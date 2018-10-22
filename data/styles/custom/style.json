@@ -35,18 +35,13 @@
       "id": "landuse-residential",
       "type": "fill",
       "source": "openmaptiles",
-      "source-layer": "landuse",
+      "source-layer": "admin_1_boundaries",
       "filter": [
         "all",
         [
           "==",
           "$type",
           "Polygon"
-        ],
-        [
-          "==",
-          "class",
-          "residential"
         ]
       ],
       "layout": {
@@ -113,7 +108,7 @@
       "id": "water",
       "type": "fill",
       "source": "openmaptiles",
-      "source-layer": "water",
+      "source-layer": "physical_lakes",
       "filter": [
         "==",
         "$type",
@@ -233,7 +228,7 @@
       "id": "waterway",
       "type": "line",
       "source": "openmaptiles",
-      "source-layer": "waterway",
+      "source-layer": "water_edges",
       "filter": [
         "==",
         "$type",
