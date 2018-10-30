@@ -20,7 +20,7 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "mbtiles://{v2}"
+      "url": "mbtiles://{argentinia}"
     }
   },
   "glyphs": "{fontstack}/{range}.pbf",
