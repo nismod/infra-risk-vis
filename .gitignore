@@ -1,1 +1,6 @@
 node_modules/
+incoming_data/
+package-lock.json
+data/argentinia.mbtiles
+intermediate_data/
+package-lock.json
