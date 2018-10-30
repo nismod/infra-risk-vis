@@ -1,12 +1,12 @@
 {
   "version": 8,
-  "name": "Overview",
+  "name": "Road network",
   "center": [
     -64.405087,
     -34.919628
   ],
   "height": "600px",
-  "zoom": 10,
+  "zoom": 4,
   "bearing": 0,
   "pitch": 0,
   "sources": {
@@ -53,23 +53,6 @@
       }
     },
     {
-      "id": "landuse-highlight",
-      "type": "fill",
-      "source": "openmaptiles",
-      "source-layer": "admin_1_boundaries",
-      "paint": {
-        "fill-color": "#7c7c7c"
-      },
-      "filter": [
-        "all",
-        [
-          "==",
-          "name",
-          "Buenos Aires"
-        ]
-      ]
-    },
-    {
       "id": "landuse-borders",
       "type": "line",
       "source": "openmaptiles",
@@ -108,7 +91,88 @@
         "text-field": "{name}",
         "symbol-placement": "point"
       },
-      "minzoom": 4
+      "minzoom": 3
+    },
+    {
+      "id": "road_secondary_tertiary",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "road_edges_rural",
+      "minzoom": 6,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#1f99e0",
+        "line-width": {
+          "base": 1.4,
+          "stops": [
+            [
+              6,
+              0.5
+            ],
+            [
+              20,
+              20
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "road_trunk_primary",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "road_edges_provincial",
+      "minzoom": 4,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#e0881f",
+        "line-width": {
+          "base": 1.4,
+          "stops": [
+            [
+              6,
+              0.5
+            ],
+            [
+              20,
+              30
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "road_major_motorway",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "road_edges_national",
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#ba0f03",
+        "line-width": {
+          "base": 1.4,
+          "stops": [
+            [
+              8,
+              1
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        },
+        "line-offset": 0
+      }
     }
   ]
 }

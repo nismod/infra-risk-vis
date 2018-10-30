@@ -1,0 +1,114 @@
+{
+  "version": 8,
+  "name": "Overview",
+  "center": [
+    -64.405087,
+    -34.919628
+  ],
+  "height": "600px",
+  "zoom": 4,
+  "bearing": 0,
+  "pitch": 0,
+  "sources": {
+    "openmaptiles": {
+      "type": "vector",
+      "url": "mbtiles://{argentinia}"
+    }
+  },
+  "glyphs": "{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#c6e1ff"
+      }
+    },
+    {
+      "id": "landuse-neighbour",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "admin_0_boundaries",
+      "paint": {
+        "fill-color": "#e0e0e0"
+      }
+    },
+    {
+      "id": "landuse-neighbour-borders",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "admin_0_boundaries",
+      "paint": {
+        "line-color": "#ffffff",
+        "line-width": 2
+      }
+    },
+    {
+      "id": "landuse",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "admin_1_boundaries",
+      "paint": {
+        "fill-color": "#d2d2d2"
+      }
+    },
+    {
+      "id": "landuse-highlight",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "admin_1_boundaries",
+      "paint": {
+        "fill-color": "#7c7c7c"
+      },
+      "filter": [
+        "all",
+        [
+          "==",
+          "name",
+          "Buenos Aires"
+        ]
+      ]
+    },
+    {
+      "id": "landuse-borders",
+      "type": "line",
+      "source": "openmaptiles",
+      "source-layer": "admin_1_boundaries",
+      "paint": {
+        "line-color": "#ffffff",
+        "line-width": 2
+      }
+    },
+    {
+      "id": "water",
+      "type": "fill",
+      "source": "openmaptiles",
+      "source-layer": "physical_lakes",
+      "paint": {
+        "fill-color": "#c6e1ff"
+      }
+    },
+    {
+      "id": "country_labels",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "admin_0_boundaries",
+      "layout": {
+        "text-field": "{name}",
+        "symbol-placement": "point"
+      },
+      "maxzoom": 4
+    },
+    {
+      "id": "provinces_labels",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "admin_1_boundaries",
+      "layout": {
+        "text-field": "{name}",
+        "symbol-placement": "point"
+      },
+      "minzoom": 4
+    }
+  ]
+}
