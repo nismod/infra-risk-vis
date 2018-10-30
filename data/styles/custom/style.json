@@ -13,6 +13,7 @@
     -64.405087,
     -34.919628
   ],
+  "height": "600px",
   "zoom": 12.241790506353492,
   "bearing": 0,
   "pitch": 0,
@@ -292,6 +293,16 @@
             ]
           ]
         }
+      }
+    },
+    {
+      "id": "bla",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "admin_0_boundaries",
+      "layout": {
+        "text-field": "{name}",
+        "symbol-placement": "point"
       }
     }
   ],
