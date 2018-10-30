@@ -1,0 +1,53 @@
+{
+    "options": {
+      "paths": {
+        "root": "",
+        "fonts": "fonts",
+        "styles": "styles",
+        "mbtiles": "/data"
+      }
+    },
+    "styles": {
+      "klokantech-basic": {
+        "style": "klokantech-basic/style.json",
+        "tilejson": {
+          "bounds": [
+            8.275,
+            47.225,
+            8.8,
+            47.533
+          ]
+        }
+      },
+      "osm-bright": {
+        "style": "osm-bright/style.json",
+        "tilejson": {
+          "bounds": [
+            8.275, 
+            47.225,
+            8.8,
+            47.533
+          ]
+        }
+      },
+      "custom": {
+        "style": "custom/style.json",
+        "tilejson": {
+          "bounds": [
+            -75.89355468749999,
+            -42.94033923363181,
+            -55.37109374999999,
+            -29.954934549656134
+          ]
+        }
+      }
+    },
+    "data": {
+      "v3": {
+        "mbtiles": "zurich_switzerland.mbtiles"
+      },
+      "v2": {
+        "mbtiles": "argentinia.mbtiles"
+      }
+    }
+  }
