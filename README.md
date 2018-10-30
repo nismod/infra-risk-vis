@@ -16,12 +16,26 @@ Convert the incoming shapefiles into a *.mbtiles file
 
     ./convert.sh
 
-Download fonts
+# Run the Tile server
 
-    wget -P ~/Downloads/ "https://github.com/klokantech/tileserver-gl-styles/archive/master.zip"
+Start the docker contrainer
 
-# Run the tile server
+    docker run -it -v $(pwd):/data -p 8080:80 klokantech/tileserver-gl --config config.json
 
-cd data
+Open the webbrowser to view the Tile Server
 
-docker run -it -v $(pwd):/data -p 8080:80 klokantech/tileserver-gl --config config.json
+    firefox http://localhost:8080/
+
+# Run the App
+
+Install required packages
+
+    npm install
+
+Start app
+
+    npm start
+
+This should automatically start the browser, if not
+
+    firefox http://localhost:3000/
