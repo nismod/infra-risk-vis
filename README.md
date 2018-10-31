@@ -18,7 +18,7 @@ Convert the incoming shapefiles into a *.mbtiles file
 
 # Run the Tile server
 
-Start the docker contrainer
+Start the docker container
 
     docker run -it -v $(pwd):/data -p 8080:80 klokantech/tileserver-gl --config config.json
 
@@ -39,3 +39,11 @@ Start app
 This should automatically start the browser, if not
 
     firefox http://localhost:3000/
+
+# References
+
+[Setting up a Mapbox Tileserver](https://openmaptiles.org/docs/)
+
+[Blog article about using Mapbox in react](https://blog.mapbox.com/mapbox-gl-js-react-764da6cc074a)
+
+[Mapbox Style Spec](https://www.mapbox.com/mapbox-gl-js/style-spec/)
