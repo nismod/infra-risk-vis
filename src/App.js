@@ -9,9 +9,9 @@ class App extends React.Component {
   constructor(props: Props) {
     super(props);
     this.state = {
-      lng: 5,
-      lat: 34,
-      zoom: 1.5
+      lng: -56,
+      lat: -30,
+      zoom: 3
     };
   }
 
@@ -20,7 +20,7 @@ class App extends React.Component {
 
     const map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: 'http://localhost:8080/styles/custom/style.json',
+      style: 'http://localhost:8080/styles/overview/style.json',
       center: [lng, lat],
       zoom
     });
@@ -44,7 +44,7 @@ class App extends React.Component {
         <div className="inline-block absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
           <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
         </div>
-        <div ref={el => this.mapContainer = el} className="mapboxgl-map absolute top right left bottom" />
+        <div ref={el => this.mapContainer = el} className="absolute top right left bottom" />
       </div>
     );
   }
