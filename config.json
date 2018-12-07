@@ -51,22 +51,23 @@
             -23.4027649054
           ]
         }
-      },
-      "custom": {
-        "style": "custom.json",
-        "tilejson": {
-          "bounds": [
-            -75.89355468749999,
-            -42.94033923363181,
-            -55.37109374999999,
-            -29.954934549656134
-          ]
-        }
       }
     },
     "data": {
-      "argentinia": {
-        "mbtiles": "argentinia.mbtiles"
+      "air": {
+        "mbtiles": "air.mbtiles"
+      },
+      "boundaries": {
+        "mbtiles": "boundaries.mbtiles"
+      },
+      "rail": {
+        "mbtiles": "rail.mbtiles"
+      },
+      "road": {
+        "mbtiles": "road.mbtiles"
+      },
+      "water": {
+        "mbtiles": "water.mbtiles"
       }
     }
   }

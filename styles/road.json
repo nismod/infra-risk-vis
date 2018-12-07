@@ -10,9 +10,13 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "openmaptiles": {
+    "boundaries": {
       "type": "vector",
-      "url": "mbtiles://{argentinia}"
+      "url": "mbtiles://{boundaries}"
+    },
+    "road": {
+      "type": "vector",
+      "url": "mbtiles://{road}"
     }
   },
   "glyphs": "{fontstack}/{range}.pbf",
@@ -27,7 +31,7 @@
     {
       "id": "landuse-neighbour",
       "type": "fill",
-      "source": "openmaptiles",
+      "source": "boundaries",
       "source-layer": "admin_0_boundaries",
       "paint": {
         "fill-color": "#e0e0e0"
@@ -36,7 +40,7 @@
     {
       "id": "landuse-neighbour-borders",
       "type": "line",
-      "source": "openmaptiles",
+      "source": "boundaries",
       "source-layer": "admin_0_boundaries",
       "paint": {
         "line-color": "#ffffff",
@@ -46,7 +50,7 @@
     {
       "id": "landuse",
       "type": "fill",
-      "source": "openmaptiles",
+      "source": "boundaries",
       "source-layer": "admin_1_boundaries",
       "paint": {
         "fill-color": "#d2d2d2"
@@ -55,7 +59,7 @@
     {
       "id": "landuse-borders",
       "type": "line",
-      "source": "openmaptiles",
+      "source": "boundaries",
       "source-layer": "admin_1_boundaries",
       "paint": {
         "line-color": "#ffffff",
@@ -65,7 +69,7 @@
     {
       "id": "water",
       "type": "fill",
-      "source": "openmaptiles",
+      "source": "boundaries",
       "source-layer": "physical_lakes",
       "paint": {
         "fill-color": "#c6e1ff"
@@ -74,7 +78,7 @@
     {
       "id": "country_labels",
       "type": "symbol",
-      "source": "openmaptiles",
+      "source": "boundaries",
       "source-layer": "admin_0_boundaries",
       "layout": {
         "text-field": "{name}",
@@ -85,7 +89,7 @@
     {
       "id": "provinces_labels",
       "type": "symbol",
-      "source": "openmaptiles",
+      "source": "boundaries",
       "source-layer": "admin_1_boundaries",
       "layout": {
         "text-field": "{name}",
@@ -96,7 +100,7 @@
     {
       "id": "road_secondary_tertiary",
       "type": "line",
-      "source": "openmaptiles",
+      "source": "road",
       "source-layer": "road_edges_rural",
       "minzoom": 6,
       "layout": {
@@ -123,7 +127,7 @@
     {
       "id": "road_trunk_primary",
       "type": "line",
-      "source": "openmaptiles",
+      "source": "road",
       "source-layer": "road_edges_provincial",
       "minzoom": 4,
       "layout": {
@@ -150,7 +154,7 @@
     {
       "id": "road_major_motorway",
       "type": "line",
-      "source": "openmaptiles",
+      "source": "road",
       "source-layer": "road_edges_national",
       "layout": {
         "line-cap": "round",
