@@ -14,7 +14,7 @@ Unzip in ``/incoming_data`` folder
 
 Convert the incoming shapefiles into a *.mbtiles file
 
-    ./convert.sh
+    make
 
 # Run the Tile server
 
