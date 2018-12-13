@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import StaticMap from '../components/Maps'
+import StaticMap from '../components/maps/StaticMap'
 
 const SimpleMap = ({ match }) => (
     <div>
