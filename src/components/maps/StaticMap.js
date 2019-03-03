@@ -19,8 +19,8 @@ class StaticMap extends React.Component {
     const { lng, lat, zoom } = this.state;
 
     const map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: this.props.style,
+        container: this.mapContainer,
+        style: this.props.style,
       center: [lng, lat],
       zoom
     });
