@@ -79,7 +79,7 @@
       "id": "country_labels",
       "type": "symbol",
       "source": "boundaries",
-      "source-layer": "admin_0_boundaries",
+      "source-layer": "admin_0_boundaries_labels",
       "layout": {
         "text-field": "{name}",
         "symbol-placement": "point"
@@ -90,7 +90,7 @@
       "id": "provinces_labels",
       "type": "symbol",
       "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
+      "source-layer": "admin_1_boundaries_labels",
       "layout": {
         "text-field": "{name}",
         "symbol-placement": "point"

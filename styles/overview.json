@@ -50,7 +50,8 @@
       "source-layer": "admin_1_boundaries",
       "paint": {
         "fill-color": "#d2d2d2"
-      }
+      },
+      "minzoom": 4
     },
     {
       "id": "landuse-highlight",
@@ -67,7 +68,8 @@
           "name",
           "Buenos Aires"
         ]
-      ]
+      ],
+      "minzoom": 4
     },
     {
       "id": "landuse-borders",
@@ -77,7 +79,8 @@
       "paint": {
         "line-color": "#ffffff",
         "line-width": 2
-      }
+      },
+      "minzoom": 4
     },
     {
       "id": "water",
@@ -92,18 +95,44 @@
       "id": "country_labels",
       "type": "symbol",
       "source": "boundaries",
-      "source-layer": "admin_0_boundaries",
+      "source-layer": "admin_0_boundaries_labels",
       "layout": {
         "text-field": "{name}",
         "symbol-placement": "point"
       },
-      "maxzoom": 4
+      "filter": [
+        "all",
+        [
+          "!=",
+          "name",
+          "Argentina"
+        ]
+      ]
+    },
+    {
+      "id": "country_labels_argentina",
+      "type": "symbol",
+      "source": "boundaries",
+      "source-layer": "admin_0_boundaries_labels",
+      "layout": {
+        "text-field": "{name}",
+        "symbol-placement": "point"
+      },
+      "maxzoom": 4,
+      "filter": [
+        "all",
+        [
+          "==",
+          "name",
+          "Argentina"
+        ]
+      ]
     },
     {
       "id": "provinces_labels",
       "type": "symbol",
       "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
+      "source-layer": "admin_1_boundaries_labels",
       "layout": {
         "text-field": "{name}",
         "symbol-placement": "point"
