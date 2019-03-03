@@ -33,7 +33,6 @@ $(out)/boundaries.mbtiles: $(in)/boundaries/admin_0_boundaries.shp $(in)/boundar
 	rm -f $(out)/boundaries.mbtiles
 	tippecanoe \
 	-zg \
-	-r1 \
     --no-feature-limit \
     --no-line-simplification \
     --no-tile-size-limit \
@@ -60,6 +59,11 @@ $(out)/road.mbtiles: $(in)/network/road_edges_national.shp $(in)/network/road_ed
 
 	rm -f $(out)/road.mbtiles
 	tippecanoe \
+	-zg \
+    --no-feature-limit \
+    --no-line-simplification \
+    --no-tile-size-limit \
+	--extend-zooms-if-still-dropping \
     -o $(out)/road.mbtiles \
     $(temp)/road_edges_national.json \
     $(temp)/road_edges_provincial.json \
