@@ -4,7 +4,16 @@ Risk analysis visualisation tool
 https://www.mapbox.com/mapbox-gl-js/style-spec/
 Maputnik for developing syles
 
-# Prepare data
+# Get started
+
+## Install dependencies
+
+ogr2ogr
+
+tippecanoe https://github.com/mapbox/tippecanoe
+sudo apt-get install g++ libsqlite3-dev libz-dev
+
+## Prepare data
 Download the ``boundaries`` and ``network`` data
 
 Unzip in ``/incoming_data`` folder
@@ -16,7 +25,7 @@ Convert the incoming shapefiles into a *.mbtiles file
 
     make
 
-# Run the Tile server
+## Run the Tile server
 
 Start the docker container
 
@@ -26,7 +35,7 @@ Open the webbrowser to view the Tile Server
 
     firefox http://localhost:8080/
 
-# Run the App
+## Run the App
 
 Install required packages
 
