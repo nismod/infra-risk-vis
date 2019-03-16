@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { NavLink, Route } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 class Nav extends Component {
 
     render() {
         return (
-            <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <nav className="navbar navbar-height navbar-expand-md navbar-dark bg-dark"> 
                 <a className="navbar-brand" href="#">OI Analytics</a>
                 <div className="collapse navbar-collapse" id="navbarCollapse">
                     <ul className="navbar-nav mr-auto">

@@ -4,6 +4,8 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import Nav from './components/Nav'
 import SimpleMap from './containers/SimpleMap'
+import TooltipMap from './containers/TooltipMap'
+import AttributesMap from './containers/AttributesMap'
 import * as serviceWorker from './serviceWorker';
 
 import './index.css';
@@ -12,16 +14,49 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 render(
     <Router>
         <div>
-            <Route path="/" component={Nav}/>
-            <main role="main" className="container">
-                <Switch>    
-                    <Route path="/:name" render={props =>
-                        <SimpleMap 
-                            key={props.match.params.name}
-                            match={props.match}
-                        />}/>
-                </Switch>
-            </main>
+            <Route path="/" component={Nav}/>   
+            <Switch>    
+                <Route path="/:name" render={props =>
+                {
+                    const {name} = props.match.params
+                    switch(name) {
+                        case 'overview':
+                            return (
+                                <SimpleMap 
+                                    key={'map_' + props.match.params.name}
+                                    style={props.match.params.name}
+                                />
+                            )
+                        case 'road':
+                            return (
+                                <AttributesMap 
+                                    key={'map_' + props.match.params.name}
+                                    style={props.match.params.name}
+                                />
+                            )
+                        case 'water':
+                            return (
+                                <AttributesMap 
+                                    key={'map_' + props.match.params.name}
+                                    style={props.match.params.name}
+                                />
+                            )
+                        case 'air':
+                            return (
+                                <TooltipMap 
+                                    key={'map_' + props.match.params.name}
+                                    style={props.match.params.name}
+                                />
+                            )
+                        default:
+                            return (
+                                <div>
+                                    View not available
+                                </div>
+                            )
+                    }
+                }}/>
+            </Switch>
         </div>
     </Router>,
     document.getElementById('root')
