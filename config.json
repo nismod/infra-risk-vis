@@ -68,6 +68,9 @@
       },
       "water": {
         "mbtiles": "water.mbtiles"
+      },
+      "flood": {
+        "mbtiles": "flood.mbtiles"
       }
     }
   }

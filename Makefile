@@ -11,6 +11,7 @@ boundaries: $(out)/boundaries.mbtiles
 rail: $(out)/rail.mbtiles
 road: $(out)/road.mbtiles
 water: $(out)/water.mbtiles
+flood: $(out)/flood.mbtiles
 
 $(out)/air.mbtiles: $(in)/network/air_edges.shp $(in)/network/air_edges.shp
 	ogr2ogr -f GeoJSON $(temp)/air_edges.json -t_srs EPSG:4326 $(in)/network/air_edges.shp
@@ -78,6 +79,29 @@ $(out)/water.mbtiles: $(in)/network/water_edges.shp $(in)/network/water_nodes.sh
     -o $(out)/water.mbtiles \
     $(temp)/water_edges.json \
     $(temp)/water_nodes.json \
+
+FLOOD_DIRS = $(shell find $(in)/flood_data/ -type d)
+FLOOD_FILES = $(shell find $(in)/flood_data/ -type f -name '*')
+$(out)/flood.mbtiles: $(in)/flood_data/ $(FLOOD_DIRS) $(FLOOD_FILES)
+
+	mkdir -p $(temp)/flood_data/FATHOM/Baseline/fluvial/
+	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+
+	rm -f $(out)/flood.mbtiles
+	tippecanoe \
+	-zg \
+    --no-feature-limit \
+    --no-line-simplification \
+    --no-tile-size-limit \
+	--extend-zooms-if-still-dropping \
+    -o $(out)/flood.mbtiles \
+    $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.json \
+    $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.json \
+	$(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.json \
+	$(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.json
 
 clean:
 	rm -f $(out)/*.mbtiles
