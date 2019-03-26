@@ -30,6 +30,15 @@ class HighlightMap extends React.Component {
       center: [lng, lat],
       zoom
     });
+
+    map.on('move', () => {
+      const { lng, lat } = map.getCenter();
+      this.setState({
+        lng: lng.toFixed(4),
+        lat: lat.toFixed(4),
+        zoom: map.getZoom().toFixed(2)
+      });
+    });
     
     map.on('mousemove', (e) => {
       const features = map.queryRenderedFeatures(e.point);
@@ -74,8 +83,15 @@ class HighlightMap extends React.Component {
   }
 
   render() {
+    const { lng, lat, zoom } = this.state;
+
     return (
-      <div ref={el => this.mapContainer = el} className="absolute top right left bottom" />
+      <div>
+        <div className="absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
+          <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
+        </div>
+        <div ref={el => this.mapContainer = el} className="absolute top right left bottom" />
+      </div>
     );
   }
 }
