@@ -1,10 +1,10 @@
-.PHONY: all air boundaries rail road water clean
+.PHONY: all air boundaries rail road water flood clean
 
 in = incoming_data
 temp = intermediate_data
 out = data
 
-all: air boundaries rail road water
+all: air boundaries rail road water flood
 
 air: $(out)/air.mbtiles
 boundaries: $(out)/boundaries.mbtiles

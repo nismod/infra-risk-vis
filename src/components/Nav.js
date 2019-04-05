@@ -37,6 +37,13 @@ class Nav extends Component {
                                 Air
                             </NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link"
+                                to={'/flood'}>
+                                Flood
+                            </NavLink>
+                        </li>
                     </ul>
                 </div>
             </nav>

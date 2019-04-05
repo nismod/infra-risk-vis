@@ -67,8 +67,11 @@ class TooltipMap extends React.Component {
     map.on('mousemove', (e) => {
       const features = map.queryRenderedFeatures(e.point);
       tooltip.setLngLat(e.lngLat);
-      map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-      this.setTooltip(features);
+      
+      let selectedFeatures = features.filter(features => features['source'] == 'flood')
+      map.getCanvas().style.cursor = selectedFeatures.length ? 'pointer' : '';
+
+      this.setTooltip(selectedFeatures);
     });
   }
 
@@ -87,7 +90,8 @@ class TooltipMap extends React.Component {
 }
 
 TooltipMap.propTypes = {
-    style: PropTypes.string.isRequired
+    style: PropTypes.string.isRequired,
+    tooltipLayerSources: PropTypes.array
 }  
 
 export default TooltipMap
