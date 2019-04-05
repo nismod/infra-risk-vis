@@ -6,6 +6,7 @@ import Nav from './components/Nav'
 import SimpleMap from './containers/SimpleMap'
 import TooltipMap from './containers/TooltipMap'
 import AttributesMap from './containers/AttributesMap'
+import SelectMap from './containers/SelectMap'
 import * as serviceWorker from './serviceWorker';
 
 import './index.css';
@@ -44,6 +45,13 @@ render(
                         case 'air':
                             return (
                                 <TooltipMap 
+                                    key={'map_' + props.match.params.name}
+                                    style={props.match.params.name}
+                                />
+                            )
+                        case 'flood':
+                            return (
+                                <SelectMap 
                                     key={'map_' + props.match.params.name}
                                     style={props.match.params.name}
                                 />
