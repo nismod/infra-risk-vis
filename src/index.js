@@ -28,27 +28,6 @@ render(
                                     style={props.match.params.name}
                                 />
                             )
-                        case 'road':
-                            return (
-                                <AttributesMap 
-                                    key={'map_' + props.match.params.name}
-                                    style={props.match.params.name}
-                                />
-                            )
-                        case 'water':
-                            return (
-                                <AttributesMap 
-                                    key={'map_' + props.match.params.name}
-                                    style={props.match.params.name}
-                                />
-                            )
-                        case 'air':
-                            return (
-                                <TooltipMap 
-                                    key={'map_' + props.match.params.name}
-                                    style={props.match.params.name}
-                                />
-                            )
                         case 'flood':
                             return (
                                 <SelectMap 

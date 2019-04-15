@@ -13,6 +13,18 @@
     "boundaries": {
       "type": "vector",
       "url": "mbtiles://{boundaries}"
+    },
+    "road": {
+      "type": "vector",
+      "url": "mbtiles://{road}"
+    },
+    "air": {
+      "type": "vector",
+      "url": "mbtiles://{air}"
+    },
+    "water": {
+      "type": "vector",
+      "url": "mbtiles://{water}"
     }
   },
   "glyphs": "{fontstack}/{range}.pbf",
@@ -51,24 +63,6 @@
       "paint": {
         "fill-color": "#d2d2d2"
       },
-      "minzoom": 4
-    },
-    {
-      "id": "landuse-highlight",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
-      "paint": {
-        "fill-color": "#7c7c7c"
-      },
-      "filter": [
-        "all",
-        [
-          "==",
-          "name",
-          "Buenos Aires"
-        ]
-      ],
       "minzoom": 4
     },
     {
@@ -138,6 +132,132 @@
         "symbol-placement": "point"
       },
       "minzoom": 4
+    },
+    {
+      "id": "waterway",
+      "type": "line",
+      "source": "water",
+      "source-layer": "water_edges",
+      "paint": {
+        "line-color": "#045a8d",
+        "line-width": {
+          "base": 1.4,
+          "stops": [
+            [
+              11,
+              4
+            ],
+            [
+              17,
+              50
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "road_secondary_tertiary",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges_rural",
+      "minzoom": 6,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#1f99e0",
+        "line-width": {
+          "base": 1.4,
+          "stops": [
+            [
+              6,
+              0.5
+            ],
+            [
+              20,
+              20
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "road_trunk_primary",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges_provincial",
+      "minzoom": 4,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#e0881f",
+        "line-width": {
+          "base": 1.4,
+          "stops": [
+            [
+              6,
+              0.5
+            ],
+            [
+              20,
+              30
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "road_major_motorway",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges_national",
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#ba0f03",
+        "line-width": {
+          "base": 1.4,
+          "stops": [
+            [
+              8,
+              1
+            ],
+            [
+              16,
+              10
+            ]
+          ]
+        },
+        "line-offset": 0
+      }
+    },
+    {
+      "id": "aeroway",
+      "type": "line",
+      "source": "air",
+      "source-layer": "air_edges",
+      "paint": {
+        "line-color": "#000000",
+        "line-width": {
+          "base": 1.5,
+          "stops": [
+            [
+              8,
+              1
+            ],
+            [
+              20,
+              8
+            ]
+          ]
+        },
+        "line-opacity": 1
+      }
     }
   ]
 }

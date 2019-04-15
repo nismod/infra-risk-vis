@@ -19,27 +19,6 @@ class Nav extends Component {
                         <li className="nav-item">
                             <NavLink
                                 className="nav-link"
-                                to={'/road'}>
-                                Roads
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink
-                                className="nav-link"
-                                to={'/water'}>
-                                Water
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink
-                                className="nav-link"
-                                to={'/air'}>
-                                Air
-                            </NavLink>
-                        </li>
-                        <li className="nav-item">
-                            <NavLink
-                                className="nav-link"
                                 to={'/flood'}>
                                 Flood
                             </NavLink>
