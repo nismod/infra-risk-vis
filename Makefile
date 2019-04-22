@@ -25,7 +25,7 @@ $(out)/air.mbtiles: $(in)/network/air_edges.shp $(in)/network/air_edges.shp
     $(temp)/air_edges.json
 
 $(out)/boundaries.mbtiles: $(in)/boundaries/admin_0_boundaries.shp $(in)/boundaries/admin_0_boundaries_labels.shp $(in)/boundaries/admin_1_boundaries.shp $(in)/boundaries/admin_1_boundaries_labels.shp $(in)/boundaries/physical_lakes.shp 
-	ogr2ogr -f GeoJSON $(temp)/admin_0_boundaries.json -t_srs EPSG:4326 $(in)/boundaries/admin_0_boundaries.shp
+	ogr2ogr -f GeoJSON $(temp)/admin_0_boundaries.json  $(in)/boundaries/admin_0_boundaries.shp
 	ogr2ogr -f GeoJSON $(temp)/admin_0_boundaries_labels.json -t_srs EPSG:4326 $(in)/boundaries/admin_0_boundaries_labels.shp
 	ogr2ogr -f GeoJSON $(temp)/admin_1_boundaries.json -t_srs EPSG:4326 $(in)/boundaries/admin_1_boundaries.shp
 	ogr2ogr -f GeoJSON $(temp)/admin_1_boundaries_labels.json -t_srs EPSG:4326 $(in)/boundaries/admin_1_boundaries_labels.shp
@@ -71,8 +71,8 @@ $(out)/road.mbtiles: $(in)/network/road_edges_national.shp $(in)/network/road_ed
 	$(temp)/road_edges_rural.json
 
 $(out)/water.mbtiles: $(in)/network/water_edges.shp $(in)/network/water_nodes.shp
-	ogr2ogr -f GeoJSON $(temp)/water_edges.json -t_srs EPSG:4326 $(in)/network/water_edges.shp
-	ogr2ogr -f GeoJSON $(temp)/water_nodes.json -t_srs EPSG:4326 $(in)/network/water_nodes.shp
+	ogr2ogr -f GeoJSON $(temp)/water_edges.json -t_srs EPSG:4326 $(in)/network/water_edges.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/water_nodes.json -t_srs EPSG:4326 $(in)/network/water_nodes.shp -s_srs EPSG:4326
 
 	rm -f $(out)/water.mbtiles
 	tippecanoe \
