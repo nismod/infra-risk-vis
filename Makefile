@@ -34,6 +34,7 @@ $(out)/boundaries.mbtiles: $(in)/boundaries/admin_0_boundaries.shp $(in)/boundar
 	rm -f $(out)/boundaries.mbtiles
 	tippecanoe \
 	-zg \
+	-r1 -pk -pf \
     --no-feature-limit \
     --no-line-simplification \
     --no-tile-size-limit \
