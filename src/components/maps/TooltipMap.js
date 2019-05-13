@@ -54,7 +54,7 @@ class TooltipMap extends React.Component {
     const tooltip = new mapboxgl.Marker(this.tooltipContainer, {
       offset: [-120, 0]
     }).setLngLat([0,0]).addTo(map);
-    
+
     map.on('move', () => {
       const { lng, lat } = map.getCenter();
       this.setState({
@@ -67,8 +67,8 @@ class TooltipMap extends React.Component {
     map.on('mousemove', (e) => {
       const features = map.queryRenderedFeatures(e.point);
       tooltip.setLngLat(e.lngLat);
-      
-      let selectedFeatures = features.filter(features => features['source'] == 'flood')
+
+      let selectedFeatures = features.filter(features => features['source'] === 'flood')
       map.getCanvas().style.cursor = selectedFeatures.length ? 'pointer' : '';
 
       this.setTooltip(selectedFeatures);
@@ -92,6 +92,6 @@ class TooltipMap extends React.Component {
 TooltipMap.propTypes = {
     style: PropTypes.string.isRequired,
     tooltipLayerSources: PropTypes.array
-}  
+}
 
 export default TooltipMap

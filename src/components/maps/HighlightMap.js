@@ -1,9 +1,7 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
 import mapboxgl from 'mapbox-gl'
-import Tooltip from '../attributes/Tooltip'
 
 class HighlightMap extends React.Component {
   tooltipContainer;
@@ -39,7 +37,7 @@ class HighlightMap extends React.Component {
         zoom: map.getZoom().toFixed(2)
       });
     });
-    
+
     map.on('mousemove', (e) => {
       const features = map.queryRenderedFeatures(e.point);
       map.getCanvas().style.cursor = ''
@@ -54,11 +52,11 @@ class HighlightMap extends React.Component {
       const features = map.queryRenderedFeatures(e.point);
       for (var i in features) {
         if (this.props.enabledFeatures.includes(features[i]['sourceLayer'])) {
-          if (typeof map.getLayer('featureHighlight') !== "undefined" ){         
+          if (typeof map.getLayer('featureHighlight') !== "undefined" ){
               map.removeLayer('featureHighlight')
-              map.removeSource('featureHighlight');   
+              map.removeSource('featureHighlight');
           }
-    
+
           map.addSource('featureHighlight', {
               "type":"geojson",
               "data": features[i].toJSON()
@@ -100,6 +98,6 @@ HighlightMap.propTypes = {
     style: PropTypes.string.isRequired,
     enabledFeatures: PropTypes.array.isRequired,
     onHighlight: PropTypes.func.isRequired
-}  
+}
 
 export default HighlightMap

@@ -5,8 +5,8 @@ class Nav extends Component {
 
     render() {
         return (
-            <nav className="navbar navbar-height navbar-expand-md navbar-dark bg-dark"> 
-                <a className="navbar-brand" href="#">OI Analytics</a>
+            <nav className="navbar navbar-height navbar-expand-md navbar-dark bg-dark">
+                <a className="navbar-brand" href="/">OI Analytics</a>
                 <div className="collapse navbar-collapse" id="navbarCollapse">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">

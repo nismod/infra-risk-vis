@@ -1,6 +1,5 @@
 import React from 'react'
 
-// import StaticMap from '../components/maps/StaticMap'
 import TooltipMap from '../components/maps/TooltipMap'
 
 const SimpleMap = ({ style }) => (
