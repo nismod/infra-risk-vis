@@ -52,11 +52,11 @@ class StaticMap extends React.Component {
       const features = this.map.queryRenderedFeatures(e.point);
       for (var i in features) {
         if (Object.keys(this.props.clickableLayerAttributes).includes(features[i]['layer']['id'])) {
-          if (typeof this.map.getLayer('featureHighlight') !== "undefined" ){         
+          if (typeof this.map.getLayer('featureHighlight') !== "undefined" ){
               this.map.removeLayer('featureHighlight')
-              this.map.removeSource('featureHighlight');   
+              this.map.removeSource('featureHighlight');
           }
-    
+
           this.map.addSource('featureHighlight', {
               "type":"geojson",
               "data": features[i].toJSON()
@@ -82,7 +82,7 @@ class StaticMap extends React.Component {
 
   onLayerVisClick(layer) {
     var visibility = this.map.getLayoutProperty(layer, 'visibility')
-        
+
     if (visibility === 'visible') {
       this.map.setLayoutProperty(layer, 'visibility', 'none')
       this.className = ''
@@ -100,7 +100,7 @@ class StaticMap extends React.Component {
 
     let attributes = Object.keys(attributes_names)
     for (var i in attributes) {
-      
+
       if (attributes[i].startsWith('_')) {
         dfeature[attributes[i]] = attributes_names[attributes[i]]
       } else {
@@ -110,7 +110,7 @@ class StaticMap extends React.Component {
 
     this.setState({
       selectedFeature: dfeature
-    })    
+    })
   }
 
   render() {
@@ -126,10 +126,10 @@ class StaticMap extends React.Component {
               toggleableLayerIds.map(layer => {
                 return (
                   <div className="form-check" key={'toggleLayer' + layer} >
-                    <input className="form-check-input" 
-                      type="checkbox" 
+                    <input className="form-check-input"
+                      type="checkbox"
                       defaultChecked={true}
-                      id={'toggleLayerCheckbox' + layer} 
+                      id={'toggleLayerCheckbox' + layer}
                       onClick={(e) => this.onLayerVisClick(layer)}/>
                     <label className="form-check-label" htmlFor={'toggleLayerCheckbox' + layer}>
                       {layer}
@@ -152,7 +152,7 @@ class StaticMap extends React.Component {
                     <div>
                       {i}: {selectedFeature[i]}
                     </div>
-                  ) 
+                  )
                 } else {
                   return(
                     null
@@ -160,7 +160,7 @@ class StaticMap extends React.Component {
                 }
               })
             }
-            
+
           </div>
         </div>
 

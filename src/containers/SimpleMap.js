@@ -5,7 +5,7 @@ import StaticMap from '../components/maps/StaticMap'
 const SimpleMap = ({ style }) => (
     <div className="d-flex align-items-stretch map-height">
         <div className="col-sm-12">
-            <StaticMap 
+            <StaticMap
                 style={"http://localhost:8080/styles/" + style + "/style.json"}
                 toggleableLayerIds={['road_secondary_tertiary', 'road_trunk_primary', 'road_major_motorway', 'aeroway', 'waterway']}
                 clickableLayerAttributes={{
@@ -23,11 +23,11 @@ const SimpleMap = ({ style }) => (
                         '_header': 'Motorway',
                         'name': 'Name',
                         'jurisdicti': 'Classification'
-                    }, 
+                    },
                     'waterway': {},
                     'aeroway': {
                         '_header': 'Flight path',
-                        'from_iata': 'From', 
+                        'from_iata': 'From',
                         'to_iata': 'To'
                     }
                 }}/>

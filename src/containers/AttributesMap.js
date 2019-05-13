@@ -20,7 +20,7 @@ class AttributesMap extends Component {
       return (
         <div className="d-flex align-items-stretch map-height">
             <div className="col-sm-8">
-                <HighlightMap 
+                <HighlightMap
                     style={"http://localhost:8080/styles/" + this.props.style + "/style.json"}
                     enabledFeatures={['road_edges_national', 'road_edges_provincial', 'road_edges_rural', 'water_edges', 'water_nodes']}
                     onHighlight={this.onHighlight}/>
