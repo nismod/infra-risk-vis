@@ -108,11 +108,27 @@ $(out)/water.mbtiles: $(in)/network/water_edges.shp $(in)/network/water_nodes.sh
 FLOOD_DIRS = $(shell find $(in)/flood_data/ -type d)
 FLOOD_FILES = $(shell find $(in)/flood_data/ -type f -name '*')
 $(out)/flood.mbtiles: $(in)/flood_data/ $(FLOOD_DIRS) $(FLOOD_FILES)
+
 	mkdir -p $(temp)/flood_data/FATHOM/Baseline/fluvial/
-	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+	
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+	
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
 
 	rm -f $(out)/flood.mbtiles
 	tippecanoe \
@@ -122,10 +138,7 @@ $(out)/flood.mbtiles: $(in)/flood_data/ $(FLOOD_DIRS) $(FLOOD_FILES)
 		--no-tile-size-limit \
 		--extend-zooms-if-still-dropping \
 		-o $(out)/flood.mbtiles \
-		$(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.json \
-		$(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.json \
-		$(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.json \
-		$(temp)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.json
+		$(temp)/flood_data/*
 
 clean:
 	rm -f $(out)/*.mbtiles
