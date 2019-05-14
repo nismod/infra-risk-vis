@@ -13,8 +13,76 @@ class TooltipMap extends React.Component {
     this.state = {
       lng: -56,
       lat: -30,
-      zoom: 3
+      zoom: 3,
+      scenario: 'baseline',
+      floodtype: 'fluvial',
+      floodlevel: {
+        _1m2m: true,
+        _2m3m: true,
+        _3m4m: true,
+        _4m999m: true
+      }
     };
+    
+    this.map = undefined
+  }
+
+  setScenario(scenario) {
+    this.setState({
+      scenario: scenario
+    })
+    this.setMap(scenario, this.state.floodtype, this.state.floodlevel)
+  }
+
+  setFloodType(floodtype) {
+    this.setState({
+      floodtype: floodtype
+    })
+    this.setMap(this.state.scenario, floodtype, this.state.floodlevel)
+  }
+
+  setFloodLevel(level, value) {
+
+    let floodlevel = Object.assign({}, this.state.floodlevel);
+    floodlevel[level] = value
+
+    this.setState({
+      floodlevel: floodlevel
+    })
+
+    this.setMap(this.state.scenario, this.state.floodtype, floodlevel)
+  }
+
+  setMap(scenario, floodtype, floodlevel) {
+
+    var flood_layers = ['1m2m', '2m3m', '3m4m', '4m999m']
+    var flood_layer_colors = {
+      '1m2m': "#072f5f",
+      '2m3m': "#1261a0",
+      '3m4m': "#3895d3",
+      '4m999m': "#58cced"
+    }
+
+    for (var i in flood_layers) {
+
+      var mapLayer = this.map.getLayer('flood_' + flood_layers[i]);
+
+      if(typeof mapLayer !== 'undefined') {
+        this.map.removeLayer('flood_' + flood_layers[i]);
+      }
+
+      if (floodlevel['_' + flood_layers[i]]) {
+        this.map.addLayer({
+          "id": "flood_" + flood_layers[i],
+          "type": "fill",
+          "source": "flood",
+          "source-layer": scenario + '_' + floodtype + '_1in500_' + flood_layers[i],
+          "paint": {
+            "fill-color": flood_layer_colors[flood_layers[i]]
+          }
+        },);
+      }
+    }
   }
 
   setTooltip(features) {
@@ -44,7 +112,7 @@ class TooltipMap extends React.Component {
 
     const { lng, lat, zoom } = this.state;
 
-    const map = new mapboxgl.Map({
+    this.map = new mapboxgl.Map({
       container: this.mapContainer,
       style: this.props.style,
       center: [lng, lat],
@@ -53,23 +121,23 @@ class TooltipMap extends React.Component {
 
     const tooltip = new mapboxgl.Marker(this.tooltipContainer, {
       offset: [-120, 0]
-    }).setLngLat([0,0]).addTo(map);
+    }).setLngLat([0,0]).addTo(this.map);
     
-    map.on('move', () => {
-      const { lng, lat } = map.getCenter();
+    this.map.on('move', () => {
+      const { lng, lat } = this.map.getCenter();
       this.setState({
         lng: lng.toFixed(4),
         lat: lat.toFixed(4),
-        zoom: map.getZoom().toFixed(2)
+        zoom: this.map.getZoom().toFixed(2)
       });
     });
 
-    map.on('mousemove', (e) => {
-      const features = map.queryRenderedFeatures(e.point);
+    this.map.on('mousemove', (e) => {
+      const features = this.map.queryRenderedFeatures(e.point);
       tooltip.setLngLat(e.lngLat);
       
       let selectedFeatures = features.filter(features => features['source'] == 'flood')
-      map.getCanvas().style.cursor = selectedFeatures.length ? 'pointer' : '';
+      this.map.getCanvas().style.cursor = selectedFeatures.length ? 'pointer' : '';
 
       this.setTooltip(selectedFeatures);
     });
@@ -84,20 +152,20 @@ class TooltipMap extends React.Component {
           <div className="mt6 mb12">
             <div className="txt-bold">Scenario</div>
             <div className="form-check">
-              <input className="form-check-input" type="radio" name="scenarioRadios" id="scenarioRadios1" value="option1"/>
-              <label className="form-check-label" for="scenarioRadios1">
+              <input className="form-check-input" defaultChecked={true} type="radio" name="scenarioRadio" value="baseline" onClick={(e) => this.setScenario(e.target.value)}/>
+              <label className="form-check-label">
                 Baseline
               </label>
             </div>
             <div className="form-check">
-              <input className="form-check-input" type="radio" name="scenarioRadios" id="scenarioRadios2" value="option2"/>
-              <label className="form-check-label" for="scenarioRadios2">
+              <input className="form-check-input" type="radio" name="scenarioRadio" value="low" onClick={(e) => this.setScenario(e.target.value)}/>
+              <label className="form-check-label">
                 Low
               </label>
             </div>
             <div className="form-check">
-              <input className="form-check-input" type="radio" name="scenarioRadios" id="scenarioRadios3" value="option3"/>
-              <label className="form-check-label" for="scenarioRadios3">
+              <input className="form-check-input" type="radio" name="scenarioRadio" value="high" onClick={(e) => this.setScenario(e.target.value)}/>
+              <label className="form-check-label">
                 High
               </label>
             </div>
@@ -106,14 +174,14 @@ class TooltipMap extends React.Component {
 
             <div className="txt-bold">Flood Type</div>
             <div className="form-check">
-              <input className="form-check-input" type="radio" name="floodtypeRadios" id="floodtypeRadios1" value="option1"/>
-              <label className="form-check-label" for="floodtypeRadios1">
+              <input className="form-check-input" defaultChecked={true} type="radio" name="floodtypeRadios" value="fluvial" onClick={(e) => this.setFloodType(e.target.value)}/>
+              <label className="form-check-label">
                 Fluvial
               </label>
             </div>
             <div className="form-check">
-              <input className="form-check-input" type="radio" name="floodtypeRadios" id="floodtypeRadios2" value="option2"/>
-              <label className="form-check-label" for="floodtypeRadios2">
+              <input className="form-check-input" type="radio" name="floodtypeRadios" value="pluvial" onClick={(e) => this.setFloodType(e.target.value)}/>
+              <label className="form-check-label">
                 Pluvial
               </label>
             </div>
@@ -125,33 +193,31 @@ class TooltipMap extends React.Component {
           <div className="mt6 mb12">
             <div className="txt-bold">Flood Level</div>
             <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="floodlevel_1m-2m"/>
-              <label className="form-check-label" for="floodlevel_1m-2m">
+              <input className="form-check-input" defaultChecked={true} type="checkbox" value="_1m2m" onClick={(e) => this.setFloodLevel(e.target.value, e.target.checked)}/>
+              <label className="form-check-label">
                 1m-2m
               </label>
             </div>
             <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="floodlevel_2m-3m"/>
-              <label className="form-check-label" for="floodlevel_2m-3m">
+              <input className="form-check-input" defaultChecked={true} type="checkbox" value="_2m3m" onClick={(e) => this.setFloodLevel(e.target.value, e.target.checked)}/>
+              <label className="form-check-label">
                 2m-3m
               </label>
             </div>
             <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="floodlevel_3m-4m"/>
-              <label className="form-check-label" for="floodlevel_3m-4m">
+              <input className="form-check-input" defaultChecked={true} type="checkbox" value="_3m4m" onClick={(e) => this.setFloodLevel(e.target.value, e.target.checked)}/>
+              <label className="form-check-label">
                 3m-4m
               </label>
             </div>
             <div className="form-check">
-              <input className="form-check-input" type="checkbox" value="" id="floodlevel_4m-999m"/>
-              <label className="form-check-label" for="floodlevel_4m-999m">
+              <input className="form-check-input" defaultChecked={true} type="checkbox" value="_4m999m" onClick={(e) => this.setFloodLevel(e.target.value, e.target.checked)}/>
+              <label className="form-check-label">
                 >4m
               </label>
             </div>
           </div>
         </div>
-
-
 
         <div className="absolute bottom right mb12 mr12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
           <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
