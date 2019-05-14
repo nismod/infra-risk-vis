@@ -55,10 +55,6 @@ Convert the incoming shapefiles into a *.mbtiles file:
 
 ## Build and run requirements
 
-### Docker
-
-Docker CE is used to run the tileserver in a container. Follow the [docker installation
-guide](https://docs.docker.com/install/) to get set up.
 
 ### Node and npm
 
@@ -68,6 +64,16 @@ Install required packages. Run from the project root:
 
     npm install
 
+### Tileserver GL
+
+Install tlieserver-gl globally:
+
+    npm install -g tileserver-gl
+
+### Docker (optional)
+
+Alternately, Docker CE may be used to run the tileserver in a container. Follow the [docker
+installation guide](https://docs.docker.com/install/) to get set up.
 
 ## Run
 
@@ -76,7 +82,11 @@ app itself.
 
 ### Run the tileserver
 
-Start the docker container:
+Run the tileserver directly (from the root of the project):
+
+    tileserver-gl
+
+Or start the docker container:
 
     docker run -it -v $(pwd):/data -p 8080:80 klokantech/tileserver-gl --config config.json
 
