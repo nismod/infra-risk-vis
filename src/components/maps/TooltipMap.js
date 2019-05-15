@@ -58,9 +58,9 @@ class TooltipMap extends React.Component {
     map.on('move', () => {
       const { lng, lat } = map.getCenter();
       this.setState({
-        lng: lng.toFixed(4),
-        lat: lat.toFixed(4),
-        zoom: map.getZoom().toFixed(2)
+        lng: lng,
+        lat: lat,
+        zoom: map.getZoom()
       });
     });
 
@@ -80,10 +80,10 @@ class TooltipMap extends React.Component {
 
     return (
       <div>
-        <div className="absolute top left mt12 ml12 bg-darken75 color-white z1 py6 px12 round-full txt-s txt-bold">
-          <div>{`Longitude: ${lng} Latitude: ${lat} Zoom: ${zoom}`}</div>
+        <div className="custom-map-control top-left">
+          <div>{`Longitude: ${lng.toFixed(2)} Latitude: ${lat.toFixed(2)} Zoom: ${zoom.toFixed(0)}`}</div>
         </div>
-        <div ref={el => this.mapContainer = el} className="absolute top right left bottom" />
+        <div ref={el => this.mapContainer = el} className="map" />
       </div>
     );
   }
