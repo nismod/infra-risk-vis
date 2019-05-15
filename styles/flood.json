@@ -99,36 +99,36 @@
       "id": "flood_1m2m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "FU_1in500_1m2m_threshold",
+      "source-layer": "baseline_fluvial_1in500_1m2m",
       "paint": {
-        "fill-color": "#fecc5c"
+        "fill-color": "#072f5f"
       }
     },
     {
       "id": "flood_2m3m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "FU_1in500_2m3m_threshold",
+      "source-layer": "baseline_fluvial_1in500_2m3m",
       "paint": {
-        "fill-color": "#fd8d3c"
+        "fill-color": "#1261a0"
       }
     },
     {
       "id": "flood_3m4m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "FU_1in500_3m4m_threshold",
+      "source-layer": "baseline_fluvial_1in500_3m4m",
       "paint": {
-        "fill-color": "#f03b20"
+        "fill-color": "#3895d3"
       }
     },
     {
       "id": "flood_4m999m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "FU_1in500_4m999m_threshold",
+      "source-layer": "baseline_fluvial_1in500_4m999m",
       "paint": {
-        "fill-color": "#bd0026"
+        "fill-color": "#58cced"
       }
     },
     {

@@ -13,8 +13,7 @@ export default class Tooltip extends React.Component {
     const renderFeature = (feature, i) => {
       return (
         <div key={i}>
-          <strong className='mr3'>{feature.layer['source-layer']}:</strong>
-          <span className='color-gray-light'>{feature.layer.id}</span>
+          <strong>{feature.layer['source-layer']}</strong>
         </div>
       )
     };
