@@ -8,6 +8,7 @@ import TooltipMap from './TooltipMap'
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 const App = () => (
   <Router>
