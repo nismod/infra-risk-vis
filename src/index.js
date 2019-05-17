@@ -13,6 +13,7 @@ const App = () => (
   <Router>
     <Fragment>
       <Route path="/" component={Nav}/>
+      <main class="map-height">
       <Switch>
         <Route path="/overview">
           <StaticMap
@@ -48,6 +49,7 @@ const App = () => (
               tooltipLayerSources={['flood']}/>
           </Route>
       </Switch>
+      </main>
     </Fragment>
   </Router>
 )

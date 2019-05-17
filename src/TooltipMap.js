@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
@@ -87,9 +87,8 @@ class TooltipMap extends React.Component {
   }
 
   setTooltip(features) {
-    const tips = (features.length)? features : []
     ReactDOM.render(
-      React.createElement(Tooltip, {tips}),
+      React.createElement(Tooltip, {features: features}),
       this.tooltipContainer
     );
   }
@@ -136,7 +135,7 @@ class TooltipMap extends React.Component {
     const { lng, lat, zoom } = this.state;
 
     return (
-      <div>
+      <Fragment>
         <div className="custom-map-control top-left">
             <h4 className="h5">Scenario</h4>
             <div className="form-check">
@@ -205,7 +204,7 @@ class TooltipMap extends React.Component {
 
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />
-      </div>
+      </Fragment>
     );
   }
 }

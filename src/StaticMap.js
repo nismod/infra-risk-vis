@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 import mapboxgl from 'mapbox-gl'
@@ -121,7 +121,7 @@ class StaticMap extends React.Component {
     const { toggleableLayerIds } = this.props
 
     return (
-      <div>
+      <Fragment>
         <div className="custom-map-control top-left">
             <h4 className="h5">Layers</h4>
             {
@@ -147,17 +147,11 @@ class StaticMap extends React.Component {
             <div>{selectedFeature['_header']}</div>
             {
               Object.keys(selectedFeature).map(i => {
-                if (!i.startsWith('_')) {
-                  return (
-                    <div>
+                return (i.startsWith('_'))? null : (
+                    <div key={i}>
                       {i}: {selectedFeature[i]}
                     </div>
                   )
-                } else {
-                  return(
-                    null
-                  )
-                }
               })
             }
         </div>
@@ -166,7 +160,7 @@ class StaticMap extends React.Component {
           <div>{`Longitude: ${lng.toFixed(2)} Latitude: ${lat.toFixed(2)} Zoom: ${zoom.toFixed(0)}`}</div>
         </div>
         <div ref={el => this.mapContainer = el} className="map" />
-      </div>
+      </Fragment>
     );
   }
 }
