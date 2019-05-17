@@ -10,7 +10,7 @@ class StaticMap extends React.Component {
     this.state = {
       lng: -56,
       lat: -30,
-      zoom: 3,
+      zoom: 4,
       selectedFeature: {},
     }
     this.map = undefined
