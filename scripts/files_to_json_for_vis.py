@@ -43,8 +43,8 @@ def main():
                                 'min_econ_impact','max_econ_impact'],
                 'risk_results_cols':[],
                 'vulnerability_results_cols':[],
-                'adaptation_results_cols':['hazard_type','climate_scenario', 
-                                'min_flood_depth', 'max_flood_depth', 
+                'adaptation_results_cols':['hazard_type','climate_scenario',
+                                'min_flood_depth', 'max_flood_depth',
                                 'min_exposure_length', 'max_exposure_length',
                                 'min_eael','max_eael',
                                 'min_options', 'min_benefit',
@@ -66,8 +66,8 @@ def main():
                                 'min_econ_loss','max_econ_loss',
                                 'min_econ_impact','max_econ_impact'],
                 'vulnerability_results_cols':[],
-                'risk_results_cols':['hazard_type','climate_scenario', 
-                                'min_flood_depth', 'max_flood_depth', 
+                'risk_results_cols':['hazard_type','climate_scenario',
+                                'min_flood_depth', 'max_flood_depth',
                                 'min_exposure_length', 'max_exposure_length','risk_wt'],
                 'adaptation_results_cols':[],
                 },
@@ -123,15 +123,15 @@ def main():
                                 'min_econ_impact','max_econ_impact'],
                 'risk_results_cols':[],
                 'vulnerability_results_cols':[],
-                'adaptation_results_cols':['hazard_type','climate_scenario', 
-                                'min_flood_depth', 'max_flood_depth', 
+                'adaptation_results_cols':['hazard_type','climate_scenario',
+                                'min_flood_depth', 'max_flood_depth',
                                 'min_exposure_length', 'max_exposure_length',
                                 'min_eael','max_eael',
                                 'min_options', 'min_benefit',
                                 'min_ini_adap_cost','min_tot_adap_cost','min_bc_ratio',
                                 'max_options','max_benefit', 'max_ini_adap_cost','max_tot_adap_cost','max_bc_ratio'],
                 },
-                
+
     ]
 
     geometry_column = 'geometry'
@@ -241,8 +241,8 @@ def main():
         print ('* Done with merging vulnerability results for {}'.format(m['sector']))
 
 
-        edges.to_file(os.path.join(output_path,'{}.json'.format(m['edge_file'])), driver="GeoJSON",encoding='utf-8-sig')
-        nodes.to_file(os.path.join(output_path,'{}.json'.format(m['node_file'])), driver="GeoJSON",encoding='utf-8-sig')
+        edges.to_file(os.path.join(output_path,'{}.json'.format(m['edge_file'])), driver="GeoJSON", encoding='utf-8')
+        nodes.to_file(os.path.join(output_path,'{}.json'.format(m['node_file'])), driver="GeoJSON", encoding='utf-8')
 
         print ('* Done with writing to JSON for {}'.format(m['sector']))
 
