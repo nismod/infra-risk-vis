@@ -33,19 +33,19 @@
     },
     "data": {
       "air": {
-        "mbtiles": "air.mbtiles"
+        "mbtiles": "air_edges.mbtiles"
       },
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
       },
       "rail": {
-        "mbtiles": "rail.mbtiles"
+        "mbtiles": "rail_edges.mbtiles"
       },
       "road": {
-        "mbtiles": "road.mbtiles"
+        "mbtiles": "road_edges.mbtiles"
       },
       "water": {
-        "mbtiles": "water.mbtiles"
+        "mbtiles": "port_edges.mbtiles"
       },
       "flood": {
         "mbtiles": "flood.mbtiles"

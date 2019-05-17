@@ -4,32 +4,41 @@ in = incoming_data
 temp = intermediate_data
 out = data
 
-all: air boundaries rail road water flood
+all: air boundaries rail road water flood bridge
 
-air: $(out)/air.mbtiles
+air: $(out)/air_edges.mbtiles $(out)/air_nodes.mbtiles
 boundaries: $(out)/boundaries.mbtiles
-rail: $(out)/rail.mbtiles
-road: $(out)/road.mbtiles
-water: $(out)/water.mbtiles
+rail: $(out)/rail_edges.mbtiles $(out)/rail_nodes.mbtiles
+road: $(out)/road_edges.mbtiles
+bridge: $(out)/bridges.mbtiles
+water: $(out)/port_edges.mbtiles $(out)/port_nodes.mbtiles
 flood: $(out)/flood.mbtiles
 
-$(out)/air.mbtiles: $(in)/network/air_edges.shp $(in)/network/air_edges.shp
-	ogr2ogr -f GeoJSON $(temp)/air_edges.json -t_srs EPSG:4326 $(in)/network/air_edges.shp
-	rm -f $(out)/air.mbtiles
+$(out)/air_edges.mbtiles: $(temp)/air_edges.json $(temp)/air_edges.json
+	rm -f $(out)/air_edges.mbtiles
 	tippecanoe \
 		--no-feature-limit \
 		--no-line-simplification \
 		--no-tile-size-limit \
-		-o $(out)/air.mbtiles \
+		-o $(out)/air_edges.mbtiles \
 		$(temp)/air_edges.json
 
- $(in)/boundaries/admin_0_labels.shp:  $(in)/boundaries/admin_0_labels.csv
+$(out)/air_nodes.mbtiles: $(temp)/air_nodes.json $(temp)/air_nodes.json
+	rm -f $(out)/air_nodes.mbtiles
+	tippecanoe \
+		--no-feature-limit \
+		--no-line-simplification \
+		--no-tile-size-limit \
+		-o $(out)/air_nodes.mbtiles \
+		$(temp)/air_nodes.json
+
+$(in)/boundaries/admin_0_labels.shp:  $(in)/boundaries/admin_0_labels.csv
 	ogr2ogr -f "ESRI Shapefile" $@ $< -a_srs EPSG:4326 \
 		-oo X_POSSIBLE_NAMES=lon \
 		-oo Y_POSSIBLE_NAMES=lat \
 		-oo KEEP_GEOM_COLUMNS=NO
 
- $(in)/boundaries/admin_1_labels.shp:  $(in)/boundaries/admin_1_labels.csv
+$(in)/boundaries/admin_1_labels.shp:  $(in)/boundaries/admin_1_labels.csv
 	ogr2ogr -f "ESRI Shapefile" $@ $< -a_srs EPSG:4326 \
 		-oo X_POSSIBLE_NAMES=lon \
 		-oo Y_POSSIBLE_NAMES=lat \
@@ -70,66 +79,100 @@ $(out)/boundaries.mbtiles: $(in)/boundaries/admin_0_boundaries.shp $(in)/boundar
 		$(temp)/admin_1_labels.json \
 		$(temp)/physical_lakes.json
 
-$(out)/rail.mbtiles: $(in)/network/rail_edges.shp $(in)/network/rail_edges.shp
-	ogr2ogr -f GeoJSON $(temp)/rail_edges.json -t_srs EPSG:4326 $(in)/network/rail_edges.shp
-
-	rm -f $(out)/rail.mbtiles
+$(out)/bridges.mbtiles: $(temp)/bridges.json $(temp)/bridges.json
+	rm -f $(out)/bridges.mbtiles
 	tippecanoe \
-		-o $(out)/rail.mbtiles \
+		-o $(out)/bridges.mbtiles \
+		$(temp)/bridges.json
+
+$(out)/rail_nodes.mbtiles: $(temp)/rail_nodes.json $(temp)/rail_nodes.json
+	rm -f $(out)/rail_nodes.mbtiles
+	tippecanoe \
+		-o $(out)/rail_nodes.mbtiles \
+		$(temp)/rail_nodes.json
+
+$(out)/rail_edges.mbtiles: $(temp)/rail_edges.json $(temp)/rail_edges.json
+	rm -f $(out)/rail_edges.mbtiles
+	tippecanoe \
+		-o $(out)/rail_edges.mbtiles \
 		$(temp)/rail_edges.json
 
-$(out)/road.mbtiles: $(in)/network/road_edges_national.shp $(in)/network/road_edges_provincial.shp $(in)/network/road_edges_rural.shp
-	ogr2ogr -f GeoJSON $(temp)/road_edges_national.json -t_srs EPSG:4326 $(in)/network/road_edges_national.shp
-	ogr2ogr -f GeoJSON $(temp)/road_edges_provincial.json -t_srs EPSG:4326 $(in)/network/road_edges_provincial.shp
-	ogr2ogr -f GeoJSON $(temp)/road_edges_rural.json -t_srs EPSG:4326 $(in)/network/road_edges_rural.shp
-
-	rm -f $(out)/road.mbtiles
+$(out)/road_edges.mbtiles: $(temp)/road_edges.json $(temp)/road_edges.json
+	rm -f $(out)/road_edges.mbtiles
 	tippecanoe \
 		-zg \
 		--no-feature-limit \
 		--no-line-simplification \
 		--no-tile-size-limit \
 		--extend-zooms-if-still-dropping \
-		-o $(out)/road.mbtiles \
-		$(temp)/road_edges_national.json \
-		$(temp)/road_edges_provincial.json \
-		$(temp)/road_edges_rural.json
+		-o $(out)/road_edges.mbtiles \
+		$(temp)/road_edges.json \
 
-$(out)/water.mbtiles: $(in)/network/water_edges.shp $(in)/network/water_nodes.shp
-	ogr2ogr -f GeoJSON $(temp)/water_edges.json -t_srs EPSG:4326 $(in)/network/water_edges.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/water_nodes.json -t_srs EPSG:4326 $(in)/network/water_nodes.shp -s_srs EPSG:4326
-
-	rm -f $(out)/water.mbtiles
+$(out)/port_nodes.mbtiles: $(temp)/port_nodes.json $(temp)/port_nodes.json
+	rm -f $(out)/port_nodes.mbtiles
 	tippecanoe \
-		-o $(out)/water.mbtiles \
-		$(temp)/water_edges.json \
-		$(temp)/water_nodes.json \
+		-o $(out)/port_nodes.mbtiles \
+		$(temp)/port_nodes.json
 
-FLOOD_DIRS = $(shell find $(in)/flood_data/ -type d)
-FLOOD_FILES = $(shell find $(in)/flood_data/ -type f -name '*')
-$(out)/flood.mbtiles: $(in)/flood_data/ $(FLOOD_DIRS) $(FLOOD_FILES)
+$(out)/port_edges.mbtiles: $(temp)/port_edges.json $(temp)/port_edges.json
+	rm -f $(out)/port_edges.mbtiles
+	tippecanoe \
+		-o $(out)/port_edges.mbtiles \
+		$(temp)/port_edges.json
 
-	mkdir -p $(temp)/flood_data/FATHOM/Baseline/fluvial/
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+$(temp)/flood_data/baseline_fluvial_1in1000_1m-2m.json: $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_1m-2m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in1000_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
 
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+$(temp)/flood_data/baseline_fluvial_1in1000_2m-3m.json: $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_2m-3m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in1000_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
 
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+$(temp)/flood_data/baseline_fluvial_1in1000_3m-4m.json: $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_3m-4m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
 
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_1m-2m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_2m-3m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_3m-4m_threshold.shp -s_srs EPSG:4326
-	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in500_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in500_4m-999m_threshold.shp -s_srs EPSG:4326
+$(temp)/flood_data/baseline_fluvial_1in1000_4m-999m.json: $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_4m-999m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_fluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
 
+
+$(temp)/flood_data/baseline_pluvial_1in1000_1m-2m.json: $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_1m-2m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in1000_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/baseline_pluvial_1in1000_2m-3m.json: $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_2m-3m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in1000_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/baseline_pluvial_1in1000_3m-4m.json: $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_3m-4m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/baseline_pluvial_1in1000_4m-999m.json: $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_4m-999m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/baseline_pluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Baseline/pluvial/P_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
+
+
+$(temp)/flood_data/high_fluvial_1in1000_1m-2m.json: $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_1m-2m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in1000_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/high_fluvial_1in1000_2m-3m.json: $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_2m-3m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in1000_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/high_fluvial_1in1000_3m-4m.json: $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_3m-4m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/high_fluvial_1in1000_4m-999m.json: $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_4m-999m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_fluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
+
+
+$(temp)/flood_data/high_pluvial_1in1000_1m-2m.json: $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_1m-2m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in1000_1m-2m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/high_pluvial_1in1000_2m-3m.json: $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_2m-3m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in1000_2m-3m.json -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/high_pluvial_1in1000_3m-4m.json: $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_3m-4m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
+
+$(temp)/flood_data/high_pluvial_1in1000_4m-999m.json: $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_4m-999m_threshold.shp
+	ogr2ogr -f GeoJSON $(temp)/flood_data/high_pluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 $(in)/flood_data/FATHOM/Future_High/pluvial/P_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
+
+
+$(out)/flood.mbtiles: $(temp)/flood_data/baseline_fluvial_1in1000_1m-2m.json $(temp)/flood_data/baseline_fluvial_1in1000_2m-3m.json $(temp)/flood_data/baseline_fluvial_1in1000_3m-4m.json $(temp)/flood_data/baseline_fluvial_1in1000_4m-999m.json $(temp)/flood_data/baseline_pluvial_1in1000_1m-2m.json $(temp)/flood_data/baseline_pluvial_1in1000_2m-3m.json $(temp)/flood_data/baseline_pluvial_1in1000_3m-4m.json $(temp)/flood_data/baseline_pluvial_1in1000_4m-999m.json $(temp)/flood_data/high_fluvial_1in1000_1m-2m.json $(temp)/flood_data/high_fluvial_1in1000_2m-3m.json $(temp)/flood_data/high_fluvial_1in1000_3m-4m.json $(temp)/flood_data/high_fluvial_1in1000_4m-999m.json $(temp)/flood_data/high_pluvial_1in1000_1m-2m.json $(temp)/flood_data/high_pluvial_1in1000_2m-3m.json $(temp)/flood_data/high_pluvial_1in1000_3m-4m.json $(temp)/flood_data/high_pluvial_1in1000_4m-999m.json
 	rm -f $(out)/flood.mbtiles
 	tippecanoe \
 		-zg \
