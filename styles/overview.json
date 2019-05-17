@@ -1,31 +1,16 @@
 {
   "version": 8,
   "name": "Overview",
-  "center": [
-    -64.405087,
-    -34.919628
-  ],
+  "center": [-64.405087, -34.919628],
   "height": "600px",
   "zoom": 4,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": {
-      "type": "vector",
-      "url": "mbtiles://{boundaries}"
-    },
-    "road": {
-      "type": "vector",
-      "url": "mbtiles://{road}"
-    },
-    "air": {
-      "type": "vector",
-      "url": "mbtiles://{air}"
-    },
-    "water": {
-      "type": "vector",
-      "url": "mbtiles://{water}"
-    }
+    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "road": { "type": "vector", "url": "mbtiles://{road}" },
+    "air": { "type": "vector", "url": "mbtiles://{air}" },
+    "water": { "type": "vector", "url": "mbtiles://{water}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -94,14 +79,7 @@
         "text-field": "{name}",
         "symbol-placement": "point"
       },
-      "filter": [
-        "all",
-        [
-          "!=",
-          "name",
-          "Argentina"
-        ]
-      ]
+      "filter": ["all", ["!=", "name", "Argentina"]]
     },
     {
       "id": "country_labels_argentina",
@@ -113,14 +91,7 @@
         "symbol-placement": "point"
       },
       "maxzoom": 4,
-      "filter": [
-        "all",
-        [
-          "==",
-          "name",
-          "Argentina"
-        ]
-      ]
+      "filter": ["all", ["==", "name", "Argentina"]]
     },
     {
       "id": "provinces_labels",
@@ -142,16 +113,7 @@
         "line-color": "#045a8d",
         "line-width": {
           "base": 1.4,
-          "stops": [
-            [
-              11,
-              4
-            ],
-            [
-              17,
-              50
-            ]
-          ]
+          "stops": [[11, 4], [17, 50]]
         }
       }
     },
@@ -169,16 +131,7 @@
         "line-color": "#1f99e0",
         "line-width": {
           "base": 1.4,
-          "stops": [
-            [
-              6,
-              0.5
-            ],
-            [
-              20,
-              20
-            ]
-          ]
+          "stops": [[6, 0.5], [20, 20]]
         }
       }
     },
@@ -196,16 +149,7 @@
         "line-color": "#e0881f",
         "line-width": {
           "base": 1.4,
-          "stops": [
-            [
-              6,
-              0.5
-            ],
-            [
-              20,
-              30
-            ]
-          ]
+          "stops": [[6, 0.5], [20, 30]]
         }
       }
     },
@@ -213,7 +157,7 @@
       "id": "road_major_motorway",
       "type": "line",
       "source": "road",
-      "source-layer": "road_edges_national",
+      "source-layer": "road_edges",
       "layout": {
         "line-cap": "round",
         "line-join": "round"
@@ -222,16 +166,7 @@
         "line-color": "#ba0f03",
         "line-width": {
           "base": 1.4,
-          "stops": [
-            [
-              8,
-              1
-            ],
-            [
-              16,
-              10
-            ]
-          ]
+          "stops": [[8, 1], [16, 10]]
         },
         "line-offset": 0
       }
@@ -245,16 +180,7 @@
         "line-color": "#000000",
         "line-width": {
           "base": 1.5,
-          "stops": [
-            [
-              8,
-              1
-            ],
-            [
-              20,
-              8
-            ]
-          ]
+          "stops": [[8, 1], [20, 8]]
         },
         "line-opacity": 1
       }
