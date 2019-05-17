@@ -24,7 +24,7 @@ class StaticMap extends React.Component {
 
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: this.props.style,
+      style: this.props.map_style,
       center: [lng, lat],
       zoom
     })
@@ -172,7 +172,7 @@ class StaticMap extends React.Component {
 }
 
 StaticMap.propTypes = {
-  style: PropTypes.string.isRequired,
+  map_style: PropTypes.string.isRequired,
   toggleableLayerIds: PropTypes.array,
   clickableLayerAttributes: PropTypes.object
 }

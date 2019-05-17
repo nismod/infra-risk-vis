@@ -2,46 +2,52 @@ import React from 'react';
 import { render } from 'react-dom'
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
-import Nav from './components/Nav'
-import SimpleMap from './containers/SimpleMap'
-import SelectMap from './containers/SelectMap'
+import Nav from './Nav'
+import StaticMap from './StaticMap'
+import TooltipMap from './TooltipMap'
 
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-render(
-    <Router>
-        <div>
-            <Route path="/" component={Nav}/>
-            <Switch>
-                <Route path="/:name" render={props =>
-                {
-                    const {name} = props.match.params
-                    switch(name) {
-                        case 'overview':
-                            return (
-                                <SimpleMap
-                                    key={'map_' + props.match.params.name}
-                                    style={props.match.params.name}
-                                />
-                            )
-                        case 'flood':
-                            return (
-                                <SelectMap
-                                    key={'map_' + props.match.params.name}
-                                    style={props.match.params.name}
-                                />
-                            )
-                        default:
-                            return (
-                                <div>
-                                    View not available
-                                </div>
-                            )
-                    }
-                }}/>
-            </Switch>
-        </div>
-    </Router>,
-    document.getElementById('root')
+const App = () => (
+  <Router>
+    <Switch>
+      <Route path="/" component={Nav}/>
+      <Route  path="/overview">
+        <StaticMap
+          map_style={"http://localhost:8080/styles/overview/style.json"}
+          toggleableLayerIds={['road_secondary_tertiary', 'road_trunk_primary', 'road_major_motorway', 'aeroway', 'waterway']}
+          clickableLayerAttributes={{
+            'road_secondary_tertiary': {
+              '_header': 'Rural Road',
+              'gml_id': 'Name',
+              'u_jurisdic': 'Classification'
+            },
+            'road_trunk_primary': {
+              '_header': 'Provincial Road',
+              'name': 'Name',
+              'jurisdicti': 'Classification'
+            },
+            'road_major_motorway': {
+              '_header': 'Motorway',
+              'name': 'Name',
+              'jurisdicti': 'Classification'
+            },
+            'waterway': {},
+            'aeroway': {
+              '_header': 'Flight path',
+              'from_iata': 'From',
+              'to_iata': 'To'
+            }
+          }}/>
+        </Route>
+        <Route path="/flood">
+          <TooltipMap
+            map_style={"http://localhost:8080/styles/flood/style.json"}
+            tooltipLayerSources={['flood']}/>
+        </Route>
+    </Switch>
+  </Router>
 )
+
+render(<App />, document.getElementById('root'));

@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
 
 import mapboxgl from 'mapbox-gl'
-import Tooltip from '../attributes/Tooltip'
+import Tooltip from './Tooltip'
+import PositionControl from './PositionControl'
 
 class TooltipMap extends React.Component {
   tooltipContainer;
@@ -86,23 +87,11 @@ class TooltipMap extends React.Component {
   }
 
   setTooltip(features) {
-    if (features.length) {
-      ReactDOM.render(
-        React.createElement(
-          Tooltip, {
-            features
-          }
-        ),
-        this.tooltipContainer
-      );
-    } else {
-      ReactDOM.render(
-        React.createElement(
-          'div'
-        ),
-        this.tooltipContainer
-      );
-    }
+    const tips = (features.length)? features : []
+    ReactDOM.render(
+      React.createElement(Tooltip, {tips}),
+      this.tooltipContainer
+    );
   }
 
   componentDidMount() {
@@ -114,7 +103,7 @@ class TooltipMap extends React.Component {
 
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: this.props.style,
+      style: this.props.map_style,
       center: [lng, lat],
       zoom
     });
@@ -136,7 +125,7 @@ class TooltipMap extends React.Component {
       const features = this.map.queryRenderedFeatures(e.point);
       tooltip.setLngLat(e.lngLat);
 
-      let selectedFeatures = features.filter(features => features['source'] == 'flood')
+      let selectedFeatures = features.filter(features => features['source'] === 'flood')
       this.map.getCanvas().style.cursor = selectedFeatures.length ? 'pointer' : '';
 
       this.setTooltip(selectedFeatures);
@@ -214,9 +203,7 @@ class TooltipMap extends React.Component {
           </div>
         </div>
 
-        <div className="custom-map-control top-left">
-          <div>{`Longitude: ${lng.toFixed(2)} Latitude: ${lat.toFixed(2)} Zoom: ${zoom.toFixed(0)}`}</div>
-        </div>
+        <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />
       </div>
     );
@@ -224,7 +211,7 @@ class TooltipMap extends React.Component {
 }
 
 TooltipMap.propTypes = {
-    style: PropTypes.string.isRequired,
+    map_style: PropTypes.string.isRequired,
     tooltipLayerSources: PropTypes.array
 }
 
