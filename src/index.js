@@ -13,7 +13,7 @@ const App = () => (
   <Router>
     <Fragment>
       <Route path="/" component={Nav}/>
-      <main class="map-height">
+      <main className="map-height">
       <Switch>
         <Route path="/overview">
           <StaticMap
