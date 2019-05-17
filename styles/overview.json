@@ -76,7 +76,7 @@
       "source": "boundaries",
       "source-layer": "admin_0_labels",
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{text}",
         "symbol-placement": "point"
       },
       "filter": ["all", ["!=", "name", "Argentina"]]
@@ -87,7 +87,7 @@
       "source": "boundaries",
       "source-layer": "admin_0_labels",
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{text}",
         "symbol-placement": "point"
       },
       "maxzoom": 4,
@@ -99,7 +99,7 @@
       "source": "boundaries",
       "source-layer": "admin_1_labels",
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{text}",
         "symbol-placement": "point"
       },
       "minzoom": 4
@@ -108,7 +108,7 @@
       "id": "waterway",
       "type": "line",
       "source": "water",
-      "source-layer": "water_edges",
+      "source-layer": "port_edges",
       "paint": {
         "line-color": "#045a8d",
         "line-width": {
@@ -118,57 +118,25 @@
       }
     },
     {
-      "id": "road_secondary_tertiary",
+      "id": "road",
       "type": "line",
       "source": "road",
-      "source-layer": "road_edges_rural",
-      "minzoom": 6,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "paint": {
-        "line-color": "#1f99e0",
-        "line-width": {
-          "base": 1.4,
-          "stops": [[6, 0.5], [20, 20]]
-        }
-      }
-    },
-    {
-      "id": "road_trunk_primary",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges_provincial",
+      "source-layer": "road_edges",
       "minzoom": 4,
       "layout": {
         "line-cap": "round",
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e0881f",
-        "line-width": {
-          "base": 1.4,
-          "stops": [[6, 0.5], [20, 30]]
-        }
-      }
-    },
-    {
-      "id": "road_major_motorway",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "paint": {
-        "line-color": "#ba0f03",
-        "line-width": {
-          "base": 1.4,
-          "stops": [[8, 1], [16, 10]]
-        },
-        "line-offset": 0
+        "line-color": [
+          "match",
+          ["get", "road_type"],
+          "rural", "#1f99e0",
+          "province", "#e0881f",
+          "national", "#ba0f03",
+          "#fff"
+        ],
+        "line-width": ["sqrt", ["get", "max_total_tons"]]
       }
     },
     {
