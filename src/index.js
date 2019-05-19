@@ -19,22 +19,11 @@ const App = () => (
         <Route path="/overview">
           <StaticMap
             map_style={"http://localhost:8080/styles/overview/style.json"}
-            toggleableLayerIds={['road_secondary_tertiary', 'road_trunk_primary', 'road_major_motorway', 'aeroway', 'waterway']}
+            toggleableLayerIds={['road_all', 'aeroway', 'waterway']}
             clickableLayerAttributes={{
-              'road_secondary_tertiary': {
-                '_header': 'Rural Road',
-                'gml_id': 'Name',
-                'u_jurisdic': 'Classification'
-              },
-              'road_trunk_primary': {
-                '_header': 'Provincial Road',
-                'name': 'Name',
-                'jurisdicti': 'Classification'
-              },
-              'road_major_motorway': {
-                '_header': 'Motorway',
-                'name': 'Name',
-                'jurisdicti': 'Classification'
+              'road_all': {
+                '_header': 'Road',
+                'road_name': 'Name'
               },
               'waterway': {},
               'aeroway': {

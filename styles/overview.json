@@ -27,17 +27,8 @@
       "source": "boundaries",
       "source-layer": "admin_0_boundaries",
       "paint": {
-        "fill-color": "#e0e0e0"
-      }
-    },
-    {
-      "id": "landuse-neighbour-borders",
-      "type": "line",
-      "source": "boundaries",
-      "source-layer": "admin_0_boundaries",
-      "paint": {
-        "line-color": "#ffffff",
-        "line-width": 2
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
       }
     },
     {
@@ -46,20 +37,9 @@
       "source": "boundaries",
       "source-layer": "admin_1_boundaries",
       "paint": {
-        "fill-color": "#d2d2d2"
-      },
-      "minzoom": 4
-    },
-    {
-      "id": "landuse-borders",
-      "type": "line",
-      "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
-      "paint": {
-        "line-color": "#ffffff",
-        "line-width": 2
-      },
-      "minzoom": 4
+        "fill-color": "#d2d2d2",
+        "fill-outline-color": "#ffffff"
+      }
     },
     {
       "id": "water",
@@ -71,58 +51,24 @@
       }
     },
     {
-      "id": "country_labels",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_0_labels",
-      "layout": {
-        "text-field": "{text}",
-        "symbol-placement": "point"
-      },
-      "filter": ["all", ["!=", "name", "Argentina"]]
-    },
-    {
-      "id": "country_labels_argentina",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_0_labels",
-      "layout": {
-        "text-field": "{text}",
-        "symbol-placement": "point"
-      },
-      "maxzoom": 4,
-      "filter": ["all", ["==", "name", "Argentina"]]
-    },
-    {
-      "id": "provinces_labels",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_1_labels",
-      "layout": {
-        "text-field": "{text}",
-        "symbol-placement": "point"
-      },
-      "minzoom": 4
-    },
-    {
       "id": "waterway",
-      "type": "line",
+      "type": "circle",
       "source": "water",
-      "source-layer": "port_edges",
+      "source-layer": "port_nodes",
       "paint": {
-        "line-color": "#045a8d",
-        "line-width": {
-          "base": 1.4,
+        "circle-color": "#045a8d",
+        "circle-radius": {
+          "base": 2,
           "stops": [[11, 4], [17, 50]]
         }
       }
     },
     {
-      "id": "road",
+      "id": "road_all",
       "type": "line",
       "source": "road",
       "source-layer": "road_edges",
-      "minzoom": 4,
+      "minzoom": 6,
       "layout": {
         "line-cap": "round",
         "line-join": "round"
@@ -136,21 +82,56 @@
           "national", "#ba0f03",
           "#fff"
         ],
-        "line-width": ["sqrt", ["get", "max_total_tons"]]
+        "line-width": 2
       }
     },
     {
-      "id": "aeroway",
+      "id": "road_national",
       "type": "line",
-      "source": "air",
-      "source-layer": "air_edges",
+      "source": "road",
+      "source-layer": "road_edges",
+      "maxzoom": 6,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
-        "line-color": "#000000",
-        "line-width": {
+        "line-color": "#ba0f03",
+        "line-width": 2
+      },
+      "filter": ["==", "road_type", "national"]
+    },
+    {
+      "id": "aeroway",
+      "type": "circle",
+      "source": "air",
+      "source-layer": "air_nodes",
+      "paint": {
+        "circle-color": "#000000",
+        "circle-radius": {
           "base": 1.5,
           "stops": [[8, 1], [20, 8]]
-        },
-        "line-opacity": 1
+        }
+      }
+    },
+    {
+      "id": "country_labels",
+      "type": "symbol",
+      "source": "boundaries",
+      "source-layer": "admin_0_labels",
+      "layout": {
+        "text-field": "{text}",
+        "symbol-placement": "point"
+      }
+    },
+    {
+      "id": "provinces_labels",
+      "type": "symbol",
+      "source": "boundaries",
+      "source-layer": "admin_1_labels",
+      "layout": {
+        "text-field": "{text}",
+        "symbol-placement": "point"
       }
     }
   ]
