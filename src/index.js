@@ -20,7 +20,7 @@ const App = () => (
           <StaticMap
             map_style={"http://localhost:8080/styles/overview/style.json"}
             dataSources={['road', 'air', 'water']}
-            dataLayers={['road_all', 'road_national', 'air', 'water']}
+            dataLayers={['road', 'air', 'water']}
             />
           </Route>
           <Route path="/flood">

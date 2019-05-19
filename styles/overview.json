@@ -64,7 +64,7 @@
       }
     },
     {
-      "id": "road_all",
+      "id": "road",
       "type": "line",
       "source": "road",
       "source-layer": "road_edges",
@@ -119,7 +119,8 @@
       "layout": {
         "text-field": "{text}",
         "symbol-placement": "point"
-      }
+      },
+      "minzoom": 3.5
     }
   ]
 }

@@ -111,7 +111,8 @@
       "layout": {
         "text-field": "{text}",
         "symbol-placement": "point"
-      }
+      },
+      "minzoom": 3.5
     }
   ]
 }
