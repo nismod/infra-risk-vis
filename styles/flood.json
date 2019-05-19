@@ -63,7 +63,7 @@
       "source": "flood",
       "source-layer": "baseline_fluvial_1in1000_1m2m",
       "paint": {
-        "fill-color": "#072f5f"
+        "fill-color": "#58cced"
       }
     },
     {
@@ -72,7 +72,7 @@
       "source": "flood",
       "source-layer": "baseline_fluvial_1in1000_2m3m",
       "paint": {
-        "fill-color": "#1261a0"
+        "fill-color": "#3895d3"
       }
     },
     {
@@ -81,7 +81,7 @@
       "source": "flood",
       "source-layer": "baseline_fluvial_1in1000_3m4m",
       "paint": {
-        "fill-color": "#3895d3"
+        "fill-color": "#1261a0"
       }
     },
     {
@@ -90,7 +90,7 @@
       "source": "flood",
       "source-layer": "baseline_fluvial_1in1000_4m999m",
       "paint": {
-        "fill-color": "#58cced"
+        "fill-color": "#072f5f"
       }
     },
     {

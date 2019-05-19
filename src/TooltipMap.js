@@ -58,10 +58,10 @@ class TooltipMap extends React.Component {
 
     var flood_layers = ['1m2m', '2m3m', '3m4m', '4m999m']
     var flood_layer_colors = {
-      '1m2m': "#072f5f",
-      '2m3m': "#1261a0",
-      '3m4m': "#3895d3",
-      '4m999m': "#58cced"
+      '4m999m': "#072f5f",
+      '3m4m': "#1261a0",
+      '2m3m': "#3895d3",
+      '1m2m': "#58cced"
     }
 
     for (var i in flood_layers) {
@@ -77,7 +77,7 @@ class TooltipMap extends React.Component {
           "id": "flood_" + flood_layers[i],
           "type": "fill",
           "source": "flood",
-          "source-layer": scenario + '_' + floodtype + '_1in500_' + flood_layers[i],
+          "source-layer": scenario + '_' + floodtype + '_1in1000_' + flood_layers[i],
           "paint": {
             "fill-color": flood_layer_colors[flood_layers[i]]
           }
@@ -144,12 +144,6 @@ class TooltipMap extends React.Component {
               <input className="form-check-input" defaultChecked={true} type="radio" name="scenarioRadio" value="baseline" onClick={(e) => this.setScenario(e.target.value)}/>
               <label className="form-check-label">
                 Baseline
-              </label>
-            </div>
-            <div className="form-check">
-              <input className="form-check-input" type="radio" name="scenarioRadio" value="low" onClick={(e) => this.setScenario(e.target.value)}/>
-              <label className="form-check-label">
-                Low
               </label>
             </div>
             <div className="form-check">
