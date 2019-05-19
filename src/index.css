@@ -59,7 +59,7 @@
   width: 20rem;
 }
 .selected-feature pre {
-  overflow: none;
+  overflow: visible;
   white-space: pre;
 }
 .position-control {
