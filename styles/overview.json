@@ -42,7 +42,7 @@
       }
     },
     {
-      "id": "water",
+      "id": "lakes",
       "type": "fill",
       "source": "boundaries",
       "source-layer": "physical_lakes",
@@ -51,7 +51,7 @@
       }
     },
     {
-      "id": "waterway",
+      "id": "water",
       "type": "circle",
       "source": "water",
       "source-layer": "port_nodes",
@@ -68,7 +68,7 @@
       "type": "line",
       "source": "road",
       "source-layer": "road_edges",
-      "minzoom": 6,
+      "minzoom": 3,
       "layout": {
         "line-cap": "round",
         "line-join": "round"
@@ -77,40 +77,27 @@
         "line-color": [
           "match",
           ["get", "road_type"],
-          "rural", "#1f99e0",
-          "province", "#e0881f",
           "national", "#ba0f03",
+          "province", "#e0881f",
+          "rural", "#1f99e0",
           "#fff"
         ],
-        "line-width": 2
+        "line-width": {
+          "base": 0.1,
+          "stops": [[3, 0.01], [5, 0.1], [9, 1], [10, 2], [17, 6]]
+        }
       }
     },
     {
-      "id": "road_national",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "maxzoom": 6,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "paint": {
-        "line-color": "#ba0f03",
-        "line-width": 2
-      },
-      "filter": ["==", "road_type", "national"]
-    },
-    {
-      "id": "aeroway",
+      "id": "air",
       "type": "circle",
       "source": "air",
       "source-layer": "air_nodes",
       "paint": {
         "circle-color": "#000000",
         "circle-radius": {
-          "base": 1.5,
-          "stops": [[8, 1], [20, 8]]
+          "base": 2,
+          "stops": [[11, 4], [17, 50]]
         }
       }
     },
