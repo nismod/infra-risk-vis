@@ -19,19 +19,9 @@ const App = () => (
         <Route path="/overview">
           <StaticMap
             map_style={"http://localhost:8080/styles/overview/style.json"}
-            toggleableLayerIds={['road_all', 'aeroway', 'waterway']}
-            clickableLayerAttributes={{
-              'road_all': {
-                '_header': 'Road',
-                'road_name': 'Name'
-              },
-              'waterway': {},
-              'aeroway': {
-                '_header': 'Flight path',
-                'from_iata': 'From',
-                'to_iata': 'To'
-              }
-            }}/>
+            dataSources={['road', 'air', 'water']}
+            dataLayers={['road_all', 'road_national', 'air', 'water']}
+            />
           </Route>
           <Route path="/flood">
             <TooltipMap

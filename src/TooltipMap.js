@@ -106,7 +106,7 @@ class TooltipMap extends React.Component {
       center: [lng, lat],
       zoom: zoom,
       minZoom: 3,
-      maxZoom: 20
+      maxZoom: 12
     });
 
     const tooltip = new mapboxgl.Marker(this.tooltipContainer, {

@@ -11,12 +11,11 @@ class StaticMap extends React.Component {
       lng: -56,
       lat: -30,
       zoom: 4,
-      selectedFeature: {},
+      selectedFeature: undefined
     }
     this.map = undefined
 
-    this.onLayerVisClick = this.onLayerVisClick.bind(this)
-    this.onFeatureHighlight = this.onFeatureHighlight.bind(this);
+    this.onLayerVisChange = this.onLayerVisChange.bind(this)
   }
 
   componentDidMount() {
@@ -28,7 +27,7 @@ class StaticMap extends React.Component {
       center: [lng, lat],
       zoom: zoom,
       minZoom: 3,
-      maxZoom: 20
+      maxZoom: 12
     })
 
     var nav = new mapboxgl.NavigationControl();
@@ -47,94 +46,84 @@ class StaticMap extends React.Component {
       const features = this.map.queryRenderedFeatures(e.point);
       this.map.getCanvas().style.cursor = ''
       for (var i in features) {
-        if (Object.keys(this.props.clickableLayerAttributes).includes(features[i]['layer']['id'])) {
+        if (this.props.dataSources.includes(features[i].source)) {
           this.map.getCanvas().style.cursor = 'pointer'
+          break
         }
       }
     });
 
     this.map.on('click', (e) => {
+      // remove current highlight
+      if (typeof this.map.getLayer('featureHighlight') !== "undefined" ) {
+        this.map.removeLayer('featureHighlight');
+        this.map.removeSource('featureHighlight');
+      }
+
+      let feature;
       const features = this.map.queryRenderedFeatures(e.point);
       for (var i in features) {
-        if (Object.keys(this.props.clickableLayerAttributes).includes(features[i]['layer']['id'])) {
-          if (typeof this.map.getLayer('featureHighlight') !== "undefined" ){
-              this.map.removeLayer('featureHighlight')
-              this.map.removeSource('featureHighlight');
-          }
-
-          this.map.addSource('featureHighlight', {
-              "type":"geojson",
-              "data": features[i].toJSON()
-          });
-          this.map.addLayer({
-              "id": "featureHighlight",
-              "type": "line",
-              "source": "featureHighlight",
-              "layout": {
-                  "line-join": "round",
-                  "line-cap": "round"
-              },
-              "paint": {
-                  "line-color": "yellow",
-                  "line-width": 8
-              }
-          });
-          this.onFeatureHighlight(features[i])
+        if (this.props.dataSources.includes(features[i].source)) {
+          feature = features[i]
+          break
         }
       }
-    })
-  }
 
-  onLayerVisClick(layer) {
-    var visibility = this.map.getLayoutProperty(layer, 'visibility')
-
-    if (visibility === 'visible') {
-      this.map.setLayoutProperty(layer, 'visibility', 'none')
-      this.className = ''
-    } else {
-      this.className = 'active'
-      this.map.setLayoutProperty(layer, 'visibility', 'visible')
-    }
-  }
-
-  onFeatureHighlight(feature) {
-    const { clickableLayerAttributes } = this.props
-
-    let attributes_names = clickableLayerAttributes[feature['layer']['id']]
-    let dfeature = {}
-
-    let attributes = Object.keys(attributes_names)
-    for (var i in attributes) {
-
-      if (attributes[i].startsWith('_')) {
-        dfeature[attributes[i]] = attributes_names[attributes[i]]
-      } else {
-        dfeature[attributes_names[attributes[i]]] = feature['properties'][attributes[i]]
+      if (feature) {
+        // add highlight layer
+        this.map.addSource('featureHighlight', {
+            "type":"geojson",
+            "data": feature.toJSON()
+        });
+        this.map.addLayer({
+            "id": "featureHighlight",
+            "type": "line",
+            "source": "featureHighlight",
+            "layout": {
+                "line-join": "round",
+                "line-cap": "round"
+            },
+            "paint": {
+                "line-color": "yellow",
+                "line-width": 8
+            }
+        });
       }
-    }
 
-    this.setState({
-      selectedFeature: dfeature
+      this.setState({
+        selectedFeature: feature
+      })
     })
+  }
+
+  onLayerVisChange(e) {
+    console.log(e)
+    const layer = e.target.dataset.layer
+    if (e.target.checked) {
+      this.map.setLayoutProperty(layer, 'visibility', 'visible')
+    } else {
+      this.map.setLayoutProperty(layer, 'visibility', 'none')
+    }
   }
 
   render() {
     const { lng, lat, zoom, selectedFeature } = this.state
-    const { toggleableLayerIds } = this.props
+    const { dataLayers } = this.props
 
     return (
       <Fragment>
         <div className="custom-map-control top-left">
             <h4 className="h5">Layers</h4>
             {
-              toggleableLayerIds.map(layer => {
+              dataLayers.map(layer => {
                 return (
                   <div className="form-check" key={'toggleLayer' + layer} >
                     <input className="form-check-input"
                       type="checkbox"
+                      data-layer={layer}
                       defaultChecked={true}
                       id={'toggleLayerCheckbox' + layer}
-                      onClick={(e) => this.onLayerVisClick(layer)}/>
+                      onClick={this.onLayerVisChange}/>
                     <label className="form-check-label" htmlFor={'toggleLayerCheckbox' + layer}>
                       {layer}
                     </label>
@@ -144,19 +133,7 @@ class StaticMap extends React.Component {
             }
         </div>
 
-        <div className="custom-map-control top-right">
-            <h4 className="h5">Selected Feature</h4>
-            <div>{selectedFeature['_header']}</div>
-            {
-              Object.keys(selectedFeature).map(i => {
-                return (i.startsWith('_'))? null : (
-                    <div key={i}>
-                      {i}: {selectedFeature[i]}
-                    </div>
-                  )
-              })
-            }
-        </div>
+        <FeatureSidebar feature={this.state.selectedFeature} />
 
         <div className="custom-map-control bottom-right">
           <div>{`Longitude: ${lng.toFixed(2)} Latitude: ${lat.toFixed(2)} Zoom: ${zoom.toFixed(0)}`}</div>
@@ -165,6 +142,18 @@ class StaticMap extends React.Component {
       </Fragment>
     );
   }
+}
+
+const FeatureSidebar = (props) => {
+  if (!props.feature) {
+    return null
+  }
+  return (
+    <div className="custom-map-control top-right">
+      <h4 className="h5">Selected Feature</h4>
+      {JSON.stringify(props.feature.properties)}
+    </div>
+  )
 }
 
 StaticMap.propTypes = {
