@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-
 import mapboxgl from 'mapbox-gl'
+
 import Tooltip from './Tooltip'
 import PositionControl from './PositionControl'
 
@@ -139,38 +139,38 @@ class TooltipMap extends React.Component {
     return (
       <Fragment>
         <div className="custom-map-control top-left">
-            <h4 className="h5">Scenario</h4>
-            <div className="form-check">
-              <input className="form-check-input" defaultChecked={true} type="radio" name="scenarioRadio" value="baseline" onClick={(e) => this.setScenario(e.target.value)}/>
-              <label className="form-check-label">
-                Baseline
-              </label>
-            </div>
-            <div className="form-check">
-              <input className="form-check-input" type="radio" name="scenarioRadio" value="high" onClick={(e) => this.setScenario(e.target.value)}/>
-              <label className="form-check-label">
-                High
-              </label>
-            </div>
+          <h4 className="h5">Scenario</h4>
+          <div className="form-check">
+            <input className="form-check-input" defaultChecked={true} type="radio" name="scenarioRadio" value="baseline" onClick={(e) => this.setScenario(e.target.value)}/>
+            <label className="form-check-label">
+              Baseline
+            </label>
+          </div>
+          <div className="form-check">
+            <input className="form-check-input" type="radio" name="scenarioRadio" value="high" onClick={(e) => this.setScenario(e.target.value)}/>
+            <label className="form-check-label">
+              High
+            </label>
+          </div>
 
-            <br/>
+          <br/>
 
-            <h4 className="h5">Flood Type</h4>
-            <div className="form-check">
-              <input className="form-check-input" defaultChecked={true} type="radio" name="floodtypeRadios" value="fluvial" onClick={(e) => this.setFloodType(e.target.value)}/>
-              <label className="form-check-label">
-                Fluvial
-              </label>
-            </div>
-            <div className="form-check">
-              <input className="form-check-input" type="radio" name="floodtypeRadios" value="pluvial" onClick={(e) => this.setFloodType(e.target.value)}/>
-              <label className="form-check-label">
-                Pluvial
-              </label>
-            </div>
-        </div>
+          <h4 className="h5">Flood Type</h4>
+          <div className="form-check">
+            <input className="form-check-input" defaultChecked={true} type="radio" name="floodtypeRadios" value="fluvial" onClick={(e) => this.setFloodType(e.target.value)}/>
+            <label className="form-check-label">
+              Fluvial
+            </label>
+          </div>
+          <div className="form-check">
+            <input className="form-check-input" type="radio" name="floodtypeRadios" value="pluvial" onClick={(e) => this.setFloodType(e.target.value)}/>
+            <label className="form-check-label">
+              Pluvial
+            </label>
+          </div>
 
-        <div className="custom-map-control top-right">
+          <br />
+
           <h4 className="h5">Flood Level</h4>
           <div className="form-check">
             <input className="form-check-input" defaultChecked={true} type="checkbox" value="_1m2m" onClick={(e) => this.setFloodLevel(e.target.value, e.target.checked)}/>

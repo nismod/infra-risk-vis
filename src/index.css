@@ -48,3 +48,20 @@
   bottom: 10px;
   right: 10px;
 }
+.custom-map-control .h5,
+.custom-map-control summary {
+  font-weight: bold;
+  font-size: 1rem;
+}
+.selected-feature {
+  overflow: scroll;
+  max-height: 80vh;
+  width: 20rem;
+}
+.selected-feature pre {
+  overflow: none;
+  white-space: pre;
+}
+.position-control {
+  font-size: 0.8rem;
+}

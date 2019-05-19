@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-
 import mapboxgl from 'mapbox-gl'
+
+import PositionControl from './PositionControl'
 
 class StaticMap extends React.Component {
 
@@ -134,10 +135,7 @@ class StaticMap extends React.Component {
         </div>
 
         <FeatureSidebar feature={this.state.selectedFeature} />
-
-        <div className="custom-map-control bottom-right">
-          <div>{`Longitude: ${lng.toFixed(2)} Latitude: ${lat.toFixed(2)} Zoom: ${zoom.toFixed(0)}`}</div>
-        </div>
+        <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />
       </Fragment>
     );
@@ -148,10 +146,39 @@ const FeatureSidebar = (props) => {
   if (!props.feature) {
     return null
   }
+  const f = props.feature.properties;
   return (
-    <div className="custom-map-control top-right">
-      <h4 className="h5">Selected Feature</h4>
-      {JSON.stringify(props.feature.properties)}
+    <div className="custom-map-control top-right selected-feature">
+      <h4 className="h5">Selected Asset</h4>
+      <dl>
+        <dt>ID</dt>
+        <dd>{f.node_id || f.edge_id}</dd>
+        <dt>Name</dt>
+        <dd>{f.name || f.road_name}</dd>
+        {
+          (f.max_total_tons)? (
+            <Fragment>
+              <dt>Max tons</dt>
+              <dd>{f.max_total_tons.toFixed(0)}</dd>
+            </Fragment>
+          ) : null
+        }
+        {
+          (f.passengers_2016)? (
+            <Fragment>
+              <dt>Passengers</dt>
+              <dd>{f.passengers_2016.toFixed(0)}</dd>
+            </Fragment>
+          ) : null
+        }
+
+      </dl>
+      <details>
+        <summary>More data</summary>
+        <pre>
+          {JSON.stringify(f, null, 2)}
+        </pre>
+      </details>
     </div>
   )
 }
