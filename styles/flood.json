@@ -34,17 +34,8 @@
       "source": "boundaries",
       "source-layer": "admin_0_boundaries",
       "paint": {
-        "fill-color": "#e0e0e0"
-      }
-    },
-    {
-      "id": "landuse-neighbour-borders",
-      "type": "line",
-      "source": "boundaries",
-      "source-layer": "admin_0_boundaries",
-      "paint": {
-        "line-color": "#ffffff",
-        "line-width": 2
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
       }
     },
     {
@@ -53,23 +44,12 @@
       "source": "boundaries",
       "source-layer": "admin_1_boundaries",
       "paint": {
-        "fill-color": "#d2d2d2"
-      },
-      "minzoom": 4
+        "fill-color": "#d2d2d2",
+        "fill-outline-color": "#ffffff"
+      }
     },
     {
-      "id": "landuse-borders",
-      "type": "line",
-      "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
-      "paint": {
-        "line-color": "#ffffff",
-        "line-width": 2
-      },
-      "minzoom": 4
-    },
-    {
-      "id": "water",
+      "id": "lakes",
       "type": "fill",
       "source": "boundaries",
       "source-layer": "physical_lakes",
@@ -78,28 +58,10 @@
       }
     },
     {
-      "id": "country_labels",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_0_labels",
-      "layout": {
-        "text-field": "{name}",
-        "symbol-placement": "point"
-      },
-      "filter": [
-        "all",
-        [
-          "!=",
-          "name",
-          "Argentina"
-        ]
-      ]
-    },
-    {
       "id": "flood_1m2m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "baseline_fluvial_1in500_1m2m",
+      "source-layer": "baseline_fluvial_1in1000_1m2m",
       "paint": {
         "fill-color": "#072f5f"
       }
@@ -108,7 +70,7 @@
       "id": "flood_2m3m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "baseline_fluvial_1in500_2m3m",
+      "source-layer": "baseline_fluvial_1in1000_2m3m",
       "paint": {
         "fill-color": "#1261a0"
       }
@@ -117,7 +79,7 @@
       "id": "flood_3m4m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "baseline_fluvial_1in500_3m4m",
+      "source-layer": "baseline_fluvial_1in1000_3m4m",
       "paint": {
         "fill-color": "#3895d3"
       }
@@ -126,29 +88,20 @@
       "id": "flood_4m999m",
       "type": "fill",
       "source": "flood",
-      "source-layer": "baseline_fluvial_1in500_4m999m",
+      "source-layer": "baseline_fluvial_1in1000_4m999m",
       "paint": {
         "fill-color": "#58cced"
       }
     },
     {
-      "id": "country_labels_argentina",
+      "id": "country_labels",
       "type": "symbol",
       "source": "boundaries",
       "source-layer": "admin_0_labels",
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{text}",
         "symbol-placement": "point"
-      },
-      "maxzoom": 4,
-      "filter": [
-        "all",
-        [
-          "==",
-          "name",
-          "Argentina"
-        ]
-      ]
+      }
     },
     {
       "id": "provinces_labels",
@@ -156,10 +109,9 @@
       "source": "boundaries",
       "source-layer": "admin_1_labels",
       "layout": {
-        "text-field": "{name}",
+        "text-field": "{text}",
         "symbol-placement": "point"
-      },
-      "minzoom": 4
+      }
     }
   ]
 }
