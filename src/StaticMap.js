@@ -134,7 +134,7 @@ class StaticMap extends React.Component {
             }
         </div>
 
-        <FeatureSidebar feature={this.state.selectedFeature} />
+        <FeatureSidebar feature={selectedFeature} />
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />
       </Fragment>
