@@ -156,10 +156,10 @@ const FeatureSidebar = (props) => {
         <dt>Name</dt>
         <dd>{f.name || f.road_name}</dd>
         {
-          (f.max_total_tons)? (
+          (f.max_total_tons && f.min_total_tons)? (
             <Fragment>
-              <dt>Max tons</dt>
-              <dd>{f.max_total_tons.toFixed(0)}</dd>
+              <dt>Freight flows (tons/day)</dt>
+              <dd>{f.min_total_tons.toFixed(0)}-{f.max_total_tons.toFixed(0)}</dd>
             </Fragment>
           ) : null
         }
