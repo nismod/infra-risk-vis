@@ -40,11 +40,15 @@ On Ubuntu it will usually be easiest to build from the source repository:
 
 ## Prepare data
 
-For Argentina (for example) download `boundaries`, `network` and `flood_data` from the OIA
+For Argentina (for example) download `boundaries`, `network` and `flood_data` `usage` `results` from the OIA
 shared folder `302 Argentina/D Work Processes/Argentina/data/`.
 
-Unzip within `/incoming_data` folder:
+Either link to the synced/downloaded data directories:
 
+    ln -s 'path/to/OneDrive/Argentina/results' incoming_data/results
+
+OR Unzip within `/incoming_data` folder:
+    
     unzip ~/Downloads/boundaries.zip -d incoming_data/
     unzip ~/Downloads/network.zip -d incoming_data/
 

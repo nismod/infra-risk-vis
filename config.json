@@ -35,6 +35,9 @@
       "air": {
         "mbtiles": "air_nodes.mbtiles"
       },
+      "bridges": {
+        "mbtiles": "bridges.mbtiles"
+      },
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
       },

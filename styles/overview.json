@@ -10,6 +10,8 @@
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
     "road": { "type": "vector", "url": "mbtiles://{road}" },
     "air": { "type": "vector", "url": "mbtiles://{air}" },
+    "rail": { "type": "vector", "url": "mbtiles://{rail}" },
+    "bridges": { "type": "vector", "url": "mbtiles://{bridges}" },
     "water": { "type": "vector", "url": "mbtiles://{water}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
@@ -89,6 +91,24 @@
       }
     },
     {
+      "id": "rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "rail_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width": {
+          "base": 0.1,
+          "stops": [[3, 0.01], [5, 0.1], [9, 1], [10, 2], [17, 6]]
+        }
+      }
+    },
+    {
       "id": "air",
       "type": "circle",
       "source": "air",
@@ -97,6 +117,19 @@
         "circle-color": "#000000",
         "circle-radius": {
           "base": 2,
+          "stops": [[11, 4], [17, 50]]
+        }
+      }
+    },
+    {
+      "id": "bridges",
+      "type": "circle",
+      "source": "bridges",
+      "source-layer": "bridges",
+      "paint": {
+        "circle-color": "#a50f15",
+        "circle-radius": {
+          "base": 5,
           "stops": [[11, 4], [17, 50]]
         }
       }

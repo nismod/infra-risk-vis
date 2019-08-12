@@ -46,7 +46,7 @@ def main():
     """Process results
     """
     data_path = os.path.join(os.path.dirname(__file__), '..', 'incoming_data')
-    results_path = os.path.join(os.path.dirname(__file__), '..', 'incoming_data')
+    results_path = os.path.join(os.path.dirname(__file__), '..', 'incoming_data','results')
     output_path = os.path.join(os.path.dirname(__file__), '..', 'intermediate_data')
 
     # Supply input data and parameters
@@ -81,6 +81,8 @@ def main():
                                 'options',
                                 'ini_adap_cost',
                                 'ini_adap_cost_per_km',
+                                'tot_maintenance_cost',
+                                'tot_maintenance_cost_per_km',
                                 'tot_adap_cost',
                                 'tot_adap_cost_per_km'],
                 },
@@ -176,6 +178,8 @@ def main():
                                 'options',
                                 'ini_adap_cost',
                                 'ini_adap_cost_per_km',
+                                'tot_maintenance_cost',
+                                'tot_maintenance_cost_per_km',
                                 'tot_adap_cost',
                                 'tot_adap_cost_per_km']
                 },
