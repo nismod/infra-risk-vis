@@ -164,10 +164,42 @@ const FeatureSidebar = (props) => {
           ) : null
         }
         {
-          (f.passengers_2016)? (
+          (f.passengers)? (
             <Fragment>
               <dt>Passengers</dt>
-              <dd>{f.passengers_2016.toFixed(0)}</dd>
+              <dd>{f.passengers.toFixed(0)}</dd>
+            </Fragment>
+          ) : null
+        }
+        {
+          (f.max_tr_loss && f.min_tr_loss)? (
+            <Fragment>
+              <dt>Rerouting loss (USD/day)</dt>
+              <dd>{f.min_tr_loss.toFixed(0)}-{f.max_tr_loss.toFixed(0)}</dd>
+            </Fragment>
+          ) : null
+        }
+        {
+          (f.max_econ_loss && f.min_econ_loss)? (
+            <Fragment>
+              <dt>Macroeconomic loss (USD/day)</dt>
+              <dd>{f.min_econ_loss.toFixed(0)}-{f.max_econ_loss.toFixed(0)}</dd>
+            </Fragment>
+          ) : null
+        }
+        {
+          (f.max_econ_impact && f.min_econ_impact)? (
+            <Fragment>
+              <dt>Total Economic impact (USD/day)</dt>
+              <dd>{f.min_econ_impact.toFixed(0)}-{f.max_econ_impact.toFixed(0)}</dd>
+            </Fragment>
+          ) : null
+        }
+        {
+          (f.max_econ_impact && f.min_econ_impact)? (
+            <Fragment>
+              <dt>Total Economic impact (USD/day)</dt>
+              <dd>{f.min_econ_impact.toFixed(0)}-{f.max_econ_impact.toFixed(0)}</dd>
             </Fragment>
           ) : null
         }
