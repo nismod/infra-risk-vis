@@ -1,23 +1,15 @@
 {
   "version": 8,
-  "name": "Flood",
-  "center": [
-    -64.405087,
-    -34.919628
-  ],
+  "name": "Roads",
+  "center": [-64.405087, -34.919628],
   "height": "600px",
   "zoom": 4,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": {
-      "type": "vector",
-      "url": "mbtiles://{boundaries}"
-    },
-    "flood": {
-      "type": "vector",
-      "url": "mbtiles://{flood}"
-    }
+    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "road": { "type": "vector", "url": "mbtiles://{road}" },
+    "bridges": { "type": "vector", "url": "mbtiles://{bridges}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -58,48 +50,41 @@
       }
     },
     {
-      "id": "flood_50cm1m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_50cm1m",
+      "id": "road",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
-        "fill-color": "#ffffff"
+        "line-color": [
+          "match",
+          ["get", "road_type"],
+          "national", "#ba0f03",
+          "province", "#e0881f",
+          "rural", "#1f99e0",
+          "#fff"
+        ],
+        "line-width": {
+          "base": 0.1,
+          "stops": [[3, 0.01], [5, 0.1], [9, 1], [10, 2], [17, 6]]
+        }
       }
     },
     {
-      "id": "flood_1m2m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_1m2m",
+      "id": "bridges",
+      "type": "circle",
+      "source": "bridges",
+      "source-layer": "bridges",
       "paint": {
-        "fill-color": "#58cced"
-      }
-    },
-    {
-      "id": "flood_2m3m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_2m3m",
-      "paint": {
-        "fill-color": "#3895d3"
-      }
-    },
-    {
-      "id": "flood_3m4m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_3m4m",
-      "paint": {
-        "fill-color": "#1261a0"
-      }
-    },
-    {
-      "id": "flood_4m999m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_4m999m",
-      "paint": {
-        "fill-color": "#072f5f"
+        "circle-color": "#a50f15",
+        "circle-radius": {
+          "base": 5,
+          "stops": [[11, 4], [17, 50]]
+        }
       }
     },
     {

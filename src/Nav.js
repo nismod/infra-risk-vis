@@ -8,14 +8,29 @@ const Nav = () => (
     </NavLink>
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
-        <NavLink className="nav-link" to='/overview'>
+        <a className="nav-link" href='/overview'>
           Overview
-        </NavLink>
+        </a>
       </li>
       <li className="nav-item">
-        <NavLink className="nav-link" to='/flood'>
+        <a className="nav-link" href='/roads'>
+          Roads
+        </a>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link" href='/rail'>
+          Railways
+        </a>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link" href='/airwater'>
+          Airports and Waterway ports
+        </a>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link" href='/flood'>
           Flood
-        </NavLink>
+        </a>
       </li>
     </ul>
   </nav>

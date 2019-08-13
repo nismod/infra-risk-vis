@@ -38,7 +38,7 @@
 }
 .custom-map-control.top-right {
   top: 10px;
-  right: 10px;
+  right: 50px;
 }
 .custom-map-control.bottom-left {
   bottom: 10px;
@@ -55,8 +55,8 @@
 }
 .selected-feature {
   overflow: scroll;
-  max-height: 80vh;
-  width: 20rem;
+  max-height: 85vh;
+  width: 40rem;
 }
 .selected-feature pre {
   overflow: visible;

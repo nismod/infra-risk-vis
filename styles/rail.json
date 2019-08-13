@@ -1,23 +1,14 @@
 {
   "version": 8,
-  "name": "Flood",
-  "center": [
-    -64.405087,
-    -34.919628
-  ],
+  "name": "Overview",
+  "center": [-64.405087, -34.919628],
   "height": "600px",
   "zoom": 4,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": {
-      "type": "vector",
-      "url": "mbtiles://{boundaries}"
-    },
-    "flood": {
-      "type": "vector",
-      "url": "mbtiles://{flood}"
-    }
+    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "rail": { "type": "vector", "url": "mbtiles://{rail}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -58,50 +49,24 @@
       }
     },
     {
-      "id": "flood_50cm1m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_50cm1m",
+      "id": "rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "rail_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
-        "fill-color": "#ffffff"
+        "line-color":"#006d2c",
+        "line-width": {
+          "base": 0.1,
+          "stops": [[3, 0.01], [5, 0.1], [9, 1], [10, 2], [17, 6]]
+        }
       }
     },
-    {
-      "id": "flood_1m2m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_1m2m",
-      "paint": {
-        "fill-color": "#58cced"
-      }
-    },
-    {
-      "id": "flood_2m3m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_2m3m",
-      "paint": {
-        "fill-color": "#3895d3"
-      }
-    },
-    {
-      "id": "flood_3m4m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_3m4m",
-      "paint": {
-        "fill-color": "#1261a0"
-      }
-    },
-    {
-      "id": "flood_4m999m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_4m999m",
-      "paint": {
-        "fill-color": "#072f5f"
-      }
-    },
+    
     {
       "id": "country_labels",
       "type": "symbol",

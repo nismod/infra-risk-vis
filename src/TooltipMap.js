@@ -18,6 +18,7 @@ class TooltipMap extends React.Component {
       scenario: 'baseline',
       floodtype: 'fluvial',
       floodlevel: {
+        _50cm1m: true,
         _1m2m: true,
         _2m3m: true,
         _3m4m: true,
@@ -56,12 +57,13 @@ class TooltipMap extends React.Component {
 
   setMap(scenario, floodtype, floodlevel) {
 
-    var flood_layers = ['1m2m', '2m3m', '3m4m', '4m999m']
+    var flood_layers = ['50cm1m', '1m2m', '2m3m', '3m4m', '4m999m']
     var flood_layer_colors = {
       '4m999m': "#072f5f",
       '3m4m': "#1261a0",
       '2m3m': "#3895d3",
-      '1m2m': "#58cced"
+      '1m2m': "#58cced",
+      '50cm1m': "#ffffff"
     }
 
     for (var i in flood_layers) {
@@ -109,6 +111,10 @@ class TooltipMap extends React.Component {
       maxZoom: 12
     });
 
+    // add zoom contrtol
+    var nav = new mapboxgl.NavigationControl();
+    this.map.addControl(nav, 'top-right');
+
     const tooltip = new mapboxgl.Marker(this.tooltipContainer, {
       offset: [-120, 0]
     }).setLngLat([0,0]).addTo(this.map);
@@ -147,6 +153,12 @@ class TooltipMap extends React.Component {
             </label>
           </div>
           <div className="form-check">
+            <input className="form-check-input" type="radio" name="scenarioRadio" value="med" onClick={(e) => this.setScenario(e.target.value)}/>
+            <label className="form-check-label">
+              Med
+            </label>
+          </div>
+          <div className="form-check">
             <input className="form-check-input" type="radio" name="scenarioRadio" value="high" onClick={(e) => this.setScenario(e.target.value)}/>
             <label className="form-check-label">
               High
@@ -172,6 +184,12 @@ class TooltipMap extends React.Component {
           <br />
 
           <h4 className="h5">Flood Level</h4>
+          <div className="form-check">
+            <input className="form-check-input" defaultChecked={true} type="checkbox" value="_50cm1m" onClick={(e) => this.setFloodLevel(e.target.value, e.target.checked)}/>
+            <label className="form-check-label">
+              50cm-1m
+            </label>
+          </div>
           <div className="form-check">
             <input className="form-check-input" defaultChecked={true} type="checkbox" value="_1m2m" onClick={(e) => this.setFloodLevel(e.target.value, e.target.checked)}/>
             <label className="form-check-label">
@@ -200,6 +218,18 @@ class TooltipMap extends React.Component {
 
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />
+
+        <div className="custom-map-control top-right selected-feature">
+          <h4 className="h5">Flood Climate Outlooks - Explanation</h4>
+          <dl>
+            <dt>Baseline</dt>
+            <dd>{"The estimated flooded depths and areas informed by the 1986-2005 baseline precipitation given by historical rainfall records."}</dd>
+            <dt>Future Median</dt>
+            <dd>{"The estimated flooded depths and areas by 2050 informed by the median value of 5-day maximum precipitation change with respect to the 1986-2005 baseline precipitation, which was approximately +6%, recorded across 32 GCM's and across RCP 4.5 and RCP 8.5 climate emission scenarios."}</dd>
+            <dt>Future High</dt>
+            <dd>{"The estimated flooded depths and areas by 2050 informed by 90th percentile value of 5-day maximum precipitation changes with respect to the 1986-2005 baseline precipitation, which was approximately +12%, recorded across 32 GCM's  and across RCP 4.5 and RCP 8.5 climate emission scenarios."}</dd>
+          </dl>
+        </div>
       </Fragment>
     );
   }
