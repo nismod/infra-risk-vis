@@ -22,8 +22,9 @@ flood: ./data/flood.mbtiles
 ./data/air_nodes.mbtiles: ./intermediate_data/air_nodes.json ./intermediate_data/air_nodes.json
 	rm -f ./data/air_nodes.mbtiles
 	tippecanoe \
+		-zg \
+		-r0 \
 		--no-feature-limit \
-		--no-line-simplification \
 		--no-tile-size-limit \
 		-o ./data/air_nodes.mbtiles \
 		./intermediate_data/air_nodes.json
@@ -107,6 +108,10 @@ flood: ./data/flood.mbtiles
 ./data/port_nodes.mbtiles: ./intermediate_data/port_nodes.json ./intermediate_data/port_nodes.json
 	rm -f ./data/port_nodes.mbtiles
 	tippecanoe \
+		-zg \
+		-r0 \
+		--no-feature-limit \
+		--no-tile-size-limit \
 		-o ./data/port_nodes.mbtiles \
 		./intermediate_data/port_nodes.json
 
