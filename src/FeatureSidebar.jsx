@@ -182,7 +182,7 @@ const FeatureSidebar = (props) => {
                     {
                       hazard_types.map((hazard) => {
                         return scenarios.map((scenario) => {
-                          return (<tr>
+                          return (<tr key={scenario + hazard}>
                             <td>{titleCase(hazard.replace("_flooding", ""))}</td>
                             <td>{titleCase(scenario.replace("_"," "))}</td>
                             {
@@ -192,18 +192,18 @@ const FeatureSidebar = (props) => {
                                   && f[hazard + "_" + scenario + "_max_" + hazard_var]
                                 ){
                                   if (hazard_var === "probability") {
-                                    return (<td>{
+                                    return (<td key={hazard_var}>{
                                       `1/${(1 / f[hazard + "_" + scenario + "_max_" + hazard_var]).toFixed(0)}`
                                     }</td>)
                                   } else {
-                                    return (<td>{
+                                    return (<td key={hazard_var}>{
                                       commas(f[hazard + "_" + scenario + "_min_" + hazard_var].toFixed(1))
                                     }-{
                                       commas(f[hazard + "_" + scenario + "_max_" + hazard_var].toFixed(1))
                                     }</td>)
                                   }
                                 } else {
-                                    return (<td>-</td>)
+                                    return (<td key={hazard_var}>-</td>)
                                 }
                               })
                             }
@@ -274,23 +274,23 @@ const FeatureSidebar = (props) => {
                   <tbody>
                     {
                       scenarios.map((scenario) => {
-                        return (<tr>
+                        return (<tr key={scenario}>
                           <td>{titleCase(scenario.replace("_"," "))}</td>
                           {
                             risk_vars.map((risk_var) => {
                               if (risk_var === "ead" && f[scenario + "_" + risk_var]) {
-                                return (<td>{
+                                return (<td key={risk_var}>{
                                   commas(f[scenario + "_" + risk_var].toFixed(0))
                                 }</td>)
                               } else if (f[scenario + "_min_" + risk_var] && f[scenario + "_max_" + risk_var]) {
 
-                                return (<td>{
+                                return (<td key={risk_var}>{
                                   commas(f[scenario + "_min_" + risk_var].toFixed(0))
                                 }-{
                                   commas(f[scenario + "_max_" + risk_var].toFixed(0))
                                 }</td>)
                               } else {
-                                return (<td>-</td>)
+                                return (<td key={risk_var}>-</td>)
                               }
                             })
                           }
@@ -322,16 +322,16 @@ const FeatureSidebar = (props) => {
                   <tbody>
                     {
                       scenarios.map((scenario) => {
-                        return (<tr>
+                        return (<tr key={scenario}>
                           <td>{titleCase(scenario.replace("_"," "))}</td>
                           {
                             adapt_vars.map((adapt_var) => {
                               if (f[scenario + "_" + adapt_var]) {
-                                return (<td>{
+                                return (<td key={adapt_var}>{
                                   commas(f[scenario + "_" + adapt_var].toFixed(0))
                                 }</td>)
                               } else {
-                                return (<td>-</td>)
+                                return (<td key={adapt_var}>-</td>)
                               }
                             })
                           }
@@ -363,16 +363,16 @@ const FeatureSidebar = (props) => {
                   <tbody>
                     {
                       scenarios.map((scenario) => {
-                        return (<tr>
+                        return (<tr key={scenario}>
                           <td>{titleCase(scenario.replace("_"," "))}</td>
                           {
                             adapt_vars_perkm.map((adapt_var_perkm) => {
                               if (f[scenario + "_" + adapt_var_perkm]) {
-                                return (<td>{
+                                return (<td key={adapt_var_perkm}>{
                                   commas(f[scenario + "_" + adapt_var_perkm].toFixed(0))
                                 }</td>)
                               } else {
-                                return (<td>-</td>)
+                                return (<td key={adapt_var_perkm}>-</td>)
                               }
                             })
                           }
