@@ -79,6 +79,10 @@ flood: ./data/flood.mbtiles
 ./data/bridges.mbtiles: ./intermediate_data/bridges.json ./intermediate_data/bridges.json
 	rm -f ./data/bridges.mbtiles
 	tippecanoe \
+		-zg \
+		-r0 \
+		--no-feature-limit \
+		--no-tile-size-limit \
 		-o ./data/bridges.mbtiles \
 		./intermediate_data/bridges.json
 

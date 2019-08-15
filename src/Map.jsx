@@ -186,19 +186,33 @@ class Map extends React.Component {
             "type":"geojson",
             "data": feature.toJSON()
         });
-        this.map.addLayer({
-            "id": "featureHighlight",
-            "type": "line",
-            "source": "featureHighlight",
-            "layout": {
+
+        if (feature.layer.type === 'line') {
+          this.map.addLayer({
+              "id": "featureHighlight",
+              "type": "line",
+              "source": "featureHighlight",
+              "layout": {
                 "line-join": "round",
                 "line-cap": "round"
-            },
-            "paint": {
+              },
+              "paint": {
                 "line-color": "yellow",
                 "line-width": 8
+              }
+          });
+        }
+        if (feature.layer.type === 'circle') {
+          this.map.addLayer({
+            "id": "featureHighlight",
+            "type": "circle",
+            "source": "featureHighlight",
+            "paint": {
+              "circle-color": "yellow",
+              "circle-radius": 10
             }
         });
+        }
       }
 
       this.setState({

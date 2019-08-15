@@ -126,10 +126,10 @@
       "source": "bridges",
       "source-layer": "bridges",
       "paint": {
-        "circle-color": "#a50f15",
+        "circle-color": "#a00a09",
         "circle-radius": {
-          "base": 5,
-          "stops": [[11, 4], [17, 50]]
+          "base": 0.4,
+          "stops": [[3, 0.04], [5, 0.4], [9, 4], [10, 8], [17, 16]]
         }
       }
     },
