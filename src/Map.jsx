@@ -26,7 +26,8 @@ class Map extends React.Component {
         _2m3m: true,
         _3m4m: true,
         _4m999m: true
-      }
+      },
+      showFloodHelp: false
     }
     this.map = undefined
     this.tooltipContainer = undefined
@@ -36,6 +37,7 @@ class Map extends React.Component {
     this.setFloodType = this.setFloodType.bind(this)
     this.setFloodLevel = this.setFloodLevel.bind(this)
     this.setMap = this.setMap.bind(this)
+    this.toggleFloodHelp = this.toggleFloodHelp.bind(this)
   }
 
   setScenario(scenario) {
@@ -100,6 +102,12 @@ class Map extends React.Component {
       React.createElement(Tooltip, {features: features}),
       this.tooltipContainer
     );
+  }
+
+  toggleFloodHelp() {
+    this.setState({
+      showFloodHelp: !this.state.showFloodHelp
+    })
   }
 
   componentDidMount() {
@@ -226,17 +234,22 @@ class Map extends React.Component {
           }
           {
             (this.props.tooltipLayerSources.includes('flood'))?
-              <FloodControl
-                setScenario={this.setScenario}
-                setFloodType={this.setFloodType}
-                setFloodLevel={this.setFloodLevel}
-                />
+              <Fragment>
+                <FloodControl
+                  setScenario={this.setScenario}
+                  setFloodType={this.setFloodType}
+                  setFloodLevel={this.setFloodLevel}
+                  />
+                <a href="#flood-help" onClick={this.toggleFloodHelp}>
+                { (this.state.showFloodHelp)? 'Hide info' : 'More info' }
+                </a>
+              </Fragment>
             : null
           }
         </div>
 
         <FeatureSidebar feature={selectedFeature} />
-        { (false)? <FloodHelp /> : null }
+        { (this.state.showFloodHelp)? <FloodHelp /> : null }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />
       </Fragment>
