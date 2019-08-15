@@ -53,6 +53,9 @@
   font-weight: bold;
   font-size: 1rem;
 }
+.custom-map-control .h5 {
+  margin: 0.75rem 0 0.25rem;
+}
 .selected-feature {
   overflow: scroll;
   max-height: 85vh;
@@ -64,4 +67,44 @@
 }
 .position-control {
   font-size: 0.8rem;
+}
+
+.tooltip-wrap {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  position: absolute;
+  bottom: 0;
+}
+.tooltip-body {
+  display: block;
+  width: 240px;
+  max-width: 100%;
+  padding: 12px;
+  background-color: #273d56;
+  border-radius: 4px;
+  box-shadow: 0 0 10px 2px rgba(31, 51, 73, 0.10);
+
+  color: #fff;
+  font-size: 12px;
+  line-height: 18px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.tooltip-triangle {
+  display: block;
+  max-width: 100%;
+  width: 12px;
+  height: 12px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 9px solid currentColor;
+  font-size: 0;
+  line-height: 0;
+  color: #273d56;
 }

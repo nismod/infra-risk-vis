@@ -15,4 +15,8 @@ function titleCase(str) {
  return splitStr.join(' ');
 }
 
-export { commas, titleCase }
+function unique(arr) {
+  return Array.from(new Set(arr))
+}
+
+export { commas, titleCase, unique }

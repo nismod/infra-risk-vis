@@ -8,6 +8,7 @@ import Tooltip from './Tooltip'
 import FeatureSidebar from './FeatureSidebar'
 import FloodHelp from './FloodHelp'
 import FloodControl from './FloodControl'
+import NetworkControl from './NetworkControl';
 
 class Map extends React.Component {
   constructor(props) {
@@ -144,7 +145,7 @@ class Map extends React.Component {
       )
 
       const tooltipFeatures = features.filter(
-        f => f.source === 'flood'
+        f => this.props.tooltipLayerSources.includes(f.source)
       )
 
       this.map.getCanvas().style.cursor = (
@@ -214,29 +215,28 @@ class Map extends React.Component {
     return (
       <Fragment>
         <div className="custom-map-control top-left">
-            <h4 className="h5">Layers</h4>
-            {
-              dataLayers.map(layer_data => {
-                const layer = layer_data.key;
-                const label = layer_data.label
-                return (
-                  <div className="form-check" key={'toggleLayer' + layer} >
-                    <input className="form-check-input"
-                      type="checkbox"
-                      data-layer={layer}
-                      defaultChecked={true}
-                      id={'toggleLayerCheckbox' + layer}
-                      onClick={this.onLayerVisChange}/>
-                    <label className="form-check-label" htmlFor={'toggleLayerCheckbox' + layer}>
-                      {label}
-                    </label>
-                  </div>
-                )
-              })
-            }
+          <h3 className="h4">Select layers</h3>
+          {
+            (dataLayers.length)?
+              <NetworkControl
+                onLayerVisChange={this.onLayerVisChange}
+                dataLayers={dataLayers}
+              />
+            : null
+          }
+          {
+            (this.props.tooltipLayerSources.includes('flood'))?
+              <FloodControl
+                setScenario={this.setScenario}
+                setFloodType={this.setFloodType}
+                setFloodLevel={this.setFloodLevel}
+                />
+            : null
+          }
         </div>
 
         <FeatureSidebar feature={selectedFeature} />
+        { (false)? <FloodHelp /> : null }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />
       </Fragment>

@@ -25,6 +25,7 @@ const App = () => (
               {key:'air', label: 'Airports'},
               {key:'water', label: 'Water'}
             ]}
+            tooltipLayerSources={['road','bridges','rail', 'air', 'water']}
             />
         </Route>
         <Route path="/roads">
@@ -35,6 +36,7 @@ const App = () => (
               {key:'road', label: 'Roads'},
               {key:'bridges', label: 'National-roads bridges'}
             ]}
+            tooltipLayerSources={['flood']}
             />
         </Route>
         <Route path="/rail">
@@ -44,6 +46,7 @@ const App = () => (
             dataLayers={[
               {key:'rail', label: 'Railways'}
             ]}
+            tooltipLayerSources={['flood']}
             />
         </Route>
         <Route path="/airwater">
@@ -54,12 +57,16 @@ const App = () => (
               {key:'air', label: 'Airports'},
               {key:'water', label: 'Water'}
             ]}
+            tooltipLayerSources={['flood']}
             />
         </Route>
         <Route path="/flood">
           <Map
             map_style={"http://localhost:8080/styles/flood/style.json"}
-            tooltipLayerSources={['flood']}/>
+            dataSources={[]}
+            dataLayers={[]}
+            tooltipLayerSources={['flood']}
+            />
         </Route>
         <Route path="/">
           <div className="jumbotron welcome-float">
