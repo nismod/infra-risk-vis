@@ -12,7 +12,8 @@
     "air": { "type": "vector", "url": "mbtiles://{air}" },
     "rail": { "type": "vector", "url": "mbtiles://{rail}" },
     "bridges": { "type": "vector", "url": "mbtiles://{bridges}" },
-    "water": { "type": "vector", "url": "mbtiles://{water}" }
+    "water": { "type": "vector", "url": "mbtiles://{water}" },
+    "flood": { "type": "vector", "url": "mbtiles://{flood}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -85,8 +86,8 @@
           "#fff"
         ],
         "line-width": {
-          "base": 0.1,
-          "stops": [[3, 0.01], [5, 0.1], [9, 1], [10, 2], [17, 6]]
+          "base": 0.2,
+          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
         }
       }
     },
@@ -103,8 +104,8 @@
       "paint": {
         "line-color":"#006d2c",
         "line-width": {
-          "base": 0.1,
-          "stops": [[3, 0.01], [5, 0.1], [9, 1], [10, 2], [17, 6]]
+          "base": 0.2,
+          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
         }
       }
     },

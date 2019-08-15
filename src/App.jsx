@@ -36,7 +36,7 @@ const App = () => (
               {key:'road', label: 'Roads'},
               {key:'bridges', label: 'National-roads bridges'}
             ]}
-            tooltipLayerSources={['flood']}
+            tooltipLayerSources={['road','bridges','flood']}
             />
         </Route>
         <Route path="/rail">
@@ -46,7 +46,7 @@ const App = () => (
             dataLayers={[
               {key:'rail', label: 'Railways'}
             ]}
-            tooltipLayerSources={['flood']}
+            tooltipLayerSources={['rail','flood']}
             />
         </Route>
         <Route path="/airwater">
@@ -57,7 +57,7 @@ const App = () => (
               {key:'air', label: 'Airports'},
               {key:'water', label: 'Water'}
             ]}
-            tooltipLayerSources={['flood']}
+            tooltipLayerSources={['air','water','flood']}
             />
         </Route>
         <Route path="/flood">

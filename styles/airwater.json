@@ -9,7 +9,8 @@
   "sources": {
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
     "air": { "type": "vector", "url": "mbtiles://{air}" },
-    "water": { "type": "vector", "url": "mbtiles://{water}" }
+    "water": { "type": "vector", "url": "mbtiles://{water}" },
+    "flood": { "type": "vector", "url": "mbtiles://{flood}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -47,6 +48,51 @@
       "source-layer": "physical_lakes",
       "paint": {
         "fill-color": "#c6e1ff"
+      }
+    },
+    {
+      "id": "flood_50cm1m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_50cm1m",
+      "paint": {
+        "fill-color": "#ffffff"
+      }
+    },
+    {
+      "id": "flood_1m2m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_1m2m",
+      "paint": {
+        "fill-color": "#58cced"
+      }
+    },
+    {
+      "id": "flood_2m3m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_2m3m",
+      "paint": {
+        "fill-color": "#3895d3"
+      }
+    },
+    {
+      "id": "flood_3m4m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_3m4m",
+      "paint": {
+        "fill-color": "#1261a0"
+      }
+    },
+    {
+      "id": "flood_4m999m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_4m999m",
+      "paint": {
+        "fill-color": "#072f5f"
       }
     },
     {

@@ -10,14 +10,8 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": {
-      "type": "vector",
-      "url": "mbtiles://{boundaries}"
-    },
-    "flood": {
-      "type": "vector",
-      "url": "mbtiles://{flood}"
-    }
+    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "flood": { "type": "vector", "url": "mbtiles://{flood}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
