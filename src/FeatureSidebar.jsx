@@ -386,8 +386,143 @@ const FeatureSidebar = (props) => {
           </details>
         : null
       }
+      {
+        (f.baseline_ini_adap_cost || f.future_med_ini_adap_cost || f.future_high_ini_adap_cost)?
+          <details>
+            <summary>Benefit-cost ratio estimates</summary>
+            <BCRWidget feature={f} scenarios={scenarios} />
+          </details>
+          : null
+      }
     </div>
   )
+}
+
+class BCRWidget extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      duration: 10,
+      growth_rate_percentage: 1
+    }
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  render() {
+    const f = this.props.feature;
+    const duration = this.state.duration;
+    const growth_rate = this.state.growth_rate_percentage / 100;
+
+    return <form>
+      <div className="form-group">
+        <label for="duration">Duration of disruption (days)</label>
+        <input
+          id="duration"
+          name="duration"
+          onChange={this.handleChange}
+          className="form-control"
+          type="range"
+          value={this.state.duration}
+          min={10}
+          max={100}
+          step={10}
+          />
+        <span>{this.state.duration}</span>
+      </div>
+      <div className="form-group">
+        <label for="growth_rate_percentage">Growth Rate (%)</label>
+        <input
+          id="growth_rate_percentage"
+          name="growth_rate_percentage"
+          onChange={this.handleChange}
+          className="form-control"
+          type="range"
+          value={this.state.growth_rate_percentage}
+          min={-2}
+          max={4}
+          step={0.2}
+          />
+        <span>{this.state.growth_rate_percentage}</span>
+      </div>
+      {
+        this.props.scenarios.map(scenario => {
+          // data from asset
+          const ead = f[`${scenario}_ead`];
+          const min_eael_per_day = f[`${scenario}_min_eael_per_day`];
+          const max_eael_per_day = f[`${scenario}_max_eael_per_day`];
+          const tot_adap_cost = f[`${scenario}_tot_adap_cost`];
+
+          const data = calculateAdaption(
+            ead, min_eael_per_day, max_eael_per_day, tot_adap_cost, duration, growth_rate)
+
+          return <p>{JSON.stringify(data)}</p>
+        })
+      }
+    </form>
+  }
+}
+
+/**
+ * Calculate min/max adaptation benefits (as avoided damages and macroeconomic losses) and bcr,
+ * given hazard duration and economic growth rate assumptions.
+ *
+ * @param {number} ead from asset - expected annual damages
+ * @param {number} min_eael_per_day from asset - min expected annual losses per day
+ * @param {number} max_eael_per_day from asset - max expected annual losses per day
+ * @param {number} tot_adap_cost from asset - total adaptation cost
+ * @param {number} duration as integer number of days
+ * @param {number} growth_rate as rate between 0 and 1 (typically presented as percentage)
+ */
+function calculateAdaption(ead, min_eael_per_day, max_eael_per_day, tot_adap_cost, duration, growth_rate) {
+  // See atra.adaptation_options.calculate_discounting_arrays() at
+  // https://github.com/oi-analytics/argentina-transport/blob/master/src/atra/adaptation_options.py
+  // for reference.
+
+  // fix parameters
+  const discount_rate = 0.12;
+  const start_year = 2016;
+  const end_year = 2050;
+
+  const years_from_start = Array.from(
+    Array(end_year - start_year).keys()
+  )
+
+  const discount_rate_norms = years_from_start.map(
+    year => 1.0 / Math.pow(1.0 + discount_rate, year)
+  )
+  const discount_rate_norm = discount_rate_norms.reduce((a, b) => a + b, 0)
+
+  const discount_rate_growths = years_from_start.map(
+    year => Math.pow(1.0 + growth_rate, year) /
+            Math.pow(1.0 + discount_rate, year)
+  )
+  const discount_rate_growth = discount_rate_growths.reduce((a, b) => a + b, 0)
+
+  console.log(years_from_start)
+  console.log(discount_rate_norms, discount_rate_norm)
+  console.log(discount_rate_growths, discount_rate_growth)
+
+  // for variable growth_rate and duration we want to estimate min/max benefit and bcr
+  const min_benefit = benefit(discount_rate_norm, ead, duration, discount_rate_growth, min_eael_per_day)
+  const max_benefit = benefit(discount_rate_norm, ead, duration, discount_rate_growth, max_eael_per_day)
+  const min_bcr = bcr(min_benefit, tot_adap_cost)
+  const max_bcr = bcr(max_benefit, tot_adap_cost)
+
+  return { min_benefit, min_bcr, max_benefit, max_bcr }
+}
+
+function benefit(discount_rate_norm, ead, duration, discount_rate_growth, eael_per_day){
+  return (discount_rate_norm * ead) + (duration * discount_rate_growth * eael_per_day)
+}
+
+function bcr(benefit, tot_adap_cost){
+  return benefit / tot_adap_cost;
 }
 
 export default FeatureSidebar;

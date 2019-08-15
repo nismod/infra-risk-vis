@@ -8,11 +8,6 @@ const Nav = () => (
     </NavLink>
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
-        <a className="nav-link" href='/overview'>
-          Overview
-        </a>
-      </li>
-      <li className="nav-item">
         <a className="nav-link" href='/roads'>
           Roads
         </a>
