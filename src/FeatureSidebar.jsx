@@ -432,7 +432,20 @@ class BCRWidget extends React.Component {
           min={10}
           max={100}
           step={10}
+          list="duration_ticks"
           />
+        <datalist id="duration_ticks">
+          <option value="10" label="10" />
+          <option value="20" label="20" />
+          <option value="30" label="30" />
+          <option value="40" label="40" />
+          <option value="50" label="50" />
+          <option value="60" label="60" />
+          <option value="70" label="70" />
+          <option value="80" label="80" />
+          <option value="90" label="90" />
+          <option value="100" label="100" />
+        </datalist>
         <span>{this.state.duration}</span>
       </div>
       <div className="form-group">
@@ -447,8 +460,18 @@ class BCRWidget extends React.Component {
           min={-2}
           max={4}
           step={0.2}
+          list="growth_rate_percentage_ticks"
           />
-        <span>{this.state.growth_rate_percentage}</span>
+        <datalist id="growth_rate_percentage_ticks">
+          <option value="-2" label="-2%" />
+          <option value="-1" />
+          <option value="0" label="0%" />
+          <option value="1" />
+          <option value="2" label="2%" />
+          <option value="3" />
+          <option value="4" label="4%" />
+        </datalist>
+        <span>{this.state.growth_rate_percentage.toFixed(1)}</span>
       </div>
       <table className="table">
         <thead>
