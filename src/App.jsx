@@ -70,13 +70,16 @@ const App = () => (
         </Route>
         <Route path="/adaptation">
           <Map
+            zoom={6}
+            lng={-61.5}
+            lat={-34.6}
             map_style={"http://localhost:8080/styles/adaptation/style.json"}
             dataSources={['road','bridges']}
             dataLayers={[
               {key:'road', label: 'Roads'},
               {key:'bridges', label: 'National-roads bridges'}
             ]}
-            tooltipLayerSources={['road','bridges','flood']}
+            tooltipLayerSources={['road','bridges']}
             />
         </Route>
         <Route path="/">
