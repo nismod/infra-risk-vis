@@ -132,7 +132,7 @@ const FeatureSidebar = (props) => {
             (f.min_speed && f.max_speed)? (
               <Fragment>
                 <dt>Speeds (km/hr)</dt>
-                <dd>{f.min_speed.toFixed(0)}-{f.max_speed.toFixed(0)}</dd>
+                <dd>{f.min_speed.toFixed(0)} – {f.max_speed.toFixed(0)}</dd>
               </Fragment>
             ) : null
           }
@@ -140,7 +140,7 @@ const FeatureSidebar = (props) => {
             (f.max_total_tons && f.min_total_tons)? (
               <Fragment>
                 <dt>Freight flows (tons/day)</dt>
-                <dd>{commas(f.min_total_tons.toFixed(0))}-{commas(f.max_total_tons.toFixed(0))}</dd>
+                <dd>{commas(f.min_total_tons.toFixed(0))} – {commas(f.max_total_tons.toFixed(0))}</dd>
               </Fragment>
             ) : null
           }
@@ -198,7 +198,7 @@ const FeatureSidebar = (props) => {
                                   } else {
                                     return (<td key={hazard_var}>{
                                       commas(f[hazard + "_" + scenario + "_min_" + hazard_var].toFixed(1))
-                                    }-{
+                                    } – {
                                       commas(f[hazard + "_" + scenario + "_max_" + hazard_var].toFixed(1))
                                     }</td>)
                                   }
@@ -233,7 +233,7 @@ const FeatureSidebar = (props) => {
                 (f.max_tr_loss && f.min_tr_loss)? (
                   <Fragment>
                     <dt>Rerouting loss (USD/day)</dt>
-                    <dd>{commas(f.min_tr_loss.toFixed(0))}-{commas(f.max_tr_loss.toFixed(0))}</dd>
+                    <dd>{commas(f.min_tr_loss.toFixed(0))} – {commas(f.max_tr_loss.toFixed(0))}</dd>
                   </Fragment>
                 ) : null
               }
@@ -241,7 +241,7 @@ const FeatureSidebar = (props) => {
                 (f.max_econ_loss && f.min_econ_loss)? (
                   <Fragment>
                     <dt>Macroeconomic loss (USD/day)</dt>
-                    <dd>{commas(f.min_econ_loss.toFixed(0))}-{commas(f.max_econ_loss.toFixed(0))}</dd>
+                    <dd>{commas(f.min_econ_loss.toFixed(0))} – {commas(f.max_econ_loss.toFixed(0))}</dd>
                   </Fragment>
                 ) : null
               }
@@ -249,7 +249,7 @@ const FeatureSidebar = (props) => {
                 (f.max_econ_impact && f.min_econ_impact)? (
                   <Fragment>
                     <dt>Total Economic impact (USD/day)</dt>
-                    <dd>{commas(f.min_econ_impact.toFixed(0))}-{commas(f.max_econ_impact.toFixed(0))}</dd>
+                    <dd>{commas(f.min_econ_impact.toFixed(0))} – {commas(f.max_econ_impact.toFixed(0))}</dd>
                   </Fragment>
                 ) : null
               }
@@ -286,7 +286,7 @@ const FeatureSidebar = (props) => {
 
                                 return (<td key={risk_var}>{
                                   commas(f[scenario + "_min_" + risk_var].toFixed(0))
-                                }-{
+                                } – {
                                   commas(f[scenario + "_max_" + risk_var].toFixed(0))
                                 }</td>)
                               } else {
@@ -450,20 +450,41 @@ class BCRWidget extends React.Component {
           />
         <span>{this.state.growth_rate_percentage}</span>
       </div>
-      {
-        this.props.scenarios.map(scenario => {
-          // data from asset
-          const ead = f[`${scenario}_ead`];
-          const min_eael_per_day = f[`${scenario}_min_eael_per_day`];
-          const max_eael_per_day = f[`${scenario}_max_eael_per_day`];
-          const tot_adap_cost = f[`${scenario}_tot_adap_cost`];
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Cost</th>
+            <th>Benefit</th>
+            <th>Benefit-Cost Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+        {
+          this.props.scenarios.map(scenario => {
+            // data from asset
+            const ead = f[`${scenario}_ead`];
+            const min_eael_per_day = f[`${scenario}_min_eael_per_day`];
+            const max_eael_per_day = f[`${scenario}_max_eael_per_day`];
+            const tot_adap_cost = f[`${scenario}_tot_adap_cost`];
 
-          const data = calculateAdaption(
-            ead, min_eael_per_day, max_eael_per_day, tot_adap_cost, duration, growth_rate)
+            if (!ead || !min_eael_per_day || !max_eael_per_day || !tot_adap_cost) {
+              return null
+            }
 
-          return <p>{JSON.stringify(data)}</p>
-        })
-      }
+            const data = calculateAdaption(
+              ead, min_eael_per_day, max_eael_per_day, tot_adap_cost, duration, growth_rate)
+
+            return <tr key={scenario}>
+              <td>{titleCase(scenario.replace('_', ' '))}</td>
+              <td>{commas(tot_adap_cost.toFixed(0))}</td>
+              <td>{`${commas(data.min_benefit.toFixed(0))} – ${commas(data.max_benefit.toFixed(0))}`}</td>
+              <td>{`${data.min_bcr.toFixed(2)} – ${data.max_bcr.toFixed(2)}`}</td>
+            </tr>
+          })
+        }
+        </tbody>
+      </table>
     </form>
   }
 }
