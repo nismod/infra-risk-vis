@@ -72,32 +72,32 @@
                 "max",
                 [
                   "/",
-                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],115.1354914467122]],
+                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
                   ["get", "baseline_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],115.1354914467122]],
+                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
                   ["get", "baseline_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],115.1354914467122]],
+                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],345.4064743401366]],
                   ["get", "future_med_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],115.1354914467122]],
+                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],345.4064743401366]],
                   ["get", "future_med_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],115.1354914467122]],
+                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],345.4064743401366]],
                   ["get", "future_high_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],115.1354914467122]],
+                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],345.4064743401366]],
                   ["get", "future_high_tot_adap_cost"]
                 ]
               ],
@@ -141,32 +141,32 @@
                 "max",
                 [
                   "/",
-                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345]],
+                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
                   ["get", "baseline_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345]],
+                  ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
                   ["get", "baseline_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],345]],
+                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],345.4064743401366]],
                   ["get", "future_med_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],345]],
+                  ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],345.4064743401366]],
                   ["get", "future_med_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],345]],
+                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],345.4064743401366]],
                   ["get", "future_high_tot_adap_cost"]
                 ],
                 [
                   "/",
-                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],345]],
+                  ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],345.4064743401366]],
                   ["get", "future_high_tot_adap_cost"]
                 ]
               ],
