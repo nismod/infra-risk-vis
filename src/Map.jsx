@@ -27,7 +27,9 @@ class Map extends React.Component {
         _3m4m: true,
         _4m999m: true
       },
-      showFloodHelp: false
+      showFloodHelp: false,
+      duration: 30,
+      growth_rate_percentage: 2.8
     }
     this.map = undefined
     this.tooltipContainer = undefined
@@ -38,6 +40,7 @@ class Map extends React.Component {
     this.setFloodLevel = this.setFloodLevel.bind(this)
     this.setMap = this.setMap.bind(this)
     this.toggleFloodHelp = this.toggleFloodHelp.bind(this)
+    this.updateBCR = this.updateBCR.bind(this)
   }
 
   setScenario(scenario) {
@@ -83,16 +86,45 @@ class Map extends React.Component {
         this.map.removeLayer('flood_' + flood_layers[i]);
       }
 
+      // insert before (under) road/rail/bridges/air/water/labels
+      let before_layer_id;
+
+      switch (this.props.map_style) {
+        case 'flood':
+          before_layer_id = 'country_labels';
+          break;
+        case 'roads':
+          before_layer_id = 'road';
+          break;
+        case 'rail':
+          before_layer_id = 'rail';
+          break;
+        case 'airwater':
+          before_layer_id = 'water';
+          break;
+        case 'adaptation':
+          before_layer_id = 'bridges';
+          break;
+        case 'overview':
+            before_layer_id = 'road';
+            break;
+        default:
+          before_layer_id = 'country_labels';
+      }
+
       if (floodlevel['_' + flood_layers[i]]) {
-        this.map.addLayer({
-          "id": "flood_" + flood_layers[i],
-          "type": "fill",
-          "source": "flood",
-          "source-layer": scenario + '_' + floodtype + '_1in1000_' + flood_layers[i],
-          "paint": {
-            "fill-color": flood_layer_colors[flood_layers[i]]
-          }
-        },);
+        this.map.addLayer(
+          {
+            "id": "flood_" + flood_layers[i],
+            "type": "fill",
+            "source": "flood",
+            "source-layer": scenario + '_' + floodtype + '_1in1000_' + flood_layers[i],
+            "paint": {
+              "fill-color": flood_layer_colors[flood_layers[i]]
+            }
+          },
+          before_layer_id
+        );
       }
     }
   }
@@ -102,6 +134,102 @@ class Map extends React.Component {
       React.createElement(Tooltip, {features: features}),
       this.tooltipContainer
     );
+  }
+
+  updateBCR(data) {
+    if (this.props.map_style !== 'adaptation'){
+      return
+    }
+    const { duration, discount_growth, discount_norm, growth_rate_percentage } = data;
+
+    const dn = discount_norm;
+    const ddg = duration * discount_growth;
+
+    const calc = [
+      ">=",
+      [
+        "max",
+        [
+          "/",
+          ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_min_eael_per_day"],ddg]],
+          ["get", "baseline_tot_adap_cost"]
+        ],
+        [
+          "/",
+          ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_max_eael_per_day"],ddg]],
+          ["get", "baseline_tot_adap_cost"]
+        ],
+        [
+          "/",
+          ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_min_eael_per_day"],ddg]],
+          ["get", "future_med_tot_adap_cost"]
+        ],
+        [
+          "/",
+          ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_max_eael_per_day"],ddg]],
+          ["get", "future_med_tot_adap_cost"]
+        ],
+        [
+          "/",
+          ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_min_eael_per_day"],ddg]],
+          ["get", "future_high_tot_adap_cost"]
+        ],
+        [
+          "/",
+          ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_max_eael_per_day"],ddg]],
+          ["get", "future_high_tot_adap_cost"]
+        ]
+      ],
+      1
+    ];
+
+    const circle_paint_circle_color = [
+      "case",
+      [
+        "all",
+        ["has", "baseline_tot_adap_cost"],
+        ["has", "future_med_tot_adap_cost"],
+        ["has", "future_high_tot_adap_cost"]
+      ],
+      [
+        "case",
+        calc,
+        "#a00a09",
+        "#efefef"
+      ],
+      "#efefef"
+    ];
+    this.map.setPaintProperty('bridges', 'circle-color', circle_paint_circle_color);
+
+    const line_paint_line_color = [
+      "case",
+      [
+        "all",
+        ["has", "baseline_tot_adap_cost"],
+        ["has", "future_med_tot_adap_cost"],
+        ["has", "future_high_tot_adap_cost"]
+      ],
+      [
+        "case",
+        calc,
+        [
+          "match",
+          ["get", "road_type"],
+          "national", "#ba0f03",
+          "province", "#e0881f",
+          "rural", "#1f99e0",
+          "#e2e2e2"
+        ],
+        "#e2e2e2"
+      ],
+      "#e2e2e2"
+    ];
+    this.map.setPaintProperty('road', 'line-color', line_paint_line_color);
+
+    this.setState({
+      duration: duration,
+      growth_rate_percentage: growth_rate_percentage
+    })
   }
 
   toggleFloodHelp() {
@@ -115,7 +243,7 @@ class Map extends React.Component {
 
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: this.props.map_style,
+      style: `http://localhost:8080/styles/${this.props.map_style}/style.json`,
       center: [lng, lat],
       zoom: zoom,
       minZoom: 3,
@@ -268,7 +396,12 @@ class Map extends React.Component {
           }
         </div>
 
-        <FeatureSidebar feature={selectedFeature} />
+        <FeatureSidebar
+          feature={selectedFeature}
+          updateBCR={this.updateBCR}
+          duration={this.state.duration}
+          growth_rate_percentage={this.state.growth_rate_percentage}
+          />
         { (this.state.showFloodHelp)? <FloodHelp /> : null }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={el => this.mapContainer = el} className="map" />

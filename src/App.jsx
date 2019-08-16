@@ -16,7 +16,7 @@ const App = () => (
       <Switch>
         <Route path="/overview">
           <Map
-            map_style={"http://localhost:8080/styles/overview/style.json"}
+            map_style="overview"
             dataSources={['road','bridges','rail', 'air', 'water']}
             dataLayers={[
               {key:'road', label: 'Roads'},
@@ -30,7 +30,7 @@ const App = () => (
         </Route>
         <Route path="/roads">
           <Map
-            map_style={"http://localhost:8080/styles/roads/style.json"}
+            map_style="roads"
             dataSources={['road','bridges']}
             dataLayers={[
               {key:'road', label: 'Roads'},
@@ -41,7 +41,7 @@ const App = () => (
         </Route>
         <Route path="/rail">
           <Map
-            map_style={"http://localhost:8080/styles/rail/style.json"}
+            map_style="rail"
             dataSources={['rail']}
             dataLayers={[
               {key:'rail', label: 'Railways'}
@@ -51,7 +51,7 @@ const App = () => (
         </Route>
         <Route path="/airwater">
           <Map
-            map_style={"http://localhost:8080/styles/airwater/style.json"}
+            map_style="airwater"
             dataSources={['air', 'water']}
             dataLayers={[
               {key:'air', label: 'Airports'},
@@ -62,7 +62,7 @@ const App = () => (
         </Route>
         <Route path="/flood">
           <Map
-            map_style={"http://localhost:8080/styles/flood/style.json"}
+            map_style="flood"
             dataSources={[]}
             dataLayers={[]}
             tooltipLayerSources={['flood']}
@@ -73,7 +73,7 @@ const App = () => (
             zoom={6}
             lng={-61.5}
             lat={-34.6}
-            map_style={"http://localhost:8080/styles/adaptation/style.json"}
+            map_style="adaptation"
             dataSources={['road','bridges']}
             dataLayers={[
               {key:'road', label: 'Roads'},

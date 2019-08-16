@@ -168,7 +168,7 @@ const FeatureSidebar = (props) => {
             <summary>Flood exposure statistics</summary>
             <dl>
               {
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th>Flood type</th>
@@ -263,7 +263,7 @@ const FeatureSidebar = (props) => {
             <summary>Risk estimates</summary>
             <dl>
               {
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th>Climate scenario</th>
@@ -310,7 +310,7 @@ const FeatureSidebar = (props) => {
             <summary>Adaptation cost estimates</summary>
             <dl>
               {
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th>Climate scenario</th>
@@ -351,7 +351,7 @@ const FeatureSidebar = (props) => {
             <summary>Adaptation cost estimates per km</summary>
             <dl>
               {
-                <table class="table">
+                <table className="table">
                   <thead>
                     <tr>
                       <th>Climate scenario</th>
@@ -390,7 +390,13 @@ const FeatureSidebar = (props) => {
         (f.baseline_ini_adap_cost || f.future_med_ini_adap_cost || f.future_high_ini_adap_cost)?
           <details>
             <summary>Benefit-cost ratio estimates</summary>
-            <BCRWidget feature={f} scenarios={scenarios} />
+            <BCRWidget
+              feature={f}
+              scenarios={scenarios}
+              updateBCR={props.updateBCR}
+              duration={props.duration}
+              growth_rate_percentage={props.growth_rate_percentage}
+              />
           </details>
           : null
       }
@@ -402,15 +408,32 @@ class BCRWidget extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      duration: 30,
-      growth_rate_percentage: 2.8
+      duration: props.duration || 30,
+      growth_rate_percentage: props.growth_rate_percentage || 2.8
     }
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(e) {
+    const growth_rate_percentage = (e.target.name === 'growth_rate_percentage')?
+      +e.target.value
+      : this.state.growth_rate_percentage;
+
+    const duration = (e.target.name === 'duration')?
+      +e.target.value
+      : this.state.duration;
+
+    const { discount_rate_norm, discount_rate_growth } = discount_rates(growth_rate_percentage / 100)
+
+    this.props.updateBCR({
+      duration: duration,
+      growth_rate_percentage: growth_rate_percentage,
+      discount_growth: discount_rate_growth,
+      discount_norm: discount_rate_norm
+    })
+
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: +e.target.value  // + coerces to number
     })
   }
 
@@ -421,7 +444,7 @@ class BCRWidget extends React.Component {
 
     return <form>
       <div className="form-group">
-        <label for="duration">Duration of disruption (days)</label>
+        <label htmlFor="duration">Duration of disruption (days)</label>
         <input
           id="duration"
           name="duration"
@@ -449,7 +472,7 @@ class BCRWidget extends React.Component {
         <span>{this.state.duration}</span>
       </div>
       <div className="form-group">
-        <label for="growth_rate_percentage">Growth Rate (%)</label>
+        <label htmlFor="growth_rate_percentage">Growth Rate (%)</label>
         <input
           id="growth_rate_percentage"
           name="growth_rate_percentage"
@@ -471,7 +494,7 @@ class BCRWidget extends React.Component {
           <option value="3" />
           <option value="4" label="4%" />
         </datalist>
-        <span>{(+this.state.growth_rate_percentage).toFixed(1)}</span>
+        <span>{this.state.growth_rate_percentage.toFixed(1)}</span>
       </div>
       <table className="table">
         <thead>
@@ -527,7 +550,16 @@ function calculateAdaption(ead, min_eael_per_day, max_eael_per_day, tot_adap_cos
   // See atra.adaptation_options.calculate_discounting_arrays() at
   // https://github.com/oi-analytics/argentina-transport/blob/master/src/atra/adaptation_options.py
   // for reference.
+  const { discount_rate_norm, discount_rate_growth } = discount_rates(growth_rate)
+  const min_benefit = benefit(discount_rate_norm, ead, duration, discount_rate_growth, min_eael_per_day)
+  const max_benefit = benefit(discount_rate_norm, ead, duration, discount_rate_growth, max_eael_per_day)
+  const min_bcr = bcr(min_benefit, tot_adap_cost)
+  const max_bcr = bcr(max_benefit, tot_adap_cost)
 
+  return { min_benefit, min_bcr, max_benefit, max_bcr }
+}
+
+function discount_rates(growth_rate) {
   // fix parameters
   const discount_rate = 0.12;
   const start_year = 2016;
@@ -548,17 +580,7 @@ function calculateAdaption(ead, min_eael_per_day, max_eael_per_day, tot_adap_cos
   )
   const discount_rate_growth = discount_rate_growths.reduce((a, b) => a + b, 0)
 
-  console.log(years_from_start)
-  console.log(discount_rate_norms, discount_rate_norm)
-  console.log(discount_rate_growths, discount_rate_growth)
-
-  // for variable growth_rate and duration we want to estimate min/max benefit and bcr
-  const min_benefit = benefit(discount_rate_norm, ead, duration, discount_rate_growth, min_eael_per_day)
-  const max_benefit = benefit(discount_rate_norm, ead, duration, discount_rate_growth, max_eael_per_day)
-  const min_bcr = bcr(min_benefit, tot_adap_cost)
-  const max_bcr = bcr(max_benefit, tot_adap_cost)
-
-  return { min_benefit, min_bcr, max_benefit, max_bcr }
+  return { discount_rate_norm, discount_rate_growth }
 }
 
 function benefit(discount_rate_norm, ead, duration, discount_rate_growth, eael_per_day){
