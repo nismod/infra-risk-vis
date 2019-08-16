@@ -125,6 +125,12 @@ class Map extends React.Component {
     var nav = new mapboxgl.NavigationControl();
     this.map.addControl(nav, 'top-right');
 
+    var scale = new mapboxgl.ScaleControl({
+        maxWidth: 80,
+        unit: 'metric'
+    });
+    this.map.addControl(scale, 'bottom-left');
+
     this.map.on('move', () => {
       const { lng, lat } = this.map.getCenter()
       this.setState({
