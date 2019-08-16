@@ -68,6 +68,17 @@ const App = () => (
             tooltipLayerSources={['flood']}
             />
         </Route>
+        <Route path="/adaptation">
+          <Map
+            map_style={"http://localhost:8080/styles/adaptation/style.json"}
+            dataSources={['road','bridges']}
+            dataLayers={[
+              {key:'road', label: 'Roads'},
+              {key:'bridges', label: 'National-roads bridges'}
+            ]}
+            tooltipLayerSources={['road','bridges','flood']}
+            />
+        </Route>
         <Route path="/">
           <div className="jumbotron welcome-float">
             <h1 className="h1">Argentina Transport Risk Analysis - Results inquirer</h1>

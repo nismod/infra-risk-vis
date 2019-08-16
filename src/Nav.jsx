@@ -27,6 +27,11 @@ const Nav = () => (
           Flood
         </a>
       </li>
+      <li className="nav-item">
+        <a className="nav-link" href='/adaptation'>
+          Adaptation
+        </a>
+      </li>
     </ul>
   </nav>
 )
