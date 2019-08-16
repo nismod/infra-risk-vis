@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "Air and Water",
+  "name": "Adaptation",
   "center": [-64.405087, -34.919628],
   "height": "600px",
   "zoom": 4,
@@ -8,8 +8,8 @@
   "pitch": 0,
   "sources": {
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
-    "air": { "type": "vector", "url": "mbtiles://{air}" },
-    "water": { "type": "vector", "url": "mbtiles://{water}" },
+    "road": { "type": "vector", "url": "mbtiles://{road}" },
+    "bridges": { "type": "vector", "url": "mbtiles://{bridges}" },
     "flood": { "type": "vector", "url": "mbtiles://{flood}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
@@ -96,28 +96,38 @@
       }
     },
     {
-      "id": "water",
-      "type": "circle",
-      "source": "water",
-      "source-layer": "port_nodes",
+      "id": "road",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "==",
+        ["get", "road_type"],
+        "national"
+      ],
       "paint": {
-        "circle-color": "#045a8d",
-        "circle-radius": {
-          "base": 2,
-          "stops": [[11, 4], [17, 50]]
+        "line-color": "#ba0f03",
+        "line-width": {
+          "base": 0.2,
+          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
         }
       }
     },
     {
-      "id": "air",
+      "id": "bridges",
       "type": "circle",
-      "source": "air",
-      "source-layer": "air_nodes",
+      "source": "bridges",
+      "source-layer": "bridges",
       "paint": {
-        "circle-color": "#000000",
+        "circle-color": "#a00a09",
         "circle-radius": {
-          "base": 2,
-          "stops": [[11, 4], [17, 50]]
+          "base": 0.4,
+          "stops": [[3, 0.04], [5, 0.4], [9, 4], [10, 8], [17, 16]]
         }
       }
     },
