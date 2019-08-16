@@ -402,8 +402,8 @@ class BCRWidget extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      duration: 10,
-      growth_rate_percentage: 1
+      duration: 30,
+      growth_rate_percentage: 2.8
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -471,7 +471,7 @@ class BCRWidget extends React.Component {
           <option value="3" />
           <option value="4" label="4%" />
         </datalist>
-        <span>{this.state.growth_rate_percentage.toFixed(1)}</span>
+        <span>{(+this.state.growth_rate_percentage).toFixed(1)}</span>
       </div>
       <table className="table">
         <thead>
