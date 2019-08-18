@@ -100,6 +100,17 @@ const App = () => (
             analysis of adaptation options.
 
             </p>
+
+            <p className="lead">
+
+            The concepts and model results presented here are documented in the study report:
+            </p>
+
+            <p className="lead">
+
+            Pant, R., Koks, E.E., Paltan, H., Russell, T., & Hall, J.W. (2019). Argentina – Transport risk analysis. Final Report, Oxford Infrastructure Analytics Ltd., Oxford, UK. (Available by request from World Bank)
+            </p>
+
             <p className="lead">
 
             The outputs visualized here were generated from a model created and documented
