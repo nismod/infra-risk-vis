@@ -19,4 +19,16 @@ function unique(arr) {
   return Array.from(new Set(arr))
 }
 
-export { commas, titleCase, unique }
+function insert_string(str){
+	if (str.includes("bridge"))
+	{
+		return (str.slice(0, 10) + "to climate resilient " + str.slice(9))
+	}
+	else
+	{
+		return (str.slice(0, 13) + "climate resilient " + str.slice(13))
+	}
+
+}
+
+export { commas, titleCase, unique, insert_string}

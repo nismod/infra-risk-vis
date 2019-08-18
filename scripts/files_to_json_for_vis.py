@@ -42,6 +42,12 @@ def flatten_dataframe(df,id_column,anchor_columns,value_columns):
     del flat_dict
     return pd.DataFrame(final_dict),list(set(all_cols))
 
+def rail_usage_check(x):
+    if x.max_total_tons > 0:
+        return 'Y'
+    else:
+        return 'N'
+
 def main():
     """Process results
     """
@@ -53,6 +59,7 @@ def main():
     modes = [
                 {
                 'sector':'road',
+                'multimodal':'N',
                 'edge_file':'road_edges',
                 'node_file':'road_nodes',
                 'edge_id':'edge_id',
@@ -61,7 +68,7 @@ def main():
                                 'road_quality','road_service',
                                 'min_speed','max_speed',
                                 'width','length',
-                                'tmda_count'],
+                                'tmda_count','dnv_flood'],
                 'node_attribute_cols':[],
                 'flow_results_cols':['min_total_tons','max_total_tons'],
                 'max_flow_colmun':'max_total_tons',
@@ -88,6 +95,7 @@ def main():
                 },
                 {
                 'sector':'rail',
+                'multimodal':'Y',
                 'edge_file':'rail_edges',
                 'node_file':'rail_nodes',
                 'edge_id':'edge_id',
@@ -100,6 +108,9 @@ def main():
                 'fail_results_cols':['min_tr_loss','max_tr_loss',
                                 'min_econ_loss','max_econ_loss',
                                 'min_econ_impact','max_econ_impact'],
+                'multimodal_fail_results_cols':[
+                                'min_multimodal_econ_impact',
+                                'max_multimodal_econ_impact'],
                 'flood_results_cols':['min_flood_depth',
                                 'max_flood_depth',
                                 'min_probability',
@@ -109,10 +120,14 @@ def main():
                 'risk_results_cols':[
                                 'min_eael_per_day',
                                 'max_eael_per_day'],
+                'multimodal_risk_results_cols':[
+                                'min_eael_multimodal_per_day',
+                                'max_eael_multimodal_per_day'],
                 'adaptation_results_cols':[],
                 },
                 {
                 'sector':'port',
+                'multimodal':'N',
                 'edge_file':'port_edges',
                 'node_file':'port_nodes',
                 'edge_id':'edge_id',
@@ -131,6 +146,7 @@ def main():
                 },
                 {
                 'sector':'air',
+                'multimodal':'N',
                 'edge_file':'air_edges',
                 'node_file':'air_nodes',
                 'edge_id':'edge_id',
@@ -149,6 +165,7 @@ def main():
                 },
                 {
                 'sector':'bridge',
+                'multimodal':'N',
                 'edge_file':'bridge_edges',
                 'node_file':'bridges',
                 'edge_id':'bridge_id',
@@ -234,6 +251,8 @@ def main():
                             pd.read_csv(os.path.join(results_path,'flow_mapping_combined',
                                 'weighted_flows_{}_100_percent.csv'.format(m['sector']))),
                             m['edge_id'],m['flow_results_cols'],merge_to_file=merge_type)
+                if m['sector'] == 'rail':
+                    mode_df['in_use'] = mode_df.apply(lambda x: rail_usage_check(x),axis=1)
 
         print ('* Done with merging flows for {}'.format(m['sector']))
 
@@ -244,6 +263,21 @@ def main():
                             'minmax_combined_scenarios',
                             'single_edge_failures_minmax_{}_100_percent_disrupt.csv'.format(m['sector']))),
                         m['edge_id'],m['fail_results_cols'],merge_to_file=merge_type)
+
+            if m['multimodal'] == 'Y':
+                fail_df = pd.read_csv(os.path.join(results_path,
+                            'failure_results',
+                            'minmax_combined_scenarios',
+                            'single_edge_failures_minmax_{}_100_percent_disrupt_multi_modal.csv'.format(m['sector'])))
+                fail_df.rename(columns={'min_tr_loss':'min_multimodal_econ_impact',
+                    'max_tr_loss':'max_multimodal_econ_impact'},inplace=True)
+
+                mode_df = merge_files(mode_df,mode_df,
+                        fail_df,
+                        m['edge_id'],
+                        m['multimodal_fail_results_cols'],
+                        merge_to_file=merge_type)
+                del fail_df
 
         print ('* Done with merging criticality results for {}'.format(m['sector']))
 
@@ -277,6 +311,32 @@ def main():
                         f_cols,
                         merge_to_file=merge_type)
             del f_df
+            if m['multimodal'] == 'Y':
+                risk_file = pd.read_csv(os.path.join(results_path, 
+                                                'risk_results',
+                                                '{}_hazard_intersections_risk_weights.csv'.format(m['sector'])))
+                fail_file = pd.read_csv(os.path.join(results_path,
+                                                'failure_results',
+                                                'minmax_combined_scenarios',
+                                                'single_edge_failures_minmax_{}_100_percent_disrupt_multi_modal.csv'.format(m['sector'])))
+                risk = pd.merge(risk_file,
+                                fail_file[[m['edge_id'],'min_tr_loss','max_tr_loss']],
+                                how = 'left',on=['edge_id'])
+                del risk_file, fail_file
+                risk['min_eael_multimodal_per_day'] = risk['risk_wt']*risk['min_tr_loss']
+                risk['max_eael_multimodal_per_day'] = risk['risk_wt']*risk['max_tr_loss']
+                f_df , f_cols = flatten_dataframe(risk,
+                                        m['edge_id'],
+                                        ['climate_scenario'],
+                                        m['multimodal_risk_results_cols'])
+
+                mode_df = merge_files(mode_df,mode_df,
+                            f_df,
+                            m['edge_id'],
+                            f_cols,
+                            merge_to_file=merge_type)
+                del f_df
+
 
         print ('* Done with merging risk results for {}'.format(m['sector']))
 

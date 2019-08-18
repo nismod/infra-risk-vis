@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { commas, titleCase } from './helpers';
+import { commas, titleCase, insert_string } from './helpers';
 
 const FeatureSidebar = (props) => {
   if (!props.feature) {
@@ -160,8 +160,42 @@ const FeatureSidebar = (props) => {
               </Fragment>
             ) : null
           }
+          {
+            (f.in_use)? (
+              <Fragment>
+                <dt>Route in Use</dt>
+                <dd>{f.in_use}</dd>
+              </Fragment>
+            ) : null
+          }
         </dl>
       </details>
+      {
+        (f.dnv_flood)? 
+        <details>
+           <summary>DNV validation</summary>
+           <dl>
+           {
+                (f.dnv_flood === 1)? (
+                  <Fragment>
+                    <dd>Flooded</dd>
+                  </Fragment>
+                ) 
+                :
+                (f.dnv_flood === -1)?(
+                    <Fragment>
+                    <dd>Not flooded</dd>
+                  </Fragment>
+                )
+                :
+                  <Fragment>
+                    <dd>No validation</dd>
+                  </Fragment>
+            }
+           </dl>
+        </details>
+        : null
+      }
       {
         (f.pluvial_flooding_baseline_min_flood_depth || f.fluvial_flooding_baseline_min_flood_depth || f.pluvial_flooding_future_med_min_flood_depth || f.fluvial_flooding_future_med_min_flood_depth || f.pluvial_flooding_future_high_min_flood_depth || f.fluvial_flooding_future_high_min_flood_depth)?
           <details>
@@ -220,7 +254,7 @@ const FeatureSidebar = (props) => {
           <details>
             <summary>Flood exposure statistics</summary>
             <dl>
-              <dt>No values</dt>
+              <dt>No flooding estimated</dt>
             </dl>
           </details>
       }
@@ -255,7 +289,13 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        : null
+        : 
+          <details>
+            <summary>Criticality metrics</summary>
+            <dl>
+              <dt>No values estimated</dt>
+            </dl>
+          </details>
       }
       {
         (f.baseline_ead || f.future_med_ead || f.future_high_ead || f.baseline_max_eael_per_day || f.future_med_max_eael_per_day || f.future_high_max_eael_per_day)?
@@ -302,7 +342,45 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        : null
+        : 
+          <details>
+            <summary>Risk estimates</summary>
+            <dl>
+              <dt>No values estimated</dt>
+            </dl>
+          </details>
+      }
+      {
+        (f.baseline_options || f.future_med_options || f.future_options)?
+          <details>
+            <summary>Adaptation option</summary>
+            <dl>
+            {
+                (f.baseline_options)? (
+                  <Fragment>
+                    <dd>{insert_string(f.baseline_options)}</dd>
+                  </Fragment>
+                ) 
+                :
+                (f.future_med_options)?(
+                    <Fragment>
+                    <dd>{insert_string(f.future_med_options)}</dd>
+                  </Fragment>
+                )
+                :
+                  <Fragment>
+                    <dd>{insert_string(f.future_high_options)}</dd>
+                  </Fragment>
+            }
+            </dl>
+          </details>
+          : 
+          <details>
+            <summary>Adaptation option</summary>
+            <dl>
+              <dt>No values estimated</dt>
+            </dl>
+          </details>
       }
       {
         (f.baseline_ini_adap_cost || f.future_med_ini_adap_cost || f.future_high_ini_adap_cost)?
