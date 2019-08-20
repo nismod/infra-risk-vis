@@ -48,7 +48,7 @@ Either link to the synced/downloaded data directories:
     ln -s 'path/to/OneDrive/Argentina/results' incoming_data/results
 
 OR Unzip within `/incoming_data` folder:
-    
+
     unzip ~/Downloads/boundaries.zip -d incoming_data/
     unzip ~/Downloads/network.zip -d incoming_data/
 
@@ -72,12 +72,7 @@ Install required packages. Run from the project root:
 
 Install tlieserver-gl globally:
 
-    npm install -g tileserver-gl
-
-### Docker (optional)
-
-Alternately, Docker CE may be used to run the tileserver in a container. Follow the [docker
-installation guide](https://docs.docker.com/install/) to get set up.
+    npm install -g tileserver-gl-light
 
 ## Run
 
@@ -88,11 +83,7 @@ app itself.
 
 Run the tileserver directly (from the root of the project):
 
-    tileserver-gl
-
-Or start the docker container:
-
-    docker run -it -v $(pwd):/data -p 8080:80 klokantech/tileserver-gl --config config.json
+    tileserver-gl-light
 
 Open a browser to view the tileserver:
 
@@ -107,3 +98,25 @@ Start the app server:
 This should automatically open a browser tab. If not, open:
 
     firefox http://localhost:3000/
+
+
+## Deployment
+
+To build and deploy the site:
+    - build the frontend
+    - provision a server
+    - configure the server
+    - upload frontend, data and config
+
+`npm run build` builds the frontend for deployment. This puts HTML/CSS/JS in the build folder,
+which can be served directly in production.
+
+`provision.sh` contains installation instructions for an Ubuntu 18.04 server to install NGINX,
+setup SSL using CertBot, install node and tileserver-gl-light
+
+`config` directory contains:
+    - nginx config to serve frontend assets directly and proxy tile requests to the tileserver
+    - systemd service config to run the tileserver as a service
+
+`deploy.sh` uploads the build directory, data and tileserver config to a server,
+assuming that whoever runs the script has ssh/public key access.
