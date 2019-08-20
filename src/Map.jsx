@@ -243,7 +243,7 @@ class Map extends React.Component {
 
     this.map = new mapboxgl.Map({
       container: this.mapContainer,
-      style: `http://localhost:8080/styles/${this.props.map_style}/style.json`,
+      style: `/styles/${this.props.map_style}/style.json`,
       center: [lng, lat],
       zoom: zoom,
       minZoom: 3,
