@@ -171,7 +171,7 @@ const FeatureSidebar = (props) => {
         </dl>
       </details>
       {
-        (f.dnv_flood)?
+        (typeof(f.dnv_flood) !== "undefined")?
         <details>
            <summary>DNV validation</summary>
            <dl>
