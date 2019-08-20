@@ -1,0 +1,15 @@
+[Unit]
+Description=Tileserver GL light
+After=network.target
+
+[Service]
+Type=simple
+User=raghav
+Group=raghav
+WorkingDirectory=/var/www/tileserver
+ExecStart=/usr/local/lib/node/node-v8.11.3/bin/tileserver-gl-light
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
