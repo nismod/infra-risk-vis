@@ -171,7 +171,7 @@ const FeatureSidebar = (props) => {
         </dl>
       </details>
       {
-        (f.dnv_flood)? 
+        (f.dnv_flood)?
         <details>
            <summary>DNV validation</summary>
            <dl>
@@ -180,9 +180,9 @@ const FeatureSidebar = (props) => {
                   <Fragment>
                     <dd>Flooded</dd>
                   </Fragment>
-                ) 
+                )
                 :
-                (f.dnv_flood === -1)?(
+                (f.dnv_flood === -1)? (
                     <Fragment>
                     <dd>Not flooded</dd>
                   </Fragment>
@@ -289,7 +289,7 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        : 
+        :
           <details>
             <summary>Criticality metrics</summary>
             <dl>
@@ -342,7 +342,7 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        : 
+        :
           <details>
             <summary>Risk estimates</summary>
             <dl>
@@ -360,7 +360,7 @@ const FeatureSidebar = (props) => {
                   <Fragment>
                     <dd>{insert_string(f.baseline_options)}</dd>
                   </Fragment>
-                ) 
+                )
                 :
                 (f.future_med_options)?(
                     <Fragment>
@@ -374,7 +374,7 @@ const FeatureSidebar = (props) => {
             }
             </dl>
           </details>
-          : 
+          :
           <details>
             <summary>Adaptation option</summary>
             <dl>
