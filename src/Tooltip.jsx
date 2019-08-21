@@ -1,5 +1,5 @@
 import React from 'react'
-import { unique } from './helpers'
+import { unique, titleCase } from './helpers'
 
 const Tooltip = (props) => {
   const source_layers = unique(props.features.map(f => f.sourceLayer));
@@ -10,7 +10,12 @@ const Tooltip = (props) => {
         {
           source_layers.map((source_layer, i) => (
             <div key={i}>
-              <strong>{source_layer}</strong>
+              <strong>{titleCase(
+                source_layer.replace(/_/g," ")
+                  .replace(/m(\d)/, 'm-$1')
+                  .replace('4m-999m', '>4m')
+                  .replace('1in', '1/')
+              )}</strong>
             </div>
           ))
         }
