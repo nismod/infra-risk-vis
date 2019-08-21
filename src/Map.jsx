@@ -217,7 +217,7 @@ class Map extends React.Component {
           ["get", "road_type"],
           "national", "#ba0f03",
           "province", "#e0881f",
-          "rural", "#1f99e0",
+          "rural", "#03ba6b",
           "#e2e2e2"
         ],
         "#e2e2e2"
