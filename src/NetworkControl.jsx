@@ -16,6 +16,9 @@ const NetworkControl = (props) => (
               defaultChecked={true}
               id={'toggleLayerCheckbox' + layer}
               onClick={props.onLayerVisChange}/>
+            <span
+              className={layer_data.linear? 'dot line': 'dot'}
+              style={{backgroundColor: layer_data.color}}></span>
             <label className="form-check-label" htmlFor={'toggleLayerCheckbox' + layer}>
               {label}
             </label>
