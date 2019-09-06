@@ -41,6 +41,12 @@
 .custom-map-control.top-left {
   top: 10px;
   left: 10px;
+  max-width: 15rem;
+}
+.custom-map-control small {
+  display: block;
+  line-height: 1.2;
+  margin: 0.2rem 0;
 }
 .custom-map-control.top-right {
   top: 10px;

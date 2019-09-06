@@ -194,7 +194,7 @@ class Map extends React.Component {
       [
         "case",
         calc,
-        "#a00a09",
+        "#860403",
         "#efefef"
       ],
       "#efefef"
@@ -406,6 +406,37 @@ class Map extends React.Component {
                 dataLayers={dataLayers}
               />
             : null
+          }
+          {
+            (this.props.map_style === 'risk')?
+              <small>
+                Feature size indicates maximum expected annual damages plus maximum expected annual
+                losses for a 30-day disruption
+              </small> : null
+          }
+          {
+            (this.props.map_style === 'impact')?
+              <small>
+                Feature size indicates maximum total economic impact
+              </small> : null
+          }
+          {
+            (this.props.map_style === 'roads')?
+              <small>
+                Feature size indicates maximum freight flows
+              </small> : null
+          }
+          {
+            (this.props.map_style === 'rail')?
+              <small>
+                Feature size indicates maximum freight flows
+              </small> : null
+          }
+          {
+            (this.props.map_style === 'airwater')?
+              <small>
+                Feature size indicates maximum freight flows (ports) or passenger flows (airports)
+              </small> : null
           }
           {
             (this.props.tooltipLayerSources.includes('flood'))?

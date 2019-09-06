@@ -28,6 +28,16 @@ const Nav = () => (
         </a>
       </li>
       <li className="nav-item">
+        <a className="nav-link" href='/impact'>
+          Impact
+        </a>
+      </li>
+      <li className="nav-item">
+        <a className="nav-link" href='/risk'>
+          Risk
+        </a>
+      </li>
+      <li className="nav-item">
         <a className="nav-link" href='/adaptation'>
           Assets with Adaptation BCR > 1
         </a>

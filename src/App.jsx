@@ -28,7 +28,7 @@ const App = () => (
               {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
               {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
               {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#a00a09"},
+              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
               {key:'rail', label: 'Railways', linear: true, color: "#006d2c"},
               {key:'air', label: 'Airports', color: "#000000"},
               {key:'water', label: 'Water', color: "#045a8d"}
@@ -53,7 +53,7 @@ const App = () => (
               {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
               {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
               {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#a00a09"},
+              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
             ]}
             tooltipLayerSources={[
               'road',
@@ -103,6 +103,50 @@ const App = () => (
             tooltipLayerSources={['flood']}
             />
         </Route>
+        <Route path="/impact">
+          <Map
+            map_style="impact"
+            dataSources={[
+              'road',
+              'bridges',
+              'rail'
+            ]}
+            dataLayers={[
+              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
+              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
+              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
+              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
+              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"}
+            ]}
+            tooltipLayerSources={[
+              'road',
+              'bridges',
+              'rail'
+            ]}
+            />
+        </Route>
+        <Route path="/risk">
+          <Map
+            map_style="risk"
+            dataSources={[
+              'road',
+              'bridges',
+              'rail'
+            ]}
+            dataLayers={[
+              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
+              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
+              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
+              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
+              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"}
+            ]}
+            tooltipLayerSources={[
+              'road',
+              'bridges',
+              'rail'
+            ]}
+            />
+        </Route>
         <Route path="/adaptation">
           <Map
             zoom={6}
@@ -117,7 +161,7 @@ const App = () => (
               {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
               {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
               {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#a00a09"},
+              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
             ]}
             tooltipLayerSources={[
               'road',
