@@ -102,10 +102,15 @@
       "source-layer": "port_nodes",
       "paint": {
         "circle-color": "#045a8d",
-        "circle-radius": {
-          "base": 2,
-          "stops": [[11, 4], [17, 50]]
-        }
+        "circle-radius": [
+          "+",
+          [
+            "/",
+            ["sqrt", ["get", "max_total_tons"]],
+            100
+          ],
+          3
+        ]
       }
     },
     {
@@ -115,10 +120,15 @@
       "source-layer": "air_nodes",
       "paint": {
         "circle-color": "#000000",
-        "circle-radius": {
-          "base": 2,
-          "stops": [[11, 4], [17, 50]]
-        }
+        "circle-radius": [
+          "+",
+          [
+            "/",
+            ["sqrt", ["get", "passengers"]],
+            300
+          ],
+          3
+        ]
       }
     },
     {
