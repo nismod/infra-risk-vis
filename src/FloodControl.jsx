@@ -98,6 +98,10 @@ const FloodControl = (props) => (
         id="floodLevelCheck_50cm1m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
         />
+      <span
+        className="dot"
+        style="background-color: #ffffff;box-shadow: black 0px 0px 1px 1px;">
+      </span>
       <label
         className="form-check-label"
         htmlFor="floodLevelCheck_50cm1m"
@@ -115,6 +119,10 @@ const FloodControl = (props) => (
         id="floodLevelCheck_1m2m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
         />
+      <span
+        className="dot"
+        style="background-color: #58cced;">
+      </span>
       <label
         className="form-check-label"
         htmlFor="floodLevelCheck_1m2m"
@@ -132,6 +140,10 @@ const FloodControl = (props) => (
         id="floodLevelCheck_2m3m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
         />
+      <span
+        className="dot"
+        style="background-color: #3895d3;">
+      </span>
       <label
         className="form-check-label"
         htmlFor="floodLevelCheck_2m3m"
@@ -149,6 +161,10 @@ const FloodControl = (props) => (
         id="floodLevelCheck_3m4m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
         />
+      <span
+        className="dot"
+        style="background-color: #1261a0;">
+      </span>
       <label
         className="form-check-label"
         htmlFor="floodLevelCheck_3m4m"
@@ -166,6 +182,10 @@ const FloodControl = (props) => (
         id="floodLevelCheck_4m999m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
         />
+      <span
+        className="dot"
+        style="background-color: #072f5f;">
+      </span>
       <label
         className="form-check-label"
         htmlFor="floodLevelCheck_4m999m"
