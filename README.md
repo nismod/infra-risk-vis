@@ -120,3 +120,8 @@ setup SSL using CertBot, install node and tileserver-gl-light
 
 `deploy.sh` uploads the build directory, data and tileserver config to a server,
 assuming that whoever runs the script has ssh/public key access.
+
+After changing map styles (any of the `*.json` files under `styles`), the tileserver should be
+restarted. Assuming that it has been setup as a systemd service, run:
+
+    sudo service tileserver restart
