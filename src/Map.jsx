@@ -94,7 +94,7 @@ class Map extends React.Component {
           before_layer_id = 'country_labels';
           break;
         case 'roads':
-          before_layer_id = 'road';
+          before_layer_id = 'road_rural';
           break;
         case 'rail':
           before_layer_id = 'rail';
@@ -106,7 +106,7 @@ class Map extends React.Component {
           before_layer_id = 'bridges';
           break;
         case 'overview':
-            before_layer_id = 'road';
+            before_layer_id = 'road_rural';
             break;
         default:
           before_layer_id = 'country_labels';
@@ -201,7 +201,7 @@ class Map extends React.Component {
     ];
     this.map.setPaintProperty('bridges', 'circle-color', circle_paint_circle_color);
 
-    const line_paint_line_color = [
+    const line_paint_line_color_national = [
       "case",
       [
         "all",
@@ -212,19 +212,46 @@ class Map extends React.Component {
       [
         "case",
         calc,
-        [
-          "match",
-          ["get", "road_type"],
-          "national", "#ba0f03",
-          "province", "#e0881f",
-          "rural", "#03ba6b",
-          "#e2e2e2"
-        ],
+        "#ba0f03",
         "#e2e2e2"
       ],
       "#e2e2e2"
     ];
-    this.map.setPaintProperty('road', 'line-color', line_paint_line_color);
+    const line_paint_line_color_province = [
+      "case",
+      [
+        "all",
+        ["has", "baseline_tot_adap_cost"],
+        ["has", "future_med_tot_adap_cost"],
+        ["has", "future_high_tot_adap_cost"]
+      ],
+      [
+        "case",
+        calc,
+        "#e0881f",
+        "#e2e2e2"
+      ],
+      "#e2e2e2"
+    ];
+    const line_paint_line_color_rural = [
+      "case",
+      [
+        "all",
+        ["has", "baseline_tot_adap_cost"],
+        ["has", "future_med_tot_adap_cost"],
+        ["has", "future_high_tot_adap_cost"]
+      ],
+      [
+        "case",
+        calc,
+        "#03ba6b",
+        "#e2e2e2"
+      ],
+      "#e2e2e2"
+    ];
+    this.map.setPaintProperty('road_national', 'line-color', line_paint_line_color_national);
+    this.map.setPaintProperty('road_province', 'line-color', line_paint_line_color_province);
+    this.map.setPaintProperty('road_rural', 'line-color', line_paint_line_color_rural);
 
     this.setState({
       duration: duration,

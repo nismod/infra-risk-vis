@@ -18,9 +18,7 @@ const App = () => (
           <Map
             map_style="overview"
             dataSources={[
-              'road_national',
-              'road_province',
-              'road_rural',
+              'road',
               'bridges',
               'rail',
               'air',
@@ -36,9 +34,7 @@ const App = () => (
               {key:'water', label: 'Water', color: "#045a8d"}
             ]}
             tooltipLayerSources={[
-              'road_national',
-              'road_province',
-              'road_rural',
+              'road',
               'bridges',
               'rail',
               'air',
@@ -50,9 +46,7 @@ const App = () => (
           <Map
             map_style="roads"
             dataSources={[
-              'road_national',
-              'road_province',
-              'road_rural',
+              'road',
               'bridges'
             ]}
             dataLayers={[
@@ -62,9 +56,7 @@ const App = () => (
               {key:'bridges', label: 'National-roads bridges', color: "#a00a09"},
             ]}
             tooltipLayerSources={[
-              'road_national',
-              'road_province',
-              'road_rural',
+              'road',
               'bridges',
               'flood'
             ]}
@@ -122,7 +114,9 @@ const App = () => (
               'bridges'
             ]}
             dataLayers={[
-              {key:'road', label: 'All Roads', linear: true, color: "#ba0f03"},
+              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
+              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
+              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
               {key:'bridges', label: 'National-roads bridges', color: "#a00a09"},
             ]}
             tooltipLayerSources={[
