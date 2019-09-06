@@ -30,7 +30,7 @@ server {
 	root /var/www/html;
 
 	# Add index.php to the list if you are using PHP
-	index index.html 
+	index index.html
 
 	server_name argentina.oi-analytics.com;
 
@@ -44,6 +44,25 @@ server {
 		try_files $uri $uri/ /index.html;
 	}
 
+	location @index {
+		add_header Cache-Control "no-store, no-cache, must-revalidate";
+		expires 0;
+		try_files /index.html =404;
+	}
+
+	location /static {
+		# basic authentication - use htpasswd to add users
+		auth_basic "Access restricted";
+		auth_basic_user_file /etc/apache2/.htpasswd;
+
+		# First attempt to serve request as file, then
+		# as directory, then fall back to index.
+		try_files $uri;
+		expires 1y;
+		access_log off;
+		add_header Cache-Control "public";
+	}
+
 	location /styles {
 		# basic authentication - use htpasswd to add users
 		auth_basic "Access restricted";
@@ -55,7 +74,7 @@ server {
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header X-Forwarded-Proto $scheme;
 	}
-	
+
 	location /data {
 		# basic authentication - use htpasswd to add users
 		auth_basic "Access restricted";
@@ -101,4 +120,3 @@ server {
 	server_name argentina.oi-analytics.com;
 	return 404; # managed by Certbot
 }
-
