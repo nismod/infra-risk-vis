@@ -17,47 +17,90 @@ const App = () => (
         <Route path="/overview">
           <Map
             map_style="overview"
-            dataSources={['road','bridges','rail', 'air', 'water']}
+            dataSources={[
+              'road_national',
+              'road_province',
+              'road_rural',
+              'bridges',
+              'rail',
+              'air',
+              'water'
+            ]}
             dataLayers={[
-              {key:'road', label: 'Roads'},
+              {key:'road_national', label: 'National Roads'},
+              {key:'road_province', label: 'Province Roads'},
+              {key:'road_rural', label: 'Rural Roads'},
               {key:'bridges', label: 'National-roads bridges'},
               {key:'rail', label: 'Railways'},
               {key:'air', label: 'Airports'},
               {key:'water', label: 'Water'}
             ]}
-            tooltipLayerSources={['road','bridges','rail', 'air', 'water']}
+            tooltipLayerSources={[
+              'road_national',
+              'road_province',
+              'road_rural',
+              'bridges',
+              'rail',
+              'air',
+              'water'
+            ]}
             />
         </Route>
         <Route path="/roads">
           <Map
             map_style="roads"
-            dataSources={['road','bridges']}
+            dataSources={[
+              'road_national',
+              'road_province',
+              'road_rural',
+              'bridges'
+            ]}
             dataLayers={[
-              {key:'road', label: 'Roads'},
+              {key:'road_national', label: 'National Roads'},
+              {key:'road_province', label: 'Province Roads'},
+              {key:'road_rural', label: 'Rural Roads'},
               {key:'bridges', label: 'National-roads bridges'}
             ]}
-            tooltipLayerSources={['road','bridges','flood']}
+            tooltipLayerSources={[
+              'road_national',
+              'road_province',
+              'road_rural',
+              'bridges',
+              'flood'
+            ]}
             />
         </Route>
         <Route path="/rail">
           <Map
             map_style="rail"
-            dataSources={['rail']}
+            dataSources={[
+              'rail'
+            ]}
             dataLayers={[
               {key:'rail', label: 'Railways'}
             ]}
-            tooltipLayerSources={['rail','flood']}
+            tooltipLayerSources={[
+              'rail',
+              'flood'
+            ]}
             />
         </Route>
         <Route path="/airwater">
           <Map
             map_style="airwater"
-            dataSources={['air', 'water']}
+            dataSources={[
+              'air',
+              'water'
+            ]}
             dataLayers={[
               {key:'air', label: 'Airports'},
               {key:'water', label: 'Water'}
             ]}
-            tooltipLayerSources={['air','water','flood']}
+            tooltipLayerSources={[
+              'air',
+              'water',
+              'flood'
+            ]}
             />
         </Route>
         <Route path="/flood">
@@ -74,12 +117,24 @@ const App = () => (
             lng={-61.5}
             lat={-34.6}
             map_style="adaptation"
-            dataSources={['road','bridges']}
+            dataSources={[
+              'road_national',
+              'road_province',
+              'road_rural',
+              'bridges'
+            ]}
             dataLayers={[
-              {key:'road', label: 'Roads'},
+              {key:'road_national', label: 'National Roads'},
+              {key:'road_province', label: 'Province Roads'},
+              {key:'road_rural', label: 'Rural Roads'},
               {key:'bridges', label: 'National-roads bridges'}
             ]}
-            tooltipLayerSources={['road','bridges']}
+            tooltipLayerSources={[
+              'road_national',
+              'road_province',
+              'road_rural',
+              'bridges'
+            ]}
             />
         </Route>
         <Route path="/">

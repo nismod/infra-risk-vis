@@ -96,7 +96,7 @@
       }
     },
     {
-      "id": "road",
+      "id": "road_rural",
       "type": "line",
       "source": "road",
       "source-layer": "road_edges",
@@ -105,15 +105,59 @@
         "line-cap": "round",
         "line-join": "round"
       },
+      "filter": [
+        "==",
+        ["get", "road_type"],
+        "rural"
+      ],
       "paint": {
-        "line-color": [
-          "match",
-          ["get", "road_type"],
-          "national", "#ba0f03",
-          "province", "#e0881f",
-          "rural", "#03ba6b",
-          "#fff"
-        ],
+        "line-color": "#03ba6b",
+        "line-width": {
+          "base": 0.2,
+          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
+        }
+      }
+    },
+    {
+      "id": "road_province",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "==",
+        ["get", "road_type"],
+        "province"
+      ],
+      "paint": {
+        "line-color": "#e0881f",
+        "line-width": {
+          "base": 0.2,
+          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
+        }
+      }
+    },
+    {
+      "id": "road_national",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "==",
+        ["get", "road_type"],
+        "national"
+      ],
+      "paint": {
+        "line-color": "#ba0f03",
         "line-width": {
           "base": 0.2,
           "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]

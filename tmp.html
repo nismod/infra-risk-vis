@@ -1,0 +1,101 @@
+
+
+<div class="custom-map-control top-left">
+  <h3 class="h4">Select layers</h3>
+  <h4 class="h5">Networks</h4>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" data-layer="road" id="toggleLayerCheckboxroad" checked="">
+    <label class="form-check-label" for="toggleLayerCheckboxroad">Roads</label>
+    <ul style="list-style: none;padding: 0;">
+      <li>
+        <span class="dot line" style="background-color: #ba0f03;" ></span>
+        National
+      </li>
+      <li>
+        <span class="dot line" style="background-color: #e0881f;"></span>
+        Provincial
+      </li>
+      <li>
+        <span class="dot line" style="background-color: #03ba6b;"></span>
+        Rural/Other
+      </li>
+    </ul>
+  </div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" data-layer="bridges" id="toggleLayerCheckboxbridges" checked="">
+    <span class="dot" style="background-color: #a00a09;"></span>
+    <label class="form-check-label" for="toggleLayerCheckboxbridges">National-roads bridges</label>
+</div>
+
+<h4 class="h5">Climate Scenario</h4>
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="scenarioRadio" id="scenarioRadio_baseline" value="baseline" checked="">
+    <label class="form-check-label" for="scenarioRadio_baseline">Baseline</label>
+</div>
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="scenarioRadio" id="scenarioRadio_med" value="med">
+    <label class="form-check-label" for="scenarioRadio_med">Med</label>
+</div>
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="scenarioRadio" id="scenarioRadio_high" value="high">
+    <label class="form-check-label" for="scenarioRadio_high">High</label>
+</div>
+
+<h4 class="h5">Flood Type</h4>
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="floodtypeRadios" id="floodtypeRadios_fluvial" value="fluvial" checked="">
+    <label class="form-check-label" for="floodtypeRadios_fluvial">Fluvial</label>
+</div>
+<div class="form-check">
+    <input class="form-check-input" type="radio" name="floodtypeRadios" id="floodtypeRadios_pluvial" value="pluvial">
+    <label class="form-check-label" for="floodtypeRadios_pluvial">Pluvial</label>
+</div>
+
+<h4 class="h5">Flood Level</h4>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" name="floodLevelCheck" id="floodLevelCheck_50cm1m" value="_50cm1m" checked="">
+    <span class="dot" style="background-color: #ffffff;box-shadow: black 0px 0px 1px 1px;"></span>
+    <label class="form-check-label" for="floodLevelCheck_50cm1m">50cm-1m</label>
+  </div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" name="floodLevelCheck" id="floodLevelCheck_1m2m" value="_1m2m" checked="">
+      <span
+        class="dot"
+        style="background-color: #58cced;">
+      </span>
+    <label class="form-check-label" for="floodLevelCheck_1m2m">1m-2m</label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" name="floodLevelCheck" id="floodLevelCheck_2m3m" value="_2m3m" checked="">
+    <span
+      class="dot"
+      style="background-color: #3895d3;">
+    </span>
+    <label class="form-check-label" for="floodLevelCheck_2m3m">2m-3m</label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" name="floodLevelCheck" id="floodLevelCheck_3m4m" value="_3m4m" checked="">
+      <span
+        class="dot"
+        style="background-color: #1261a0;">
+      </span>
+    <label class="form-check-label" for="floodLevelCheck_3m4m">3m-4m</label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" name="floodLevelCheck" id="floodLevelCheck_4m999m" value="_4m999m" checked="">
+      <span
+        class="dot"
+        style="background-color: #072f5f;">
+      </span>
+    <label class="form-check-label" for="floodLevelCheck_4m999m">&gt;4m</label>
+</div>
+
+<a href="#flood-help">More info</a>
+
+</div>
