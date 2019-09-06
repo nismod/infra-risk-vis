@@ -100,7 +100,7 @@ const FloodControl = (props) => (
         />
       <span
         className="dot"
-        style="background-color: #ffffff;box-shadow: black 0px 0px 1px 1px;">
+        style={{backgroundColor: "#ffffff", boxShadow: "black 0px 0px 1px 1px"}}>
       </span>
       <label
         className="form-check-label"
@@ -121,7 +121,7 @@ const FloodControl = (props) => (
         />
       <span
         className="dot"
-        style="background-color: #58cced;">
+        style={{backgroundColor: "#58cced"}}>
       </span>
       <label
         className="form-check-label"
@@ -142,7 +142,7 @@ const FloodControl = (props) => (
         />
       <span
         className="dot"
-        style="background-color: #3895d3;">
+        style={{backgroundColor: "#3895d3"}}>
       </span>
       <label
         className="form-check-label"
@@ -163,7 +163,7 @@ const FloodControl = (props) => (
         />
       <span
         className="dot"
-        style="background-color: #1261a0;">
+        style={{backgroundColor: "#1261a0"}}>
       </span>
       <label
         className="form-check-label"
@@ -184,7 +184,7 @@ const FloodControl = (props) => (
         />
       <span
         className="dot"
-        style="background-color: #072f5f;">
+        style={{backgroundColor: "#072f5f"}}>
       </span>
       <label
         className="form-check-label"
