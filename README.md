@@ -103,10 +103,11 @@ This should automatically open a browser tab. If not, open:
 ## Deployment
 
 To build and deploy the site:
-    - build the frontend
-    - provision a server
-    - configure the server
-    - upload frontend, data and config
+
+- build the frontend
+- provision a server
+- configure the server
+- upload frontend, data and config
 
 `npm run build` builds the frontend for deployment. This puts HTML/CSS/JS in the build folder,
 which can be served directly in production.
@@ -114,9 +115,10 @@ which can be served directly in production.
 `provision.sh` contains installation instructions for an Ubuntu 18.04 server to install NGINX,
 setup SSL using CertBot, install node and tileserver-gl-light
 
-`config` directory contains:
-    - nginx config to serve frontend assets directly and proxy tile requests to the tileserver
-    - systemd service config to run the tileserver as a service
+`config/` directory contains:
+
+- nginx config to serve frontend assets directly and proxy tile  requests to the tileserver
+- systemd service config to run the tileserver as a service
 
 `deploy.sh` uploads the build directory, data and tileserver config to a server,
 assuming that whoever runs the script has ssh/public key access.
