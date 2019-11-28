@@ -322,7 +322,10 @@ const FeatureSidebar = (props) => {
                                 return (<td key={risk_var}>{
                                   commas(f[scenario + "_" + risk_var].toFixed(0))
                                 }</td>)
-                              } else if (f[scenario + "_min_" + risk_var] && f[scenario + "_max_" + risk_var]) {
+                              } else if (
+                                (f[scenario + "_min_" + risk_var] || f[scenario + "_min_" + risk_var] === 0)
+                                && f[scenario + "_max_" + risk_var]
+                                ) {
 
                                 return (<td key={risk_var}>{
                                   commas(f[scenario + "_min_" + risk_var].toFixed(0))
