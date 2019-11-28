@@ -41,6 +41,7 @@ class Map extends React.Component {
     this.setMap = this.setMap.bind(this)
     this.toggleFloodHelp = this.toggleFloodHelp.bind(this)
     this.updateBCR = this.updateBCR.bind(this)
+    this.networkBaseLayerID = this.networkBaseLayerID.bind(this)
   }
 
   setScenario(scenario) {
@@ -86,32 +87,6 @@ class Map extends React.Component {
         this.map.removeLayer('flood_' + flood_layers[i]);
       }
 
-      // insert before (under) road/rail/bridges/air/water/labels
-      let before_layer_id;
-
-      switch (this.props.map_style) {
-        case 'flood':
-          before_layer_id = 'country_labels';
-          break;
-        case 'roads':
-          before_layer_id = 'road_rural';
-          break;
-        case 'rail':
-          before_layer_id = 'rail';
-          break;
-        case 'airwater':
-          before_layer_id = 'water';
-          break;
-        case 'adaptation':
-          before_layer_id = 'bridges';
-          break;
-        case 'overview':
-            before_layer_id = 'road_rural';
-            break;
-        default:
-          before_layer_id = 'country_labels';
-      }
-
       if (floodlevel['_' + flood_layers[i]]) {
         this.map.addLayer(
           {
@@ -123,10 +98,45 @@ class Map extends React.Component {
               "fill-color": flood_layer_colors[flood_layers[i]]
             }
           },
-          before_layer_id
+          this.networkBaseLayerID()
         );
       }
     }
+  }
+
+  networkBaseLayerID() {
+    // insert before (under) road/rail/bridges/air/water/labels
+    let before_layer_id;
+
+    switch (this.props.map_style) {
+      case 'flood':
+        before_layer_id = 'country_labels';
+        break;
+      case 'roads':
+        before_layer_id = 'road_rural';
+        break;
+      case 'rail':
+        before_layer_id = 'rail';
+        break;
+      case 'airwater':
+        before_layer_id = 'water';
+        break;
+      case 'adaptation':
+        before_layer_id = 'road_rural';
+        break;
+      case 'risk':
+        before_layer_id = 'bridges';
+        break;
+      case 'impact':
+        before_layer_id = 'bridges';
+        break;
+      case 'overview':
+          before_layer_id = 'road_rural';
+          break;
+      default:
+        before_layer_id = 'country_labels';
+    }
+    return before_layer_id;
   }
 
   setTooltip(features) {
@@ -146,112 +156,53 @@ class Map extends React.Component {
     const ddg = duration * discount_growth;
 
     const calc = [
-      ">=",
+      "max",
       [
-        "max",
-        [
-          "/",
-          ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_min_eael_per_day"],ddg]],
-          ["get", "baseline_tot_adap_cost"]
-        ],
-        [
-          "/",
-          ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_max_eael_per_day"],ddg]],
-          ["get", "baseline_tot_adap_cost"]
-        ],
-        [
-          "/",
-          ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_min_eael_per_day"],ddg]],
-          ["get", "future_med_tot_adap_cost"]
-        ],
-        [
-          "/",
-          ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_max_eael_per_day"],ddg]],
-          ["get", "future_med_tot_adap_cost"]
-        ],
-        [
-          "/",
-          ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_min_eael_per_day"],ddg]],
-          ["get", "future_high_tot_adap_cost"]
-        ],
-        [
-          "/",
-          ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_max_eael_per_day"],ddg]],
-          ["get", "future_high_tot_adap_cost"]
-        ]
+        "/",
+        ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_min_eael_per_day"],ddg]],
+        ["get", "baseline_tot_adap_cost"]
       ],
-      1
+      [
+        "/",
+        ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_max_eael_per_day"],ddg]],
+        ["get", "baseline_tot_adap_cost"]
+      ],
+      [
+        "/",
+        ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_min_eael_per_day"],ddg]],
+        ["get", "future_med_tot_adap_cost"]
+      ],
+      [
+        "/",
+        ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_max_eael_per_day"],ddg]],
+        ["get", "future_med_tot_adap_cost"]
+      ],
+      [
+        "/",
+        ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_min_eael_per_day"],ddg]],
+        ["get", "future_high_tot_adap_cost"]
+      ],
+      [
+        "/",
+        ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_max_eael_per_day"],ddg]],
+        ["get", "future_high_tot_adap_cost"]
+      ]
     ];
 
-    const circle_paint_circle_color = [
-      "case",
-      [
-        "all",
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
-      ],
-      [
-        "case",
+    const paint_color = [
+      "interpolate",
+      ["linear"],
         calc,
-        "#860403",
-        "#efefef"
-      ],
-      "#efefef"
+        0, "#e2e2e2",
+        0.99, "#e2e2e2",
+        1, "#fd8d3c",
+        1.5, "#e31a1c",
+        2, "#800026"
     ];
-    this.map.setPaintProperty('bridges', 'circle-color', circle_paint_circle_color);
-
-    const line_paint_line_color_national = [
-      "case",
-      [
-        "all",
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
-      ],
-      [
-        "case",
-        calc,
-        "#ba0f03",
-        "#e2e2e2"
-      ],
-      "#e2e2e2"
-    ];
-    const line_paint_line_color_province = [
-      "case",
-      [
-        "all",
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
-      ],
-      [
-        "case",
-        calc,
-        "#e0881f",
-        "#e2e2e2"
-      ],
-      "#e2e2e2"
-    ];
-    const line_paint_line_color_rural = [
-      "case",
-      [
-        "all",
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
-      ],
-      [
-        "case",
-        calc,
-        "#03ba6b",
-        "#e2e2e2"
-      ],
-      "#e2e2e2"
-    ];
-    this.map.setPaintProperty('road_national', 'line-color', line_paint_line_color_national);
-    this.map.setPaintProperty('road_province', 'line-color', line_paint_line_color_province);
-    this.map.setPaintProperty('road_rural', 'line-color', line_paint_line_color_rural);
+    this.map.setPaintProperty('bridges', 'circle-color', paint_color);
+    this.map.setPaintProperty('road_national', 'line-color', paint_color);
+    this.map.setPaintProperty('road_province', 'line-color', paint_color);
+    this.map.setPaintProperty('road_rural', 'line-color', paint_color);
 
     this.setState({
       duration: duration,
@@ -327,7 +278,7 @@ class Map extends React.Component {
 
     this.map.on('click', (e) => {
       // remove current highlight
-      if (typeof this.map.getLayer('featureHighlight') !== "undefined" ) {
+      if (this.map.getLayer('featureHighlight')) {
         this.map.removeLayer('featureHighlight');
         this.map.removeSource('featureHighlight');
       }
@@ -350,17 +301,20 @@ class Map extends React.Component {
 
         if (feature.layer.type === 'line') {
           this.map.addLayer({
-              "id": "featureHighlight",
-              "type": "line",
-              "source": "featureHighlight",
-              "layout": {
-                "line-join": "round",
-                "line-cap": "round"
-              },
-              "paint": {
-                "line-color": "yellow",
-                "line-width": 8
+            "id": "featureHighlight",
+            "type": "line",
+            "source": "featureHighlight",
+            "layout": {
+              "line-join": "round",
+              "line-cap": "round"
+            },
+            "paint": {
+              "line-color": "yellow",
+              "line-width": {
+                "base": 1,
+                "stops": [[3, 1], [10, 8], [17, 16]]
               }
+            }
           });
         }
         if (feature.layer.type === 'circle') {
@@ -370,9 +324,12 @@ class Map extends React.Component {
             "source": "featureHighlight",
             "paint": {
               "circle-color": "yellow",
-              "circle-radius": 10
+              "circle-radius": {
+                "base": 1,
+                "stops": [[3, 4], [10, 12], [17, 20]]
+              }
             }
-        });
+          });
         }
       }
 
@@ -431,6 +388,19 @@ class Map extends React.Component {
                 <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>0.5-1 million USD/day<br/>
                 <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>1-2 million USD/day<br/>
                 <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;2 million USD/day<br/>
+              </div>
+              : null
+          }
+          {
+            (this.props.map_style === 'adaptation')?
+              <div>
+                <small>
+                  Feature colour indicates Benefit-Cost Ratio (click on a feature to adjust disruption and growth rate assumptions)
+                </small>
+                <span className="dot" style={{backgroundColor: "#e2e2e2"}}></span>&lt;1<br/>
+                <span className="dot" style={{backgroundColor: "#fd8d3c"}}></span>1-1.5<br/>
+                <span className="dot" style={{backgroundColor: "#e31a1c"}}></span>1.5-2<br/>
+                <span className="dot" style={{backgroundColor: "#800026"}}></span>&gt;2<br/>
               </div>
               : null
           }
