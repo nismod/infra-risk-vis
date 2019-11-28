@@ -299,7 +299,7 @@ class Map extends React.Component {
     this.tooltipContainer = document.createElement('div')
 
     const tooltip = new mapboxgl.Marker(
-      this.tooltipContainer, {offset: [-120, 0]}
+      this.tooltipContainer, {offset: [-150, 0]}  // offset to match width set in tooltip-body css
     ).setLngLat(
       [0,0]
     ).addTo(
