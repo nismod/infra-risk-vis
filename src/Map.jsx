@@ -414,10 +414,10 @@ class Map extends React.Component {
                 Feature size indicates maximum expected annual damages plus maximum expected annual
                 losses for a 30-day disruption
                 </small>
-                <span className="dot line" style={{"height": "2px", "width": "24px"}}></span>&lt;0.5 million USD<br/>
-                <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>0.5-1 million USD<br/>
-                <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>1-2 million USD<br/>
-                <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;2 million USD<br/>
+                <span className="dot line" style={{"height": "2px", "width": "24px"}}></span>&lt;1 million USD<br/>
+                <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>1-5 million USD<br/>
+                <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>5-10 million USD<br/>
+                <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;10 million USD<br/>
               </div>
               : null
           }
@@ -427,10 +427,10 @@ class Map extends React.Component {
                 <small>
                   Feature size indicates maximum total economic impact
                 </small>
-                <span className="dot line" style={{"height": "2px", "width": "24px"}}></span>&lt;0.5 million USD<br/>
-                <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>0.5-1 million USD<br/>
-                <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>1-2 million USD<br/>
-                <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;2 million USD<br/>
+                <span className="dot line" style={{"height": "2px", "width": "24px"}}></span>&lt;0.5 million USD/day<br/>
+                <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>0.5-1 million USD/day<br/>
+                <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>1-2 million USD/day<br/>
+                <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;2 million USD/day<br/>
               </div>
               : null
           }
