@@ -131,7 +131,7 @@ class Map extends React.Component {
 
   setTooltip(features) {
     ReactDOM.render(
-      React.createElement(Tooltip, {features: features}),
+      React.createElement(Tooltip, {features: features, map_style: this.props.map_style}),
       this.tooltipContainer
     );
   }
