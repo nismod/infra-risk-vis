@@ -52,9 +52,16 @@ OR Unzip within `/incoming_data` folder:
     unzip ~/Downloads/boundaries.zip -d incoming_data/
     unzip ~/Downloads/network.zip -d incoming_data/
 
-Convert the incoming shapefiles into a *.mbtiles file:
+Convert the incoming data to JSON files first:
+
+    python scripts/files_to_json_for_vis.py
+
+Create the *.mbtiles files for visualisation:
 
     make
+
+Alternatively, download the prepared MBTiles files from `network_data_vis/Mbtiles_files` and
+unzip directly in the `/data` folder.
 
 
 ## Build and run requirements
