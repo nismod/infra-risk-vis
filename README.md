@@ -2,6 +2,24 @@
 
 This project provides interactive data visualisations of OIA risk analysis results.
 
+The tool presents the infrastructure systems and hazards considered in the analysis, then
+presents results as modelled for the whole system at a fine scale.
+
+![Ports and airports](images/05-port-airport-flows.png)
+
+Query attributes of elements of the system:
+
+![System attributes](images/03-road-attributes.png)
+
+Range of potential economic impact of failure:
+
+![Impact of flooding](images/06-impact.png)
+
+Cost-benefit analysis (under uncertainty, with options to explore some parameters) of
+adaptation measures:
+
+![Cost-benefit analysis of adaptation measures](images/07-cost-benefit.png)
+
 This README covers requirements and steps through how to prepare data for visualisation and how
 to run the tool.
 
