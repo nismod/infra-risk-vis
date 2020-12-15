@@ -32,12 +32,12 @@ server {
 	# Add index.php to the list if you are using PHP
 	index index.html
 
-	server_name argentina.oi-analytics.com;
+	server_name tool.oi-analytics.com;
 
 	location / {
 		# basic authentication - use htpasswd to add users
 		auth_basic "Access restricted";
-		auth_basic_user_file /etc/apache2/.htpasswd;
+		auth_basic_user_file /etc/nginx/.htpasswd;
 
 		# First attempt to serve request as file, then
 		# as directory, then fall back to index.
@@ -53,11 +53,11 @@ server {
 	location /static {
 		# basic authentication - use htpasswd to add users
 		auth_basic "Access restricted";
-		auth_basic_user_file /etc/apache2/.htpasswd;
+		auth_basic_user_file /etc/nginx/.htpasswd;
 
 		# First attempt to serve request as file, then
 		# as directory, then fall back to index.
-		try_files $uri;
+		try_files $uri =404;
 		expires 1y;
 		access_log off;
 		add_header Cache-Control "public";
@@ -66,7 +66,7 @@ server {
 	location /styles {
 		# basic authentication - use htpasswd to add users
 		auth_basic "Access restricted";
-		auth_basic_user_file /etc/apache2/.htpasswd;
+		auth_basic_user_file /etc/nginx/.htpasswd;
 
 		proxy_pass http://tileserver;
 		proxy_set_header Host $host;
@@ -78,7 +78,7 @@ server {
 	location /data {
 		# basic authentication - use htpasswd to add users
 		auth_basic "Access restricted";
-		auth_basic_user_file /etc/apache2/.htpasswd;
+		auth_basic_user_file /etc/nginx/.htpasswd;
 
 		proxy_pass http://tileserver;
 		proxy_set_header Host $host;
@@ -90,7 +90,7 @@ server {
 	location /fonts {
 		# basic authentication - use htpasswd to add users
 		auth_basic "Access restricted";
-		auth_basic_user_file /etc/apache2/.htpasswd;
+		auth_basic_user_file /etc/nginx/.htpasswd;
 
 		proxy_pass http://tileserver;
 		proxy_set_header Host $host;
@@ -102,21 +102,21 @@ server {
 
 	listen [::]:443 ssl ipv6only=on; # managed by Certbot
 	listen 443 ssl; # managed by Certbot
-	ssl_certificate /etc/letsencrypt/live/argentina.oi-analytics.com/fullchain.pem; # managed by Certbot
-	ssl_certificate_key /etc/letsencrypt/live/argentina.oi-analytics.com/privkey.pem; # managed by Certbot
+	ssl_certificate /etc/letsencrypt/live/tool.oi-analytics.com/fullchain.pem; # managed by Certbot
+	ssl_certificate_key /etc/letsencrypt/live/tool.oi-analytics.com/privkey.pem; # managed by Certbot
 	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
 	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
 
 # Redirect from HTTP to HTTPS
 server {
-	if ($host = argentina.oi-analytics.com) {
+	if ($host = tool.oi-analytics.com) {
 		return 301 https://$host$request_uri;
 	} # managed by Certbot
 
 
 	listen 80 ;
 	listen [::]:80 ;
-	server_name argentina.oi-analytics.com;
+	server_name tool.oi-analytics.com;
 	return 404; # managed by Certbot
 }
