@@ -3,10 +3,12 @@ node_modules/
 data
 incoming_data/
 intermediate_data/
+*.zip
 
 # local config
 package-lock.json
 TODO
+NOTES
 
 # build
 build/
