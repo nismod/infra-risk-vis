@@ -73,48 +73,17 @@
             -23.4027649054
           ]
         }
-      },
-      "rail": {
-        "style": "rail.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
-      },
-      "airwater": {
-        "style": "airwater.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
       }
     },
     "data": {
-      "air": {
-        "mbtiles": "air_nodes.mbtiles"
-      },
-      "bridges": {
-        "mbtiles": "bridges.mbtiles"
-      },
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
       },
-      "rail": {
-        "mbtiles": "rail_edges.mbtiles"
+      "energy_network": {
+        "mbtiles": "energy_network.mbtiles"
       },
       "road": {
         "mbtiles": "road_edges.mbtiles"
-      },
-      "water": {
-        "mbtiles": "port_nodes.mbtiles"
       },
       "flood": {
         "mbtiles": "flood.mbtiles"
