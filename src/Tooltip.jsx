@@ -27,14 +27,18 @@ const Tooltip = (props) => {
           : "";
 
       } else {
-        max_value = f.properties.max_total_tons;
+        max_value = f.properties.max_tons;
 
-        detail = (f.properties.max_total_tons && f.properties.min_total_tons)?
+        detail = (f.properties.max_tons && f.properties.min_tons)?
           " " +
-          commas(f.properties.min_total_tons.toFixed(0)) + " – " +
-          commas(f.properties.max_total_tons.toFixed(0)) + " tons/day freight flows"
+          commas(f.properties.min_tons.toFixed(0)) + " – " +
+          commas(f.properties.max_tons.toFixed(0)) + " tons/day freight flows"
           : "";
       }
+    }
+
+    if (props.map_style === "energy_network") {
+      detail = "Asset Ref: " + f.properties.fid;
     }
 
     if (props.map_style === "impact") {
@@ -49,9 +53,9 @@ const Tooltip = (props) => {
 
     if (props.map_style === "risk") {
       max_value = Math.max(
-        ((f.properties.baseline_ead || 0) + (f.properties.baseline_max_eael_per_day || 0) *30),
-        ((f.properties.future_med_ead || 0) + (f.properties.future_med_max_eael_per_day || 0) * 30),
-        ((f.properties.future_high_ead || 0) + (f.properties.future_high_max_eael_per_day || 0) * 30)
+        ((f.properties.baseline_max_ead || 0) + (f.properties.baseline_max_eael_per_day || 0) *30),
+        ((f.properties.rcp_4p5_max_ead || 0) + (f.properties.rcp_4p5_max_eael_per_day || 0) * 30),
+        ((f.properties.rcp_8p5_max_ead || 0) + (f.properties.rcp_8p5_max_eael_per_day || 0) * 30)
       );
 
       detail = (max_value)?

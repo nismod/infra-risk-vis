@@ -1,17 +1,14 @@
 {
   "version": 8,
   "name": "Flood",
-  "center": [
-    -64.405087,
-    -34.919628
-  ],
+  "center": [105.12, 16.19],
   "height": "600px",
-  "zoom": 4,
+  "zoom": 5,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
-    "flood": { "type": "vector", "url": "mbtiles://{flood}" }
+    "flood": { "type": "vector", "url": "mbtiles://{flood}" },
+    "wb_boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -23,41 +20,23 @@
       }
     },
     {
-      "id": "landuse-neighbour",
+      "id": "adminboundaries",
       "type": "fill",
-      "source": "boundaries",
-      "source-layer": "admin_0_boundaries",
+      "source": "wb_boundaries",
+      "source-layer": "WB_countries_Admin0",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#d2d2d2",
         "fill-outline-color": "#fff"
       }
     },
     {
-      "id": "landuse",
+      "id": "disputedareas",
       "type": "fill",
-      "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
+      "source": "wb_boundaries",
+      "source-layer": "WB_Admin0_disputed_areas",
       "paint": {
-        "fill-color": "#d2d2d2",
-        "fill-outline-color": "#ffffff"
-      }
-    },
-    {
-      "id": "lakes",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "physical_lakes",
-      "paint": {
-        "fill-color": "#c6e1ff"
-      }
-    },
-    {
-      "id": "flood_50cm1m",
-      "type": "fill",
-      "source": "flood",
-      "source-layer": "baseline_fluvial_1in1000_50cm1m",
-      "paint": {
-        "fill-color": "#ffffff"
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
       }
     },
     {
@@ -99,23 +78,12 @@
     {
       "id": "country_labels",
       "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_0_labels",
+      "source": "wb_boundaries",
+      "source-layer": "CNTR_LB_2020_4326",
       "layout": {
-        "text-field": "{text}",
+        "text-field": "{NAME_ENGL}",
         "symbol-placement": "point"
       }
-    },
-    {
-      "id": "provinces_labels",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_1_labels",
-      "layout": {
-        "text-field": "{text}",
-        "symbol-placement": "point"
-      },
-      "minzoom": 3.5
     }
   ]
 }

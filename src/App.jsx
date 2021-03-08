@@ -18,27 +18,23 @@ const App = () => (
           <Map
             map_style="overview"
             dataSources={[
-              'road',
-              'bridges',
-              'rail',
-              'air',
-              'water'
+              'road'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"},
-              {key:'air', label: 'Airports', color: "#000000"},
-              {key:'water', label: 'Water', color: "#045a8d"}
+              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
+              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
+              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
+              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
+              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
+              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"},
+              {key:'Cambodia_Energy', label: 'Cambodia Energy Network', linear: true, color: "#000000"},
+              {key:'Laos_Energy', label: 'Lao PDR Energy Network', linear: true, color: "#000000"},
+              {key:'Myanmar_Energy', label: 'Myanmar Energy Network', linear: true, color: "#000000"},
+              {key:'Thailand_Energy', label: 'Thailand Energy Network', linear: true, color: "#000000"},
+              {key:'Vietnam_Energy', label: 'Vietnam Energy Network', linear: true, color: "#000000"}
             ]}
             tooltipLayerSources={[
-              'road',
-              'bridges',
-              'rail',
-              'air',
-              'water'
+              'road'
             ]}
             />
         </Route>
@@ -46,52 +42,37 @@ const App = () => (
           <Map
             map_style="roads"
             dataSources={[
-              'road',
-              'bridges'
+              'road'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
+              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
+              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
+              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
+              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
+              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
+              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
+
             ]}
             tooltipLayerSources={[
-              'road',
-              'bridges',
-              'flood'
+              'road'
             ]}
             />
         </Route>
-        <Route path="/rail">
+        <Route path="/energy_network">
           <Map
-            map_style="rail"
+            map_style="energy_network"
             dataSources={[
-              'rail'
+              'energy_network'
             ]}
             dataLayers={[
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"},
+              {key:'Cambodia_Energy', label: 'Cambodia Energy Network', linear: true, color: "#000000"},
+              {key:'Laos_Energy', label: 'Lao PDR Energy Network', linear: true, color: "#000000"},
+              {key:'Myanmar_Energy', label: 'Myanmar Energy Network', linear: true, color: "#000000"},
+              {key:'Thailand_Energy', label: 'Thailand Energy Network', linear: true, color: "#000000"},
+              {key:'Vietnam_Energy', label: 'Vietnam Energy Network', linear: true, color: "#000000"}
             ]}
             tooltipLayerSources={[
-              'rail',
-              'flood'
-            ]}
-            />
-        </Route>
-        <Route path="/airwater">
-          <Map
-            map_style="airwater"
-            dataSources={[
-              'air',
-              'water'
-            ]}
-            dataLayers={[
-              {key:'air', label: 'Airports', color: "#000000"},
-              {key:'water', label: 'Water', color: "#045a8d"}
-            ]}
-            tooltipLayerSources={[
-              'air',
-              'water',
-              'flood'
+              'energy_network'
             ]}
             />
         </Route>
@@ -107,21 +88,19 @@ const App = () => (
           <Map
             map_style="impact"
             dataSources={[
-              'road',
-              'bridges',
-              'rail'
+              'road'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"}
+              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
+              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
+              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
+              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
+              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
+              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
+
             ]}
             tooltipLayerSources={[
-              'road',
-              'bridges',
-              'rail'
+              'road'
             ]}
             />
         </Route>
@@ -129,91 +108,98 @@ const App = () => (
           <Map
             map_style="risk"
             dataSources={[
-              'road',
-              'bridges',
-              'rail'
+              'road'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"}
+              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
+              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
+              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
+              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
+              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
+              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
             ]}
             tooltipLayerSources={[
-              'road',
-              'bridges',
-              'rail'
+              'road'
             ]}
             />
         </Route>
         <Route path="/adaptation">
           <Map
-            zoom={6}
-            lng={-61.5}
-            lat={-34.6}
             map_style="adaptation"
             dataSources={[
-              'road',
-              'bridges'
+              'road'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
+              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
+              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
+              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
+              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
+              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
+              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
             ]}
             tooltipLayerSources={[
-              'road',
-              'bridges'
+              'road'
             ]}
             />
         </Route>
         <Route path="/">
           <div className="jumbotron welcome-float">
-            <h1 className="h1">Argentina Transport Risk Analysis - Results inquirer</h1>
+            <h1 className="h1">Southeast Asia Transport Risk Platform: Prototype Results Inquirer</h1>
+
             <p className="lead">
-
-            This tool presents results of the modelling and analysis of climate-related risks
-            to transport networks in Argentina.
-
-            </p>
-            <p className="lead">
-
-            The modelling and analysis aim to support decision-making by identifying spatial
-            criticailities, risks, and the performance of adaptation options under current and
-            future fluvial and pluvial flooding outlooks. It comprises a network flow model,
-            generation of failure scenarios, economic impact assessment, and cost-benefit
-            analysis of adaptation options.
-
+              This protoype tool presents data from the World Bank's Transport Risk Study
+              of Vietnam within the risk visualisation tool developed as part of the World Bank's
+              Argentia Transport Risk Study. Both studies have been undertaken for the World Bank by
+              Oxford Infrastructure Analytics Ltd.
             </p>
 
-            <p className="lead">
 
-            The concepts and model results presented here are documented in the study report:
+            <p className="lead">
+              The purpose of the prototype is to illustrate the type and nature of simulation results and network
+              data currently available in the SEA region, and how - using the existing toolchain - this data might
+              be accessed and interrogated at a National or Super-National scale.
             </p>
 
-            <p className="lead">
 
-            Pant, R., Koks, E.E., Paltan, H., Russell, T., & Hall, J.W. (2019). Argentina – Transport risk analysis. Final Report, Oxford Infrastructure Analytics Ltd., Oxford, UK. (Available by request from World Bank)
+            <p className="lead">
+              The modelling and analysis presented here aim to support decision-making by identifying
+              spatial criticailities, risks, and the performance of adaptation options under current and
+              future fluvial flooding outlooks. It comprises a network flow model, generation of failure
+              scenarios, economic impact assessment, and cost-benefit analysis of adaptation options.
             </p>
 
             <p className="lead">
+              The concepts and model results presented here are documented in the study report:
+            </p>
 
-            The outputs visualized here were generated from a model created and documented
-            here:
+            <p className="lead">
+              Pant, R., Koks, E.E., Paltan, H., Russell, T., &amp; Hall, J.W. (2019). Argentina – Transport risk analysis.
+              Final Report, Oxford Infrastructure Analytics Ltd., Oxford, UK. (Available by request from World Bank)
+            </p>
 
+
+            <p className="lead">
+              The tool being used to visualize the model outputs was created and documented
+              here:
             </p>
             <p className="lead">
-
-            <a href="https://github.com/oi-analytics/argentina-transport" target="blank">GitHub resources</a>
-
+              <a href="https://github.com/oi-analytics/argentina-transport" target="blank">Argentina Transport Study</a>
             </p>
+
             <p className="lead">
-
-            <a href="https://argentina-transport-risk-analysis.readthedocs.io/en/latest/?badge=latest" target="blank">ReadTheDocs resources</a>
-
+              <a href="https://argentina-transport-risk-analysis.readthedocs.io/en/latest/?badge=latest" target="blank">ReadTheDocs resources</a>
             </p>
+
+
+            <p className="lead">
+              The outputs visualized here were generated from a model created and documented
+              here:
+            </p>
+
+            <p className="lead">
+              <a href="https://github.com/oi-analytics/vietnam-transport" target="blank">Vietnam Transport Study</a><br></br>
+            </p>
+
 
             <h1 className="h1">Funding support</h1>
             <p className="lead">

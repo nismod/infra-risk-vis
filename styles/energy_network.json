@@ -1,13 +1,13 @@
 {
   "version": 8,
-  "name": "Overview",
+  "name": "Energy Network",
   "center": [105.12, 16.19],
   "height": "600px",
   "zoom": 5,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "road": { "type": "vector", "url": "mbtiles://{road}" },
+    "flood": { "type": "vector", "url": "mbtiles://{flood}" },
     "wb_boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
     "energy_network": { "type": "vector", "url": "mbtiles://{energy_network}" }
   },
@@ -41,141 +41,39 @@
       }
     },
     {
-      "id": "road_class_6",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        6
-      ],
+      "id": "flood_1m2m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_1m2m",
       "paint": {
-        "line-color": "#feb078",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "fill-color": "#58cced"
       }
     },
     {
-      "id": "road_class_5",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        5
-      ],
+      "id": "flood_2m3m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_2m3m",
       "paint": {
-        "line-color": "#f1605d",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "fill-color": "#3895d3"
       }
     },
     {
-      "id": "road_class_4",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        4
-      ],
+      "id": "flood_3m4m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_3m4m",
       "paint": {
-        "line-color": "#b73779",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "fill-color": "#1261a0"
       }
     },
     {
-      "id": "road_class_3",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        3
-      ],
+      "id": "flood_4m999m",
+      "type": "fill",
+      "source": "flood",
+      "source-layer": "baseline_fluvial_1in1000_4m999m",
       "paint": {
-        "line-color": "#721f81",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
-      }
-    },
-    {
-      "id": "road_class_2",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        2
-      ],
-      "paint": {
-        "line-color": "#2c115f",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
-      }
-    },
-    {
-      "id": "road_class_1",
-      "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        1
-      ],
-      "paint": {
-        "line-color": "#000004",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "fill-color": "#072f5f"
       }
     },
     {

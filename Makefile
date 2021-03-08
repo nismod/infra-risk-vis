@@ -1,6 +1,6 @@
 .PHONY: all air boundaries bridge flood rail road water clean
 
-all: air boundaries bridge flood rail road water
+all: flood road boundaries
 
 air: ./data/air_edges.mbtiles ./data/air_nodes.mbtiles
 boundaries: ./data/boundaries.mbtiles
@@ -29,39 +29,17 @@ flood: ./data/flood.mbtiles
 		-o ./data/air_nodes.mbtiles \
 		./intermediate_data/air_nodes.json
 
-./incoming_data/boundaries/admin_0_labels.shp:  ./incoming_data/boundaries/admin_0_labels.csv
-	ogr2ogr -f "ESRI Shapefile" $@ $< -a_srs EPSG:4326 \
-		-oo X_POSSIBLE_NAMES=lon \
-		-oo Y_POSSIBLE_NAMES=lat \
-		-oo KEEP_GEOM_COLUMNS=NO
 
-./incoming_data/boundaries/admin_1_labels.shp:  ./incoming_data/boundaries/admin_1_labels.csv
-	ogr2ogr -f "ESRI Shapefile" $@ $< -a_srs EPSG:4326 \
-		-oo X_POSSIBLE_NAMES=lon \
-		-oo Y_POSSIBLE_NAMES=lat \
-		-oo KEEP_GEOM_COLUMNS=NO
-
-./data/boundaries.mbtiles: ./incoming_data/boundaries/admin_0_boundaries.shp ./incoming_data/boundaries/admin_0_labels.shp ./incoming_data/boundaries/admin_1_boundaries.shp ./incoming_data/boundaries/admin_1_labels.shp ./incoming_data/boundaries/physical_lakes.shp
-	ogr2ogr -f GeoJSON \
-		./intermediate_data/admin_0_boundaries.json \
-		./incoming_data/boundaries/admin_0_boundaries.shp
-	ogr2ogr -f GeoJSON \
-		./intermediate_data/admin_0_labels.json \
-		-t_srs EPSG:4326 \
-		./incoming_data/boundaries/admin_0_labels.shp
-	ogr2ogr -f GeoJSON \
-		./intermediate_data/admin_1_boundaries.json \
-		-t_srs EPSG:4326 \
-		./incoming_data/boundaries/admin_1_boundaries.shp
-	ogr2ogr -f GeoJSON \
-		./intermediate_data/admin_1_labels.json \
-		-t_srs EPSG:4326 \
-		./incoming_data/boundaries/admin_1_labels.shp
-	ogr2ogr -f GeoJSON \
-		./intermediate_data/physical_lakes.json \
-		-t_srs EPSG:4326 \
-		./incoming_data/boundaries/physical_lakes.shp
+./data/boundaries.mbtiles: ./intermediate_data/boundaries/CNTR_LB_2020_4326.json ./intermediate_data/boundaries/WB_Admin0_disputed_areas.geojson ./intermediate_data/boundaries/WB_countries_Admin0.geojson
 	rm -f ./data/boundaries.mbtiles
+	ogr2ogr -f GeoJSON \
+		./intermediate_data/boundaries/WB_Admin0_disputed_areas.json \
+		-t_srs EPSG:4326 \
+		./intermediate_data/boundaries/WB_Admin0_disputed_areas.geojson
+	ogr2ogr -f GeoJSON \
+		./intermediate_data/boundaries/WB_countries_Admin0.json \
+		-t_srs EPSG:4326 \
+		./intermediate_data/boundaries/WB_countries_Admin0.geojson
 	tippecanoe \
 		-zg \
 		-r1 -pk -pf \
@@ -70,11 +48,9 @@ flood: ./data/flood.mbtiles
 		--no-tile-size-limit \
 		--extend-zooms-if-still-dropping \
 		-o ./data/boundaries.mbtiles \
-		./intermediate_data/admin_0_boundaries.json \
-		./intermediate_data/admin_0_labels.json \
-		./intermediate_data/admin_1_boundaries.json \
-		./intermediate_data/admin_1_labels.json \
-		./intermediate_data/physical_lakes.json
+		./intermediate_data/boundaries/WB_Admin0_disputed_areas.json \
+		./intermediate_data/boundaries/CNTR_LB_2020_4326.json \
+		./intermediate_data/boundaries/WB_countries_Admin0.json
 
 ./data/bridges.mbtiles: ./intermediate_data/bridges.json ./intermediate_data/bridges.json
 	rm -f ./data/bridges.mbtiles
@@ -125,102 +101,7 @@ flood: ./data/flood.mbtiles
 		-o ./data/port_edges.mbtiles \
 		./intermediate_data/port_edges.json
 
-./intermediate_data/flood_data/baseline_fluvial_1in1000_50cm-1m.json: ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_50cm-1m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_fluvial_1in1000_50cm-1m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_50cm-1m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_fluvial_1in1000_1m-2m.json: ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_1m-2m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_fluvial_1in1000_1m-2m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_fluvial_1in1000_2m-3m.json: ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_2m-3m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_fluvial_1in1000_2m-3m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_fluvial_1in1000_3m-4m.json: ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_3m-4m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_fluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_fluvial_1in1000_4m-999m.json: ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_4m-999m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_fluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/fluvial/FU_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
-
-
-./intermediate_data/flood_data/baseline_pluvial_1in1000_50cm-1m.json: ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_50cm-1m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_pluvial_1in1000_50cm-1m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_50cm-1m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_pluvial_1in1000_1m-2m.json: ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_1m-2m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_pluvial_1in1000_1m-2m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_pluvial_1in1000_2m-3m.json: ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_2m-3m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_pluvial_1in1000_2m-3m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_pluvial_1in1000_3m-4m.json: ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_3m-4m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_pluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/baseline_pluvial_1in1000_4m-999m.json: ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_4m-999m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/baseline_pluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Baseline/pluvial/P_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
-
-
-./intermediate_data/flood_data/med_fluvial_1in1000_50cm-1m.json: ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_50cm-1m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_fluvial_1in1000_50cm-1m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_50cm-1m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_fluvial_1in1000_1m-2m.json: ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_1m-2m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_fluvial_1in1000_1m-2m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_fluvial_1in1000_2m-3m.json: ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_2m-3m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_fluvial_1in1000_2m-3m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_fluvial_1in1000_3m-4m.json: ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_3m-4m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_fluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_fluvial_1in1000_4m-999m.json: ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_4m-999m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_fluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/fluvial/FU_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_pluvial_1in1000_50cm-1m.json: ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_50cm-1m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_pluvial_1in1000_50cm-1m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_50cm-1m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_pluvial_1in1000_1m-2m.json: ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_1m-2m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_pluvial_1in1000_1m-2m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_pluvial_1in1000_2m-3m.json: ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_2m-3m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_pluvial_1in1000_2m-3m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_pluvial_1in1000_3m-4m.json: ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_3m-4m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_pluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/med_pluvial_1in1000_4m-999m.json: ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_4m-999m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/med_pluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_Med/pluvial/P_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
-
-
-./intermediate_data/flood_data/high_fluvial_1in1000_50cm-1m.json: ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_50cm-1m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_fluvial_1in1000_50cm-1m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_50cm-1m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_fluvial_1in1000_1m-2m.json: ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_1m-2m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_fluvial_1in1000_1m-2m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_fluvial_1in1000_2m-3m.json: ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_2m-3m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_fluvial_1in1000_2m-3m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_fluvial_1in1000_3m-4m.json: ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_3m-4m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_fluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_fluvial_1in1000_4m-999m.json: ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_4m-999m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_fluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/fluvial/FU_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
-
-
-./intermediate_data/flood_data/high_pluvial_1in1000_50cm-1m.json: ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_50cm-1m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_pluvial_1in1000_50cm-1m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_50cm-1m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_pluvial_1in1000_1m-2m.json: ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_1m-2m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_pluvial_1in1000_1m-2m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_1m-2m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_pluvial_1in1000_2m-3m.json: ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_2m-3m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_pluvial_1in1000_2m-3m.json -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_2m-3m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_pluvial_1in1000_3m-4m.json: ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_3m-4m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_pluvial_1in1000_3m-4m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_3m-4m_threshold.shp -s_srs EPSG:4326
-
-./intermediate_data/flood_data/high_pluvial_1in1000_4m-999m.json: ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_4m-999m_threshold.shp
-	ogr2ogr -f GeoJSON ./intermediate_data/flood_data/high_pluvial_1in1000_4m-999m.json  -t_srs EPSG:4326 ./incoming_data/flood_data/FATHOM/Future_High/pluvial/P_1in1000_4m-999m_threshold.shp -s_srs EPSG:4326
-
-
-./data/flood.mbtiles: ./intermediate_data/flood_data/baseline_fluvial_1in1000_50cm-1m.json ./intermediate_data/flood_data/baseline_fluvial_1in1000_1m-2m.json ./intermediate_data/flood_data/baseline_fluvial_1in1000_2m-3m.json ./intermediate_data/flood_data/baseline_fluvial_1in1000_3m-4m.json ./intermediate_data/flood_data/baseline_fluvial_1in1000_4m-999m.json ./intermediate_data/flood_data/baseline_pluvial_1in1000_50cm-1m.json ./intermediate_data/flood_data/baseline_pluvial_1in1000_1m-2m.json ./intermediate_data/flood_data/baseline_pluvial_1in1000_2m-3m.json ./intermediate_data/flood_data/baseline_pluvial_1in1000_3m-4m.json ./intermediate_data/flood_data/baseline_pluvial_1in1000_4m-999m.json ./intermediate_data/flood_data/med_fluvial_1in1000_50cm-1m.json ./intermediate_data/flood_data/med_fluvial_1in1000_1m-2m.json ./intermediate_data/flood_data/med_fluvial_1in1000_2m-3m.json ./intermediate_data/flood_data/med_fluvial_1in1000_3m-4m.json ./intermediate_data/flood_data/med_fluvial_1in1000_4m-999m.json ./intermediate_data/flood_data/med_pluvial_1in1000_50cm-1m.json ./intermediate_data/flood_data/med_pluvial_1in1000_1m-2m.json ./intermediate_data/flood_data/med_pluvial_1in1000_2m-3m.json ./intermediate_data/flood_data/med_pluvial_1in1000_3m-4m.json ./intermediate_data/flood_data/med_pluvial_1in1000_4m-999m.json ./intermediate_data/flood_data/high_fluvial_1in1000_50cm-1m.json ./intermediate_data/flood_data/high_fluvial_1in1000_1m-2m.json ./intermediate_data/flood_data/high_fluvial_1in1000_2m-3m.json ./intermediate_data/flood_data/high_fluvial_1in1000_3m-4m.json ./intermediate_data/flood_data/high_fluvial_1in1000_4m-999m.json ./intermediate_data/flood_data/high_pluvial_1in1000_50cm-1m.json ./intermediate_data/flood_data/high_pluvial_1in1000_1m-2m.json ./intermediate_data/flood_data/high_pluvial_1in1000_2m-3m.json ./intermediate_data/flood_data/high_pluvial_1in1000_3m-4m.json ./intermediate_data/flood_data/high_pluvial_1in1000_4m-999m.json
+./data/flood.mbtiles: ./intermediate_data/flood_data/baseline_fluvial_1in1000_1m2m.json ./intermediate_data/flood_data/baseline_fluvial_1in1000_2m3m.json ./intermediate_data/flood_data/baseline_fluvial_1in1000_3m4m.json ./intermediate_data/flood_data/baseline_fluvial_1in1000_4m999m.json ./intermediate_data/flood_data/rcp_4p5_fluvial_1in1000_1m2m.json ./intermediate_data/flood_data/rcp_4p5_fluvial_1in1000_2m3m.json ./intermediate_data/flood_data/rcp_4p5_fluvial_1in1000_3m4m.json ./intermediate_data/flood_data/rcp_4p5_fluvial_1in1000_4m999m.json ./intermediate_data/flood_data/rcp_8p5_fluvial_1in1000_1m2m.json ./intermediate_data/flood_data/rcp_8p5_fluvial_1in1000_2m3m.json ./intermediate_data/flood_data/rcp_8p5_fluvial_1in1000_3m4m.json ./intermediate_data/flood_data/rcp_8p5_fluvial_1in1000_4m999m.json 
 	rm -f ./data/flood.mbtiles
 	tippecanoe \
 		-zg \

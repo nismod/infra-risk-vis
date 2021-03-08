@@ -1,16 +1,15 @@
 {
   "version": 8,
   "name": "Adaptation",
-  "center": [-64.405087, -34.919628],
+  "center": [105.12, 16.19],
   "height": "600px",
-  "zoom": 4,
+  "zoom": 5,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
     "road": { "type": "vector", "url": "mbtiles://{road}" },
-    "bridges": { "type": "vector", "url": "mbtiles://{bridges}" },
-    "flood": { "type": "vector", "url": "mbtiles://{flood}" }
+    "flood": { "type": "vector", "url": "mbtiles://{flood}" },
+    "wb_boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -22,36 +21,50 @@
       }
     },
     {
-      "id": "landuse-neighbour",
+      "id": "adminboundaries",
       "type": "fill",
-      "source": "boundaries",
-      "source-layer": "admin_0_boundaries",
+      "source": "wb_boundaries",
+      "source-layer": "WB_countries_Admin0",
+      "paint": {
+        "fill-color": "#d2d2d2",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "disputedareas",
+      "type": "fill",
+      "source": "wb_boundaries",
+      "source-layer": "WB_Admin0_disputed_areas",
       "paint": {
         "fill-color": "#e0e0e0",
         "fill-outline-color": "#fff"
       }
     },
     {
-      "id": "landuse",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
+      "id": "all_roads",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        ">=",
+        ["get", "road_class"],
+        0
+      ],
       "paint": {
-        "fill-color": "#d2d2d2",
-        "fill-outline-color": "#ffffff"
+        "line-color": "#a0a0a0",
+        "line-width": {
+          "base": 0.1,
+          "stops": [[3, 0.02], [5, 0.2], [9, 1], [10, 2], [17, 5]]
+        }
       }
     },
     {
-      "id": "lakes",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "physical_lakes",
-      "paint": {
-        "fill-color": "#c6e1ff"
-      }
-    },
-    {
-      "id": "road_rural",
+      "id": "road_class_6",
       "type": "line",
       "source": "road",
       "source-layer": "road_edges",
@@ -62,10 +75,10 @@
       },
       "filter": [
         "all",
-        ["==", ["get", "road_type"], "rural"],
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
+        ["==", ["get", "road_class"], 6 ],
+        ["==",["typeof",["get", "baseline_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_4p5_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_8p5_max_tot_adap_cost"]], "number"]
       ],
       "paint": {
         "line-color": [
@@ -75,40 +88,41 @@
             "max",
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["/",["+",["get", "baseline_min_ead"],["get", "baseline_max_ead"]],2],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["get", "baseline_max_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_4p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ]
           ],
           0, "#e2e2e2",
           0.99, "#e2e2e2",
           1, "#fd8d3c",
           1.5, "#e31a1c",
-          2, "#800026"
+          2, "#800026",
+          2000, "#800026"
         ],
         "line-width": {
           "base": 0.2,
@@ -117,7 +131,7 @@
       }
     },
     {
-      "id": "road_province",
+      "id": "road_class_5",
       "type": "line",
       "source": "road",
       "source-layer": "road_edges",
@@ -128,10 +142,10 @@
       },
       "filter": [
         "all",
-        ["==", ["get", "road_type"], "province"],
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
+        ["==", ["get", "road_class"], 5 ],
+        ["==",["typeof",["get", "baseline_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_4p5_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_8p5_max_tot_adap_cost"]], "number"]
       ],
       "paint": {
         "line-color": [
@@ -141,40 +155,41 @@
             "max",
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["get", "baseline_min_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["get", "baseline_max_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_4p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ]
           ],
           0, "#e2e2e2",
           0.99, "#e2e2e2",
           1, "#fd8d3c",
           1.5, "#e31a1c",
-          2, "#800026"
+          2, "#800026",
+          2000, "#800026"
         ],
         "line-width": {
           "base": 0.2,
@@ -183,7 +198,7 @@
       }
     },
     {
-      "id": "road_national",
+      "id": "road_class_4",
       "type": "line",
       "source": "road",
       "source-layer": "road_edges",
@@ -194,10 +209,10 @@
       },
       "filter": [
         "all",
-        ["==", ["get", "road_type"], "national"],
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
+        ["==", ["get", "road_class"], 4 ],
+        ["==",["typeof",["get", "baseline_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_4p5_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_8p5_max_tot_adap_cost"]], "number"]
       ],
       "paint": {
         "line-color": [
@@ -207,40 +222,41 @@
             "max",
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["get", "baseline_min_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["get", "baseline_max_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_4p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ]
           ],
           0, "#e2e2e2",
           0.99, "#e2e2e2",
           1, "#fd8d3c",
           1.5, "#e31a1c",
-          2, "#800026"
+          2, "#800026",
+          2000, "#800026"
         ],
         "line-width": {
           "base": 0.2,
@@ -249,85 +265,215 @@
       }
     },
     {
-      "id": "bridges",
-      "type": "circle",
-      "source": "bridges",
-      "source-layer": "bridges",
+      "id": "road_class_3",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "filter": [
         "all",
-        ["has", "baseline_tot_adap_cost"],
-        ["has", "future_med_tot_adap_cost"],
-        ["has", "future_high_tot_adap_cost"]
+        ["==", ["get", "road_class"], 3],
+        ["==",["typeof",["get", "baseline_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_4p5_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_8p5_max_tot_adap_cost"]], "number"]
       ],
       "paint": {
-        "circle-color": [
+        "line-color": [
           "interpolate",
           ["linear"],
           [
             "max",
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["get", "baseline_min_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "baseline_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
-              ["get", "baseline_tot_adap_cost"]
+              ["+",["*",["get", "baseline_max_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_4p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_med_ead"],9.13535210891046],["*",["get", "future_med_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_med_tot_adap_cost"]
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_min_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ],
             [
               "/",
-              ["+",["*",["get", "future_high_ead"],9.13535210891046],["*",["get", "future_high_max_eael_per_day"],345.4064743401366]],
-              ["get", "future_high_tot_adap_cost"]
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
             ]
           ],
           0, "#e2e2e2",
           0.99, "#e2e2e2",
           1, "#fd8d3c",
           1.5, "#e31a1c",
-          2, "#800026"
+          2, "#800026",
+          2000, "#800026"
         ],
-        "circle-radius": {
-          "base": 0.4,
-          "stops": [[3, 2], [9, 4], [10, 8], [17, 16]]
+        "line-width": {
+          "base": 0.2,
+          "stops": [[3, 0.1], [8, 2], [10, 4], [17, 12]]
+        }
+      }
+    },
+    {
+      "id": "road_class_2",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "all",
+        ["==", ["get", "road_class"], 2],
+        ["==",["typeof",["get", "baseline_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_4p5_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_8p5_max_tot_adap_cost"]], "number"]
+      ],
+      "paint": {
+        "line-color": [
+          "interpolate",
+          ["linear"],
+          [
+            "max",
+            [
+              "/",
+              ["+",["*",["get", "baseline_min_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "baseline_max_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_4p5_ead"],9.13535210891046],["*",["get", "rcp_4p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_4p5_ead"],9.13535210891046],["*",["get", "rcp_4p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_8p5_ead"],9.13535210891046],["*",["get", "rcp_8p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_8p5_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
+            ]
+          ],
+          0, "#e2e2e2",
+          0.99, "#e2e2e2",
+          1, "#fd8d3c",
+          1.5, "#e31a1c",
+          2, "#800026",
+          2000, "#800026"
+        ],
+        "line-width": {
+          "base": 0.2,
+          "stops": [[3, 0.1], [8, 2], [10, 4], [17, 12]]
+        }
+      }
+    },
+    {
+      "id": "road_class_1",
+      "type": "line",
+      "source": "road",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "all",
+        ["==", ["get", "road_class"], 1],
+        ["==",["typeof",["get", "baseline_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_4p5_max_tot_adap_cost"]], "number"],
+        ["==",["typeof",["get", "rcp_8p5_max_tot_adap_cost"]], "number"]
+      ],
+      "paint": {
+        "line-color": [
+          "interpolate",
+          ["linear"],
+          [
+            "max",
+            [
+              "/",
+              ["+",["*",["get", "baseline_min_ead"],9.13535210891046],["*",["get", "baseline_min_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "baseline_max_ead"],9.13535210891046],["*",["get", "baseline_max_eael_per_day"],345.4064743401366]],
+              ["get", "baseline_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_4p5_min_ead"],9.13535210891046],["*",["get", "rcp_4p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_4p5_max_ead"],9.13535210891046],["*",["get", "rcp_4p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_4p5_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_8p5_min_ead"],9.13535210891046],["*",["get", "rcp_8p5_min_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
+            ],
+            [
+              "/",
+              ["+",["*",["get", "rcp_8p5_max_ead"],9.13535210891046],["*",["get", "rcp_8p5_max_eael_per_day"],345.4064743401366]],
+              ["get", "rcp_8p5_max_tot_adap_cost"]
+            ]
+          ],
+          0, "#e2e2e2",
+          0.99, "#e2e2e2",
+          1, "#fd8d3c",
+          1.5, "#e31a1c",
+          2, "#800026",
+          2000, "#800026"
+        ],
+        "line-width": {
+          "base": 0.2,
+          "stops": [[3, 0.1], [8, 2], [10, 4], [17, 12]]
         }
       }
     },
     {
       "id": "country_labels",
       "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_0_labels",
+      "source": "wb_boundaries",
+      "source-layer": "CNTR_LB_2020_4326",
       "layout": {
-        "text-field": "{text}",
+        "text-field": "{NAME_ENGL}",
         "symbol-placement": "point"
       }
-    },
-    {
-      "id": "provinces_labels",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_1_labels",
-      "layout": {
-        "text-field": "{text}",
-        "symbol-placement": "point"
-      },
-      "minzoom": 3.5
     }
   ]
 }

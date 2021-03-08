@@ -8,18 +8,18 @@ const Nav = () => (
     </NavLink>
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
+        <a className="nav-link" href='/overview'>
+          Overview
+        </a>
+      </li>
+      <li className="nav-item">
         <a className="nav-link" href='/roads'>
           Roads
         </a>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/rail'>
-          Railways
-        </a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href='/airwater'>
-          Airports and Waterway ports
+        <a className="nav-link" href='/energy_network'>
+          Energy Network
         </a>
       </li>
       <li className="nav-item">
@@ -39,7 +39,7 @@ const Nav = () => (
       </li>
       <li className="nav-item">
         <a className="nav-link" href='/adaptation'>
-          Assets with Adaptation BCR > 1
+          Assets with Adaptation BCR &gt; 1
         </a>
       </li>
     </ul>

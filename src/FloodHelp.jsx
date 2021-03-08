@@ -1,15 +1,16 @@
 import React from 'react';
 
+// TODO: Change the words - Raghav to advise?
 const FloodHelp = () => (
   <div className="custom-map-control top-right selected-feature">
     <h4 className="h5">Flood Climate Outlooks - Explanation</h4>
     <dl>
       <dt>Baseline</dt>
-      <dd>{"The estimated flooded depths and areas informed by the 1986-2005 baseline precipitation given by historical rainfall records."}</dd>
+      <dd>{"The estimated flooded depths and areas averaged over 1960-1999 based on historical rainfall records."}</dd>
       <dt>Future Median</dt>
-      <dd>{"The estimated flooded depths and areas by 2050 informed by the median value of 5-day maximum precipitation change with respect to the 1986-2005 baseline precipitation, which was approximately +6%, recorded across 32 GCM's and across RCP 4.5 and RCP 8.5 climate emission scenarios."}</dd>
+      <dd>{" The estimated flooded depths and areas averaged over 2010-2049 based on global climate model outputs assuming global carbon emissions peak by 2040 before declining. The layer displayed here shows the flood outlines from the UK Met Office Hadley Centre Global Environment Model version 2 (HadGEM2-ES) model output, which is 1 of 5 models used in this study."}</dd>
       <dt>Future High</dt>
-      <dd>{"The estimated flooded depths and areas by 2050 informed by 90th percentile value of 5-day maximum precipitation changes with respect to the 1986-2005 baseline precipitation, which was approximately +12%, recorded across 32 GCM's  and across RCP 4.5 and RCP 8.5 climate emission scenarios."}</dd>
+      <dd>{" The estimated flooded depths and areas averaged over 2010-2049 based on global climate model outputs assuming global carbon emissions continue to rise throughout the 21st century. The layer displayed here shows the flood outlines from the UK Met Office Hadley Centre Global Environment Model version 2 (HadGEM2-ES) model output, which is 1 of 5 models used in this study."}</dd>
     </dl>
   </div>
 )
