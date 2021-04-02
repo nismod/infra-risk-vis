@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import VegaLite from 'react-vega';
 
 import Nav from './Nav'
 import Map from './Map'
@@ -142,11 +143,49 @@ const App = () => (
             ]}
             />
         </Route>
+        <Route path="/summary">
+          <div className="page-col-right">
+            <article>
+              <h1 className="h1">Risk summary</h1>
+              {/* <VegaLite spec={
+                {
+                  "description": "A simple bar chart with embedded data.",
+                  "layer": [
+                    {
+                      "data": {
+                        "url": "aggregated_stats_national_summary.csv"
+                      },
+                      "encoding": {
+                        "x": {
+                          "field": "probability",
+                          "type": "ordinal"
+                        },
+                        "y": {
+                          "field": "Minimum economic loss",
+                          "type": "quantitative"
+                        }
+                      },
+                      "mark": "line"
+                    }
+                  ]
+                }
+              } /> */}
+            </article>
+          </div>
+          <div className="page-col-left">
+            <Map
+              map_style="regions"
+              dataSources={[]}
+              dataLayers={[]}
+              tooltipLayerSources={[]}
+              />
+          </div>
+        </Route>
         <Route path="/">
-          <div className="jumbotron welcome-float">
+          <article>
             <h1 className="h1">Southeast Asia Transport Risk Platform: Prototype Results Inquirer</h1>
 
-            <p className="lead">
+            <p>
               This protoype tool presents data from the World Bank's Transport Risk Study
               of Vietnam within the risk visualisation tool developed as part of the World Bank's
               Argentia Transport Risk Study. Both studies have been undertaken for the World Bank by
@@ -154,62 +193,62 @@ const App = () => (
             </p>
 
 
-            <p className="lead">
+            <p>
               The purpose of the prototype is to illustrate the type and nature of simulation results and network
               data currently available in the SEA region, and how - using the existing toolchain - this data might
               be accessed and interrogated at a National or Super-National scale.
             </p>
 
 
-            <p className="lead">
+            <p>
               The modelling and analysis presented here aim to support decision-making by identifying
               spatial criticailities, risks, and the performance of adaptation options under current and
               future fluvial flooding outlooks. It comprises a network flow model, generation of failure
               scenarios, economic impact assessment, and cost-benefit analysis of adaptation options.
             </p>
 
-            <p className="lead">
+            <p>
               The concepts and model results presented here are documented in the study report:
             </p>
 
-            <p className="lead">
+            <p>
               Pant, R., Koks, E.E., Paltan, H., Russell, T., &amp; Hall, J.W. (2019). Argentina – Transport risk analysis.
               Final Report, Oxford Infrastructure Analytics Ltd., Oxford, UK. (Available by request from World Bank)
             </p>
 
 
-            <p className="lead">
+            <p>
               The tool being used to visualize the model outputs was created and documented
               here:
             </p>
-            <p className="lead">
+            <p>
               <a href="https://github.com/oi-analytics/argentina-transport" target="blank">Argentina Transport Study</a>
             </p>
 
-            <p className="lead">
+            <p>
               <a href="https://argentina-transport-risk-analysis.readthedocs.io/en/latest/?badge=latest" target="blank">ReadTheDocs resources</a>
             </p>
 
 
-            <p className="lead">
+            <p>
               The outputs visualized here were generated from a model created and documented
               here:
             </p>
 
-            <p className="lead">
+            <p>
               <a href="https://github.com/oi-analytics/vietnam-transport" target="blank">Vietnam Transport Study</a><br></br>
             </p>
 
 
             <h1 className="h1">Funding support</h1>
-            <p className="lead">
+            <p>
 
             This results inquirer tool has been developed for the Government of Argentina with
             funding support from the World Bank Group and Global Facility for Disaster
             Reduction and Recovery (GFDRR).
 
             </p>
-          </div>
+          </article>
         </Route>
       </Switch>
       </main>
