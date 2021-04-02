@@ -1,0 +1,52 @@
+{
+  "version": 8,
+  "name": "Overview",
+  "center": [105.12, 16.19],
+  "height": "600px",
+  "zoom": 5,
+  "bearing": 0,
+  "pitch": 0,
+  "sources": {
+    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" }
+  },
+  "glyphs": "{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#c6e1ff"
+      }
+    },
+    {
+      "id": "adminboundaries",
+      "type": "fill",
+      "source": "boundaries",
+      "source-layer": "WB_countries_Admin0",
+      "paint": {
+        "fill-color": "#d2d2d2",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "disputedareas",
+      "type": "fill",
+      "source": "boundaries",
+      "source-layer": "WB_Admin0_disputed_areas",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "country_labels",
+      "type": "symbol",
+      "source": "boundaries",
+      "source-layer": "CNTR_LB_2020_4326",
+      "layout": {
+        "text-field": "{NAME_ENGL}",
+        "symbol-placement": "point"
+      }
+    }
+  ]
+}
