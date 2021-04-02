@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import VegaLite from 'react-vega';
+import  { VegaLite } from 'react-vega';
 
 import Nav from './Nav'
 import Map from './Map'
@@ -147,29 +147,31 @@ const App = () => (
           <div className="page-col-right">
             <article>
               <h1 className="h1">Risk summary</h1>
-              {/* <VegaLite spec={
-                {
-                  "description": "A simple bar chart with embedded data.",
-                  "layer": [
-                    {
-                      "data": {
-                        "url": "aggregated_stats_national_summary.csv"
-                      },
-                      "encoding": {
-                        "x": {
-                          "field": "probability",
-                          "type": "ordinal"
-                        },
-                        "y": {
-                          "field": "Minimum economic loss",
-                          "type": "quantitative"
-                        }
-                      },
-                      "mark": "line"
-                    }
-                  ]
-                }
-              } /> */}
+              <VegaLite
+                spec={{
+                  width: 400,
+                  height: 200,
+                  mark: 'bar',
+                  encoding: {
+                    x: { field: 'a', type: 'ordinal' },
+                    y: { field: 'b', type: 'quantitative' },
+                  },
+                  data: { name: 'table' },
+                }}
+                data={{
+                  table: [
+                    { a: 'A', b: 28 },
+                    { a: 'B', b: 55 },
+                    { a: 'C', b: 43 },
+                    { a: 'D', b: 91 },
+                    { a: 'E', b: 81 },
+                    { a: 'F', b: 53 },
+                    { a: 'G', b: 19 },
+                    { a: 'H', b: 87 },
+                    { a: 'I', b: 52 },
+                  ],
+                }}
+                />
             </article>
           </div>
           <div className="page-col-left">
