@@ -1,6 +1,5 @@
-import React, { Fragment } from 'react';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import  { VegaLite } from 'react-vega';
+import React, { Fragment, useState } from 'react';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import Nav from './Nav'
 import Map from './Map'
@@ -8,8 +7,11 @@ import Map from './Map'
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'mapbox-gl/dist/mapbox-gl.css'
+import RegionSummary from './RegionSummary';
 
-const App = () => (
+const App = () => {
+  const [region, setRegion] = useState(undefined);
+  return (
   <Router>
     <Fragment>
       <Route path="/" component={Nav}/>
@@ -145,47 +147,23 @@ const App = () => (
         </Route>
         <Route path="/summary">
           <div className="page-col-right">
-            <article>
-              <h1 className="h1">Risk summary</h1>
-              <VegaLite
-                spec={{
-                  width: 400,
-                  height: 200,
-                  mark: 'bar',
-                  encoding: {
-                    x: { field: 'a', type: 'ordinal' },
-                    y: { field: 'b', type: 'quantitative' },
-                  },
-                  data: { name: 'table' },
-                }}
-                data={{
-                  table: [
-                    { a: 'A', b: 28 },
-                    { a: 'B', b: 55 },
-                    { a: 'C', b: 43 },
-                    { a: 'D', b: 91 },
-                    { a: 'E', b: 81 },
-                    { a: 'F', b: 53 },
-                    { a: 'G', b: 19 },
-                    { a: 'H', b: 87 },
-                    { a: 'I', b: 52 },
-                  ],
-                }}
-                />
-            </article>
+            <RegionSummary region={region} />
           </div>
           <div className="page-col-left">
             <Map
               map_style="regions"
-              dataSources={[]}
+              dataSources={[
+                'boundaries'
+              ]}
               dataLayers={[]}
               tooltipLayerSources={[]}
+              onRegionSelect={setRegion}
               />
           </div>
         </Route>
         <Route path="/">
           <article>
-            <h1 className="h1">Southeast Asia Transport Risk Platform: Prototype Results Inquirer</h1>
+            <h1 className="h1">Southeast Asia Infrastructure Risk: Prototype</h1>
 
             <p>
               This protoype tool presents data from the World Bank's Transport Risk Study
@@ -257,5 +235,6 @@ const App = () => (
     </Fragment>
   </Router>
 )
+}
 
 export default App;

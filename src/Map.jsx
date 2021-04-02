@@ -284,18 +284,27 @@ class Map extends React.Component {
         clickableFeatures[0]
         : undefined;
 
-      if (feature) {
-        this.drawFeature(feature)
-      } else {
-        // remove current highlight
-        if (this.map.getLayer('featureHighlight')) {
-          this.map.removeLayer('featureHighlight');
-          this.map.removeSource('featureHighlight');
+      if (this.props.map_style === 'regions') {
+        if (feature) {
+          // pass region code up to App for RegionSummary to use
+          this.props.onRegionSelect(feature.properties)
+        } else {
+          this.props.onRegionSelect(undefined)
         }
+      } else {
+        if (feature) {
+          this.drawFeature(feature)
+        } else {
+          // remove current highlight
+          if (this.map.getLayer('featureHighlight')) {
+            this.map.removeLayer('featureHighlight');
+            this.map.removeSource('featureHighlight');
+          }
+        }
+        this.setState({
+          selectedFeature: feature
+        })
       }
-      this.setState({
-        selectedFeature: feature
-      })
     })
   }
 
