@@ -2,45 +2,50 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 const Nav = () => (
-  <nav className="navbar navbar-height navbar-expand navbar-dark">
+  <nav className="navbar navbar-height navbar-expand navbar-light">
     <NavLink className="navbar-brand" to="/">
       <img src="/logo.png" alt="OIA" />
     </NavLink>
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
-        <a className="nav-link" href='/overview'>
+        <NavLink className="nav-link" to='/summary'>
+          Summary
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink className="nav-link" to='/overview'>
           Overview
-        </a>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/roads'>
+        <NavLink className="nav-link" to='/roads'>
           Roads
-        </a>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/energy_network'>
+        <NavLink className="nav-link" to='/energy_network'>
           Energy Network
-        </a>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/flood'>
+        <NavLink className="nav-link" to='/flood'>
           Flood
-        </a>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/impact'>
+        <NavLink className="nav-link" to='/impact'>
           Impact
-        </a>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/risk'>
+        <NavLink className="nav-link" to='/risk'>
           Risk
-        </a>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/adaptation'>
+        <NavLink className="nav-link" to='/adaptation'>
           Assets with Adaptation BCR &gt; 1
-        </a>
+        </NavLink>
       </li>
     </ul>
   </nav>

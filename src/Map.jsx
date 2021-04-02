@@ -30,7 +30,8 @@ class Map extends React.Component {
       duration: 30,
       growth_rate_percentage: 2.8
     }
-    this.map = undefined
+    this.map = undefined;
+    this.mapContainer = React.createRef();
     this.tooltipContainer = undefined
 
     this.onLayerVisChange = this.onLayerVisChange.bind(this)
@@ -217,7 +218,7 @@ class Map extends React.Component {
     const { lng, lat, zoom } = this.state
 
     this.map = new mapboxgl.Map({
-      container: this.mapContainer,
+      container: this.mapContainer.current,
       style: `/styles/${this.props.map_style}/style.json`,
       center: [lng, lat],
       zoom: zoom,
@@ -274,12 +275,6 @@ class Map extends React.Component {
     });
 
     this.map.on('click', (e) => {
-      // remove current highlight
-      if (this.map.getLayer('featureHighlight')) {
-        this.map.removeLayer('featureHighlight');
-        this.map.removeSource('featureHighlight');
-      }
-
       const features = this.map.queryRenderedFeatures(e.point);
       const clickableFeatures = features.filter(
         f => this.props.dataSources.includes(f.source)
@@ -290,50 +285,79 @@ class Map extends React.Component {
         : undefined;
 
       if (feature) {
-        // add highlight layer
-        this.map.addSource('featureHighlight', {
-            "type":"geojson",
-            "data": feature.toJSON()
-        });
-
-        if (feature.layer.type === 'line') {
-          this.map.addLayer({
-            "id": "featureHighlight",
-            "type": "line",
-            "source": "featureHighlight",
-            "layout": {
-              "line-join": "round",
-              "line-cap": "round"
-            },
-            "paint": {
-              "line-color": "yellow",
-              "line-width": {
-                "base": 1,
-                "stops": [[3, 1], [10, 8], [17, 16]]
-              }
-            }
-          });
-        }
-        if (feature.layer.type === 'circle') {
-          this.map.addLayer({
-            "id": "featureHighlight",
-            "type": "circle",
-            "source": "featureHighlight",
-            "paint": {
-              "circle-color": "yellow",
-              "circle-radius": {
-                "base": 1,
-                "stops": [[3, 4], [10, 12], [17, 20]]
-              }
-            }
-          });
+        this.drawFeature(feature)
+      } else {
+        // remove current highlight
+        if (this.map.getLayer('featureHighlight')) {
+          this.map.removeLayer('featureHighlight');
+          this.map.removeSource('featureHighlight');
         }
       }
-
       this.setState({
         selectedFeature: feature
       })
     })
+  }
+
+  drawFeature(feature) {
+    // remove current highlight
+    if (this.map.getLayer('featureHighlight')) {
+      this.map.removeLayer('featureHighlight');
+      this.map.removeSource('featureHighlight');
+    }
+
+    // add highlight layer
+    this.map.addSource('featureHighlight', {
+      "type":"geojson",
+      "data": feature.toJSON()
+    });
+
+    if (feature.layer.type === 'line') {
+      this.map.addLayer({
+        "id": "featureHighlight",
+        "type": "line",
+        "source": "featureHighlight",
+        "layout": {
+          "line-join": "round",
+          "line-cap": "round"
+        },
+        "paint": {
+          "line-color": "yellow",
+          "line-width": {
+            "base": 1,
+            "stops": [[3, 1], [10, 8], [17, 16]]
+          }
+        }
+      });
+    }
+    if (feature.layer.type === 'circle') {
+      this.map.addLayer({
+        "id": "featureHighlight",
+        "type": "circle",
+        "source": "featureHighlight",
+        "paint": {
+          "circle-color": "yellow",
+          "circle-radius": {
+            "base": 1,
+            "stops": [[3, 4], [10, 12], [17, 20]]
+          }
+        }
+      });
+    }
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.map_style !== this.props.map_style) {
+      fetch(`/styles/${this.props.map_style}/style.json`)
+        .then(response => response.json())
+        .then(data => {
+          this.map.setStyle(data);
+          const feature = this.state.selectedFeature;
+          if (feature && this.props.dataSources.includes(feature.source)) {
+            this.drawFeature(feature)
+          }
+        });
+    }
   }
 
   onLayerVisChange(e) {
@@ -347,7 +371,7 @@ class Map extends React.Component {
 
   render() {
     const { lng, lat, zoom, selectedFeature } = this.state
-    const { dataLayers } = this.props
+    const { map_style, dataLayers, tooltipLayerSources } = this.props
 
     return (
       <Fragment>
@@ -362,7 +386,7 @@ class Map extends React.Component {
             : null
           }
           {
-            (this.props.map_style === 'risk')?
+            (map_style === 'risk')?
               <div>
                 <small>
                 Feature size indicates maximum expected annual damages plus maximum expected annual
@@ -376,7 +400,7 @@ class Map extends React.Component {
               : null
           }
           {
-            (this.props.map_style === 'impact')?
+            (map_style === 'impact')?
               <div>
                 <small>
                   Feature size indicates maximum total economic impact
@@ -389,7 +413,7 @@ class Map extends React.Component {
               : null
           }
           {
-            (this.props.map_style === 'adaptation')?
+            (map_style === 'adaptation')?
               <div>
                 <small>
                   Feature colour indicates Benefit-Cost Ratio (click on a feature to adjust disruption and growth rate assumptions)
@@ -402,19 +426,19 @@ class Map extends React.Component {
               : null
           }
           {
-            (this.props.map_style === 'roads')?
+            (map_style === 'roads')?
               <small>
                 Feature size indicates maximum freight flows
               </small> : null
           }
           {
-            (this.props.map_style === 'energy_network')?
+            (map_style === 'energy_network')?
               <small>
                 Energy network data extracted from Gridfinder
               </small> : null
           }
           {
-            (this.props.tooltipLayerSources.includes('flood'))?
+            (tooltipLayerSources.includes('flood'))?
               <Fragment>
                 <FloodControl
                   setScenario={this.setScenario}
@@ -437,7 +461,7 @@ class Map extends React.Component {
           />
         { (this.state.showFloodHelp)? <FloodHelp /> : null }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
-        <div ref={el => this.mapContainer = el} className="map" />
+        <div ref={this.mapContainer} className="map" />
       </Fragment>
     );
   }
