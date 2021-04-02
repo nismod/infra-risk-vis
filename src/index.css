@@ -12,7 +12,7 @@
   border-style: solid;
   border-width: 0 0 1px 4px;
 }
-.navbar-brand {
+.navbar .navbar-brand {
   margin-right: 6px;
 }
 .navbar-brand img {
@@ -21,6 +21,7 @@
 }
 .nav-link {
   color: #000044;
+  border-bottom: 1px solid transparent;
 }
 .nav-link.active,
 .nav-link:hover,
@@ -44,6 +45,7 @@
 .page-col-right {
   left: 50%;
   right: 0;
+  overflow-y: scroll;
 }
 article {
   max-width: 50rem;
