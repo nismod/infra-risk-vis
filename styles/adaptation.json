@@ -7,7 +7,7 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "road": { "type": "vector", "url": "mbtiles://{roads}" },
+    "road": { "type": "vector", "url": "mbtiles://{vietnam_roads}" },
     "flood": { "type": "vector", "url": "mbtiles://{flood}" },
     "wb_boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" }
   },

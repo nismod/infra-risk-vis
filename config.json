@@ -121,6 +121,9 @@
       "roads": {
         "mbtiles": "roads.mbtiles"
       },
+      "vietnam_roads": {
+        "mbtiles": "road_edges.mbtiles"
+      },
       "flood": {
         "mbtiles": "flood.mbtiles"
       }
