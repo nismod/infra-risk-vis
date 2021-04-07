@@ -49,11 +49,11 @@
         "line-color": [
           "match",
           ["get", "highway"],
-          ["motorway", "motorway_link"], "#feb078",
-          ["primary", "primary_link"], "#f1605d",
-          ["secondary", "secondary_link"], "#f1605d",
-          ["tertiary", "tertiary_link"], "#721f81",
-          "#2c115f"
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+          "#b2afaa"
         ]
       }
     },
@@ -79,7 +79,7 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#2c115f"
+        "line-color": "#b2afaa"
       }
     },
     {
@@ -92,11 +92,11 @@
         "line-color": [
           "match",
           ["get", "highway"],
-          ["motorway", "motorway_link"], "#feb078",
-          ["primary", "primary_link"], "#f1605d",
-          ["secondary", "secondary_link"], "#f1605d",
-          ["tertiary", "tertiary_link"], "#721f81",
-            "#2c115f"
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
         ]
       }
     },
@@ -122,7 +122,7 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#2c115f"
+        "line-color": "#b2afaa"
       }
     },
     {
@@ -135,11 +135,11 @@
         "line-color": [
           "match",
           ["get", "highway"],
-          ["motorway", "motorway_link"], "#feb078",
-          ["primary", "primary_link"], "#f1605d",
-          ["secondary", "secondary_link"], "#f1605d",
-          ["tertiary", "tertiary_link"], "#721f81",
-            "#2c115f"
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
         ]
       }
     },
@@ -165,7 +165,7 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#2c115f"
+        "line-color": "#b2afaa"
       }
     },
     {
@@ -178,11 +178,11 @@
         "line-color": [
           "match",
           ["get", "highway"],
-          ["motorway", "motorway_link"], "#feb078",
-          ["primary", "primary_link"], "#f1605d",
-          ["secondary", "secondary_link"], "#f1605d",
-          ["tertiary", "tertiary_link"], "#721f81",
-            "#2c115f"
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
         ]
       }
     },
@@ -208,7 +208,7 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#2c115f"
+        "line-color": "#b2afaa"
       }
     },
     {
@@ -221,11 +221,11 @@
         "line-color": [
           "match",
           ["get", "highway"],
-          ["motorway", "motorway_link"], "#feb078",
-          ["primary", "primary_link"], "#f1605d",
-          ["secondary", "secondary_link"], "#f1605d",
-          ["tertiary", "tertiary_link"], "#721f81",
-            "#2c115f"
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
         ]
       }
     },
@@ -251,7 +251,7 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#2c115f"
+        "line-color": "#b2afaa"
       }
     },
     {
@@ -264,11 +264,11 @@
         "line-color": [
           "match",
           ["get", "highway"],
-          ["motorway", "motorway_link"], "#feb078",
-          ["primary", "primary_link"], "#f1605d",
-          ["secondary", "secondary_link"], "#f1605d",
-          ["tertiary", "tertiary_link"], "#721f81",
-            "#2c115f"
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
         ]
       }
     },
@@ -294,7 +294,7 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#2c115f"
+        "line-color": "#b2afaa"
       }
     },
     {
@@ -307,11 +307,11 @@
         "line-color": [
           "match",
           ["get", "highway"],
-          ["motorway", "motorway_link"], "#feb078",
-          ["primary", "primary_link"], "#f1605d",
-          ["secondary", "secondary_link"], "#f1605d",
-          ["tertiary", "tertiary_link"], "#721f81",
-            "#2c115f"
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
         ]
       }
     },
@@ -337,7 +337,7 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#2c115f"
+        "line-color": "#b2afaa"
       }
     },
     {
