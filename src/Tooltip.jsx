@@ -19,27 +19,23 @@ const Tooltip = (props) => {
     let max_value;
     let detail;
 
-    if (props.map_style === "roads" || props.map_style === "rail" || props.map_style === "airwater" || props.map_style === "overview") {
-      if (f.sourceLayer === "air_nodes") {
-        max_value = f.properties.passengers;
-        detail = (f.properties.passengers)?
-          commas(f.properties.passengers.toFixed(0)) + " passengers"
-          : "";
+    if (props.map_style === "roads" || props.map_style === "rail" || props.map_style === "electricity" || props.map_style === "overview") {
 
+      title = "ID: " + (f.properties.osm_id || f.properties.link);
+
+      if (f.properties.EAD_min && f.properties.EAD_max && f.properties.EAEL) {
+        max_value = f.properties.EAD_max || 0;
+
+        detail = " EAD: " +
+          (f.properties.EAD_min.toFixed(6) || 0) + " – " +
+          (f.properties.EAD_max.toFixed(6) || 0) + ", EAEL: " +
+          (f.properties.EAEL.toFixed(6) || 0) + ".";
       } else {
-        max_value = f.properties.max_tons;
-
-        detail = (f.properties.max_tons && f.properties.min_tons)?
-          " " +
-          commas(f.properties.min_tons.toFixed(0)) + " – " +
-          commas(f.properties.max_tons.toFixed(0)) + " tons/day freight flows"
-          : "";
+        detail = "(no exposure calculated)  "
       }
+
     }
 
-    if (props.map_style === "energy_network") {
-      detail = "Asset Ref: " + f.properties.fid;
-    }
 
     if (props.map_style === "impact") {
       max_value = f.properties.max_econ_impact;

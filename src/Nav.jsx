@@ -23,8 +23,13 @@ const Nav = () => (
         </NavLink>
       </li>
       <li className="nav-item">
+        <NavLink className="nav-link" to='/rail'>
+          Rail
+        </NavLink>
+      </li>
+      <li className="nav-item">
         <NavLink className="nav-link" to='/energy_network'>
-          Energy Network
+          Electricity
         </NavLink>
       </li>
       <li className="nav-item">
