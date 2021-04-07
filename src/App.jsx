@@ -21,23 +21,38 @@ const App = () => {
           <Map
             map_style="overview"
             dataSources={[
-              'road'
+              'roads',
+              'rail',
+              'electricity'
             ]}
             dataLayers={[
-              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
-              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
-              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
-              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
-              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
-              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"},
-              {key:'Cambodia_Energy', label: 'Cambodia Energy Network', linear: true, color: "#000000"},
-              {key:'Laos_Energy', label: 'Lao PDR Energy Network', linear: true, color: "#000000"},
-              {key:'Myanmar_Energy', label: 'Myanmar Energy Network', linear: true, color: "#000000"},
-              {key:'Thailand_Energy', label: 'Thailand Energy Network', linear: true, color: "#000000"},
-              {key:'Vietnam_Energy', label: 'Vietnam Energy Network', linear: true, color: "#000000"}
+              {key: 'KHM_Electricity', label: 'Cambodia Grid', linear: true, color: "#dab540"},
+              {key: 'IDN_Electricity', label: 'Indonesia Grid', linear: true, color: "#dab540"},
+              {key: 'LAO_Electricity', label: 'Laos Grid', linear: true, color: "#dab540"},
+              {key: 'MMR_Electricity', label: 'Myanmar Grid', linear: true, color: "#dab540"},
+              {key: 'PHL_Electricity', label: 'Philippines Grid', linear: true, color: "#dab540"},
+              {key: 'THA_Electricity', label: 'Thailand Grid', linear: true, color: "#dab540"},
+              {key: 'VNM_Electricity', label: 'Vietnam Grid', linear: true, color: "#dab540"},
+              {key: 'KHM_Rail', label: 'Cambodia Rail', linear: true, color: "#444"},
+              {key: 'IDN_Rail', label: 'Indonesia Rail', linear: true, color: "#444"},
+              {key: 'LAO_Rail', label: 'Laos Rail', linear: true, color: "#444"},
+              {key: 'MMR_Rail', label: 'Myanmar Rail', linear: true, color: "#444"},
+              {key: 'PHL_Rail', label: 'Philippines Rail', linear: true, color: "#444"},
+              {key: 'THA_Rail', label: 'Thailand Rail', linear: true, color: "#444"},
+              {key: 'VNM_Rail', label: 'Vietnam Rail', linear: true, color: "#444"},
+              {key: 'KHM_Rail', label: 'Cambodia Rail', linear: true, color: "#444"},
+              {key: 'IDN_main', label: 'Indonesia Road', linear: true, color: "#b2afaa"},
+              {key: 'LAO_main', label: 'Laos Road', linear: true, color: "#b2afaa"},
+              {key: 'MMR_main', label: 'Myanmar Road', linear: true, color: "#b2afaa"},
+              {key: 'PHL_main', label: 'Philippines Road', linear: true, color: "#b2afaa"},
+              {key: 'THA_main', label: 'Thailand Road', linear: true, color: "#b2afaa"},
+              {key: 'VNM_main', label: 'Vietnam Road', linear: true, color: "#b2afaa"}
+
             ]}
             tooltipLayerSources={[
-              'road'
+              'road',
+              'rail',
+              'electricity'
             ]}
             />
         </Route>
@@ -45,34 +60,42 @@ const App = () => {
           <Map
             map_style="roads"
             dataSources={[
-              'road'
+              'roads'
             ]}
             dataLayers={[
-              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
-              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
-              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
-              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
-              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
-              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
+              {key: 'IDN_main', label: 'Indonesia Major Road', linear: true, color: "#e48d14"},
+              {key: 'LAO_main', label: 'Laos Major Road', linear: true, color: "#e48d14"},
+              {key: 'MMR_main', label: 'Myanmar Major Road', linear: true, color: "#e48d14"},
+              {key: 'PHL_main', label: 'Philippines Major Road', linear: true, color: "#e48d14"},
+              {key: 'THA_main', label: 'Thailand Major Road', linear: true, color: "#e48d14"},
+              {key: 'VNM_main', label: 'Vietnam Major Road', linear: true, color: "#e48d14"},
+              {key: 'IDN_other', label: 'Indonesia Minor Roads', linear: true, color: "#b2afaa"},
+              {key: 'LAO_other', label: 'Laos Minor Roads', linear: true, color: "#b2afaa"},
+              {key: 'MMR_other', label: 'Myanmar Minor Roads', linear: true, color: "#b2afaa"},
+              {key: 'PHL_other', label: 'Philippines Minor Roads', linear: true, color: "#b2afaa"},
+              {key: 'THA_other', label: 'Thailand Minor Roads', linear: true, color: "#b2afaa"},
+              {key: 'VNM_other', label: 'Vietnam Minor Roads', linear: true, color: "#b2afaa"}
 
             ]}
             tooltipLayerSources={[
-              'road'
+              'roads'
             ]}
             />
         </Route>
         <Route path="/energy_network">
           <Map
-            map_style="energy_network"
+            map_style="electricity"
             dataSources={[
-              'energy_network'
+              'electricity'
             ]}
             dataLayers={[
-              {key:'Cambodia_Energy', label: 'Cambodia Energy Network', linear: true, color: "#000000"},
-              {key:'Laos_Energy', label: 'Lao PDR Energy Network', linear: true, color: "#000000"},
-              {key:'Myanmar_Energy', label: 'Myanmar Energy Network', linear: true, color: "#000000"},
-              {key:'Thailand_Energy', label: 'Thailand Energy Network', linear: true, color: "#000000"},
-              {key:'Vietnam_Energy', label: 'Vietnam Energy Network', linear: true, color: "#000000"}
+              {key: 'KHM_Electricity', label: 'Cambodia Grid', linear: true, color: "#dab540"},
+              {key: 'IDN_Electricity', label: 'Indonesia Grid', linear: true, color: "#dab540"},
+              {key: 'LAO_Electricity', label: 'Laos Grid', linear: true, color: "#dab540"},
+              {key: 'MMR_Electricity', label: 'Myanmar Grid', linear: true, color: "#dab540"},
+              {key: 'PHL_Electricity', label: 'Philippines Grid', linear: true, color: "#dab540"},
+              {key: 'THA_Electricity', label: 'Thailand Grid', linear: true, color: "#dab540"},
+              {key: 'VNM_Electricity', label: 'Vietnam Grid', linear: true, color: "#dab540"},
             ]}
             tooltipLayerSources={[
               'energy_network'
@@ -91,7 +114,7 @@ const App = () => {
           <Map
             map_style="impact"
             dataSources={[
-              'road'
+              'roads'
             ]}
             dataLayers={[
               {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
@@ -103,7 +126,7 @@ const App = () => {
 
             ]}
             tooltipLayerSources={[
-              'road'
+              'roads'
             ]}
             />
         </Route>
