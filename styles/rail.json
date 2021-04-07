@@ -1,13 +1,13 @@
 {
   "version": 8,
   "name": "Rail",
-  "center": [-64.405087, -34.919628],
+  "center": [105.12, 16.19],
   "height": "600px",
-  "zoom": 4,
+  "zoom": 5,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "wb_boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
     "rail": { "type": "vector", "url": "mbtiles://{rail}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
@@ -20,32 +20,23 @@
       }
     },
     {
-      "id": "landuse-neighbour",
+      "id": "adminboundaries",
       "type": "fill",
-      "source": "boundaries",
-      "source-layer": "admin_0_boundaries",
+      "source": "wb_boundaries",
+      "source-layer": "WB_countries_Admin0",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#d2d2d2",
         "fill-outline-color": "#fff"
       }
     },
     {
-      "id": "landuse",
+      "id": "disputedareas",
       "type": "fill",
-      "source": "boundaries",
-      "source-layer": "admin_1_boundaries",
+      "source": "wb_boundaries",
+      "source-layer": "WB_Admin0_disputed_areas",
       "paint": {
-        "fill-color": "#d2d2d2",
-        "fill-outline-color": "#ffffff"
-      }
-    },
-    {
-      "id": "lakes",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "physical_lakes",
-      "paint": {
-        "fill-color": "#c6e1ff"
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
       }
     },
     {
@@ -54,20 +45,25 @@
       "source": "rail",
       "source-layer": "IDN_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
       "paint": {
-        "line-color":"#006d2c",
-        "line-width":  [
-          "+",
-          [
-            "/",
-            ["get", "EAD_max"],
-            50
-          ],
-          1
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ]
       }
     },
@@ -77,20 +73,25 @@
       "source": "rail",
       "source-layer": "KHM_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
       "paint": {
-        "line-color":"#006d2c",
-        "line-width":  [
-          "+",
-          [
-            "/",
-            ["get", "EAD_max"],
-            50
-          ],
-          1
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ]
       }
     },
@@ -100,20 +101,25 @@
       "source": "rail",
       "source-layer": "LAO_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
       "paint": {
-        "line-color":"#006d2c",
-        "line-width":  [
-          "+",
-          [
-            "/",
-            ["get", "EAD_max"],
-            50
-          ],
-          1
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ]
       }
     },
@@ -123,20 +129,25 @@
       "source": "rail",
       "source-layer": "MMR_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
       "paint": {
-        "line-color":"#006d2c",
-        "line-width":  [
-          "+",
-          [
-            "/",
-            ["get", "EAD_max"],
-            50
-          ],
-          1
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ]
       }
     },
@@ -146,20 +157,25 @@
       "source": "rail",
       "source-layer": "PHL_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
       "paint": {
-        "line-color":"#006d2c",
-        "line-width":  [
-          "+",
-          [
-            "/",
-            ["get", "EAD_max"],
-            50
-          ],
-          1
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ]
       }
     },
@@ -169,20 +185,25 @@
       "source": "rail",
       "source-layer": "THA_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
       "paint": {
-        "line-color":"#006d2c",
-        "line-width":  [
-          "+",
-          [
-            "/",
-            ["get", "EAD_max"],
-            50
-          ],
-          1
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ]
       }
     },
@@ -192,43 +213,37 @@
       "source": "rail",
       "source-layer": "VNM_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
       "paint": {
-        "line-color":"#006d2c",
-        "line-width":  [
-          "+",
-          [
-            "/",
-            ["get", "EAD_max"],
-            50
-          ],
-          1
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ]
       }
     },
     {
       "id": "country_labels",
       "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_0_labels",
+      "source": "wb_boundaries",
+      "source-layer": "CNTR_LB_2020_4326",
       "layout": {
-        "text-field": "{text}",
+        "text-field": "{NAME_ENGL}",
         "symbol-placement": "point"
       }
-    },
-    {
-      "id": "provinces_labels",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "admin_1_labels",
-      "layout": {
-        "text-field": "{text}",
-        "symbol-placement": "point"
-      },
-      "minzoom": 3.5
     }
   ]
 }
