@@ -1,0 +1,249 @@
+{
+  "version": 8,
+  "name": "Electricity",
+  "center": [105.12, 16.19],
+  "height": "600px",
+  "zoom": 5,
+  "bearing": 0,
+  "pitch": 0,
+  "sources": {
+    "wb_boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "electricity": { "type": "vector", "url": "mbtiles://{electricity}" }
+  },
+  "glyphs": "{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#c6e1ff"
+      }
+    },
+    {
+      "id": "adminboundaries",
+      "type": "fill",
+      "source": "wb_boundaries",
+      "source-layer": "WB_countries_Admin0",
+      "paint": {
+        "fill-color": "#d2d2d2",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "disputedareas",
+      "type": "fill",
+      "source": "wb_boundaries",
+      "source-layer": "WB_Admin0_disputed_areas",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "IDN_Electricity",
+      "type": "line",
+      "source": "electricity",
+      "source-layer": "IDN_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ]
+      }
+    },
+    {
+      "id": "KHM_Electricity",
+      "type": "line",
+      "source": "electricity",
+      "source-layer": "KHM_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ]
+      }
+    },
+    {
+      "id": "LAO_Electricity",
+      "type": "line",
+      "source": "electricity",
+      "source-layer": "LAO_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ]
+      }
+    },
+    {
+      "id": "MMR_Electricity",
+      "type": "line",
+      "source": "electricity",
+      "source-layer": "MMR_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ]
+      }
+    },
+    {
+      "id": "PHL_Electricity",
+      "type": "line",
+      "source": "electricity",
+      "source-layer": "PHL_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ]
+      }
+    },
+    {
+      "id": "THA_Electricity",
+      "type": "line",
+      "source": "electricity",
+      "source-layer": "THA_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ]
+      }
+    },
+    {
+      "id": "VNM_Electricity",
+      "type": "line",
+      "source": "electricity",
+      "source-layer": "VNM_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ]
+      }
+    },
+    {
+      "id": "country_labels",
+      "type": "symbol",
+      "source": "wb_boundaries",
+      "source-layer": "CNTR_LB_2020_4326",
+      "layout": {
+        "text-field": "{NAME_ENGL}",
+        "symbol-placement": "point"
+      }
+    }
+  ]
+}

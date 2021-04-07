@@ -7,9 +7,9 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "road": { "type": "vector", "url": "mbtiles://{road}" },
+    "road": { "type": "vector", "url": "mbtiles://{roads}" },
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
-    "energy_network": { "type": "vector", "url": "mbtiles://{energy_network}" }
+    "energy_network": { "type": "vector", "url": "mbtiles://{electricity}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [

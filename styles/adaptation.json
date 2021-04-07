@@ -7,9 +7,9 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "road": { "type": "vector", "url": "mbtiles://{road}" },
+    "road": { "type": "vector", "url": "mbtiles://{roads}" },
     "flood": { "type": "vector", "url": "mbtiles://{flood}" },
-    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" }
+    "wb_boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -23,7 +23,7 @@
     {
       "id": "adminboundaries",
       "type": "fill",
-      "source": "boundaries",
+      "source": "wb_boundaries",
       "source-layer": "WB_countries_Admin0",
       "paint": {
         "fill-color": "#d2d2d2",
@@ -33,7 +33,7 @@
     {
       "id": "disputedareas",
       "type": "fill",
-      "source": "boundaries",
+      "source": "wb_boundaries",
       "source-layer": "WB_Admin0_disputed_areas",
       "paint": {
         "fill-color": "#e0e0e0",
@@ -468,7 +468,7 @@
     {
       "id": "country_labels",
       "type": "symbol",
-      "source": "boundaries",
+      "source": "wb_boundaries",
       "source-layer": "CNTR_LB_2020_4326",
       "layout": {
         "text-field": "{NAME_ENGL}",

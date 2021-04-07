@@ -1,0 +1,234 @@
+{
+  "version": 8,
+  "name": "Rail",
+  "center": [-64.405087, -34.919628],
+  "height": "600px",
+  "zoom": 4,
+  "bearing": 0,
+  "pitch": 0,
+  "sources": {
+    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "rail": { "type": "vector", "url": "mbtiles://{rail}" }
+  },
+  "glyphs": "{fontstack}/{range}.pbf",
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#c6e1ff"
+      }
+    },
+    {
+      "id": "landuse-neighbour",
+      "type": "fill",
+      "source": "boundaries",
+      "source-layer": "admin_0_boundaries",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "landuse",
+      "type": "fill",
+      "source": "boundaries",
+      "source-layer": "admin_1_boundaries",
+      "paint": {
+        "fill-color": "#d2d2d2",
+        "fill-outline-color": "#ffffff"
+      }
+    },
+    {
+      "id": "lakes",
+      "type": "fill",
+      "source": "boundaries",
+      "source-layer": "physical_lakes",
+      "paint": {
+        "fill-color": "#c6e1ff"
+      }
+    },
+    {
+      "id": "IDN_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "IDN_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width":  [
+          "+",
+          [
+            "/",
+            ["get", "EAD_max"],
+            50
+          ],
+          1
+        ]
+      }
+    },
+    {
+      "id": "KHM_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "KHM_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width":  [
+          "+",
+          [
+            "/",
+            ["get", "EAD_max"],
+            50
+          ],
+          1
+        ]
+      }
+    },
+    {
+      "id": "LAO_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "LAO_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width":  [
+          "+",
+          [
+            "/",
+            ["get", "EAD_max"],
+            50
+          ],
+          1
+        ]
+      }
+    },
+    {
+      "id": "MMR_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "MMR_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width":  [
+          "+",
+          [
+            "/",
+            ["get", "EAD_max"],
+            50
+          ],
+          1
+        ]
+      }
+    },
+    {
+      "id": "PHL_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "PHL_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width":  [
+          "+",
+          [
+            "/",
+            ["get", "EAD_max"],
+            50
+          ],
+          1
+        ]
+      }
+    },
+    {
+      "id": "THA_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "THA_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width":  [
+          "+",
+          [
+            "/",
+            ["get", "EAD_max"],
+            50
+          ],
+          1
+        ]
+      }
+    },
+    {
+      "id": "VNM_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "VNM_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color":"#006d2c",
+        "line-width":  [
+          "+",
+          [
+            "/",
+            ["get", "EAD_max"],
+            50
+          ],
+          1
+        ]
+      }
+    },
+    {
+      "id": "country_labels",
+      "type": "symbol",
+      "source": "boundaries",
+      "source-layer": "admin_0_labels",
+      "layout": {
+        "text-field": "{text}",
+        "symbol-placement": "point"
+      }
+    },
+    {
+      "id": "provinces_labels",
+      "type": "symbol",
+      "source": "boundaries",
+      "source-layer": "admin_1_labels",
+      "layout": {
+        "text-field": "{text}",
+        "symbol-placement": "point"
+      },
+      "minzoom": 3.5
+    }
+  ]
+}

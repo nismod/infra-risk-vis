@@ -12,10 +12,21 @@
         "style": "overview.json",
         "tilejson": {
           "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
+          ]
+        }
+      },
+      "electricity": {
+        "style": "electricity.json",
+        "tilejson": {
+          "bounds": [
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
           ]
         }
       },
@@ -34,10 +45,10 @@
         "style": "adaptation.json",
         "tilejson": {
           "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
           ]
         }
       },
@@ -45,10 +56,10 @@
         "style": "impact.json",
         "tilejson": {
           "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
           ]
         }
       },
@@ -56,10 +67,10 @@
         "style": "risk.json",
         "tilejson": {
           "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
           ]
         }
       },
@@ -67,21 +78,21 @@
         "style": "roads.json",
         "tilejson": {
           "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
           ]
         }
       },
-      "energy_network": {
-        "style": "energy_network.json",
+      "rail": {
+        "style": "rail.json",
         "tilejson": {
           "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
           ]
         }
       },
@@ -89,10 +100,10 @@
         "style": "regions.json",
         "tilejson": {
           "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
+            102.169,
+            8.5986,
+            109.45,
+            23.2945
           ]
         }
       }
@@ -101,11 +112,14 @@
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
       },
-      "energy_network": {
-        "mbtiles": "energy_network.mbtiles"
+      "electricity": {
+        "mbtiles": "electricity.mbtiles"
       },
-      "road": {
-        "mbtiles": "road_edges.mbtiles"
+      "rail": {
+        "mbtiles": "rail.mbtiles"
+      },
+      "roads": {
+        "mbtiles": "roads.mbtiles"
       },
       "flood": {
         "mbtiles": "flood.mbtiles"
