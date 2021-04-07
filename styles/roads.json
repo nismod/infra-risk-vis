@@ -45,6 +45,21 @@
       "source": "roads",
       "source-layer": "IDN_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "any",
+        ["==",["get", "highway"], "motorway"],
+        ["==",["get", "highway"], "motorway_link"],
+        ["==",["get", "highway"], "primary"],
+        ["==",["get", "highway"], "primary_link"],
+        ["==",["get", "highway"], "secondary"],
+        ["==",["get", "highway"], "secondary_link"],
+        ["==",["get", "highway"], "tertiary"],
+        ["==",["get", "highway"], "tertiary_link"]
+      ],
       "paint": {
         "line-color": [
           "match",
@@ -54,7 +69,11 @@
           ["secondary", "secondary_link"], "#e48d14",
           ["tertiary", "tertiary_link"], "#487dbc",
           "#b2afaa"
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -79,7 +98,11 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa"
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -88,6 +111,21 @@
       "source": "roads",
       "source-layer": "KHM_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "any",
+        ["==",["get", "highway"], "motorway"],
+        ["==",["get", "highway"], "motorway_link"],
+        ["==",["get", "highway"], "primary"],
+        ["==",["get", "highway"], "primary_link"],
+        ["==",["get", "highway"], "secondary"],
+        ["==",["get", "highway"], "secondary_link"],
+        ["==",["get", "highway"], "tertiary"],
+        ["==",["get", "highway"], "tertiary_link"]
+      ],
       "paint": {
         "line-color": [
           "match",
@@ -97,7 +135,11 @@
           ["secondary", "secondary_link"], "#e48d14",
           ["tertiary", "tertiary_link"], "#487dbc",
             "#b2afaa"
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -122,7 +164,11 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa"
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -131,6 +177,21 @@
       "source": "roads",
       "source-layer": "LAO_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "any",
+        ["==",["get", "highway"], "motorway"],
+        ["==",["get", "highway"], "motorway_link"],
+        ["==",["get", "highway"], "primary"],
+        ["==",["get", "highway"], "primary_link"],
+        ["==",["get", "highway"], "secondary"],
+        ["==",["get", "highway"], "secondary_link"],
+        ["==",["get", "highway"], "tertiary"],
+        ["==",["get", "highway"], "tertiary_link"]
+      ],
       "paint": {
         "line-color": [
           "match",
@@ -139,8 +200,12 @@
           ["primary", "primary_link"], "#c1194b",
           ["secondary", "secondary_link"], "#e48d14",
           ["tertiary", "tertiary_link"], "#487dbc",
-            "#b2afaa"
-        ]
+          "#b2afaa"
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -165,7 +230,11 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa"
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -174,6 +243,21 @@
       "source": "roads",
       "source-layer": "MMR_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "any",
+        ["==",["get", "highway"], "motorway"],
+        ["==",["get", "highway"], "motorway_link"],
+        ["==",["get", "highway"], "primary"],
+        ["==",["get", "highway"], "primary_link"],
+        ["==",["get", "highway"], "secondary"],
+        ["==",["get", "highway"], "secondary_link"],
+        ["==",["get", "highway"], "tertiary"],
+        ["==",["get", "highway"], "tertiary_link"]
+      ],
       "paint": {
         "line-color": [
           "match",
@@ -182,8 +266,12 @@
           ["primary", "primary_link"], "#c1194b",
           ["secondary", "secondary_link"], "#e48d14",
           ["tertiary", "tertiary_link"], "#487dbc",
-            "#b2afaa"
-        ]
+          "#b2afaa"
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -208,7 +296,11 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa"
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -217,6 +309,21 @@
       "source": "roads",
       "source-layer": "PHL_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "any",
+        ["==",["get", "highway"], "motorway"],
+        ["==",["get", "highway"], "motorway_link"],
+        ["==",["get", "highway"], "primary"],
+        ["==",["get", "highway"], "primary_link"],
+        ["==",["get", "highway"], "secondary"],
+        ["==",["get", "highway"], "secondary_link"],
+        ["==",["get", "highway"], "tertiary"],
+        ["==",["get", "highway"], "tertiary_link"]
+      ],
       "paint": {
         "line-color": [
           "match",
@@ -225,8 +332,12 @@
           ["primary", "primary_link"], "#c1194b",
           ["secondary", "secondary_link"], "#e48d14",
           ["tertiary", "tertiary_link"], "#487dbc",
-            "#b2afaa"
-        ]
+          "#b2afaa"
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -251,7 +362,11 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa"
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -260,6 +375,21 @@
       "source": "roads",
       "source-layer": "THA_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "any",
+        ["==",["get", "highway"], "motorway"],
+        ["==",["get", "highway"], "motorway_link"],
+        ["==",["get", "highway"], "primary"],
+        ["==",["get", "highway"], "primary_link"],
+        ["==",["get", "highway"], "secondary"],
+        ["==",["get", "highway"], "secondary_link"],
+        ["==",["get", "highway"], "tertiary"],
+        ["==",["get", "highway"], "tertiary_link"]
+      ],
       "paint": {
         "line-color": [
           "match",
@@ -268,8 +398,12 @@
           ["primary", "primary_link"], "#c1194b",
           ["secondary", "secondary_link"], "#e48d14",
           ["tertiary", "tertiary_link"], "#487dbc",
-            "#b2afaa"
-        ]
+          "#b2afaa"
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -294,7 +428,11 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa"
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -303,6 +441,21 @@
       "source": "roads",
       "source-layer": "VNM_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "any",
+        ["==",["get", "highway"], "motorway"],
+        ["==",["get", "highway"], "motorway_link"],
+        ["==",["get", "highway"], "primary"],
+        ["==",["get", "highway"], "primary_link"],
+        ["==",["get", "highway"], "secondary"],
+        ["==",["get", "highway"], "secondary_link"],
+        ["==",["get", "highway"], "tertiary"],
+        ["==",["get", "highway"], "tertiary_link"]
+      ],
       "paint": {
         "line-color": [
           "match",
@@ -311,8 +464,12 @@
           ["primary", "primary_link"], "#c1194b",
           ["secondary", "secondary_link"], "#e48d14",
           ["tertiary", "tertiary_link"], "#487dbc",
-            "#b2afaa"
-        ]
+          "#b2afaa"
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -337,7 +494,11 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa"
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {

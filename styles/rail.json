@@ -45,6 +45,10 @@
       "source": "rail",
       "source-layer": "IDN_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": [
           "interpolate-lab",
@@ -64,7 +68,11 @@
           ["to-color", "#ff9c66"],
           1,
           ["to-color", "#ffffff"]
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -73,6 +81,10 @@
       "source": "rail",
       "source-layer": "KHM_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": [
           "interpolate-lab",
@@ -92,7 +104,11 @@
           ["to-color", "#ff9c66"],
           1,
           ["to-color", "#ffffff"]
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -101,6 +117,10 @@
       "source": "rail",
       "source-layer": "LAO_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": [
           "interpolate-lab",
@@ -120,7 +140,11 @@
           ["to-color", "#ff9c66"],
           1,
           ["to-color", "#ffffff"]
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -129,6 +153,10 @@
       "source": "rail",
       "source-layer": "MMR_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": [
           "interpolate-lab",
@@ -148,7 +176,11 @@
           ["to-color", "#ff9c66"],
           1,
           ["to-color", "#ffffff"]
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -157,6 +189,10 @@
       "source": "rail",
       "source-layer": "PHL_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": [
           "interpolate-lab",
@@ -176,7 +212,11 @@
           ["to-color", "#ff9c66"],
           1,
           ["to-color", "#ffffff"]
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -185,6 +225,10 @@
       "source": "rail",
       "source-layer": "THA_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": [
           "interpolate-lab",
@@ -204,7 +248,11 @@
           ["to-color", "#ff9c66"],
           1,
           ["to-color", "#ffffff"]
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
@@ -213,6 +261,10 @@
       "source": "rail",
       "source-layer": "VNM_EAD_Summary",
       "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
       "paint": {
         "line-color": [
           "interpolate-lab",
@@ -232,7 +284,11 @@
           ["to-color", "#ff9c66"],
           1,
           ["to-color", "#ffffff"]
-        ]
+        ],
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
       }
     },
     {
