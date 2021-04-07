@@ -50,7 +50,7 @@ const App = () => {
 
             ]}
             tooltipLayerSources={[
-              'road',
+              'roads',
               'rail',
               'electricity'
             ]}
@@ -136,7 +136,7 @@ const App = () => {
           <Map
             map_style="impact"
             dataSources={[
-              'roads'
+              'road'
             ]}
             dataLayers={[
               {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
@@ -148,7 +148,7 @@ const App = () => {
 
             ]}
             tooltipLayerSources={[
-              'roads'
+              'road'
             ]}
             />
         </Route>
