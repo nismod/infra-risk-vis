@@ -40,6 +40,35 @@
       }
     },
     {
+      "id": "IDN_other",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "IDN_EAD_Summary",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "filter": [
+        "all",
+        ["!=",["get", "highway"], "motorway"],
+        ["!=",["get", "highway"], "motorway_link"],
+        ["!=",["get", "highway"], "primary"],
+        ["!=",["get", "highway"], "primary_link"],
+        ["!=",["get", "highway"], "secondary"],
+        ["!=",["get", "highway"], "secondary_link"],
+        ["!=",["get", "highway"], "tertiary"],
+        ["!=",["get", "highway"], "tertiary_link"]
+      ],
+      "paint": {
+        "line-color": "#b2afaa",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 12]]
+        }
+      }
+    },
+    {
       "id": "IDN_main",
       "type": "line",
       "source": "roads",
@@ -77,10 +106,10 @@
       }
     },
     {
-      "id": "IDN_other",
+      "id": "KHM_other",
       "type": "line",
       "source": "roads",
-      "source-layer": "IDN_EAD_Summary",
+      "source-layer": "KHM_EAD_Summary",
       "minzoom": 3,
       "layout": {
         "line-cap": "round",
@@ -143,10 +172,10 @@
       }
     },
     {
-      "id": "KHM_other",
+      "id": "LAO_other",
       "type": "line",
       "source": "roads",
-      "source-layer": "KHM_EAD_Summary",
+      "source-layer": "LAO_EAD_Summary",
       "minzoom": 3,
       "layout": {
         "line-cap": "round",
@@ -209,10 +238,10 @@
       }
     },
     {
-      "id": "LAO_other",
+      "id": "MMR_other",
       "type": "line",
       "source": "roads",
-      "source-layer": "LAO_EAD_Summary",
+      "source-layer": "MMR_EAD_Summary",
       "minzoom": 3,
       "layout": {
         "line-cap": "round",
@@ -275,10 +304,10 @@
       }
     },
     {
-      "id": "MMR_other",
+      "id": "PHL_other",
       "type": "line",
       "source": "roads",
-      "source-layer": "MMR_EAD_Summary",
+      "source-layer": "PHL_EAD_Summary",
       "minzoom": 3,
       "layout": {
         "line-cap": "round",
@@ -341,10 +370,10 @@
       }
     },
     {
-      "id": "PHL_other",
+      "id": "THA_other",
       "type": "line",
       "source": "roads",
-      "source-layer": "PHL_EAD_Summary",
+      "source-layer": "THA_EAD_Summary",
       "minzoom": 3,
       "layout": {
         "line-cap": "round",
@@ -407,10 +436,10 @@
       }
     },
     {
-      "id": "THA_other",
+      "id": "VNM_other",
       "type": "line",
       "source": "roads",
-      "source-layer": "THA_EAD_Summary",
+      "source-layer": "VNM_EAD_Summary",
       "minzoom": 3,
       "layout": {
         "line-cap": "round",
@@ -466,35 +495,6 @@
           ["tertiary", "tertiary_link"], "#487dbc",
           "#b2afaa"
         ],
-        "line-width": {
-          "base": 1,
-          "stops": [[7, 1], [12, 2], [16, 12]]
-        }
-      }
-    },
-    {
-      "id": "VNM_other",
-      "type": "line",
-      "source": "roads",
-      "source-layer": "VNM_EAD_Summary",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "all",
-        ["!=",["get", "highway"], "motorway"],
-        ["!=",["get", "highway"], "motorway_link"],
-        ["!=",["get", "highway"], "primary"],
-        ["!=",["get", "highway"], "primary_link"],
-        ["!=",["get", "highway"], "secondary"],
-        ["!=",["get", "highway"], "secondary_link"],
-        ["!=",["get", "highway"], "tertiary"],
-        ["!=",["get", "highway"], "tertiary_link"]
-      ],
-      "paint": {
-        "line-color": "#b2afaa",
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
