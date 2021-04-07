@@ -7,9 +7,10 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "road": { "type": "vector", "url": "mbtiles://{roads}" },
+    "roads": { "type": "vector", "url": "mbtiles://{roads}" },
+    "rail": { "type": "vector", "url": "mbtiles://{rail}" },
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
-    "energy_network": { "type": "vector", "url": "mbtiles://{electricity}" }
+    "electricity": { "type": "vector", "url": "mbtiles://{electricity}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -41,241 +42,269 @@
       }
     },
     {
-      "id": "road_class_6",
+      "id": "IDN_Electricity",
       "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
+      "source": "electricity",
+      "source-layer": "IDN_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        6
-      ],
       "paint": {
-        "line-color": "#feb078",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "line-color": "#dab540"
       }
     },
     {
-      "id": "road_class_5",
+      "id": "KHM_Electricity",
       "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
+      "source": "electricity",
+      "source-layer": "KHM_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        5
-      ],
       "paint": {
-        "line-color": "#f1605d",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "line-color": "#dab540"
       }
     },
     {
-      "id": "road_class_4",
+      "id": "LAO_Electricity",
       "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
+      "source": "electricity",
+      "source-layer": "LAO_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        4
-      ],
       "paint": {
-        "line-color": "#b73779",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "line-color": "#dab540"
       }
     },
     {
-      "id": "road_class_3",
+      "id": "MMR_Electricity",
       "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
+      "source": "electricity",
+      "source-layer": "MMR_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        3
-      ],
       "paint": {
-        "line-color": "#721f81",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "line-color": "#dab540"
       }
     },
     {
-      "id": "road_class_2",
+      "id": "PHL_Electricity",
       "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
+      "source": "electricity",
+      "source-layer": "PHL_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        2
-      ],
       "paint": {
-        "line-color": "#2c115f",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "line-color": "#dab540"
       }
     },
     {
-      "id": "road_class_1",
+      "id": "THA_Electricity",
       "type": "line",
-      "source": "road",
-      "source-layer": "road_edges",
+      "source": "electricity",
+      "source-layer": "THA_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "road_class"],
-        1
-      ],
       "paint": {
-        "line-color": "#000004",
-        "line-width": {
-          "base": 0.2,
-          "stops": [[3, 0.02], [5, 0.2], [9, 2], [10, 4], [17, 12]]
-        }
+        "line-color": "#dab540"
       }
     },
     {
-      "id": "Cambodia_Energy",
+      "id": "VNM_Electricity",
       "type": "line",
-      "source": "energy_network",
-      "source-layer": "SoutheastAsia_Gridfinder",
+      "source": "electricity",
+      "source-layer": "VNM_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "NAME_EN"],
-        "Cambodia"
-      ],
       "paint": {
-        "line-color": "#000000",
-        "line-width": 0.2
+        "line-color": "#dab540"
       }
     },
     {
-      "id": "Laos_Energy",
+      "id": "IDN_Rail",
       "type": "line",
-      "source": "energy_network",
-      "source-layer": "SoutheastAsia_Gridfinder",
+      "source": "rail",
+      "source-layer": "IDN_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "NAME_EN"],
-        "Laos"
-      ],
       "paint": {
-        "line-color": "#000000",
-        "line-width": 0.2
+        "line-color": "#444"
       }
     },
     {
-      "id": "Myanmar_Energy",
+      "id": "KHM_Rail",
       "type": "line",
-      "source": "energy_network",
-      "source-layer": "SoutheastAsia_Gridfinder",
+      "source": "rail",
+      "source-layer": "KHM_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "NAME_EN"],
-        "Myanmar"
-      ],
       "paint": {
-        "line-color": "#000000",
-        "line-width": 0.2
+        "line-color": "#444"
       }
     },
     {
-      "id": "Thailand_Energy",
+      "id": "LAO_Rail",
       "type": "line",
-      "source": "energy_network",
-      "source-layer": "SoutheastAsia_Gridfinder",
+      "source": "rail",
+      "source-layer": "LAO_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "NAME_EN"],
-        "Thailand"
-      ],
       "paint": {
-        "line-color": "#000000",
-        "line-width": 0.2
+        "line-color": "#444"
       }
     },
     {
-      "id": "Vietnam_Energy",
+      "id": "MMR_Rail",
       "type": "line",
-      "source": "energy_network",
-      "source-layer": "SoutheastAsia_Gridfinder",
+      "source": "rail",
+      "source-layer": "MMR_EAD_Summary",
       "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "filter": [
-        "==",
-        ["get", "NAME_EN"],
-        "Vietnam"
-      ],
       "paint": {
-        "line-color": "#000000",
-        "line-width": 0.2
+        "line-color": "#444"
+      }
+    },
+    {
+      "id": "PHL_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "PHL_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": "#444"
+      }
+    },
+    {
+      "id": "THA_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "THA_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": "#444"
+      }
+    },
+    {
+      "id": "VNM_Rail",
+      "type": "line",
+      "source": "rail",
+      "source-layer": "VNM_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": "#444"
+      }
+    },
+    {
+      "id": "IDN_main",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "IDN_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "highway"],
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+          "#b2afaa"
+        ]
+      }
+    },
+    {
+      "id": "KHM_main",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "KHM_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "highway"],
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
+        ]
+      }
+    },
+    {
+      "id": "LAO_main",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "LAO_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "highway"],
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
+        ]
+      }
+    },
+    {
+      "id": "MMR_main",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "MMR_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "highway"],
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
+        ]
+      }
+    },
+    {
+      "id": "PHL_main",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "PHL_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "highway"],
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
+        ]
+      }
+    },
+    {
+      "id": "THA_main",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "THA_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "highway"],
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
+        ]
+      }
+    },
+    {
+      "id": "VNM_main",
+      "type": "line",
+      "source": "roads",
+      "source-layer": "VNM_EAD_Summary",
+      "minzoom": 3,
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "highway"],
+          ["motorway", "motorway_link"], "#c1194c",
+          ["primary", "primary_link"], "#c1194b",
+          ["secondary", "secondary_link"], "#e48d14",
+          ["tertiary", "tertiary_link"], "#487dbc",
+            "#b2afaa"
+        ]
       }
     },
     {
