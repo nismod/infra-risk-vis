@@ -19,11 +19,11 @@ const FeatureSidebar = (props) => {
     <div className="custom-map-control top-right selected-feature">
       <h4 className="h5">Selected Asset</h4>
 
-      <details>
+      <details open="true">
         <summary>Attributes</summary>
         <dl>
           <dt>ID</dt>
-          <dd>{f.node_id || f.edge_id}</dd>
+          <dd>{f.node_id || f.edge_id || f.osm_id }</dd>
           {
             (f.name)? (
               <Fragment>
@@ -41,10 +41,10 @@ const FeatureSidebar = (props) => {
             ) : null
           }
           {
-            (f.road_class)? (
+            (f.road_class || f.highway)? (
               <Fragment>
                 <dt>Road classification</dt>
-                <dd>{titleCase(String(f.road_class))}</dd>
+                <dd>{titleCase(String(f.road_class || f.highway))}</dd>
               </Fragment>
             ) : null
           }
@@ -104,6 +104,30 @@ const FeatureSidebar = (props) => {
               </Fragment>
             ) : null
           }
+          {
+            (f.annualProbability)? (
+              <Fragment>
+                <dt>Annual Probability of Failure</dt>
+                <dd>{f.annualProbability.toFixed(6)}</dd>
+              </Fragment>
+            ) : null
+          }
+          {
+            (f.EAD_min && f.EAD_max)? (
+              <Fragment>
+                <dt>Expected Annual Damages</dt>
+                <dd>{f.EAD_min.toFixed(6)}&mdash;{f.EAD_max.toFixed(6)}</dd>
+              </Fragment>
+            ) : null
+          }
+          {
+            (f.EAEL)? (
+              <Fragment>
+                <dt>Expected Annual Economic Losses</dt>
+                <dd>{f.EAEL.toFixed(6)}</dd>
+              </Fragment>
+            ) : null
+          }
         </dl>
       </details>
       {
@@ -132,7 +156,7 @@ const FeatureSidebar = (props) => {
                             <td>{titleCase(scenario.replace("_"," "))}</td>
                             {
                               hazard_vars.map((hazard_var) => {
-                                
+
                                 if (
                                   f["flooding_" + scenario + "_min_" + hazard_var]
                                   && f["flooding_" + scenario + "_max_" + hazard_var]
@@ -166,13 +190,7 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        :
-          <details>
-            <summary>Flood exposure statistics</summary>
-            <dl>
-              <dt>No flooding estimated</dt>
-            </dl>
-          </details>
+        : null
       }
       {
         (f.max_tr_loss || f.max_econ_loss || f.max_econ_impact)?
@@ -205,16 +223,10 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        :
-          <details>
-            <summary>Criticality metrics</summary>
-            <dl>
-              <dt>No values estimated</dt>
-            </dl>
-          </details>
+        : null
       }
       {
-        (f.baseline_max_ead || f.rcp_4p5_max_ead || f.rcp_8p5_max_ead || 
+        (f.baseline_max_ead || f.rcp_4p5_max_ead || f.rcp_8p5_max_ead ||
           f.baseline_max_eael_per_day || f.rcp_4p5_max_eael_per_day || f.rcp_8p5_max_eael_per_day)?
           <details>
             <summary>Risk estimates</summary>
@@ -239,7 +251,7 @@ const FeatureSidebar = (props) => {
                               const max_risk = f[scenario + "_max_" + risk_var];
 
                               return (
-                                max_risk > min_risk ? 
+                                max_risk > min_risk ?
                                     <td key={risk_var}>{commas(min_risk.toFixed(0))} - {commas(max_risk.toFixed(0))}</td> :
                                     <td key={risk_var}>{commas(min_risk.toFixed(0))}</td>);
                               }
@@ -253,13 +265,7 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        :
-          <details>
-            <summary>Risk estimates</summary>
-            <dl>
-              <dt>No values estimated</dt>
-            </dl>
-          </details>
+        : null
       }
       {
         (f.options)?
@@ -273,13 +279,7 @@ const FeatureSidebar = (props) => {
             }
             </dl>
           </details>
-          :
-          <details>
-            <summary>Adaptation option</summary>
-            <dl>
-              <dt>No values estimated</dt>
-            </dl>
-          </details>
+          : null
       }
       {
         (f.baseline_max_ini_adap_cost || f.rcp_4p5_max_ini_adap_cost || f.rcp_8p5_max_ini_adap_cost)?
@@ -306,9 +306,9 @@ const FeatureSidebar = (props) => {
                               if (f[scenario + "_min_" + adapt_var] || f[scenario + "_max_" + adapt_var]) {
                                 const min_val = f[scenario + "_min_" + adapt_var];
                                 const max_val = f[scenario + "_max_" + adapt_var];
-  
+
                                 return (
-                                  Math.floor(Math.max(min_val,max_val)) > Math.floor(Math.min(min_val,max_val)) ? 
+                                  Math.floor(Math.max(min_val,max_val)) > Math.floor(Math.min(min_val,max_val)) ?
                                       <td key={adapt_var}>{commas(Math.min(min_val,max_val).toFixed(0))} - {commas(Math.max(min_val,max_val).toFixed(0))}</td> :
                                       <td key={adapt_var}>{commas(min_val.toFixed(0))}</td>
                                 );
@@ -354,7 +354,7 @@ const FeatureSidebar = (props) => {
                                 const max_val = f[scenario + "_max_" + adapt_var_perkm];
 
                                 return (
-                                  Math.floor(Math.max(min_val,max_val)) > Math.floor(Math.min(min_val,max_val)) ? 
+                                  Math.floor(Math.max(min_val,max_val)) > Math.floor(Math.min(min_val,max_val)) ?
                                       <td key={adapt_var_perkm}>{commas(Math.min(min_val,max_val).toFixed(0))} - {commas(Math.max(min_val,max_val).toFixed(0))}</td> :
                                       <td key={adapt_var_perkm}>{commas(min_val.toFixed(0))}</td>
                                 );
