@@ -4,6 +4,8 @@ data
 incoming_data/
 intermediate_data/
 *.zip
+*.bak
+public/*.csv
 
 # local config
 package-lock.json
