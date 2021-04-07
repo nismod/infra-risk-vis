@@ -23,13 +23,19 @@ const Tooltip = (props) => {
 
       title = "ID: " + (f.properties.osm_id || f.properties.link);
 
-      if (f.properties.EAD_min && f.properties.EAD_max && f.properties.EAEL) {
+      if (f.properties.EAD_min && f.properties.EAD_max) {
         max_value = f.properties.EAD_max || 0;
 
         detail = " EAD: " +
           (f.properties.EAD_min.toFixed(6) || 0) + " – " +
-          (f.properties.EAD_max.toFixed(6) || 0) + ", EAEL: " +
+          (f.properties.EAD_max.toFixed(6) || 0);
+
+        if (f.properties.EAEL) {
+          detail += ", EAEL: " +
           (f.properties.EAEL.toFixed(6) || 0) + ".";
+        } else {
+          detail += ".";
+        }
       } else {
         detail = "(no exposure calculated)  "
       }
