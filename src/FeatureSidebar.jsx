@@ -23,7 +23,7 @@ const FeatureSidebar = (props) => {
         <summary>Attributes</summary>
         <dl>
           <dt>ID</dt>
-          <dd>{f.node_id || f.edge_id || f.osm_id }</dd>
+          <dd>{f.node_id || f.edge_id || f.osm_id || f.link }</dd>
           {
             (f.name)? (
               <Fragment>
