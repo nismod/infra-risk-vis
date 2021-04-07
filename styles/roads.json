@@ -61,7 +61,25 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa",
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ],
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
@@ -91,13 +109,23 @@
       ],
       "paint": {
         "line-color": [
-          "match",
-          ["get", "highway"],
-          ["motorway", "motorway_link"], "#c1194c",
-          ["primary", "primary_link"], "#c1194b",
-          ["secondary", "secondary_link"], "#e48d14",
-          ["tertiary", "tertiary_link"], "#487dbc",
-          "#b2afaa"
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ],
         "line-width": {
           "base": 1,
@@ -127,7 +155,25 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa",
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ],
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
@@ -157,13 +203,23 @@
       ],
       "paint": {
         "line-color": [
-          "match",
-          ["get", "highway"],
-          ["motorway", "motorway_link"], "#c1194c",
-          ["primary", "primary_link"], "#c1194b",
-          ["secondary", "secondary_link"], "#e48d14",
-          ["tertiary", "tertiary_link"], "#487dbc",
-            "#b2afaa"
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ],
         "line-width": {
           "base": 1,
@@ -193,7 +249,25 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa",
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ],
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
@@ -223,13 +297,23 @@
       ],
       "paint": {
         "line-color": [
-          "match",
-          ["get", "highway"],
-          ["motorway", "motorway_link"], "#c1194c",
-          ["primary", "primary_link"], "#c1194b",
-          ["secondary", "secondary_link"], "#e48d14",
-          ["tertiary", "tertiary_link"], "#487dbc",
-          "#b2afaa"
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ],
         "line-width": {
           "base": 1,
@@ -259,7 +343,25 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa",
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ],
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
@@ -289,13 +391,23 @@
       ],
       "paint": {
         "line-color": [
-          "match",
-          ["get", "highway"],
-          ["motorway", "motorway_link"], "#c1194c",
-          ["primary", "primary_link"], "#c1194b",
-          ["secondary", "secondary_link"], "#e48d14",
-          ["tertiary", "tertiary_link"], "#487dbc",
-          "#b2afaa"
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ],
         "line-width": {
           "base": 1,
@@ -325,7 +437,25 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa",
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ],
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
@@ -355,13 +485,23 @@
       ],
       "paint": {
         "line-color": [
-          "match",
-          ["get", "highway"],
-          ["motorway", "motorway_link"], "#c1194c",
-          ["primary", "primary_link"], "#c1194b",
-          ["secondary", "secondary_link"], "#e48d14",
-          ["tertiary", "tertiary_link"], "#487dbc",
-          "#b2afaa"
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ],
         "line-width": {
           "base": 1,
@@ -391,7 +531,25 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa",
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ],
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
@@ -421,13 +579,23 @@
       ],
       "paint": {
         "line-color": [
-          "match",
-          ["get", "highway"],
-          ["motorway", "motorway_link"], "#c1194c",
-          ["primary", "primary_link"], "#c1194b",
-          ["secondary", "secondary_link"], "#e48d14",
-          ["tertiary", "tertiary_link"], "#487dbc",
-          "#b2afaa"
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ],
         "line-width": {
           "base": 1,
@@ -457,7 +625,25 @@
         ["!=",["get", "highway"], "tertiary_link"]
       ],
       "paint": {
-        "line-color": "#b2afaa",
+        "line-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
+        ],
         "line-width": {
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
@@ -487,13 +673,23 @@
       ],
       "paint": {
         "line-color": [
-          "match",
-          ["get", "highway"],
-          ["motorway", "motorway_link"], "#c1194c",
-          ["primary", "primary_link"], "#c1194b",
-          ["secondary", "secondary_link"], "#e48d14",
-          ["tertiary", "tertiary_link"], "#487dbc",
-          "#b2afaa"
+          "interpolate-lab",
+          ["linear"],
+          ["get", "annualProbability"],
+          0,
+          ["to-color", "#151030"],
+          0.00001,
+          ["to-color", "#3f0a72"],
+          0.0001,
+          ["to-color", "#792283"],
+          0.001,
+          ["to-color", "#d03f6f"],
+          0.01,
+          ["to-color", "#fcfcb8"],
+          0.1,
+          ["to-color", "#ff9c66"],
+          1,
+          ["to-color", "#ffffff"]
         ],
         "line-width": {
           "base": 1,
