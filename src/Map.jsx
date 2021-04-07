@@ -14,9 +14,9 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lng: props.lng || 105.12,
-      lat: props.lat || 16.19,
-      zoom: props.zoom || 5,
+      lng: props.lng || 116.12,
+      lat: props.lat || 7.89,
+      zoom: props.zoom || 4,
       selectedFeature: undefined,
       scenario: 'baseline',
       floodtype: 'fluvial',
@@ -223,7 +223,7 @@ class Map extends React.Component {
       center: [lng, lat],
       zoom: zoom,
       minZoom: 3,
-      maxZoom: 12
+      maxZoom: 16
     })
 
     var nav = new mapboxgl.NavigationControl();
