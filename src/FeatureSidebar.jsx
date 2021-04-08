@@ -19,7 +19,7 @@ const FeatureSidebar = (props) => {
     <div className="custom-map-control top-right selected-feature">
       <h4 className="h5">Selected Asset</h4>
 
-      <details open="true">
+      <details open={true}>
         <summary>Attributes</summary>
         <dl>
           <dt>ID</dt>

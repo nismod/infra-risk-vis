@@ -173,65 +173,7 @@ class Map extends React.Component {
   }
 
   updateBCR(data) {
-    if (this.props.map_style !== 'adaptation'){
-      return
-    }
-    const { duration, discount_growth, discount_norm, growth_rate_percentage } = data;
-
-    const dn = discount_norm;
-    const ddg = duration * discount_growth;
-
-    const calc = [
-      "max",
-      [
-        "/",
-        ["+",["*",["get", "baseline_min_ead"],dn],["*",["get", "baseline_min_eael_per_day"],ddg]],
-        ["get", "baseline_min_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "baseline_max_ead"],dn],["*",["get", "baseline_max_eael_per_day"],ddg]],
-        ["get", "baseline_max_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "rcp_4p5_min_ead"],dn],["*",["get", "rcp_4p5_min_eael_per_day"],ddg]],
-        ["get", "rcp_4p5_min_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "rcp_4p5_max_ead"],dn],["*",["get", "rcp_4p5_max_eael_per_day"],ddg]],
-        ["get", "rcp_4p5_max_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "rcp_8p5_min_ead"],dn],["*",["get", "rcp_8p5_min_eael_per_day"],ddg]],
-        ["get", "rcp_8p5_min_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "rcp_8p5_max_ead"],dn],["*",["get", "rcp_8p5_max_eael_per_day"],ddg]],
-        ["get", "rcp_8p5_max_tot_adap_cost"]
-      ]
-    ];
-
-    const paint_color = [
-      "interpolate",
-      ["linear"],
-        calc,
-        0, "#e2e2e2",
-        0.99, "#e2e2e2",
-        1, "#fd8d3c",
-        1.5, "#e31a1c",
-        2, "#800026",
-        2000, "#800026"
-    ];
-    this.map.setPaintProperty('road_class_1', 'line-color', paint_color);
-    this.map.setPaintProperty('road_class_2', 'line-color', paint_color);
-    this.map.setPaintProperty('road_class_3', 'line-color', paint_color);
-    this.map.setPaintProperty('road_class_4', 'line-color', paint_color);
-    this.map.setPaintProperty('road_class_5', 'line-color', paint_color);
-    this.map.setPaintProperty('road_class_6', 'line-color', paint_color);
+    const { duration, growth_rate_percentage } = data;
 
     this.setState({
       duration: duration,
@@ -447,7 +389,13 @@ class Map extends React.Component {
           {
             (map_style === 'roads')?
               <small>
-                Feature size indicates maximum freight flows
+                Road network data extracted from OpenStreetMap
+              </small> : null
+          }
+          {
+            (map_style === 'rail')?
+              <small>
+                Rail network data extracted from OpenStreetMap
               </small> : null
           }
           {
@@ -472,13 +420,16 @@ class Map extends React.Component {
           }
         </div>
 
-        <FeatureSidebar
-          feature={selectedFeature}
-          updateBCR={this.updateBCR}
-          duration={this.state.duration}
-          growth_rate_percentage={this.state.growth_rate_percentage}
-          />
-        { (this.state.showHelp)? <Help topic={this.state.helpTopic} /> : null }
+        {
+          (this.state.showHelp)?
+            <Help topic={this.state.helpTopic} />
+            : <FeatureSidebar
+                feature={selectedFeature}
+                updateBCR={this.updateBCR}
+                duration={this.state.duration}
+                growth_rate_percentage={this.state.growth_rate_percentage}
+                />
+        }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={this.mapContainer} className="map" />
       </Fragment>
