@@ -113,18 +113,18 @@ const FeatureSidebar = (props) => {
             ) : null
           }
           {
-            (f.EAD_min && f.EAD_max)? (
+            (f.EAD_min_usd && f.EAD_max_usd)? (
               <Fragment>
-                <dt>Expected Annual Damages</dt>
-                <dd>{f.EAD_min.toFixed(6)}&mdash;{f.EAD_max.toFixed(6)}</dd>
+                <dt>Expected Annual Damages ($USD)</dt>
+                <dd>{f.EAD_min_usd}&mdash;{f.EAD_max_usd}</dd>
               </Fragment>
             ) : null
           }
           {
-            (f.EAEL)? (
+            (f.EAEL_daily_usd)? (
               <Fragment>
-                <dt>Expected Annual Economic Losses</dt>
-                <dd>{f.EAEL.toFixed(6)}</dd>
+                <dt>Expected Annual Economic Losses (per day of disruption, $USD)</dt>
+                <dd>{f.EAEL_daily_usd}</dd>
               </Fragment>
             ) : null
           }

@@ -9,6 +9,37 @@ import FeatureSidebar from './FeatureSidebar'
 import FloodHelp from './FloodHelp'
 import FloodControl from './FloodControl'
 import NetworkControl from './NetworkControl';
+import { commas } from './helpers'
+
+/**
+ * Process feature for tooltip/detail display
+ *
+ * Calculate damages     and losses
+ *      in   USD         or  USD/day
+ *      from USD million or  USD million / year
+ * and save to features as formatted strings
+ *
+ * @param {object} f
+ * @returns modified f
+ */
+function processFeature(f) {
+  if (!f || !f.properties) {
+    return f
+  }
+  if (f.properties.EAD_min) {
+    f.properties.EAD_min_usd = commas(
+      (f.properties.EAD_min * 1e6).toFixed(0))
+  }
+  if (f.properties.EAD_max) {
+    f.properties.EAD_max_usd = commas(
+      (f.properties.EAD_max * 1e6).toFixed(0))
+  }
+  if (f.properties.EAEL) {
+    f.properties.EAEL_daily_usd = commas(
+      ((f.properties.EAEL / 365) * 1e6).toFixed(0))
+  }
+  return f
+}
 
 class Map extends React.Component {
   constructor(props) {
@@ -271,7 +302,7 @@ class Map extends React.Component {
       )? 'pointer' : '';
 
       tooltip.setLngLat(e.lngLat);
-      this.setTooltip(tooltipFeatures);
+      this.setTooltip(tooltipFeatures.map(processFeature));
     });
 
     this.map.on('click', (e) => {
@@ -302,7 +333,7 @@ class Map extends React.Component {
           }
         }
         this.setState({
-          selectedFeature: feature
+          selectedFeature: processFeature(feature)
         })
       }
     })
