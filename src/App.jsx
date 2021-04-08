@@ -133,48 +133,9 @@ const App = () => {
             tooltipLayerSources={['flood']}
             />
         </Route>
-        <Route path="/impact">
-          <Map
-            map_style="impact"
-            dataSources={[
-              'road'
-            ]}
-            dataLayers={[
-              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
-              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
-              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
-              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
-              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
-              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
-
-            ]}
-            tooltipLayerSources={[
-              'road'
-            ]}
-            />
-        </Route>
         <Route path="/risk">
           <Map
             map_style="risk"
-            dataSources={[
-              'road'
-            ]}
-            dataLayers={[
-              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
-              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
-              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
-              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
-              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
-              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
-            ]}
-            tooltipLayerSources={[
-              'road'
-            ]}
-            />
-        </Route>
-        <Route path="/adaptation">
-          <Map
-            map_style="adaptation"
             dataSources={[
               'road'
             ]}

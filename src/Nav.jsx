@@ -38,18 +38,8 @@ const Nav = () => (
         </NavLink>
       </li>
       <li className="nav-item">
-        <NavLink className="nav-link" to='/impact'>
-          Impact
-        </NavLink>
-      </li>
-      <li className="nav-item">
         <NavLink className="nav-link" to='/risk'>
           Risk
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" to='/adaptation'>
-          Assets with Adaptation BCR &gt; 1
         </NavLink>
       </li>
     </ul>

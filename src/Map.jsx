@@ -445,32 +445,6 @@ class Map extends React.Component {
               : null
           }
           {
-            (map_style === 'impact')?
-              <div>
-                <small>
-                  Feature size indicates maximum total economic impact
-                </small>
-                <span className="dot line" style={{"height": "2px", "width": "24px"}}></span>&lt;0.5 million USD/day<br/>
-                <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>0.5-1 million USD/day<br/>
-                <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>1-2 million USD/day<br/>
-                <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;2 million USD/day<br/>
-              </div>
-              : null
-          }
-          {
-            (map_style === 'adaptation')?
-              <div>
-                <small>
-                  Feature colour indicates Benefit-Cost Ratio (click on a feature to adjust disruption and growth rate assumptions)
-                </small>
-                <span className="dot" style={{backgroundColor: "#e2e2e2"}}></span>&lt;1<br/>
-                <span className="dot" style={{backgroundColor: "#fd8d3c"}}></span>1-1.5<br/>
-                <span className="dot" style={{backgroundColor: "#e31a1c"}}></span>1.5-2<br/>
-                <span className="dot" style={{backgroundColor: "#800026"}}></span>&gt;2<br/>
-              </div>
-              : null
-          }
-          {
             (map_style === 'roads')?
               <small>
                 Feature size indicates maximum freight flows
