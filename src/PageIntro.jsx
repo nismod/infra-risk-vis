@@ -2,71 +2,55 @@ import React from 'react';
 
 const PageIntro = () => (
   <article>
-  <h1 className="h1">Southeast Asia Infrastructure Risk: Prototype</h1>
+  <h1>Southeast Asia Infrastructure Risk: Prototype</h1>
 
-  <p>
-    This protoype tool presents data from the World Bank's Transport Risk Study
-    of Vietnam within the risk visualisation tool developed as part of the World Bank's
-    Argentia Transport Risk Study. Both studies have been undertaken for the World Bank by
-    Oxford Infrastructure Analytics Ltd.
-  </p>
+  <p>This prototype tool presents infrastructure risk analytics for South-East
+  Asia (SEA) using open-data sources on fluvial and coastal flooding hazard maps
+  along with cyclone hazard maps. The risks are analysed and visualised for
+  power plants, electricity transmission lines, road networks, railway networks,
+  ports and airports in SEA. The analysis has been undertaken for the World Bank
+  by Oxford Infrastructure Analytics Ltd.</p>
 
+  <p>The purpose of the prototype is to illustrate the type and nature of
+  simulation results and network data currently available in the SEA region, and
+  how &ndash; using the existing toolchain &ndash; this data might be accessed
+  and interrogated at a sub-national, national or super-national scale. </p>
 
-  <p>
-    The purpose of the prototype is to illustrate the type and nature of simulation results and network
-    data currently available in the SEA region, and how - using the existing toolchain - this data might
-    be accessed and interrogated at a National or Super-National scale.
-  </p>
+  <p>The modelling and analysis presented here aim to support Disaster Risk
+  Finance and Insurance (DRFI) decision-making by identifying spatial
+  criticalities and risks under current and future hazard scenarios. It
+  comprises a direct damage estimation and an indirect economic loss estimation
+  of GDP disruptions due to asset failures and service disruption.</p>
 
+  <p>The concepts and model results presented here are documented in the study
+  report:</p>
 
-  <p>
-    The modelling and analysis presented here aim to support decision-making by identifying
-    spatial criticailities, risks, and the performance of adaptation options under current and
-    future fluvial flooding outlooks. It comprises a network flow model, generation of failure
-    scenarios, economic impact assessment, and cost-benefit analysis of adaptation options.
-  </p>
+  <ul><li>Pant, R., Russell, T., Glasgow, G., Verschuur, J., Gavin, H., Fowler,
+  T. &amp; Hall, J.W. (2021). <em>Analytics for Financial Risk Management of
+  Critical Infrastructure in South East Asia – Final Report.</em> Oxford
+  Infrastructure Analytics Ltd., Oxford, UK. (Available on request from the
+  World Bank)</li></ul>
 
-  <p>
-    The concepts and model results presented here are documented in the study report:
-  </p>
+  <p>The tool being used to visualize the model outputs is developed and
+  documented here: </p>
 
-  <p>
-    Pant, R., Koks, E.E., Paltan, H., Russell, T., &amp; Hall, J.W. (2019). Argentina – Transport risk analysis.
-    Final Report, Oxford Infrastructure Analytics Ltd., Oxford, UK. (Available by request from World Bank)
-  </p>
+  <ul><li><a href="https://github.com/oi-analytics/seasia"
+  target="blank">github.com/oi-analytics/seasia</a></li></ul>
 
+  <p>The outputs specific to Vietnam visualized here were generated from a model
+  created and documented here: </p>
 
-  <p>
-    The tool being used to visualize the model outputs was created and documented
-    here:
-  </p>
-  <p>
-    <a href="https://github.com/oi-analytics/argentina-transport" target="blank">Argentina Transport Study</a>
-  </p>
+  <ul><li><a href="https://github.com/oi-analytics/vietnam-transport"
+  target="blank">Vietnam Transport Study</a></li></ul>
 
-  <p>
-    <a href="https://argentina-transport-risk-analysis.readthedocs.io/en/latest/?badge=latest" target="blank">ReadTheDocs resources</a>
-  </p>
+  <h2>Funding support</h2>
 
+  <p>This project is led by the Disaster Risk Financing and Insurance Program
+  (DRFIP) of the World Bank with support from the Japan&mdash;World Bank Program
+  for Mainstreaming DRM in Developing Countries, which is financed by the
+  Government of Japan and managed by the Global Facility for Disaster Reduction
+  and Recovery (GFDRR) through the Tokyo Disaster Risk Management Hub. </p>
 
-  <p>
-    The outputs visualized here were generated from a model created and documented
-    here:
-  </p>
-
-  <p>
-    <a href="https://github.com/oi-analytics/vietnam-transport" target="blank">Vietnam Transport Study</a><br></br>
-  </p>
-
-
-  <h1 className="h1">Funding support</h1>
-  <p>
-
-  This results inquirer tool has been developed for the Government of Argentina with
-  funding support from the World Bank Group and Global Facility for Disaster
-  Reduction and Recovery (GFDRR).
-
-  </p>
   </article>
 );
 
