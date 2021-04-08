@@ -239,10 +239,11 @@ class Map extends React.Component {
     })
   }
 
-  toggleHelp() {
+  toggleHelp(e) {
+    const helpTopic = e.target.dataset.helpTopic;
     this.setState({
       showHelp: !this.state.showHelp,
-      helpTopic: "flood"
+      helpTopic: helpTopic
     })
   }
 
@@ -437,6 +438,9 @@ class Map extends React.Component {
                 <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>1-5 million USD<br/>
                 <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>5-10 million USD<br/>
                 <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;10 million USD<br/>
+                <a href="#help" data-help-topic="vietnam" onClick={this.toggleHelp}>
+                { (this.state.showHelp)? 'Hide info' : 'More info' }
+                </a>
               </div>
               : null
           }
