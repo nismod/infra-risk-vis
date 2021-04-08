@@ -6,7 +6,7 @@ import mapboxgl from 'mapbox-gl'
 import PositionControl from './PositionControl'
 import Tooltip from './Tooltip'
 import FeatureSidebar from './FeatureSidebar'
-import FloodHelp from './FloodHelp'
+import Help from './Help'
 import FloodControl from './FloodControl'
 import NetworkControl from './NetworkControl';
 import { commas } from './helpers'
@@ -57,7 +57,7 @@ class Map extends React.Component {
         _3m4m: true,
         _4m999m: true
       },
-      showFloodHelp: false,
+      showHelp: false,
       duration: 30,
       growth_rate_percentage: 2.8
     }
@@ -70,7 +70,7 @@ class Map extends React.Component {
     this.setFloodType = this.setFloodType.bind(this)
     this.setFloodLevel = this.setFloodLevel.bind(this)
     this.setMap = this.setMap.bind(this)
-    this.toggleFloodHelp = this.toggleFloodHelp.bind(this)
+    this.toggleHelp = this.toggleHelp.bind(this)
     this.updateBCR = this.updateBCR.bind(this)
     this.networkBaseLayerID = this.networkBaseLayerID.bind(this)
   }
@@ -239,9 +239,10 @@ class Map extends React.Component {
     })
   }
 
-  toggleFloodHelp() {
+  toggleHelp() {
     this.setState({
-      showFloodHelp: !this.state.showFloodHelp
+      showHelp: !this.state.showHelp,
+      helpTopic: "flood"
     })
   }
 
@@ -485,8 +486,8 @@ class Map extends React.Component {
                   setFloodType={this.setFloodType}
                   setFloodLevel={this.setFloodLevel}
                   />
-                <a href="#flood-help" onClick={this.toggleFloodHelp}>
-                { (this.state.showFloodHelp)? 'Hide info' : 'More info' }
+                <a href="#help" data-help-topic="flood" onClick={this.toggleHelp}>
+                { (this.state.showHelp)? 'Hide info' : 'More info' }
                 </a>
               </Fragment>
             : null
@@ -499,7 +500,7 @@ class Map extends React.Component {
           duration={this.state.duration}
           growth_rate_percentage={this.state.growth_rate_percentage}
           />
-        { (this.state.showFloodHelp)? <FloodHelp /> : null }
+        { (this.state.showHelp)? <Help topic={this.state.helpTopic} /> : null }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={this.mapContainer} className="map" />
       </Fragment>
