@@ -169,7 +169,7 @@ class Map extends React.Component {
 
   toggleHelp(e) {
     const helpTopic = e.target.dataset.helpTopic;
-    const showHelp = !this.state.showHelp || this.state.helpTopic != helpTopic;
+    const showHelp = !this.state.showHelp || this.state.helpTopic !== helpTopic;
     this.setState({
       showHelp: showHelp,
       helpTopic: helpTopic
@@ -368,7 +368,7 @@ class Map extends React.Component {
                 <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>5-10 million USD<br/>
                 <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;10 million USD<br/>
                 <a href="#help" data-help-topic="vietnam" onClick={this.toggleHelp}>
-                { (this.state.showHelp && this.state.helpTopic == "vietnam")? 'Hide info' : 'More info' }
+                { (this.state.showHelp && this.state.helpTopic === "vietnam")? 'Hide info' : 'More info' }
                 </a>
               </div>
               : null
@@ -400,7 +400,7 @@ class Map extends React.Component {
                   setFloodLevel={this.setFloodLevel}
                   />
                 <a href="#help" data-help-topic="flood" onClick={this.toggleHelp}>
-                { (this.state.showHelp && this.state.helpTopic == "flood")? 'Hide info' : 'More info' }
+                { (this.state.showHelp && this.state.helpTopic === "flood")? 'Hide info' : 'More info' }
                 </a>
               </Fragment>
             : null
