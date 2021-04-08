@@ -148,7 +148,8 @@ const App = () => {
               {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
             ]}
             tooltipLayerSources={[
-              'road'
+              'road',
+              'flood'
             ]}
             />
         </Route>

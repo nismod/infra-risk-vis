@@ -142,23 +142,9 @@ class Map extends React.Component {
       case 'flood':
         before_layer_id = 'country_labels';
         break;
-      case 'roads':
-        before_layer_id = 'road_class_6';
-        break;
-      case 'energy_network':
-          break;
-      case 'adaptation':
-        before_layer_id = 'road_class_6';
-        break;
       case 'risk':
-        //before_layer_id = 'bridges';
+        before_layer_id = 'road_class_6';
         break;
-      case 'impact':
-        //before_layer_id = 'bridges';
-        break;
-      case 'overview':
-          before_layer_id = 'road_class_6';
-          break;
       default:
         before_layer_id = 'country_labels';
     }
@@ -183,8 +169,9 @@ class Map extends React.Component {
 
   toggleHelp(e) {
     const helpTopic = e.target.dataset.helpTopic;
+    const showHelp = !this.state.showHelp || this.state.helpTopic != helpTopic;
     this.setState({
-      showHelp: !this.state.showHelp,
+      showHelp: showHelp,
       helpTopic: helpTopic
     })
   }
@@ -381,7 +368,7 @@ class Map extends React.Component {
                 <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>5-10 million USD<br/>
                 <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;10 million USD<br/>
                 <a href="#help" data-help-topic="vietnam" onClick={this.toggleHelp}>
-                { (this.state.showHelp)? 'Hide info' : 'More info' }
+                { (this.state.showHelp && this.state.helpTopic == "vietnam")? 'Hide info' : 'More info' }
                 </a>
               </div>
               : null
@@ -413,7 +400,7 @@ class Map extends React.Component {
                   setFloodLevel={this.setFloodLevel}
                   />
                 <a href="#help" data-help-topic="flood" onClick={this.toggleHelp}>
-                { (this.state.showHelp)? 'Hide info' : 'More info' }
+                { (this.state.showHelp && this.state.helpTopic == "flood")? 'Hide info' : 'More info' }
                 </a>
               </Fragment>
             : null

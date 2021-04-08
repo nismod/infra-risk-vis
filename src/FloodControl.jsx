@@ -53,24 +53,6 @@ const FloodControl = (props) => (
       </label>
     </div>
 
-    <h4 className="h5">Flood Type</h4>
-    <div className="form-check">
-      <input
-        className="form-check-input"
-        defaultChecked={true} type="radio"
-        name="floodtypeRadios"
-        value="fluvial"
-        id="floodtypeRadios_fluvial"
-        onClick={(e) => props.setFloodType(e.target.value)}
-        />
-      <label
-        className="form-check-label"
-        htmlFor="floodtypeRadios_fluvial"
-        >
-        Fluvial
-      </label>
-    </div>
-
     <h4 className="h5">Flood Level</h4>
     <div className="form-check">
       <input
