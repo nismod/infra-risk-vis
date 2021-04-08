@@ -41,28 +41,6 @@
           ]
         }
       },
-      "adaptation": {
-        "style": "adaptation.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
-      },
-      "impact": {
-        "style": "impact.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
-      },
       "risk": {
         "style": "risk.json",
         "tilejson": {
