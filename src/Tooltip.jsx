@@ -65,6 +65,14 @@ const Tooltip = (props) => {
         : "";
     }
 
+    // Hazard details
+    if (f.properties.depth_m) {
+      detail = "Depth (m): " + f.properties.depth_m.toFixed(1);
+    }
+    if (f.properties["gust_speed_ms-1"]) {
+      detail = "Speed (ms⁻¹): " + f.properties["gust_speed_ms-1"].toFixed(1);
+    }
+
     if (!entries[f.sourceLayer] || entries[f.sourceLayer].max_value < max_value) {
       entries[f.sourceLayer] = { title, subtitle, max_value, detail }
     }
