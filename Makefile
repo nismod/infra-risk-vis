@@ -3,7 +3,6 @@
 all: ./data/rail.mbtiles ./data/roads_main.mbtiles ./data/roads_other.mbtiles ./data/electricity.mbtiles
 
 ./data/rail.mbtiles:
-	rm -f ./data/rail.mbtiles
 	tippecanoe \
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
@@ -12,7 +11,6 @@ all: ./data/rail.mbtiles ./data/roads_main.mbtiles ./data/roads_other.mbtiles ./
 		./intermediate_data/Rail/*.json
 
 ./data/roads_main.mbtiles:
-	rm -f ./data/roads_main.mbtiles
 	tippecanoe \
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
@@ -24,7 +22,6 @@ all: ./data/rail.mbtiles ./data/roads_main.mbtiles ./data/roads_other.mbtiles ./
 		./intermediate_data/Roads/highway/secondary.json
 
 ./data/roads_other.mbtiles:
-	rm -f ./data/roads_other.mbtiles
 	tippecanoe \
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
@@ -36,7 +33,6 @@ all: ./data/rail.mbtiles ./data/roads_main.mbtiles ./data/roads_other.mbtiles ./
 		./intermediate_data/Roads/highway/other_*.json
 
 ./data/electricity.mbtiles:
-	rm -f ./data/electricity.mbtiles
 	tippecanoe \
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
