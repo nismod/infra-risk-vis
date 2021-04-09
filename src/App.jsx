@@ -93,12 +93,16 @@ const App = () => {
             ]}
             />
         </Route>
-        <Route path="/flood">
+        <Route path="/hazards">
           <Map
-            map_style="flood"
+            map_style="hazards"
             dataSources={[]}
-            dataLayers={[]}
-            tooltipLayerSources={['flood']}
+            dataLayers={[
+              {key:'coastal', label: 'Coastal flood depth (m), 100yr', color: "#9df4b0"},
+              {key:'fluvial', label: 'Fluvial flood depth (m), 100yr', color: "#58cced"},
+              {key:'cyclone', label: 'Cyclone gust speed (m/s), 100yr', color: "#f9d5cb"}
+            ]}
+            tooltipLayerSources={['coastal', 'fluvial', 'cyclone']}
             />
         </Route>
         <Route path="/risk">

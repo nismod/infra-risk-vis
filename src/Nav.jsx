@@ -18,6 +18,11 @@ const Nav = () => (
         </NavLink>
       </li>
       <li className="nav-item">
+        <NavLink className="nav-link" to='/hazards'>
+          Hazards
+        </NavLink>
+      </li>
+      <li className="nav-item">
         <NavLink className="nav-link" to='/roads'>
           Roads
         </NavLink>
@@ -30,11 +35,6 @@ const Nav = () => (
       <li className="nav-item">
         <NavLink className="nav-link" to='/energy_network'>
           Electricity
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" to='/flood'>
-          Flood
         </NavLink>
       </li>
       <li className="nav-item">
