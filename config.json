@@ -90,6 +90,9 @@
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
       },
+      "admin1": {
+        "mbtiles": "admin1.mbtiles"
+      },
       "electricity": {
         "mbtiles": "electricity.mbtiles"
       },
@@ -98,6 +101,12 @@
       },
       "roads": {
         "mbtiles": "roads.mbtiles"
+      },
+      "roads_main": {
+        "mbtiles": "roads_main.mbtiles"
+      },
+      "roads_other": {
+        "mbtiles": "roads_other.mbtiles"
       },
       "vietnam_roads": {
         "mbtiles": "road_edges.mbtiles"

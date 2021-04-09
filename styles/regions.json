@@ -1,13 +1,14 @@
 {
   "version": 8,
-  "name": "Overview",
+  "name": "Regions",
   "center": [105.12, 16.19],
   "height": "600px",
   "zoom": 5,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" }
+    "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
+    "admin1": { "type": "vector", "url": "mbtiles://{admin1}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -33,6 +34,76 @@
       "type": "fill",
       "source": "boundaries",
       "source-layer": "WB_Admin0_disputed_areas",
+      "paint": {
+        "fill-color": "#d2d2d2",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "admin1_IDN",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "IDN_Admin1",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "admin1_KHM",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "KHM_Admin1",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "admin1_LAO",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "LAO_Admin1",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "admin1_MMR",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "MMR_Admin1",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "admin1_PHL",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "PHL_Admin1",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "admin1_THA",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "THA_Admin1",
+      "paint": {
+        "fill-color": "#e0e0e0",
+        "fill-outline-color": "#fff"
+      }
+    },
+    {
+      "id": "admin1_VNM",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "VNM_Admin1",
       "paint": {
         "fill-color": "#e0e0e0",
         "fill-outline-color": "#fff"
