@@ -15,15 +15,10 @@
         "style": "electricity.json"
       },
       "flood": {
-        "style": "flood.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+        "style": "flood.json"
+      },
+      "hazards": {
+        "style": "hazards.json"
       },
       "risk": {
         "style": "risk.json"
@@ -62,6 +57,15 @@
       },
       "flood": {
         "mbtiles": "flood.mbtiles"
+      },
+      "coastal": {
+        "mbtiles": "coastal.mbtiles"
+      },
+      "fluvial": {
+        "mbtiles": "fluvial.mbtiles"
+      },
+      "cyclone": {
+        "mbtiles": "cyclone.mbtiles"
       }
     }
   }
