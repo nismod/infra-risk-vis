@@ -8,13 +8,18 @@ const Nav = () => (
     </NavLink>
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
+        <NavLink className="nav-link" to='/'>
+          About
+        </NavLink>
+      </li>
+      <li className="nav-item">
         <NavLink className="nav-link" to='/summary'>
           Summary
         </NavLink>
       </li>
       <li className="nav-item">
         <NavLink className="nav-link" to='/overview'>
-          Overview
+          Infrastructure networks
         </NavLink>
       </li>
       <li className="nav-item">
