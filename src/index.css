@@ -102,7 +102,7 @@ article {
 }
 .custom-map-control .h4 {
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1rem;
   padding-bottom: 2px;
   border-bottom: 2px solid #000066;
 }
@@ -112,7 +112,7 @@ article {
   font-size: 1rem;
 }
 .custom-map-control .h5 {
-  margin: 4px 0 0.25rem;
+  margin: 0.5rem 0 0.25rem;
 }
 .selected-feature {
   overflow: scroll;
