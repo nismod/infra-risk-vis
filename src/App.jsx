@@ -133,10 +133,12 @@ const App = () => {
             <Map
               map_style="regions"
               dataSources={[
-                'boundaries'
+                'admin1'
               ]}
               dataLayers={[]}
-              tooltipLayerSources={[]}
+              tooltipLayerSources={[
+                'admin1'
+              ]}
               onRegionSelect={setRegion}
               />
           </div>

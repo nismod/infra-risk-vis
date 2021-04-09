@@ -55,7 +55,7 @@
       "source": "admin1",
       "source-layer": "KHM_Admin1",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#d8d8d8",
         "fill-outline-color": "#fff"
       }
     },
@@ -65,7 +65,7 @@
       "source": "admin1",
       "source-layer": "LAO_Admin1",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#d4d4d4",
         "fill-outline-color": "#fff"
       }
     },
@@ -75,7 +75,7 @@
       "source": "admin1",
       "source-layer": "MMR_Admin1",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#dcdcdc",
         "fill-outline-color": "#fff"
       }
     },
@@ -85,7 +85,7 @@
       "source": "admin1",
       "source-layer": "PHL_Admin1",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#dfdfdf",
         "fill-outline-color": "#fff"
       }
     },
@@ -105,7 +105,7 @@
       "source": "admin1",
       "source-layer": "VNM_Admin1",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#dedede",
         "fill-outline-color": "#fff"
       }
     },

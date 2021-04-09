@@ -73,6 +73,14 @@ const Tooltip = (props) => {
       detail = "Speed (ms⁻¹): " + f.properties["gust_speed_ms-1"].toFixed(1);
     }
 
+    // Regions
+    if (props.map_style == 'regions') {
+      title = "Region"
+    }
+    if (f.properties.NAME_1 && f.properties.NAME_0) {
+      detail = f.properties.NAME_1 + ", " + f.properties.NAME_0
+    }
+
     if (!entries[f.sourceLayer] || entries[f.sourceLayer].max_value < max_value) {
       entries[f.sourceLayer] = { title, subtitle, max_value, detail }
     }
