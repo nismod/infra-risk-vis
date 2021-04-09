@@ -22,9 +22,10 @@ const App = () => {
           <Map
             map_style="overview"
             dataSources={[
-              'roads',
+              'electricity',
               'rail',
-              'electricity'
+              'roads_main',
+              'roads_other'
             ]}
             dataLayers={[
               {key: 'electricity', label: 'Power Grid', linear: true, color: "#eca926"},
@@ -37,9 +38,10 @@ const App = () => {
 
             ]}
             tooltipLayerSources={[
-              'roads',
+              'electricity',
               'rail',
-              'electricity'
+              'roads_main',
+              'roads_other'
             ]}
             />
         </Route>
@@ -47,7 +49,8 @@ const App = () => {
           <Map
             map_style="roads"
             dataSources={[
-              'roads'
+              'roads_main',
+              'roads_other'
             ]}
             dataLayers={[
               {key: 'trunk', label: 'Trunk Roads', linear: true, color: "#b2afaa"},
@@ -57,7 +60,8 @@ const App = () => {
               {key: 'roads_other', label: 'Tertiary and Other Roads', linear: true, color: "#b2afaa"},
             ]}
             tooltipLayerSources={[
-              'roads'
+              'roads_main',
+              'roads_other'
             ]}
             />
         </Route>
