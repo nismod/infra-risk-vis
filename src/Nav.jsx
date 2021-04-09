@@ -39,7 +39,7 @@ const Nav = () => (
       </li>
       <li className="nav-item">
         <NavLink className="nav-link" to='/risk'>
-          Risk
+          Vietnam Case Study - Risk and Adaptation
         </NavLink>
       </li>
     </ul>
