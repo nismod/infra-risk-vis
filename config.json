@@ -9,26 +9,10 @@
     },
     "styles": {
       "overview": {
-        "style": "overview.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
+        "style": "overview.json"
       },
       "electricity": {
-        "style": "electricity.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
+        "style": "electricity.json"
       },
       "flood": {
         "style": "flood.json",
@@ -42,48 +26,16 @@
         }
       },
       "risk": {
-        "style": "risk.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
+        "style": "risk.json"
       },
       "roads": {
-        "style": "roads.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
+        "style": "roads.json"
       },
       "rail": {
-        "style": "rail.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
+        "style": "rail.json"
       },
       "regions": {
-        "style": "regions.json",
-        "tilejson": {
-          "bounds": [
-            102.169,
-            8.5986,
-            109.45,
-            23.2945
-          ]
-        }
+        "style": "regions.json"
       }
     },
     "data": {
