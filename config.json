@@ -51,9 +51,6 @@
       "rail": {
         "mbtiles": "rail.mbtiles"
       },
-      "roads": {
-        "mbtiles": "roads.mbtiles"
-      },
       "roads_main": {
         "mbtiles": "roads_main.mbtiles"
       },
