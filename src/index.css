@@ -77,6 +77,8 @@ article {
   box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.1);
   border-radius: 2px;
   padding: 5px;
+  max-height: calc(100vh - 7rem);
+  overflow-y: scroll;
 }
 .custom-map-control.top-left {
   top: 10px;
@@ -116,7 +118,6 @@ article {
 }
 .selected-feature {
   overflow: scroll;
-  max-height: 85vh;
   width: 40rem;
 }
 .selected-feature pre {

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 const FloodControl = (props) => (
   <Fragment>
+    <br />
+    <h3 className="h4">Flood layers</h3>
     <h4 className="h5">Climate Scenario</h4>
     <div className="form-check">
       <input

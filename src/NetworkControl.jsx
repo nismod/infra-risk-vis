@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 const NetworkControl = (props) => (
   <Fragment>
-    <h4 className="h5">Networks</h4>
     {
       props.dataLayers.map(layer_data => {
         const layer = layer_data.key;

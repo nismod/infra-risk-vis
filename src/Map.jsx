@@ -347,7 +347,7 @@ class Map extends React.Component {
     return (
       <Fragment>
         <div className="custom-map-control top-left">
-          <h3 className="h4">Select layers</h3>
+          <h2 className="h4">Select layers</h2>
           {
             (dataLayers.length)?
               <NetworkControl
@@ -386,7 +386,7 @@ class Map extends React.Component {
               </small> : null
           }
           {
-            (map_style === 'energy_network')?
+            (map_style === 'electricity')?
               <small>
                 Energy network data extracted from Gridfinder
               </small> : null
