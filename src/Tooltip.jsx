@@ -42,7 +42,6 @@ const Tooltip = (props) => {
 
     }
 
-
     if (props.map_style === "impact") {
       max_value = f.properties.max_econ_impact;
 
@@ -67,10 +66,10 @@ const Tooltip = (props) => {
 
     // Hazard details
     if (f.properties.depth_m) {
-      detail = "Depth (m): " + f.properties.depth_m.toFixed(1);
+      detail = "Depth: " + f.properties.depth_m.toFixed(1) + "m";
     }
     if (f.properties["gust_speed_ms-1"]) {
-      detail = "Speed (ms⁻¹): " + f.properties["gust_speed_ms-1"].toFixed(1);
+      detail = "Gust speed: " + f.properties["gust_speed_ms-1"].toFixed(1) + "ms⁻¹";
     }
 
     // Regions
