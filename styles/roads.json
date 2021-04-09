@@ -41,7 +41,7 @@
       }
     },
     {
-      "id": "other",
+      "id": "roads_other",
       "type": "line",
       "source": "roads_other",
       "source-layer": "other",

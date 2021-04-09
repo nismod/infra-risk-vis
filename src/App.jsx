@@ -27,27 +27,13 @@ const App = () => {
               'electricity'
             ]}
             dataLayers={[
-              {key: 'KHM_Electricity', label: 'Cambodia Grid', linear: true, color: "#dab540"},
-              {key: 'IDN_Electricity', label: 'Indonesia Grid', linear: true, color: "#dab540"},
-              {key: 'LAO_Electricity', label: 'Laos Grid', linear: true, color: "#dab540"},
-              {key: 'MMR_Electricity', label: 'Myanmar Grid', linear: true, color: "#dab540"},
-              {key: 'PHL_Electricity', label: 'Philippines Grid', linear: true, color: "#dab540"},
-              {key: 'THA_Electricity', label: 'Thailand Grid', linear: true, color: "#dab540"},
-              {key: 'VNM_Electricity', label: 'Vietnam Grid', linear: true, color: "#dab540"},
-              {key: 'KHM_Rail', label: 'Cambodia Rail', linear: true, color: "#444"},
-              {key: 'IDN_Rail', label: 'Indonesia Rail', linear: true, color: "#444"},
-              {key: 'LAO_Rail', label: 'Laos Rail', linear: true, color: "#444"},
-              {key: 'MMR_Rail', label: 'Myanmar Rail', linear: true, color: "#444"},
-              {key: 'PHL_Rail', label: 'Philippines Rail', linear: true, color: "#444"},
-              {key: 'THA_Rail', label: 'Thailand Rail', linear: true, color: "#444"},
-              {key: 'VNM_Rail', label: 'Vietnam Rail', linear: true, color: "#444"},
-              {key: 'KHM_main', label: 'Cambodia Road', linear: true, color: "#b2afaa"},
-              {key: 'IDN_main', label: 'Indonesia Road', linear: true, color: "#b2afaa"},
-              {key: 'LAO_main', label: 'Laos Road', linear: true, color: "#b2afaa"},
-              {key: 'MMR_main', label: 'Myanmar Road', linear: true, color: "#b2afaa"},
-              {key: 'PHL_main', label: 'Philippines Road', linear: true, color: "#b2afaa"},
-              {key: 'THA_main', label: 'Thailand Road', linear: true, color: "#b2afaa"},
-              {key: 'VNM_main', label: 'Vietnam Road', linear: true, color: "#b2afaa"}
+              {key: 'electricity', label: 'Power Grid', linear: true, color: "#eca926"},
+              {key: 'rail', label: 'Railways', linear: true, color: "#444"},
+              {key: 'trunk', label: 'Trunk Roads', linear: true, color: "#941339"},
+              {key: 'motorway', label: 'Motorways', linear: true, color: "#941339"},
+              {key: 'primary', label: 'Primary Roads', linear: true, color: "#cb3e4e"},
+              {key: 'secondary', label: 'Secondary Roads', linear: true, color: "#8471a8"},
+              {key: 'roads_other', label: 'Tertiary and Other Roads', linear: true, color: "#b2afaa"},
 
             ]}
             tooltipLayerSources={[
@@ -64,21 +50,11 @@ const App = () => {
               'roads'
             ]}
             dataLayers={[
-              {key: 'KHM_main', label: 'Cambodia Major Roads', linear: true, color: "#e48d14"},
-              {key: 'IDN_main', label: 'Indonesia Major Roads', linear: true, color: "#e48d14"},
-              {key: 'LAO_main', label: 'Laos Major Roads', linear: true, color: "#e48d14"},
-              {key: 'MMR_main', label: 'Myanmar Major Roads', linear: true, color: "#e48d14"},
-              {key: 'PHL_main', label: 'Philippines Major Roads', linear: true, color: "#e48d14"},
-              {key: 'THA_main', label: 'Thailand Major Roads', linear: true, color: "#e48d14"},
-              {key: 'VNM_main', label: 'Vietnam Major Roads', linear: true, color: "#e48d14"},
-              {key: 'KHM_other', label: 'Cambodia Minor Roads', linear: true, color: "#e48d14"},
-              {key: 'IDN_other', label: 'Indonesia Minor Roads', linear: true, color: "#b2afaa"},
-              {key: 'LAO_other', label: 'Laos Minor Roads', linear: true, color: "#b2afaa"},
-              {key: 'MMR_other', label: 'Myanmar Minor Roads', linear: true, color: "#b2afaa"},
-              {key: 'PHL_other', label: 'Philippines Minor Roads', linear: true, color: "#b2afaa"},
-              {key: 'THA_other', label: 'Thailand Minor Roads', linear: true, color: "#b2afaa"},
-              {key: 'VNM_other', label: 'Vietnam Minor Roads', linear: true, color: "#b2afaa"}
-
+              {key: 'trunk', label: 'Trunk Roads', linear: true, color: "#b2afaa"},
+              {key: 'motorway', label: 'Motorways', linear: true, color: "#b2afaa"},
+              {key: 'primary', label: 'Primary Roads', linear: true, color: "#b2afaa"},
+              {key: 'secondary', label: 'Secondary Roads', linear: true, color: "#b2afaa"},
+              {key: 'roads_other', label: 'Tertiary and Other Roads', linear: true, color: "#b2afaa"},
             ]}
             tooltipLayerSources={[
               'roads'
@@ -92,13 +68,7 @@ const App = () => {
               'rail'
             ]}
             dataLayers={[
-              {key: 'KHM_Rail', label: 'Cambodia Rail', linear: true, color: "#444"},
-              {key: 'IDN_Rail', label: 'Indonesia Rail', linear: true, color: "#444"},
-              {key: 'LAO_Rail', label: 'Laos Rail', linear: true, color: "#444"},
-              {key: 'MMR_Rail', label: 'Myanmar Rail', linear: true, color: "#444"},
-              {key: 'PHL_Rail', label: 'Philippines Rail', linear: true, color: "#444"},
-              {key: 'THA_Rail', label: 'Thailand Rail', linear: true, color: "#444"},
-              {key: 'VNM_Rail', label: 'Vietnam Rail', linear: true, color: "#444"}
+              {key: 'rail', label: 'Railways', linear: true, color: "#444"},
             ]}
             tooltipLayerSources={[
               'rail'
@@ -112,13 +82,7 @@ const App = () => {
               'electricity'
             ]}
             dataLayers={[
-              {key: 'KHM_Electricity', label: 'Cambodia Grid', linear: true, color: "#dab540"},
-              {key: 'IDN_Electricity', label: 'Indonesia Grid', linear: true, color: "#dab540"},
-              {key: 'LAO_Electricity', label: 'Laos Grid', linear: true, color: "#dab540"},
-              {key: 'MMR_Electricity', label: 'Myanmar Grid', linear: true, color: "#dab540"},
-              {key: 'PHL_Electricity', label: 'Philippines Grid', linear: true, color: "#dab540"},
-              {key: 'THA_Electricity', label: 'Thailand Grid', linear: true, color: "#dab540"},
-              {key: 'VNM_Electricity', label: 'Vietnam Grid', linear: true, color: "#dab540"},
+              {key: 'electricity', label: 'Power Grid', linear: true, color: "#eca926"},
             ]}
             tooltipLayerSources={[
               'electricity'
