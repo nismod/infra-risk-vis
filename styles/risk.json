@@ -354,6 +354,11 @@
       "layout": {
         "text-field": "{NAME_ENGL}",
         "symbol-placement": "point"
+      },
+      "paint": {
+        "text-color": "#222",
+        "text-halo-color": "#fff",
+        "text-halo-width": 2
       }
     }
   ]
