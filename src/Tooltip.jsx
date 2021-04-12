@@ -73,7 +73,7 @@ const Tooltip = (props) => {
     }
 
     // Regions
-    if (props.map_style == 'regions') {
+    if (props.map_style === 'regions') {
       title = "Region"
     }
     if (f.properties.NAME_1 && f.properties.NAME_0) {
