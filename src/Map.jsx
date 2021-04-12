@@ -26,17 +26,38 @@ function processFeature(f) {
   if (!f || !f.properties) {
     return f
   }
+  let ead_min_usd, ead_max_usd, eael_annual_usd;
+
+  if (f.source === 'electricity') {
+    if (f.properties.EAEL) {
+      // fix units - electricity EAEL is already in USD, everything else needs
+      // multiplying by 1e6 to convert from USDmillions
+      eael_annual_usd = f.properties.EAEL;
+    } else {
+      eael_annual_usd = 0
+    }
+    ead_min_usd = f.properties.EAD_min * 1e6 - eael_annual_usd;
+    ead_max_usd = f.properties.EAD_max * 1e6 - eael_annual_usd;
+  } else {
+    if (f.properties.EAEL) {
+      eael_annual_usd = f.properties.EAEL * 1e6;
+    } else {
+      eael_annual_usd = 0
+    }
+    ead_min_usd= f.properties.EAD_min * 1e6 - eael_annual_usd;
+    ead_max_usd= f.properties.EAD_max * 1e6 - eael_annual_usd;
+  }
+  // report daily indirect numbers
+  const eael_daily_usd = eael_annual_usd / 365;
+
   if (f.properties.EAD_min) {
-    f.properties.EAD_min_usd = commas(
-      (f.properties.EAD_min * 1e6).toFixed(0))
+    f.properties.EAD_min_usd = commas(ead_min_usd.toFixed(0))
   }
   if (f.properties.EAD_max) {
-    f.properties.EAD_max_usd = commas(
-      (f.properties.EAD_max * 1e6).toFixed(0))
+    f.properties.EAD_max_usd = commas(ead_max_usd.toFixed(0))
   }
   if (f.properties.EAEL) {
-    f.properties.EAEL_daily_usd = commas(
-      ((f.properties.EAEL / 365) * 1e6).toFixed(0))
+    f.properties.EAEL_daily_usd = commas(eael_daily_usd.toFixed(0))
   }
   return f
 }
