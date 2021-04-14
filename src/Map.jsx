@@ -395,16 +395,70 @@ class Map extends React.Component {
               : null
           }
           {
+            (map_style === 'roads' || map_style === 'rail' || map_style === 'electricity')?
+              <svg width="260" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0%" stop-color="#fcfcb8" />
+                    <stop offset="20%" stop-color="#ff9c66" />
+                    <stop offset="40%" stop-color="#d03f6f" />
+                    <stop offset="60%" stop-color="#792283" />
+                    <stop offset="80%" stop-color="#3f0a72" />
+                    <stop offset="100%" stop-color="#151030" />
+                  </linearGradient>
+                </defs>
+                <g fill="none" font-size="8" font-family="sans-serif">
+                <text fill="currentColor" x="0" y="10" dy="0.71em">Maximum Expected Annual Damages ($USD)</text>
+                </g>
+                <rect font-size="8" x="2" y="20" width="240" height="10" fill="url(#gradient)"/>
+                <g fill="none" font-size="8" transform="translate(2,30)" font-family="sans-serif" text-anchor="middle">
+                  <g transform="translate(0.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">0</text>
+                  </g>
+                  <g transform="translate(40,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">1</text>
+                  </g>
+                  <g transform="translate(80,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">10</text>
+                  </g>
+                  <g transform="translate(120,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">100</text>
+                  </g>
+                  <g transform="translate(160,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">1,000</text>
+                  </g>
+                  <g transform="translate(200,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">10,000</text>
+                  </g>
+                  <g transform="translate(239.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">100,000</text>
+                  </g>
+                </g>
+              </svg>
+              : null
+          }
+          {
             (map_style === 'roads')?
               <small>
                 Road network data extracted from OpenStreetMap
-              </small> : null
+              </small>
+              : null
           }
           {
             (map_style === 'rail')?
-              <small>
-                Rail network data extracted from OpenStreetMap
-              </small> : null
+              <div>
+                <small>
+                  Rail network data extracted from OpenStreetMap
+                </small>
+              </div>
+               : null
           }
           {
             (map_style === 'electricity')?
