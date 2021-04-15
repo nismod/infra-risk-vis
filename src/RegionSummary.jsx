@@ -41,7 +41,7 @@ const RegionSummary = (props) => {
               field: 'value',
               aggregate: "sum",
               type: 'quantitative',
-              title: 'Value ($USDm)'
+              title: 'Value (US$m)'
             },
             color: {
               field: 'field',
@@ -78,7 +78,7 @@ const RegionSummary = (props) => {
             },
             // probability,min_econ_impact,max_econ_impact,damages,total_min,total_max,ini_investment
             x: { field: 'probability', type: 'quantitative', title: 'Probability'},
-            y: { field: 'damages', type: 'quantitative', title: 'Annual Damages ($USDm)'},
+            y: { field: 'damages', type: 'quantitative', title: 'Annual Damages (US$m)'},
             color: { field: 'model', type: 'nominal', title: 'Global Climate Model'}
           },
           data: { url: 'aggregated_stats_national.csv' },
