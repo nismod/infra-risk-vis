@@ -52,9 +52,11 @@ function processFeature(f) {
 
   if (f.properties.EAD_min) {
     f.properties.EAD_min_usd = commas(ead_min_usd.toFixed(0))
+    f.properties.total_EAL_min_usd = commas((ead_min_usd + eael_daily_usd * 30).toFixed(0))
   }
   if (f.properties.EAD_max) {
     f.properties.EAD_max_usd = commas(ead_max_usd.toFixed(0))
+    f.properties.total_EAL_max_usd = commas((ead_max_usd + eael_daily_usd * 30).toFixed(0))
   }
   if (f.properties.EAEL) {
     f.properties.EAEL_daily_usd = commas(eael_daily_usd.toFixed(0))
