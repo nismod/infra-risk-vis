@@ -408,7 +408,7 @@ class Map extends React.Component {
                   </linearGradient>
                 </defs>
                 <g fill="none" font-size="8" font-family="sans-serif">
-                <text fill="currentColor" x="0" y="10" dy="0.71em">Maximum Expected Annual Damages ($USD)</text>
+                <text fill="currentColor" x="0" y="10" dy="0.71em">Total Expected Annual Damages and Losses ($USD)</text>
                 </g>
                 <rect font-size="8" x="2" y="20" width="240" height="10" fill="url(#gradient)"/>
                 <g fill="none" font-size="8" transform="translate(2,30)" font-family="sans-serif" text-anchor="middle">
