@@ -115,7 +115,7 @@ const FeatureSidebar = (props) => {
           {
             (f.EAD_min_usd && f.EAD_max_usd)? (
               <Fragment>
-                <dt>Expected Annual Damages ($USD)</dt>
+                <dt>Expected Annual Damages (US$)</dt>
                 <dd>{f.EAD_min_usd}&mdash;{f.EAD_max_usd}</dd>
               </Fragment>
             ) : null
@@ -123,8 +123,16 @@ const FeatureSidebar = (props) => {
           {
             (f.EAEL_daily_usd)? (
               <Fragment>
-                <dt>Expected Annual Economic Losses (per day of disruption, $USD)</dt>
+                <dt>Expected Annual Economic Losses (per day of disruption, US$)</dt>
                 <dd>{f.EAEL_daily_usd}</dd>
+              </Fragment>
+            ) : null
+          }
+          {
+            (f.total_EAL_min_usd && f.total_EAL_max_usd)? (
+              <Fragment>
+                <dt>Total Expected Risk (EAD + EAEL for 30 day disruption, US$)</dt>
+                <dd>{f.total_EAL_min_usd}–{f.total_EAL_max_usd}</dd>
               </Fragment>
             ) : null
           }

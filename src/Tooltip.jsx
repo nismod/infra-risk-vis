@@ -26,16 +26,10 @@ const Tooltip = (props) => {
       if (f.properties.EAD_min_usd && f.properties.EAD_max_usd) {
         max_value = f.properties.EAD_max || 0;
 
-        detail = " EAD: $" +
-          f.properties.EAD_min_usd + "–" +
-          f.properties.EAD_max_usd;
+        detail = " Total Expected Risk: $" +
+          f.properties.total_EAL_min_usd + "–" +
+          f.properties.total_EAL_max_usd;
 
-        if (f.properties.EAEL_daily_usd) {
-          detail += ", EAEL: $" +
-          f.properties.EAEL_daily_usd + ".";
-        } else {
-          detail += ".";
-        }
       } else {
         detail = "(no exposure calculated)  "
       }
