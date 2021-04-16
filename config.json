@@ -40,6 +40,9 @@
       "admin1": {
         "mbtiles": "admin1.mbtiles"
       },
+      "admin1_merged": {
+        "mbtiles": "admin1_merged.mbtiles"
+      },
       "electricity": {
         "mbtiles": "electricity.mbtiles"
       },

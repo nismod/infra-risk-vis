@@ -8,7 +8,7 @@
   "pitch": 0,
   "sources": {
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
-    "admin1": { "type": "vector", "url": "mbtiles://{admin1}" }
+    "admin1": { "type": "vector", "url": "mbtiles://{admin1_merged}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -40,72 +40,41 @@
       }
     },
     {
-      "id": "admin1_IDN",
+      "id": "admin1",
       "type": "fill",
       "source": "admin1",
-      "source-layer": "IDN_Admin1",
+      "source-layer": "admin1",
       "paint": {
-        "fill-color": "#e0e0e0",
-        "fill-outline-color": "#fff"
+        "fill-color": [
+          "interpolate-lab",
+          ["linear"],
+          ["+", ["get", "maxEAD"], ["*", 0.0821917808219, ["coalesce", ["get", "EAEL-gdp"], 0]]],
+          0,
+          ["to-color", "#ffffff"],
+          0.1,
+          ["to-color", "#fee0d2"],
+          0.5,
+          ["to-color", "#fdc1a9"],
+          2.5,
+          ["to-color", "#fc9d7f"],
+          10,
+          ["to-color", "#fb7859"],
+          50,
+          ["to-color", "#f4513b"],
+          250,
+          ["to-color", "#de2c26"],
+          1000,
+          ["to-color", "#bf161b"]
+        ]
       }
     },
     {
-      "id": "admin1_KHM",
+      "id": "country_outlines",
       "type": "fill",
-      "source": "admin1",
-      "source-layer": "KHM_Admin1",
+      "source": "boundaries",
+      "source-layer": "WB_countries_Admin0",
       "paint": {
-        "fill-color": "#d8d8d8",
-        "fill-outline-color": "#fff"
-      }
-    },
-    {
-      "id": "admin1_LAO",
-      "type": "fill",
-      "source": "admin1",
-      "source-layer": "LAO_Admin1",
-      "paint": {
-        "fill-color": "#d4d4d4",
-        "fill-outline-color": "#fff"
-      }
-    },
-    {
-      "id": "admin1_MMR",
-      "type": "fill",
-      "source": "admin1",
-      "source-layer": "MMR_Admin1",
-      "paint": {
-        "fill-color": "#dcdcdc",
-        "fill-outline-color": "#fff"
-      }
-    },
-    {
-      "id": "admin1_PHL",
-      "type": "fill",
-      "source": "admin1",
-      "source-layer": "PHL_Admin1",
-      "paint": {
-        "fill-color": "#dfdfdf",
-        "fill-outline-color": "#fff"
-      }
-    },
-    {
-      "id": "admin1_THA",
-      "type": "fill",
-      "source": "admin1",
-      "source-layer": "THA_Admin1",
-      "paint": {
-        "fill-color": "#e0e0e0",
-        "fill-outline-color": "#fff"
-      }
-    },
-    {
-      "id": "admin1_VNM",
-      "type": "fill",
-      "source": "admin1",
-      "source-layer": "VNM_Admin1",
-      "paint": {
-        "fill-color": "#dedede",
+        "fill-color": "transparent",
         "fill-outline-color": "#fff"
       }
     },
