@@ -2,32 +2,51 @@ import React from 'react';
 import  { VegaLite } from 'react-vega';
 
 const RegionSummary = (props) => {
-  // if (!props.region) {
-  //   return (
-  //     <article>
-  //       <h1 className="h2">Select a region</h1>
-  //       <p className="alert alert-primary">
-  //         Click the map to see details for a region.
-  //       </p>
-  //     </article>
-  //   );
-  // }
+  if (!props.region) {
+    return (
+      <article>
+        <h1>Region, Country</h1>
+        <small>Region code: &hellip;</small>
+        <p className="alert alert-primary">
+          Click the map to see details for a region.
+        </p>
+      </article>
+    );
+  }
+  const r = props.region;
+  const disruption_fraction = 30 / 365;
   return (
     <article>
-      {
-        (props.region && props.region.NAME_1 && props.region.NAME_0)?
-          <p className="alert alert-info">
-            {props.region.NAME_1}, {props.region.NAME_0}
-          </p>
-        : null
-      }
-
-      <h1 className="h2">Vietnam</h1>
-
-      <p className="alert alert-primary">Coming soon: admin-1 regional summary
-      statistics to be loaded when the map is clicked. Currently showing
-      summary statistics as calculated for Vietnam.</p>
-
+      <h1>{r.NAME_1}, {r.NAME_0}</h1>
+      <small>Region code: {r.GID_1}</small>
+      <h2>Total expected damages and losses under climate scenarios</h2>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Climate Scenario</th>
+            <th>Expected Annual Damages</th>
+            <th>Expected Annual Economic Losses (30-day disruption)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Historical</th>
+            <td>{r.minEAD.toFixed(0)}&ndash;{r.maxEAD.toFixed(0)}</td>
+            <td>{(r['EAEL-gdp'] * disruption_fraction).toFixed(0)}</td>
+          </tr>
+          <tr>
+            <th>RCP 4.5</th>
+            <td>{r.minEAD_rcp4p5.toFixed(0)}&ndash;{r.maxEAD_rcp4p5.toFixed(0)}</td>
+            <td>{(r['EAEL-gdp_rcp4p5'] * disruption_fraction).toFixed(0)}</td>
+          </tr>
+          <tr>
+            <th>RCP 8.5</th>
+            <td>{r.minEAD_rcp8p5.toFixed(0)}&ndash;{r.maxEAD_rcp8p5.toFixed(0)}</td>
+            <td>{(r['EAEL-gdp_rcp8p5'] * disruption_fraction).toFixed(0)}</td>
+          </tr>
+        </tbody>
+      </table>
+      {/*
       <p>Annual damages and economic losses</p>
       <VegaLite
         spec={{
@@ -91,6 +110,7 @@ const RegionSummary = (props) => {
           editor: false,
         }}
         />
+        */}
     </article>
   );
 }

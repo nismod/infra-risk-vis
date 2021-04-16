@@ -53,6 +53,20 @@ article {
   margin: 0 auto;
   font-size: 1.2rem;
 }
+article h1,
+article h2 {
+  font-weight: bold;
+}
+article h1 {
+  font-size: 1.75rem;
+}
+article h2 {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+article .alert {
+  margin-top: 1rem;
+}
 /**
  * Map and controls
  */
