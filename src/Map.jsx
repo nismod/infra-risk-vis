@@ -388,21 +388,21 @@ class Map extends React.Component {
               <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0%" stop-color="#ffffff" />
-                    <stop offset="12.5%" stop-color="#fee0d2" />
-                    <stop offset="25%" stop-color="#fdc1a9" />
-                    <stop offset="37.5%" stop-color="#fc9d7f" />
-                    <stop offset="50%" stop-color="#fb7859" />
-                    <stop offset="62.5%" stop-color="#f4513b" />
-                    <stop offset="75%" stop-color="#de2c26" />
-                    <stop offset="87.5%" stop-color="#bf161b" />
-                    <stop offset="100%" stop-color="#950b13" />
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="12.5%" stopColor="#fee0d2" />
+                    <stop offset="25%" stopColor="#fdc1a9" />
+                    <stop offset="37.5%" stopColor="#fc9d7f" />
+                    <stop offset="50%" stopColor="#fb7859" />
+                    <stop offset="62.5%" stopColor="#f4513b" />
+                    <stop offset="75%" stopColor="#de2c26" />
+                    <stop offset="87.5%" stopColor="#bf161b" />
+                    <stop offset="100%" stopColor="#950b13" />
                   </linearGradient>
                 </defs>
-                <g fill="none" font-size="10" font-family="sans-serif">
+                <g fill="none" fontSize="10" fontFamily="sans-serif">
                 </g>
                 <rect x="2" y="0" width="258" height="10" fill="url(#gradient)"/>
-                <g fill="none" font-size="10" transform="translate(2,10)" font-family="sans-serif" text-anchor="middle">
+                <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
                   <g transform="translate(0.5,0)">
                     <line stroke="currentColor" y2="3"></line>
                     <text fill="currentColor" y="6" dy="0.71em">0</text>
@@ -468,18 +468,18 @@ class Map extends React.Component {
               <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0%" stop-color="#fcfcb8" />
-                    <stop offset="20%" stop-color="#ff9c66" />
-                    <stop offset="40%" stop-color="#d03f6f" />
-                    <stop offset="60%" stop-color="#792283" />
-                    <stop offset="80%" stop-color="#3f0a72" />
-                    <stop offset="100%" stop-color="#151030" />
+                    <stop offset="0%" stopColor="#fcfcb8" />
+                    <stop offset="20%" stopColor="#ff9c66" />
+                    <stop offset="40%" stopColor="#d03f6f" />
+                    <stop offset="60%" stopColor="#792283" />
+                    <stop offset="80%" stopColor="#3f0a72" />
+                    <stop offset="100%" stopColor="#151030" />
                   </linearGradient>
                 </defs>
-                <g fill="none" font-size="10" font-family="sans-serif">
+                <g fill="none" fontSize="10" fontFamily="sans-serif">
                 </g>
                 <rect x="2" y="0" width="258" height="10" fill="url(#gradient)"/>
-                <g fill="none" font-size="10" transform="translate(2,10)" font-family="sans-serif" text-anchor="middle">
+                <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
                   <g transform="translate(0.5,0)">
                     <line stroke="currentColor" y2="3"></line>
                     <text fill="currentColor" y="6" dy="0.71em">0</text>

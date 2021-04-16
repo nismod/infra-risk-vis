@@ -6,6 +6,7 @@ intermediate_data/
 *.zip
 *.bak
 public/*.csv
+public/**/*.csv
 
 # local config
 package-lock.json

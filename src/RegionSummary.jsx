@@ -19,42 +19,13 @@ const RegionSummary = (props) => {
     <article>
       <h1>{r.NAME_1}, {r.NAME_0}</h1>
       <small>Region code: {r.GID_1}</small>
-      <h2>Total expected damages and losses under climate scenarios</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Climate Scenario</th>
-            <th>Expected Annual Damages</th>
-            <th>Expected Annual Economic Losses (30-day disruption)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Historical</th>
-            <td>{r.minEAD.toFixed(0)}&ndash;{r.maxEAD.toFixed(0)}</td>
-            <td>{(r['EAEL-gdp'] * disruption_fraction).toFixed(0)}</td>
-          </tr>
-          <tr>
-            <th>RCP 4.5</th>
-            <td>{r.minEAD_rcp4p5.toFixed(0)}&ndash;{r.maxEAD_rcp4p5.toFixed(0)}</td>
-            <td>{(r['EAEL-gdp_rcp4p5'] * disruption_fraction).toFixed(0)}</td>
-          </tr>
-          <tr>
-            <th>RCP 8.5</th>
-            <td>{r.minEAD_rcp8p5.toFixed(0)}&ndash;{r.maxEAD_rcp8p5.toFixed(0)}</td>
-            <td>{(r['EAEL-gdp_rcp8p5'] * disruption_fraction).toFixed(0)}</td>
-          </tr>
-        </tbody>
-      </table>
-      {/*
-      <p>Annual damages and economic losses</p>
+      <h2>Annual direct damages and economic losses, historical scenario</h2>
       <VegaLite
         spec={{
           width: 400,
           height: 200,
           mark: 'area',
           encoding: {
-            // probability,min_econ_impact,max_econ_impact,damages,total_min,total_max,ini_investment
             x: { field: 'probability', type: 'quantitative', title: 'Probability' },
             y: {
               field: 'value',
@@ -72,7 +43,7 @@ const RegionSummary = (props) => {
               },
             }
           },
-          data: { url: 'aggregated_stats_national_summary.csv' },
+          data: { url: 'historical_total/historical_total_'+r.GID_1+'.csv' },
         }}
         // defines the actions available behind the ... menu top-right of chart
         actions={{
@@ -81,26 +52,20 @@ const RegionSummary = (props) => {
           compiled: false,
           editor: false,
         }}
-        />
-      <p>Annual damages across climate scenarios</p>
+      />
+      <h2>Max direct damages across climate scenarios (historical/2080)</h2>
       <VegaLite
         spec={{
           width: 400,
           height: 200,
           mark: 'line',
           encoding: {
-            facet: {
-              field: "climate_scenario",
-              title: "Climate Scenario",
-              type: "nominal",
-              columns: 1
-            },
-            // probability,min_econ_impact,max_econ_impact,damages,total_min,total_max,ini_investment
             x: { field: 'probability', type: 'quantitative', title: 'Probability'},
-            y: { field: 'damages', type: 'quantitative', title: 'Annual Damages (US$m)'},
-            color: { field: 'model', type: 'nominal', title: 'Global Climate Model'}
+            y: { field: 'assetDamage', type: 'quantitative', title: 'Annual Damages (US$m)'},
+            color: { field: 'rcp', type: 'nominal', title: 'RCP'},
+            row: { field: 'hazard'}
           },
-          data: { url: 'aggregated_stats_national.csv' },
+          data: { url: 'climate_total/climate_total_'+r.GID_1+'.csv' },
         }}
         // defines the actions available behind the ... menu top-right of chart
         actions={{
@@ -109,8 +74,57 @@ const RegionSummary = (props) => {
           compiled: false,
           editor: false,
         }}
-        />
-        */}
+      />
+      <h2>Max indirect damages across climate scenarios</h2>
+      <VegaLite
+        spec={{
+          width: 400,
+          height: 200,
+          mark: 'line',
+          encoding: {
+            x: { field: 'probability', type: 'quantitative', title: 'Probability'},
+            y: { field: 'gdp', type: 'quantitative', title: 'Annual Damages (US$m)'},
+            color: { field: 'rcp', type: 'nominal', title: 'RCP'},
+            row: { field: 'hazard'}
+          },
+          data: { url: 'climate_total/climate_total_'+r.GID_1+'.csv' },
+        }}
+        // defines the actions available behind the ... menu top-right of chart
+        actions={{
+          export: true,
+          source: false,
+          compiled: false,
+          editor: false,
+        }}
+      />
+      <h2>Total expected damages and losses under climate scenarios</h2>
+      <p>* Note that cyclone damages are only estimated for historical scenario.</p>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Climate Scenario</th>
+            <th>Expected Annual Damages (US$m)</th>
+            <th>Expected Annual Economic Losses (30-day disruption, US$m)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Historical</th>
+            <td>{r.minEAD.toFixed(1)}&ndash;{r.maxEAD.toFixed(1)}</td>
+            <td>{(r['EAEL-gdp'] * disruption_fraction).toFixed(1)}</td>
+          </tr>
+          <tr>
+            <th>RCP 4.5</th>
+            <td>{r.minEAD_rcp4p5.toFixed(1)}&ndash;{r.maxEAD_rcp4p5.toFixed(1)}</td>
+            <td>{(r['EAEL-gdp_rcp4p5'] * disruption_fraction).toFixed(1)}</td>
+          </tr>
+          <tr>
+            <th>RCP 8.5</th>
+            <td>{r.minEAD_rcp8p5.toFixed(1)}&ndash;{r.maxEAD_rcp8p5.toFixed(1)}</td>
+            <td>{(r['EAEL-gdp_rcp8p5'] * disruption_fraction).toFixed(1)}</td>
+          </tr>
+        </tbody>
+      </table>
     </article>
   );
 }
