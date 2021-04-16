@@ -370,14 +370,79 @@ class Map extends React.Component {
     return (
       <Fragment>
         <div className="custom-map-control top-left">
-          <h2 className="h4">Select layers</h2>
           {
             (dataLayers.length)?
-              <NetworkControl
-                onLayerVisChange={this.onLayerVisChange}
-                dataLayers={dataLayers}
-              />
+              <Fragment>
+                <h2 className="h4">Select layers</h2>
+                <NetworkControl
+                  onLayerVisChange={this.onLayerVisChange}
+                  dataLayers={dataLayers}
+                  />
+              </Fragment>
             : null
+          }
+          {
+            (map_style === 'regions')?
+              <Fragment>
+              <small>Max Total Expected Risk (EAD + EAEL for 30 day disruption, million US$)</small>
+              <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="12.5%" stop-color="#fee0d2" />
+                    <stop offset="25%" stop-color="#fdc1a9" />
+                    <stop offset="37.5%" stop-color="#fc9d7f" />
+                    <stop offset="50%" stop-color="#fb7859" />
+                    <stop offset="62.5%" stop-color="#f4513b" />
+                    <stop offset="75%" stop-color="#de2c26" />
+                    <stop offset="87.5%" stop-color="#bf161b" />
+                    <stop offset="100%" stop-color="#950b13" />
+                  </linearGradient>
+                </defs>
+                <g fill="none" font-size="10" font-family="sans-serif">
+                </g>
+                <rect x="2" y="0" width="258" height="10" fill="url(#gradient)"/>
+                <g fill="none" font-size="10" transform="translate(2,10)" font-family="sans-serif" text-anchor="middle">
+                  <g transform="translate(0.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">0</text>
+                  </g>
+                  <g transform="translate(32.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">0.1</text>
+                  </g>
+                  <g transform="translate(65,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">0.5</text>
+                  </g>
+                  <g transform="translate(97.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">2.5</text>
+                  </g>
+                  <g transform="translate(130,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">10</text>
+                  </g>
+                  <g transform="translate(162.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">50</text>
+                  </g>
+                  <g transform="translate(195,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">250</text>
+                  </g>
+                  <g transform="translate(227.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">1k</text>
+                  </g>
+                  <g transform="translate(257.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">5k</text>
+                  </g>
+                </g>
+              </svg>
+              </Fragment>
+              : null
           }
           {
             (map_style === 'risk')?
