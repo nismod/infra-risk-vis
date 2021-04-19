@@ -22,6 +22,44 @@ const PageIntro = () => (
   comprises a direct damage estimation and an indirect economic loss estimation
   of GDP disruptions due to asset failures and service disruption.</p>
 
+  <table className="table table-sm table-striped">
+    <thead>
+      <th>Infrastructure</th>
+      <th>Assets</th>
+      <th>Expected Annual Damages (EAD)</th>
+      <th>Expected Annual Economic Losses (EAEL)</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Road</td>
+        <td>Road links</td>
+        <td>Cost of rehabilitation/reinstating damaged assets</td>
+        <td>Rerouting costs* + Macroeconomic losses**</td>
+      </tr>
+      <tr>
+        <td>Rail</td>
+        <td>Railway tracks</td>
+        <td>Cost of rehabilitation/reinstating damaged assets</td>
+        <td>Rerouting costs* + Macroeconomic losses**</td>
+      </tr>
+      <tr>
+        <td>Electricity</td>
+        <td>Electricity lines</td>
+        <td>Cost of rehabilitation/reinstating damaged assets</td>
+        <td>Macroeconomic losses**</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><small><em>* Rerouting costs are computed for the Vietnam case study only and
+  ignored for other regions. The pages showing results for all of Southeast Asia
+  do not include the rerouting costs for Vietnam.</em></small></p>
+
+  <p><small><em>** Macroeconomic losses are computed based on GDP for all regions in the
+  Southeast Asia analysis. In the Vietnam case study, IO models were used to
+  estimate wider effects of disruption on the macroeconomy - these results are
+  shown only on the Vietnam case study page.</em></small></p>
+
   <p>The concepts and model results presented here are documented in the study
   report:</p>
 
