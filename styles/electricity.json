@@ -56,6 +56,8 @@
           ["+", ["get", "EAD_max"], ["*", 0.0000000821917808219, ["coalesce", ["get", "EAEL"], 0]]],
           0,
           ["to-color", "#b2afaa"],
+          0.000000001,
+          ["to-color", "#fff"],
           0.001,
           ["to-color", "#fcfcb8"],
           0.01,
