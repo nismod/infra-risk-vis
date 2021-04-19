@@ -62,16 +62,6 @@
       }
     },
     {
-      "id": "country_outlines",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "WB_countries_Admin0",
-      "paint": {
-        "fill-color": "transparent",
-        "fill-outline-color": "#fff"
-      }
-    },
-    {
       "id": "fluvial",
       "type": "circle",
       "source": "fluvial",
@@ -115,6 +105,17 @@
           10, 5,
           15, 150
         ]
+      }
+    },
+    {
+      "id": "country_outlines",
+      "type": "line",
+      "source": "boundaries",
+      "source-layer": "WB_countries_Admin0",
+      "paint": {
+        "line-color": "#fff",
+        "line-width": 2,
+        "line-blur": 1
       }
     },
     {

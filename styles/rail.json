@@ -78,6 +78,17 @@
       }
     },
     {
+      "id": "country_outlines",
+      "type": "line",
+      "source": "boundaries",
+      "source-layer": "WB_countries_Admin0",
+      "paint": {
+        "line-color": "#fff",
+        "line-width": 2,
+        "line-blur": 1
+      }
+    },
+    {
       "id": "country_labels",
       "type": "symbol",
       "source": "boundaries",

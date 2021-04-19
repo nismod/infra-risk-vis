@@ -28,7 +28,7 @@
       "source": "boundaries",
       "source-layer": "WB_countries_Admin0",
       "paint": {
-        "fill-color": "#eee",
+        "fill-color": "#d2d2d2",
         "fill-outline-color": "#fff"
       }
     },
@@ -38,7 +38,7 @@
       "source": "boundaries",
       "source-layer": "WB_Admin0_disputed_areas",
       "paint": {
-        "fill-color": "#eee",
+        "fill-color": "#e0e0e0",
         "fill-outline-color": "#fff"
       }
     },
@@ -171,6 +171,17 @@
           "base": 1,
           "stops": [[7, 1], [12, 2], [16, 12]]
         }
+      }
+    },
+    {
+      "id": "country_outlines",
+      "type": "line",
+      "source": "boundaries",
+      "source-layer": "WB_countries_Admin0",
+      "paint": {
+        "line-color": "#fff",
+        "line-width": 2,
+        "line-blur": 1
       }
     },
     {
