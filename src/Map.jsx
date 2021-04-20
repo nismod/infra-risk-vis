@@ -9,6 +9,7 @@ import FeatureSidebar from './FeatureSidebar'
 import Help from './Help'
 import FloodControl from './FloodControl'
 import NetworkControl from './NetworkControl';
+import RiskControl from './RiskControl';
 import { commas } from './helpers'
 
 /**
@@ -82,7 +83,8 @@ class Map extends React.Component {
       },
       showHelp: false,
       duration: 30,
-      growth_rate_percentage: 2.8
+      growth_rate_percentage: 2.8,
+      riskMetric: 'total'
     }
     this.map = undefined;
     this.mapContainer = React.createRef();
@@ -92,6 +94,7 @@ class Map extends React.Component {
     this.setScenario = this.setScenario.bind(this)
     this.setFloodType = this.setFloodType.bind(this)
     this.setFloodLevel = this.setFloodLevel.bind(this)
+    this.setRiskMetric = this.setRiskMetric.bind(this)
     this.setMap = this.setMap.bind(this)
     this.toggleHelp = this.toggleHelp.bind(this)
     this.updateBCR = this.updateBCR.bind(this)
@@ -121,6 +124,90 @@ class Map extends React.Component {
     })
 
     this.setMap(this.state.scenario, this.state.floodtype, floodlevel)
+  }
+
+  setRiskMetric(riskMetric) {
+    console.log(riskMetric);
+
+    const map_style = this.props.map_style;
+    console.log(map_style);
+    this.setState({
+      riskMetric: riskMetric
+    })
+
+    let calc;
+
+    if (map_style !== 'electricity'){
+      // EAD has EAEL baked in to the numbers in road and rail
+      if (riskMetric === 'total') {
+        // EAD subtract 335/365 of EAEL (annual) to get total
+        // assuming 30-day disruption
+        calc = [
+          "-",
+          ["get", "EAD_max"],
+          ["*", 0.917808219178, ["coalesce", ["get", "EAEL"], 0]]];
+      }
+      if (riskMetric === 'EAD') {
+        // EAD subtract EAEL to get direct only
+        calc = [
+          "-",
+          ["get", "EAD_max"],
+          ["coalesce", ["get", "EAEL"], 0]];
+      }
+      if (riskMetric === 'EAEL') {
+        calc = ["*", 0.0821917808219, ["coalesce", ["get", "EAEL"], 0]];
+      }
+    } else {
+      // EAD does not include EAEL in electricity
+      // EAEL here is in annual dollars, so multiply by
+      // 1e-6 * (30/365)
+      // to get 30-day disruption in US$m
+      if (riskMetric === 'total') {
+        calc = [
+          "+",
+          ["get", "EAD_max"],
+          ["*", 0.0000000821917808219, ["coalesce", ["get", "EAEL"], 0]]];
+      }
+      if (riskMetric === 'EAD') {
+        calc = ["get", "EAD_max"]
+      }
+      if (riskMetric === 'EAEL') {
+        calc = ["*", 0.0000000821917808219, ["coalesce", ["get", "EAEL"], 0]];
+      }
+    }
+
+    const paint_color = [
+      "interpolate-lab",
+      ["linear"],
+      calc,
+      0,
+      ["to-color", "#b2afaa"],
+      0.000000001,
+      ["to-color", "#fff"],
+      0.001,
+      ["to-color", "#fcfcb8"],
+      0.01,
+      ["to-color", "#ff9c66"],
+      0.1,
+      ["to-color", "#d03f6f"],
+      1,
+      ["to-color", "#792283"],
+      10,
+      ["to-color", "#3f0a72"],
+      100,
+      ["to-color", "#151030"]
+    ];
+
+    if (map_style === 'roads') {
+      this.map.setPaintProperty('trunk', 'line-color', paint_color);
+      this.map.setPaintProperty('primary', 'line-color', paint_color);
+      this.map.setPaintProperty('secondary', 'line-color', paint_color);
+      this.map.setPaintProperty('roads_other', 'line-color', paint_color);
+      this.map.setPaintProperty('motorway', 'line-color', paint_color);
+
+    } else {
+      this.map.setPaintProperty(map_style, 'line-color', paint_color);
+    }
   }
 
   setMap(scenario, floodtype, floodlevel) {
@@ -350,6 +437,9 @@ class Map extends React.Component {
           if (feature && this.props.dataSources.includes(feature.source)) {
             this.drawFeature(feature)
           }
+          if (this.props.map_style === 'roads' || this.props.map_style === 'rail' || this.props.map_style === 'electricity') {
+            this.setRiskMetric(this.state.riskMetric);
+          }
         });
     }
   }
@@ -463,54 +553,7 @@ class Map extends React.Component {
           }
           {
             (map_style === 'roads' || map_style === 'rail' || map_style === 'electricity')?
-              <Fragment>
-              <small>Max Total Expected Risk (EAD + EAEL for 30 day disruption, million US$)</small>
-              <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
-                    <stop offset="0%" stopColor="#fcfcb8" />
-                    <stop offset="20%" stopColor="#ff9c66" />
-                    <stop offset="40%" stopColor="#d03f6f" />
-                    <stop offset="60%" stopColor="#792283" />
-                    <stop offset="80%" stopColor="#3f0a72" />
-                    <stop offset="100%" stopColor="#151030" />
-                  </linearGradient>
-                </defs>
-                <g fill="none" fontSize="10" fontFamily="sans-serif">
-                </g>
-                <rect x="2" y="0" width="258" height="10" fill="url(#gradient)"/>
-                <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
-                  <g transform="translate(0.5,0)">
-                    <line stroke="currentColor" y2="3"></line>
-                    <text fill="currentColor" y="6" dy="0.71em">0</text>
-                  </g>
-                  <g transform="translate(43,0)">
-                    <line stroke="currentColor" y2="3"></line>
-                    <text fill="currentColor" y="6" dy="0.71em">0.001</text>
-                  </g>
-                  <g transform="translate(86,0)">
-                    <line stroke="currentColor" y2="3"></line>
-                    <text fill="currentColor" y="6" dy="0.71em">0.01</text>
-                  </g>
-                  <g transform="translate(129,0)">
-                    <line stroke="currentColor" y2="3"></line>
-                    <text fill="currentColor" y="6" dy="0.71em">0.1</text>
-                  </g>
-                  <g transform="translate(172,0)">
-                    <line stroke="currentColor" y2="3"></line>
-                    <text fill="currentColor" y="6" dy="0.71em">1</text>
-                  </g>
-                  <g transform="translate(215,0)">
-                    <line stroke="currentColor" y2="3"></line>
-                    <text fill="currentColor" y="6" dy="0.71em">10</text>
-                  </g>
-                  <g transform="translate(257.5,0)">
-                    <line stroke="currentColor" y2="3"></line>
-                    <text fill="currentColor" y="6" dy="0.71em">100</text>
-                  </g>
-                </g>
-              </svg>
-              </Fragment>
+              <RiskControl setRiskMetric={this.setRiskMetric} riskMetric={this.state.riskMetric} />
               : null
           }
           {
