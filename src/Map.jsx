@@ -6,40 +6,97 @@ import mapboxgl from 'mapbox-gl'
 import PositionControl from './PositionControl'
 import Tooltip from './Tooltip'
 import FeatureSidebar from './FeatureSidebar'
-import FloodHelp from './FloodHelp'
+import Help from './Help'
 import FloodControl from './FloodControl'
 import NetworkControl from './NetworkControl';
+import RiskControl from './RiskControl';
+import { commas } from './helpers'
+
+/**
+ * Process feature for tooltip/detail display
+ *
+ * Calculate damages     and losses
+ *      in   USD         or  USD/day
+ *      from USD million or  USD million / year
+ * and save to features as formatted strings
+ *
+ * @param {object} f
+ * @returns modified f
+ */
+function processFeature(f) {
+  if (!f || !f.properties) {
+    return f
+  }
+  let ead_min_usd, ead_max_usd, eael_annual_usd;
+
+  if (f.source === 'electricity') {
+    if (f.properties.EAEL) {
+      // fix units - electricity EAEL is already in USD, everything else needs
+      // multiplying by 1e6 to convert from USDmillions
+      eael_annual_usd = f.properties.EAEL;
+    } else {
+      eael_annual_usd = 0
+    }
+    ead_min_usd = f.properties.EAD_min * 1e6 - eael_annual_usd;
+    ead_max_usd = f.properties.EAD_max * 1e6 - eael_annual_usd;
+  } else {
+    if (f.properties.EAEL) {
+      eael_annual_usd = f.properties.EAEL * 1e6;
+    } else {
+      eael_annual_usd = 0
+    }
+    ead_min_usd= f.properties.EAD_min * 1e6 - eael_annual_usd;
+    ead_max_usd= f.properties.EAD_max * 1e6 - eael_annual_usd;
+  }
+  // report daily indirect numbers
+  const eael_daily_usd = eael_annual_usd / 365;
+
+  if (f.properties.EAD_min) {
+    f.properties.EAD_min_usd = commas(ead_min_usd.toFixed(0))
+    f.properties.total_EAL_min_usd = commas((ead_min_usd + eael_daily_usd * 30).toFixed(0))
+  }
+  if (f.properties.EAD_max) {
+    f.properties.EAD_max_usd = commas(ead_max_usd.toFixed(0))
+    f.properties.total_EAL_max_usd = commas((ead_max_usd + eael_daily_usd * 30).toFixed(0))
+  }
+  if (f.properties.EAEL) {
+    f.properties.EAEL_daily_usd = commas(eael_daily_usd.toFixed(0))
+  }
+  return f
+}
 
 class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lng: props.lng || -56,
-      lat: props.lat || -30,
+      lng: props.lng || 116.12,
+      lat: props.lat || 7.89,
       zoom: props.zoom || 4,
       selectedFeature: undefined,
       scenario: 'baseline',
       floodtype: 'fluvial',
       floodlevel: {
-        _50cm1m: true,
         _1m2m: true,
         _2m3m: true,
         _3m4m: true,
         _4m999m: true
       },
-      showFloodHelp: false,
+      showHelp: false,
       duration: 30,
-      growth_rate_percentage: 2.8
+      growth_rate_percentage: 2.8,
+      riskMetric: 'total'
     }
-    this.map = undefined
+    this.map = undefined;
+    this.mapContainer = React.createRef();
     this.tooltipContainer = undefined
 
     this.onLayerVisChange = this.onLayerVisChange.bind(this)
     this.setScenario = this.setScenario.bind(this)
     this.setFloodType = this.setFloodType.bind(this)
     this.setFloodLevel = this.setFloodLevel.bind(this)
+    this.setRiskMetric = this.setRiskMetric.bind(this)
     this.setMap = this.setMap.bind(this)
-    this.toggleFloodHelp = this.toggleFloodHelp.bind(this)
+    this.toggleHelp = this.toggleHelp.bind(this)
     this.updateBCR = this.updateBCR.bind(this)
     this.networkBaseLayerID = this.networkBaseLayerID.bind(this)
   }
@@ -59,7 +116,6 @@ class Map extends React.Component {
   }
 
   setFloodLevel(level, value) {
-
     let floodlevel = Object.assign({}, this.state.floodlevel);
     floodlevel[level] = value
 
@@ -70,14 +126,96 @@ class Map extends React.Component {
     this.setMap(this.state.scenario, this.state.floodtype, floodlevel)
   }
 
+  setRiskMetric(riskMetric) {
+    const map_style = this.props.map_style;
+    this.setState({
+      riskMetric: riskMetric
+    })
+
+    let calc;
+
+    if (map_style !== 'electricity'){
+      // EAD has EAEL baked in to the numbers in road and rail
+      if (riskMetric === 'total') {
+        // EAD subtract 335/365 of EAEL (annual) to get total
+        // assuming 30-day disruption
+        calc = [
+          "-",
+          ["get", "EAD_max"],
+          ["*", 0.917808219178, ["coalesce", ["get", "EAEL"], 0]]];
+      }
+      if (riskMetric === 'EAD') {
+        // EAD subtract EAEL to get direct only
+        calc = [
+          "-",
+          ["get", "EAD_max"],
+          ["coalesce", ["get", "EAEL"], 0]];
+      }
+      if (riskMetric === 'EAEL') {
+        calc = ["*", 0.0821917808219, ["coalesce", ["get", "EAEL"], 0]];
+      }
+    } else {
+      // EAD does not include EAEL in electricity
+      // EAEL here is in annual dollars, so multiply by
+      // 1e-6 * (30/365)
+      // to get 30-day disruption in US$m
+      if (riskMetric === 'total') {
+        calc = [
+          "+",
+          ["get", "EAD_max"],
+          ["*", 0.0000000821917808219, ["coalesce", ["get", "EAEL"], 0]]];
+      }
+      if (riskMetric === 'EAD') {
+        calc = ["get", "EAD_max"]
+      }
+      if (riskMetric === 'EAEL') {
+        calc = ["*", 0.0000000821917808219, ["coalesce", ["get", "EAEL"], 0]];
+      }
+    }
+
+    const paint_color = [
+      "interpolate-lab",
+      ["linear"],
+      calc,
+      0,
+      ["to-color", "#b2afaa"],
+      0.000000001,
+      ["to-color", "#fff"],
+      0.001,
+      ["to-color", "#fcfcb8"],
+      0.01,
+      ["to-color", "#ff9c66"],
+      0.1,
+      ["to-color", "#d03f6f"],
+      1,
+      ["to-color", "#792283"],
+      10,
+      ["to-color", "#3f0a72"],
+      100,
+      ["to-color", "#151030"]
+    ];
+
+    if (map_style === 'roads') {
+      this.map.setPaintProperty('trunk', 'line-color', paint_color);
+      this.map.setPaintProperty('primary', 'line-color', paint_color);
+      this.map.setPaintProperty('secondary', 'line-color', paint_color);
+      this.map.setPaintProperty('roads_other', 'line-color', paint_color);
+      this.map.setPaintProperty('motorway', 'line-color', paint_color);
+
+    }
+    if (map_style === 'rail' || map_style === 'electricity' ) {
+      this.map.setPaintProperty(map_style, 'line-color', paint_color);
+    }
+  }
+
   setMap(scenario, floodtype, floodlevel) {
-    var flood_layers = ['50cm1m', '1m2m', '2m3m', '3m4m', '4m999m']
+
+    var flood_layers = ['1m2m', '2m3m', '3m4m', '4m999m']
     var flood_layer_colors = {
       '4m999m': "#072f5f",
       '3m4m': "#1261a0",
       '2m3m': "#3895d3",
-      '1m2m': "#58cced",
-      '50cm1m': "#ffffff"
+      '1m2m': "#58cced"
     }
 
     for (var i in flood_layers) {
@@ -112,27 +250,9 @@ class Map extends React.Component {
       case 'flood':
         before_layer_id = 'country_labels';
         break;
-      case 'roads':
-        before_layer_id = 'road_rural';
-        break;
-      case 'rail':
-        before_layer_id = 'rail';
-        break;
-      case 'airwater':
-        before_layer_id = 'water';
-        break;
-      case 'adaptation':
-        before_layer_id = 'road_rural';
-        break;
       case 'risk':
-        before_layer_id = 'bridges';
+        before_layer_id = 'road_class_6';
         break;
-      case 'impact':
-        before_layer_id = 'bridges';
-        break;
-      case 'overview':
-          before_layer_id = 'road_rural';
-          break;
       default:
         before_layer_id = 'country_labels';
     }
@@ -147,62 +267,7 @@ class Map extends React.Component {
   }
 
   updateBCR(data) {
-    if (this.props.map_style !== 'adaptation'){
-      return
-    }
-    const { duration, discount_growth, discount_norm, growth_rate_percentage } = data;
-
-    const dn = discount_norm;
-    const ddg = duration * discount_growth;
-
-    const calc = [
-      "max",
-      [
-        "/",
-        ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_min_eael_per_day"],ddg]],
-        ["get", "baseline_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "baseline_ead"],dn],["*",["get", "baseline_max_eael_per_day"],ddg]],
-        ["get", "baseline_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_min_eael_per_day"],ddg]],
-        ["get", "future_med_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "future_med_ead"],dn],["*",["get", "future_med_max_eael_per_day"],ddg]],
-        ["get", "future_med_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_min_eael_per_day"],ddg]],
-        ["get", "future_high_tot_adap_cost"]
-      ],
-      [
-        "/",
-        ["+",["*",["get", "future_high_ead"],dn],["*",["get", "future_high_max_eael_per_day"],ddg]],
-        ["get", "future_high_tot_adap_cost"]
-      ]
-    ];
-
-    const paint_color = [
-      "interpolate",
-      ["linear"],
-        calc,
-        0, "#e2e2e2",
-        0.99, "#e2e2e2",
-        1, "#fd8d3c",
-        1.5, "#e31a1c",
-        2, "#800026"
-    ];
-    this.map.setPaintProperty('bridges', 'circle-color', paint_color);
-    this.map.setPaintProperty('road_national', 'line-color', paint_color);
-    this.map.setPaintProperty('road_province', 'line-color', paint_color);
-    this.map.setPaintProperty('road_rural', 'line-color', paint_color);
+    const { duration, growth_rate_percentage } = data;
 
     this.setState({
       duration: duration,
@@ -210,9 +275,12 @@ class Map extends React.Component {
     })
   }
 
-  toggleFloodHelp() {
+  toggleHelp(e) {
+    const helpTopic = e.target.dataset.helpTopic;
+    const showHelp = !this.state.showHelp || this.state.helpTopic !== helpTopic;
     this.setState({
-      showFloodHelp: !this.state.showFloodHelp
+      showHelp: showHelp,
+      helpTopic: helpTopic
     })
   }
 
@@ -220,12 +288,12 @@ class Map extends React.Component {
     const { lng, lat, zoom } = this.state
 
     this.map = new mapboxgl.Map({
-      container: this.mapContainer,
+      container: this.mapContainer.current,
       style: `/styles/${this.props.map_style}/style.json`,
       center: [lng, lat],
       zoom: zoom,
       minZoom: 3,
-      maxZoom: 12
+      maxZoom: 16
     })
 
     var nav = new mapboxgl.NavigationControl();
@@ -273,16 +341,10 @@ class Map extends React.Component {
       )? 'pointer' : '';
 
       tooltip.setLngLat(e.lngLat);
-      this.setTooltip(tooltipFeatures);
+      this.setTooltip(tooltipFeatures.map(processFeature));
     });
 
     this.map.on('click', (e) => {
-      // remove current highlight
-      if (this.map.getLayer('featureHighlight')) {
-        this.map.removeLayer('featureHighlight');
-        this.map.removeSource('featureHighlight');
-      }
-
       const features = this.map.queryRenderedFeatures(e.point);
       const clickableFeatures = features.filter(
         f => this.props.dataSources.includes(f.source)
@@ -292,51 +354,96 @@ class Map extends React.Component {
         clickableFeatures[0]
         : undefined;
 
-      if (feature) {
-        // add highlight layer
-        this.map.addSource('featureHighlight', {
-            "type":"geojson",
-            "data": feature.toJSON()
-        });
-
-        if (feature.layer.type === 'line') {
-          this.map.addLayer({
-            "id": "featureHighlight",
-            "type": "line",
-            "source": "featureHighlight",
-            "layout": {
-              "line-join": "round",
-              "line-cap": "round"
-            },
-            "paint": {
-              "line-color": "yellow",
-              "line-width": {
-                "base": 1,
-                "stops": [[3, 1], [10, 8], [17, 16]]
-              }
-            }
-          });
+      if (this.props.map_style === 'regions') {
+        if (feature) {
+          // pass region code up to App for RegionSummary to use
+          this.props.onRegionSelect(feature.properties)
+        } else {
+          this.props.onRegionSelect(undefined)
         }
-        if (feature.layer.type === 'circle') {
-          this.map.addLayer({
-            "id": "featureHighlight",
-            "type": "circle",
-            "source": "featureHighlight",
-            "paint": {
-              "circle-color": "yellow",
-              "circle-radius": {
-                "base": 1,
-                "stops": [[3, 4], [10, 12], [17, 20]]
-              }
-            }
-          });
+      } else {
+        if (feature) {
+          this.drawFeature(feature)
+        } else {
+          // remove current highlight
+          if (this.map.getLayer('featureHighlight')) {
+            this.map.removeLayer('featureHighlight');
+            this.map.removeSource('featureHighlight');
+          }
         }
+        this.setState({
+          selectedFeature: processFeature(feature)
+        })
       }
-
-      this.setState({
-        selectedFeature: feature
-      })
     })
+  }
+
+  drawFeature(feature) {
+    // remove current highlight
+    if (this.map.getLayer('featureHighlight')) {
+      this.map.removeLayer('featureHighlight');
+      this.map.removeSource('featureHighlight');
+    }
+
+    // add highlight layer
+    this.map.addSource('featureHighlight', {
+      "type":"geojson",
+      "data": feature.toJSON()
+    });
+
+    if (feature.layer.type === 'line') {
+      this.map.addLayer({
+        "id": "featureHighlight",
+        "type": "line",
+        "source": "featureHighlight",
+        "layout": {
+          "line-join": "round",
+          "line-cap": "round"
+        },
+        "paint": {
+          "line-color": "yellow",
+          "line-width": {
+            "base": 1,
+            "stops": [[3, 1], [10, 8], [17, 16]]
+          }
+        }
+      });
+    }
+    if (feature.layer.type === 'circle') {
+      this.map.addLayer({
+        "id": "featureHighlight",
+        "type": "circle",
+        "source": "featureHighlight",
+        "paint": {
+          "circle-color": "yellow",
+          "circle-radius": {
+            "base": 1,
+            "stops": [[3, 4], [10, 12], [17, 20]]
+          }
+        }
+      });
+    }
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.map_style !== this.props.map_style) {
+      fetch(`/styles/${this.props.map_style}/style.json`)
+        .then(response => response.json())
+        .then(data => {
+          this.map.setStyle(data);
+          const feature = this.state.selectedFeature;
+          if (feature && this.props.dataSources.includes(feature.source)) {
+            this.drawFeature(feature)
+          }
+          if (this.props.map_style === 'roads' || this.props.map_style === 'rail' || this.props.map_style === 'electricity') {
+            this.setRiskMetric(this.state.riskMetric);
+          }
+        });
+    }
+  }
+
+  componentWillUnmount() {
+    this.map.remove();
   }
 
   onLayerVisChange(e) {
@@ -350,22 +457,87 @@ class Map extends React.Component {
 
   render() {
     const { lng, lat, zoom, selectedFeature } = this.state
-    const { dataLayers } = this.props
+    const { map_style, dataLayers, tooltipLayerSources } = this.props
 
     return (
-      <Fragment>
+      <div className={this.props.className}>
         <div className="custom-map-control top-left">
-          <h3 className="h4">Select layers</h3>
           {
             (dataLayers.length)?
-              <NetworkControl
-                onLayerVisChange={this.onLayerVisChange}
-                dataLayers={dataLayers}
-              />
+              <Fragment>
+                <h2 className="h4">Select layers</h2>
+                <NetworkControl
+                  onLayerVisChange={this.onLayerVisChange}
+                  dataLayers={dataLayers}
+                  />
+              </Fragment>
             : null
           }
           {
-            (this.props.map_style === 'risk')?
+            (map_style === 'regions')?
+              <Fragment>
+              <small>Max Total Expected Risk (EAD + EAEL for 30 day disruption, million US$)</small>
+              <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="summary_gradient" x1="0" x2="1" y1="0" y2="0">
+                    <stop offset="0%" stopColor="#ffffff" />
+                    <stop offset="12.5%" stopColor="#fee0d2" />
+                    <stop offset="25%" stopColor="#fdc1a9" />
+                    <stop offset="37.5%" stopColor="#fc9d7f" />
+                    <stop offset="50%" stopColor="#fb7859" />
+                    <stop offset="62.5%" stopColor="#f4513b" />
+                    <stop offset="75%" stopColor="#de2c26" />
+                    <stop offset="87.5%" stopColor="#bf161b" />
+                    <stop offset="100%" stopColor="#950b13" />
+                  </linearGradient>
+                </defs>
+                <g fill="none" fontSize="10" fontFamily="sans-serif">
+                </g>
+                <rect x="2" y="0" width="258" height="10" fill="url(#summary_gradient)"/>
+                <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
+                  <g transform="translate(0.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">0</text>
+                  </g>
+                  <g transform="translate(32.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">0.1</text>
+                  </g>
+                  <g transform="translate(65,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">0.5</text>
+                  </g>
+                  <g transform="translate(97.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">2.5</text>
+                  </g>
+                  <g transform="translate(130,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">10</text>
+                  </g>
+                  <g transform="translate(162.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">50</text>
+                  </g>
+                  <g transform="translate(195,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">250</text>
+                  </g>
+                  <g transform="translate(227.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">1k</text>
+                  </g>
+                  <g transform="translate(257.5,0)">
+                    <line stroke="currentColor" y2="3"></line>
+                    <text fill="currentColor" y="6" dy="0.71em">5k</text>
+                  </g>
+                </g>
+              </svg>
+              </Fragment>
+              : null
+          }
+          {
+            (map_style === 'risk')?
               <div>
                 <small>
                 Feature size indicates maximum expected annual damages plus maximum expected annual
@@ -375,79 +547,156 @@ class Map extends React.Component {
                 <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>1-5 million USD<br/>
                 <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>5-10 million USD<br/>
                 <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;10 million USD<br/>
+                <a href="#help" data-help-topic="vietnam" onClick={this.toggleHelp}>
+                { (this.state.showHelp && this.state.helpTopic === "vietnam")? 'Hide info' : 'More info' }
+                </a>
               </div>
               : null
           }
           {
-            (this.props.map_style === 'impact')?
+            (map_style === 'roads' || map_style === 'rail' || map_style === 'electricity')?
+              <RiskControl setRiskMetric={this.setRiskMetric} riskMetric={this.state.riskMetric} />
+              : null
+          }
+          {
+            (map_style === 'roads')?
+              <small>
+                Road network data extracted from OpenStreetMap
+              </small>
+              : null
+          }
+          {
+            (map_style === 'rail')?
               <div>
                 <small>
-                  Feature size indicates maximum total economic impact
+                  Rail network data extracted from OpenStreetMap
                 </small>
-                <span className="dot line" style={{"height": "2px", "width": "24px"}}></span>&lt;0.5 million USD/day<br/>
-                <span className="dot line" style={{"height": "4px", "width": "24px"}}></span>0.5-1 million USD/day<br/>
-                <span className="dot line" style={{"height": "6px", "width": "24px"}}></span>1-2 million USD/day<br/>
-                <span className="dot line" style={{"height": "8px", "width": "24px"}}></span>&gt;2 million USD/day<br/>
               </div>
-              : null
+               : null
           }
           {
-            (this.props.map_style === 'adaptation')?
-              <div>
-                <small>
-                  Feature colour indicates Benefit-Cost Ratio (click on a feature to adjust disruption and growth rate assumptions)
-                </small>
-                <span className="dot" style={{backgroundColor: "#e2e2e2"}}></span>&lt;1<br/>
-                <span className="dot" style={{backgroundColor: "#fd8d3c"}}></span>1-1.5<br/>
-                <span className="dot" style={{backgroundColor: "#e31a1c"}}></span>1.5-2<br/>
-                <span className="dot" style={{backgroundColor: "#800026"}}></span>&gt;2<br/>
-              </div>
-              : null
-          }
-          {
-            (this.props.map_style === 'roads')?
+            (map_style === 'electricity')?
               <small>
-                Feature size indicates maximum freight flows
+                Energy network data extracted from Gridfinder
               </small> : null
           }
           {
-            (this.props.map_style === 'rail')?
-              <small>
-                Feature size indicates maximum freight flows
-              </small> : null
+            (map_style === 'hazards')?
+            <Fragment>
+            <small>Coastal flood depth (m)</small>
+            <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="coastal_gradient" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stopColor="#9df4b0" />
+                  <stop offset="100%" stopColor="#0b601d" />
+                </linearGradient>
+              </defs>
+              <g fill="none" fontSize="10" fontFamily="sans-serif">
+              </g>
+              <rect x="2" y="0" width="258" height="10" fill="url(#coastal_gradient)"/>
+              <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
+                <g transform="translate(0.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">0</text>
+                </g>
+                <g transform="translate(130,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">2.5</text>
+                </g>
+                <g transform="translate(257.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">5</text>
+                </g>
+              </g>
+            </svg>
+            <small>Fluvial flood depth (m)</small>
+            <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fluvial_gradient" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stopColor="#58cced" />
+                  <stop offset="100%" stopColor="#072f5f" />
+                </linearGradient>
+              </defs>
+              <g fill="none" fontSize="10" fontFamily="sans-serif">
+              </g>
+              <rect x="2" y="0" width="258" height="10" fill="url(#fluvial_gradient)"/>
+              <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
+                <g transform="translate(0.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">0</text>
+                </g>
+                <g transform="translate(130,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">2.5</text>
+                </g>
+                <g transform="translate(257.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">5</text>
+                </g>
+              </g>
+            </svg>
+            <small>Cyclone gust speed (m/s)</small>
+            <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="cyclone_gradient" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="50%" stopColor="#f9d5cb" />
+                  <stop offset="100%" stopColor="#d44118" />
+                </linearGradient>
+              </defs>
+              <g fill="none" fontSize="10" fontFamily="sans-serif">
+              </g>
+              <rect x="2" y="0" width="258" height="10" fill="url(#cyclone_gradient)"/>
+              <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
+                <g transform="translate(0.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">0</text>
+                </g>
+                <g transform="translate(130,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">25</text>
+                </g>
+                <g transform="translate(257.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">50</text>
+                </g>
+              </g>
+            </svg>
+            <a href="#help" data-help-topic="hazards" onClick={this.toggleHelp}>
+              { (this.state.showHelp && this.state.helpTopic === "hazards")? 'Hide info' : 'More info' }
+            </a>
+            </Fragment>
+            : null
           }
           {
-            (this.props.map_style === 'airwater')?
-              <small>
-                Feature size indicates maximum freight flows (ports) or passenger flows (airports)
-              </small> : null
-          }
-          {
-            (this.props.tooltipLayerSources.includes('flood'))?
+            (tooltipLayerSources.includes('flood'))?
               <Fragment>
                 <FloodControl
                   setScenario={this.setScenario}
                   setFloodType={this.setFloodType}
                   setFloodLevel={this.setFloodLevel}
                   />
-                <a href="#flood-help" onClick={this.toggleFloodHelp}>
-                { (this.state.showFloodHelp)? 'Hide info' : 'More info' }
+                <a href="#help" data-help-topic="flood" onClick={this.toggleHelp}>
+                { (this.state.showHelp && this.state.helpTopic === "flood")? 'Hide info' : 'More info' }
                 </a>
               </Fragment>
             : null
           }
         </div>
 
-        <FeatureSidebar
-          feature={selectedFeature}
-          updateBCR={this.updateBCR}
-          duration={this.state.duration}
-          growth_rate_percentage={this.state.growth_rate_percentage}
-          />
-        { (this.state.showFloodHelp)? <FloodHelp /> : null }
+        {
+          (this.state.showHelp)?
+            <Help topic={this.state.helpTopic} />
+            : <FeatureSidebar
+                feature={selectedFeature}
+                updateBCR={this.updateBCR}
+                duration={this.state.duration}
+                growth_rate_percentage={this.state.growth_rate_percentage}
+                />
+        }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
-        <div ref={el => this.mapContainer = el} className="map" />
-      </Fragment>
+        <div ref={this.mapContainer} className="map" />
+      </div>
     );
   }
 }

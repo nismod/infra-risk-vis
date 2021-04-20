@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "Rail",
+  "name": "Regions",
   "center": [105.12, 16.19],
   "height": "600px",
   "zoom": 5,
@@ -8,7 +8,7 @@
   "pitch": 0,
   "sources": {
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
-    "rail": { "type": "vector", "url": "mbtiles://{rail}" }
+    "admin1": { "type": "vector", "url": "mbtiles://{admin1_merged}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -35,57 +35,47 @@
       "source": "boundaries",
       "source-layer": "WB_Admin0_disputed_areas",
       "paint": {
-        "fill-color": "#e0e0e0",
+        "fill-color": "#d2d2d2",
         "fill-outline-color": "#fff"
       }
     },
     {
-      "id": "rail",
-      "type": "line",
-      "source": "rail",
-      "source-layer": "rail",
-      "minzoom": 3,
-      "layout": {
-        "line-cap": "round",
-        "line-join": "round"
-      },
+      "id": "admin1",
+      "type": "fill",
+      "source": "admin1",
+      "source-layer": "admin1",
       "paint": {
-        "line-color": [
+        "fill-color": [
           "interpolate-lab",
           ["linear"],
-          ["-", ["get", "EAD_max"], ["*", 0.917808219178, ["coalesce", ["get", "EAEL"], 0]]],
+          ["+", ["get", "maxEAD"], ["*", 0.0821917808219, ["coalesce", ["get", "EAEL-gdp"], 0]]],
           0,
-          ["to-color", "#b2afaa"],
-          0.000000001,
-          ["to-color", "#fff"],
-          0.001,
-          ["to-color", "#fcfcb8"],
-          0.01,
-          ["to-color", "#ff9c66"],
+          ["to-color", "#ffffff"],
           0.1,
-          ["to-color", "#d03f6f"],
-          1,
-          ["to-color", "#792283"],
+          ["to-color", "#fee0d2"],
+          0.5,
+          ["to-color", "#fdc1a9"],
+          2.5,
+          ["to-color", "#fc9d7f"],
           10,
-          ["to-color", "#3f0a72"],
-          100,
-          ["to-color", "#151030"]
-        ],
-        "line-width": {
-          "base": 1,
-          "stops": [[7, 1.5], [12, 2], [16, 6]]
-        }
+          ["to-color", "#fb7859"],
+          50,
+          ["to-color", "#f4513b"],
+          250,
+          ["to-color", "#de2c26"],
+          1000,
+          ["to-color", "#bf161b"]
+        ]
       }
     },
     {
       "id": "country_outlines",
-      "type": "line",
+      "type": "fill",
       "source": "boundaries",
       "source-layer": "WB_countries_Admin0",
       "paint": {
-        "line-color": "#fff",
-        "line-width": 2,
-        "line-blur": 1
+        "fill-color": "transparent",
+        "fill-outline-color": "#fff"
       }
     },
     {

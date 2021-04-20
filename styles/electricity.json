@@ -1,6 +1,6 @@
 {
   "version": 8,
-  "name": "Rail",
+  "name": "Electricity",
   "center": [105.12, 16.19],
   "height": "600px",
   "zoom": 5,
@@ -8,7 +8,7 @@
   "pitch": 0,
   "sources": {
     "boundaries": { "type": "vector", "url": "mbtiles://{boundaries}" },
-    "rail": { "type": "vector", "url": "mbtiles://{rail}" }
+    "electricity": { "type": "vector", "url": "mbtiles://{electricity}" }
   },
   "glyphs": "{fontstack}/{range}.pbf",
   "layers": [
@@ -40,10 +40,10 @@
       }
     },
     {
-      "id": "rail",
+      "id": "electricity",
       "type": "line",
-      "source": "rail",
-      "source-layer": "rail",
+      "source": "electricity",
+      "source-layer": "electricity",
       "minzoom": 3,
       "layout": {
         "line-cap": "round",
@@ -53,7 +53,7 @@
         "line-color": [
           "interpolate-lab",
           ["linear"],
-          ["-", ["get", "EAD_max"], ["*", 0.917808219178, ["coalesce", ["get", "EAEL"], 0]]],
+          ["+", ["get", "EAD_max"], ["*", 0.0000000821917808219, ["coalesce", ["get", "EAEL"], 0]]],
           0,
           ["to-color", "#b2afaa"],
           0.000000001,
@@ -73,7 +73,7 @@
         ],
         "line-width": {
           "base": 1,
-          "stops": [[7, 1.5], [12, 2], [16, 6]]
+          "stops": [[7, 1], [12, 2], [16, 12]]
         }
       }
     },

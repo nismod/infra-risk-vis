@@ -9,115 +9,66 @@
     },
     "styles": {
       "overview": {
-        "style": "overview.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+        "style": "overview.json"
+      },
+      "electricity": {
+        "style": "electricity.json"
       },
       "flood": {
-        "style": "flood.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+        "style": "flood.json"
       },
-      "adaptation": {
-        "style": "adaptation.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
-      },
-      "impact": {
-        "style": "impact.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+      "hazards": {
+        "style": "hazards.json"
       },
       "risk": {
-        "style": "risk.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+        "style": "risk.json"
       },
       "roads": {
-        "style": "roads.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+        "style": "roads.json"
       },
       "rail": {
-        "style": "rail.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+        "style": "rail.json"
       },
-      "airwater": {
-        "style": "airwater.json",
-        "tilejson": {
-          "bounds": [
-            -80.947265625,
-            -48.5747899109,
-            -49.658203125,
-            -23.4027649054
-          ]
-        }
+      "regions": {
+        "style": "regions.json"
       }
     },
     "data": {
-      "air": {
-        "mbtiles": "air_nodes.mbtiles"
-      },
-      "bridges": {
-        "mbtiles": "bridges.mbtiles"
-      },
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
       },
+      "admin1": {
+        "mbtiles": "admin1.mbtiles"
+      },
+      "admin1_merged": {
+        "mbtiles": "admin1_merged.mbtiles"
+      },
+      "electricity": {
+        "mbtiles": "electricity.mbtiles"
+      },
       "rail": {
-        "mbtiles": "rail_edges.mbtiles"
+        "mbtiles": "rail.mbtiles"
       },
-      "road": {
+      "roads_main": {
+        "mbtiles": "roads_main.mbtiles"
+      },
+      "roads_other": {
+        "mbtiles": "roads_other.mbtiles"
+      },
+      "vietnam_roads": {
         "mbtiles": "road_edges.mbtiles"
-      },
-      "water": {
-        "mbtiles": "port_nodes.mbtiles"
       },
       "flood": {
         "mbtiles": "flood.mbtiles"
+      },
+      "coastal": {
+        "mbtiles": "coastal.mbtiles"
+      },
+      "fluvial": {
+        "mbtiles": "fluvial.mbtiles"
+      },
+      "cyclone": {
+        "mbtiles": "cyclone.mbtiles"
       }
     }
   }

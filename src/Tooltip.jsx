@@ -19,22 +19,21 @@ const Tooltip = (props) => {
     let max_value;
     let detail;
 
-    if (props.map_style === "roads" || props.map_style === "rail" || props.map_style === "airwater" || props.map_style === "overview") {
-      if (f.sourceLayer === "air_nodes") {
-        max_value = f.properties.passengers;
-        detail = (f.properties.passengers)?
-          commas(f.properties.passengers.toFixed(0)) + " passengers"
-          : "";
+    if (props.map_style === "roads" || props.map_style === "rail" || props.map_style === "electricity" || props.map_style === "overview") {
+
+      title = "ID: " + (f.properties.osm_id || f.properties.link);
+
+      if (f.properties.EAD_min_usd && f.properties.EAD_max_usd) {
+        max_value = f.properties.EAD_max || 0;
+
+        detail = " Total Expected Risk: $" +
+          f.properties.total_EAL_min_usd + "–" +
+          f.properties.total_EAL_max_usd;
 
       } else {
-        max_value = f.properties.max_total_tons;
-
-        detail = (f.properties.max_total_tons && f.properties.min_total_tons)?
-          " " +
-          commas(f.properties.min_total_tons.toFixed(0)) + " – " +
-          commas(f.properties.max_total_tons.toFixed(0)) + " tons/day freight flows"
-          : "";
+        detail = "(no exposure calculated)  "
       }
+
     }
 
     if (props.map_style === "impact") {
@@ -49,14 +48,30 @@ const Tooltip = (props) => {
 
     if (props.map_style === "risk") {
       max_value = Math.max(
-        ((f.properties.baseline_ead || 0) + (f.properties.baseline_max_eael_per_day || 0) *30),
-        ((f.properties.future_med_ead || 0) + (f.properties.future_med_max_eael_per_day || 0) * 30),
-        ((f.properties.future_high_ead || 0) + (f.properties.future_high_max_eael_per_day || 0) * 30)
+        ((f.properties.baseline_max_ead || 0) + (f.properties.baseline_max_eael_per_day || 0) *30),
+        ((f.properties.rcp_4p5_max_ead || 0) + (f.properties.rcp_4p5_max_eael_per_day || 0) * 30),
+        ((f.properties.rcp_8p5_max_ead || 0) + (f.properties.rcp_8p5_max_eael_per_day || 0) * 30)
       );
 
       detail = (max_value)?
         " up to " + commas(max_value.toFixed(0)) + " USD expected annual damages plus losses for a 30-day disruption"
         : "";
+    }
+
+    // Hazard details
+    if (f.properties.depth_m) {
+      detail = "Depth: " + f.properties.depth_m.toFixed(1) + "m";
+    }
+    if (f.properties["gust_speed_ms-1"]) {
+      detail = "Gust speed: " + f.properties["gust_speed_ms-1"].toFixed(1) + "ms⁻¹";
+    }
+
+    // Regions
+    if (props.map_style === 'regions') {
+      title = "Region"
+    }
+    if (f.properties.NAME_1 && f.properties.NAME_0) {
+      detail = f.properties.NAME_1 + ", " + f.properties.NAME_0
     }
 
     if (!entries[f.sourceLayer] || entries[f.sourceLayer].max_value < max_value) {

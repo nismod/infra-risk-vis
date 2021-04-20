@@ -65,7 +65,7 @@ Either link to the synced/downloaded data directories:
 
     ln -s 'path/to/OneDrive/Argentina/results' incoming_data/results
 
-OR Unzip within `/incoming_data` folder:
+Or unzip within `/incoming_data` folder:
 
     unzip ~/Downloads/boundaries.zip -d incoming_data/
     unzip ~/Downloads/network.zip -d incoming_data/
@@ -84,7 +84,6 @@ unzip directly in the `/data` folder.
 
 ## Build and run requirements
 
-
 ### Node and npm
 
 The build and run steps use [node.js](https://nodejs.org/) - this provides the `npm` command.
@@ -92,12 +91,6 @@ The build and run steps use [node.js](https://nodejs.org/) - this provides the `
 Install required packages. Run from the project root:
 
     npm install
-
-### Tileserver GL
-
-Install tlieserver-gl globally:
-
-    npm install -g tileserver-gl-light
 
 ## Run
 
@@ -108,7 +101,7 @@ app itself.
 
 Run the tileserver directly (from the root of the project):
 
-    tileserver-gl-light
+    npx tileserver-gl-light
 
 Open a browser to view the tileserver:
 

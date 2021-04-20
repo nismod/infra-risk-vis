@@ -2,45 +2,50 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 
 const Nav = () => (
-  <nav className="navbar navbar-height navbar-expand navbar-dark">
+  <nav className="navbar navbar-height navbar-expand navbar-light">
     <NavLink className="navbar-brand" to="/">
       <img src="/logo.png" alt="OIA" />
     </NavLink>
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
-        <a className="nav-link" href='/roads'>
+        <NavLink exact className="nav-link" to='/'>
+          About
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink className="nav-link" to='/summary'>
+          Summary
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink className="nav-link" to='/overview'>
+          Infrastructure networks
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink className="nav-link" to='/hazards'>
+          Hazards
+        </NavLink>
+      </li>
+      <li className="nav-item">
+        <NavLink className="nav-link" to='/roads'>
           Roads
-        </a>
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/rail'>
-          Railways
-        </a>
+        <NavLink className="nav-link" to='/rail'>
+          Rail
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/airwater'>
-          Airports and Waterway ports
-        </a>
+        <NavLink className="nav-link" to='/energy_network'>
+          Electricity
+        </NavLink>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href='/flood'>
-          Flood
-        </a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href='/impact'>
-          Impact
-        </a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href='/risk'>
-          Risk
-        </a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link" href='/adaptation'>
-          Assets with Adaptation BCR > 1
-        </a>
+        <NavLink className="nav-link" to='/risk'>
+          Vietnam Case Study - Risk and Adaptation
+        </NavLink>
       </li>
     </ul>
   </nav>

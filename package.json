@@ -3,12 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.3.1",
-    "mapbox-gl": "^0.54.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "^3.0.1"
+    "bootstrap": "^4.6.0",
+    "mapbox-gl": "^0.54.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.4",
+    "react-vega": "^7.4.2",
+    "tileserver-gl-light": "^3.1.1",
+    "vega": "^5.19.1",
+    "vega-lite": "^5.0.0"
   },
   "proxy": "http://localhost:8080",
   "scripts": {

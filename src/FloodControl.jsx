@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 const FloodControl = (props) => (
   <Fragment>
+    <br />
+    <h3 className="h4">Flood layers</h3>
     <h4 className="h5">Climate Scenario</h4>
     <div className="form-check">
       <input
@@ -25,15 +27,15 @@ const FloodControl = (props) => (
         className="form-check-input"
         type="radio"
         name="scenarioRadio"
-        value="med"
-        id="scenarioRadio_med"
+        value="rcp_4p5"
+        id="scenarioRadio_rcp4p5"
         onClick={(e) => props.setScenario(e.target.value)}
         />
       <label
         className="form-check-label"
-        htmlFor="scenarioRadio_med"
+        htmlFor="scenarioRadio_rcp4p5"
         >
-        Med
+        RCP 4.5
       </label>
     </div>
     <div className="form-check">
@@ -41,74 +43,19 @@ const FloodControl = (props) => (
         className="form-check-input"
         type="radio"
         name="scenarioRadio"
-        value="high"
-        id="scenarioRadio_high"
+        value="rcp_8p5"
+        id="scenarioRadio_rcp8p5"
         onClick={(e) => props.setScenario(e.target.value)}
         />
       <label
         className="form-check-label"
-        htmlFor="scenarioRadio_high"
+        htmlFor="scenarioRadio_rcp8p5"
         >
-        High
-      </label>
-    </div>
-
-    <h4 className="h5">Flood Type</h4>
-    <div className="form-check">
-      <input
-        className="form-check-input"
-        defaultChecked={true} type="radio"
-        name="floodtypeRadios"
-        value="fluvial"
-        id="floodtypeRadios_fluvial"
-        onClick={(e) => props.setFloodType(e.target.value)}
-        />
-      <label
-        className="form-check-label"
-        htmlFor="floodtypeRadios_fluvial"
-        >
-        Fluvial
-      </label>
-    </div>
-    <div className="form-check">
-      <input
-        className="form-check-input"
-        type="radio"
-        name="floodtypeRadios"
-        value="pluvial"
-        id="floodtypeRadios_pluvial"
-        onClick={(e) => props.setFloodType(e.target.value)}
-        />
-      <label
-        className="form-check-label"
-        htmlFor="floodtypeRadios_pluvial"
-        >
-        Pluvial
+        RCP 8.5
       </label>
     </div>
 
     <h4 className="h5">Flood Level</h4>
-    <div className="form-check">
-      <input
-        className="form-check-input"
-        defaultChecked={true}
-        type="checkbox"
-        name="floodLevelCheck"
-        value="_50cm1m"
-        id="floodLevelCheck_50cm1m"
-        onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
-        />
-      <span
-        className="dot"
-        style={{backgroundColor: "#ffffff", boxShadow: "black 0px 0px 1px 1px"}}>
-      </span>
-      <label
-        className="form-check-label"
-        htmlFor="floodLevelCheck_50cm1m"
-        >
-        50cm-1m
-      </label>
-    </div>
     <div className="form-check">
       <input
         className="form-check-input"
@@ -190,7 +137,7 @@ const FloodControl = (props) => (
         className="form-check-label"
         htmlFor="floodLevelCheck_4m999m"
         >
-        >4m
+        &gt;4m
       </label>
     </div>
   </Fragment>

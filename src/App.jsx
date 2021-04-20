@@ -1,14 +1,18 @@
-import React, { Fragment } from 'react';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
+import React, { Fragment, useState } from 'react';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
-import Nav from './Nav'
-import Map from './Map'
+import Nav from './Nav';
+import Map from './Map';
+import PageIntro from './PageIntro';
+import RegionSummary from './RegionSummary';
 
 import './index.css';
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-const App = () => (
+const App = () => {
+  const [region, setRegion] = useState(undefined);
+  return (
   <Router>
     <Fragment>
       <Route path="/" component={Nav}/>
@@ -18,27 +22,26 @@ const App = () => (
           <Map
             map_style="overview"
             dataSources={[
-              'road',
-              'bridges',
+              'electricity',
               'rail',
-              'air',
-              'water'
+              'roads_main',
+              'roads_other'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"},
-              {key:'air', label: 'Airports', color: "#000000"},
-              {key:'water', label: 'Water', color: "#045a8d"}
+              {key: 'electricity', label: 'Power Grid', linear: true, color: "#eca926"},
+              {key: 'rail', label: 'Railways', linear: true, color: "#444"},
+              {key: 'trunk', label: 'Trunk Roads', linear: true, color: "#941339"},
+              {key: 'motorway', label: 'Motorways', linear: true, color: "#941339"},
+              {key: 'primary', label: 'Primary Roads', linear: true, color: "#cb3e4e"},
+              {key: 'secondary', label: 'Secondary Roads', linear: true, color: "#8471a8"},
+              {key: 'roads_other', label: 'Tertiary and Other Roads', linear: true, color: "#b2afaa"},
+
             ]}
             tooltipLayerSources={[
-              'road',
-              'bridges',
+              'electricity',
               'rail',
-              'air',
-              'water'
+              'roads_main',
+              'roads_other'
             ]}
             />
         </Route>
@@ -46,19 +49,19 @@ const App = () => (
           <Map
             map_style="roads"
             dataSources={[
-              'road',
-              'bridges'
+              'roads_main',
+              'roads_other'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
+              {key: 'trunk', label: 'Trunk Roads', linear: true, color: "#b2afaa"},
+              {key: 'motorway', label: 'Motorways', linear: true, color: "#b2afaa"},
+              {key: 'primary', label: 'Primary Roads', linear: true, color: "#b2afaa"},
+              {key: 'secondary', label: 'Secondary Roads', linear: true, color: "#b2afaa"},
+              {key: 'roads_other', label: 'Tertiary and Other Roads', linear: true, color: "#b2afaa"},
             ]}
             tooltipLayerSources={[
-              'road',
-              'bridges',
-              'flood'
+              'roads_main',
+              'roads_other'
             ]}
             />
         </Route>
@@ -69,166 +72,84 @@ const App = () => (
               'rail'
             ]}
             dataLayers={[
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"},
+              {key: 'rail', label: 'Railways', linear: true, color: "#444"},
             ]}
             tooltipLayerSources={[
-              'rail',
-              'flood'
+              'rail'
             ]}
             />
         </Route>
-        <Route path="/airwater">
+        <Route path="/energy_network">
           <Map
-            map_style="airwater"
+            map_style="electricity"
             dataSources={[
-              'air',
-              'water'
+              'electricity'
             ]}
             dataLayers={[
-              {key:'air', label: 'Airports', color: "#000000"},
-              {key:'water', label: 'Water', color: "#045a8d"}
+              {key: 'electricity', label: 'Power Grid', linear: true, color: "#eca926"},
             ]}
             tooltipLayerSources={[
-              'air',
-              'water',
-              'flood'
+              'electricity'
             ]}
             />
         </Route>
-        <Route path="/flood">
+        <Route path="/hazards">
           <Map
-            map_style="flood"
+            map_style="hazards"
             dataSources={[]}
-            dataLayers={[]}
-            tooltipLayerSources={['flood']}
-            />
-        </Route>
-        <Route path="/impact">
-          <Map
-            map_style="impact"
-            dataSources={[
-              'road',
-              'bridges',
-              'rail'
-            ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"}
+              {key:'coastal', label: 'Coastal flood depth (m), 100yr', color: "#9df4b0"},
+              {key:'fluvial', label: 'Fluvial flood depth (m), 100yr', color: "#58cced"},
+              {key:'cyclone', label: 'Cyclone gust speed (m/s), 100yr', color: "#f9d5cb"}
             ]}
-            tooltipLayerSources={[
-              'road',
-              'bridges',
-              'rail'
-            ]}
+            tooltipLayerSources={['coastal', 'fluvial', 'cyclone']}
             />
         </Route>
         <Route path="/risk">
           <Map
             map_style="risk"
             dataSources={[
-              'road',
-              'bridges',
-              'rail'
+              'road'
             ]}
             dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
-              {key:'rail', label: 'Railways', linear: true, color: "#006d2c"}
+              {key:'road_class_1', label: 'Road Class 1', linear: true, color: "#000004"},
+              {key:'road_class_2', label: 'Road Class 2', linear: true, color: "#2c115f"},
+              {key:'road_class_3', label: 'Road Class 3', linear: true, color: "#721f81"},
+              {key:'road_class_4', label: 'Road Class 4', linear: true, color: "#b73779"},
+              {key:'road_class_5', label: 'Road Class 5', linear: true, color: "#f1605d"},
+              {key:'road_class_6', label: 'Road Class 6', linear: true, color: "#feb078"}
             ]}
             tooltipLayerSources={[
               'road',
-              'bridges',
-              'rail'
+              'flood'
             ]}
             />
         </Route>
-        <Route path="/adaptation">
-          <Map
-            zoom={6}
-            lng={-61.5}
-            lat={-34.6}
-            map_style="adaptation"
-            dataSources={[
-              'road',
-              'bridges'
-            ]}
-            dataLayers={[
-              {key:'road_national', label: 'National Roads', linear: true, color: "#ba0f03"},
-              {key:'road_province', label: 'Province Roads', linear: true, color: "#e0881f"},
-              {key:'road_rural', label: 'Rural Roads', linear: true, color: "#03ba6b"},
-              {key:'bridges', label: 'National-roads bridges', color: "#860403"},
-            ]}
-            tooltipLayerSources={[
-              'road',
-              'bridges'
-            ]}
-            />
-        </Route>
-        <Route path="/">
-          <div className="jumbotron welcome-float">
-            <h1 className="h1">Argentina Transport Risk Analysis - Results inquirer</h1>
-            <p className="lead">
-
-            This tool presents results of the modelling and analysis of climate-related risks
-            to transport networks in Argentina.
-
-            </p>
-            <p className="lead">
-
-            The modelling and analysis aim to support decision-making by identifying spatial
-            criticailities, risks, and the performance of adaptation options under current and
-            future fluvial and pluvial flooding outlooks. It comprises a network flow model,
-            generation of failure scenarios, economic impact assessment, and cost-benefit
-            analysis of adaptation options.
-
-            </p>
-
-            <p className="lead">
-
-            The concepts and model results presented here are documented in the study report:
-            </p>
-
-            <p className="lead">
-
-            Pant, R., Koks, E.E., Paltan, H., Russell, T., & Hall, J.W. (2019). Argentina – Transport risk analysis. Final Report, Oxford Infrastructure Analytics Ltd., Oxford, UK. (Available by request from World Bank)
-            </p>
-
-            <p className="lead">
-
-            The outputs visualized here were generated from a model created and documented
-            here:
-
-            </p>
-            <p className="lead">
-
-            <a href="https://github.com/oi-analytics/argentina-transport" target="blank">GitHub resources</a>
-
-            </p>
-            <p className="lead">
-
-            <a href="https://argentina-transport-risk-analysis.readthedocs.io/en/latest/?badge=latest" target="blank">ReadTheDocs resources</a>
-
-            </p>
-
-            <h1 className="h1">Funding support</h1>
-            <p className="lead">
-
-            This results inquirer tool has been developed for the Government of Argentina with
-            funding support from the World Bank Group and Global Facility for Disaster
-            Reduction and Recovery (GFDRR).
-
-            </p>
+        <Route path="/summary">
+          <div className="page-col-right">
+            <RegionSummary region={region} />
           </div>
+          <Map
+            className="page-col-left"
+            map_style="regions"
+            dataSources={[
+              'admin1'
+            ]}
+            dataLayers={[]}
+            tooltipLayerSources={[
+              'admin1'
+            ]}
+            onRegionSelect={setRegion}
+            />
+        </Route>
+        <Route path="/" exact>
+          <PageIntro />
         </Route>
       </Switch>
       </main>
     </Fragment>
   </Router>
 )
+}
 
 export default App;

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { commas, titleCase, insert_string } from './helpers';
+import { commas, titleCase } from './helpers';
 
 const FeatureSidebar = (props) => {
   if (!props.feature) {
@@ -8,22 +8,22 @@ const FeatureSidebar = (props) => {
   }
   const f = props.feature.properties;
 
-  const hazard_types = ["pluvial_flooding", "fluvial_flooding"]
-  const scenarios = ["baseline", "future_med", "future_high"]
-  const hazard_vars = ["flood_depth", "probability", "exposure_length"]
+  const hazard_types = ["fluvial"]
+  const scenarios = ["baseline", "rcp_4p5", "rcp_8p5"]
+  const hazard_vars = ["height", "probability", "exposure_length"]
   const risk_vars = ["ead","eael_per_day"]
-  const adapt_vars = ["ini_adap_cost","tot_maintenance_cost","tot_adap_cost"]
-  const adapt_vars_perkm = ["ini_adap_cost_per_km","tot_maintenance_cost_per_km","tot_adap_cost_per_km"]
+  const adapt_vars = ["ini_adap_cost","maintenance_cost","tot_adap_cost"]
+  const adapt_vars_perkm = ["ini_adap_cost_perkm","maintenance_cost_perkm","tot_adap_cost_perkm"]
 
   return (
     <div className="custom-map-control top-right selected-feature">
       <h4 className="h5">Selected Asset</h4>
 
-      <details>
+      <details open={true}>
         <summary>Attributes</summary>
         <dl>
           <dt>ID</dt>
-          <dd>{f.node_id || f.edge_id || f.bridge_id}</dd>
+          <dd>{f.node_id || f.edge_id || f.osm_id || f.link }</dd>
           {
             (f.name)? (
               <Fragment>
@@ -41,66 +41,18 @@ const FeatureSidebar = (props) => {
             ) : null
           }
           {
-            (f.ruta)? (
-              <Fragment>
-                <dt>Road name</dt>
-                <dd>{f.ruta}</dd>
-              </Fragment>
-            ) : null
-          }
-          {
-            (f.iata)? (
-              <Fragment>
-                <dt>IATA code</dt>
-                <dd>{f.iata}</dd>
-              </Fragment>
-            ) : null
-          }
-          {
-            (f.locality)? (
-              <Fragment>
-                <dt>Port cluster</dt>
-                <dd>{f.locality}</dd>
-              </Fragment>
-            ) : null
-          }
-          {
-            (f.operador)? (
-              <Fragment>
-                <dt>Line Operating company</dt>
-                <dd>{f.operador}</dd>
-              </Fragment>
-            ) : null
-          }
-          {
-            (f.linea)? (
-              <Fragment>
-                <dt>Line name</dt>
-                <dd>{f.linea}</dd>
-              </Fragment>
-            ) : null
-          }
-          {
-            (f.road_type)? (
+            (f.road_class || f.highway)? (
               <Fragment>
                 <dt>Road classification</dt>
-                <dd>{titleCase(f.road_type)}</dd>
+                <dd>{titleCase(String(f.road_class || f.highway))}</dd>
               </Fragment>
             ) : null
           }
           {
-            (f.structure_type)? (
+            (f.road_cond)? (
               <Fragment>
-                <dt>Structure type</dt>
-                <dd>{f.structure_type}</dd>
-              </Fragment>
-            ) : null
-          }
-          {
-            (f.pavement_material_asc)? (
-              <Fragment>
-                <dt>Existing pavement material</dt>
-                <dd>{f.pavement_material_asc.replace("0","Unknown").replace(",","/")}</dd>
+                <dt>Road Condition</dt>
+                <dd>{f.road_cond}</dd>
               </Fragment>
             ) : null
           }
@@ -137,67 +89,58 @@ const FeatureSidebar = (props) => {
             ) : null
           }
           {
-            (f.max_total_tons && f.min_total_tons)? (
+            (f.max_tons && f.min_tons)? (
               <Fragment>
                 <dt>Freight flows (tons/day)</dt>
-                <dd>{commas(f.min_total_tons.toFixed(0))} – {commas(f.max_total_tons.toFixed(0))}</dd>
+                <dd>{commas(f.min_tons.toFixed(0))} – {commas(f.max_tons.toFixed(0))}</dd>
               </Fragment>
             ) : null
           }
           {
-            (f.passengers)? (
+            (f.vehicle_co)? (
               <Fragment>
-                <dt>Passengers</dt>
-                <dd>{commas(f.passengers.toFixed(0))}</dd>
+                <dt>Vehicle counts (vehicles/day)</dt>
+                <dd>{commas(f.vehicle_co.toFixed(0))}</dd>
               </Fragment>
             ) : null
           }
           {
-            (f.tmda_count)? (
+            (f.annualProbability)? (
               <Fragment>
-                <dt>Vehicle counts (Annual)</dt>
-                <dd>{commas(f.tmda_count.toFixed(0))}</dd>
+                <dt>Annual Probability of Failure</dt>
+                <dd>{f.annualProbability.toFixed(6)}</dd>
               </Fragment>
             ) : null
           }
           {
-            (f.in_use)? (
+            (f.EAD_min_usd && f.EAD_max_usd)? (
               <Fragment>
-                <dt>Route in Use</dt>
-                <dd>{f.in_use}</dd>
+                <dt>Expected Annual Damages (US$)</dt>
+                <dd>{f.EAD_min_usd}&mdash;{f.EAD_max_usd}</dd>
+              </Fragment>
+            ) : null
+          }
+          {
+            (f.EAEL_daily_usd)? (
+              <Fragment>
+                <dt>Expected Annual Economic Losses (per day of disruption, US$)</dt>
+                <dd>{f.EAEL_daily_usd}</dd>
+              </Fragment>
+            ) : null
+          }
+          {
+            (f.total_EAL_min_usd && f.total_EAL_max_usd)? (
+              <Fragment>
+                <dt>Total Expected Risk (EAD + EAEL for 30 day disruption, US$)</dt>
+                <dd>{f.total_EAL_min_usd}–{f.total_EAL_max_usd}</dd>
               </Fragment>
             ) : null
           }
         </dl>
       </details>
       {
-        (typeof(f.dnv_flood) !== "undefined")?
-        <details>
-           <summary>DNV validation</summary>
-           <dl>
-           {
-                (f.dnv_flood === 1)? (
-                  <Fragment>
-                    <dd>Flooded</dd>
-                  </Fragment>
-                )
-                :
-                (f.dnv_flood === -1)? (
-                    <Fragment>
-                    <dd>Not flooded</dd>
-                  </Fragment>
-                )
-                :
-                  <Fragment>
-                    <dd>No validation</dd>
-                  </Fragment>
-            }
-           </dl>
-        </details>
-        : null
-      }
-      {
-        (f.pluvial_flooding_baseline_min_flood_depth || f.fluvial_flooding_baseline_min_flood_depth || f.pluvial_flooding_future_med_min_flood_depth || f.fluvial_flooding_future_med_min_flood_depth || f.pluvial_flooding_future_high_min_flood_depth || f.fluvial_flooding_future_high_min_flood_depth)?
+        (f.flooding_baseline_min_height || f.flooding_rcp_4p5_min_height || f.flooding_rcp_8p5_min_height ||
+           f.flooding_baseline_max_height || f.flooding_rcp_4p5_max_height || f.flooding_rcp_8p5_max_height)?
           <details>
             <summary>Flood exposure statistics</summary>
             <dl>
@@ -221,19 +164,24 @@ const FeatureSidebar = (props) => {
                             <td>{titleCase(scenario.replace("_"," "))}</td>
                             {
                               hazard_vars.map((hazard_var) => {
+
                                 if (
-                                  f[hazard + "_" + scenario + "_min_" + hazard_var]
-                                  && f[hazard + "_" + scenario + "_max_" + hazard_var]
+                                  f["flooding_" + scenario + "_min_" + hazard_var]
+                                  && f["flooding_" + scenario + "_max_" + hazard_var]
                                 ){
                                   if (hazard_var === "probability") {
-                                    return (<td key={hazard_var}>{
-                                      `1/${(1 / f[hazard + "_" + scenario + "_max_" + hazard_var]).toFixed(0)}`
-                                    }</td>)
+                                    if(f["flooding_" + scenario + "_max_" + hazard_var] != null){
+                                      return (<td key={hazard_var}>{
+                                        `1/${(1 / f["flooding_" + scenario + "_max_" + hazard_var]).toFixed(0)}`
+                                      }</td>)
+                                    }else{
+                                      return(<td key={hazard_var}>-</td>)
+                                    }
                                   } else {
                                     return (<td key={hazard_var}>{
-                                      commas(f[hazard + "_" + scenario + "_min_" + hazard_var].toFixed(1))
+                                      commas(f["flooding_" + scenario + "_min_" + hazard_var].toFixed(1))
                                     } – {
-                                      commas(f[hazard + "_" + scenario + "_max_" + hazard_var].toFixed(1))
+                                      commas(f["flooding_" + scenario + "_max_" + hazard_var].toFixed(1))
                                     }</td>)
                                   }
                                 } else {
@@ -250,13 +198,7 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        :
-          <details>
-            <summary>Flood exposure statistics</summary>
-            <dl>
-              <dt>No flooding estimated</dt>
-            </dl>
-          </details>
+        : null
       }
       {
         (f.max_tr_loss || f.max_econ_loss || f.max_econ_impact)?
@@ -289,16 +231,11 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        :
-          <details>
-            <summary>Criticality metrics</summary>
-            <dl>
-              <dt>No values estimated</dt>
-            </dl>
-          </details>
+        : null
       }
       {
-        (f.baseline_ead || f.future_med_ead || f.future_high_ead || f.baseline_max_eael_per_day || f.future_med_max_eael_per_day || f.future_high_max_eael_per_day)?
+        (f.baseline_max_ead || f.rcp_4p5_max_ead || f.rcp_8p5_max_ead ||
+          f.baseline_max_eael_per_day || f.rcp_4p5_max_eael_per_day || f.rcp_8p5_max_eael_per_day)?
           <details>
             <summary>Risk estimates</summary>
             <dl>
@@ -318,24 +255,15 @@ const FeatureSidebar = (props) => {
                           <td>{titleCase(scenario.replace("_"," "))}</td>
                           {
                             risk_vars.map((risk_var) => {
-                              if (risk_var === "ead" && f[scenario + "_" + risk_var]) {
-                                return (<td key={risk_var}>{
-                                  commas(f[scenario + "_" + risk_var].toFixed(0))
-                                }</td>)
-                              } else if (
-                                (f[scenario + "_min_" + risk_var] || f[scenario + "_min_" + risk_var] === 0)
-                                && f[scenario + "_max_" + risk_var]
-                                ) {
+                              const min_risk = f[scenario + "_min_" + risk_var];
+                              const max_risk = f[scenario + "_max_" + risk_var];
 
-                                return (<td key={risk_var}>{
-                                  commas(f[scenario + "_min_" + risk_var].toFixed(0))
-                                } – {
-                                  commas(f[scenario + "_max_" + risk_var].toFixed(0))
-                                }</td>)
-                              } else {
-                                return (<td key={risk_var}>-</td>)
+                              return (
+                                max_risk > min_risk ?
+                                    <td key={risk_var}>{commas(min_risk.toFixed(0))} - {commas(max_risk.toFixed(0))}</td> :
+                                    <td key={risk_var}>{commas(min_risk.toFixed(0))}</td>);
                               }
-                            })
+                            )
                           }
                         </tr>)
                       })
@@ -345,48 +273,24 @@ const FeatureSidebar = (props) => {
               }
             </dl>
           </details>
-        :
-          <details>
-            <summary>Risk estimates</summary>
-            <dl>
-              <dt>No values estimated</dt>
-            </dl>
-          </details>
+        : null
       }
       {
-        (f.baseline_options || f.future_med_options || f.future_options)?
+        (f.options)?
           <details>
             <summary>Adaptation option</summary>
             <dl>
             {
-                (f.baseline_options)? (
-                  <Fragment>
-                    <dd>{insert_string(f.baseline_options)}</dd>
-                  </Fragment>
-                )
-                :
-                (f.future_med_options)?(
-                    <Fragment>
-                    <dd>{insert_string(f.future_med_options)}</dd>
-                  </Fragment>
-                )
-                :
-                  <Fragment>
-                    <dd>{insert_string(f.future_high_options)}</dd>
-                  </Fragment>
+              <Fragment>
+                  <dd>{f.options}</dd>
+              </Fragment>
             }
             </dl>
           </details>
-          :
-          <details>
-            <summary>Adaptation option</summary>
-            <dl>
-              <dt>No values estimated</dt>
-            </dl>
-          </details>
+          : null
       }
       {
-        (f.baseline_ini_adap_cost || f.future_med_ini_adap_cost || f.future_high_ini_adap_cost)?
+        (f.baseline_max_ini_adap_cost || f.rcp_4p5_max_ini_adap_cost || f.rcp_8p5_max_ini_adap_cost)?
           <details>
             <summary>Adaptation cost estimates</summary>
             <dl>
@@ -407,10 +311,15 @@ const FeatureSidebar = (props) => {
                           <td>{titleCase(scenario.replace("_"," "))}</td>
                           {
                             adapt_vars.map((adapt_var) => {
-                              if (f[scenario + "_" + adapt_var]) {
-                                return (<td key={adapt_var}>{
-                                  commas(f[scenario + "_" + adapt_var].toFixed(0))
-                                }</td>)
+                              if (f[scenario + "_min_" + adapt_var] || f[scenario + "_max_" + adapt_var]) {
+                                const min_val = f[scenario + "_min_" + adapt_var];
+                                const max_val = f[scenario + "_max_" + adapt_var];
+
+                                return (
+                                  Math.floor(Math.max(min_val,max_val)) > Math.floor(Math.min(min_val,max_val)) ?
+                                      <td key={adapt_var}>{commas(Math.min(min_val,max_val).toFixed(0))} - {commas(Math.max(min_val,max_val).toFixed(0))}</td> :
+                                      <td key={adapt_var}>{commas(min_val.toFixed(0))}</td>
+                                );
                               } else {
                                 return (<td key={adapt_var}>-</td>)
                               }
@@ -427,7 +336,7 @@ const FeatureSidebar = (props) => {
         : null
       }
       {
-        (f.baseline_ini_adap_cost || f.future_med_ini_adap_cost || f.future_high_ini_adap_cost)?
+        (f.baseline_max_ini_adap_cost_perkm || f.rcp_4p5_max_ini_adap_cost_perkm || f.rcp_8p5_max_ini_adap_cost_perkm)?
           <details>
             <summary>Adaptation cost estimates per km</summary>
             <dl>
@@ -448,10 +357,15 @@ const FeatureSidebar = (props) => {
                           <td>{titleCase(scenario.replace("_"," "))}</td>
                           {
                             adapt_vars_perkm.map((adapt_var_perkm) => {
-                              if (f[scenario + "_" + adapt_var_perkm]) {
-                                return (<td key={adapt_var_perkm}>{
-                                  commas(f[scenario + "_" + adapt_var_perkm].toFixed(0))
-                                }</td>)
+                              if (f[scenario + "_min_" + adapt_var_perkm] || f[scenario + "_max_" + adapt_var_perkm]) {
+                                const min_val = f[scenario + "_min_" + adapt_var_perkm];
+                                const max_val = f[scenario + "_max_" + adapt_var_perkm];
+
+                                return (
+                                  Math.floor(Math.max(min_val,max_val)) > Math.floor(Math.min(min_val,max_val)) ?
+                                      <td key={adapt_var_perkm}>{commas(Math.min(min_val,max_val).toFixed(0))} - {commas(Math.max(min_val,max_val).toFixed(0))}</td> :
+                                      <td key={adapt_var_perkm}>{commas(min_val.toFixed(0))}</td>
+                                );
                               } else {
                                 return (<td key={adapt_var_perkm}>-</td>)
                               }
@@ -468,7 +382,7 @@ const FeatureSidebar = (props) => {
         : null
       }
       {
-        (f.baseline_ini_adap_cost || f.future_med_ini_adap_cost || f.future_high_ini_adap_cost)?
+        (f.baseline_max_tot_adap_cost || f.rcp_4p5_max_tot_adap_cost || f.rcp_8p5_max_tot_adap_cost)?
           <details>
             <summary>Benefit-cost ratio estimates</summary>
             <BCRWidget
@@ -590,17 +504,18 @@ class BCRWidget extends React.Component {
         {
           this.props.scenarios.map(scenario => {
             // data from asset
-            const ead = f[`${scenario}_ead`];
+            const min_ead = f[`${scenario}_min_ead`];
+            const max_ead = f[`${scenario}_max_ead`];
             const min_eael_per_day = f[`${scenario}_min_eael_per_day`];
             const max_eael_per_day = f[`${scenario}_max_eael_per_day`];
-            const tot_adap_cost = f[`${scenario}_tot_adap_cost`];
+            const tot_adap_cost = f[`${scenario}_max_tot_adap_cost`];
 
-            if (!ead || !min_eael_per_day || !max_eael_per_day || !tot_adap_cost) {
+            if (!min_ead || !max_ead || !min_eael_per_day || !max_eael_per_day || !tot_adap_cost) {
               return null
             }
 
             const data = calculateAdaption(
-              ead, min_eael_per_day, max_eael_per_day, tot_adap_cost, duration, growth_rate)
+              (max_ead + min_ead) / 2.0, min_eael_per_day, max_eael_per_day, tot_adap_cost, duration, growth_rate)
 
             return <tr key={scenario}>
               <td>{titleCase(scenario.replace('_', ' '))}</td>
