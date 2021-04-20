@@ -460,7 +460,7 @@ class Map extends React.Component {
     const { map_style, dataLayers, tooltipLayerSources } = this.props
 
     return (
-      <Fragment>
+      <div className={this.props.className}>
         <div className="custom-map-control top-left">
           {
             (dataLayers.length)?
@@ -608,7 +608,7 @@ class Map extends React.Component {
         }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={this.mapContainer} className="map" />
-      </Fragment>
+      </div>
     );
   }
 }
