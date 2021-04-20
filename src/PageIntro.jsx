@@ -24,10 +24,12 @@ const PageIntro = () => (
 
   <table className="table table-sm table-striped">
     <thead>
-      <th>Infrastructure</th>
-      <th>Assets</th>
-      <th>Expected Annual Damages (EAD)</th>
-      <th>Expected Annual Economic Losses (EAEL)</th>
+      <tr>
+        <th>Infrastructure</th>
+        <th>Assets</th>
+        <th>Expected Annual Damages (EAD)</th>
+        <th>Expected Annual Economic Losses (EAEL)</th>
+      </tr>
     </thead>
     <tbody>
       <tr>
