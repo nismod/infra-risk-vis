@@ -202,7 +202,8 @@ class Map extends React.Component {
       this.map.setPaintProperty('roads_other', 'line-color', paint_color);
       this.map.setPaintProperty('motorway', 'line-color', paint_color);
 
-    } else {
+    }
+    if (map_style === 'rail' || map_style === 'electricity' ) {
       this.map.setPaintProperty(map_style, 'line-color', paint_color);
     }
   }
