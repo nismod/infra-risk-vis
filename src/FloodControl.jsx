@@ -35,7 +35,7 @@ const FloodControl = (props) => (
         className="form-check-label"
         htmlFor="scenarioRadio_rcp4p5"
         >
-        rcp 4.5
+        RCP 4.5
       </label>
     </div>
     <div className="form-check">
@@ -51,7 +51,7 @@ const FloodControl = (props) => (
         className="form-check-label"
         htmlFor="scenarioRadio_rcp8p5"
         >
-        rcp 8.5
+        RCP 8.5
       </label>
     </div>
 

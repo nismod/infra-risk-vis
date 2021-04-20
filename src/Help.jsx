@@ -19,7 +19,7 @@ const FloodHelp = () => (
       <dd>The estimated flooded depths and areas averaged over 1960-1999 based
       on historical rainfall records.</dd>
 
-      <dt>Future Median</dt>
+      <dt>RCP 4.5</dt>
 
       <dd>The estimated flooded depths and areas averaged over 2010-2049 based
       on global climate model outputs assuming global carbon emissions peak by
@@ -27,7 +27,7 @@ const FloodHelp = () => (
       from the UK Met Office Hadley Centre Global Environment Model version 2
       (HadGEM2-ES) model output, which is 1 of 5 models used in this study.</dd>
 
-      <dt>Future High</dt>
+      <dt>RCP 8.5</dt>
 
       <dd>The estimated flooded depths and areas averaged over 2010-2049
       based on global climate model outputs assuming global carbon emissions
@@ -145,8 +145,8 @@ const VietnamHelp = () => (
     </p>
 
     <ul>
-    <li>Cost - Net present value of maximum total adaptation investment in US$ for the road link over the years needed for eliminating climate risks</li>
-    <li>Benefit - Net present value of range of avoided risks in US$ for the road link over the years</li>
+    <li>Cost – Net present value of maximum total adaptation investment in US$ for the road link over the years needed for eliminating climate risks</li>
+    <li>Benefit – Net present value of range of avoided risks in US$ for the road link over the years</li>
     <li>Benefit-Cost Ratio – Benefit divided by the Cost</li>
     </ul>
   </div>
