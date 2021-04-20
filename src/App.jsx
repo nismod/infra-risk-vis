@@ -129,19 +129,18 @@ const App = () => {
           <div className="page-col-right">
             <RegionSummary region={region} />
           </div>
-          <div className="page-col-left">
-            <Map
-              map_style="regions"
-              dataSources={[
-                'admin1'
-              ]}
-              dataLayers={[]}
-              tooltipLayerSources={[
-                'admin1'
-              ]}
-              onRegionSelect={setRegion}
-              />
-          </div>
+          <Map
+            className="page-col-left"
+            map_style="regions"
+            dataSources={[
+              'admin1'
+            ]}
+            dataLayers={[]}
+            tooltipLayerSources={[
+              'admin1'
+            ]}
+            onRegionSelect={setRegion}
+            />
         </Route>
         <Route path="/">
           <PageIntro />
