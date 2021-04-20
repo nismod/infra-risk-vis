@@ -442,6 +442,10 @@ class Map extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.map.remove();
+  }
+
   onLayerVisChange(e) {
     const layer = e.target.dataset.layer
     if (e.target.checked) {
