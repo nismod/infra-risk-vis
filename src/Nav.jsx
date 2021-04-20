@@ -8,7 +8,7 @@ const Nav = () => (
     </NavLink>
     <ul className="navbar-nav mr-auto">
       <li className="nav-item">
-        <NavLink className="nav-link" to='/'>
+        <NavLink exact className="nav-link" to='/'>
           About
         </NavLink>
       </li>

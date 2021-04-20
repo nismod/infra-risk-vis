@@ -142,7 +142,7 @@ const App = () => {
             onRegionSelect={setRegion}
             />
         </Route>
-        <Route path="/">
+        <Route path="/" exact>
           <PageIntro />
         </Route>
       </Switch>
