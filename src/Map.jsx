@@ -127,10 +127,7 @@ class Map extends React.Component {
   }
 
   setRiskMetric(riskMetric) {
-    console.log(riskMetric);
-
     const map_style = this.props.map_style;
-    console.log(map_style);
     this.setState({
       riskMetric: riskMetric
     })
