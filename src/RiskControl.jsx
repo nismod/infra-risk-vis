@@ -62,7 +62,7 @@ const RiskControl = (props) => (
   <small>{labels[props.riskMetric]}</small>
   <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
+      <linearGradient id="risk_gradient" x1="0" x2="1" y1="0" y2="0">
         <stop offset="0%" stopColor="#fcfcb8" />
         <stop offset="20%" stopColor="#ff9c66" />
         <stop offset="40%" stopColor="#d03f6f" />
@@ -73,7 +73,7 @@ const RiskControl = (props) => (
     </defs>
     <g fill="none" fontSize="10" fontFamily="sans-serif">
     </g>
-    <rect x="2" y="0" width="258" height="10" fill="url(#gradient)"/>
+    <rect x="2" y="0" width="258" height="10" fill="url(#risk_gradient)"/>
     <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
       <g transform="translate(0.5,0)">
         <line stroke="currentColor" y2="3"></line>

@@ -479,7 +479,7 @@ class Map extends React.Component {
               <small>Max Total Expected Risk (EAD + EAEL for 30 day disruption, million US$)</small>
               <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
+                  <linearGradient id="summary_gradient" x1="0" x2="1" y1="0" y2="0">
                     <stop offset="0%" stopColor="#ffffff" />
                     <stop offset="12.5%" stopColor="#fee0d2" />
                     <stop offset="25%" stopColor="#fdc1a9" />
@@ -493,7 +493,7 @@ class Map extends React.Component {
                 </defs>
                 <g fill="none" fontSize="10" fontFamily="sans-serif">
                 </g>
-                <rect x="2" y="0" width="258" height="10" fill="url(#gradient)"/>
+                <rect x="2" y="0" width="258" height="10" fill="url(#summary_gradient)"/>
                 <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
                   <g transform="translate(0.5,0)">
                     <line stroke="currentColor" y2="3"></line>
@@ -579,6 +579,94 @@ class Map extends React.Component {
               <small>
                 Energy network data extracted from Gridfinder
               </small> : null
+          }
+          {
+            (map_style === 'hazards')?
+            <Fragment>
+            <small>Coastal flood depth (m)</small>
+            <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="coastal_gradient" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stopColor="#9df4b0" />
+                  <stop offset="100%" stopColor="#0b601d" />
+                </linearGradient>
+              </defs>
+              <g fill="none" fontSize="10" fontFamily="sans-serif">
+              </g>
+              <rect x="2" y="0" width="258" height="10" fill="url(#coastal_gradient)"/>
+              <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
+                <g transform="translate(0.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">0</text>
+                </g>
+                <g transform="translate(130,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">2.5</text>
+                </g>
+                <g transform="translate(257.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">5</text>
+                </g>
+              </g>
+            </svg>
+            <small>Fluvial flood depth (m)</small>
+            <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="fluvial_gradient" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stopColor="#58cced" />
+                  <stop offset="100%" stopColor="#072f5f" />
+                </linearGradient>
+              </defs>
+              <g fill="none" fontSize="10" fontFamily="sans-serif">
+              </g>
+              <rect x="2" y="0" width="258" height="10" fill="url(#fluvial_gradient)"/>
+              <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
+                <g transform="translate(0.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">0</text>
+                </g>
+                <g transform="translate(130,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">2.5</text>
+                </g>
+                <g transform="translate(257.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">5</text>
+                </g>
+              </g>
+            </svg>
+            <small>Cyclone gust speed (m/s)</small>
+            <svg width="270" height="25" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="cyclone_gradient" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stopColor="#ffffff" />
+                  <stop offset="50%" stopColor="#f9d5cb" />
+                  <stop offset="100%" stopColor="#d44118" />
+                </linearGradient>
+              </defs>
+              <g fill="none" fontSize="10" fontFamily="sans-serif">
+              </g>
+              <rect x="2" y="0" width="258" height="10" fill="url(#cyclone_gradient)"/>
+              <g fill="none" fontSize="10" transform="translate(2,10)" fontFamily="sans-serif" textAnchor="middle">
+                <g transform="translate(0.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">0</text>
+                </g>
+                <g transform="translate(130,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">25</text>
+                </g>
+                <g transform="translate(257.5,0)">
+                  <line stroke="currentColor" y2="3"></line>
+                  <text fill="currentColor" y="6" dy="0.71em">50</text>
+                </g>
+              </g>
+            </svg>
+            <a href="#help" data-help-topic="hazards" onClick={this.toggleHelp}>
+              { (this.state.showHelp && this.state.helpTopic === "hazards")? 'Hide info' : 'More info' }
+            </a>
+            </Fragment>
+            : null
           }
           {
             (tooltipLayerSources.includes('flood'))?
