@@ -1,27 +1,50 @@
 # OIA Risk Visualisation Tool
 
-This project provides interactive data visualisations of OIA risk analysis results.
+This project provides interactive data visualisations of risk analysis results.
 
-The tool presents the infrastructure systems and hazards considered in the analysis, then
-presents results as modelled for the whole system at a fine scale.
+The tool presents the infrastructure systems and hazards considered in the
+analysis, then presents results as modelled for the whole system at a fine
+scale.
 
-![Ports and airports](images/05-port-airport-flows.png)
+Summarise risk analysis at an admin-1 regional scale:
+
+![Nghe An summary](images/nghe-an.png)
+
+See an overview of infrastructure networks:
+
+![Networks](images/networks-all.png)
+
+Zoom in to see networks in detail:
+
+![Networks in detail](images/networks-zoom.png)
+
+See an overview of hazard data:
+
+![Hazards](images/hazards-all.png)
+
+Inspect details of hazard layers:
+
+![Hazards in detail](images/hazard-zoom.png)
 
 Query attributes of elements of the system:
 
-![System attributes](images/03-road-attributes.png)
+![System attributes](images/road-zoom-alt.png)
 
-Range of potential economic impact of failure:
+Range of potential economic impacts of failure, consisting of direct damages to
+infrastructure assets and indirect economic losses resulting from infrastructure
+service disruption (loss of power, loss of access):
 
-![Impact of flooding](images/06-impact.png)
+![Impact of flooding](images/risk-total.png)
 
-Cost-benefit analysis (under uncertainty, with options to explore some parameters) of
-adaptation measures:
+In the Vietnam case study (and in
+[version 0.1 of this tool](https://github.com/oi-analytics/oi-risk-vis/releases/tag/v0.1-argentina)
+showing analysis done in Argentina), explore a cost-benefit analysis (under
+uncertainty, with options to explore some parameters) of adaptation measures:
 
-![Cost-benefit analysis of adaptation measures](images/07-cost-benefit.png)
+![Cost-benefit analysis of adaptation measures](images/cost-benefit.png)
 
-This README covers requirements and steps through how to prepare data for visualisation and how
-to run the tool.
+This README covers requirements and steps through how to prepare data for
+visualisation and how to run the tool.
 
 1. Data preparation requirements
 2. Prepare data
@@ -33,15 +56,16 @@ to run the tool.
 
 ### ogr2ogr
 
-[ogr2ogr](https://www.gdal.org/ogr2ogr.html) is used for spatial data processing. On Ubuntu,
-run:
+[ogr2ogr](https://www.gdal.org/ogr2ogr.html) is used for spatial data
+processing. On Ubuntu, run:
 
     sudo apt-get install gdal-bin
 
 ### Tippecanoe
 
-The data preparation steps use [Mapbox tippecanoe](https://github.com/mapbox/tippecanoe) to
-build vector tiles from large feature sets.
+The data preparation steps use
+[Mapbox tippecanoe](https://github.com/mapbox/tippecanoe) to build vector tiles
+from large feature sets.
 
 The easiest way to install tippecanoe on OSX is with Homebrew:
 
@@ -58,12 +82,19 @@ On Ubuntu it will usually be easiest to build from the source repository:
 
 ## Prepare data
 
-For Argentina (for example) download `boundaries`, `network` and `flood_data` `usage` `results` from the OIA
-shared folder `302 Argentina/D Work Processes/Argentina/data/`.
+This step is not necessary if you already have a prepared set MBTiles files -
+the simplest option is to place them directly in the `/data` folder.
+
+Otherwise, to prepare results of analysis for visualisation in this tool, you
+will need to build a set of MBTiles files which contain the data as Mapbox
+Vector Tiles for the map visualisations, and a set of CSV files for the charts.
+
+Download `boundaries`, `network` and `flood_data` `usage` `results` from the
+shared folder.
 
 Either link to the synced/downloaded data directories:
 
-    ln -s 'path/to/OneDrive/Argentina/results' incoming_data/results
+    ln -s 'path/to/results' incoming_data/results
 
 Or unzip within `/incoming_data` folder:
 
@@ -78,15 +109,13 @@ Create the *.mbtiles files for visualisation:
 
     make
 
-Alternatively, download the prepared MBTiles files from `network_data_vis/Mbtiles_files` and
-unzip directly in the `/data` folder.
-
 
 ## Build and run requirements
 
 ### Node and npm
 
-The build and run steps use [node.js](https://nodejs.org/) - this provides the `npm` command.
+The build and run steps use [node.js](https://nodejs.org/) - this provides the
+`npm` command.
 
 Install required packages. Run from the project root:
 
@@ -94,8 +123,8 @@ Install required packages. Run from the project root:
 
 ## Run
 
-Running the application currently requires two (local) server processes: the tileserver and the
-app itself.
+Running the application currently requires two (local) server processes: the
+tileserver and the app itself.
 
 ### Run the tileserver
 
@@ -127,21 +156,23 @@ To build and deploy the site:
 - configure the server
 - upload frontend, data and config
 
-`npm run build` builds the frontend for deployment. This puts HTML/CSS/JS in the build folder,
-which can be served directly in production.
+`npm run build` builds the frontend for deployment. This puts HTML/CSS/JS in the
+build folder, which can be served directly in production.
 
-`provision.sh` contains installation instructions for an Ubuntu 18.04 server to install NGINX,
-setup SSL using CertBot, install node and tileserver-gl-light
+`provision.sh` contains installation instructions for an Ubuntu 18.04 server to
+install NGINX, setup SSL using CertBot, install node and tileserver-gl-light
 
 `config/` directory contains:
 
-- nginx config to serve frontend assets directly and proxy tile  requests to the tileserver
+- nginx config to serve frontend assets directly and proxy tile requests to the
+  tileserver
 - systemd service config to run the tileserver as a service
 
 `deploy.sh` uploads the build directory, data and tileserver config to a server,
 assuming that whoever runs the script has ssh/public key access.
 
-After changing map styles (any of the `*.json` files under `styles`), the tileserver should be
-restarted. Assuming that it has been setup as a systemd service, run:
+After changing map styles (any of the `*.json` files under `styles`), the
+tileserver should be restarted. Assuming that it has been setup as a systemd
+service, run:
 
     sudo service tileserver restart
