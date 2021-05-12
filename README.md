@@ -1,4 +1,4 @@
-# OIA Risk Visualisation Tool
+# Infrastructure Risk Visualisation Tool
 
 This project provides interactive data visualisations of risk analysis results.
 
@@ -176,3 +176,26 @@ tileserver should be restarted. Assuming that it has been setup as a systemd
 service, run:
 
     sudo service tileserver restart
+
+## Acknowledgements
+
+This tool has been developed through several projects.
+
+- [v0.1](https://github.com/oi-analytics/oi-risk-vis/releases/tag/v0.1-argentina)
+  was developed by Oxford Infrastructure Analytics for the Government of
+  Argentina with funding support from the World Bank Group and Global Facility
+  for Disaster Reduction and Recovery (GFDRR).
+- [v0.2](https://github.com/oi-analytics/oi-risk-vis/releases/tag/v0.2.0-seasia)
+  was developed by Oxford Infrastructure Analytics for the Disaster Risk
+  Financing and Insurance Program (DRFIP) of the World Bank with support from
+  the Japan&mdash;World Bank Program for Mainstreaming DRM in Developing
+  Countries, which is financed by the Government of Japan and managed by the
+  Global Facility for Disaster Reduction and Recovery (GFDRR) through the Tokyo
+  Disaster Risk Management Hub.
+- current development is by the Oxford Programme for Sustainable Infrastructure
+  Systems in the Environmental Change Institute, University of Oxford, for the
+  Government of Jamaica (GoJ) as part of a project funded by UK Aid (FCDO). The
+  initiative forms part of the Coalition for Climate Resilient Investment’s
+  (CCRI) collaboration with the GoJ, which also includes analysis of
+  nature-based approaches to build resilience in Jamaica to be procured and
+  funded by the Green Climate Fund (GCF).
