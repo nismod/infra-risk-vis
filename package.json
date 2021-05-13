@@ -4,11 +4,11 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.6.0",
-    "mapbox-gl": "^0.54.1",
+    "mapbox-gl": "^1.13.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.4",
+    "react-scripts": "^4.0.3",
     "react-vega": "^7.4.2",
     "tileserver-gl-light": "^3.1.1",
     "vega": "^5.19.1",
@@ -19,7 +19,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "tileserver": "tileserver-gl-light"
   },
   "eslintConfig": {
     "extends": "react-app"
