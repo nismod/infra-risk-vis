@@ -10,38 +10,8 @@ const Nav = () => (
         </NavLink>
       </li>
       <li className="nav-item">
-        <NavLink className="nav-link" to='/summary'>
-          Summary
-        </NavLink>
-      </li>
-      <li className="nav-item">
         <NavLink className="nav-link" to='/overview'>
           Infrastructure networks
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" to='/hazards'>
-          Hazards
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" to='/roads'>
-          Roads
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" to='/rail'>
-          Rail
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" to='/energy_network'>
-          Electricity
-        </NavLink>
-      </li>
-      <li className="nav-item">
-        <NavLink className="nav-link" to='/risk'>
-          Vietnam Case Study - Risk and Adaptation
         </NavLink>
       </li>
     </ul>

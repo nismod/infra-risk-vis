@@ -10,65 +10,11 @@
     "styles": {
       "overview": {
         "style": "overview.json"
-      },
-      "electricity": {
-        "style": "electricity.json"
-      },
-      "flood": {
-        "style": "flood.json"
-      },
-      "hazards": {
-        "style": "hazards.json"
-      },
-      "risk": {
-        "style": "risk.json"
-      },
-      "roads": {
-        "style": "roads.json"
-      },
-      "rail": {
-        "style": "rail.json"
-      },
-      "regions": {
-        "style": "regions.json"
       }
     },
     "data": {
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
-      },
-      "admin1": {
-        "mbtiles": "admin1.mbtiles"
-      },
-      "admin1_merged": {
-        "mbtiles": "admin1_merged.mbtiles"
-      },
-      "electricity": {
-        "mbtiles": "electricity.mbtiles"
-      },
-      "rail": {
-        "mbtiles": "rail.mbtiles"
-      },
-      "roads_main": {
-        "mbtiles": "roads_main.mbtiles"
-      },
-      "roads_other": {
-        "mbtiles": "roads_other.mbtiles"
-      },
-      "vietnam_roads": {
-        "mbtiles": "road_edges.mbtiles"
-      },
-      "flood": {
-        "mbtiles": "flood.mbtiles"
-      },
-      "coastal": {
-        "mbtiles": "coastal.mbtiles"
-      },
-      "fluvial": {
-        "mbtiles": "fluvial.mbtiles"
-      },
-      "cyclone": {
-        "mbtiles": "cyclone.mbtiles"
       }
     }
   }
