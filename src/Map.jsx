@@ -10,60 +10,7 @@ import Help from './Help'
 import FloodControl from './FloodControl'
 import NetworkControl from './NetworkControl';
 import RiskControl from './RiskControl';
-import { commas } from './helpers'
 
-/**
- * Process feature for tooltip/detail display
- *
- * Calculate damages     and losses
- *      in   USD         or  USD/day
- *      from USD million or  USD million / year
- * and save to features as formatted strings
- *
- * @param {object} f
- * @returns modified f
- */
-function processFeature(f) {
-  if (!f || !f.properties) {
-    return f
-  }
-  let ead_min_usd, ead_max_usd, eael_annual_usd;
-
-  if (f.source === 'electricity') {
-    if (f.properties.EAEL) {
-      // fix units - electricity EAEL is already in USD, everything else needs
-      // multiplying by 1e6 to convert from USDmillions
-      eael_annual_usd = f.properties.EAEL;
-    } else {
-      eael_annual_usd = 0
-    }
-    ead_min_usd = f.properties.EAD_min * 1e6 - eael_annual_usd;
-    ead_max_usd = f.properties.EAD_max * 1e6 - eael_annual_usd;
-  } else {
-    if (f.properties.EAEL) {
-      eael_annual_usd = f.properties.EAEL * 1e6;
-    } else {
-      eael_annual_usd = 0
-    }
-    ead_min_usd= f.properties.EAD_min * 1e6 - eael_annual_usd;
-    ead_max_usd= f.properties.EAD_max * 1e6 - eael_annual_usd;
-  }
-  // report daily indirect numbers
-  const eael_daily_usd = eael_annual_usd / 365;
-
-  if (f.properties.EAD_min) {
-    f.properties.EAD_min_usd = commas(ead_min_usd.toFixed(0))
-    f.properties.total_EAL_min_usd = commas((ead_min_usd + eael_daily_usd * 30).toFixed(0))
-  }
-  if (f.properties.EAD_max) {
-    f.properties.EAD_max_usd = commas(ead_max_usd.toFixed(0))
-    f.properties.total_EAL_max_usd = commas((ead_max_usd + eael_daily_usd * 30).toFixed(0))
-  }
-  if (f.properties.EAEL) {
-    f.properties.EAEL_daily_usd = commas(eael_daily_usd.toFixed(0))
-  }
-  return f
-}
 
 class Map extends React.Component {
   constructor(props) {
@@ -341,7 +288,7 @@ class Map extends React.Component {
       )? 'pointer' : '';
 
       tooltip.setLngLat(e.lngLat);
-      this.setTooltip(tooltipFeatures.map(processFeature));
+      this.setTooltip(tooltipFeatures);
     });
 
     this.map.on('click', (e) => {
@@ -372,7 +319,7 @@ class Map extends React.Component {
           }
         }
         this.setState({
-          selectedFeature: processFeature(feature)
+          selectedFeature: feature
         })
       }
     })
