@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import Nav from './Nav';
 import Map from './Map';
@@ -15,6 +16,7 @@ const App = () => (
     <Route path="/" component={Nav}/>
     <Switch>
       <Route path="/" exact>
+        <Toolbar />
         <PageIntro />
       </Route>
       <Route path="/overview">
