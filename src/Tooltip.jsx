@@ -1,5 +1,5 @@
 import React from 'react'
-import { commas, titleCase } from './helpers'
+import { titleCase } from './helpers'
 
 const Tooltip = (props) => {
   const entries = {}
