@@ -32,13 +32,8 @@ const PageIntro = () => (
     </TableHead>
     <TableBody>
       <TableRow>
-        <TableCell rowspan="2">Transport</TableCell>
-        <TableCell>Road links</TableCell>
-        <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
-        <TableCell>Rerouting costs + wider effects of service disruption</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>Railway tracks</TableCell>
+        <TableCell>Transport</TableCell>
+        <TableCell>Road links and railway tracks</TableCell>
         <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
         <TableCell>Rerouting costs + wider effects of service disruption</TableCell>
       </TableRow>
