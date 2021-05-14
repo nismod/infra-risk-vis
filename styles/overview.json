@@ -1,15 +1,46 @@
 {
   "version": 8,
   "name": "Overview",
-  "center": [105.12, 16.19],
+  "center": [-77.28, 18.14],
   "height": "600px",
-  "zoom": 5,
+  "zoom": 8,
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "boundaries": {
+    "light": {
+      "type": "raster",
+      "tiles": [
+        "https://tiles.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+        "https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+        "https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+        "https://c.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png",
+        "https://d.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
+      ],
+      "tileSize": 256
+    },
+    "road_edges": {
       "type": "vector",
-      "url": "mbtiles://{boundaries}"
+      "url": "mbtiles://{road_edges}"
+    },
+    "bridges": {
+      "type": "vector",
+      "url": "mbtiles://{bridges}"
+    },
+    "elec_edges": {
+      "type": "vector",
+      "url": "mbtiles://{elec_edges}"
+    },
+    "elec_nodes": {
+      "type": "vector",
+      "url": "mbtiles://{elec_nodes}"
+    },
+    "rail_edges": {
+      "type": "vector",
+      "url": "mbtiles://{rail_edges}"
+    },
+    "rail_nodes": {
+      "type": "vector",
+      "url": "mbtiles://{rail_nodes}"
     }
   },
   "glyphs": "{fontstack}/{range}.pbf",
@@ -22,49 +53,140 @@
       }
     },
     {
-      "id": "adminboundaries",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "WB_countries_Admin0",
-      "paint": {
-        "fill-color": "#eeeeee",
-        "fill-outline-color": "#fff"
-      }
+      "id": "light",
+      "type": "raster",
+      "source": "light"
     },
     {
-      "id": "disputedareas",
-      "type": "fill",
-      "source": "boundaries",
-      "source-layer": "WB_Admin0_disputed_areas",
-      "paint": {
-        "fill-color": "#e0e0e0",
-        "fill-outline-color": "#fff"
-      }
-    },
-    {
-      "id": "country_outlines",
+      "id": "elec_edges_high",
       "type": "line",
-      "source": "boundaries",
-      "source-layer": "WB_countries_Admin0",
-      "paint": {
-        "line-color": "#fff",
-        "line-width": 2,
-        "line-blur": 1
-      }
-    },
-    {
-      "id": "country_labels",
-      "type": "symbol",
-      "source": "boundaries",
-      "source-layer": "CNTR_LB_2020_4326",
+      "source": "elec_edges",
+      "source-layer": "elec_edges",
+      "minzoom": 3,
+      "filter": [
+        "==",
+        "High Voltage",
+        ["get", "line_type"]
+      ],
       "layout": {
-        "text-field": "{NAME_ENGL}",
-        "symbol-placement": "point"
+        "line-cap": "round",
+        "line-join": "round"
       },
       "paint": {
-        "text-color": "#222",
-        "text-halo-color": "#fff",
-        "text-halo-width": 2
+        "line-color": "#eca926",
+        "line-width": {
+          "base": 1,
+          "stops": [[7, 1], [12, 2], [16, 6]]
+        }
+      }
+    },
+    {
+      "id": "elec_edges_low",
+      "type": "line",
+      "source": "elec_edges",
+      "source-layer": "elec_edges",
+      "minzoom": 3,
+      "filter": [
+        "==",
+        "Low Voltage",
+        ["get", "line_type"]
+      ],
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#f1d75c",
+        "line-width": {
+          "base": 0.5,
+          "stops": [[7, 0.5], [12, 1], [16, 3]]
+        }
+      }
+    },
+    {
+      "id": "elec_nodes",
+      "type": "circle",
+      "source": "elec_nodes",
+      "source-layer": "elec_nodes",
+      "minzoom": 3,
+      "paint": {
+        "circle-color": "#eca926",
+        "circle-radius": {
+          "base": 1.5,
+          "stops": [[7, 3], [12, 4], [16, 12]]
+        }
+      }
+    },
+    {
+      "id": "rail_edges",
+      "type": "line",
+      "source": "rail_edges",
+      "source-layer": "rail_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#444",
+        "line-width": {
+          "base": 1.5,
+          "stops": [[7, 1.5], [12, 2], [16, 6]]
+        }
+      }
+    },
+    {
+      "id": "rail_nodes",
+      "type": "circle",
+      "source": "rail_nodes",
+      "source-layer": "rail_nodes",
+      "minzoom": 3,
+      "paint": {
+        "circle-color": "#444",
+        "circle-radius": {
+          "base": 1.5,
+          "stops": [[7, 3], [12, 4], [16, 12]]
+        }
+      }
+    },
+    {
+      "id": "road_edges",
+      "type": "line",
+      "source": "road_edges",
+      "source-layer": "road_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": [
+          "match",
+          ["get", "class"],
+          "CLASS A", "#941339",
+          "CLASS B", "#cb3e4e",
+          "CLASS C", "#8471a8",
+          "METRO", "#487dbc",
+          "#b2afaa"
+        ],
+        "line-width": {
+          "base": 0.5,
+          "stops": [[7, 1.5], [12, 2], [16, 6]]
+        }
+      }
+    },
+    {
+      "id": "bridges",
+      "type": "circle",
+      "source": "bridges",
+      "source-layer": "bridges",
+      "minzoom": 3,
+      "paint": {
+        "circle-color": "#487dbc",
+        "circle-radius": {
+          "base": 1.5,
+          "stops": [[7, 3], [12, 4], [16, 12]]
+        }
       }
     }
   ]
