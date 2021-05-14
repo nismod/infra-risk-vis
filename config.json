@@ -15,6 +15,24 @@
     "data": {
       "boundaries": {
         "mbtiles": "boundaries.mbtiles"
+      },
+      "road_edges": {
+        "mbtiles": "road_edges.mbtiles"
+      },
+      "bridges": {
+        "mbtiles": "bridges.mbtiles"
+      },
+      "elec_edges": {
+        "mbtiles": "elec_edges.mbtiles"
+      },
+      "elec_nodes": {
+        "mbtiles": "elec_nodes.mbtiles"
+      },
+      "rail_edges": {
+        "mbtiles": "rail_edges.mbtiles"
+      },
+      "rail_nodes": {
+        "mbtiles": "rail_nodes.mbtiles"
       }
     }
   }
