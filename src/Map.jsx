@@ -236,7 +236,8 @@ class Map extends React.Component {
 
   componentDidMount() {
     const { lng, lat, zoom } = this.state
-
+    const MAPBOX_KEY = 'pk.eyJ1IjoidG9tcnVzc2VsbCIsImEiOiJjaXZpMTFpdGkwMDQ1MnptcTh4ZzRzeXNsIn0.ZSvSOHSsWBQ44QNhA71M6Q';
+    mapboxgl.accessToken = MAPBOX_KEY;
     this.map = new mapboxgl.Map({
       container: this.mapContainer.current,
       style: `/styles/${this.props.map_style}/style.json`,
