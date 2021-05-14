@@ -363,7 +363,7 @@ class Map extends React.Component {
             "stops": [[3, 1], [10, 8], [17, 16]]
           }
         }
-      });
+      }, feature.sourceLayer);
     }
     if (feature.layer.type === 'circle') {
       this.map.addLayer({
@@ -377,7 +377,7 @@ class Map extends React.Component {
             "stops": [[3, 4], [10, 12], [17, 20]]
           }
         }
-      });
+      }, feature.sourceLayer);
     }
   }
 
