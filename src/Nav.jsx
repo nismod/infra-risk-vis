@@ -1,21 +1,35 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
-const Nav = () => (
-  <nav className="navbar navbar-height navbar-expand navbar-light">
-    <ul className="navbar-nav mr-auto">
-      <li className="nav-item">
+const useStyles = makeStyles();
+
+const Nav = () => {
+  const classes = useStyles();
+  return (
+    <AppBar position="fixed">
+      <Toolbar>
+        <Typography variant="h6" className={classes.title}>
+          <span className="nav-brand">
+          Infrastructure Risk Assessment
+          </span>
+        </Typography>
         <NavLink exact className="nav-link" to='/'>
-          About
+          <Typography variant="h6" className={classes.title}>
+            About
+          </Typography>
         </NavLink>
-      </li>
-      <li className="nav-item">
         <NavLink className="nav-link" to='/overview'>
-          Infrastructure networks
+          <Typography variant="h6" className={classes.title}>
+            Infrastructure networks
+          </Typography>
         </NavLink>
-      </li>
-    </ul>
-  </nav>
-)
+      </Toolbar>
+    </AppBar>
+  )
+}
 
 export default Nav

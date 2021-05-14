@@ -1,13 +1,15 @@
-import React, { Fragment } from 'react'
-import ReactDOM from 'react-dom'
-import PropTypes from 'prop-types'
-import mapboxgl from 'mapbox-gl'
+import React, { Fragment } from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
+import mapboxgl from 'mapbox-gl';
+import Drawer from '@material-ui/core/Drawer';
+import Toolbar from '@material-ui/core/Toolbar';
 
-import PositionControl from './PositionControl'
-import Tooltip from './Tooltip'
-import FeatureSidebar from './FeatureSidebar'
-import Help from './Help'
-import FloodControl from './FloodControl'
+import PositionControl from './PositionControl';
+import Tooltip from './Tooltip';
+import FeatureSidebar from './FeatureSidebar';
+import Help from './Help';
+import FloodControl from './FloodControl';
 import NetworkControl from './NetworkControl';
 import RiskControl from './RiskControl';
 
@@ -31,7 +33,8 @@ class Map extends React.Component {
       showHelp: false,
       duration: 30,
       growth_rate_percentage: 2.8,
-      riskMetric: 'total'
+      riskMetric: 'total',
+      layerVisibility: {}
     }
     this.map = undefined;
     this.mapContainer = React.createRef();
@@ -394,21 +397,25 @@ class Map extends React.Component {
   }
 
   onLayerVisChange(e) {
-    const layer = e.target.dataset.layer
+    const layer = e.target.value;
     if (e.target.checked) {
       this.map.setLayoutProperty(layer, 'visibility', 'visible')
     } else {
       this.map.setLayoutProperty(layer, 'visibility', 'none')
     }
+    const { layerVisibility } = this.state;
+    layerVisibility[layer] = e.target.checked;
+    this.setState({layerVisibility: layerVisibility});
   }
 
   render() {
-    const { lng, lat, zoom, selectedFeature } = this.state
-    const { map_style, dataLayers, tooltipLayerSources } = this.props
-
+    const { lng, lat, zoom, selectedFeature, layerVisibility } = this.state;
+    const { map_style, dataLayers, tooltipLayerSources } = this.props;
     return (
-      <div className={this.props.className}>
-        <div className="custom-map-control top-left">
+      <Fragment>
+        <Drawer variant="permanent">
+          <Toolbar />
+          <div className="drawer-contents">
           {
             (dataLayers.length)?
               <Fragment>
@@ -416,6 +423,7 @@ class Map extends React.Component {
                 <NetworkControl
                   onLayerVisChange={this.onLayerVisChange}
                   dataLayers={dataLayers}
+                  layerVisibility={layerVisibility}
                   />
               </Fragment>
             : null
@@ -629,8 +637,9 @@ class Map extends React.Component {
               </Fragment>
             : null
           }
-        </div>
-
+          </div>
+        </Drawer>
+        <div className="map-height">
         {
           (this.state.showHelp)?
             <Help topic={this.state.helpTopic} />
@@ -643,7 +652,8 @@ class Map extends React.Component {
         }
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={this.mapContainer} className="map" />
-      </div>
+        </div>
+      </Fragment>
     );
   }
 }

@@ -1,5 +1,13 @@
 import React from 'react';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
 const PageIntro = () => (
   <article>
   <h1>Jamaica Infrastructure Risk Assessment Tool</h1>
@@ -12,41 +20,43 @@ const PageIntro = () => (
   indirect economic loss estimation of GDP disruptions due to asset failures and
   service disruption.</p>
 
-  <table className="table table-sm table-striped">
-    <thead>
-      <tr>
-        <th>Infrastructure</th>
-        <th>Assets</th>
-        <th>Expected Annual Damages (EAD)</th>
-        <th>Expected Annual Economic Losses (EAEL)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td rowspan="2">Transport</td>
-        <td>Road links</td>
-        <td>Cost of rehabilitation/reinstating damaged assets</td>
-        <td>Rerouting costs + wider effects of service disruption</td>
-      </tr>
-      <tr>
-        <td>Railway tracks</td>
-        <td>Cost of rehabilitation/reinstating damaged assets</td>
-        <td>Rerouting costs + wider effects of service disruption</td>
-      </tr>
-      <tr>
-        <td>Energy</td>
-        <td>Electricity transmission and distribution grid: generation, lines and substations</td>
-        <td>Cost of rehabilitation/reinstating damaged assets</td>
-        <td>Wider effects of service disruption</td>
-      </tr>
-      <tr>
-        <td>Water</td>
-        <td>Water supply and wastewater networks, abstraction points, irrigation schemes</td>
-        <td>Cost of rehabilitation/reinstating damaged assets</td>
-        <td>Wider effects of service disruption</td>
-      </tr>
-    </tbody>
-  </table>
+  <TableContainer component={Paper}>
+  <Table aria-label="simple table">
+    <TableHead>
+      <TableRow>
+        <TableCell>Infrastructure</TableCell>
+        <TableCell>Assets</TableCell>
+        <TableCell>Expected Annual Damages (EAD)</TableCell>
+        <TableCell>Expected Annual Economic Losses (EAEL)</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      <TableRow>
+        <TableCell rowspan="2">Transport</TableCell>
+        <TableCell>Road links</TableCell>
+        <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
+        <TableCell>Rerouting costs + wider effects of service disruption</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Railway tracks</TableCell>
+        <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
+        <TableCell>Rerouting costs + wider effects of service disruption</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Energy</TableCell>
+        <TableCell>Electricity transmission and distribution grid: generation, lines and substations</TableCell>
+        <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
+        <TableCell>Wider effects of service disruption</TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell>Water</TableCell>
+        <TableCell>Water supply and wastewater networks, abstraction points, irrigation schemes</TableCell>
+        <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
+        <TableCell>Wider effects of service disruption</TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+  </TableContainer>
 
   <p>This tool to visualize the model outputs is developed and documented
   here:</p>

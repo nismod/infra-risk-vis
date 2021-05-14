@@ -1,27 +1,39 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
 
 const NetworkControl = (props) => (
   <Fragment>
     {
       props.dataLayers.map(layer_data => {
         const layer = layer_data.key;
-        const label = layer_data.label
+        const label = layer_data.label;
+        const checked = props.layerVisibility[layer];
         return (
-          <div className="form-check" key={'toggleLayer' + layer} >
-            <input className="form-check-input"
-              type="checkbox"
-              data-layer={layer}
-              defaultChecked={true}
-              id={'toggleLayerCheckbox' + layer}
-              onClick={props.onLayerVisChange}/>
-            <span
-              className={layer_data.linear? 'dot line': 'dot'}
-              style={{backgroundColor: layer_data.color}}></span>
-            <label className="form-check-label" htmlFor={'toggleLayerCheckbox' + layer}>
-              {label}
-            </label>
-          </div>
+          <FormGroup row key={'toggleLayer' + layer}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                data-layer={layer}
+                color="primary"
+                checked={checked}
+                value={layer}
+                name={'toggleLayerCheckbox' + layer}
+                onChange={props.onLayerVisChange} />
+            }
+            label={
+              <Fragment>
+                <span
+                  className={layer_data.linear? 'dot line': 'dot'}
+                  style={{backgroundColor: layer_data.color}}></span>
+                {label}
+              </Fragment>
+            }
+            >
+          </FormControlLabel>
+          </FormGroup>
         )
       })
     }

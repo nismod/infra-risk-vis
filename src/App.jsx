@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Nav from './Nav';
 import Map from './Map';
@@ -10,8 +11,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 const App = () => (
   <Router>
+    <CssBaseline />
     <Route path="/" component={Nav}/>
-    <main className="map-height">
     <Switch>
       <Route path="/" exact>
         <PageIntro />
@@ -44,7 +45,6 @@ const App = () => (
           />
       </Route>
     </Switch>
-    </main>
   </Router>
 )
 
