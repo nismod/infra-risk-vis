@@ -18,9 +18,9 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lng: props.lng || -77.24,
+      lng: props.lng || -77.28,
       lat: props.lat || 18.14,
-      zoom: props.zoom || 9,
+      zoom: props.zoom || 8,
       selectedFeature: undefined,
       scenario: 'baseline',
       floodtype: 'fluvial',
