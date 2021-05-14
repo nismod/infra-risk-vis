@@ -17,6 +17,11 @@ import RiskControl from './RiskControl';
 class Map extends React.Component {
   constructor(props) {
     super(props);
+    const layerVisibility = {};
+    for (const layer of props.dataLayers) {
+      layerVisibility[layer.key] = true;
+    }
+    console.log(layerVisibility)
     this.state = {
       lng: props.lng || -77.28,
       lat: props.lat || 18.14,
@@ -34,7 +39,7 @@ class Map extends React.Component {
       duration: 30,
       growth_rate_percentage: 2.8,
       riskMetric: 'total',
-      layerVisibility: {}
+      layerVisibility: layerVisibility
     }
     this.map = undefined;
     this.mapContainer = React.createRef();
