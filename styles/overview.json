@@ -18,11 +18,6 @@
       ],
       "tileSize": 256
     },
-    "satellite": {
-      "type": "raster",
-      "url": "mapbox://mapbox.satellite",
-      "tileSize": 256
-    },
     "road_edges": {
       "type": "vector",
       "url": "mbtiles://{road_edges}"
@@ -61,12 +56,6 @@
       "id": "light",
       "type": "raster",
       "source": "light"
-    },
-    {
-      "id": "satellite",
-      "type": "raster",
-      "source": "satellite",
-      "source-layer": "mapbox_satellite_full"
     },
     {
       "id": "elec_edges_high",
