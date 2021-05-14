@@ -28,7 +28,9 @@ const App = () => (
             'rail_edges',
             'rail_nodes',
             'elec_edges',
-            'elec_nodes'
+            'elec_nodes',
+            'pot_edges',
+            'abs_nodes'
           ]}
           dataLayers={[
             {key: 'road_edges', label: 'Roads', linear: true, color: "#b2afaa"},
@@ -38,6 +40,8 @@ const App = () => (
             {key: 'elec_edges_high', label: 'Power Lines (High Voltage)', linear: true, color: "#eca926"},
             {key: 'elec_edges_low', label: 'Power Lines (Low Voltage)', linear: true, color: "#f1d75c"},
             {key: 'elec_nodes', label: 'Power Nodes', color: "#eca926"},
+            {key: 'pot_edges', label: 'Water Supply Network', color: "#314386"},
+            {key: 'abs_nodes', label: 'Water Abstraction', color: "#4d49bc"},
           ]}
           tooltipLayerSources={[
             'road_edges',
@@ -45,7 +49,8 @@ const App = () => (
             'rail_edges',
             'rail_nodes',
             'elec_edges',
-            'elec_nodes'
+            'pot_edges',
+            'abs_nodes'
           ]}
           />
       </Route>

@@ -41,6 +41,14 @@
     "rail_nodes": {
       "type": "vector",
       "url": "mbtiles://{rail_nodes}"
+    },
+    "pot_edges": {
+      "type": "vector",
+      "url": "mbtiles://{pot_edges}"
+    },
+    "abs_nodes": {
+      "type": "vector",
+      "url": "mbtiles://{abs_nodes}"
     }
   },
   "glyphs": "{fontstack}/{range}.pbf",
@@ -183,6 +191,38 @@
       "minzoom": 3,
       "paint": {
         "circle-color": "#487dbc",
+        "circle-radius": {
+          "base": 1.5,
+          "stops": [[7, 3], [12, 4], [16, 12]]
+        }
+      }
+    },
+    {
+      "id": "pot_edges",
+      "type": "line",
+      "source": "pot_edges",
+      "source-layer": "pot_edges",
+      "minzoom": 3,
+      "layout": {
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "#314386",
+        "line-width": {
+          "base": 0.5,
+          "stops": [[7, 0.5], [12, 1], [16, 3]]
+        }
+      }
+    },
+    {
+      "id": "abs_nodes",
+      "type": "circle",
+      "source": "abs_nodes",
+      "source-layer": "abs_nodes",
+      "minzoom": 3,
+      "paint": {
+        "circle-color": "#4d49bc",
         "circle-radius": {
           "base": 1.5,
           "stops": [[7, 3], [12, 4], [16, 12]]

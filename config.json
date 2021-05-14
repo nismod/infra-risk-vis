@@ -33,6 +33,12 @@
       },
       "rail_nodes": {
         "mbtiles": "rail_nodes.mbtiles"
+      },
+      "pot_edges": {
+        "mbtiles": "pot_edges.mbtiles"
+      },
+      "abs_nodes": {
+        "mbtiles": "abs_nodes.mbtiles"
       }
     }
   }

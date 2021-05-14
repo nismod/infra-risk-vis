@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-all: ./data/rail_edges.mbtiles ./data/rail_nodes.mbtiles ./data/road_edges.mbtiles ./data/bridges.mbtiles ./data/elec_edges.mbtiles ./data/elec_nodes.mbtiles
+all: ./data/pot_edges.mbtiles ./data/abs_nodes.mbtiles ./data/rail_edges.mbtiles ./data/rail_nodes.mbtiles ./data/road_edges.mbtiles ./data/bridges.mbtiles ./data/elec_edges.mbtiles ./data/elec_nodes.mbtiles
 
 ./data/rail_edges.mbtiles:
 	tippecanoe \
@@ -48,6 +48,22 @@ all: ./data/rail_edges.mbtiles ./data/rail_nodes.mbtiles ./data/road_edges.mbtil
 		--output=./data/elec_nodes.mbtiles \
 		--layer=elec_nodes \
 		./intermediate_data/elec_nodes.json
+
+./data/pot_edges.mbtiles:
+	tippecanoe \
+		--minimum-zoom=3 \
+		--maximum-zoom=15 \
+		--drop-smallest-as-needed \
+		--output=./data/pot_edges.mbtiles \
+		--layer=pot_edges \
+		./intermediate_data/pot_edges.json
+
+./data/abs_nodes.mbtiles:
+	tippecanoe \
+		-zg \
+		--output=./data/abs_nodes.mbtiles \
+		--layer=abs_nodes \
+		./intermediate_data/abs_nodes.json
 
 clean:
 	rm -f ./data/*.mbtiles
