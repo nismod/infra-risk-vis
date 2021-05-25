@@ -1,11 +1,14 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
+import FormLabel from '@material-ui/core/FormLabel';
 
 const NetworkControl = (props) => (
-  <Fragment>
+  <FormControl component="fieldset">
+    <FormLabel component="legend">Infrastructure Layers</FormLabel>
     {
       props.dataLayers.map(layer_data => {
         const layer = layer_data.key;
@@ -37,7 +40,7 @@ const NetworkControl = (props) => (
         )
       })
     }
-  </Fragment>
+  </FormControl>
 )
 
 NetworkControl.propTypes = {
