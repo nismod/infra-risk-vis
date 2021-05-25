@@ -5,6 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 
+import BackgroundControl from './BackgroundControl';
 import PositionControl from './PositionControl';
 import Tooltip from './Tooltip';
 import FeatureSidebar from './FeatureSidebar';
@@ -39,13 +40,16 @@ class Map extends React.Component {
       duration: 30,
       growth_rate_percentage: 2.8,
       riskMetric: 'total',
-      layerVisibility: layerVisibility
+      layerVisibility: layerVisibility,
+      background: 'light'
     }
     this.map = undefined;
     this.mapContainer = React.createRef();
     this.tooltipContainer = undefined
 
     this.onLayerVisChange = this.onLayerVisChange.bind(this)
+    this.onBackgroundChange = this.onBackgroundChange.bind(this)
+
     this.setScenario = this.setScenario.bind(this)
     this.setFloodType = this.setFloodType.bind(this)
     this.setFloodLevel = this.setFloodLevel.bind(this)
@@ -414,8 +418,16 @@ class Map extends React.Component {
     this.setState({layerVisibility: layerVisibility});
   }
 
+  onBackgroundChange(e) {
+    const { background } = this.state;
+    const nextBackground = e.target.value;
+    this.map.setLayoutProperty(nextBackground, 'visibility', 'visible')
+    this.map.setLayoutProperty(background, 'visibility', 'none')
+    this.setState({background: nextBackground})
+  }
+
   render() {
-    const { lng, lat, zoom, selectedFeature, layerVisibility } = this.state;
+    const { lng, lat, zoom, selectedFeature, layerVisibility, background } = this.state;
     const { map_style, dataLayers, tooltipLayerSources } = this.props;
     return (
       <Fragment>
@@ -430,6 +442,10 @@ class Map extends React.Component {
                   onLayerVisChange={this.onLayerVisChange}
                   dataLayers={dataLayers}
                   layerVisibility={layerVisibility}
+                  />
+                <BackgroundControl
+                  onBackgroundChange={this.onBackgroundChange}
+                  background={background}
                   />
               </Fragment>
             : null
