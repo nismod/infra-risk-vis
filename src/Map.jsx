@@ -22,7 +22,6 @@ class Map extends React.Component {
     for (const layer of props.dataLayers) {
       layerVisibility[layer.key] = true;
     }
-    console.log(layerVisibility)
     this.state = {
       lng: props.lng || -77.28,
       lat: props.lat || 18.14,
@@ -328,7 +327,6 @@ class Map extends React.Component {
           // remove current highlight
           if (this.map.getLayer('featureHighlight')) {
             this.map.removeLayer('featureHighlight');
-            this.map.removeSource('featureHighlight');
           }
         }
         this.setState({
@@ -342,14 +340,20 @@ class Map extends React.Component {
     // remove current highlight
     if (this.map.getLayer('featureHighlight')) {
       this.map.removeLayer('featureHighlight');
-      this.map.removeSource('featureHighlight');
     }
 
     // add highlight layer
-    this.map.addSource('featureHighlight', {
-      "type":"geojson",
-      "data": feature.toJSON()
-    });
+    const source = this.map.getSource('featureHighlight');
+    if (source) {
+      source.setData(
+        feature.toJSON()
+      )
+    } else {
+      this.map.addSource('featureHighlight', {
+        "type":"geojson",
+        "data": feature.toJSON()
+      });
+    }
 
     if (feature.layer.type === 'line') {
       this.map.addLayer({
@@ -367,7 +371,7 @@ class Map extends React.Component {
             "stops": [[3, 1], [10, 8], [17, 16]]
           }
         }
-      }, feature.sourceLayer);
+      }, feature.layer.id);
     }
     if (feature.layer.type === 'circle') {
       this.map.addLayer({
@@ -381,7 +385,7 @@ class Map extends React.Component {
             "stops": [[3, 4], [10, 12], [17, 20]]
           }
         }
-      }, feature.sourceLayer);
+      }, feature.layer.id);
     }
   }
 
