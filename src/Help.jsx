@@ -1,16 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const Help = (props) => {
-  if (props.topic === 'flood') {
+const Help = ({ topic }) => {
+  if (topic === 'flood') {
     return <FloodHelp />;
   }
-  if (props.topic === 'vietnam') {
+  if (topic === 'vietnam') {
     return <VietnamHelp />;
   }
-  if (props.topic === 'hazards') {
+  if (topic === 'hazards') {
     return <HazardHelp />;
   }
   return null;
+};
+
+Help.propTypes = {
+  topic: PropTypes.string.isRequired,
 };
 
 const HazardHelp = () => (

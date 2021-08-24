@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -7,11 +8,11 @@ import { VegaLite } from 'react-vega';
 
 import { titleCase } from './helpers';
 
-const FeatureSidebar = (props) => {
-  if (!props.feature) {
+const FeatureSidebar = ({ feature }) => {
+  if (!feature) {
     return null;
   }
-  const f = props.feature.properties;
+  const f = feature.properties;
 
   return (
     <div className="custom-map-control top-right selected-feature">
@@ -61,6 +62,10 @@ const FeatureSidebar = (props) => {
       ) : null}
     </div>
   );
+};
+
+FeatureSidebar.propTypes = {
+  feature: PropTypes.object,
 };
 
 export default FeatureSidebar;

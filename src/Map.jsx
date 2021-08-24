@@ -685,8 +685,13 @@ class Map extends React.Component {
 
 Map.propTypes = {
   map_style: PropTypes.string.isRequired,
-  toggleableLayerIds: PropTypes.array,
-  clickableLayerAttributes: PropTypes.object,
+  lat: PropTypes.number,
+  lng: PropTypes.number,
+  zoom: PropTypes.number,
+  dataSources: PropTypes.array.isRequired,
+  dataLayers: PropTypes.array.isRequired,
+  tooltipLayerSources: PropTypes.array.isRequired,
+  onRegionSelect: PropTypes.func,
 };
 
 export default Map;

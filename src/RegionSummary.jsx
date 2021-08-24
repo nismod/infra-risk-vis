@@ -1,8 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { VegaLite } from 'react-vega';
 
-const RegionSummary = (props) => {
-  if (!props.region) {
+const RegionSummary = ({ region }) => {
+  if (!region) {
     return (
       <article>
         <h1>Region, Country</h1>
@@ -11,7 +12,7 @@ const RegionSummary = (props) => {
       </article>
     );
   }
-  const r = props.region;
+  const r = region;
   const disruption_fraction = 30 / 365;
   return (
     <article>
@@ -133,6 +134,10 @@ const RegionSummary = (props) => {
       </table>
     </article>
   );
+};
+
+RegionSummary.propTypes = {
+  region: PropTypes.object,
 };
 
 export default RegionSummary;

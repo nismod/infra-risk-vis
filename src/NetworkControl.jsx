@@ -6,13 +6,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 
-const NetworkControl = (props) => (
+const NetworkControl = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">Infrastructure Layers</FormLabel>
-    {props.dataLayers.map((layer_data) => {
+    {dataLayers.map((layer_data) => {
       const layer = layer_data.key;
       const label = layer_data.label;
-      const checked = props.layerVisibility[layer];
+      const checked = layerVisibility[layer];
       return (
         <FormGroup row key={'toggleLayer' + layer}>
           <FormControlLabel
@@ -23,7 +23,7 @@ const NetworkControl = (props) => (
                 checked={checked}
                 value={layer}
                 name={'toggleLayerCheckbox' + layer}
-                onChange={props.onLayerVisChange}
+                onChange={onLayerVisChange}
               />
             }
             label={
@@ -43,13 +43,14 @@ const NetworkControl = (props) => (
 );
 
 NetworkControl.propTypes = {
-  onLayerVisChange: PropTypes.func,
+  onLayerVisChange: PropTypes.func.isRequired,
   dataLayers: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string,
       label: PropTypes.string,
     }),
-  ),
+  ).isRequired,
+  layerVisibility: PropTypes.object.isRequired,
 };
 
 export default NetworkControl;

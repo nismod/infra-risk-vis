@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { titleCase } from './helpers';
 
-const Tooltip = (props) => {
+const Tooltip = ({ features }) => {
   const entries = {};
 
-  for (const f of props.features) {
+  for (const f of features) {
     let title = titleCase(
       f.sourceLayer.replace(/_/g, ' ').replace('edges', '').replace('nodes', '').replace('elec', 'electricity'),
     );
@@ -18,7 +19,7 @@ const Tooltip = (props) => {
     }
   }
 
-  return props.features.length ? (
+  return features.length ? (
     <div className="tooltip-wrap">
       <div className="tooltip-body">
         {Object.values(entries).map((entry, i) => {
@@ -35,6 +36,10 @@ const Tooltip = (props) => {
       <span className="tooltip-triangle"></span>
     </div>
   ) : null;
+};
+
+Tooltip.propTypes = {
+  features: PropTypes.array.isRequired,
 };
 
 export default Tooltip;
