@@ -12,11 +12,12 @@ const BackgroundControl = (props) => (
       aria-label="Map background"
       name="map_background"
       value={props.background}
-      onChange={props.onBackgroundChange}>
+      onChange={props.onBackgroundChange}
+    >
       <FormControlLabel value="light" control={<Radio />} label="Map" />
       <FormControlLabel value="satellite" control={<Radio />} label="Satellite" />
     </RadioGroup>
   </FormControl>
-)
+);
 
 export default BackgroundControl;

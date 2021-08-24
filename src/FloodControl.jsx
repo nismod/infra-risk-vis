@@ -9,16 +9,14 @@ const FloodControl = (props) => (
     <div className="form-check">
       <input
         className="form-check-input"
-        defaultChecked={true} type="radio"
+        defaultChecked={true}
+        type="radio"
         name="scenarioRadio"
         value="baseline"
         id="scenarioRadio_baseline"
         onClick={(e) => props.setScenario(e.target.value)}
-        />
-      <label
-        className="form-check-label"
-        htmlFor="scenarioRadio_baseline"
-        >
+      />
+      <label className="form-check-label" htmlFor="scenarioRadio_baseline">
         Baseline
       </label>
     </div>
@@ -30,11 +28,8 @@ const FloodControl = (props) => (
         value="rcp_4p5"
         id="scenarioRadio_rcp4p5"
         onClick={(e) => props.setScenario(e.target.value)}
-        />
-      <label
-        className="form-check-label"
-        htmlFor="scenarioRadio_rcp4p5"
-        >
+      />
+      <label className="form-check-label" htmlFor="scenarioRadio_rcp4p5">
         RCP 4.5
       </label>
     </div>
@@ -46,11 +41,8 @@ const FloodControl = (props) => (
         value="rcp_8p5"
         id="scenarioRadio_rcp8p5"
         onClick={(e) => props.setScenario(e.target.value)}
-        />
-      <label
-        className="form-check-label"
-        htmlFor="scenarioRadio_rcp8p5"
-        >
+      />
+      <label className="form-check-label" htmlFor="scenarioRadio_rcp8p5">
         RCP 8.5
       </label>
     </div>
@@ -65,15 +57,9 @@ const FloodControl = (props) => (
         value="_1m2m"
         id="floodLevelCheck_1m2m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
-        />
-      <span
-        className="dot"
-        style={{backgroundColor: "#58cced"}}>
-      </span>
-      <label
-        className="form-check-label"
-        htmlFor="floodLevelCheck_1m2m"
-        >
+      />
+      <span className="dot" style={{ backgroundColor: '#58cced' }}></span>
+      <label className="form-check-label" htmlFor="floodLevelCheck_1m2m">
         1m-2m
       </label>
     </div>
@@ -86,15 +72,9 @@ const FloodControl = (props) => (
         value="_2m3m"
         id="floodLevelCheck_2m3m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
-        />
-      <span
-        className="dot"
-        style={{backgroundColor: "#3895d3"}}>
-      </span>
-      <label
-        className="form-check-label"
-        htmlFor="floodLevelCheck_2m3m"
-        >
+      />
+      <span className="dot" style={{ backgroundColor: '#3895d3' }}></span>
+      <label className="form-check-label" htmlFor="floodLevelCheck_2m3m">
         2m-3m
       </label>
     </div>
@@ -107,15 +87,9 @@ const FloodControl = (props) => (
         value="_3m4m"
         id="floodLevelCheck_3m4m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
-        />
-      <span
-        className="dot"
-        style={{backgroundColor: "#1261a0"}}>
-      </span>
-      <label
-        className="form-check-label"
-        htmlFor="floodLevelCheck_3m4m"
-        >
+      />
+      <span className="dot" style={{ backgroundColor: '#1261a0' }}></span>
+      <label className="form-check-label" htmlFor="floodLevelCheck_3m4m">
         3m-4m
       </label>
     </div>
@@ -128,25 +102,19 @@ const FloodControl = (props) => (
         value="_4m999m"
         id="floodLevelCheck_4m999m"
         onClick={(e) => props.setFloodLevel(e.target.value, e.target.checked)}
-        />
-      <span
-        className="dot"
-        style={{backgroundColor: "#072f5f"}}>
-      </span>
-      <label
-        className="form-check-label"
-        htmlFor="floodLevelCheck_4m999m"
-        >
+      />
+      <span className="dot" style={{ backgroundColor: '#072f5f' }}></span>
+      <label className="form-check-label" htmlFor="floodLevelCheck_4m999m">
         &gt;4m
       </label>
     </div>
   </Fragment>
-)
+);
 
 FloodControl.propTypes = {
   setScenario: PropTypes.func,
   setFloodType: PropTypes.func,
-  setFloodLevel: PropTypes.func
-}
+  setFloodLevel: PropTypes.func,
+};
 
 export default FloodControl;

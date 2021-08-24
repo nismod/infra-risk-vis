@@ -79,7 +79,7 @@ article .alert {
   position: absolute;
   z-index: 999;
   background-color: #fff;
-  box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
   border-radius: 2px;
   padding: 5px;
   max-height: calc(100vh - 7rem);
@@ -106,7 +106,7 @@ article .alert {
 .custom-map-control.bottom-right {
   bottom: 39px;
   overflow: hidden;
-  font: 10px/20px Helvetica Neue,Arial,Helvetica,sans-serif;
+  font: 10px/20px Helvetica Neue, Arial, Helvetica, sans-serif;
   right: 10px;
 }
 .custom-map-control .h4 {
@@ -151,7 +151,7 @@ article .alert {
   height: 10px;
   border-radius: 50%;
   background: black;
-      background-color: black;
+  background-color: black;
   display: inline-block;
   margin-right: 5px;
   text-align: center;
@@ -166,7 +166,7 @@ article .alert {
   -webkit-align-items: center;
   align-items: center;
   -webkit-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
   position: absolute;
   bottom: 0;
 }
@@ -177,7 +177,7 @@ article .alert {
   padding: 12px;
   background-color: #273d56;
   border-radius: 4px;
-  box-shadow: 0 0 10px 2px rgba(31, 51, 73, 0.10);
+  box-shadow: 0 0 10px 2px rgba(31, 51, 73, 0.1);
 
   color: #fff;
   font-size: 12px;

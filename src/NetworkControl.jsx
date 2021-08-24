@@ -9,13 +9,12 @@ import FormLabel from '@material-ui/core/FormLabel';
 const NetworkControl = (props) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">Infrastructure Layers</FormLabel>
-    {
-      props.dataLayers.map(layer_data => {
-        const layer = layer_data.key;
-        const label = layer_data.label;
-        const checked = props.layerVisibility[layer];
-        return (
-          <FormGroup row key={'toggleLayer' + layer}>
+    {props.dataLayers.map((layer_data) => {
+      const layer = layer_data.key;
+      const label = layer_data.label;
+      const checked = props.layerVisibility[layer];
+      return (
+        <FormGroup row key={'toggleLayer' + layer}>
           <FormControlLabel
             control={
               <Checkbox
@@ -24,31 +23,33 @@ const NetworkControl = (props) => (
                 checked={checked}
                 value={layer}
                 name={'toggleLayerCheckbox' + layer}
-                onChange={props.onLayerVisChange} />
+                onChange={props.onLayerVisChange}
+              />
             }
             label={
               <Fragment>
                 <span
-                  className={layer_data.linear? 'dot line': 'dot'}
-                  style={{backgroundColor: layer_data.color}}></span>
+                  className={layer_data.linear ? 'dot line' : 'dot'}
+                  style={{ backgroundColor: layer_data.color }}
+                ></span>
                 {label}
               </Fragment>
             }
-            >
-          </FormControlLabel>
-          </FormGroup>
-        )
-      })
-    }
+          ></FormControlLabel>
+        </FormGroup>
+      );
+    })}
   </FormControl>
-)
+);
 
 NetworkControl.propTypes = {
   onLayerVisChange: PropTypes.func,
-  dataLayers: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    label: PropTypes.string
-  }))
-}
+  dataLayers: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      label: PropTypes.string,
+    }),
+  ),
+};
 
 export default NetworkControl;
