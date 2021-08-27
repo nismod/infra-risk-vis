@@ -14,7 +14,7 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         name="scenarioRadio"
         value="baseline"
         id="scenarioRadio_baseline"
-        onClick={(e) => setScenario(e.target.value)}
+        onClick={(e) => setScenario(e.currentTarget.value)}
       />
       <label className="form-check-label" htmlFor="scenarioRadio_baseline">
         Baseline
@@ -27,7 +27,7 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         name="scenarioRadio"
         value="rcp_4p5"
         id="scenarioRadio_rcp4p5"
-        onClick={(e) => setScenario(e.target.value)}
+        onClick={(e) => setScenario(e.currentTarget.value)}
       />
       <label className="form-check-label" htmlFor="scenarioRadio_rcp4p5">
         RCP 4.5
@@ -40,7 +40,7 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         name="scenarioRadio"
         value="rcp_8p5"
         id="scenarioRadio_rcp8p5"
-        onClick={(e) => setScenario(e.target.value)}
+        onClick={(e) => setScenario(e.currentTarget.value)}
       />
       <label className="form-check-label" htmlFor="scenarioRadio_rcp8p5">
         RCP 8.5
@@ -56,7 +56,7 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         name="floodLevelCheck"
         value="_1m2m"
         id="floodLevelCheck_1m2m"
-        onClick={(e) => setFloodLevel(e.target.value, e.target.checked)}
+        onClick={(e) => setFloodLevel(e.currentTarget.value, e.currentTarget.checked)}
       />
       <span className="dot" style={{ backgroundColor: '#58cced' }}></span>
       <label className="form-check-label" htmlFor="floodLevelCheck_1m2m">
@@ -71,7 +71,7 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         name="floodLevelCheck"
         value="_2m3m"
         id="floodLevelCheck_2m3m"
-        onClick={(e) => setFloodLevel(e.target.value, e.target.checked)}
+        onClick={(e) => setFloodLevel(e.currentTarget.value, e.currentTarget.checked)}
       />
       <span className="dot" style={{ backgroundColor: '#3895d3' }}></span>
       <label className="form-check-label" htmlFor="floodLevelCheck_2m3m">
@@ -86,7 +86,7 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         name="floodLevelCheck"
         value="_3m4m"
         id="floodLevelCheck_3m4m"
-        onClick={(e) => setFloodLevel(e.target.value, e.target.checked)}
+        onClick={(e) => setFloodLevel(e.currentTarget.value, e.currentTarget.checked)}
       />
       <span className="dot" style={{ backgroundColor: '#1261a0' }}></span>
       <label className="form-check-label" htmlFor="floodLevelCheck_3m4m">
@@ -101,7 +101,7 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         name="floodLevelCheck"
         value="_4m999m"
         id="floodLevelCheck_4m999m"
-        onClick={(e) => setFloodLevel(e.target.value, e.target.checked)}
+        onClick={(e) => setFloodLevel(e.currentTarget.value, e.currentTarget.checked)}
       />
       <span className="dot" style={{ backgroundColor: '#072f5f' }}></span>
       <label className="form-check-label" htmlFor="floodLevelCheck_4m999m">

@@ -5,10 +5,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import { VegaLite } from 'react-vega';
+import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
 import { titleCase } from './helpers';
 
-const FeatureSidebar = ({ feature }) => {
+const FeatureSidebar = ({ feature }: { feature: MapboxGeoJSONFeature }) => {
   if (!feature) {
     return null;
   }
@@ -18,7 +19,7 @@ const FeatureSidebar = ({ feature }) => {
     <div className="custom-map-control top-right selected-feature">
       <Typography variant="h6">Selected Asset</Typography>
       <pre style={{ display: 'none' }}>
-        <code>{JSON.stringify(f, '', 2)}</code>
+        <code>{JSON.stringify(f, null, 2)}</code>
       </pre>
       <List>
         {Object.entries(f).map(([key, value]) => (

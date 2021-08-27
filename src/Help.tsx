@@ -47,9 +47,9 @@ const HazardHelp = () => (
               WRI Aqueduct
             </a>
           </td>
-          <td rowSpan="2">1/2, 1/5, 1/10, 1/25, 1/50, 1/100, 1/250, 1/500, and 1/1000 </td>
-          <td rowSpan="2">Flood depths in meters over 30 arc second grid squares. </td>
-          <td rowSpan="2">
+          <td rowSpan={2}>1/2, 1/5, 1/10, 1/25, 1/50, 1/100, 1/250, 1/500, and 1/1000 </td>
+          <td rowSpan={2}>Flood depths in meters over 30 arc second grid squares. </td>
+          <td rowSpan={2}>
             <ul>
               <li>1 current and 5 future climate models</li>
               <li>RCP 4.5 and 8.5 emission scenarios</li>

@@ -19,7 +19,7 @@ const RiskControl = ({ riskMetric, setRiskMetric }) => (
         name="riskRadio"
         value="total"
         id="riskRadio_total"
-        onClick={(e) => setRiskMetric(e.target.value)}
+        onClick={(e) => setRiskMetric(e.currentTarget.value)}
       />
       <label className="form-check-label" htmlFor="riskRadio_total">
         {labels.total}
@@ -33,7 +33,7 @@ const RiskControl = ({ riskMetric, setRiskMetric }) => (
         name="riskRadio"
         value="EAD"
         id="riskRadio_EAD"
-        onClick={(e) => setRiskMetric(e.target.value)}
+        onClick={(e) => setRiskMetric(e.currentTarget.value)}
       />
       <label className="form-check-label" htmlFor="riskRadio_EAD">
         {labels.EAD}
@@ -47,7 +47,7 @@ const RiskControl = ({ riskMetric, setRiskMetric }) => (
         name="riskRadio"
         value="EAEL"
         id="riskRadio_EAEL"
-        onClick={(e) => setRiskMetric(e.target.value)}
+        onClick={(e) => setRiskMetric(e.currentTarget.value)}
       />
       <label className="form-check-label" htmlFor="riskRadio_EAEL">
         {labels.EAEL}

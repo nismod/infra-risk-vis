@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { titleCase } from './helpers';
+import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
-const Tooltip = ({ features }) => {
-  const entries = {};
+const Tooltip = ({ features }: { features: MapboxGeoJSONFeature[] }) => {
+  const entries: object = {};
 
   for (const f of features) {
     let title = titleCase(
@@ -11,11 +12,8 @@ const Tooltip = ({ features }) => {
     );
     let subtitle = f.properties.road_type ? '(' + f.properties.road_type + ')' : '';
 
-    let max_value;
-    let detail;
-
-    if (!entries[f.sourceLayer] || entries[f.sourceLayer].max_value < max_value) {
-      entries[f.sourceLayer] = { title, subtitle, max_value, detail };
+    if (!entries[f.sourceLayer]) {
+      entries[f.sourceLayer] = { title, subtitle };
     }
   }
 

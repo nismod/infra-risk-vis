@@ -1,6 +1,6 @@
 import React, { createRef, Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl, { Map, MapboxGeoJSONFeature } from 'mapbox-gl';
 import Drawer from '@material-ui/core/Drawer';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -99,7 +99,7 @@ function drawFeature(feature, map) {
   }
 }
 
-const Map = ({
+const InteractiveMap = ({
   lng: lngProp,
   lat: latProp,
   zoom: zoomProp,
@@ -113,7 +113,7 @@ const Map = ({
   const [lat, setLat] = useState(latProp ?? 18.14);
   const [zoom, setZoom] = useState(zoomProp ?? 8);
 
-  const [selectedFeature, setSelectedFeature] = useState();
+  const [selectedFeature, setSelectedFeature] = useState<MapboxGeoJSONFeature>();
   const [layerVisibility, setLayerVisibility] = useState(Object.fromEntries(dataLayers.map((dl) => [dl.key, true])));
 
   const [background, setBackground] = useState('light');
@@ -122,8 +122,8 @@ const Map = ({
   const [helpTopic, setHelpTopic] = useState();
 
   const [riskMetric, setRiskMetric] = useState('total');
-  const [duration, setDuration] = useState(30);
-  const [growth_rate_percentage, setGrowth_rate_percentage] = useState(2.8);
+  // const [duration, setDuration] = useState(30);
+  // const [growth_rate_percentage, setGrowth_rate_percentage] = useState(2.8);
 
   const [scenario, setScenario] = useState('baseline');
   const [floodlevel, setFloodLevel] = useState({
@@ -141,13 +141,15 @@ const Map = ({
     [floodlevel],
   );
 
-  const [map, setMap] = useState();
-  const mapContainerRef = createRef();
-  const tooltip = useRef();
+  const [map, setMap] = useState<Map>();
+  const mapContainerRef = createRef<HTMLDivElement>();
+  const tooltip = useRef<mapboxgl.Marker>();
   const tooltipContainerRef = useRef(document.createElement('div'));
-  const [tooltipFeatures, setTooltipFeatures] = useState();
+  const [tooltipFeatures, setTooltipFeatures] = useState<MapboxGeoJSONFeature[]>();
 
   useEffect(() => {
+    if (mapContainerRef.current == undefined) return;
+
     const newMap = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: `/styles/${map_style}/style.json`,
@@ -177,6 +179,7 @@ const Map = ({
   }, []);
 
   const onMapMove = useCallback(() => {
+    if (!map) return;
     const { lng, lat } = map.getCenter();
     setLat(lat);
     setLng(lng);
@@ -185,6 +188,8 @@ const Map = ({
 
   const onMapMouseMove = useCallback(
     (e) => {
+      if (!map) return;
+
       const features = map.queryRenderedFeatures(e.point);
 
       const clickableFeatures = features.filter((f) => dataSources.includes(f.source));
@@ -193,7 +198,7 @@ const Map = ({
 
       map.getCanvas().style.cursor = clickableFeatures.length || tooltipFeatures.length ? 'pointer' : '';
 
-      tooltip.current.setLngLat(e.lngLat);
+      tooltip.current?.setLngLat(e.lngLat);
       setTooltipFeatures(tooltipFeatures);
     },
     [dataSources, map, tooltipLayerSources],
@@ -201,6 +206,7 @@ const Map = ({
 
   const onMapClick = useCallback(
     (e) => {
+      if (!map) return;
       const features = map.queryRenderedFeatures(e.point);
       const clickableFeatures = features.filter((f) => dataSources.includes(f.source));
 
@@ -381,11 +387,6 @@ const Map = ({
     },
     [showHelp, helpTopic],
   );
-
-  const updateBCR = useCallback(({ duration, growth_rate_percentage }) => {
-    setDuration(duration);
-    setGrowth_rate_percentage(growth_rate_percentage);
-  }, []);
 
   const onBackgroundChange = useCallback(
     (e) => {
@@ -652,21 +653,19 @@ const Map = ({
         ) : (
           <FeatureSidebar
             feature={selectedFeature}
-            updateBCR={updateBCR}
-            duration={duration}
-            growth_rate_percentage={growth_rate_percentage}
+            // duration={duration}
+            // growth_rate_percentage={growth_rate_percentage}
           />
         )}
         <PositionControl lat={lat} lng={lng} zoom={zoom} />
         <div ref={mapContainerRef} className="map" />
       </div>
-      {tooltipFeatures &&
-        createPortal(<Tooltip features={tooltipFeatures} map_style={map_style}></Tooltip>, tooltipContainerRef.current)}
+      {tooltipFeatures && createPortal(<Tooltip features={tooltipFeatures}></Tooltip>, tooltipContainerRef.current)}
     </>
   );
 };
 
-Map.propTypes = {
+InteractiveMap.propTypes = {
   map_style: PropTypes.string.isRequired,
   lat: PropTypes.number,
   lng: PropTypes.number,
@@ -677,4 +676,4 @@ Map.propTypes = {
   onRegionSelect: PropTypes.func,
 };
 
-export default Map;
+export default InteractiveMap;

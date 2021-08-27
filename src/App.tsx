@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import Nav from './Nav';
-import Map from './Map';
+import InteractiveMap from './Map';
 import PageIntro from './PageIntro';
 
 import './index.css';
@@ -20,7 +20,7 @@ const App = () => (
         <PageIntro />
       </Route>
       <Route path="/overview">
-        <Map
+        <InteractiveMap
           map_style="overview"
           dataSources={[
             'road_edges',
