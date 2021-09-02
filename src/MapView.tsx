@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Drawer, Toolbar } from '@material-ui/core';
-import MapGL, { MapEvent, Marker } from 'react-map-gl';
+import MapGL, { MapEvent } from 'react-map-gl';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
 import FeatureSidebar from './FeatureSidebar';
@@ -30,12 +30,11 @@ export const MapView = () => {
   const [background, setBackground] = useState<'satellite' | 'light'>('light');
 
   const [hoveredFeatures, setHoveredFeatures] = useState<MapboxGeoJSONFeature[]>([]);
-  const [hoverPosition, setHoverPosition] = useState(null);
+  const [hoverLngLat, setHoverLngLat] = useState<[number, number]>(null);
   const handleMapHover = useCallback((e: MapEvent) => {
     setHoveredFeatures(e.features ?? []);
     if (e.features?.length) {
-      const [longitude, latitude] = e.lngLat;
-      setHoverPosition({ longitude, latitude });
+      setHoverLngLat(e.lngLat);
     }
   }, []);
 
@@ -89,9 +88,9 @@ export const MapView = () => {
           reuseMaps={true}
         >
           {hoveredFeatures.length !== 0 && (
-            <Marker {...hoverPosition} offsetLeft={-150}>
-              <MapTooltip features={hoveredFeatures} />
-            </Marker>
+            // <Marker {...hoverPosition} offsetLeft={-150}>
+            <MapTooltip features={hoveredFeatures} tooltipLngLat={hoverLngLat} />
+            // </Marker>
           )}
         </MapGL>
         {selectedFeatures.length !== 0 && <FeatureSidebar feature={selectedFeatures[0]} />}

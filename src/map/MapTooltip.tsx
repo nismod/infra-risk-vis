@@ -1,9 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 import { titleCase } from '../helpers';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
+import { Marker } from 'react-map-gl';
 
-const MapTooltip = ({ features }: { features: MapboxGeoJSONFeature[] }) => {
+interface MapTooltipProps {
+  features: MapboxGeoJSONFeature[];
+  tooltipLngLat: [number, number];
+}
+
+const MapTooltip: FC<MapTooltipProps> = ({ features, tooltipLngLat }) => {
   const entries: object = {};
 
   for (const f of features) {
@@ -17,27 +22,25 @@ const MapTooltip = ({ features }: { features: MapboxGeoJSONFeature[] }) => {
     }
   }
 
-  return features.length ? (
-    <div className="tooltip-wrap">
-      <div className="tooltip-body">
-        {Object.values(entries).map((entry, i) => {
-          return (
-            <div key={i}>
-              <strong>
-                {entry.title} {entry.subtitle}
-              </strong>
-              {entry.detail}
-            </div>
-          );
-        })}
+  return features.length && tooltipLngLat ? (
+    <Marker longitude={tooltipLngLat[0]} latitude={tooltipLngLat[1]} offsetLeft={-150}>
+      <div className="tooltip-wrap">
+        <div className="tooltip-body">
+          {Object.values(entries).map((entry, i) => {
+            return (
+              <div key={i}>
+                <strong>
+                  {entry.title} {entry.subtitle}
+                </strong>
+                {entry.detail}
+              </div>
+            );
+          })}
+        </div>
+        <span className="tooltip-triangle"></span>
       </div>
-      <span className="tooltip-triangle"></span>
-    </div>
+    </Marker>
   ) : null;
-};
-
-MapTooltip.propTypes = {
-  features: PropTypes.array.isRequired,
 };
 
 export default MapTooltip;
