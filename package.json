@@ -33,7 +33,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "tileserver": "tileserver-gl-light",
+    "tileserver": "tileserver-gl-light -c tileserver/config.json",
     "lint": "eslint src/**/*.{js,jsx}"
   },
   "browserslist": [
