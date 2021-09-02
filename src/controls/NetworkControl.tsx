@@ -23,7 +23,7 @@ const NetworkControl = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
                 checked={checked}
                 value={layer}
                 name={'toggleLayerCheckbox' + layer}
-                onChange={onLayerVisChange}
+                onChange={(e) => onLayerVisChange(e.target.value, e.target.checked)}
               />
             }
             label={

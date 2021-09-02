@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { titleCase } from './helpers';
+import { titleCase } from '../helpers';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
-const Tooltip = ({ features }: { features: MapboxGeoJSONFeature[] }) => {
+const MapTooltip = ({ features }: { features: MapboxGeoJSONFeature[] }) => {
   const entries: object = {};
 
   for (const f of features) {
@@ -36,8 +36,8 @@ const Tooltip = ({ features }: { features: MapboxGeoJSONFeature[] }) => {
   ) : null;
 };
 
-Tooltip.propTypes = {
+MapTooltip.propTypes = {
   features: PropTypes.array.isRequired,
 };
 
-export default Tooltip;
+export default MapTooltip;

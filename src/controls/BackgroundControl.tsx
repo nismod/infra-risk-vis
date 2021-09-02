@@ -9,7 +9,12 @@ import FormLabel from '@material-ui/core/FormLabel';
 const BackgroundControl = ({ background, onBackgroundChange }) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">Map Background</FormLabel>
-    <RadioGroup aria-label="Map background" name="map_background" value={background} onChange={onBackgroundChange}>
+    <RadioGroup
+      aria-label="Map background"
+      name="map_background"
+      value={background}
+      onChange={(e) => onBackgroundChange(e.target.value)}
+    >
       <FormControlLabel value="light" control={<Radio />} label="Map" />
       <FormControlLabel value="satellite" control={<Radio />} label="Satellite" />
     </RadioGroup>

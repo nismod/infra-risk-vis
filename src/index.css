@@ -23,21 +23,6 @@
 /**
  * Page layout
  */
-.page-col-left,
-.page-col-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-}
-.page-col-left {
-  left: 0;
-  right: 50%;
-}
-.page-col-right {
-  left: 50%;
-  right: 0;
-  overflow-y: scroll;
-}
 article {
   max-width: 50rem;
   padding: 1rem;
@@ -67,13 +52,6 @@ article .alert {
   left: 320px;
   right: 0;
   bottom: 0;
-}
-.map.mapboxgl-map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
 }
 .custom-map-control {
   position: absolute;
