@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
 
+import { LayerName, layers } from '../config/layers';
+import { ViewName, views } from '../config/views';
+
 /**
  * get map style and layers definition based on:
  * - selected background
@@ -8,8 +11,10 @@ import { useMemo } from 'react';
  * - any highlights / selections
  */
 
-interface MapParams {
+export interface MapParams {
   background: 'satellite' | 'light';
+  view: ViewName;
+  dataLayerSelection: Record<LayerName, boolean>;
 }
 
 function getMapSources() {
@@ -66,206 +71,11 @@ function getMapSources() {
   };
 }
 
-const overviewLayers = [
-  {
-    id: 'elec_edges_high',
-    type: 'line',
-    source: 'elec_edges',
-    'source-layer': 'elec_edges',
-    minzoom: 3,
-    filter: ['==', 'High Voltage', ['get', 'line_type']],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round',
-    },
-    paint: {
-      'line-color': '#eca926',
-      'line-width': {
-        base: 1,
-        stops: [
-          [7, 1],
-          [12, 2],
-          [16, 6],
-        ],
-      },
-    },
-  },
-  {
-    id: 'elec_edges_low',
-    type: 'line',
-    source: 'elec_edges',
-    'source-layer': 'elec_edges',
-    minzoom: 3,
-    filter: ['==', 'Low Voltage', ['get', 'line_type']],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round',
-    },
-    paint: {
-      'line-color': '#f1d75c',
-      'line-width': {
-        base: 0.5,
-        stops: [
-          [7, 0.5],
-          [12, 1],
-          [16, 3],
-        ],
-      },
-    },
-  },
-  {
-    id: 'elec_nodes',
-    type: 'circle',
-    source: 'elec_nodes',
-    'source-layer': 'elec_nodes',
-    minzoom: 3,
-    paint: {
-      'circle-color': '#eca926',
-      'circle-radius': {
-        base: 1.5,
-        stops: [
-          [7, 3],
-          [12, 4],
-          [16, 12],
-        ],
-      },
-    },
-  },
-  {
-    id: 'rail_edges',
-    type: 'line',
-    source: 'rail_edges',
-    'source-layer': 'rail_edges',
-    minzoom: 3,
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round',
-    },
-    paint: {
-      'line-color': '#444',
-      'line-width': {
-        base: 1.5,
-        stops: [
-          [7, 1.5],
-          [12, 2],
-          [16, 6],
-        ],
-      },
-    },
-  },
-  {
-    id: 'rail_nodes',
-    type: 'circle',
-    source: 'rail_nodes',
-    'source-layer': 'rail_nodes',
-    minzoom: 3,
-    paint: {
-      'circle-color': '#444',
-      'circle-radius': {
-        base: 1.5,
-        stops: [
-          [7, 3],
-          [12, 4],
-          [16, 12],
-        ],
-      },
-    },
-  },
-  {
-    id: 'road_edges',
-    type: 'line',
-    source: 'road_edges',
-    'source-layer': 'road_edges',
-    minzoom: 3,
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round',
-    },
-    paint: {
-      'line-color': [
-        'match',
-        ['get', 'class'],
-        'CLASS A',
-        '#941339',
-        'CLASS B',
-        '#cb3e4e',
-        'CLASS C',
-        '#8471a8',
-        'METRO',
-        '#487dbc',
-        '#b2afaa',
-      ],
-      'line-width': {
-        base: 0.5,
-        stops: [
-          [7, 1.5],
-          [12, 2],
-          [16, 6],
-        ],
-      },
-    },
-  },
-  {
-    id: 'bridges',
-    type: 'circle',
-    source: 'bridges',
-    'source-layer': 'bridges',
-    minzoom: 3,
-    paint: {
-      'circle-color': '#487dbc',
-      'circle-radius': {
-        base: 1.5,
-        stops: [
-          [7, 3],
-          [12, 4],
-          [16, 12],
-        ],
-      },
-    },
-  },
-  {
-    id: 'pot_edges',
-    type: 'line',
-    source: 'pot_edges',
-    'source-layer': 'pot_edges',
-    minzoom: 3,
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round',
-    },
-    paint: {
-      'line-color': '#314386',
-      'line-width': {
-        base: 0.5,
-        stops: [
-          [7, 0.5],
-          [12, 1],
-          [16, 3],
-        ],
-      },
-    },
-  },
-  {
-    id: 'abs_nodes',
-    type: 'circle',
-    source: 'abs_nodes',
-    'source-layer': 'abs_nodes',
-    minzoom: 3,
-    paint: {
-      'circle-color': '#4d49bc',
-      'circle-radius': {
-        base: 1.5,
-        stops: [
-          [7, 3],
-          [12, 4],
-          [16, 12],
-        ],
-      },
-    },
-  },
-];
+function visible(isVisible: boolean): 'visible' | 'none' {
+  return isVisible ? 'visible' : 'none';
+}
 
-function getMapLayers({ background }: MapParams) {
+function getMapLayers({ background, view, dataLayerSelection }: MapParams) {
   let res = [];
 
   res.push({
@@ -274,7 +84,7 @@ function getMapLayers({ background }: MapParams) {
     type: 'raster',
     'source-layer': 'mapbox_satellite_full',
     layout: {
-      visibility: background === 'satellite' ? 'visible' : 'none',
+      visibility: visible(background === 'satellite'),
     },
   });
 
@@ -283,12 +93,18 @@ function getMapLayers({ background }: MapParams) {
     source: 'light',
     type: 'raster',
     layout: {
-      visibility: background === 'light' ? 'visible' : 'none',
+      visibility: visible(background === 'light'),
     },
   });
 
-  res = res.concat(overviewLayers);
+  for (const layerName of views[view].layers) {
+    const layerStyle = layers[layerName].style;
 
+    // TODO: prevent overwriting layout from original style - perform deep merge instead
+    res.push({ ...layerStyle, layout: { visibility: visible(dataLayerSelection[layerName]) } });
+  }
+
+  // TODO: handle setting beforeId if needed
   // for (let i = 0; i < res.length - 1; i++) {
   //   res[i].beforeId = res[i + 1].id;
   // }

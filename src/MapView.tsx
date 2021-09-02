@@ -5,8 +5,12 @@ import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
 import FeatureSidebar from './FeatureSidebar';
 import MapTooltip from './map/MapTooltip';
-import { useMapContent } from './map/use-map-content';
+import { MapParams, useMapContent } from './map/use-map-content';
 import BackgroundControl from './controls/BackgroundControl';
+import NetworkControl from './controls/NetworkControl';
+import { useLayerSelection } from './controls/use-layer-selection';
+import { ViewName, views } from './config/views';
+import { LayerName, layers } from './config/layers';
 
 const viewportLimits = {
   minZoom: 3,
@@ -29,8 +33,10 @@ export const MapView = () => {
   const [hoverPosition, setHoverPosition] = useState(null);
   const handleMapHover = useCallback((e: MapEvent) => {
     setHoveredFeatures(e.features ?? []);
-    const [longitude, latitude] = e.lngLat;
-    setHoverPosition({ longitude, latitude });
+    if (e.features?.length) {
+      const [longitude, latitude] = e.lngLat;
+      setHoverPosition({ longitude, latitude });
+    }
   }, []);
 
   const [selectedFeatures, setSelectedFeatures] = useState<MapboxGeoJSONFeature[]>([]);
@@ -38,7 +44,20 @@ export const MapView = () => {
     setSelectedFeatures(e.features ?? []);
   }, []);
 
-  const mapContentParams = useMemo(() => ({ background }), [background]);
+  const [view] = useState<ViewName>('overview');
+
+  const viewLayerNames = useMemo<LayerName[]>(() => views[view].layers as LayerName[], [view]);
+  const layerDefinitions = useMemo(
+    () => viewLayerNames.map((layerName) => ({ ...layers[layerName], key: layerName })),
+    [viewLayerNames],
+  );
+
+  const { layerSelection, updateLayerSelection } = useLayerSelection(viewLayerNames);
+
+  const mapContentParams = useMemo<MapParams>(
+    () => ({ background, view, dataLayerSelection: layerSelection }),
+    [background, view, layerSelection],
+  );
   const mapContent = useMapContent(mapContentParams);
 
   return (
@@ -46,6 +65,11 @@ export const MapView = () => {
       <Drawer variant="permanent">
         <Toolbar /> {/* Prevents app bar from concealing content*/}
         <div className="drawer-contents">
+          <NetworkControl
+            dataLayers={layerDefinitions}
+            layerVisibility={layerSelection}
+            onLayerVisChange={updateLayerSelection}
+          />
           <BackgroundControl background={background} onBackgroundChange={setBackground} />
         </div>
       </Drawer>

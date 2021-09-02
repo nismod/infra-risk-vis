@@ -1,39 +1,44 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormLabel from '@material-ui/core/FormLabel';
+import { LayerDefinition, LayerName } from '../config/layers';
 
-const NetworkControl = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
+interface NetworkControlProps {
+  dataLayers: (LayerDefinition & { key: LayerName })[];
+  layerVisibility: Record<LayerName, boolean>;
+  onLayerVisChange: (layerName: LayerName, visibility: boolean) => void;
+}
+const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">Infrastructure Layers</FormLabel>
-    {dataLayers.map((layer_data) => {
-      const layer = layer_data.key;
-      const label = layer_data.label;
-      const checked = layerVisibility[layer];
+    {dataLayers.map((layerData) => {
+      const layerName = layerData.key;
+      const label = layerData.label;
+      const checked = layerVisibility[layerName];
       return (
-        <FormGroup row key={'toggleLayer' + layer}>
+        <FormGroup row key={'toggleLayer' + layerName}>
           <FormControlLabel
             control={
               <Checkbox
-                data-layer={layer}
+                data-layer={layerName}
                 color="primary"
                 checked={checked}
-                value={layer}
-                name={'toggleLayerCheckbox' + layer}
-                onChange={(e) => onLayerVisChange(e.target.value, e.target.checked)}
+                value={layerName}
+                name={'toggleLayerCheckbox' + layerName}
+                onChange={(e) => onLayerVisChange(e.target.value as LayerName, e.target.checked)}
               />
             }
             label={
-              <Fragment>
+              <>
                 <span
-                  className={layer_data.linear ? 'dot line' : 'dot'}
-                  style={{ backgroundColor: layer_data.color }}
+                  className={layerData.linear ? 'dot line' : 'dot'}
+                  style={{ backgroundColor: layerData.color }}
                 ></span>
                 {label}
-              </Fragment>
+              </>
             }
           ></FormControlLabel>
         </FormGroup>
@@ -41,16 +46,5 @@ const NetworkControl = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
     })}
   </FormControl>
 );
-
-NetworkControl.propTypes = {
-  onLayerVisChange: PropTypes.func.isRequired,
-  dataLayers: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string,
-      label: PropTypes.string,
-    }),
-  ).isRequired,
-  layerVisibility: PropTypes.object.isRequired,
-};
 
 export default NetworkControl;
