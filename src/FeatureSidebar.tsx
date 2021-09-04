@@ -23,7 +23,7 @@ const FeatureSidebar = ({ feature }: { feature: MapboxGeoJSONFeature }) => {
       </pre>
       <List>
         {Object.entries(f).map(([key, value]) => (
-          <ListItem>
+          <ListItem key={key}>
             <ListItemText
               primary={titleCase(key.replace(/_/g, ' '))}
               primaryTypographyProps={{ variant: 'caption' }}

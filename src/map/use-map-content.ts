@@ -1,3 +1,4 @@
+import { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { useMemo } from 'react';
 
 import { LayerName, layers } from '../config/layers';
@@ -15,10 +16,11 @@ export interface MapParams {
   background: 'satellite' | 'light';
   view: ViewName;
   dataLayerSelection: Record<LayerName, boolean>;
+  highlightedFeature: MapboxGeoJSONFeature;
 }
 
-function getMapSources() {
-  return {
+function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
+  const res = {
     satellite: {
       type: 'raster',
       url: 'mapbox://mapbox.satellite',
@@ -69,13 +71,15 @@ function getMapSources() {
       url: 'http://localhost:8080/data/abs_nodes.json',
     },
   };
+
+  return res;
 }
 
 function visible(isVisible: boolean): 'visible' | 'none' {
   return isVisible ? 'visible' : 'none';
 }
 
-function getMapLayers({ background, view, dataLayerSelection }: MapParams) {
+function getMapLayers({ background, view, dataLayerSelection, highlightedFeature }: MapParams) {
   let res = [];
 
   res.push({
@@ -97,8 +101,67 @@ function getMapLayers({ background, view, dataLayerSelection }: MapParams) {
     },
   });
 
+  let highlightLayer: object;
+  let highlightedLayerName: string;
+  if (highlightedFeature) {
+    const layer = highlightedFeature.layer;
+
+    let visualStyle: object;
+
+    if (layer.type === 'line') {
+      visualStyle = {
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': 'yellow',
+          'line-width': {
+            base: 1,
+            stops: [
+              [3, 1],
+              [10, 8],
+              [17, 16],
+            ],
+          },
+        },
+      };
+    } else if (layer.type === 'circle') {
+      visualStyle = {
+        paint: {
+          'circle-color': 'yellow',
+          'circle-radius': {
+            base: 1,
+            stops: [
+              [3, 4],
+              [10, 12],
+              [17, 20],
+            ],
+          },
+        },
+      };
+    }
+    if (visualStyle) {
+      highlightedLayerName = layer.id;
+      highlightLayer = {
+        id: `feature-highlight-${highlightedFeature.id}`,
+        // source: 'feature-highlight',
+        source: layer.source,
+        'source-layer': layer['source-layer'],
+        type: layer.type,
+        // beforeId: layer.id,
+        filter: ['==', ['id'], highlightedFeature.id],
+        ...visualStyle,
+      };
+    }
+  }
+
   for (const layerName of views[view].layers) {
     const layerStyle = layers[layerName].style;
+
+    if (layerName === highlightedLayerName) {
+      res.push(highlightLayer);
+    }
 
     // TODO: prevent overwriting layout from original style - perform deep merge instead
     res.push({ ...layerStyle, layout: { visibility: visible(dataLayerSelection[layerName]) } });
@@ -113,7 +176,8 @@ function getMapLayers({ background, view, dataLayerSelection }: MapParams) {
 }
 
 export function useMapContent(params: MapParams) {
-  const sources = useMemo(() => getMapSources(), []);
+  const { highlightedFeature } = params;
+  const sources = useMemo(() => getMapSources(highlightedFeature), [highlightedFeature]);
   const layers = useMemo(() => getMapLayers(params), [params]);
 
   const res = useMemo(

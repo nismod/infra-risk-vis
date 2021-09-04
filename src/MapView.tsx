@@ -11,6 +11,7 @@ import NetworkControl from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, views } from './config/views';
 import { LayerName, layers } from './config/layers';
+import { MapStyle } from './map/MapStyle';
 
 const viewportLimits = {
   minZoom: 3,
@@ -54,8 +55,8 @@ export const MapView = () => {
   const { layerSelection, updateLayerSelection } = useLayerSelection(viewLayerNames);
 
   const mapContentParams = useMemo<MapParams>(
-    () => ({ background, view, dataLayerSelection: layerSelection }),
-    [background, view, layerSelection],
+    () => ({ background, view, dataLayerSelection: layerSelection, highlightedFeature: selectedFeatures?.[0] }),
+    [background, view, layerSelection, selectedFeatures],
   );
   const mapContent = useMapContent(mapContentParams);
 
@@ -84,14 +85,10 @@ export const MapView = () => {
           touchRotate={false}
           onHover={handleMapHover}
           onClick={handleMapClick}
-          mapStyle={mapContent}
           reuseMaps={true}
         >
-          {hoveredFeatures.length !== 0 && (
-            // <Marker {...hoverPosition} offsetLeft={-150}>
-            <MapTooltip features={hoveredFeatures} tooltipLngLat={hoverLngLat} />
-            // </Marker>
-          )}
+          <MapStyle mapStyle={mapContent} />
+          {hoveredFeatures.length !== 0 && <MapTooltip features={hoveredFeatures} tooltipLngLat={hoverLngLat} />}
         </MapGL>
         {selectedFeatures.length !== 0 && <FeatureSidebar feature={selectedFeatures[0]} />}
       </div>
