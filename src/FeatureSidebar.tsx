@@ -1,15 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import React, { FC } from 'react';
 import { VegaLite } from 'react-vega';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
+import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
 
 import { titleCase } from './helpers';
 
-const FeatureSidebar = ({ feature }: { feature: MapboxGeoJSONFeature }) => {
+interface FeatureSidebarProps {
+  feature: MapboxGeoJSONFeature;
+}
+
+export const FeatureSidebar: FC<FeatureSidebarProps> = ({ feature }) => {
   if (!feature) {
     return null;
   }
@@ -64,9 +64,3 @@ const FeatureSidebar = ({ feature }: { feature: MapboxGeoJSONFeature }) => {
     </div>
   );
 };
-
-FeatureSidebar.propTypes = {
-  feature: PropTypes.object,
-};
-
-export default FeatureSidebar;

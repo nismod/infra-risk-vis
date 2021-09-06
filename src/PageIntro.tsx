@@ -1,14 +1,7 @@
 import React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-
-const PageIntro = () => (
+export const PageIntro = () => (
   <article>
     <h1>Jamaica Infrastructure Risk Assessment Tool</h1>
 
@@ -84,5 +77,3 @@ const PageIntro = () => (
     </p>
   </article>
 );
-
-export default PageIntro;

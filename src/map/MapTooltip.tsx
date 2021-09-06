@@ -1,14 +1,15 @@
 import React, { FC } from 'react';
-import { titleCase } from '../helpers';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { Marker } from 'react-map-gl';
+
+import { titleCase } from '../helpers';
 
 interface MapTooltipProps {
   features: MapboxGeoJSONFeature[];
   tooltipLngLat: [number, number];
 }
 
-const MapTooltip: FC<MapTooltipProps> = ({ features, tooltipLngLat }) => {
+export const MapTooltip: FC<MapTooltipProps> = ({ features, tooltipLngLat }) => {
   const entries: object = {};
 
   for (const f of features) {
@@ -42,5 +43,3 @@ const MapTooltip: FC<MapTooltipProps> = ({ features, tooltipLngLat }) => {
     </Marker>
   ) : null;
 };
-
-export default MapTooltip;

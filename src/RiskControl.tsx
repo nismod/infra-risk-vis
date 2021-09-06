@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, Fragment } from 'react';
 
 const labels = {
   EAEL: 'Expected Annual Economic Losses (EAEL, million US$)',
@@ -7,7 +6,12 @@ const labels = {
   total: 'Max Total Expected Risk (Max EAD + EAEL for 30 day disruption, million US$)',
 };
 
-const RiskControl = ({ riskMetric, setRiskMetric }) => (
+interface RiskControlProps {
+  riskMetric: string;
+  setRiskMetric: (riskMetric: string) => void;
+}
+
+export const RiskControl: FC<RiskControlProps> = ({ riskMetric, setRiskMetric }) => (
   <Fragment>
     <br />
     <h3 className="h4">Select risk metric</h3>
@@ -115,10 +119,3 @@ const RiskControl = ({ riskMetric, setRiskMetric }) => (
     </svg>
   </Fragment>
 );
-
-RiskControl.propTypes = {
-  riskMetric: PropTypes.string.isRequired,
-  setRiskMetric: PropTypes.func.isRequired,
-};
-
-export default RiskControl;

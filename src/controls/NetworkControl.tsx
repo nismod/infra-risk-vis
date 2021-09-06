@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormLabel from '@material-ui/core/FormLabel';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel } from '@material-ui/core';
+
 import { LayerDefinition, LayerName } from '../config/layers';
 
 interface NetworkControlProps {
@@ -11,7 +8,8 @@ interface NetworkControlProps {
   layerVisibility: Record<LayerName, boolean>;
   onLayerVisChange: (layerName: LayerName, visibility: boolean) => void;
 }
-const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
+
+export const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
   <FormControl component="fieldset">
     <FormLabel component="legend">Infrastructure Layers</FormLabel>
     {dataLayers.map((layerData) => {
@@ -46,5 +44,3 @@ const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisibility, 
     })}
   </FormControl>
 );
-
-export default NetworkControl;

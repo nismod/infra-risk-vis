@@ -3,11 +3,11 @@ import { Drawer, Toolbar } from '@material-ui/core';
 import MapGL, { MapEvent } from 'react-map-gl';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
-import FeatureSidebar from './FeatureSidebar';
-import MapTooltip from './map/MapTooltip';
+import { FeatureSidebar } from './FeatureSidebar';
+import { MapTooltip } from './map/MapTooltip';
 import { MapParams, useMapContent } from './map/use-map-content';
-import BackgroundControl from './controls/BackgroundControl';
-import NetworkControl from './controls/NetworkControl';
+import { BackgroundControl } from './controls/BackgroundControl';
+import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, views } from './config/views';
 import { LayerName, layers } from './config/layers';

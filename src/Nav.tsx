@@ -1,10 +1,8 @@
 import React from 'react';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 
-const Nav = () => {
+export const Nav = () => {
   return (
     <AppBar position="fixed">
       <Toolbar>
@@ -21,5 +19,3 @@ const Nav = () => {
     </AppBar>
   );
 };
-
-export default Nav;

@@ -1,8 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 import { VegaLite } from 'react-vega';
 
-const RegionSummary = ({ region }) => {
+interface RegionSummaryProps {
+  region: any;
+}
+
+export const RegionSummary: FC<RegionSummaryProps> = ({ region }) => {
   if (!region) {
     return (
       <article>
@@ -135,9 +138,3 @@ const RegionSummary = ({ region }) => {
     </article>
   );
 };
-
-RegionSummary.propTypes = {
-  region: PropTypes.object,
-};
-
-export default RegionSummary;

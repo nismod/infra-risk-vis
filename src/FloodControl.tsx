@@ -1,8 +1,12 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC } from 'react';
 
-const FloodControl = ({ setScenario, setFloodLevel }) => (
-  <Fragment>
+interface FloodControlProps {
+  setScenario: (scenario: any) => void;
+  setFloodLevel: (floodLevel: any, checked: boolean) => void;
+}
+
+export const FloodControl: FC<FloodControlProps> = ({ setScenario, setFloodLevel }) => (
+  <>
     <br />
     <h3 className="h4">Flood layers</h3>
     <h4 className="h5">Climate Scenario</h4>
@@ -108,13 +112,5 @@ const FloodControl = ({ setScenario, setFloodLevel }) => (
         &gt;4m
       </label>
     </div>
-  </Fragment>
+  </>
 );
-
-FloodControl.propTypes = {
-  setScenario: PropTypes.func.isRequired,
-  setFloodType: PropTypes.func.isRequired,
-  setFloodLevel: PropTypes.func.isRequired,
-};
-
-export default FloodControl;
