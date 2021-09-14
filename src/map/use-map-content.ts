@@ -2,6 +2,7 @@ import { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { useMemo } from 'react';
 
 import { LayerName, layers } from '../config/layers';
+import { BackgroundName } from '../config/types';
 import { ViewName, views } from '../config/views';
 
 /**
@@ -13,7 +14,7 @@ import { ViewName, views } from '../config/views';
  */
 
 export interface MapParams {
-  background: 'satellite' | 'light';
+  background: BackgroundName;
   view: ViewName;
   dataLayerSelection: Record<LayerName, boolean>;
   highlightedFeature: MapboxGeoJSONFeature;

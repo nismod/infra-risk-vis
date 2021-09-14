@@ -10,6 +10,7 @@ import { BackgroundControl } from './controls/BackgroundControl';
 import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, views } from './config/views';
+import { BackgroundName } from './config/types';
 import { LayerName, layers } from './config/layers';
 import { MapStyle } from './map/MapStyle';
 
@@ -28,7 +29,7 @@ export const MapView = () => {
     zoom: 8,
   });
 
-  const [background, setBackground] = useState<'satellite' | 'light'>('light');
+  const [background, setBackground] = useState<BackgroundName>('light');
 
   const [hoveredFeatures, setHoveredFeatures] = useState<MapboxGeoJSONFeature[]>([]);
   const [hoverLngLat, setHoverLngLat] = useState<[number, number]>(null);
