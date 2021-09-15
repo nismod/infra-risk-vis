@@ -76,6 +76,22 @@ function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
       type: 'raster',
       tiles: ['http://localhost:5000/singleband/fluvial/20/raw/{z}/{x}/{y}.png?colormap=blues'],
     },
+    flood_fluvial_50: {
+      type: 'raster',
+      tiles: ['http://localhost:5000/singleband/fluvial/50/raw/{z}/{x}/{y}.png?colormap=blues'],
+    },
+    flood_fluvial_100: {
+      type: 'raster',
+      tiles: ['http://localhost:5000/singleband/fluvial/100/raw/{z}/{x}/{y}.png?colormap=blues'],
+    },
+    flood_fluvial_200: {
+      type: 'raster',
+      tiles: ['http://localhost:5000/singleband/fluvial/200/raw/{z}/{x}/{y}.png?colormap=blues'],
+    },
+    flood_fluvial_500: {
+      type: 'raster',
+      tiles: ['http://localhost:5000/singleband/fluvial/500/raw/{z}/{x}/{y}.png?colormap=blues'],
+    },
     flood_fluvial_1500: {
       type: 'raster',
       tiles: ['http://localhost:5000/singleband/fluvial/1500/raw/{z}/{x}/{y}.png?colormap=blues'],

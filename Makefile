@@ -1,13 +1,19 @@
-.PHONY: all clean
+.PHONY: all clean vector raster
 
-all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./tileserver/data/rail_edges.mbtiles ./tileserver/data/rail_nodes.mbtiles ./tileserver/data/road_edges.mbtiles ./tileserver/data/bridges.mbtiles ./tileserver/data/elec_edges.mbtiles ./tileserver/data/elec_nodes.mbtiles ./tileserver-raster/data/fluvial_rp20_raw.tif ./tileserver-raster/data/fluvial_rp1500_raw.tif
+all: vector raster
+
+vector_layers = rail_edges rail_nodes road_edges bridges elec_edges elec_nodes pot_edges abs_nodes
+raster_layers = fluvial_rp20_raw fluvial_rp50_raw fluvial_rp100_raw fluvial_rp200_raw fluvial_rp500_raw fluvial_rp1500_raw
+
+vector: $(patsubst %,./tileserver/data/%.mbtiles,$(vector_layers))
+raster: $(patsubst %,./tileserver-raster/data/%.tif,$(raster_layers))
 
 ./tileserver/data/rail_edges.mbtiles:
 	tippecanoe \
 		--generate-ids \
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
-		--output=./tileserver/data/rail_edges.mbtiles \
+		--output=$@ \
 		--layer=rail_edges \
 		./intermediate_data/rail_edges.json
 
@@ -15,7 +21,7 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 	tippecanoe \
 		-zg \
 		--generate-ids \
-		--output=./tileserver/data/rail_nodes.mbtiles \
+		--output=$@ \
 		--layer=rail_nodes \
 		./intermediate_data/rail_nodes.json
 
@@ -25,7 +31,7 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
 		--drop-smallest-as-needed \
-		--output=./tileserver/data/road_edges.mbtiles \
+		--output=$@ \
 		--layer=road_edges \
 		./intermediate_data/road_edges.json
 
@@ -33,7 +39,7 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 	tippecanoe \
 		-zg \
 		--generate-ids \
-		--output=./tileserver/data/bridges.mbtiles \
+		--output=$@ \
 		--layer=bridges \
 		./intermediate_data/bridges.json
 
@@ -43,7 +49,7 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
 		--drop-smallest-as-needed \
-		--output=./tileserver/data/elec_edges.mbtiles \
+		--output=$@ \
 		--layer=elec_edges \
 		./intermediate_data/elec_edges.json
 
@@ -51,7 +57,7 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 	tippecanoe \
 		-zg \
 		--generate-ids \
-		--output=./tileserver/data/elec_nodes.mbtiles \
+		--output=$@ \
 		--layer=elec_nodes \
 		./intermediate_data/elec_nodes.json
 
@@ -61,7 +67,7 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 		--minimum-zoom=3 \
 		--maximum-zoom=15 \
 		--drop-smallest-as-needed \
-		--output=./tileserver/data/pot_edges.mbtiles \
+		--output=$@ \
 		--layer=pot_edges \
 		./intermediate_data/pot_edges.json
 
@@ -69,15 +75,29 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 	tippecanoe \
 		-zg \
 		--generate-ids \
-		--output=./tileserver/data/abs_nodes.mbtiles \
+		--output=$@ \
 		--layer=abs_nodes \
 		./intermediate_data/abs_nodes.json
 
+MAKE_COG = ./scripts/raster/make_cog.sh
+
 ./tileserver-raster/data/fluvial_rp20_raw.tif:
-	./scripts/raster/make_cog.sh ./intermediate_data/Fluvial/JM_FLRF_UD_Q20_RD_02.tif $@
+	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q20_RD_02.tif $@
+
+./tileserver-raster/data/fluvial_rp50_raw.tif:
+	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q50_RD_02.tif $@
+
+./tileserver-raster/data/fluvial_rp100_raw.tif:
+	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q100_RD_02.tif $@
+
+./tileserver-raster/data/fluvial_rp200_raw.tif:
+	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q200_RD_02.tif $@
+
+./tileserver-raster/data/fluvial_rp500_raw.tif:
+	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q500_RD_02.tif $@
 
 ./tileserver-raster/data/fluvial_rp1500_raw.tif:
-	./scripts/raster/make_cog.sh ./intermediate_data/Fluvial/JM_FLRF_UD_Q1500_RD_02.tif $@
+	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q1500_RD_02.tif $@
 
 clean:
-	rm -f ./tileserver/data/*.mbtiles
+	rm -f ./tileserver/data/*.mbtiles && rm -f ./tileserver-raster/data/*.tif

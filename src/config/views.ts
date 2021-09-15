@@ -15,6 +15,10 @@ export const views = {
   hazards: {
     layers: [
       'flood_fluvial_20',
+      'flood_fluvial_50',
+      'flood_fluvial_100',
+      'flood_fluvial_200',
+      'flood_fluvial_500',
       'flood_fluvial_1500',
     ],
   },

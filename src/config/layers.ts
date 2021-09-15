@@ -247,16 +247,6 @@ export const layers = {
       },
     },
   },
-  flood_fluvial_1500: {
-    linear: false,
-    label: 'Fluvial flood (1500 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_fluvial_1500',
-      type: 'raster',
-      source: 'flood_fluvial_1500',
-    },
-  },
   flood_fluvial_20: {
     linear: false,
     label: 'Fluvial flood (20 year RP)',
@@ -265,6 +255,56 @@ export const layers = {
       id: 'flood_fluvial_20',
       type: 'raster',
       source: 'flood_fluvial_20',
+    },
+  },
+  flood_fluvial_50: {
+    linear: false,
+    label: 'Fluvial flood (50 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_fluvial_50',
+      type: 'raster',
+      source: 'flood_fluvial_50',
+    },
+  },
+  flood_fluvial_100: {
+    linear: false,
+    label: 'Fluvial flood (100 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_fluvial_100',
+      type: 'raster',
+      source: 'flood_fluvial_100',
+    },
+  },
+  flood_fluvial_200: {
+    linear: false,
+    label: 'Fluvial flood (200 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_fluvial_200',
+      type: 'raster',
+      source: 'flood_fluvial_200',
+    },
+  },
+  flood_fluvial_500: {
+    linear: false,
+    label: 'Fluvial flood (500 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_fluvial_500',
+      type: 'raster',
+      source: 'flood_fluvial_500',
+    },
+  },
+  flood_fluvial_1500: {
+    linear: false,
+    label: 'Fluvial flood (1500 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_fluvial_1500',
+      type: 'raster',
+      source: 'flood_fluvial_1500',
     },
   },
 };
