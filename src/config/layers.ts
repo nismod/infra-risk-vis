@@ -247,6 +247,26 @@ export const layers = {
       },
     },
   },
+  flood_fluvial_1500: {
+    linear: false,
+    label: 'Fluvial flood (1500 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_fluvial_1500',
+      type: 'raster',
+      source: 'flood_fluvial_1500',
+    },
+  },
+  flood_fluvial_20: {
+    linear: false,
+    label: 'Fluvial flood (20 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_fluvial_20',
+      type: 'raster',
+      source: 'flood_fluvial_20',
+    },
+  },
 };
 
 export type LayerName = keyof typeof layers;

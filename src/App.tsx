@@ -8,6 +8,7 @@ import { MapView } from './MapView';
 
 import './index.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { ViewName } from './config/views';
 
 export const App = () => {
   return (
@@ -19,9 +20,10 @@ export const App = () => {
           <Toolbar /> {/* Prevents app bar from concealing content*/}
           <PageIntro />
         </Route>
-        <Route path="/overview">
-          <MapView />
-        </Route>
+        <Route
+          path="/:view(overview|hazards)"
+          render={({ match: { params } }) => <MapView view={params.view as ViewName} />}
+        />
       </Switch>
     </Router>
   );

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Drawer, Toolbar } from '@material-ui/core';
 import MapGL, { MapEvent } from 'react-map-gl';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
@@ -22,7 +22,11 @@ const viewportLimits = {
 
 const MAPBOX_KEY = 'pk.eyJ1IjoidG9tcnVzc2VsbCIsImEiOiJjaXZpMTFpdGkwMDQ1MnptcTh4ZzRzeXNsIn0.ZSvSOHSsWBQ44QNhA71M6Q';
 
-export const MapView = () => {
+interface MapViewProps {
+  view: ViewName;
+}
+
+export const MapView: FC<MapViewProps> = ({ view }) => {
   const [viewport, setViewport] = useState({
     latitude: 18.14,
     longitude: -77.28,
@@ -45,8 +49,6 @@ export const MapView = () => {
     setSelectedFeatures(e.features ?? []);
   }, []);
 
-  const [view] = useState<ViewName>('overview');
-
   const viewLayerNames = useMemo<LayerName[]>(() => views[view].layers as LayerName[], [view]);
   const layerDefinitions = useMemo(
     () => viewLayerNames.map((layerName) => ({ ...layers[layerName], key: layerName })),
@@ -66,11 +68,19 @@ export const MapView = () => {
       <Drawer variant="permanent">
         <Toolbar /> {/* Prevents app bar from concealing content*/}
         <div className="drawer-contents">
+          {/* {view === 'overview' && ( */}
           <NetworkControl
             dataLayers={layerDefinitions}
             layerVisibility={layerSelection}
             onLayerVisChange={updateLayerSelection}
           />
+          {/* )} */}
+          {/* {
+            view==='hazards' &&
+            <HazardsControl
+
+            />
+          } */}
           <BackgroundControl background={background} onBackgroundChange={setBackground} />
         </div>
       </Drawer>

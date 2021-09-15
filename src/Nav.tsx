@@ -15,6 +15,9 @@ export const Nav = () => {
         <NavLink className="nav-link" to="/overview">
           <Typography variant="h6">Infrastructure networks</Typography>
         </NavLink>
+        <NavLink className="nav-link" to="/hazards">
+          <Typography variant="h6">Hazards</Typography>
+        </NavLink>
       </Toolbar>
     </AppBar>
   );

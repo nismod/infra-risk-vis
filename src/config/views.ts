@@ -12,6 +12,12 @@ export const views = {
       'abs_nodes',
     ],
   },
+  hazards: {
+    layers: [
+      'flood_fluvial_20',
+      'flood_fluvial_1500',
+    ],
+  },
 };
 
 export type ViewName = keyof typeof views;

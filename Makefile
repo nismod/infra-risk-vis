@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./tileserver/data/rail_edges.mbtiles ./tileserver/data/rail_nodes.mbtiles ./tileserver/data/road_edges.mbtiles ./tileserver/data/bridges.mbtiles ./tileserver/data/elec_edges.mbtiles ./tileserver/data/elec_nodes.mbtiles
+all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./tileserver/data/rail_edges.mbtiles ./tileserver/data/rail_nodes.mbtiles ./tileserver/data/road_edges.mbtiles ./tileserver/data/bridges.mbtiles ./tileserver/data/elec_edges.mbtiles ./tileserver/data/elec_nodes.mbtiles ./tileserver-raster/data/fluvial_rp20_raw.tif ./tileserver-raster/data/fluvial_rp1500_raw.tif
 
 ./tileserver/data/rail_edges.mbtiles:
 	tippecanoe \
@@ -72,6 +72,12 @@ all: ./tileserver/data/pot_edges.mbtiles ./tileserver/data/abs_nodes.mbtiles ./t
 		--output=./tileserver/data/abs_nodes.mbtiles \
 		--layer=abs_nodes \
 		./intermediate_data/abs_nodes.json
+
+./tileserver-raster/data/fluvial_rp20_raw.tif:
+	./scripts/raster/make_cog.sh ./intermediate_data/Fluvial/JM_FLRF_UD_Q20_RD_02.tif $@
+
+./tileserver-raster/data/fluvial_rp1500_raw.tif:
+	./scripts/raster/make_cog.sh ./intermediate_data/Fluvial/JM_FLRF_UD_Q1500_RD_02.tif $@
 
 clean:
 	rm -f ./tileserver/data/*.mbtiles

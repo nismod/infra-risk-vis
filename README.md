@@ -33,12 +33,11 @@ visualisation and how to run the tool.
 3. Build and run requirements
 4. Run
 
-
 ## Data preparation requirements
 
-### ogr2ogr
+### GDAL tools
 
-[ogr2ogr](https://www.gdal.org/ogr2ogr.html) is used for spatial data
+[ogr2ogr](https://www.gdal.org/ogr2ogr.html) and other GDAL programs are used for spatial data
 processing. On Ubuntu, run:
 
     sudo apt-get install gdal-bin
@@ -68,7 +67,6 @@ data to visualise.
 
 > TODO update the documentation of this process
 
-
 ## Build and run requirements
 
 ### Node and npm
@@ -80,20 +78,44 @@ Install required packages. Run from the project root:
 
     npm install
 
+### Terracotta
+
+Install the raster tileserver - Terracotta
+
+> TODO expand on the python + terracotta install process
+
+```
+pip3 install terracotta[recommended]
+```
+
 ## Run
 
 Running the application currently requires two (local) server processes: the
 tileserver and the app itself.
 
-### Run the tileserver
+### Run the vector tileserver
 
 Run the tileserver directly (from the root of the project):
 
-    npx tileserver-gl-light
+    npm run tileserver
 
 Open a browser to view the tileserver:
 
     firefox http://localhost:8080/
+
+### Run the raster tileserver
+
+Prepare the raster tileserver database:
+
+```
+npm run raster-init
+```
+
+Run the raster tileserver:
+
+```
+npm run raster
+```
 
 ### Run the app
 
@@ -104,7 +126,6 @@ Start the app server:
 This should automatically open a browser tab. If not, open:
 
     firefox http://localhost:3000/
-
 
 ## Deployment
 

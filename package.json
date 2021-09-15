@@ -34,6 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "tileserver": "tileserver-gl-light -c tileserver/config.json",
+    "raster-init": "terracotta ingest tileserver-raster/data/{type}_rp{return}_{format}.tif -o tileserver-raster/terracotta.sqlite",
+    "raster": "terracotta -c tileserver-raster/config.toml serve -d tileserver-raster/terracotta.sqlite  --port 5000",
     "lint": "eslint src/**/*.{js,jsx}"
   },
   "browserslist": [

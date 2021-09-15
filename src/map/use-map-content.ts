@@ -71,6 +71,15 @@ function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
       type: 'vector',
       url: 'http://localhost:8080/data/abs_nodes.json',
     },
+
+    flood_fluvial_20: {
+      type: 'raster',
+      tiles: ['http://localhost:5000/singleband/fluvial/20/raw/{z}/{x}/{y}.png?colormap=blues'],
+    },
+    flood_fluvial_1500: {
+      type: 'raster',
+      tiles: ['http://localhost:5000/singleband/fluvial/1500/raw/{z}/{x}/{y}.png?colormap=blues'],
+    },
   };
 
   return res;
