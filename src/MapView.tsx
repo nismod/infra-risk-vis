@@ -59,12 +59,19 @@ export const MapView: FC<MapViewProps> = ({ view }) => {
   const { layerSelection, updateLayerSelection, selectSingleLayer } = useLayerSelection(viewLayerNames);
 
   // TODO: create separate mechanism for layer-dependent features
-  const [returnPeriodYears, setReturnPeriodYears] = useState(10);
+  const [fluvialReturnPeriod, setFluvialReturnPeriod] = useState(10);
   useEffect(() => {
     if (view === 'hazards') {
-      selectSingleLayer(`flood_fluvial_${returnPeriodYears}` as LayerName);
+      selectSingleLayer(`flood_fluvial_${fluvialReturnPeriod}` as LayerName);
     }
-  }, [view, returnPeriodYears, selectSingleLayer]);
+  }, [view, fluvialReturnPeriod, selectSingleLayer]);
+
+  const [coastalReturnPeriod, setCoastalReturnPeriod] = useState(1);
+  useEffect(() => {
+    if (view === 'hazards') {
+      selectSingleLayer(`flood_coastal_${coastalReturnPeriod}` as LayerName);
+    }
+  }, [view, coastalReturnPeriod, selectSingleLayer]);
 
   const mapContentParams = useMemo<MapParams>(
     () => ({
@@ -90,7 +97,12 @@ export const MapView: FC<MapViewProps> = ({ view }) => {
             />
           )}
           {view === 'hazards' && (
-            <HazardsControl returnPeriodYears={returnPeriodYears} setReturnPeriodYears={setReturnPeriodYears} />
+            <HazardsControl
+              fluvialReturnPeriod={fluvialReturnPeriod}
+              setFluvialReturnPeriod={setFluvialReturnPeriod}
+              coastalReturnPeriod={coastalReturnPeriod}
+              setCoastalReturnPeriod={setCoastalReturnPeriod}
+            />
           )}
           <BackgroundControl background={background} onBackgroundChange={setBackground} />
         </div>

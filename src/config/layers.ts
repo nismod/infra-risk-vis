@@ -325,6 +325,84 @@ export const layers = {
       },
     },
   },
+  flood_coastal_1: {
+    linear: false,
+    label: 'Coastal flood (1 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_coastal_1',
+      type: 'raster',
+      source: 'flood_coastal_1',
+      paint: {
+        'raster-fade-duration': 0,
+      },
+    },
+  },
+  flood_coastal_2: {
+    linear: false,
+    label: 'Coastal flood (2 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_coastal_2',
+      type: 'raster',
+      source: 'flood_coastal_2',
+      paint: {
+        'raster-fade-duration': 0,
+      },
+    },
+  },
+  flood_coastal_5: {
+    linear: false,
+    label: 'Coastal flood (5 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_coastal_5',
+      type: 'raster',
+      source: 'flood_coastal_5',
+      paint: {
+        'raster-fade-duration': 0,
+      },
+    },
+  },
+  flood_coastal_10: {
+    linear: false,
+    label: 'Coastal flood (10 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_coastal_10',
+      type: 'raster',
+      source: 'flood_coastal_10',
+      paint: {
+        'raster-fade-duration': 0,
+      },
+    },
+  },
+  flood_coastal_50: {
+    linear: false,
+    label: 'Coastal flood (50 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_coastal_50',
+      type: 'raster',
+      source: 'flood_coastal_50',
+      paint: {
+        'raster-fade-duration': 0,
+      },
+    },
+  },
+  flood_coastal_100: {
+    linear: false,
+    label: 'Coastal flood (100 year RP)',
+    color: '#aaaaaa',
+    style: {
+      id: 'flood_coastal_100',
+      type: 'raster',
+      source: 'flood_coastal_100',
+      paint: {
+        'raster-fade-duration': 0,
+      },
+    },
+  },
 };
 
 export type LayerName = keyof typeof layers;

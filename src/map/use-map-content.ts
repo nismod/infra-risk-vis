@@ -24,6 +24,16 @@ function makeSources<T>(values: T[], keyTransform: (v: T) => string, valueTransf
   return Object.fromEntries(values.map((v) => [keyTransform(v), valueTransform(v)]));
 }
 
+const rasterColormaps = {
+  fluvial: 'blues',
+  coastal: 'greens',
+};
+
+const rasterColormapRanges = {
+  fluvial: '[0,10]',
+  coastal: '[0,3.5]',
+};
+
 function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
   const res = {
     satellite: {
@@ -53,12 +63,26 @@ function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
     ),
 
     ...makeSources(
-      [20, 50, 100, 200, 500, 1500],
-      (v) => `flood_fluvial_${v}`,
-      (v) => ({
+      [
+        { type: 'fluvial', rp: 20 },
+        { type: 'fluvial', rp: 50 },
+        { type: 'fluvial', rp: 100 },
+        { type: 'fluvial', rp: 200 },
+        { type: 'fluvial', rp: 500 },
+        { type: 'fluvial', rp: 1500 },
+        { type: 'coastal', rp: 1 },
+        { type: 'coastal', rp: 2 },
+        { type: 'coastal', rp: 5 },
+        { type: 'coastal', rp: 10 },
+        { type: 'coastal', rp: 50 },
+        { type: 'coastal', rp: 100 },
+      ],
+
+      ({ type, rp }) => `flood_${type}_${rp}`,
+      ({ type, rp }) => ({
         type: 'raster',
         tiles: [
-          `http://localhost:5000/singleband/fluvial/${v}/raw/{z}/{x}/{y}.png?colormap=blues&stretch_range=[0, 10]`,
+          `http://localhost:5000/singleband/${type}/${rp}/raw/{z}/{x}/{y}.png?colormap=${rasterColormaps[type]}&stretch_range=${rasterColormapRanges[type]}`,
         ],
       }),
     ),

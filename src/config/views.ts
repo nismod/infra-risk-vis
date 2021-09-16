@@ -20,6 +20,12 @@ export const views = {
       'flood_fluvial_200',
       'flood_fluvial_500',
       'flood_fluvial_1500',
+      'flood_coastal_1',
+      'flood_coastal_2',
+      'flood_coastal_5',
+      'flood_coastal_10',
+      'flood_coastal_50',
+      'flood_coastal_100',
     ],
   },
 };
