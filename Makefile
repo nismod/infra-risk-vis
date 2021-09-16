@@ -1,12 +1,17 @@
-.PHONY: all clean vector raster
+.PHONY: all clean vector raster clean-vector clean-rasters
 
 all: vector raster
 
 vector_layers = boundaries rail_edges rail_nodes road_edges bridges elec_edges elec_nodes pot_edges abs_nodes
-raster_layers = fluvial_rp20_raw fluvial_rp50_raw fluvial_rp100_raw fluvial_rp200_raw fluvial_rp500_raw fluvial_rp1500_raw
+raster_layers = fluvial_rp20_raw fluvial_rp50_raw fluvial_rp100_raw fluvial_rp200_raw fluvial_rp500_raw fluvial_rp1500_raw coastal_rp1_raw coastal_rp2_raw coastal_rp5_raw coastal_rp10_raw coastal_rp50_raw coastal_rp100_raw
 
 vector: $(patsubst %,./tileserver/data/%.mbtiles,$(vector_layers))
+clean-vector:
+	rm ./tileserver/data/*.mbtiles
+
 raster: $(patsubst %,./tileserver-raster/data/%.tif,$(raster_layers))
+clean-raster:
+	rm ./tileserver-raster/data/*.tif
 
 ./tileserver/data/boundaries.mbtiles:
 	cp ./incoming_data/boundaries.mbtiles $@
@@ -82,25 +87,43 @@ raster: $(patsubst %,./tileserver-raster/data/%.tif,$(raster_layers))
 		--layer=abs_nodes \
 		./intermediate_data/abs_nodes.json
 
-MAKE_COG = ./scripts/raster/make_cog.sh
+PROCESS_RASTER = ./scripts/raster/prepare_raster.sh
 
 ./tileserver-raster/data/fluvial_rp20_raw.tif:
-	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q20_RD_02.tif $@
+	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q20_RD_02.tif $@
 
 ./tileserver-raster/data/fluvial_rp50_raw.tif:
-	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q50_RD_02.tif $@
+	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q50_RD_02.tif $@
 
 ./tileserver-raster/data/fluvial_rp100_raw.tif:
-	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q100_RD_02.tif $@
+	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q100_RD_02.tif $@
 
 ./tileserver-raster/data/fluvial_rp200_raw.tif:
-	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q200_RD_02.tif $@
+	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q200_RD_02.tif $@
 
 ./tileserver-raster/data/fluvial_rp500_raw.tif:
-	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q500_RD_02.tif $@
+	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q500_RD_02.tif $@
 
 ./tileserver-raster/data/fluvial_rp1500_raw.tif:
-	$(MAKE_COG) ./intermediate_data/Fluvial/JM_FLRF_UD_Q1500_RD_02.tif $@
+	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q1500_RD_02.tif $@
 
-clean:
-	rm -f ./tileserver/data/*.mbtiles && rm -f ./tileserver-raster/data/*.tif
+
+./tileserver-raster/data/coastal_rp1_raw.tif:
+	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_1.tif $@
+
+./tileserver-raster/data/coastal_rp2_raw.tif:
+	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_2.tif $@
+
+./tileserver-raster/data/coastal_rp5_raw.tif:
+	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_5.tif $@
+
+./tileserver-raster/data/coastal_rp10_raw.tif:
+	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_10.tif $@
+
+./tileserver-raster/data/coastal_rp50_raw.tif:
+	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_50.tif $@
+
+./tileserver-raster/data/coastal_rp100_raw.tif:
+	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_100.tif $@
+
+clean: clean-vector clean-raster
