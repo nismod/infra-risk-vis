@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Drawer, Toolbar } from '@material-ui/core';
 import MapGL, { MapEvent } from 'react-map-gl';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
@@ -13,6 +13,7 @@ import { ViewName, views } from './config/views';
 import { BackgroundName } from './config/types';
 import { LayerName, layers } from './config/layers';
 import { MapStyle } from './map/MapStyle';
+import { HazardsControl } from './controls/HazardsControl';
 
 const viewportLimits = {
   minZoom: 3,
@@ -55,10 +56,23 @@ export const MapView: FC<MapViewProps> = ({ view }) => {
     [viewLayerNames],
   );
 
-  const { layerSelection, updateLayerSelection } = useLayerSelection(viewLayerNames);
+  const { layerSelection, updateLayerSelection, selectSingleLayer } = useLayerSelection(viewLayerNames);
+
+  // TODO: create separate mechanism for layer-dependent features
+  const [returnPeriodYears, setReturnPeriodYears] = useState(10);
+  useEffect(() => {
+    if (view === 'hazards') {
+      selectSingleLayer(`flood_fluvial_${returnPeriodYears}` as LayerName);
+    }
+  }, [view, returnPeriodYears, selectSingleLayer]);
 
   const mapContentParams = useMemo<MapParams>(
-    () => ({ background, view, dataLayerSelection: layerSelection, highlightedFeature: selectedFeatures?.[0] }),
+    () => ({
+      background,
+      view,
+      dataLayerSelection: layerSelection,
+      highlightedFeature: selectedFeatures?.[0],
+    }),
     [background, view, layerSelection, selectedFeatures],
   );
   const mapContent = useMapContent(mapContentParams);
@@ -68,19 +82,16 @@ export const MapView: FC<MapViewProps> = ({ view }) => {
       <Drawer variant="permanent">
         <Toolbar /> {/* Prevents app bar from concealing content*/}
         <div className="drawer-contents">
-          {/* {view === 'overview' && ( */}
-          <NetworkControl
-            dataLayers={layerDefinitions}
-            layerVisibility={layerSelection}
-            onLayerVisChange={updateLayerSelection}
-          />
-          {/* )} */}
-          {/* {
-            view==='hazards' &&
-            <HazardsControl
-
+          {view === 'overview' && (
+            <NetworkControl
+              dataLayers={layerDefinitions}
+              layerVisibility={layerSelection}
+              onLayerVisChange={updateLayerSelection}
             />
-          } */}
+          )}
+          {view === 'hazards' && (
+            <HazardsControl returnPeriodYears={returnPeriodYears} setReturnPeriodYears={setReturnPeriodYears} />
+          )}
           <BackgroundControl background={background} onBackgroundChange={setBackground} />
         </div>
       </Drawer>

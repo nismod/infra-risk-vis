@@ -255,6 +255,9 @@ export const layers = {
       id: 'flood_fluvial_20',
       type: 'raster',
       source: 'flood_fluvial_20',
+      paint: {
+        'raster-fade-duration': 0,
+      },
     },
   },
   flood_fluvial_50: {
@@ -265,6 +268,9 @@ export const layers = {
       id: 'flood_fluvial_50',
       type: 'raster',
       source: 'flood_fluvial_50',
+      paint: {
+        'raster-fade-duration': 0,
+      },
     },
   },
   flood_fluvial_100: {
@@ -275,6 +281,9 @@ export const layers = {
       id: 'flood_fluvial_100',
       type: 'raster',
       source: 'flood_fluvial_100',
+      paint: {
+        'raster-fade-duration': 0,
+      },
     },
   },
   flood_fluvial_200: {
@@ -285,6 +294,9 @@ export const layers = {
       id: 'flood_fluvial_200',
       type: 'raster',
       source: 'flood_fluvial_200',
+      paint: {
+        'raster-fade-duration': 0,
+      },
     },
   },
   flood_fluvial_500: {
@@ -295,6 +307,9 @@ export const layers = {
       id: 'flood_fluvial_500',
       type: 'raster',
       source: 'flood_fluvial_500',
+      paint: {
+        'raster-fade-duration': 0,
+      },
     },
   },
   flood_fluvial_1500: {
@@ -305,6 +320,9 @@ export const layers = {
       id: 'flood_fluvial_1500',
       type: 'raster',
       source: 'flood_fluvial_1500',
+      paint: {
+        'raster-fade-duration': 0,
+      },
     },
   },
 };

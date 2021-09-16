@@ -13,8 +13,19 @@ export function useLayerSelection(layers: LayerName[]) {
     [layerSelection],
   );
 
+  const selectSingleLayer = useCallback(
+    (layerName: LayerName) => {
+      setLayerSelection({
+        ...(Object.fromEntries(layers.map((l) => [l, false])) as Record<LayerName, boolean>),
+        [layerName]: true,
+      });
+    },
+    [layers],
+  );
+
   return {
     layerSelection,
     updateLayerSelection,
+    selectSingleLayer,
   };
 }

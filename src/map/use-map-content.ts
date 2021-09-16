@@ -20,6 +20,10 @@ export interface MapParams {
   highlightedFeature: MapboxGeoJSONFeature;
 }
 
+function makeSources<T>(values: T[], keyTransform: (v: T) => string, valueTransform: (v: T) => object) {
+  return Object.fromEntries(values.map((v) => [keyTransform(v), valueTransform(v)]));
+}
+
 function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
   const res = {
     satellite: {
@@ -39,63 +43,25 @@ function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
       tileSize: 256,
     },
 
-    road_edges: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/road_edges.json',
-    },
-    bridges: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/bridges.json',
-    },
-    elec_edges: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/elec_edges.json',
-    },
-    elec_nodes: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/elec_nodes.json',
-    },
-    rail_edges: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/rail_edges.json',
-    },
-    rail_nodes: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/rail_nodes.json',
-    },
-    pot_edges: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/pot_edges.json',
-    },
-    abs_nodes: {
-      type: 'vector',
-      url: 'http://localhost:8080/data/abs_nodes.json',
-    },
+    ...makeSources(
+      ['road_edges', 'bridges', 'elec_edges', 'elec_nodes', 'rail_edges', 'rail_nodes', 'pot_edges', 'abs_nodes'],
+      (v) => v,
+      (v) => ({
+        type: 'vector',
+        url: `http://localhost:8080/data/${v}.json`,
+      }),
+    ),
 
-    flood_fluvial_20: {
-      type: 'raster',
-      tiles: ['http://localhost:5000/singleband/fluvial/20/raw/{z}/{x}/{y}.png?colormap=blues'],
-    },
-    flood_fluvial_50: {
-      type: 'raster',
-      tiles: ['http://localhost:5000/singleband/fluvial/50/raw/{z}/{x}/{y}.png?colormap=blues'],
-    },
-    flood_fluvial_100: {
-      type: 'raster',
-      tiles: ['http://localhost:5000/singleband/fluvial/100/raw/{z}/{x}/{y}.png?colormap=blues'],
-    },
-    flood_fluvial_200: {
-      type: 'raster',
-      tiles: ['http://localhost:5000/singleband/fluvial/200/raw/{z}/{x}/{y}.png?colormap=blues'],
-    },
-    flood_fluvial_500: {
-      type: 'raster',
-      tiles: ['http://localhost:5000/singleband/fluvial/500/raw/{z}/{x}/{y}.png?colormap=blues'],
-    },
-    flood_fluvial_1500: {
-      type: 'raster',
-      tiles: ['http://localhost:5000/singleband/fluvial/1500/raw/{z}/{x}/{y}.png?colormap=blues'],
-    },
+    ...makeSources(
+      [20, 50, 100, 200, 500, 1500],
+      (v) => `flood_fluvial_${v}`,
+      (v) => ({
+        type: 'raster',
+        tiles: [
+          `http://localhost:5000/singleband/fluvial/${v}/raw/{z}/{x}/{y}.png?colormap=blues&stretch_range=[0, 10]`,
+        ],
+      }),
+    ),
   };
 
   return res;
