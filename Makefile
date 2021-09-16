@@ -2,11 +2,14 @@
 
 all: vector raster
 
-vector_layers = rail_edges rail_nodes road_edges bridges elec_edges elec_nodes pot_edges abs_nodes
+vector_layers = boundaries rail_edges rail_nodes road_edges bridges elec_edges elec_nodes pot_edges abs_nodes
 raster_layers = fluvial_rp20_raw fluvial_rp50_raw fluvial_rp100_raw fluvial_rp200_raw fluvial_rp500_raw fluvial_rp1500_raw
 
 vector: $(patsubst %,./tileserver/data/%.mbtiles,$(vector_layers))
 raster: $(patsubst %,./tileserver-raster/data/%.tif,$(raster_layers))
+
+./tileserver/data/boundaries.mbtiles:
+	cp ./incoming_data/boundaries.mbtiles $@
 
 ./tileserver/data/rail_edges.mbtiles:
 	tippecanoe \
