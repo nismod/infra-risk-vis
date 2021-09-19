@@ -56,22 +56,7 @@ export const MapView: FC<MapViewProps> = ({ view }) => {
     [viewLayerNames],
   );
 
-  const { layerSelection, updateLayerSelection, selectSingleLayer } = useLayerSelection(viewLayerNames);
-
-  // TODO: create separate mechanism for layer-dependent features
-  const [fluvialReturnPeriod, setFluvialReturnPeriod] = useState(10);
-  useEffect(() => {
-    if (view === 'hazards') {
-      selectSingleLayer(`flood_fluvial_${fluvialReturnPeriod}` as LayerName);
-    }
-  }, [view, fluvialReturnPeriod, selectSingleLayer]);
-
-  const [coastalReturnPeriod, setCoastalReturnPeriod] = useState(1);
-  useEffect(() => {
-    if (view === 'hazards') {
-      selectSingleLayer(`flood_coastal_${coastalReturnPeriod}` as LayerName);
-    }
-  }, [view, coastalReturnPeriod, selectSingleLayer]);
+  const { layerSelection, updateLayerSelection } = useLayerSelection(viewLayerNames);
 
   const mapContentParams = useMemo<MapParams>(
     () => ({
@@ -97,12 +82,7 @@ export const MapView: FC<MapViewProps> = ({ view }) => {
             />
           )}
           {view === 'hazards' && (
-            <HazardsControl
-              fluvialReturnPeriod={fluvialReturnPeriod}
-              setFluvialReturnPeriod={setFluvialReturnPeriod}
-              coastalReturnPeriod={coastalReturnPeriod}
-              setCoastalReturnPeriod={setCoastalReturnPeriod}
-            />
+            <HazardsControl layerVisibility={layerSelection} onLayerVisibilityUpdate={updateLayerSelection} />
           )}
           <BackgroundControl background={background} onBackgroundChange={setBackground} />
         </div>

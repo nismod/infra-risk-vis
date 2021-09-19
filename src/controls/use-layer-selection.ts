@@ -7,8 +7,8 @@ export function useLayerSelection(layers: LayerName[]) {
   );
 
   const updateLayerSelection = useCallback(
-    (layerName: LayerName, selected: boolean) => {
-      setLayerSelection({ ...layerSelection, [layerName]: selected });
+    (selectionUpdate: Record<string, boolean>) => {
+      setLayerSelection({ ...layerSelection, ...selectionUpdate });
     },
     [layerSelection],
   );

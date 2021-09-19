@@ -6,7 +6,7 @@ import { LayerDefinition, LayerName } from '../config/layers';
 interface NetworkControlProps {
   dataLayers: (LayerDefinition & { key: LayerName })[];
   layerVisibility: Record<LayerName, boolean>;
-  onLayerVisChange: (layerName: LayerName, visibility: boolean) => void;
+  onLayerVisChange: (visUpdate: Record<string, boolean>) => void; //TODO change record key type to LayerName
 }
 
 export const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
@@ -26,7 +26,7 @@ export const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisib
                 checked={checked}
                 value={layerName}
                 name={'toggleLayerCheckbox' + layerName}
-                onChange={(e) => onLayerVisChange(e.target.value as LayerName, e.target.checked)}
+                onChange={(e) => onLayerVisChange({ [e.target.value as LayerName]: e.target.checked })}
               />
             }
             label={

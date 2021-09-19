@@ -1,48 +1,15 @@
-import { ComponentProps, FC, useCallback, useMemo } from 'react';
-import { FormControl, FormLabel, makeStyles, Slider } from '@material-ui/core';
+import { FC, useEffect, useState } from 'react';
+import { Checkbox, FormControl, FormControlLabel, FormLabel, makeStyles } from '@material-ui/core';
+
+import { CustomNumberSlider } from './CustomSlider';
+import { layers } from '../config/layers';
 
 interface HazardsControlProps {
-  fluvialReturnPeriod: number;
-  setFluvialReturnPeriod: (years: number) => void;
-
-  coastalReturnPeriod: number;
-  setCoastalReturnPeriod: (years: number) => void;
+  layerVisibility: Record<string, boolean>;
+  onLayerVisibilityUpdate: (visibilityUpdate: Record<string, boolean>) => void;
 }
 
-interface GenericMark<T> {
-  value: T;
-  label: string;
-}
-
-type CustomSliderProps<T> = {
-  marks: GenericMark<T>[];
-  value: T;
-  onChange: (newVal: T) => void;
-} & Omit<ComponentProps<typeof Slider>, 'marks' | 'value' | 'onChange' | 'min' | 'max' | 'step' | 'scale'>;
-
-const CustomNumberSlider: FC<CustomSliderProps<number>> = ({ marks, value, onChange, ...otherProps }) => {
-  const integerMarks = useMemo(() => marks.map((m, idx) => ({ value: idx, label: m.label })), [marks]);
-  const integerValue = useMemo(() => marks.findIndex((m) => m.value === value), [marks, value]);
-
-  const handleIntegerChange = useCallback(
-    (e, value: number) => {
-      onChange(marks[value].value);
-    },
-    [marks, onChange],
-  );
-
-  return (
-    <Slider
-      marks={integerMarks}
-      value={integerValue}
-      onChange={handleIntegerChange}
-      min={0}
-      max={marks.length - 1}
-      step={1}
-      {...otherProps}
-    />
-  );
-};
+const fluvialLayers = Object.keys(layers).filter((l) => l.startsWith('flood_fluvial'));
 
 const fluvialMarks = [
   { value: 20, label: '20' },
@@ -53,6 +20,7 @@ const fluvialMarks = [
   { value: 1500, label: '1500' },
 ];
 
+const coastalLayers = Object.keys(layers).filter((l) => l.startsWith('flood_coastal'));
 const coastalMarks = [
   { value: 1, label: '1' },
   { value: 2, label: '2' },
@@ -63,29 +31,75 @@ const coastalMarks = [
 ];
 
 const useStyles = makeStyles({
+  formSection: {
+    marginTop: '1em',
+  },
   sliderForm: {
     width: '100%',
   },
 });
 
-export const HazardsControl: FC<HazardsControlProps> = ({
-  fluvialReturnPeriod,
-  setFluvialReturnPeriod,
-  coastalReturnPeriod,
-  setCoastalReturnPeriod,
-}) => {
+export const HazardsControl: FC<HazardsControlProps> = ({ layerVisibility, onLayerVisibilityUpdate }) => {
   const classes = useStyles();
+
+  const [showFluvial, setShowFluvial] = useState(false);
+  const [fluvialReturnPeriod, setFluvialReturnPeriod] = useState(10);
+
+  const [showCoastal, setShowCoastal] = useState(false);
+  const [coastalReturnPeriod, setCoastalReturnPeriod] = useState(1);
+
+  // TODO modify to avoid using useEffect with incomplete dependencies
+  useEffect(() => {
+    console.log('Setting fluvial');
+    const layerToShow = `flood_fluvial_${fluvialReturnPeriod}`;
+    onLayerVisibilityUpdate(Object.fromEntries(fluvialLayers.map((ln) => [ln, showFluvial && ln === layerToShow])));
+  }, [fluvialReturnPeriod, showFluvial]);
+
+  // TODO modify to avoid using useEffect with incomplete dependencies
+  useEffect(() => {
+    console.log('Setting coastal');
+    const layerToShow = `flood_coastal_${coastalReturnPeriod}`;
+    onLayerVisibilityUpdate(Object.fromEntries(coastalLayers.map((ln) => [ln, showCoastal && ln === layerToShow])));
+  }, [showCoastal, coastalReturnPeriod]);
 
   return (
     <>
-      <FormControl component="fieldset" className={classes.sliderForm}>
-        <FormLabel component="legend">River Flooding Return Period</FormLabel>
-        <CustomNumberSlider marks={fluvialMarks} value={fluvialReturnPeriod} onChange={setFluvialReturnPeriod} />
-      </FormControl>
-      <FormControl component="fieldset" className={classes.sliderForm}>
-        <FormLabel component="legend">Coastal Flooding Return Period</FormLabel>
-        <CustomNumberSlider marks={coastalMarks} value={coastalReturnPeriod} onChange={setCoastalReturnPeriod} />
-      </FormControl>
+      <div className={classes.formSection}>
+        <FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={showFluvial}
+                onChange={(e) => setShowFluvial(e.currentTarget.checked)}
+              />
+            }
+            label="Show River Flooding"
+          />
+        </FormControl>
+        <FormControl disabled={!showFluvial} component="fieldset" className={classes.sliderForm}>
+          <FormLabel component="legend">River Flooding Return Period</FormLabel>
+          <CustomNumberSlider marks={fluvialMarks} value={fluvialReturnPeriod} onChange={setFluvialReturnPeriod} />
+        </FormControl>
+      </div>
+      <div className={classes.formSection}>
+        <FormControl>
+          <FormControlLabel
+            control={
+              <Checkbox
+                color="primary"
+                checked={showCoastal}
+                onChange={(e) => setShowCoastal(e.currentTarget.checked)}
+              />
+            }
+            label="Show Coastal Flooding"
+          />
+        </FormControl>
+        <FormControl disabled={!showCoastal} component="fieldset" className={classes.sliderForm}>
+          <FormLabel component="legend">Coastal Flooding Return Period</FormLabel>
+          <CustomNumberSlider marks={coastalMarks} value={coastalReturnPeriod} onChange={setCoastalReturnPeriod} />
+        </FormControl>
+      </div>
     </>
   );
 };
