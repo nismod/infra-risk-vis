@@ -33,3 +33,11 @@ export function toDictionary<T, K extends string, V>(
 ): Record<K, V> {
   return Object.fromEntries(array.map((x) => [keyFn(x), valueFn(x)])) as Record<K, V>;
 }
+
+export function makeConfig<K extends string, C>(cfg: (C & { id: K })[]) {
+  return toDictionary(
+    cfg,
+    (x) => x.id,
+    (x) => x,
+  );
+}

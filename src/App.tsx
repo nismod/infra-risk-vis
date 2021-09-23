@@ -3,8 +3,8 @@ import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { CssBaseline, Toolbar } from '@material-ui/core';
 
 import { Nav } from './Nav';
-import { PageIntro } from './PageIntro';
-import { MapView } from './MapView';
+import { IntroPage } from './IntroPage';
+import { MapPage } from './MapPage';
 
 import './index.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -18,9 +18,9 @@ export const App = () => {
       <Switch>
         <Route path="/" exact>
           <Toolbar /> {/* Prevents app bar from concealing content*/}
-          <PageIntro />
+          <IntroPage />
         </Route>
-        <Route path="/:view(overview)" render={({ match: { params } }) => <MapView view={params.view as ViewName} />} />
+        <Route path="/:view(overview)" render={({ match: { params } }) => <MapPage view={params.view as ViewName} />} />
       </Switch>
     </Router>
   );

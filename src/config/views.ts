@@ -1,5 +1,8 @@
-export const views = {
-  overview: {
+import { makeConfig } from '../helpers';
+
+export const views = makeConfig([
+  {
+    id: 'overview',
     layers: [
       'flood_fluvial_20',
       'flood_fluvial_50',
@@ -24,7 +27,8 @@ export const views = {
       'abs_nodes',
     ],
   },
-  hazards: {
+  {
+    id: 'hazards',
     layers: [
       'flood_fluvial_20',
       'flood_fluvial_50',
@@ -40,6 +44,6 @@ export const views = {
       'flood_coastal_100',
     ],
   },
-};
+]);
 
 export type ViewName = keyof typeof views;
