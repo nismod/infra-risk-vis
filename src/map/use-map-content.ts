@@ -1,9 +1,12 @@
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { useMemo } from 'react';
+import { TileLayer, BitmapLayer, MVTLayer } from 'deck.gl';
+import GL from '@luma.gl/constants';
 
-import { LayerName, layers } from '../config/layers';
+import { LayerDefinition, LayerName, layers } from '../config/layers';
 import { BackgroundName } from '../config/types';
 import { ViewName, views } from '../config/views';
+import { colorToRGB } from '../helpers';
 
 /**
  * get map style and layers definition based on:
@@ -20,21 +23,11 @@ export interface MapParams {
   highlightedFeature: MapboxGeoJSONFeature;
 }
 
-function makeSources<T>(values: T[], keyTransform: (v: T) => string, valueTransform: (v: T) => object) {
-  return Object.fromEntries(values.map((v) => [keyTransform(v), valueTransform(v)]));
-}
+// function makeSources<T>(values: T[], keyTransform: (v: T) => string, valueTransform: (v: T) => object) {
+//   return Object.fromEntries(values.map((v) => [keyTransform(v), valueTransform(v)]));
+// }
 
-const rasterColormaps = {
-  fluvial: 'blues',
-  coastal: 'greens',
-};
-
-const rasterColormapRanges = {
-  fluvial: '[0,10]',
-  coastal: '[0,3.5]',
-};
-
-function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
+function getMapboxSources() {
   const res = {
     satellite: {
       type: 'raster',
@@ -53,39 +46,14 @@ function getMapSources(highlightedFeature: MapboxGeoJSONFeature) {
       tileSize: 256,
     },
 
-    ...makeSources(
-      ['road_edges', 'bridges', 'elec_edges', 'elec_nodes', 'rail_edges', 'rail_nodes', 'pot_edges', 'abs_nodes'],
-      (v) => v,
-      (v) => ({
-        type: 'vector',
-        url: `http://localhost:8080/data/${v}.json`,
-      }),
-    ),
-
-    ...makeSources(
-      [
-        { type: 'fluvial', rp: 20 },
-        { type: 'fluvial', rp: 50 },
-        { type: 'fluvial', rp: 100 },
-        { type: 'fluvial', rp: 200 },
-        { type: 'fluvial', rp: 500 },
-        { type: 'fluvial', rp: 1500 },
-        { type: 'coastal', rp: 1 },
-        { type: 'coastal', rp: 2 },
-        { type: 'coastal', rp: 5 },
-        { type: 'coastal', rp: 10 },
-        { type: 'coastal', rp: 50 },
-        { type: 'coastal', rp: 100 },
-      ],
-
-      ({ type, rp }) => `flood_${type}_${rp}`,
-      ({ type, rp }) => ({
-        type: 'raster',
-        tiles: [
-          `http://localhost:5000/singleband/${type}/${rp}/raw/{z}/{x}/{y}.png?colormap=${rasterColormaps[type]}&stretch_range=${rasterColormapRanges[type]}`,
-        ],
-      }),
-    ),
+    // ...makeSources(
+    //   ['road_edges', 'bridges', 'elec_edges', 'elec_nodes', 'rail_edges', 'rail_nodes', 'pot_edges', 'abs_nodes'],
+    //   (v) => v,
+    //   (v) => ({
+    //     type: 'vector',
+    //     url: `http://localhost:8080/data/${v}.json`,
+    //   }),
+    // ),
   };
 
   return res;
@@ -95,7 +63,7 @@ function visible(isVisible: boolean): 'visible' | 'none' {
   return isVisible ? 'visible' : 'none';
 }
 
-function getMapLayers({ background, view, dataLayerSelection, highlightedFeature }: MapParams) {
+function getMapboxLayers({ background, view, dataLayerSelection, highlightedFeature }: MapParams) {
   let res = [];
 
   res.push({
@@ -117,84 +85,82 @@ function getMapLayers({ background, view, dataLayerSelection, highlightedFeature
     },
   });
 
-  let highlightLayer: object;
-  let highlightedLayerName: string;
-  if (highlightedFeature) {
-    const layer = highlightedFeature.layer;
+  // let highlightLayer: object;
+  // let highlightedLayerName: string;
+  // if (highlightedFeature) {
+  //   const layer = highlightedFeature.layer;
 
-    let visualStyle: object;
+  //   let visualStyle: object;
 
-    if (layer.type === 'line') {
-      visualStyle = {
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': 'yellow',
-          'line-width': {
-            base: 1,
-            stops: [
-              [3, 1],
-              [10, 8],
-              [17, 16],
-            ],
-          },
-        },
-      };
-    } else if (layer.type === 'circle') {
-      visualStyle = {
-        paint: {
-          'circle-color': 'yellow',
-          'circle-radius': {
-            base: 1,
-            stops: [
-              [3, 4],
-              [10, 12],
-              [17, 20],
-            ],
-          },
-        },
-      };
-    }
-    if (visualStyle) {
-      highlightedLayerName = layer.id;
-      highlightLayer = {
-        id: `feature-highlight-${highlightedFeature.id}`,
-        // source: 'feature-highlight',
-        source: layer.source,
-        'source-layer': layer['source-layer'],
-        type: layer.type,
-        // beforeId: layer.id,
-        filter: ['==', ['id'], highlightedFeature.id],
-        ...visualStyle,
-      };
-    }
-  }
+  //   if (layer.type === 'line') {
+  //     visualStyle = {
+  //       layout: {
+  //         'line-join': 'round',
+  //         'line-cap': 'round',
+  //       },
+  //       paint: {
+  //         'line-color': 'yellow',
+  //         'line-width': {
+  //           base: 1,
+  //           stops: [
+  //             [3, 1],
+  //             [10, 8],
+  //             [17, 16],
+  //           ],
+  //         },
+  //       },
+  //     };
+  //   } else if (layer.type === 'circle') {
+  //     visualStyle = {
+  //       paint: {
+  //         'circle-color': 'yellow',
+  //         'circle-radius': {
+  //           base: 1,
+  //           stops: [
+  //             [3, 4],
+  //             [10, 12],
+  //             [17, 20],
+  //           ],
+  //         },
+  //       },
+  //     };
+  //   }
+  //   if (visualStyle) {
+  //     highlightedLayerName = layer.id;
+  //     highlightLayer = {
+  //       id: `feature-highlight-${highlightedFeature.id}`,
+  //       source: layer.source,
+  //       'source-layer': layer['source-layer'],
+  //       type: layer.type,
+  //       filter: ['==', ['id'], highlightedFeature.id],
+  //       ...visualStyle,
+  //     };
+  // }
+  // }
 
-  for (const layerName of views[view].layers) {
-    const layerStyle = layers[layerName].style;
+  // for (const layerName of views[view].layers) {
+  //   const layerDefinition = layers[layerName];
 
-    if (layerName === highlightedLayerName) {
-      res.push(highlightLayer);
-    }
+  //   // raster layers are handled by Deck.GL
+  //   if (layerDefinition.type === 'raster') continue;
 
-    // TODO: prevent overwriting layout from original style - perform deep merge instead
-    res.push({ ...layerStyle, layout: { visibility: visible(dataLayerSelection[layerName]) } });
-  }
+  //   if (layerName === highlightedLayerName) {
+  //     res.push(highlightLayer);
+  //   }
 
-  // TODO: handle setting beforeId if needed
-  // for (let i = 0; i < res.length - 1; i++) {
-  //   res[i].beforeId = res[i + 1].id;
+  //   // TODO: prevent overwriting layout from original style - perform deep merge instead
+  //   res.push({
+  //     ...layerDefinition.style,
+  //     layout: { visibility: visible(dataLayerSelection[layerName]) },
+  //   });
   // }
 
   return res;
 }
 
-export function useMapContent(params: MapParams) {
-  const { highlightedFeature } = params;
-  const sources = useMemo(() => getMapSources(highlightedFeature), [highlightedFeature]);
-  const layers = useMemo(() => getMapLayers(params), [params]);
+export function useMapboxStyle(params: MapParams) {
+  const sources = useMemo(() => getMapboxSources(), []);
+  const layers = useMemo(() => getMapboxLayers(params), [params]);
 
   const res = useMemo(
     () => ({
@@ -207,4 +173,88 @@ export function useMapContent(params: MapParams) {
   );
 
   return res;
+}
+
+function getDeckLayers(dataLayerSelection: Record<LayerName, boolean>, view: ViewName, onLayerHover) {
+  const resLayers = [];
+
+  for (const layerName of views[view].layers) {
+    const layerDefinition = layers[layerName] as LayerDefinition;
+
+    if (layerDefinition.type === 'raster') {
+      resLayers.push(
+        new TileLayer({
+          id: layerName,
+          data: layerDefinition.sourceUrl,
+          visible: !!dataLayerSelection[layerName],
+          refinementStrategy: 'no-overlap',
+          pickable: true,
+          onHover: onLayerHover,
+          renderSubLayers: (props) => {
+            const {
+              bbox: { west, south, east, north },
+            } = props.tile;
+
+            return new BitmapLayer(props, {
+              data: null,
+              image: props.data,
+              bounds: [west, south, east, north],
+              textureParameters: {
+                [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
+                [GL.TEXTURE_MAG_FILTER]: GL.NEAREST,
+              },
+            });
+          },
+        }),
+      );
+    } else if (layerDefinition.type === 'line' || layerDefinition.type === 'circle') {
+      const color = colorToRGB(layerDefinition.color);
+      let styleProperties: object;
+
+      if (layerDefinition.type === 'line') {
+        const { value, unit, minPixels, maxPixels } = layerDefinition.width;
+        styleProperties = {
+          getLineWidth: value,
+          lineWidthUnits: unit,
+          lineWidthMinPixels: minPixels,
+          lineWidthMaxPixels: maxPixels,
+          lineJointRounded: true,
+          lineCapRounded: true,
+        };
+      } else {
+        const { value, unit, minPixels, maxPixels } = layerDefinition.radius;
+        styleProperties = {
+          getPointRadius: value,
+          pointRadiusUnits: unit,
+          pointRadiusMinPixels: minPixels,
+          pointRadiusMaxPixels: maxPixels,
+        };
+      }
+      resLayers.push(
+        new MVTLayer({
+          id: layerName,
+          data: layerDefinition.sourceUrl,
+          visible: !!dataLayerSelection[layerName],
+          binary: true,
+          pickable: true,
+          pickingRadius: 20,
+          autoHighlight: true,
+          highlightColor: [0, 255, 255],
+          minZoom: 3,
+          maxZoom: 20,
+          getLineColor: color,
+          getFillColor: color,
+          ...styleProperties,
+        } as any),
+      );
+    }
+  }
+
+  return resLayers;
+}
+
+export function useDeckLayers(params: MapParams, onLayerHover) {
+  const { dataLayerSelection, view } = params;
+
+  return useMemo(() => getDeckLayers(dataLayerSelection, view, onLayerHover), [dataLayerSelection, view, onLayerHover]);
 }

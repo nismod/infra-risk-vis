@@ -1,15 +1,58 @@
+import { titleCase } from 'vega-lite';
+
 export interface LayerDefinition {
   label: string;
-  linear: boolean;
+  type: 'line' | 'circle' | 'raster';
   color: string;
   style: object;
+  sourceUrl: string;
+  width?: any;
+  radius?: any;
 }
 
-export const layers = {
+const rasterColormaps = {
+  fluvial: 'blues',
+  coastal: 'greens',
+};
+
+const rasterColormapRanges = {
+  fluvial: '[0,10]',
+  coastal: '[0,3.5]',
+};
+
+function floodLayer(floodType: string, returnPeriod: number): LayerDefinition {
+  const id = `flood_${floodType}_${returnPeriod}`;
+  return {
+    type: 'raster',
+    label: `${titleCase(floodType)} flooding (${returnPeriod} year RP)`,
+    color: '#aaaaaa',
+    style: {
+      id,
+      type: 'raster',
+      source: id,
+      paint: {
+        'raster-fade-duration': 0,
+      },
+    },
+    sourceUrl: `http://localhost:5000/singleband/${floodType}/${returnPeriod}/raw/{z}/{x}/{y}.png?colormap=${rasterColormaps[floodType]}&stretch_range=${rasterColormapRanges[floodType]}`,
+  };
+}
+
+const LINE_MIN_PIXELS = 1;
+const POINT_MIN_PIXELS = 3;
+
+const layersConfig = {
   elec_edges_high: {
-    linear: true,
+    type: 'line',
     label: 'Power Lines (High Voltage)',
     color: '#eca926',
+    sourceUrl: 'http://localhost:8080/data/elec_edges.json',
+    width: {
+      value: 5,
+      unit: 'meters',
+      minPixels: LINE_MIN_PIXELS,
+      maxPixels: 10,
+    },
     style: {
       id: 'elec_edges_high',
       type: 'line',
@@ -35,9 +78,16 @@ export const layers = {
     },
   },
   elec_edges_low: {
-    linear: true,
+    type: 'line',
     label: 'Power Lines (Low Voltage)',
     color: '#f1d75c',
+    sourceUrl: 'http://localhost:8080/data/elec_edges.json',
+    width: {
+      value: 5,
+      unit: 'meters',
+      minPixels: LINE_MIN_PIXELS,
+      maxPixels: 10,
+    },
     style: {
       id: 'elec_edges_low',
       type: 'line',
@@ -63,9 +113,16 @@ export const layers = {
     },
   },
   elec_nodes: {
-    linear: false,
+    type: 'circle',
     label: 'Power Nodes',
     color: '#eca926',
+    sourceUrl: 'http://localhost:8080/data/elec_nodes.json',
+    radius: {
+      value: 10,
+      unit: 'meters',
+      minPixels: POINT_MIN_PIXELS,
+      maxPixels: 20,
+    },
     style: {
       id: 'elec_nodes',
       type: 'circle',
@@ -86,9 +143,16 @@ export const layers = {
     },
   },
   rail_edges: {
-    linear: true,
+    type: 'line',
     label: 'Railways',
     color: '#444',
+    sourceUrl: 'http://localhost:8080/data/rail_edges.json',
+    width: {
+      value: 5,
+      unit: 'meters',
+      minPixels: LINE_MIN_PIXELS,
+      maxPixels: 10,
+    },
     style: {
       id: 'rail_edges',
       type: 'line',
@@ -113,9 +177,16 @@ export const layers = {
     },
   },
   rail_nodes: {
-    linear: false,
+    type: 'circle',
     label: 'Stations',
     color: '#444',
+    sourceUrl: 'http://localhost:8080/data/rail_nodes.json',
+    radius: {
+      value: 10,
+      unit: 'meters',
+      minPixels: POINT_MIN_PIXELS,
+      maxPixels: 20,
+    },
     style: {
       id: 'rail_nodes',
       type: 'circle',
@@ -136,9 +207,16 @@ export const layers = {
     },
   },
   road_edges: {
-    linear: true,
+    type: 'line',
     label: 'Roads',
-    color: '#b2afa',
+    color: '#b2afaa',
+    sourceUrl: 'http://localhost:8080/data/road_edges.json',
+    width: {
+      value: 5,
+      unit: 'meters',
+      minPixels: LINE_MIN_PIXELS,
+      maxPixels: 10,
+    },
     style: {
       id: 'road_edges',
       type: 'line',
@@ -175,9 +253,16 @@ export const layers = {
     },
   },
   bridges: {
-    linear: false,
+    type: 'circle',
     label: 'Bridges',
     color: '#487dbc',
+    sourceUrl: 'http://localhost:8080/data/bridges.json',
+    radius: {
+      value: 10,
+      unit: 'meters',
+      minPixels: POINT_MIN_PIXELS,
+      maxPixels: 20,
+    },
     style: {
       id: 'bridges',
       type: 'circle',
@@ -198,9 +283,16 @@ export const layers = {
     },
   },
   pot_edges: {
-    linear: true,
+    type: 'line',
     label: 'Water Supply Network',
     color: '#314386',
+    sourceUrl: 'http://localhost:8080/data/pot_edges.json',
+    width: {
+      value: 5,
+      unit: 'meters',
+      minPixels: LINE_MIN_PIXELS,
+      maxPixels: 10,
+    },
     style: {
       id: 'pot_edges',
       type: 'line',
@@ -225,9 +317,16 @@ export const layers = {
     },
   },
   abs_nodes: {
-    linear: false,
+    type: 'circle',
     label: 'Water Abstraction',
     color: '#4d49bc',
+    sourceUrl: 'http://localhost:8080/data/abs_nodes.json',
+    radius: {
+      value: 10,
+      unit: 'meters',
+      minPixels: POINT_MIN_PIXELS,
+      maxPixels: 20,
+    },
     style: {
       id: 'abs_nodes',
       type: 'circle',
@@ -247,162 +346,20 @@ export const layers = {
       },
     },
   },
-  flood_fluvial_20: {
-    linear: false,
-    label: 'Fluvial flood (20 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_fluvial_20',
-      type: 'raster',
-      source: 'flood_fluvial_20',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_fluvial_50: {
-    linear: false,
-    label: 'Fluvial flood (50 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_fluvial_50',
-      type: 'raster',
-      source: 'flood_fluvial_50',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_fluvial_100: {
-    linear: false,
-    label: 'Fluvial flood (100 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_fluvial_100',
-      type: 'raster',
-      source: 'flood_fluvial_100',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_fluvial_200: {
-    linear: false,
-    label: 'Fluvial flood (200 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_fluvial_200',
-      type: 'raster',
-      source: 'flood_fluvial_200',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_fluvial_500: {
-    linear: false,
-    label: 'Fluvial flood (500 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_fluvial_500',
-      type: 'raster',
-      source: 'flood_fluvial_500',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_fluvial_1500: {
-    linear: false,
-    label: 'Fluvial flood (1500 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_fluvial_1500',
-      type: 'raster',
-      source: 'flood_fluvial_1500',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_coastal_1: {
-    linear: false,
-    label: 'Coastal flood (1 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_coastal_1',
-      type: 'raster',
-      source: 'flood_coastal_1',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_coastal_2: {
-    linear: false,
-    label: 'Coastal flood (2 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_coastal_2',
-      type: 'raster',
-      source: 'flood_coastal_2',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_coastal_5: {
-    linear: false,
-    label: 'Coastal flood (5 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_coastal_5',
-      type: 'raster',
-      source: 'flood_coastal_5',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_coastal_10: {
-    linear: false,
-    label: 'Coastal flood (10 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_coastal_10',
-      type: 'raster',
-      source: 'flood_coastal_10',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_coastal_50: {
-    linear: false,
-    label: 'Coastal flood (50 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_coastal_50',
-      type: 'raster',
-      source: 'flood_coastal_50',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
-  flood_coastal_100: {
-    linear: false,
-    label: 'Coastal flood (100 year RP)',
-    color: '#aaaaaa',
-    style: {
-      id: 'flood_coastal_100',
-      type: 'raster',
-      source: 'flood_coastal_100',
-      paint: {
-        'raster-fade-duration': 0,
-      },
-    },
-  },
+  flood_fluvial_20: floodLayer('fluvial', 20),
+  flood_fluvial_50: floodLayer('fluvial', 50),
+  flood_fluvial_100: floodLayer('fluvial', 100),
+  flood_fluvial_200: floodLayer('fluvial', 200),
+  flood_fluvial_500: floodLayer('fluvial', 500),
+  flood_fluvial_1500: floodLayer('fluvial', 1500),
+  flood_coastal_1: floodLayer('coastal', 1),
+  flood_coastal_2: floodLayer('coastal', 2),
+  flood_coastal_5: floodLayer('coastal', 5),
+  flood_coastal_10: floodLayer('coastal', 10),
+  flood_coastal_50: floodLayer('coastal', 50),
+  flood_coastal_100: floodLayer('coastal', 100),
 };
 
-export type LayerName = keyof typeof layers;
+export type LayerName = keyof typeof layersConfig;
+
+export const layers = layersConfig as Record<LayerName, LayerDefinition>;

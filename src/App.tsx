@@ -20,10 +20,7 @@ export const App = () => {
           <Toolbar /> {/* Prevents app bar from concealing content*/}
           <PageIntro />
         </Route>
-        <Route
-          path="/:view(overview|hazards)"
-          render={({ match: { params } }) => <MapView view={params.view as ViewName} />}
-        />
+        <Route path="/:view(overview)" render={({ match: { params } }) => <MapView view={params.view as ViewName} />} />
       </Switch>
     </Router>
   );
