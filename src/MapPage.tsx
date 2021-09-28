@@ -5,9 +5,9 @@ import { DataMap } from './map/DataMap';
 import { BackgroundControl } from './controls/BackgroundControl';
 import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
-import { ViewName, views } from './config/views';
+import { ViewName, VIEWS } from './config/views';
 import { BackgroundName } from './config/backgrounds';
-import { LayerName, layers } from './config/layers';
+import { LayerName, LAYERS } from './config/layers';
 import { HazardsControl } from './controls/HazardsControl';
 
 interface MapViewProps {
@@ -17,9 +17,9 @@ interface MapViewProps {
 export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [background, setBackground] = useState<BackgroundName>('light');
 
-  const viewLayerNames = useMemo<LayerName[]>(() => views[view].layers as LayerName[], [view]);
+  const viewLayerNames = useMemo<LayerName[]>(() => VIEWS[view].layers as LayerName[], [view]);
   const layerDefinitions = useMemo(
-    () => viewLayerNames.map((layerName) => ({ ...layers[layerName], key: layerName })),
+    () => viewLayerNames.map((layerName) => ({ ...LAYERS[layerName], key: layerName })),
     [viewLayerNames],
   );
 

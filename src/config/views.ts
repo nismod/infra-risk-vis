@@ -1,21 +1,21 @@
 import { makeConfig } from '../helpers';
 
-export const views = makeConfig([
+export const VIEWS = makeConfig([
   {
     id: 'overview',
     layers: [
-      'flood_fluvial_20',
-      'flood_fluvial_50',
-      'flood_fluvial_100',
-      'flood_fluvial_200',
-      'flood_fluvial_500',
-      'flood_fluvial_1500',
-      'flood_coastal_1',
-      'flood_coastal_2',
-      'flood_coastal_5',
-      'flood_coastal_10',
-      'flood_coastal_50',
-      'flood_coastal_100',
+      'hazard_fluvial_20',
+      'hazard_fluvial_50',
+      'hazard_fluvial_100',
+      'hazard_fluvial_200',
+      'hazard_fluvial_500',
+      'hazard_fluvial_1500',
+      'hazard_coastal_1',
+      'hazard_coastal_2',
+      'hazard_coastal_5',
+      'hazard_coastal_10',
+      'hazard_coastal_50',
+      'hazard_coastal_100',
       'elec_edges_high',
       'elec_edges_low',
       'elec_nodes',
@@ -30,20 +30,20 @@ export const views = makeConfig([
   {
     id: 'hazards',
     layers: [
-      'flood_fluvial_20',
-      'flood_fluvial_50',
-      'flood_fluvial_100',
-      'flood_fluvial_200',
-      'flood_fluvial_500',
-      'flood_fluvial_1500',
-      'flood_coastal_1',
-      'flood_coastal_2',
-      'flood_coastal_5',
-      'flood_coastal_10',
-      'flood_coastal_50',
-      'flood_coastal_100',
+      'hazard_fluvial_20',
+      'hazard_fluvial_50',
+      'hazard_fluvial_100',
+      'hazard_fluvial_200',
+      'hazard_fluvial_500',
+      'hazard_fluvial_1500',
+      'hazard_coastal_1',
+      'hazard_coastal_2',
+      'hazard_coastal_5',
+      'hazard_coastal_10',
+      'hazard_coastal_50',
+      'hazard_coastal_100',
     ],
   },
 ]);
 
-export type ViewName = keyof typeof views;
+export type ViewName = keyof typeof VIEWS;

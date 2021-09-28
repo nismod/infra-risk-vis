@@ -2,14 +2,14 @@ import { FC, useEffect, useState } from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormLabel, makeStyles } from '@material-ui/core';
 
 import { CustomNumberSlider } from './CustomSlider';
-import { layers } from '../config/layers';
+import { LAYERS } from '../config/layers';
 
 interface HazardsControlProps {
   layerVisibility: Record<string, boolean>;
   onLayerVisibilityUpdate: (visibilityUpdate: Record<string, boolean>) => void;
 }
 
-const fluvialLayers = Object.keys(layers).filter((l) => l.startsWith('flood_fluvial'));
+const fluvialLayers = Object.keys(LAYERS).filter((l) => l.startsWith('hazard_fluvial'));
 
 const fluvialMarks = [
   { value: 20, label: '20' },
@@ -20,7 +20,7 @@ const fluvialMarks = [
   { value: 1500, label: '1500' },
 ];
 
-const coastalLayers = Object.keys(layers).filter((l) => l.startsWith('flood_coastal'));
+const coastalLayers = Object.keys(LAYERS).filter((l) => l.startsWith('hazard_coastal'));
 const coastalMarks = [
   { value: 1, label: '1' },
   { value: 2, label: '2' },
@@ -51,14 +51,14 @@ export const HazardsControl: FC<HazardsControlProps> = ({ layerVisibility, onLay
   // TODO modify to avoid using useEffect with incomplete dependencies
   useEffect(() => {
     console.log('Setting fluvial');
-    const layerToShow = `flood_fluvial_${fluvialReturnPeriod}`;
+    const layerToShow = `hazard_fluvial_${fluvialReturnPeriod}`;
     onLayerVisibilityUpdate(Object.fromEntries(fluvialLayers.map((ln) => [ln, showFluvial && ln === layerToShow])));
   }, [fluvialReturnPeriod, showFluvial]);
 
   // TODO modify to avoid using useEffect with incomplete dependencies
   useEffect(() => {
     console.log('Setting coastal');
-    const layerToShow = `flood_coastal_${coastalReturnPeriod}`;
+    const layerToShow = `hazard_coastal_${coastalReturnPeriod}`;
     onLayerVisibilityUpdate(Object.fromEntries(coastalLayers.map((ln) => [ln, showCoastal && ln === layerToShow])));
   }, [showCoastal, coastalReturnPeriod]);
 

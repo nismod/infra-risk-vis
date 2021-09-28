@@ -21,7 +21,7 @@ export function unique(arr) {
   return Array.from(new Set(arr));
 }
 
-export function colorToRGB(cssColor: string) {
+export function colorCssToRgb(cssColor: string): [number, number, number, number?] {
   const { r, g, b } = d3.rgb(cssColor);
   return [r, g, b];
 }
@@ -34,7 +34,7 @@ export function toDictionary<T, K extends string, V>(
   return Object.fromEntries(array.map((x) => [keyFn(x), valueFn(x)])) as Record<K, V>;
 }
 
-export function makeConfig<K extends string, C>(cfg: (C & { id: K })[]) {
+export function makeConfig<C, K extends string>(cfg: (C & { id: K })[]) {
   return toDictionary(
     cfg,
     (x) => x.id,

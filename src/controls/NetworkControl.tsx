@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel } from '@material-ui/core';
 
-import { LayerDefinition, LayerName, layers } from '../config/layers';
+import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 
 interface NetworkControlProps {
   dataLayers: (LayerDefinition & { key: LayerName })[];
@@ -25,7 +25,7 @@ export const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisib
   <FormControl component="fieldset">
     <FormLabel component="legend">Infrastructure Layers</FormLabel>
     {networkLayers.map((layerName) => {
-      const { label, type, color } = layers[layerName];
+      const { label, type, color } = LAYERS[layerName];
       const checked = layerVisibility[layerName];
       return (
         <FormGroup row key={'toggleLayer' + layerName}>

@@ -1,5 +1,5 @@
 import DeckGL from 'deck.gl';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { StaticMap } from 'react-map-gl';
 import _ from 'lodash';
 
@@ -21,7 +21,7 @@ function makeMapboxConfig(background: BackgroundName) {
   };
 }
 
-export const MapViewport = ({ layers, background, onHover, onClick, children }) => {
+export const MapViewport = ({ layersFunction, background, onHover, onClick, children }) => {
   const [viewport, setViewport] = useState({
     latitude: 18.14,
     longitude: -77.28,
@@ -31,16 +31,22 @@ export const MapViewport = ({ layers, background, onHover, onClick, children }) 
     maxPitch: 0,
   });
 
+  const deckRef = useRef<DeckGL>();
+
+  const zoom = viewport.zoom;
+
   const backgroundStyle = useMemo(() => makeMapboxConfig(background), [background]);
+  const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom]);
 
   return (
     <DeckGL
+      ref={deckRef}
       controller={true}
       viewState={viewport}
       onViewStateChange={({ viewState }) => setViewport(viewState)}
       layers={layers}
       pickingRadius={10}
-      onHover={onHover}
+      onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
       onClick={onClick}
     >
       <StaticMap mapStyle={backgroundStyle} mapboxApiAccessToken={MAPBOX_KEY} />
