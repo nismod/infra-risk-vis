@@ -1,3 +1,4 @@
+import { Box, Paper } from '@material-ui/core';
 import React, { FC } from 'react';
 
 interface MapTooltipProps {
@@ -11,14 +12,13 @@ export const MapTooltip: FC<MapTooltipProps> = ({ tooltipXY, children }) => {
         position: 'absolute',
         zIndex: 1000,
         pointerEvents: 'none',
-        left: tooltipXY[0] - 150,
-        top: tooltipXY[1] - 5,
+        left: tooltipXY[0],
+        top: tooltipXY[1],
       }}
     >
-      <div className="tooltip-wrap">
-        <div className="tooltip-body">{children}</div>
-        <span className="tooltip-triangle"></span>
-      </div>
+      <Paper>
+        <Box p={1}>{children}</Box>
+      </Paper>
     </div>
   ) : null;
 };

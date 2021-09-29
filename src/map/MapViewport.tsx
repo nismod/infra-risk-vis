@@ -41,6 +41,9 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, chil
   return (
     <DeckGL
       ref={deckRef}
+      style={{
+        overflow: 'hidden',
+      }}
       controller={true}
       viewState={viewport}
       onViewStateChange={({ viewState }) => setViewport(viewState)}

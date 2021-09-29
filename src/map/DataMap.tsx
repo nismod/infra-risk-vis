@@ -16,22 +16,20 @@ export interface RasterHover {
   type: 'raster';
   deckLayer: string;
   color: any;
-  // info: any;
+  info: any;
 }
 
 export interface VectorHover {
   type: 'vector';
   deckLayer: string;
   feature: any;
-  // info: any;
+  info: any;
 }
 
 export type HoveredObject = VectorHover | RasterHover;
 
 export const DataMap = ({ background, view, layerSelection }) => {
   const [hoveredObjects, setHoveredObjects] = useState<HoveredObject[]>([]);
-  // const [hoverColor, setHoverColor] = useState<[number, number, number, number]>(null);
-  // const [hoveredFeatures, setHoveredFeatures] = useState<MapboxGeoJSONFeature[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
 
   const [selectedFeatures, setSelectedFeatures] = useState<MapboxGeoJSONFeature[]>([]);
@@ -47,79 +45,48 @@ export const DataMap = ({ background, view, layerSelection }) => {
   );
 
   const onHover = useCallback((info: any, deck: DeckGL) => {
-    const { x, y } = info;
-    const pickedObjects = deck.pickMultipleObjects({ x, y, radius: 20 });
+    const { x, y, object } = info;
 
     const newHoveredObjects: HoveredObject[] = [];
 
-    for (const picked of pickedObjects) {
-      const layerId = picked.layer.id;
-      const deckLayerDefinition = DECK_LAYERS[layerId];
-      if (deckLayerDefinition.spatialType === 'raster') {
-        const { bitmap, sourceLayer } = picked;
-        if (bitmap) {
-          const pixelColor = readPixelsToArray(sourceLayer.props.image, {
-            sourceX: bitmap.pixel[0],
-            sourceY: bitmap.pixel[1],
-            sourceWidth: 1,
-            sourceHeight: 1,
-            sourceType: undefined,
-          });
-          if (pixelColor[3]) {
-            newHoveredObjects.push({
-              type: 'raster',
-              deckLayer: layerId,
-              color: pixelColor,
-              // info: picked,
+    if (object) {
+      const pickedObjects = deck.pickMultipleObjects({ x, y, radius: 20 });
+      for (const picked of pickedObjects) {
+        const layerId = picked.layer.id;
+        const deckLayerDefinition = DECK_LAYERS[layerId];
+        if (deckLayerDefinition.spatialType === 'raster') {
+          const { bitmap, sourceLayer } = picked;
+          if (bitmap) {
+            const pixelColor = readPixelsToArray(sourceLayer.props.image, {
+              sourceX: bitmap.pixel[0],
+              sourceY: bitmap.pixel[1],
+              sourceWidth: 1,
+              sourceHeight: 1,
+              sourceType: undefined,
             });
+            if (pixelColor[3]) {
+              newHoveredObjects.push({
+                type: 'raster',
+                deckLayer: layerId,
+                color: pixelColor,
+                info: picked,
+              });
+            }
           }
+        } else {
+          const { object } = picked;
+          newHoveredObjects.push({
+            type: 'vector',
+            deckLayer: layerId,
+            feature: object,
+            info: picked,
+          });
         }
-      } else {
-        const { object } = picked;
-        newHoveredObjects.push({
-          type: 'vector',
-          deckLayer: layerId,
-          feature: object,
-        });
       }
     }
 
     setHoveredObjects(newHoveredObjects);
-
-    if (_.isEmpty(newHoveredObjects)) {
-      setHoverXY(null);
-    } else {
-      setHoverXY([x, y]);
-    }
-
-    // const { bitmap, object, sourceLayer, x, y } = info;
-
-    // if (bitmap || object) {
-    //   setHoverXY([x, y]);
-    // } else {
-    //   setHoverXY(null);
-    // }
-    // if (bitmap) {
-    //   const pixelColor = readPixelsToArray(sourceLayer.props.image, {
-    //     sourceX: bitmap.pixel[0],
-    //     sourceY: bitmap.pixel[1],
-    //     sourceWidth: 1,
-    //     sourceHeight: 1,
-    //     sourceType: undefined,
-    //   });
-    //   if (pixelColor[3]) {
-    //     setHoverColor(pixelColor);
-    //   } else {
-    //     setHoverColor(null);
-    //   }
-    //   setHoveredFeatures(null);
-    // } else if (object?.properties) {
-    //   setHoverXY([x, y]);
-    //   setHoveredFeatures([object]);
-    // } else {
-    //   setHoverColor(null);
-    //   setHoveredFeatures(null);
-    // }
+    setHoverXY([x, y]);
   }, []);
 
   const onLayerClick = useCallback((info: any) => {
@@ -136,11 +103,7 @@ export const DataMap = ({ background, view, layerSelection }) => {
     <>
       <MapViewport layersFunction={deckLayersFunction} background={background} onHover={onHover} onClick={onLayerClick}>
         <MapTooltip tooltipXY={hoverXY}>
-          {hoveredObjects.length && <TooltipContent hoveredObjects={hoveredObjects} />}
-          {/* {hoverColor && (
-            <div style={{ backgroundColor: `rgb(${hoverColor[0]},${hoverColor[1]},${hoverColor[2]})` }}>Flooding</div>
-          )}
-          {hoveredFeatures && <FeaturesTooltipContent features={hoveredFeatures} />} */}
+          {hoveredObjects.length ? <TooltipContent hoveredObjects={hoveredObjects} /> : null}
         </MapTooltip>
       </MapViewport>
       {selectedFeatures.length !== 0 && <FeatureSidebar feature={selectedFeatures[0]} />}
