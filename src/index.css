@@ -46,13 +46,6 @@ article .alert {
 /**
  * Map and controls
  */
-.map-height {
-  position: absolute;
-  top: 64px;
-  left: 320px;
-  right: 0;
-  bottom: 0;
-}
 .custom-map-control {
   position: absolute;
   z-index: 999;
@@ -111,10 +104,6 @@ article .alert {
 }
 .position-control {
   font-size: 0.8rem;
-}
-.drawer-contents {
-  padding: 0 12px 12px;
-  width: 320px;
 }
 /**
  * Legend

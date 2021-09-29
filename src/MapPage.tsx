@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Drawer, Toolbar } from '@material-ui/core';
+import { Box, Drawer, Toolbar } from '@material-ui/core';
 
 import { DataMap } from './map/DataMap';
 import { BackgroundControl } from './controls/BackgroundControl';
@@ -13,6 +13,8 @@ import { HazardsControl } from './controls/HazardsControl';
 interface MapViewProps {
   view: ViewName;
 }
+
+const sidebarWidth = 360;
 
 export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [background, setBackground] = useState<BackgroundName>('light');
@@ -28,8 +30,8 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   return (
     <>
       <Drawer variant="permanent">
-        <Toolbar /> {/* Prevents app bar from concealing content*/}
-        <div className="drawer-contents">
+        <Box p={3} width={sidebarWidth}>
+          <Toolbar /> {/* Prevents app bar from concealing content*/}
           {view === 'overview' && (
             <>
               <NetworkControl
@@ -41,11 +43,11 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
             </>
           )}
           <BackgroundControl background={background} onBackgroundChange={setBackground} />
-        </div>
+        </Box>
       </Drawer>
-      <div className="map-height">
+      <Box position="absolute" top={64} left={sidebarWidth} right={0} bottom={0}>
         <DataMap background={background} layerSelection={layerSelection} view={view} />
-      </div>
+      </Box>
     </>
   );
 };

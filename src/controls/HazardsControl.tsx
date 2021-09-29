@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Checkbox, FormControl, FormControlLabel, FormLabel, makeStyles } from '@material-ui/core';
+import { Box, Checkbox, FormControl, FormControlLabel, FormLabel, makeStyles, Typography } from '@material-ui/core';
 
 import { CustomNumberSlider } from './CustomSlider';
 import { LAYERS } from '../config/layers';
@@ -31,9 +31,6 @@ const coastalMarks = [
 ];
 
 const useStyles = makeStyles({
-  formSection: {
-    marginTop: '1em',
-  },
   sliderForm: {
     width: '100%',
   },
@@ -50,21 +47,20 @@ export const HazardsControl: FC<HazardsControlProps> = ({ layerVisibility, onLay
 
   // TODO modify to avoid using useEffect with incomplete dependencies
   useEffect(() => {
-    console.log('Setting fluvial');
     const layerToShow = `hazard_fluvial_${fluvialReturnPeriod}`;
     onLayerVisibilityUpdate(Object.fromEntries(fluvialLayers.map((ln) => [ln, showFluvial && ln === layerToShow])));
   }, [fluvialReturnPeriod, showFluvial]);
 
   // TODO modify to avoid using useEffect with incomplete dependencies
   useEffect(() => {
-    console.log('Setting coastal');
     const layerToShow = `hazard_coastal_${coastalReturnPeriod}`;
     onLayerVisibilityUpdate(Object.fromEntries(coastalLayers.map((ln) => [ln, showCoastal && ln === layerToShow])));
   }, [showCoastal, coastalReturnPeriod]);
 
   return (
-    <>
-      <div className={classes.formSection}>
+    <Box mb={2}>
+      <Typography variant="h6">Hazard Layers</Typography>
+      <Box mb={1}>
         <FormControl>
           <FormControlLabel
             control={
@@ -79,10 +75,15 @@ export const HazardsControl: FC<HazardsControlProps> = ({ layerVisibility, onLay
         </FormControl>
         <FormControl disabled={!showFluvial} component="fieldset" className={classes.sliderForm}>
           <FormLabel component="legend">River Flooding Return Period</FormLabel>
-          <CustomNumberSlider marks={fluvialMarks} value={fluvialReturnPeriod} onChange={setFluvialReturnPeriod} />
+          <CustomNumberSlider
+            marks={fluvialMarks}
+            value={fluvialReturnPeriod}
+            onChange={setFluvialReturnPeriod}
+            disabled={!showFluvial}
+          />
         </FormControl>
-      </div>
-      <div className={classes.formSection}>
+      </Box>
+      <Box mb={1}>
         <FormControl>
           <FormControlLabel
             control={
@@ -97,9 +98,14 @@ export const HazardsControl: FC<HazardsControlProps> = ({ layerVisibility, onLay
         </FormControl>
         <FormControl disabled={!showCoastal} component="fieldset" className={classes.sliderForm}>
           <FormLabel component="legend">Coastal Flooding Return Period</FormLabel>
-          <CustomNumberSlider marks={coastalMarks} value={coastalReturnPeriod} onChange={setCoastalReturnPeriod} />
+          <CustomNumberSlider
+            marks={coastalMarks}
+            value={coastalReturnPeriod}
+            onChange={setCoastalReturnPeriod}
+            disabled={!showCoastal}
+          />
         </FormControl>
-      </div>
-    </>
+      </Box>
+    </Box>
   );
 };
