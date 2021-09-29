@@ -45,11 +45,11 @@ export const DataMap = ({ background, view, layerSelection }) => {
   );
 
   const onHover = useCallback((info: any, deck: DeckGL) => {
-    const { x, y, object } = info;
+    const { x, y } = info;
 
     const newHoveredObjects: HoveredObject[] = [];
 
-    if (object) {
+    if (info.object || info.bitmap) {
       const pickedObjects = deck.pickMultipleObjects({ x, y, radius: 20 });
       for (const picked of pickedObjects) {
         const layerId = picked.layer.id;
