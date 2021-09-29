@@ -1,5 +1,6 @@
 import { MVTLayer, TileLayer, BitmapLayer } from 'deck.gl';
 import GL from '@luma.gl/constants';
+import { DataFilterExtension } from '@deck.gl/extensions';
 
 import { COLORS } from './colors';
 import { makeConfig } from '../helpers';
@@ -65,7 +66,15 @@ function getBoundsForTile(tileProps) {
   return [west, south, east, north];
 }
 
-const DECK_COLOR_TRANSPARENT = [0, 0, 0, 0];
+enum ElecVoltage {
+  elec_edges_high = 'elec_edges_high',
+  elec_edges_low = 'elec_edges_low',
+}
+
+const electricityColor = {
+  [ElecVoltage.elec_edges_high]: COLORS.electricity_high.deck,
+  [ElecVoltage.elec_edges_low]: COLORS.electricity_low.deck,
+};
 
 export const DECK_LAYERS = makeConfig<any, string>([
   {
@@ -75,15 +84,17 @@ export const DECK_LAYERS = makeConfig<any, string>([
     fn: ({ props, zoom, visibility }) =>
       new MVTLayer(props, {
         data: 'http://localhost:8080/data/elec_edges.json',
-        getLineColor: (x) => {
-          const lt = x.properties.line_type;
-
-          if (lt === 'High Voltage') {
-            return visibility.elec_edges_high ? COLORS.electricity_high.deck : DECK_COLOR_TRANSPARENT;
-          } else if (lt === 'Low Voltage') {
-            return visibility.elec_edges_low ? COLORS.electricity_low.deck : DECK_COLOR_TRANSPARENT;
-          } else return COLORS.electricity_unknown;
+        dataTransform: (data) => {
+          for (const objectProperty of data.lines.properties) {
+            const at = objectProperty.line_type;
+            objectProperty.__logicalLayer =
+              at === 'High Voltage' ? ElecVoltage.elec_edges_high : ElecVoltage.elec_edges_low;
+          }
+          return data;
         },
+        getLineColor: (x) => electricityColor[x.properties.__logicalLayer],
+        getFilterValue: (x) => (visibility[x.properties.__logicalLayer] ? 1 : 0),
+        filterRange: [1, 1],
         getLineWidth: 10,
         lineWidthUnit: 'meters',
         lineWidthMinPixels: 1,
@@ -91,8 +102,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
         lineJointRounded: true,
         lineCapRounded: true,
         updateTriggers: {
-          getLineColor: [visibility],
+          getFilterValue: [visibility],
         },
+        extensions: [new DataFilterExtension({ filterSize: 1 })],
       } as any),
   },
   {
