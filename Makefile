@@ -1,4 +1,15 @@
-.PHONY: all clean vector raster clean-vector clean-rasters
+# load variables from .env file
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
+# get path to this Makefile regardless of CWD - see https://stackoverflow.com/a/18137056/1478817
+current_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+# current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+
+
+.PHONY: all clean vector raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters
 
 all: vector raster
 
@@ -9,7 +20,24 @@ vector: $(patsubst %,./tileserver/data/%.mbtiles,$(vector_layers))
 clean-vector:
 	rm ./tileserver/data/*.mbtiles
 
-raster: $(patsubst %,./tileserver-raster/data/%.tif,$(raster_layers))
+RASTER_BASE_COMMAND = "$(current_dir)/etl/raster/process_all.py" --raw "${RAW_DATA_DIR}" --out "$(current_dir)/tileserver/raster/data"
+
+raster:
+	${RASTER_BASE_COMMAND}
+
+raster-fluvial:
+	${RASTER_BASE_COMMAND} --type fluvial
+
+raster-surface:
+	${RASTER_BASE_COMMAND} --type surface
+
+raster-coastal:
+	${RASTER_BASE_COMMAND} --type coastal
+	
+raster-cyclone:
+	${RASTER_BASE_COMMAND} --type cyclone
+
+
 clean-raster:
 	rm ./tileserver-raster/data/*.tif
 
@@ -87,43 +115,5 @@ clean-raster:
 		--layer=abs_nodes \
 		./intermediate_data/abs_nodes.json
 
-PROCESS_RASTER = ./scripts/raster/prepare_raster.sh
-
-./tileserver-raster/data/fluvial_rp20_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q20_RD_02.tif $@
-
-./tileserver-raster/data/fluvial_rp50_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q50_RD_02.tif $@
-
-./tileserver-raster/data/fluvial_rp100_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q100_RD_02.tif $@
-
-./tileserver-raster/data/fluvial_rp200_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q200_RD_02.tif $@
-
-./tileserver-raster/data/fluvial_rp500_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q500_RD_02.tif $@
-
-./tileserver-raster/data/fluvial_rp1500_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Fluvial/JM_FLRF_UD_Q1500_RD_02.tif $@
-
-
-./tileserver-raster/data/coastal_rp1_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_1.tif $@
-
-./tileserver-raster/data/coastal_rp2_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_2.tif $@
-
-./tileserver-raster/data/coastal_rp5_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_5.tif $@
-
-./tileserver-raster/data/coastal_rp10_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_10.tif $@
-
-./tileserver-raster/data/coastal_rp50_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_50.tif $@
-
-./tileserver-raster/data/coastal_rp100_raw.tif:
-	$(PROCESS_RASTER) ./intermediate_data/Coastal/JamaicaJAM001RCP452010_epsg_32618_RP_100.tif $@
 
 clean: clean-vector clean-raster

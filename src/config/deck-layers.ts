@@ -4,13 +4,14 @@ import { DataFilterExtension } from '@deck.gl/extensions';
 
 import { COLORS } from './colors';
 import { makeConfig } from '../helpers';
+import { getHazardId } from './layers';
 
 function makeColormap(attr: string, valueColorMap: any) {
   return (x) => valueColorMap[x.properties[attr]];
 }
 
 const lineStyle = (zoom) => ({
-  getLineWidth: 10,
+  getLineWidth: 20,
   lineWidthUnit: 'meters',
   lineWidthMinPixels: 1,
   lineWidthMaxPixels: 10,
@@ -21,7 +22,7 @@ const lineStyle = (zoom) => ({
 });
 
 const pointRadius = (zoom) => ({
-  getPointRadius: 20,
+  getPointRadius: 40,
   pointRadiusUnit: 'meters',
   pointRadiusMinPixels: 3,
   pointRadiusMaxPixels: 20,
@@ -51,11 +52,13 @@ function makeValueMapping<SourceValueType, ObjectType = any>(
 const rasterColormaps = {
   fluvial: 'blues',
   coastal: 'greens',
+  surface: 'reds',
 };
 
 const rasterColormapRanges = {
   fluvial: '[0,10]',
   coastal: '[0,3.5]',
+  surface: '[0,10]',
 };
 
 function getBoundsForTile(tileProps) {
@@ -115,7 +118,8 @@ export const DECK_LAYERS = makeConfig<any, string>([
       new MVTLayer(props, {
         data: 'http://localhost:8080/data/elec_nodes.json',
         getFillColor: COLORS.electricity_high.deck,
-        stroked: false,
+        stroked: true,
+        getLineColor: [255, 255, 255],
         ...pointRadius(zoom),
       } as any),
   },
@@ -138,7 +142,8 @@ export const DECK_LAYERS = makeConfig<any, string>([
       new MVTLayer(props, {
         data: 'http://localhost:8080/data/rail_nodes.json',
         getFillColor: COLORS.railway.deck,
-        stroked: false,
+        stroked: true,
+        getLineColor: [255, 255, 255],
         ...pointRadius(zoom),
       } as any),
   },
@@ -169,7 +174,8 @@ export const DECK_LAYERS = makeConfig<any, string>([
       new MVTLayer(props, {
         data: 'http://localhost:8080/data/bridges.json',
         getFillColor: COLORS.bridges.deck,
-        stroked: false,
+        stroked: true,
+        getLineColor: [255, 255, 255],
         ...pointRadius(zoom),
       } as any),
   },
@@ -192,22 +198,31 @@ export const DECK_LAYERS = makeConfig<any, string>([
       new MVTLayer(props, {
         data: 'http://localhost:8080/data/abs_nodes.json',
         getFillColor: COLORS.water_abstraction.deck,
-        stroked: false,
+        stroked: true,
+        getLineColor: [255, 255, 255],
         ...pointRadius(zoom),
       } as any),
   },
-  hazardDeckLayer('fluvial', 20),
-  hazardDeckLayer('fluvial', 50),
-  hazardDeckLayer('fluvial', 100),
-  hazardDeckLayer('fluvial', 200),
-  hazardDeckLayer('fluvial', 500),
-  hazardDeckLayer('fluvial', 1500),
-  hazardDeckLayer('coastal', 1),
-  hazardDeckLayer('coastal', 2),
-  hazardDeckLayer('coastal', 5),
-  hazardDeckLayer('coastal', 10),
-  hazardDeckLayer('coastal', 50),
-  hazardDeckLayer('coastal', 100),
+  hazardDeckLayer('fluvial', 20, 'baseline', 2010, 'None'),
+  hazardDeckLayer('fluvial', 50, 'baseline', 2010, 'None'),
+  hazardDeckLayer('fluvial', 100, 'baseline', 2010, 'None'),
+  hazardDeckLayer('fluvial', 200, 'baseline', 2010, 'None'),
+  hazardDeckLayer('fluvial', 500, 'baseline', 2010, 'None'),
+  hazardDeckLayer('fluvial', 1500, 'baseline', 2010, 'None'),
+
+  hazardDeckLayer('surface', 20, 'baseline', 2010, 'None'),
+  hazardDeckLayer('surface', 50, 'baseline', 2010, 'None'),
+  hazardDeckLayer('surface', 100, 'baseline', 2010, 'None'),
+  hazardDeckLayer('surface', 200, 'baseline', 2010, 'None'),
+  hazardDeckLayer('surface', 500, 'baseline', 2010, 'None'),
+  hazardDeckLayer('surface', 1500, 'baseline', 2010, 'None'),
+
+  hazardDeckLayer('coastal', 1, '4x5', 2050, 'None'),
+  hazardDeckLayer('coastal', 2, '4x5', 2050, 'None'),
+  hazardDeckLayer('coastal', 5, '4x5', 2050, 'None'),
+  hazardDeckLayer('coastal', 10, '4x5', 2050, 'None'),
+  hazardDeckLayer('coastal', 50, '4x5', 2050, 'None'),
+  hazardDeckLayer('coastal', 100, '4x5', 2050, 'None'),
   // {
   //   id: 'hazard',
   //   type: 'TileLayer',
@@ -230,15 +245,15 @@ export const DECK_LAYERS = makeConfig<any, string>([
   // },
 ]);
 
-function hazardDeckLayer(hazardType, returnPeriod) {
-  const id = `hazard_${hazardType}_${returnPeriod}`;
+function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
+  const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence }); //`hazard_${hazardType}_${returnPeriod}`;
   return {
     id,
     type: 'TileLayer',
     spatialType: 'raster',
-    fn: ({ props, params: { floodType, returnPeriod } }) =>
+    fn: ({ props, params: { hazardType, returnPeriod, rcp, epoch, confidence } }) =>
       new TileLayer(props, {
-        data: `http://localhost:5000/singleband/${hazardType}/${returnPeriod}/raw/{z}/{x}/{y}.png?colormap=${rasterColormaps[hazardType]}&stretch_range=${rasterColormapRanges[floodType]}`,
+        data: `http://localhost:5000/singleband/${hazardType}/${returnPeriod}/${rcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${rasterColormaps[hazardType]}&stretch_range=${rasterColormapRanges[hazardType]}`,
         refinementStrategy: 'no-overlap',
         renderSubLayers: (props) =>
           new BitmapLayer(props, {

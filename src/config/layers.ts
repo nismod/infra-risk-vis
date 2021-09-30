@@ -11,19 +11,44 @@ export interface LayerDefinition {
   getId?: (x) => string;
 }
 
-function floodLayer<F extends 'fluvial' | 'coastal', R extends number>(
-  floodType: F,
-  returnPeriod: R,
-): LayerDefinition & { id: `hazard_${typeof floodType}_${typeof returnPeriod}` } {
-  const id = `hazard_${floodType}_${returnPeriod}` as const;
+export function getHazardId<
+  F extends 'fluvial' | 'surface' | 'coastal' | 'cyclone',
+  RP extends number,
+  RCP extends string,
+  E extends number,
+  C extends number | string,
+>({
+  hazardType,
+  returnPeriod,
+  rcp,
+  epoch,
+  confidence,
+}: {
+  hazardType: F;
+  returnPeriod: RP;
+  rcp: RCP;
+  epoch: E;
+  confidence: C;
+}) {
+  return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${confidence}` as const;
+}
+
+function hazardLayer<
+  F extends 'fluvial' | 'surface' | 'coastal' | 'cyclone',
+  RP extends number,
+  RCP extends string,
+  E extends number,
+  C extends number | string,
+>(hazardType: F, returnPeriod: RP, rcp: RCP, epoch: E, confidence: C) {
+  const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence });
   return {
     id,
-    deckLayer: { baseName: 'hazard', params: { floodType, returnPeriod } },
+    deckLayer: { baseName: 'hazard', params: { hazardType, returnPeriod, rcp, epoch, confidence } },
     type: 'raster',
-    label: `${titleCase(floodType)} flooding (${returnPeriod} year RP)`,
+    label: `${titleCase(hazardType)}`,
     color: '#aaaaaa',
-    getId: ({ floodType, returnPeriod }) => `hazard_${floodType}_${returnPeriod}`,
-  };
+    getId: getHazardId,
+  } as LayerDefinition & { id: typeof id };
 }
 
 /* Line widths:
@@ -133,18 +158,27 @@ export const LAYERS = makeConfig([
     label: 'Water Abstraction',
     color: COLORS.water_abstraction.css,
   },
-  floodLayer('fluvial', 20),
-  floodLayer('fluvial', 50),
-  floodLayer('fluvial', 100),
-  floodLayer('fluvial', 200),
-  floodLayer('fluvial', 500),
-  floodLayer('fluvial', 1500),
-  floodLayer('coastal', 1),
-  floodLayer('coastal', 2),
-  floodLayer('coastal', 5),
-  floodLayer('coastal', 10),
-  floodLayer('coastal', 50),
-  floodLayer('coastal', 100),
+
+  hazardLayer('fluvial', 20, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 50, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 100, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 200, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 500, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 1500, 'baseline', 2010, 'None'),
+
+  hazardLayer('surface', 20, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 50, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 100, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 200, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 500, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 1500, 'baseline', 2010, 'None'),
+
+  hazardLayer('coastal', 1, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 2, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 5, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 10, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 50, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 100, '4x5', 2050, 'None'),
 ]);
 
 export type LayerName = keyof typeof LAYERS;

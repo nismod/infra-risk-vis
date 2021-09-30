@@ -9,7 +9,7 @@ public/*.csv
 public/**/*.csv
 
 # local config
-package-lock.json
+.env
 TODO
 NOTES
 
