@@ -90,14 +90,14 @@ pip3 install terracotta[recommended]
 
 ## Run
 
-Running the application currently requires two (local) server processes: the
-tileserver and the app itself.
+Running the application currently requires three (local) server processes: the
+vector and raster tileservers, and the app itself.
 
 ### Run the vector tileserver
 
 Run the tileserver directly (from the root of the project):
 
-    npm run tileserver
+    npm run vector
 
 Open a browser to view the tileserver:
 

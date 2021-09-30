@@ -15,3 +15,6 @@ NOTES
 
 # build
 build/
+
+# tileserver database
+terracotta.sqlite
