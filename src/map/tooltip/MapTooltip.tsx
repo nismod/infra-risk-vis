@@ -12,7 +12,7 @@ export const MapTooltip: FC<MapTooltipProps> = ({ tooltipXY, children }) => {
         position: 'absolute',
         zIndex: 1000,
         pointerEvents: 'none',
-        left: tooltipXY[0],
+        left: tooltipXY[0] + 10,
         top: tooltipXY[1],
       }}
     >

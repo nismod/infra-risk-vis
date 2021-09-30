@@ -44,6 +44,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, chil
       style={{
         overflow: 'hidden',
       }}
+      getCursor={() => 'default'}
       controller={true}
       viewState={viewport}
       onViewStateChange={({ viewState }) => setViewport(viewState)}
