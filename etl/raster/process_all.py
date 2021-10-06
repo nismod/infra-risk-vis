@@ -14,7 +14,8 @@ def run_single_processing(in_file_path: Path, out_file_path: Path):
 
 
 def process_raster_datasets(raw: Path, out: Path, type: str = None):
-  csv_path = raw / 'hazard_layers.csv'
+  hazards_dir = raw / 'hazards'
+  csv_path = hazards_dir / 'hazard_layers.csv'
   assert csv_path.is_file(), f"{csv_path} is not a file"
 
   with csv_path.open() as f:
@@ -25,7 +26,8 @@ def process_raster_datasets(raw: Path, out: Path, type: str = None):
       assert 'hazard' in reader.fieldnames
     for row in reader:
       if type is None or row['hazard'] == type:
-        in_file_path = raw / row['path']
+        in_file_rel_path = row['path'].removeprefix('hazards/') # current version of CSV has all paths prefixed by hazards/
+        in_file_path = hazards_dir / in_file_rel_path
         file_key = row['key'].replace('.', 'x') # replace dots with 'x' because dots don't work with terracotta
         out_file_path = out / f"{file_key}.tif"
         run_single_processing(in_file_path, out_file_path)
