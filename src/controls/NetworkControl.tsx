@@ -1,46 +1,56 @@
 import React, { FC } from 'react';
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel } from '@material-ui/core';
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
 
-import { LayerDefinition, LayerName } from '../config/layers';
+import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 
 interface NetworkControlProps {
   dataLayers: (LayerDefinition & { key: LayerName })[];
   layerVisibility: Record<LayerName, boolean>;
-  onLayerVisChange: (layerName: LayerName, visibility: boolean) => void;
+  onLayerVisChange: (visUpdate: Record<string, boolean>) => void; //TODO change record key type to LayerName
 }
 
+const networkLayers = [
+  'elec_edges_high',
+  'elec_edges_low',
+  'elec_nodes',
+  'rail_edges',
+  'rail_nodes',
+  'road_edges',
+  'bridges',
+  'pot_edges',
+  'abs_nodes',
+];
+
 export const NetworkControl: FC<NetworkControlProps> = ({ dataLayers, layerVisibility, onLayerVisChange }) => (
-  <FormControl component="fieldset">
-    <FormLabel component="legend">Infrastructure Layers</FormLabel>
-    {dataLayers.map((layerData) => {
-      const layerName = layerData.key;
-      const label = layerData.label;
-      const checked = layerVisibility[layerName];
-      return (
-        <FormGroup row key={'toggleLayer' + layerName}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                data-layer={layerName}
-                color="primary"
-                checked={checked}
-                value={layerName}
-                name={'toggleLayerCheckbox' + layerName}
-                onChange={(e) => onLayerVisChange(e.target.value as LayerName, e.target.checked)}
-              />
-            }
-            label={
-              <>
-                <span
-                  className={layerData.linear ? 'dot line' : 'dot'}
-                  style={{ backgroundColor: layerData.color }}
-                ></span>
-                {label}
-              </>
-            }
-          ></FormControlLabel>
-        </FormGroup>
-      );
-    })}
-  </FormControl>
+  <Box mb={2}>
+    <Typography variant="h6">Infrastructure Layers</Typography>
+    <FormControl component="fieldset">
+      {networkLayers.map((layerName) => {
+        const { label, type, color } = LAYERS[layerName];
+        const checked = layerVisibility[layerName];
+        return (
+          <FormGroup row key={'toggleLayer' + layerName}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  data-layer={layerName}
+                  color="primary"
+                  checked={checked}
+                  value={layerName}
+                  name={'toggleLayerCheckbox' + layerName}
+                  onChange={(e) => onLayerVisChange({ [e.target.value as LayerName]: e.target.checked })}
+                />
+              }
+              label={
+                <>
+                  <span className={type === 'line' ? 'dot line' : 'dot'} style={{ backgroundColor: color }}></span>
+                  {label}
+                </>
+              }
+            ></FormControlLabel>
+          </FormGroup>
+        );
+      })}
+    </FormControl>
+  </Box>
 );

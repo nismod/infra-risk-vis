@@ -9,9 +9,12 @@ public/*.csv
 public/**/*.csv
 
 # local config
-package-lock.json
+.env
 TODO
 NOTES
 
 # build
 build/
+
+# tileserver database
+terracotta.sqlite

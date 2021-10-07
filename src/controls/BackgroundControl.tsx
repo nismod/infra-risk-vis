@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@material-ui/core';
-import { BackgroundName } from '../config/types';
+import { BackgroundName } from '../config/backgrounds';
 
 interface BackgroundControlProps {
   background: BackgroundName;

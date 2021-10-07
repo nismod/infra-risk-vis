@@ -46,13 +46,6 @@ article .alert {
 /**
  * Map and controls
  */
-.map-height {
-  position: absolute;
-  top: 64px;
-  left: 320px;
-  right: 0;
-  bottom: 0;
-}
 .custom-map-control {
   position: absolute;
   z-index: 999;
@@ -112,10 +105,6 @@ article .alert {
 .position-control {
   font-size: 0.8rem;
 }
-.drawer-contents {
-  padding: 0 12px 12px;
-  width: 320px;
-}
 /**
  * Legend
  */
@@ -134,45 +123,4 @@ article .alert {
   margin-right: 5px;
   text-align: center;
   margin-bottom: 1px;
-}
-/**
- * Tooltip
- */
-.tooltip-wrap {
-  display: -webkit-inline-flex;
-  display: inline-flex;
-  -webkit-align-items: center;
-  align-items: center;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  position: absolute;
-  bottom: 0;
-}
-.tooltip-body {
-  display: block;
-  width: 300px;
-  max-width: 100%;
-  padding: 12px;
-  background-color: #273d56;
-  border-radius: 4px;
-  box-shadow: 0 0 10px 2px rgba(31, 51, 73, 0.1);
-
-  color: #fff;
-  font-size: 12px;
-  line-height: 18px;
-
-  overflow: hidden;
-}
-.tooltip-triangle {
-  display: block;
-  max-width: 100%;
-  width: 12px;
-  height: 12px;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 9px solid currentColor;
-  font-size: 0;
-  line-height: 0;
-  color: #273d56;
-  cursor: pointer;
 }

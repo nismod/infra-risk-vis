@@ -1,7 +1,7 @@
 import React from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
-export const PageIntro = () => (
+export const IntroPage = () => (
   <article>
     <h1>Jamaica Infrastructure Risk Assessment Tool</h1>
 

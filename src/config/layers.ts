@@ -1,252 +1,184 @@
+import { titleCase } from 'vega-lite';
+import { makeConfig } from '../helpers';
+import { COLORS } from './colors';
+
 export interface LayerDefinition {
+  deckLayer: string | { baseName: string; params: any };
+  deckLayerParams?: any;
   label: string;
-  linear: boolean;
+  type: string; //'line' | 'circle' | 'raster';
   color: string;
-  style: object;
+  getId?: (x) => string;
 }
 
-export const layers = {
-  elec_edges_high: {
-    linear: true,
-    label: 'Power Lines (High Voltage)',
-    color: '#eca926',
-    style: {
-      id: 'elec_edges_high',
-      type: 'line',
-      source: 'elec_edges',
-      'source-layer': 'elec_edges',
-      minzoom: 3,
-      filter: ['==', 'High Voltage', ['get', 'line_type']],
-      layout: {
-        'line-cap': 'round',
-        'line-join': 'round',
-      },
-      paint: {
-        'line-color': '#eca926',
-        'line-width': {
-          base: 1,
-          stops: [
-            [7, 1],
-            [12, 2],
-            [16, 6],
-          ],
-        },
-      },
-    },
-  },
-  elec_edges_low: {
-    linear: true,
-    label: 'Power Lines (Low Voltage)',
-    color: '#f1d75c',
-    style: {
-      id: 'elec_edges_low',
-      type: 'line',
-      source: 'elec_edges',
-      'source-layer': 'elec_edges',
-      minzoom: 3,
-      filter: ['==', 'Low Voltage', ['get', 'line_type']],
-      layout: {
-        'line-cap': 'round',
-        'line-join': 'round',
-      },
-      paint: {
-        'line-color': '#f1d75c',
-        'line-width': {
-          base: 0.5,
-          stops: [
-            [7, 0.5],
-            [12, 1],
-            [16, 3],
-          ],
-        },
-      },
-    },
-  },
-  elec_nodes: {
-    linear: false,
-    label: 'Power Nodes',
-    color: '#eca926',
-    style: {
-      id: 'elec_nodes',
-      type: 'circle',
-      source: 'elec_nodes',
-      'source-layer': 'elec_nodes',
-      minzoom: 3,
-      paint: {
-        'circle-color': '#eca926',
-        'circle-radius': {
-          base: 1.5,
-          stops: [
-            [7, 3],
-            [12, 4],
-            [16, 12],
-          ],
-        },
-      },
-    },
-  },
-  rail_edges: {
-    linear: true,
-    label: 'Railways',
-    color: '#444',
-    style: {
-      id: 'rail_edges',
-      type: 'line',
-      source: 'rail_edges',
-      'source-layer': 'rail_edges',
-      minzoom: 3,
-      layout: {
-        'line-cap': 'round',
-        'line-join': 'round',
-      },
-      paint: {
-        'line-color': '#444',
-        'line-width': {
-          base: 1.5,
-          stops: [
-            [7, 1.5],
-            [12, 2],
-            [16, 6],
-          ],
-        },
-      },
-    },
-  },
-  rail_nodes: {
-    linear: false,
-    label: 'Stations',
-    color: '#444',
-    style: {
-      id: 'rail_nodes',
-      type: 'circle',
-      source: 'rail_nodes',
-      'source-layer': 'rail_nodes',
-      minzoom: 3,
-      paint: {
-        'circle-color': '#444',
-        'circle-radius': {
-          base: 1.5,
-          stops: [
-            [7, 3],
-            [12, 4],
-            [16, 12],
-          ],
-        },
-      },
-    },
-  },
-  road_edges: {
-    linear: true,
-    label: 'Roads',
-    color: '#b2afa',
-    style: {
-      id: 'road_edges',
-      type: 'line',
-      source: 'road_edges',
-      'source-layer': 'road_edges',
-      minzoom: 3,
-      layout: {
-        'line-cap': 'round',
-        'line-join': 'round',
-      },
-      paint: {
-        'line-color': [
-          'match',
-          ['get', 'class'],
-          'CLASS A',
-          '#941339',
-          'CLASS B',
-          '#cb3e4e',
-          'CLASS C',
-          '#8471a8',
-          'METRO',
-          '#487dbc',
-          '#b2afaa',
-        ],
-        'line-width': {
-          base: 0.5,
-          stops: [
-            [7, 1.5],
-            [12, 2],
-            [16, 6],
-          ],
-        },
-      },
-    },
-  },
-  bridges: {
-    linear: false,
-    label: 'Bridges',
-    color: '#487dbc',
-    style: {
-      id: 'bridges',
-      type: 'circle',
-      source: 'bridges',
-      'source-layer': 'bridges',
-      minzoom: 3,
-      paint: {
-        'circle-color': '#487dbc',
-        'circle-radius': {
-          base: 1.5,
-          stops: [
-            [7, 3],
-            [12, 4],
-            [16, 12],
-          ],
-        },
-      },
-    },
-  },
-  pot_edges: {
-    linear: true,
-    label: 'Water Supply Network',
-    color: '#314386',
-    style: {
-      id: 'pot_edges',
-      type: 'line',
-      source: 'pot_edges',
-      'source-layer': 'pot_edges',
-      minzoom: 3,
-      layout: {
-        'line-cap': 'round',
-        'line-join': 'round',
-      },
-      paint: {
-        'line-color': '#314386',
-        'line-width': {
-          base: 0.5,
-          stops: [
-            [7, 0.5],
-            [12, 1],
-            [16, 3],
-          ],
-        },
-      },
-    },
-  },
-  abs_nodes: {
-    linear: false,
-    label: 'Water Abstraction',
-    color: '#4d49bc',
-    style: {
-      id: 'abs_nodes',
-      type: 'circle',
-      source: 'abs_nodes',
-      'source-layer': 'abs_nodes',
-      minzoom: 3,
-      paint: {
-        'circle-color': '#4d49bc',
-        'circle-radius': {
-          base: 1.5,
-          stops: [
-            [7, 3],
-            [12, 4],
-            [16, 12],
-          ],
-        },
-      },
-    },
-  },
-};
+export function getHazardId<
+  F extends 'fluvial' | 'surface' | 'coastal' | 'cyclone',
+  RP extends number,
+  RCP extends string,
+  E extends number,
+  C extends number | string,
+>({
+  hazardType,
+  returnPeriod,
+  rcp,
+  epoch,
+  confidence,
+}: {
+  hazardType: F;
+  returnPeriod: RP;
+  rcp: RCP;
+  epoch: E;
+  confidence: C;
+}) {
+  return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${confidence}` as const;
+}
 
-export type LayerName = keyof typeof layers;
+function hazardLayer<
+  F extends 'fluvial' | 'surface' | 'coastal' | 'cyclone',
+  RP extends number,
+  RCP extends string,
+  E extends number,
+  C extends number | string,
+>(hazardType: F, returnPeriod: RP, rcp: RCP, epoch: E, confidence: C) {
+  const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence });
+  return {
+    id,
+    deckLayer: { baseName: 'hazard', params: { hazardType, returnPeriod, rcp, epoch, confidence } },
+    type: 'raster',
+    label: `${titleCase(hazardType)}`,
+    color: '#aaaaaa',
+    getId: getHazardId,
+  } as LayerDefinition & { id: typeof id };
+}
+
+/* Line widths:
+
+-) elec_edges_high, 
+base: 1,
+stops: [
+  [7, 1],
+  [12, 2],
+  [16, 6],
+],
+
+-) elec_edges_low, pot_edges
+base: 0.5,
+stops: [
+  [7, 0.5],
+  [12, 1],
+  [16, 3],
+],
+
+-) rail_edges
+base: 1.5,
+stops: [
+  [7, 1.5],
+  [12, 2],
+  [16, 6],
+],
+
+-) road_edges
+base: 0.5,
+stops: [
+  [7, 1.5],
+  [12, 2],
+  [16, 6],
+],
+
+-) all circle layers
+base: 1.5,
+stops: [
+  [7, 3],
+  [12, 4],
+  [16, 12],
+],
+
+*/
+export const LAYERS = makeConfig([
+  {
+    id: 'elec_edges_high',
+    deckLayer: 'elec_edges',
+    type: 'line',
+    label: 'Power Lines (High Voltage)',
+    color: COLORS.electricity_high.css,
+  },
+  {
+    id: 'elec_edges_low',
+    deckLayer: 'elec_edges',
+    type: 'line',
+    label: 'Power Lines (Low Voltage)',
+    color: COLORS.electricity_low.css,
+  },
+  {
+    id: 'elec_nodes',
+    deckLayer: 'elec_nodes',
+    type: 'circle',
+    label: 'Power Nodes',
+    color: COLORS.electricity_high.css,
+  },
+  {
+    id: 'rail_edges',
+    deckLayer: 'rail_edges',
+    type: 'line',
+    label: 'Railways',
+    color: COLORS.railway.css,
+  },
+  {
+    id: 'rail_nodes',
+    deckLayer: 'rail_nodes',
+    type: 'circle',
+    label: 'Stations',
+    color: COLORS.railway.css,
+  },
+  {
+    id: 'road_edges',
+    deckLayer: 'road_edges',
+    type: 'line',
+    label: 'Roads',
+    color: COLORS.roads_unknown.css,
+  },
+  {
+    id: 'bridges',
+    deckLayer: 'bridges',
+    type: 'circle',
+    label: 'Bridges',
+    color: COLORS.bridges.css,
+  },
+  {
+    id: 'pot_edges',
+    deckLayer: 'pot_edges',
+    type: 'line',
+    label: 'Water Supply Network',
+    color: COLORS.water_edges.css,
+  },
+  {
+    id: 'abs_nodes',
+    deckLayer: 'abs_nodes',
+    type: 'circle',
+    label: 'Water Abstraction',
+    color: COLORS.water_abstraction.css,
+  },
+
+  hazardLayer('fluvial', 20, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 50, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 100, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 200, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 500, 'baseline', 2010, 'None'),
+  hazardLayer('fluvial', 1500, 'baseline', 2010, 'None'),
+
+  hazardLayer('surface', 20, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 50, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 100, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 200, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 500, 'baseline', 2010, 'None'),
+  hazardLayer('surface', 1500, 'baseline', 2010, 'None'),
+
+  hazardLayer('coastal', 1, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 2, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 5, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 10, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 50, '4x5', 2050, 'None'),
+  hazardLayer('coastal', 100, '4x5', 2050, 'None'),
+]);
+
+export type LayerName = keyof typeof LAYERS;

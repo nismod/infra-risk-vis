@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.4",
+    "d3-color": "^3.0.1",
+    "deck.gl": "^8.5.8",
+    "lodash": "^4.17.21",
     "mapbox-gl": "^1.13.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
@@ -16,8 +19,11 @@
     "vega-lite": "^5.0.0"
   },
   "devDependencies": {
+    "@danmarshall/deckgl-typings": "^4.9.6",
+    "@types/d3-color": "^3.0.2",
     "@types/geojson": "^7946.0.8",
     "@types/jest": "^27.0.1",
+    "@types/lodash": "^4.14.173",
     "@types/mapbox-gl": "^1.13.2",
     "@types/node": "^16.7.2",
     "@types/react": "^17.0.19",
@@ -33,7 +39,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "tileserver": "tileserver-gl-light -c tileserver/config.json",
+    "vector": "./tileserver/vector/serve.sh ./tileserver/vector",
+    "raster-init": "./tileserver/raster/ingest.sh ./tileserver/raster",
+    "raster": "./tileserver/raster/serve.sh ./tileserver/raster",
     "lint": "eslint src/**/*.{js,jsx}"
   },
   "browserslist": [
