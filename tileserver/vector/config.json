@@ -1,44 +1,53 @@
 {
-    "options": {
-      "paths": {
-        "root": "",
-        "fonts": "fonts",
-        "styles": "styles",
-        "mbtiles": "data"
-      }
+  "options": {
+    "paths": {
+      "root": "",
+      "fonts": "fonts",
+      "styles": "styles",
+      "mbtiles": "data"
+    }
+  },
+  "styles": {
+    "overview": {
+      "style": "overview.json"
+    }
+  },
+  "data": {
+    "boundaries": {
+      "mbtiles": "boundaries.mbtiles"
     },
-    "styles": {
-      "overview": {
-        "style": "overview.json"
-      }
+    "road_edges": {
+      "mbtiles": "road_edges.mbtiles"
     },
-    "data": {
-      "boundaries": {
-        "mbtiles": "boundaries.mbtiles"
-      },
-      "road_edges": {
-        "mbtiles": "road_edges.mbtiles"
-      },
-      "bridges": {
-        "mbtiles": "bridges.mbtiles"
-      },
-      "elec_edges": {
-        "mbtiles": "elec_edges.mbtiles"
-      },
-      "elec_nodes": {
-        "mbtiles": "elec_nodes.mbtiles"
-      },
-      "rail_edges": {
-        "mbtiles": "rail_edges.mbtiles"
-      },
-      "rail_nodes": {
-        "mbtiles": "rail_nodes.mbtiles"
-      },
-      "pot_edges": {
-        "mbtiles": "pot_edges.mbtiles"
-      },
-      "abs_nodes": {
-        "mbtiles": "abs_nodes.mbtiles"
-      }
+    "road_bridges": {
+      "mbtiles": "road_bridges.mbtiles"
+    },
+    "elec_edges": {
+      "mbtiles": "elec_edges.mbtiles"
+    },
+    "elec_nodes": {
+      "mbtiles": "elec_nodes.mbtiles"
+    },
+    "rail_edges": {
+      "mbtiles": "rail_edges.mbtiles"
+    },
+    "rail_nodes": {
+      "mbtiles": "rail_nodes.mbtiles"
+    },
+    "water_irrigation_nodes": {
+      "mbtiles": "water_irrigation_nodes.mbtiles"
+    },
+    "water_potable_nodes": {
+      "mbtiles": "water_potable_nodes.mbtiles"
+    },
+    "water_potable_edges": {
+      "mbtiles": "water_potable_edges.mbtiles"
+    },
+    "water_waste_nodes": {
+      "mbtiles": "water_waste_nodes.mbtiles"
+    },
+    "water_waste_edges": {
+      "mbtiles": "water_waste_edges.mbtiles"
     }
   }
+}

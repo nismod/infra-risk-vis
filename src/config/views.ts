@@ -89,9 +89,9 @@ export const VIEWS = makeConfig([
       'rail_edges',
       'rail_nodes',
       'road_edges',
-      'bridges',
-      'pot_edges',
-      'abs_nodes',
+      'road_bridges',
+      'water_potable_edges',
+      'water_potable_nodes',
     ],
   },
   // {
