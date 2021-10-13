@@ -49,9 +49,16 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, chil
       viewState={viewport}
       onViewStateChange={({ viewState }) => setViewport(viewState)}
       layers={layers}
-      pickingRadius={10}
+      layerFilter={({ layer, renderPass }) => {
+        if (renderPass === 'picking:hover') {
+          // don't render raster layers on hover picking pass (but render them for manual picking)
+          if (layer.id.match(/^(coastal|fluvial|surface|cyclone)/)) return false;
+        }
+        return true;
+      }}
+      pickingRadius={8}
       onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
-      onClick={onClick}
+      onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
     >
       <StaticMap mapStyle={backgroundStyle} mapboxApiAccessToken={MAPBOX_KEY} />
       {children}

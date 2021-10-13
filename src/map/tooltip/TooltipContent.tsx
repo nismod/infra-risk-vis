@@ -1,3 +1,4 @@
+import { Box, Typography } from '@material-ui/core';
 import { FC } from 'react';
 import { LAYERS } from '../../config/layers';
 import { titleCase } from '../../helpers';
@@ -38,16 +39,28 @@ const RasterHoverDescription: FC<{ hoveredObject: RasterHover }> = ({ hoveredObj
   );
 };
 
-export const TooltipContent: FC<{ hoveredObjects: HoveredObject[] }> = ({ hoveredObjects }) => {
+export const TooltipContent: FC<{ hoveredVectors: VectorHover[]; hoveredRasters: RasterHover[] }> = ({
+  hoveredVectors,
+  hoveredRasters,
+}) => {
   return (
     <>
-      {hoveredObjects.map((ho) =>
-        ho.type === 'vector' ? (
-          <VectorHoverDescription hoveredObject={ho} />
-        ) : (
-          <RasterHoverDescription hoveredObject={ho} />
-        ),
-      )}
+      {hoveredVectors.length ? (
+        <Box mb={2}>
+          <Typography>Asset</Typography>
+          {hoveredVectors.map((hv) => (
+            <VectorHoverDescription hoveredObject={hv} />
+          ))}
+        </Box>
+      ) : null}
+      {hoveredRasters.length ? (
+        <Box>
+          <Typography>Hazards</Typography>
+          {hoveredRasters.map((hr) => (
+            <RasterHoverDescription hoveredObject={hr} />
+          ))}
+        </Box>
+      ) : null}
     </>
   );
 };

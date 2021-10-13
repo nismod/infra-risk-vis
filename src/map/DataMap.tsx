@@ -11,6 +11,7 @@ import { TooltipContent } from './tooltip/TooltipContent';
 import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
 import _ from 'lodash';
+import { VIEWS } from '../config/views';
 
 export interface RasterHover {
   type: 'raster';
@@ -28,8 +29,42 @@ export interface VectorHover {
 
 export type HoveredObject = VectorHover | RasterHover;
 
+function processRasterHover(layerId, info): RasterHover {
+  const { bitmap, sourceLayer } = info;
+  if (bitmap) {
+    const pixelColor = readPixelsToArray(sourceLayer.props.image, {
+      sourceX: bitmap.pixel[0],
+      sourceY: bitmap.pixel[1],
+      sourceWidth: 1,
+      sourceHeight: 1,
+      sourceType: undefined,
+    });
+    if (pixelColor[3]) {
+      return {
+        type: 'raster',
+        deckLayer: layerId,
+        color: pixelColor,
+        info,
+      };
+    } else return null;
+  }
+}
+
+function processVectorHover(layerId, info): VectorHover {
+  const { object } = info;
+
+  return {
+    type: 'vector',
+    deckLayer: layerId,
+    feature: object,
+    info,
+  };
+}
+
 export const DataMap = ({ background, view, layerSelection }) => {
-  const [hoveredObjects, setHoveredObjects] = useState<HoveredObject[]>([]);
+  // const [hoveredObjects, setHoveredObjects] = useState<HoveredObject[]>([]);
+  const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
+  const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
 
   const [selectedFeatures, setSelectedFeatures] = useState<MapboxGeoJSONFeature[]>([]);
@@ -44,66 +79,85 @@ export const DataMap = ({ background, view, layerSelection }) => {
     [background, view, layerSelection, selectedFeatures],
   );
 
-  const onHover = useCallback((info: any, deck: DeckGL) => {
-    const { x, y } = info;
+  const viewLayers = useMemo(() => VIEWS[view].layers, [view]);
 
-    const newHoveredObjects: HoveredObject[] = [];
+  const rasterLayerIds = useMemo(() => {
+    return viewLayers.filter((l: string) => l.match(/^(coastal|fluvial|surface|cyclone)/));
+  }, [viewLayers]);
 
-    if (info.object || info.bitmap) {
-      const pickedObjects = deck.pickMultipleObjects({ x, y, radius: 20 });
+  const vectorLayerIds = useMemo(() => {
+    return viewLayers.filter((l: string) => !l.match(/^(coastal|fluvial|surface|cyclone)/));
+  }, [viewLayers]);
+
+  const onHover = useCallback(
+    (info: any, deck: DeckGL) => {
+      const { x, y } = info;
+
+      const newHoveredVectors: VectorHover[] = [];
+      const newHoveredRasters: RasterHover[] = [];
+      // if (info.object || info.bitmap) {
+
+      // }
+
+      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: 8 });
+
+      if (pickedVectorInfo) {
+        const layerId = pickedVectorInfo.layer.id;
+        newHoveredVectors.push(processVectorHover(layerId, pickedVectorInfo));
+      }
+
+      const pickedObjects = deck.pickMultipleObjects({ x, y, layerIds: rasterLayerIds });
       for (const picked of pickedObjects) {
         const layerId = picked.layer.id;
         const deckLayerDefinition = DECK_LAYERS[layerId];
         if (deckLayerDefinition.spatialType === 'raster') {
-          const { bitmap, sourceLayer } = picked;
-          if (bitmap) {
-            const pixelColor = readPixelsToArray(sourceLayer.props.image, {
-              sourceX: bitmap.pixel[0],
-              sourceY: bitmap.pixel[1],
-              sourceWidth: 1,
-              sourceHeight: 1,
-              sourceType: undefined,
-            });
-            if (pixelColor[3]) {
-              newHoveredObjects.push({
-                type: 'raster',
-                deckLayer: layerId,
-                color: pixelColor,
-                info: picked,
-              });
-            }
-          }
+          const rasterHover = processRasterHover(layerId, picked);
+
+          if (rasterHover) newHoveredRasters.push(rasterHover);
         } else {
-          const { object } = picked;
-          newHoveredObjects.push({
-            type: 'vector',
-            deckLayer: layerId,
-            feature: object,
-            info: picked,
-          });
+          // it's not expected to get any non-raster layers here
         }
       }
-    }
+      setHoveredVectors(newHoveredVectors);
+      setHoveredRasters(newHoveredRasters);
+      // setHoveredObjects(newHoveredObjects);
+      setHoverXY([x, y]);
+    },
+    [rasterLayerIds, vectorLayerIds],
+  );
 
-    setHoveredObjects(newHoveredObjects);
-    setHoverXY([x, y]);
-  }, []);
+  const onClick = useCallback(
+    (info: any, deck: DeckGL) => {
+      const { x, y } = info;
+      console.log(deck);
+      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: 8 });
 
-  const onLayerClick = useCallback((info: any) => {
-    if (!info.bitmap && info.object) {
-      setSelectedFeatures([info.object]);
-    } else {
-      setSelectedFeatures([]);
-    }
-  }, []);
+      if (pickedVectorInfo) {
+        // const layerId = pickedVectorInfo.layer.id;
+        setSelectedFeatures([pickedVectorInfo.object]);
+        // newHoveredVectors.push(processVectorHover(layerId, pickedVectorInfo));
+      } else {
+        setSelectedFeatures([]);
+      }
 
-  const deckLayersFunction = useMapLayersFunction(mapContentParams, onHover);
+      // if (!info.bitmap && info.object) {
+      //   setSelectedFeatures([info.object]);
+      // } else {
+      //   setSelectedFeatures([]);
+      // }
+    },
+    [vectorLayerIds],
+  );
+
+  const deckLayersFunction = useMapLayersFunction(mapContentParams);
 
   return (
     <>
-      <MapViewport layersFunction={deckLayersFunction} background={background} onHover={onHover} onClick={onLayerClick}>
+      <MapViewport layersFunction={deckLayersFunction} background={background} onHover={onHover} onClick={onClick}>
         <MapTooltip tooltipXY={hoverXY}>
-          {hoveredObjects.length ? <TooltipContent hoveredObjects={hoveredObjects} /> : null}
+          {hoveredRasters.length || hoveredVectors.length ? (
+            <TooltipContent hoveredVectors={hoveredVectors} hoveredRasters={hoveredRasters} />
+          ) : null}
         </MapTooltip>
       </MapViewport>
       {selectedFeatures.length !== 0 && <FeatureSidebar feature={selectedFeatures[0]} />}

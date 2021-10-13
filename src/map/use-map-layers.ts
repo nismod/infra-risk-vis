@@ -22,7 +22,7 @@ export interface MapParams {
   highlightedFeature: MapboxGeoJSONFeature;
 }
 
-function getDeckLayers(dataLayerSelection: Record<LayerName, boolean>, view: ViewName, onLayerHover, zoom) {
+function getDeckLayers(dataLayerSelection: Record<LayerName, boolean>, view: ViewName, zoom) {
   const deckLayerNames = new Set<string>();
   const deckLayerParams = {};
 
@@ -59,7 +59,6 @@ function getDeckLayers(dataLayerSelection: Record<LayerName, boolean>, view: Vie
     let props: any = {
       id: deckLayerName,
       pickable: true,
-      // onHover: onLayerHover,
       visible: anyVisible,
       minZoom: 3,
       maxZoom: 20,
@@ -102,10 +101,10 @@ function getDeckLayers(dataLayerSelection: Record<LayerName, boolean>, view: Vie
   return resLayers;
 }
 
-export function useMapLayersFunction(params: MapParams, onLayerHover) {
+export function useMapLayersFunction(params: MapParams) {
   const { dataLayerSelection, view } = params;
 
   return useMemo(() => {
-    return ({ zoom }) => getDeckLayers(dataLayerSelection, view, onLayerHover, zoom);
-  }, [dataLayerSelection, view, onLayerHover]);
+    return ({ zoom }) => getDeckLayers(dataLayerSelection, view, zoom);
+  }, [dataLayerSelection, view]);
 }
