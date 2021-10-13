@@ -52,7 +52,7 @@ function makeValueMapping<SourceValueType, ObjectType = any>(
 const rasterColormaps = {
   fluvial: 'blues',
   coastal: 'greens',
-  surface: 'reds',
+  surface: 'purples',
 };
 
 const rasterColormapRanges = {
