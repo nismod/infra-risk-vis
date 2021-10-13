@@ -6,8 +6,10 @@ import { HoveredObject, RasterHover, VectorHover } from '../DataMap';
 
 const VectorHoverDescription: FC<{ hoveredObject: VectorHover }> = ({ hoveredObject }) => {
   const f = hoveredObject.feature;
-  const sourceLayer = hoveredObject.deckLayer;
-  const title = f.properties.layerName;
+  const sourceDeckLayer = hoveredObject.deckLayer;
+  const sourceLogicalLayer = hoveredObject.logicalLayer;
+  const logicalLayerSpec = LAYERS[sourceLogicalLayer];
+  const title = logicalLayerSpec.label;
 
   // let title = titleCase(
   //   sourceLayer.replace(/_/g, ' ').replace('edges', '').replace('nodes', '').replace('elec', 'electricity'),
@@ -18,12 +20,10 @@ const VectorHoverDescription: FC<{ hoveredObject: VectorHover }> = ({ hoveredObj
   //   entries[sourceLayer] = { title, subtitle };
   // }
 
-  const logicalLayerSpec = LAYERS[sourceLayer];
-
   return (
     <div key={`${title}-${f.id}`}>
       <strong style={{ color: logicalLayerSpec?.color ?? '#333' }}>
-        {title} ({f.id})
+        {title} (ID {f.id})
       </strong>
     </div>
   );
@@ -32,9 +32,16 @@ const VectorHoverDescription: FC<{ hoveredObject: VectorHover }> = ({ hoveredObj
 const RasterHoverDescription: FC<{ hoveredObject: RasterHover }> = ({ hoveredObject }) => {
   const { color, deckLayer } = hoveredObject;
 
+  const sourceLogicalLayer = hoveredObject.logicalLayer;
+  const logicalLayerSpec = LAYERS[sourceLogicalLayer];
+  const title = logicalLayerSpec.label;
+
   return (
-    <div key={`${deckLayer}-${color}`} style={{ backgroundColor: `rgb(${color[0]},${color[1]},${color[2]})` }}>
-      <strong>{deckLayer}</strong>
+    <div
+      key={`${deckLayer}-${color}`}
+      style={{ backgroundColor: `rgb(${color[0]},${color[1]},${color[2]})`, color: '#000' }}
+    >
+      <strong>{title}</strong>
     </div>
   );
 };

@@ -16,6 +16,7 @@ import { VIEWS } from '../config/views';
 export interface RasterHover {
   type: 'raster';
   deckLayer: string;
+  logicalLayer: string;
   color: any;
   info: any;
 }
@@ -23,6 +24,7 @@ export interface RasterHover {
 export interface VectorHover {
   type: 'vector';
   deckLayer: string;
+  logicalLayer: string;
   feature: any;
   info: any;
 }
@@ -43,6 +45,7 @@ function processRasterHover(layerId, info): RasterHover {
       return {
         type: 'raster',
         deckLayer: layerId,
+        logicalLayer: DECK_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: null }) ?? layerId,
         color: pixelColor,
         info,
       };
@@ -56,6 +59,7 @@ function processVectorHover(layerId, info): VectorHover {
   return {
     type: 'vector',
     deckLayer: layerId,
+    logicalLayer: DECK_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: object }) ?? layerId,
     feature: object,
     info,
   };
@@ -79,15 +83,17 @@ export const DataMap = ({ background, view, layerSelection }) => {
     [background, view, layerSelection, selectedFeatures],
   );
 
-  const viewLayers = useMemo(() => VIEWS[view].layers, [view]);
+  const [viewDeckLayers, setViewDeckLayers] = useState([]);
+
+  // const viewDeckLayers = useMemo(() => VIEWS[view].layers, [view]);
 
   const rasterLayerIds = useMemo(() => {
-    return viewLayers.filter((l: string) => l.match(/^(coastal|fluvial|surface|cyclone)/));
-  }, [viewLayers]);
+    return viewDeckLayers.filter((l: string) => l.match(/^(coastal|fluvial|surface|cyclone)/));
+  }, [viewDeckLayers]);
 
   const vectorLayerIds = useMemo(() => {
-    return viewLayers.filter((l: string) => !l.match(/^(coastal|fluvial|surface|cyclone)/));
-  }, [viewLayers]);
+    return viewDeckLayers.filter((l: string) => !l.match(/^(coastal|fluvial|surface|cyclone)/));
+  }, [viewDeckLayers]);
 
   const onHover = useCallback(
     (info: any, deck: DeckGL) => {
@@ -129,7 +135,6 @@ export const DataMap = ({ background, view, layerSelection }) => {
   const onClick = useCallback(
     (info: any, deck: DeckGL) => {
       const { x, y } = info;
-      console.log(deck);
       const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: 8 });
 
       if (pickedVectorInfo) {
@@ -153,7 +158,13 @@ export const DataMap = ({ background, view, layerSelection }) => {
 
   return (
     <>
-      <MapViewport layersFunction={deckLayersFunction} background={background} onHover={onHover} onClick={onClick}>
+      <MapViewport
+        layersFunction={deckLayersFunction}
+        background={background}
+        onHover={onHover}
+        onClick={onClick}
+        onLayerList={setViewDeckLayers}
+      >
         <MapTooltip tooltipXY={hoverXY}>
           {hoveredRasters.length || hoveredVectors.length ? (
             <TooltipContent hoveredVectors={hoveredVectors} hoveredRasters={hoveredRasters} />

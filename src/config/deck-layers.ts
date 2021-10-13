@@ -139,6 +139,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
         },
         extensions: [new DataFilterExtension({ filterSize: 1 })],
       } as any),
+    getLogicalLayer: ({ deckLayerId, feature }) => {
+      return feature.properties.__logicalLayer;
+    },
   },
   {
     id: 'elec_nodes',

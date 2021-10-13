@@ -1,5 +1,5 @@
 import DeckGL from 'deck.gl';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StaticMap } from 'react-map-gl';
 import _ from 'lodash';
 
@@ -21,7 +21,7 @@ function makeMapboxConfig(background: BackgroundName) {
   };
 }
 
-export const MapViewport = ({ layersFunction, background, onHover, onClick, children }) => {
+export const MapViewport = ({ layersFunction, background, onHover, onClick, onLayerList = null, children }) => {
   const [viewport, setViewport] = useState({
     latitude: 18.14,
     longitude: -77.28,
@@ -37,6 +37,10 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, chil
 
   const backgroundStyle = useMemo(() => makeMapboxConfig(background), [background]);
   const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom]);
+
+  useEffect(() => {
+    onLayerList?.(layers.map((l) => l.id));
+  }, [onLayerList, layers]);
 
   return (
     <DeckGL
