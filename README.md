@@ -82,10 +82,12 @@ Install required packages. Run from the project root:
 
 Install the raster tileserver - Terracotta
 
-> TODO expand on the python + terracotta install process
+Suggest installing using conda:
 
 ```
-pip3 install terracotta[recommended]
+conda create --name infrariskvis python=3.8 numpy rasterio shapely crick
+conda activate infrariskvis
+pip install terracotta[recommended]
 ```
 
 ## Run
