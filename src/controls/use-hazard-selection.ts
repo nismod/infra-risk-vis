@@ -5,6 +5,10 @@ const hazardConfig = {
   fluvial: {
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],
+
+      rcp: ['baseline'],
+      epoch: [2010],
+      confidence: ['None'],
     },
     paramDefaults: {
       returnPeriod: 20,
@@ -17,6 +21,10 @@ const hazardConfig = {
   surface: {
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],
+
+      rcp: ['baseline'],
+      epoch: [2010],
+      confidence: ['None'],
     },
     paramDefaults: {
       returnPeriod: 20,
@@ -31,6 +39,8 @@ const hazardConfig = {
       returnPeriod: [1, 2, 5, 10, 50, 100],
       epoch: [2010, 2030, 2050, 2070, 2100],
       rcp: ['baseline', '2x6', '4x5', '8x5'],
+
+      confidence: ['None'],
     },
     paramDefaults: {
       returnPeriod: 1,
@@ -92,29 +102,15 @@ export interface SingleHazardSelection {
 
 export type HazardSelectionSet = { [k: string]: SingleHazardSelection };
 
-function processHazardSelectionUpdate(hazardType: string, newSelection: SingleHazardSelection) {
-  const { paramDomains, paramDependencies } = hazardConfig[hazardType];
-}
-
 export const useHazardSelection = () => {
   const [hazardShow, setHazardShow] = useState(Object.fromEntries(hazardTypes.map((ht) => [ht, false])));
   const [hazardParams, setHazardParams] = useState(
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDefaults])),
   );
+
   const [hazardOptions, setHazardOptions] = useState(
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDomains])),
   );
-
-  // const [hazardSelection, setHazardSelection] = useState<HazardSelectionSet>();
-  // const setSingleHazardSelection = useCallback(
-  //   (hazardType, hazardTypeSelection) => {
-  //     setHazardSelection({
-  //       ...hazardSelection,
-  //       [hazardType]: processHazardSelectionUpdate(hazardType, hazardTypeSelection),
-  //     });
-  //   },
-  //   [hazardSelection],
-  // );
 
   const updateHazardShow = useCallback(
     (hazardType: string, show: boolean) => {
@@ -125,13 +121,27 @@ export const useHazardSelection = () => {
 
   const updatedHazardParam = useCallback(
     (hazardType: string, paramName: string, paramValue: any) => {
+      const { paramDomains, paramDependencies = {} } = hazardConfig[hazardType];
       const oldParams = hazardParams[hazardType];
 
-      const newParams = { ...oldParams, [paramName]: paramValue };
+      const newSingleHazardParams = { ...oldParams, [paramName]: paramValue };
+      const newSingleHazardOptions = {};
 
-      setHazardParams({ ...hazardParams, [hazardType]: newParams });
+      for (const [param, paramValue] of Object.entries(newSingleHazardParams)) {
+        const newParamOptions = paramDependencies[param]?.(newSingleHazardParams) ?? paramDomains[param];
+
+        // if the new options don't include the current param value, switch value to the first option
+        if (!newParamOptions.includes(paramValue)) {
+          newSingleHazardParams[param] = newParamOptions[0];
+        }
+
+        newSingleHazardOptions[param] = newParamOptions;
+      }
+
+      setHazardParams({ ...hazardParams, [hazardType]: newSingleHazardParams });
+      setHazardOptions({ ...hazardOptions, [hazardType]: newSingleHazardOptions });
     },
-    [hazardParams],
+    [hazardOptions, hazardParams],
   );
 
   const hazardVisibilitySet = useMemo(() => {
@@ -149,19 +159,8 @@ export const useHazardSelection = () => {
     hazardShow,
     hazardParams,
     hazardOptions,
-    // hazardTypeShow,
-    // hazardParamSelections,
-    // hazardParamOptions,
-    // setHazardTypeShow,
-    // setHazardTypeParamSelections,
     setSingleHazardShow: updateHazardShow,
     setSingleHazardParam: updatedHazardParam,
-    // setSingleHazardSelection,
     hazardVisibilitySet,
-    // {
-    //   [getHazardId({ hazardType: 'cyclone', returnPeriod: 10000, rcp: 'baseline', epoch: 2010, confidence: 50 })]: true,
-    //   [getHazardId({ hazardType: 'fluvial', returnPeriod: 50, rcp: 'baseline', epoch: 2010, confidence: 'None' })]:
-    //     true,
-    // },
   };
 };

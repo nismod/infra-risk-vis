@@ -13,9 +13,6 @@
     }
   },
   "data": {
-    "boundaries": {
-      "mbtiles": "boundaries.mbtiles"
-    },
     "road_edges": {
       "mbtiles": "road_edges.mbtiles"
     },

@@ -6,10 +6,6 @@ import { COLORS } from './colors';
 import { makeConfig } from '../helpers';
 import { getHazardId } from './layers';
 
-function makeColormap(attr: string, valueColorMap: any) {
-  return (x) => valueColorMap[x.properties[attr]];
-}
-
 const lineStyle = (zoom) => ({
   getLineWidth: 15,
   lineWidthUnit: 'meters',
@@ -29,38 +25,18 @@ const pointRadius = (zoom) => ({
   // radiusScale: 2 ** (15 - zoom),
 });
 
-function makeValueMapping<SourceValueType, ObjectType = any>(
-  accessor: (x: ObjectType) => SourceValueType,
-  sourceValues: SourceValueType[],
-) {
-  return <TargetValueType>(targetValues: TargetValueType[], defaultValue: TargetValueType) => {
-    if (targetValues.length !== sourceValues.length) {
-      throw new Error('Target domain length is not equal to the source domain length');
-    }
-    return (obj: ObjectType) => {
-      const val = accessor(obj);
-      const index = sourceValues.indexOf(val);
-      if (index === -1) {
-        return defaultValue;
-      } else {
-        return targetValues[index];
-      }
-    };
-  };
-}
-
 const rasterColormaps = {
   fluvial: 'blues',
   coastal: 'greens',
   surface: 'purples',
-  cyclone: 'gray',
+  cyclone: 'reds',
 };
 
 const rasterColormapRanges = {
   fluvial: '[0,10]',
   coastal: '[0,3.5]',
   surface: '[0,10]',
-  cyclone: '[50,70]',
+  cyclone: '[20,80]',
 };
 
 function getBoundsForTile(tileProps) {
