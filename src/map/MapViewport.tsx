@@ -1,6 +1,6 @@
 import DeckGL from 'deck.gl';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { StaticMap } from 'react-map-gl';
+import { AttributionControl, MapContext, MapContextProps, StaticMap } from 'react-map-gl';
 import _ from 'lodash';
 
 import { backgroundConfig, BackgroundName } from '../config/backgrounds';
@@ -31,7 +31,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
     maxPitch: 0,
   });
 
-  const deckRef = useRef<DeckGL>();
+  const deckRef = useRef<DeckGL<MapContextProps>>();
 
   const zoom = viewport.zoom;
 
@@ -43,7 +43,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
   }, [onLayerList, layers]);
 
   return (
-    <DeckGL
+    <DeckGL<MapContextProps>
       ref={deckRef}
       style={{
         overflow: 'hidden',
@@ -63,8 +63,17 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
       pickingRadius={8}
       onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
       onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
+      ContextProvider={MapContext.Provider}
     >
-      <StaticMap mapStyle={backgroundStyle} mapboxApiAccessToken={MAPBOX_KEY} />
+      <StaticMap mapStyle={backgroundStyle} mapboxApiAccessToken={MAPBOX_KEY} attributionControl={false} />
+      <AttributionControl
+        style={{
+          //   fontFamily: 'sans-serif',
+          //   fontSize: 14,
+          right: 0,
+          bottom: 0,
+        }}
+      />
       {children}
     </DeckGL>
   );
