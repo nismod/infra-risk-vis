@@ -1,6 +1,6 @@
 import DeckGL from 'deck.gl';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AttributionControl, MapContext, MapContextProps, StaticMap } from 'react-map-gl';
+import { AttributionControl, MapContext, MapContextProps, NavigationControl, ScaleControl, StaticMap } from 'react-map-gl';
 import _ from 'lodash';
 
 import { backgroundConfig, BackgroundName } from '../config/backgrounds';
@@ -72,6 +72,22 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
           //   fontSize: 14,
           right: 0,
           bottom: 0,
+        }}
+      />
+      <NavigationControl
+        showCompass={false}
+        capturePointerMove={true}
+        style={{
+          right: 10,
+          top: 10,
+        }}
+      />
+      <ScaleControl
+        maxWidth={100}
+        unit="metric"
+        style={{
+          right: 10,
+          bottom: 10,
         }}
       />
       {children}
