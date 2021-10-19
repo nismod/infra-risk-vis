@@ -152,17 +152,16 @@ export const HazardsControl = ({
           />
         </FormControl>
         <InputSection>
-          <FormControl disabled={!hazardShow.surface} component="fieldset" fullWidth>
-            <InputLabel>Return Period</InputLabel>
-            <Select
+          <FormControl disabled={!hazardShow.cyclone} component="fieldset" fullWidth>
+            <FormLabel>Return Period</FormLabel>
+            <CustomNumberSlider
+              marks={hazardOptions.cyclone.returnPeriod}
               value={hazardParams.cyclone.returnPeriod}
-              onChange={(e) => onSingleHazardParam('cyclone', 'returnPeriod', e.target.value)}
+              onChange={(v) => onSingleHazardParam('cyclone', 'returnPeriod', v)}
               disabled={!hazardShow.cyclone}
-            >
-              {hazardOptions.cyclone.returnPeriod.map((rp) => (
-                <MenuItem value={rp}>{rp}</MenuItem>
-              ))}
-            </Select>
+              valueLabelDisplay="auto"
+              showMarkLabelsFor={[10, 50, 100, 500, 1000, 5000, 10000]}
+            />
           </FormControl>
         </InputSection>
         <InputSection>

@@ -36,7 +36,7 @@ const rasterColormapRanges = {
   fluvial: '[0,10]',
   coastal: '[0,3.5]',
   surface: '[0,10]',
-  cyclone: '[20,80]',
+  cyclone: '[0,75]',
 };
 
 function getBoundsForTile(tileProps) {
@@ -752,8 +752,7 @@ function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
   const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence }); //`hazard_${hazardType}_${returnPeriod}`;
 
   const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;
-  const opacity = hazardType === 'cyclone' ? 0.2 : 1;
-  // const refinement = hazardType === 'cyclone' ? 'no-overlap' : 'never'
+  const refinementStrategy = hazardType === 'cyclone' ? 'best-available' : 'no-overlap';
 
   return {
     id,
@@ -762,13 +761,12 @@ function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
     fn: ({ props, zoom, params: { hazardType, returnPeriod, rcp, epoch, confidence } }) =>
       new TileLayer(props, {
         data: `http://localhost:5000/singleband/${hazardType}/${returnPeriod}/${rcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${rasterColormaps[hazardType]}&stretch_range=${rasterColormapRanges[hazardType]}`,
-        refinementStrategy: 'no-overlap',
+        refinementStrategy,
         renderSubLayers: (props) =>
           new BitmapLayer(props, {
             data: null,
             image: props.data,
             bounds: getBoundsForTile(props.tile),
-            opacity,
             textureParameters: {
               [GL.TEXTURE_MAG_FILTER]: magFilter,
               // [GL.TEXTURE_MAG_FILTER]: zoom < 12 ? GL.NEAREST : GL.NEAREST_MIPMAP_LINEAR,
