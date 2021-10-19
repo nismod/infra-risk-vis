@@ -10,8 +10,6 @@ import { FeatureSidebar } from '../FeatureSidebar';
 import { TooltipContent } from './tooltip/TooltipContent';
 import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
-import _ from 'lodash';
-import { VIEWS } from '../config/views';
 
 export interface RasterHover {
   type: 'raster';

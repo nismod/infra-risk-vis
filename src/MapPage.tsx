@@ -7,7 +7,7 @@ import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, VIEWS } from './config/views';
 import { BackgroundName } from './config/backgrounds';
-import { LayerName, LAYERS } from './config/layers';
+import { LayerName } from './config/layers';
 import { HazardsControl } from './controls/HazardsControl';
 import { useNetworkSelection } from './controls/use-network-selection';
 import { useHazardSelection } from './controls/use-hazard-selection';
@@ -22,10 +22,10 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [background, setBackground] = useState<BackgroundName>('light');
 
   const viewLayerNames = useMemo<LayerName[]>(() => VIEWS[view].layers as LayerName[], [view]);
-  const layerDefinitions = useMemo(
-    () => viewLayerNames.map((layerName) => ({ ...LAYERS[layerName], key: layerName })),
-    [viewLayerNames],
-  );
+  // const layerDefinitions = useMemo(
+  //   () => viewLayerNames.map((layerName) => ({ ...LAYERS[layerName], key: layerName })),
+  //   [viewLayerNames],
+  // );
 
   const { networkSelection, setNetworkSelection, networkVisibilitySet } = useNetworkSelection();
   const { hazardShow, hazardOptions, hazardParams, setSingleHazardParam, setSingleHazardShow, hazardVisibilitySet } =

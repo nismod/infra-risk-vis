@@ -1,7 +1,7 @@
 import React, { FC, useMemo } from 'react';
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
 
-import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
+import { LayerName, LAYERS } from '../config/layers';
 
 interface NetworkControlProps {
   networkSelection: Record<string, boolean>;
