@@ -57,9 +57,24 @@ const elecVoltageLookup = {
   'Low Voltage': ElecVoltage.elec_edges_low,
 };
 
+enum ElecNode {
+  source = 'source',
+  sink = 'sink',
+  junction = 'junction'
+}
+
+const elecNodeLookup = {
+  'source': ElecNode.source,
+  'sink': ElecNode.sink,
+  'junction': ElecNode.junction,
+}
+
 const electricityColor = {
   [ElecVoltage.elec_edges_high]: COLORS.electricity_high.deck,
   [ElecVoltage.elec_edges_low]: COLORS.electricity_low.deck,
+  [ElecNode.source]: COLORS.electricity_high.deck,
+  [ElecNode.junction]: COLORS.electricity_unknown.deck,
+  [ElecNode.sink]: COLORS.electricity_low.deck,
 };
 
 enum RoadClass {
@@ -130,7 +145,12 @@ export const DECK_LAYERS = makeConfig<any, string>([
       new MVTLayer(props, {
         data: 'http://localhost:8080/data/elec_nodes.json',
         refinementStrategy: 'no-overlap',
-        getFillColor: COLORS.electricity_high.deck,
+        getFillColor: (x) => {
+          const elecNodeProp = x.properties.asset_type;
+          const elecNodeEnum = elecNodeLookup[elecNodeProp];
+          const color = electricityColor[elecNodeEnum];
+          return color;
+        },
         stroked: true,
         getLineColor: [255, 255, 255],
         lineWidthMinPixels: 1,
