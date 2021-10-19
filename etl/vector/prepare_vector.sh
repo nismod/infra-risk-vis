@@ -1,5 +1,7 @@
 #!/bin/env bash
 
+set -e
+set -x
 set -o errexit
 
 # TODO validate arguments
@@ -26,7 +28,7 @@ rm -f tmp.json
 
 ogr2ogr \
   -t_srs epsg:4326 \
-  -f GeoJSON \
+  -f GeoJSONSeq \
   -where "$INPUT_FILTER" \
   tmp.json \
   "$INPUT_FILE" \
@@ -34,6 +36,7 @@ ogr2ogr \
 
 tippecanoe \
   --generate-ids \
+  --read-parallel \
   --output="$OUTPUT_FILE" \
   --layer="$OUTPUT_LAYER_NAME" \
   $TIPPECANOE_OPTIONS \
