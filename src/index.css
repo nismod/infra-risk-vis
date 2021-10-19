@@ -105,6 +105,9 @@ article .alert {
 .position-control {
   font-size: 0.8rem;
 }
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
 /**
  * Legend
  */

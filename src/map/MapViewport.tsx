@@ -65,8 +65,13 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
       onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
       ContextProvider={MapContext.Provider}
     >
-      <StaticMap mapStyle={backgroundStyle} mapboxApiAccessToken={MAPBOX_KEY} attributionControl={false} />
+      <StaticMap
+        mapStyle={backgroundStyle}
+        mapboxApiAccessToken={MAPBOX_KEY}
+        attributionControl={false} />
       <AttributionControl
+        customAttribution='Background map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>, satellite imagery via &copy; <a href="https://www.mapbox.com/">MapBox</a>'
+        compact={false}
         style={{
           //   fontFamily: 'sans-serif',
           //   fontSize: 14,
@@ -87,7 +92,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
         unit="metric"
         style={{
           right: 10,
-          bottom: 10,
+          bottom: 25,
         }}
       />
       {children}
