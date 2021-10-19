@@ -5,6 +5,7 @@ import { DataFilterExtension } from '@deck.gl/extensions';
 import { COLORS } from './colors';
 import { makeConfig } from '../helpers';
 import { getHazardId } from './layers';
+import { COLOR_MAPS } from './color-maps';
 
 const lineStyle = (zoom) => ({
   getLineWidth: 15,
@@ -24,25 +25,6 @@ const pointRadius = (zoom) => ({
   pointRadiusMaxPixels: 10,
   // radiusScale: 2 ** (15 - zoom),
 });
-
-const colorMaps = {
-  fluvial: {
-    scheme: 'blues',
-    range: [0, 10],
-  },
-  coastal: {
-    scheme: 'greens',
-    range: [0, 10],
-  },
-  surface: {
-    scheme: 'purples',
-    range: [0, 10],
-  },
-  cyclone: {
-    scheme: 'reds',
-    range: [0, 75],
-  },
-};
 
 enum ElecVoltage {
   elec_edges_high = 'elec_edges_high',
@@ -749,7 +731,7 @@ function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
     id,
     spatialType: 'raster',
     fn: ({ props, zoom, params: { hazardType, returnPeriod, rcp, epoch, confidence } }) => {
-      const { scheme, range } = colorMaps[hazardType];
+      const { scheme, range } = COLOR_MAPS[hazardType];
 
       return rasterTileLayer(
         {
@@ -760,6 +742,7 @@ function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
         },
         props,
         {
+          id,
           data: `http://localhost:5000/singleband/${hazardType}/${returnPeriod}/${rcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
           refinementStrategy,
         },
@@ -777,18 +760,16 @@ function getBoundsForTile(tileProps) {
 }
 
 function rasterTileLayer(bitmapProps, ...props) {
-  return new TileLayer(
-    {
-      renderSubLayers: (tileProps) =>
-        new BitmapLayer(
-          {
-            data: null,
-            image: tileProps.data,
-            bounds: getBoundsForTile(tileProps.tile),
-          },
-          bitmapProps,
-        ),
-    },
-    ...props,
-  );
+  return new TileLayer(...props, {
+    renderSubLayers: (tileProps) =>
+      new BitmapLayer(
+        tileProps,
+        {
+          data: null,
+          image: tileProps.data,
+          bounds: getBoundsForTile(tileProps.tile),
+        },
+        bitmapProps,
+      ),
+  });
 }

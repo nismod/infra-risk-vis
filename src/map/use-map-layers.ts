@@ -1,9 +1,7 @@
-import { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { useCallback, useMemo } from 'react';
 import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
-import { BackgroundName } from '../config/backgrounds';
 import { ViewName, VIEWS } from '../config/views';
 import { DECK_LAYERS } from '../config/deck-layers';
 
@@ -15,21 +13,17 @@ import { DECK_LAYERS } from '../config/deck-layers';
  * - any highlights / selections
  */
 
-export interface MapParams {
-  background: BackgroundName;
-  view: ViewName;
-  dataLayerSelection: Record<LayerName, boolean>;
-  highlightedFeature: MapboxGeoJSONFeature;
-}
-
 function getDeckLayersSpec(dataLayerSelection: Record<LayerName, boolean>, view: ViewName) {
   const deckLayers = {};
 
   for (const layerName of VIEWS[view].layers) {
     if (dataLayerSelection[layerName] == undefined) continue;
+
     const layerDefinition = LAYERS[layerName] as LayerDefinition;
     if (layerDefinition == undefined) throw new Error(`Logical layer '${layerName}' is not defined`);
+
     const deckLayerSpec = layerDefinition.deckLayer;
+
     let deckLayerName: string;
     let dataParams: any;
     if (typeof deckLayerSpec === 'object') {
@@ -42,11 +36,12 @@ function getDeckLayersSpec(dataLayerSelection: Record<LayerName, boolean>, view:
       deckLayerName = deckLayerSpec;
     }
 
-    deckLayers[deckLayerName] = _.merge(deckLayers[deckLayerName] ?? {}, {
+    deckLayers[deckLayerName] = _.merge({}, deckLayers[deckLayerName], {
       visibility: {
         [layerName]: !!dataLayerSelection[layerName],
       },
       params: dataParams ?? {},
+      sourceLogicalLayers: [layerName],
     });
   }
 

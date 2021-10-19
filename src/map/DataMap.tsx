@@ -11,7 +11,8 @@ import { TooltipContent } from './tooltip/TooltipContent';
 import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
 import _ from 'lodash';
-import { VIEWS } from '../config/views';
+import { MapLegend } from './legend/MapLegend';
+import { LegendContent } from './legend/LegendContent';
 
 export interface RasterHover {
   type: 'raster';
@@ -78,13 +79,15 @@ export const DataMap = ({ background, view, layerSelection }) => {
 
   const viewDeckLayers = useMemo(() => Object.keys(deckLayersSpec), [deckLayersSpec]);
 
-  const rasterLayerIds = useMemo(() => {
-    return viewDeckLayers.filter((l: string) => l.match(/^(coastal|fluvial|surface|cyclone)/));
-  }, [viewDeckLayers]);
+  const rasterLayerIds = useMemo(
+    () => viewDeckLayers.filter((l: string) => l.match(/^(coastal|fluvial|surface|cyclone)/)),
+    [viewDeckLayers],
+  );
 
-  const vectorLayerIds = useMemo(() => {
-    return viewDeckLayers.filter((l: string) => !l.match(/^(coastal|fluvial|surface|cyclone)/));
-  }, [viewDeckLayers]);
+  const vectorLayerIds = useMemo(
+    () => viewDeckLayers.filter((l: string) => !l.match(/^(coastal|fluvial|surface|cyclone)/)),
+    [viewDeckLayers],
+  );
 
   const onHover = useCallback(
     (info: any, deck: DeckGL) => {
@@ -151,6 +154,9 @@ export const DataMap = ({ background, view, layerSelection }) => {
         </MapTooltip>
       </MapViewport>
       {selectedFeatures.length !== 0 && <FeatureSidebar feature={selectedFeatures[0]} />}
+      <MapLegend>
+        <LegendContent deckLayersSpec={deckLayersSpec} />
+      </MapLegend>
     </>
   );
 };
