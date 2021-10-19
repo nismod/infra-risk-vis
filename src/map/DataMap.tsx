@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { readPixelsToArray } from '@luma.gl/core';
 
-import { MapParams, useMapLayersFunction } from './use-map-layers';
+import { useDeckLayersSpec, useMapLayersFunction } from './use-map-layers';
 import { MapViewport } from './MapViewport';
 import { MapTooltip } from './tooltip/MapTooltip';
 import { FeatureSidebar } from '../FeatureSidebar';
@@ -65,27 +65,18 @@ function processVectorHover(layerId, info): VectorHover {
   };
 }
 
+const pickingRadius = 8;
+
 export const DataMap = ({ background, view, layerSelection }) => {
-  // const [hoveredObjects, setHoveredObjects] = useState<HoveredObject[]>([]);
   const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
   const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
 
   const [selectedFeatures, setSelectedFeatures] = useState<MapboxGeoJSONFeature[]>([]);
 
-  const mapContentParams = useMemo<MapParams>(
-    () => ({
-      background,
-      view,
-      dataLayerSelection: layerSelection,
-      highlightedFeature: selectedFeatures?.[0],
-    }),
-    [background, view, layerSelection, selectedFeatures],
-  );
+  const deckLayersSpec = useDeckLayersSpec(layerSelection, view);
 
-  const [viewDeckLayers, setViewDeckLayers] = useState([]);
-
-  // const viewDeckLayers = useMemo(() => VIEWS[view].layers, [view]);
+  const viewDeckLayers = useMemo(() => Object.keys(deckLayersSpec), [deckLayersSpec]);
 
   const rasterLayerIds = useMemo(() => {
     return viewDeckLayers.filter((l: string) => l.match(/^(coastal|fluvial|surface|cyclone)/));
@@ -101,11 +92,8 @@ export const DataMap = ({ background, view, layerSelection }) => {
 
       const newHoveredVectors: VectorHover[] = [];
       const newHoveredRasters: RasterHover[] = [];
-      // if (info.object || info.bitmap) {
 
-      // }
-
-      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: 8 });
+      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: pickingRadius });
 
       if (pickedVectorInfo) {
         const layerId = pickedVectorInfo.layer.id;
@@ -126,7 +114,6 @@ export const DataMap = ({ background, view, layerSelection }) => {
       }
       setHoveredVectors(newHoveredVectors);
       setHoveredRasters(newHoveredRasters);
-      // setHoveredObjects(newHoveredObjects);
       setHoverXY([x, y]);
     },
     [rasterLayerIds, vectorLayerIds],
@@ -135,26 +122,18 @@ export const DataMap = ({ background, view, layerSelection }) => {
   const onClick = useCallback(
     (info: any, deck: DeckGL) => {
       const { x, y } = info;
-      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: 8 });
+      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: pickingRadius });
 
       if (pickedVectorInfo) {
-        // const layerId = pickedVectorInfo.layer.id;
         setSelectedFeatures([pickedVectorInfo.object]);
-        // newHoveredVectors.push(processVectorHover(layerId, pickedVectorInfo));
       } else {
         setSelectedFeatures([]);
       }
-
-      // if (!info.bitmap && info.object) {
-      //   setSelectedFeatures([info.object]);
-      // } else {
-      //   setSelectedFeatures([]);
-      // }
     },
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(mapContentParams);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec);
 
   return (
     <>
@@ -163,7 +142,7 @@ export const DataMap = ({ background, view, layerSelection }) => {
         background={background}
         onHover={onHover}
         onClick={onClick}
-        onLayerList={setViewDeckLayers}
+        pickingRadius={pickingRadius}
       >
         <MapTooltip tooltipXY={hoverXY}>
           {hoveredRasters.length || hoveredVectors.length ? (

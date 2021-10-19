@@ -25,27 +25,24 @@ const pointRadius = (zoom) => ({
   // radiusScale: 2 ** (15 - zoom),
 });
 
-const rasterColormaps = {
-  fluvial: 'blues',
-  coastal: 'greens',
-  surface: 'purples',
-  cyclone: 'reds',
+const colorMaps = {
+  fluvial: {
+    scheme: 'blues',
+    range: [0, 10],
+  },
+  coastal: {
+    scheme: 'greens',
+    range: [0, 10],
+  },
+  surface: {
+    scheme: 'purples',
+    range: [0, 10],
+  },
+  cyclone: {
+    scheme: 'reds',
+    range: [0, 75],
+  },
 };
-
-const rasterColormapRanges = {
-  fluvial: '[0,10]',
-  coastal: '[0,3.5]',
-  surface: '[0,10]',
-  cyclone: '[0,75]',
-};
-
-function getBoundsForTile(tileProps) {
-  const {
-    bbox: { west, south, east, north },
-  } = tileProps;
-
-  return [west, south, east, north];
-}
 
 enum ElecVoltage {
   elec_edges_high = 'elec_edges_high',
@@ -89,15 +86,25 @@ const roadColor = {
   [RoadClass.other]: COLORS.roads_unknown.deck,
 };
 
+function infrastructureLayer(...props) {
+  return new MVTLayer(
+    {
+      binary: true,
+      autoHighlight: true,
+      highlightColor: [0, 255, 255, 255],
+      refinementStrategy: 'best-available',
+    } as any,
+    ...props,
+  );
+}
+
 export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'elec_edges',
-    type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom, visibility }) =>
-      new MVTLayer(props, {
+      infrastructureLayer(props, {
         data: 'http://localhost:8080/data/elec_edges.json',
-        refinementStrategy: 'no-overlap',
         dataTransform: (data) => {
           for (const objectProperty of data.lines.properties) {
             objectProperty.__logicalLayer = elecVoltageLookup[objectProperty.asset_type];
@@ -124,104 +131,109 @@ export const DECK_LAYERS = makeConfig<any, string>([
   },
   {
     id: 'elec_nodes',
-    type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      new MVTLayer(props, {
-        data: 'http://localhost:8080/data/elec_nodes.json',
-        refinementStrategy: 'no-overlap',
-        getFillColor: COLORS.electricity_high.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        lineWidthMinPixels: 1,
-        ...pointRadius(zoom),
-      } as any),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/elec_nodes.json',
+          getFillColor: COLORS.electricity_high.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+          lineWidthMinPixels: 1,
+        },
+        pointRadius(zoom),
+      ),
   },
   {
     id: 'rail_edges',
-    type: 'MVTLayer',
+
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      new MVTLayer(props, {
-        data: 'http://localhost:8080/data/rail_edges.json',
-        refinementStrategy: 'no-overlap',
-        getLineColor: COLORS.railway.deck,
-        ...lineStyle(zoom),
-      } as any),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/rail_edges.json',
+          getLineColor: COLORS.railway.deck,
+        },
+        lineStyle(zoom),
+      ),
   },
   {
     id: 'rail_nodes',
-    type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      new MVTLayer(props, {
-        data: 'http://localhost:8080/data/rail_nodes.json',
-        refinementStrategy: 'no-overlap',
-        getFillColor: COLORS.railway.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        ...pointRadius(zoom),
-      } as any),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/rail_nodes.json',
+          getFillColor: COLORS.railway.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+        },
+        pointRadius(zoom),
+      ),
   },
   {
     id: 'road_edges',
-    type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      new MVTLayer(props, {
-        data: 'http://localhost:8080/data/road_edges.json',
-        refinementStrategy: 'no-overlap',
-        getLineColor: (x) => {
-          const roadClassProp = x.properties.road_class;
-          // console.log('prop', roadClassProp);
-          const roadClassEnum = roadClassLookup[roadClassProp];
-          // console.log('enum', roadClassEnum);
-          const color = roadColor[roadClassEnum];
-          // console.log(color);
-          return color;
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/road_edges.json',
+          getLineColor: (x) => {
+            const roadClassProp = x.properties.road_class;
+            const roadClassEnum = roadClassLookup[roadClassProp];
+            const color = roadColor[roadClassEnum];
+            return color;
+          },
         },
-        ...lineStyle(zoom),
-      } as any),
+        lineStyle(zoom),
+      ),
   },
   {
     id: 'road_bridges',
-    type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      new MVTLayer(props, {
-        data: 'http://localhost:8080/data/road_bridges.json',
-        refinementStrategy: 'no-overlap',
-        getFillColor: COLORS.bridges.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        ...pointRadius(zoom),
-      } as any),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/road_bridges.json',
+          getFillColor: COLORS.bridges.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+        },
+        pointRadius(zoom),
+      ),
   },
   {
     id: 'water_potable_edges',
-    type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      new MVTLayer(props, {
-        data: 'http://localhost:8080/data/water_potable_edges.json',
-        refinementStrategy: 'no-overlap',
-        ...lineStyle(zoom),
-        getLineColor: COLORS.water_edges.deck,
-      } as any),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/water_potable_edges.json',
+          getLineColor: COLORS.water_edges.deck,
+        },
+        lineStyle(zoom),
+      ),
   },
   {
     id: 'water_potable_nodes',
-    type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      new MVTLayer(props, {
-        data: 'http://localhost:8080/data/water_potable_nodes.json',
-        refinementStrategy: 'no-overlap',
-        getFillColor: COLORS.water_abstraction.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        ...pointRadius(zoom),
-      } as any),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/water_potable_nodes.json',
+          getFillColor: COLORS.water_abstraction.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+        },
+        pointRadius(zoom),
+      ),
   },
 
   hazardDeckLayer('fluvial', 20, 'baseline', 2010, 'None'),
@@ -725,27 +737,6 @@ export const DECK_LAYERS = makeConfig<any, string>([
   hazardDeckLayer('cyclone', 10000, 'baseline', 2010, 5),
   hazardDeckLayer('cyclone', 10000, 'baseline', 2010, 50),
   hazardDeckLayer('cyclone', 10000, 'baseline', 2010, 95),
-
-  // {
-  //   id: 'hazard',
-  //   type: 'TileLayer',
-  //   spatialType: 'raster',
-  //   fn: ({ props, params: { floodType, returnPeriod } }) =>
-  //     new TileLayer(props, {
-  //       data: `http://localhost:5000/singleband/${floodType}/${returnPeriod}/raw/{z}/{x}/{y}.png?colormap=${rasterColormaps[floodType]}&stretch_range=${rasterColormapRanges[floodType]}`,
-  //       refinementStrategy: 'no-overlap',
-  //       renderSubLayers: (props) =>
-  //         new BitmapLayer(props, {
-  //           data: null,
-  //           image: props.data,
-  //           bounds: getBoundsForTile(props.tile),
-  //           textureParameters: {
-  //             [GL.TEXTURE_MIN_FILTER]: GL.NEAREST,
-  //             [GL.TEXTURE_MAG_FILTER]: GL.NEAREST,
-  //           },
-  //         }),
-  //     }),
-  // },
 ]);
 
 function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
@@ -756,22 +747,48 @@ function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
 
   return {
     id,
-    type: 'TileLayer',
     spatialType: 'raster',
-    fn: ({ props, zoom, params: { hazardType, returnPeriod, rcp, epoch, confidence } }) =>
-      new TileLayer(props, {
-        data: `http://localhost:5000/singleband/${hazardType}/${returnPeriod}/${rcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${rasterColormaps[hazardType]}&stretch_range=${rasterColormapRanges[hazardType]}`,
-        refinementStrategy,
-        renderSubLayers: (props) =>
-          new BitmapLayer(props, {
-            data: null,
-            image: props.data,
-            bounds: getBoundsForTile(props.tile),
-            textureParameters: {
-              [GL.TEXTURE_MAG_FILTER]: magFilter,
-              // [GL.TEXTURE_MAG_FILTER]: zoom < 12 ? GL.NEAREST : GL.NEAREST_MIPMAP_LINEAR,
-            },
-          }),
-      }),
+    fn: ({ props, zoom, params: { hazardType, returnPeriod, rcp, epoch, confidence } }) => {
+      const { scheme, range } = colorMaps[hazardType];
+
+      return rasterTileLayer(
+        {
+          textureParameters: {
+            [GL.TEXTURE_MAG_FILTER]: magFilter,
+            // [GL.TEXTURE_MAG_FILTER]: zoom < 12 ? GL.NEAREST : GL.NEAREST_MIPMAP_LINEAR,
+          },
+        },
+        props,
+        {
+          data: `http://localhost:5000/singleband/${hazardType}/${returnPeriod}/${rcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
+          refinementStrategy,
+        },
+      );
+    },
   };
+}
+
+function getBoundsForTile(tileProps) {
+  const {
+    bbox: { west, south, east, north },
+  } = tileProps;
+
+  return [west, south, east, north];
+}
+
+function rasterTileLayer(bitmapProps, ...props) {
+  return new TileLayer(
+    {
+      renderSubLayers: (tileProps) =>
+        new BitmapLayer(
+          {
+            data: null,
+            image: tileProps.data,
+            bounds: getBoundsForTile(tileProps.tile),
+          },
+          bitmapProps,
+        ),
+    },
+    ...props,
+  );
 }

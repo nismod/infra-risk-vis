@@ -21,7 +21,7 @@ function makeMapboxConfig(background: BackgroundName) {
   };
 }
 
-export const MapViewport = ({ layersFunction, background, onHover, onClick, onLayerList = null, children }) => {
+export const MapViewport = ({ layersFunction, background, onHover, onClick, pickingRadius, children }) => {
   const [viewport, setViewport] = useState({
     latitude: 18.14,
     longitude: -77.28,
@@ -37,10 +37,6 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
 
   const backgroundStyle = useMemo(() => makeMapboxConfig(background), [background]);
   const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom]);
-
-  useEffect(() => {
-    onLayerList?.(layers.map((l) => l.id));
-  }, [onLayerList, layers]);
 
   return (
     <DeckGL<MapContextProps>
@@ -60,7 +56,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, onLa
         }
         return true;
       }}
-      pickingRadius={8}
+      pickingRadius={pickingRadius}
       onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
       onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
       ContextProvider={MapContext.Provider}
