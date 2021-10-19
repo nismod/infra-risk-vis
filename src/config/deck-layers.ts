@@ -1,6 +1,6 @@
 import { MVTLayer, TileLayer, BitmapLayer } from 'deck.gl';
 import GL from '@luma.gl/constants';
-import { DataFilterExtension } from '@deck.gl/extensions';
+// import { DataFilterExtension } from '@deck.gl/extensions';
 
 import { COLORS } from './colors';
 import { makeConfig } from '../helpers';
@@ -47,36 +47,6 @@ function getBoundsForTile(tileProps) {
   return [west, south, east, north];
 }
 
-enum ElecVoltage {
-  elec_edges_high = 'elec_edges_high',
-  elec_edges_low = 'elec_edges_low',
-}
-
-const elecVoltageLookup = {
-  'High Voltage': ElecVoltage.elec_edges_high,
-  'Low Voltage': ElecVoltage.elec_edges_low,
-};
-
-enum ElecNode {
-  source = 'source',
-  sink = 'sink',
-  junction = 'junction'
-}
-
-const elecNodeLookup = {
-  'source': ElecNode.source,
-  'sink': ElecNode.sink,
-  'junction': ElecNode.junction,
-}
-
-const electricityColor = {
-  [ElecVoltage.elec_edges_high]: COLORS.electricity_high.deck,
-  [ElecVoltage.elec_edges_low]: COLORS.electricity_low.deck,
-  [ElecNode.source]: COLORS.electricity_high.deck,
-  [ElecNode.junction]: COLORS.electricity_unknown.deck,
-  [ElecNode.sink]: COLORS.electricity_low.deck,
-};
-
 enum RoadClass {
   class_a = 'class_a',
   class_b = 'class_b',
@@ -106,51 +76,78 @@ const roadColor = {
 
 export const DECK_LAYERS = makeConfig<any, string>([
   {
-    id: 'elec_edges',
+    id: 'elec_edges_high',
     type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom, visibility }) =>
       new MVTLayer(props, {
-        data: 'http://localhost:8080/data/elec_edges.json',
+        data: 'http://localhost:8080/data/elec_edges_high.json',
         refinementStrategy: 'no-overlap',
-        dataTransform: (data) => {
-          for (const objectProperty of data.lines.properties) {
-            objectProperty.__logicalLayer = elecVoltageLookup[objectProperty.asset_type];
-          }
-          return data;
-        },
-        getLineColor: (x) => electricityColor[x.properties.__logicalLayer],
-        getFilterValue: (x) => (visibility[x.properties.__logicalLayer] ? 1 : 0),
-        filterRange: [1, 1],
+        getLineColor: COLORS.electricity_high.deck,
         getLineWidth: 10,
         lineWidthUnit: 'meters',
         lineWidthMinPixels: 1,
         lineWidthMaxPixels: 10,
         lineJointRounded: true,
         lineCapRounded: true,
-        updateTriggers: {
-          getFilterValue: [visibility],
-        },
-        extensions: [new DataFilterExtension({ filterSize: 1 })],
       } as any),
-    getLogicalLayer: ({ deckLayerId, feature }) => {
-      return feature.properties.__logicalLayer;
-    },
   },
   {
-    id: 'elec_nodes',
+    id: 'elec_edges_low',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom, visibility }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/elec_edges_low.json',
+        refinementStrategy: 'no-overlap',
+        getLineColor: COLORS.electricity_low.deck,
+        getLineWidth: 10,
+        lineWidthUnit: 'meters',
+        lineWidthMinPixels: 1,
+        lineWidthMaxPixels: 10,
+        lineJointRounded: true,
+        lineCapRounded: true,
+      } as any),
+  },
+  {
+    id: 'elec_nodes_source',
     type: 'MVTLayer',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
       new MVTLayer(props, {
-        data: 'http://localhost:8080/data/elec_nodes.json',
+        data: 'http://localhost:8080/data/elec_nodes_source.json',
         refinementStrategy: 'no-overlap',
-        getFillColor: (x) => {
-          const elecNodeProp = x.properties.asset_type;
-          const elecNodeEnum = elecNodeLookup[elecNodeProp];
-          const color = electricityColor[elecNodeEnum];
-          return color;
-        },
+        getFillColor: COLORS.electricity_high.deck,
+        stroked: true,
+        getLineColor: [255, 255, 255],
+        lineWidthMinPixels: 1,
+        ...pointRadius(zoom),
+      } as any),
+  },
+  {
+    id: 'elec_nodes_sink',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/elec_nodes_sink.json',
+        refinementStrategy: 'no-overlap',
+        getFillColor: COLORS.electricity_low.deck,
+        stroked: true,
+        getLineColor: [255, 255, 255],
+        lineWidthMinPixels: 1,
+        ...pointRadius(zoom),
+      } as any),
+  },
+  {
+    id: 'elec_nodes_junction',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/elec_nodes_junction.json',
+        refinementStrategy: 'no-overlap',
+        getFillColor: COLORS.electricity_unknown.deck,
         stroked: true,
         getLineColor: [255, 255, 255],
         lineWidthMinPixels: 1,
@@ -193,11 +190,8 @@ export const DECK_LAYERS = makeConfig<any, string>([
         refinementStrategy: 'no-overlap',
         getLineColor: (x) => {
           const roadClassProp = x.properties.road_class;
-          // console.log('prop', roadClassProp);
           const roadClassEnum = roadClassLookup[roadClassProp];
-          // console.log('enum', roadClassEnum);
           const color = roadColor[roadClassEnum];
-          // console.log(color);
           return color;
         },
         ...lineStyle(zoom),
@@ -215,6 +209,32 @@ export const DECK_LAYERS = makeConfig<any, string>([
         stroked: true,
         getLineColor: [255, 255, 255],
         ...pointRadius(zoom),
+      } as any),
+  },
+  {
+    id: 'airport_areas',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/airport_areas.json',
+        getFillColor: COLORS.airports.deck,
+        stroked: true,
+        getLineColor: [0, 0, 0],
+        lineWidthMinPixels: 1,
+      } as any),
+  },
+  {
+    id: 'port_areas',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/port_areas.json',
+        getFillColor: COLORS.ports.deck,
+        stroked: true,
+        getLineColor: [255, 255, 255],
+        lineWidthMinPixels: 1,
       } as any),
   },
   {
@@ -240,6 +260,61 @@ export const DECK_LAYERS = makeConfig<any, string>([
         getFillColor: COLORS.water_abstraction.deck,
         stroked: true,
         getLineColor: [255, 255, 255],
+        lineWidthMinPixels: 1,
+        ...pointRadius(zoom),
+      } as any),
+  },
+  {
+    id: 'water_irrigation_edges',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/water_irrigation_edges.json',
+        refinementStrategy: 'no-overlap',
+        ...lineStyle(zoom),
+        getLineColor: COLORS.water_edges.deck,
+      } as any),
+  },
+  {
+    id: 'water_irrigation_nodes',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/water_irrigation_nodes.json',
+        refinementStrategy: 'no-overlap',
+        getFillColor: COLORS.water_abstraction.deck,
+        stroked: true,
+        getLineColor: [255, 255, 255],
+        lineWidthMinPixels: 1,
+        ...pointRadius(zoom),
+      } as any),
+  },
+  {
+    id: 'water_waste_edges',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/water_waste_edges.json',
+        refinementStrategy: 'no-overlap',
+        ...lineStyle(zoom),
+        getLineColor: COLORS.water_edges.deck,
+      } as any),
+  },
+  {
+    id: 'water_waste_nodes',
+    type: 'MVTLayer',
+    spatialType: 'vector',
+    fn: ({ props, zoom }) =>
+      new MVTLayer(props, {
+        data: 'http://localhost:8080/data/water_waste_nodes.json',
+        refinementStrategy: 'no-overlap',
+        getFillColor: COLORS.water_abstraction.deck,
+        stroked: true,
+        getLineColor: [255, 255, 255],
+        lineWidthMinPixels: 1,
         ...pointRadius(zoom),
       } as any),
   },
