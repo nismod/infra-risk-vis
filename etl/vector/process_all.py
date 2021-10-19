@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 import csv
+import os
 from pathlib import Path
 import subprocess
 
@@ -28,11 +29,14 @@ def process_vector_datasets(raw: Path, out: Path):
     assert 'spatial_type' in reader.fieldnames
     assert 'where_filter' in reader.fieldnames
     assert 'output_layer_name' in reader.fieldnames
-    
+
     for row in reader:
       in_file_path = raw / row['path']
       output_layer_name = row['output_layer_name']
       out_file_path = out / f"{output_layer_name}.mbtiles"
+      if os.path.exists(out_file_path) and (os.path.getmtime(in_file_path) < os.path.getmtime(out_file_path)):
+        print("Skipping", out_file_path)
+        continue
       run_single_processing(in_file_path, out_file_path, **row)
 
 
