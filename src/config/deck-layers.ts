@@ -1,6 +1,5 @@
 import { MVTLayer, TileLayer, BitmapLayer } from 'deck.gl';
 import GL from '@luma.gl/constants';
-// import { DataFilterExtension } from '@deck.gl/extensions';
 
 import { COLORS } from './colors';
 import { makeConfig } from '../helpers';
@@ -70,22 +69,28 @@ export const DECK_LAYERS = makeConfig<any, string>([
     id: 'elec_edges_high',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/elec_edges_high.json',
-        getLineColor: COLORS.electricity_high.deck,
-      },
-      lineStyle(zoom)),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/elec_edges_high.json',
+          getLineColor: COLORS.electricity_high.deck,
+        },
+        lineStyle(zoom),
+      ),
   },
   {
     id: 'elec_edges_low',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/elec_edges_low.json',
-        refinementStrategy: 'no-overlap',
-        getLineColor: COLORS.electricity_low.deck,
-      },
-      lineStyle(zoom)),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/elec_edges_low.json',
+          refinementStrategy: 'no-overlap',
+          getLineColor: COLORS.electricity_low.deck,
+        },
+        lineStyle(zoom),
+      ),
   },
   {
     id: 'elec_nodes_source',
@@ -107,26 +112,33 @@ export const DECK_LAYERS = makeConfig<any, string>([
     id: 'elec_nodes_sink',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/elec_nodes_sink.json',
-        getFillColor: COLORS.electricity_low.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        lineWidthMinPixels: 1,
-      },pointRadius(zoom)
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/elec_nodes_sink.json',
+          getFillColor: COLORS.electricity_low.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+          lineWidthMinPixels: 1,
+        },
+        pointRadius(zoom),
       ),
   },
   {
     id: 'elec_nodes_junction',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/elec_nodes_junction.json',
-        getFillColor: COLORS.electricity_unknown.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        lineWidthMinPixels: 1,
-      }, pointRadius(zoom)),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/elec_nodes_junction.json',
+          getFillColor: COLORS.electricity_unknown.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+          lineWidthMinPixels: 1,
+        },
+        pointRadius(zoom),
+      ),
   },
   {
     id: 'rail_edges',
@@ -247,43 +259,59 @@ export const DECK_LAYERS = makeConfig<any, string>([
     id: 'water_irrigation_edges',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-    infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/water_irrigation_edges.json',
-        getLineColor: COLORS.water_edges.deck,
-      },lineStyle(zoom)),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/water_irrigation_edges.json',
+          getLineColor: COLORS.water_edges.deck,
+        },
+        lineStyle(zoom),
+      ),
   },
   {
     id: 'water_irrigation_nodes',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-    infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/water_irrigation_nodes.json',
-        getFillColor: COLORS.water_abstraction.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        lineWidthMinPixels: 1,
-      },pointRadius(zoom)),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/water_irrigation_nodes.json',
+          getFillColor: COLORS.water_abstraction.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+          lineWidthMinPixels: 1,
+        },
+        pointRadius(zoom),
+      ),
   },
   {
     id: 'water_waste_edges',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-      infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/water_waste_edges.json',
-        getLineColor: COLORS.water_edges.deck,
-      },lineStyle(zoom)),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/water_waste_edges.json',
+          getLineColor: COLORS.water_edges.deck,
+        },
+        lineStyle(zoom),
+      ),
   },
   {
     id: 'water_waste_nodes',
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
-    infrastructureLayer(props, {
-        data: 'http://localhost:8080/data/water_waste_nodes.json',
-        getFillColor: COLORS.water_abstraction.deck,
-        stroked: true,
-        getLineColor: [255, 255, 255],
-        lineWidthMinPixels: 1,
-      },pointRadius(zoom)),
+      infrastructureLayer(
+        props,
+        {
+          data: 'http://localhost:8080/data/water_waste_nodes.json',
+          getFillColor: COLORS.water_abstraction.deck,
+          stroked: true,
+          getLineColor: [255, 255, 255],
+          lineWidthMinPixels: 1,
+        },
+        pointRadius(zoom),
+      ),
   },
 
   hazardDeckLayer('fluvial', 20, 'baseline', 2010, 'None'),
