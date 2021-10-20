@@ -17,10 +17,10 @@ function getDeckLayersSpec(dataLayerSelection: Record<LayerName, boolean>, view:
   const deckLayers = {};
 
   for (const layerName of VIEWS[view].layers) {
-    if (dataLayerSelection[layerName] == undefined) continue;
+    if (dataLayerSelection[layerName] === undefined) continue;
 
     const layerDefinition = LAYERS[layerName] as LayerDefinition;
-    if (layerDefinition == undefined) throw new Error(`Logical layer '${layerName}' is not defined`);
+    if (layerDefinition === undefined) throw new Error(`Logical layer '${layerName}' is not defined`);
 
     const deckLayerSpec = layerDefinition.deckLayer;
 

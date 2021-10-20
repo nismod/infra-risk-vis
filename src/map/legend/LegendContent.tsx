@@ -1,5 +1,4 @@
-import { Box, Grid, Typography } from '@material-ui/core';
-import { useMemo } from 'react';
+import { Box, Typography } from '@material-ui/core';
 import { COLOR_MAPS } from '../../config/color-maps';
 import { DECK_LAYERS } from '../../config/deck-layers';
 import { LAYERS } from '../../config/layers';
@@ -24,7 +23,6 @@ const RasterLegendGradient = ({ colorMapValues }) => {
 };
 
 const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
-  const deckLayerConfig = DECK_LAYERS[deckLayerName];
   const {
     sourceLogicalLayers: [logicalLayer],
     params,
