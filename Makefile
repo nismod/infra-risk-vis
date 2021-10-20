@@ -25,7 +25,7 @@ clean-vector:
 	rm ./tileserver/data/*.mbtiles
 
 
-RASTER_BASE_COMMAND = "$(current_dir)/etl/raster/process_all.py" --raw "${RAW_DATA_DIR}" --out "$(current_dir)/tileserver/raster/data"
+RASTER_BASE_COMMAND = "$(current_dir)/etl/raster/process_all.py" --raw "${RAW_DATA_DIR}" --out "$(current_dir)/tileserver/raster/input"
 
 raster:
 	${RASTER_BASE_COMMAND}
@@ -38,7 +38,7 @@ raster-surface:
 
 raster-coastal:
 	${RASTER_BASE_COMMAND} --type coastal
-	
+
 raster-cyclone:
 	${RASTER_BASE_COMMAND} --type cyclone
 
