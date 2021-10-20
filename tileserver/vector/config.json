@@ -1,44 +1,63 @@
 {
-    "options": {
-      "paths": {
-        "root": "",
-        "fonts": "fonts",
-        "styles": "styles",
-        "mbtiles": "data"
-      }
+  "options": {
+    "paths": {
+      "root": "",
+      "fonts": "fonts",
+      "mbtiles": "data"
+    }
+  },
+  "styles": {},
+  "data": {
+    "airport_areas": {
+      "mbtiles": "airport_areas.mbtiles"
     },
-    "styles": {
-      "overview": {
-        "style": "overview.json"
-      }
+    "elec_edges_high": {
+      "mbtiles": "elec_edges_high.mbtiles"
     },
-    "data": {
-      "boundaries": {
-        "mbtiles": "boundaries.mbtiles"
-      },
-      "road_edges": {
-        "mbtiles": "road_edges.mbtiles"
-      },
-      "bridges": {
-        "mbtiles": "bridges.mbtiles"
-      },
-      "elec_edges": {
-        "mbtiles": "elec_edges.mbtiles"
-      },
-      "elec_nodes": {
-        "mbtiles": "elec_nodes.mbtiles"
-      },
-      "rail_edges": {
-        "mbtiles": "rail_edges.mbtiles"
-      },
-      "rail_nodes": {
-        "mbtiles": "rail_nodes.mbtiles"
-      },
-      "pot_edges": {
-        "mbtiles": "pot_edges.mbtiles"
-      },
-      "abs_nodes": {
-        "mbtiles": "abs_nodes.mbtiles"
-      }
+    "elec_edges_low": {
+      "mbtiles": "elec_edges_low.mbtiles"
+    },
+    "elec_nodes_junction": {
+      "mbtiles": "elec_nodes_junction.mbtiles"
+    },
+    "elec_nodes_sink": {
+      "mbtiles": "elec_nodes_sink.mbtiles"
+    },
+    "elec_nodes_source": {
+      "mbtiles": "elec_nodes_source.mbtiles"
+    },
+    "port_areas": {
+      "mbtiles": "port_areas.mbtiles"
+    },
+    "rail_edges": {
+      "mbtiles": "rail_edges.mbtiles"
+    },
+    "rail_nodes": {
+      "mbtiles": "rail_nodes.mbtiles"
+    },
+    "road_bridges": {
+      "mbtiles": "road_bridges.mbtiles"
+    },
+    "road_edges": {
+      "mbtiles": "road_edges.mbtiles"
+    },
+    "water_irrigation_edges": {
+      "mbtiles": "water_irrigation_edges.mbtiles"
+    },
+    "water_irrigation_nodes": {
+      "mbtiles": "water_irrigation_nodes.mbtiles"
+    },
+    "water_potable_edges": {
+      "mbtiles": "water_potable_edges.mbtiles"
+    },
+    "water_potable_nodes": {
+      "mbtiles": "water_potable_nodes.mbtiles"
+    },
+    "water_waste_edges": {
+      "mbtiles": "water_waste_edges.mbtiles"
+    },
+    "water_waste_nodes": {
+      "mbtiles": "water_waste_nodes.mbtiles"
     }
   }
+}

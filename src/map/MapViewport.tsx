@@ -1,6 +1,6 @@
 import DeckGL from 'deck.gl';
-import { useMemo, useRef, useState } from 'react';
-import { StaticMap } from 'react-map-gl';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AttributionControl, MapContext, MapContextProps, NavigationControl, ScaleControl, StaticMap } from 'react-map-gl';
 import _ from 'lodash';
 
 import { backgroundConfig, BackgroundName } from '../config/backgrounds';
@@ -21,7 +21,7 @@ function makeMapboxConfig(background: BackgroundName) {
   };
 }
 
-export const MapViewport = ({ layersFunction, background, onHover, onClick, children }) => {
+export const MapViewport = ({ layersFunction, background, onHover, onClick, pickingRadius, children }) => {
   const [viewport, setViewport] = useState({
     latitude: 18.14,
     longitude: -77.28,
@@ -31,7 +31,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, chil
     maxPitch: 0,
   });
 
-  const deckRef = useRef<DeckGL>();
+  const deckRef = useRef<DeckGL<MapContextProps>>();
 
   const zoom = viewport.zoom;
 
@@ -39,7 +39,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, chil
   const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom]);
 
   return (
-    <DeckGL
+    <DeckGL<MapContextProps>
       ref={deckRef}
       style={{
         overflow: 'hidden',
@@ -49,11 +49,48 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, chil
       viewState={viewport}
       onViewStateChange={({ viewState }) => setViewport(viewState)}
       layers={layers}
-      pickingRadius={10}
+      layerFilter={({ layer, renderPass }) => {
+        if (renderPass === 'picking:hover') {
+          // don't render raster layers on hover picking pass (but render them for manual picking)
+          if (layer.id.match(/^(coastal|fluvial|surface|cyclone)/)) return false;
+        }
+        return true;
+      }}
+      pickingRadius={pickingRadius}
       onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
-      onClick={onClick}
+      onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
+      ContextProvider={MapContext.Provider}
     >
-      <StaticMap mapStyle={backgroundStyle} mapboxApiAccessToken={MAPBOX_KEY} />
+      <StaticMap
+        mapStyle={backgroundStyle}
+        mapboxApiAccessToken={MAPBOX_KEY}
+        attributionControl={false} />
+      <AttributionControl
+        customAttribution='Background map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>, satellite imagery via &copy; <a href="https://www.mapbox.com/">MapBox</a>'
+        compact={false}
+        style={{
+          //   fontFamily: 'sans-serif',
+          //   fontSize: 14,
+          right: 0,
+          bottom: 0,
+        }}
+      />
+      <NavigationControl
+        showCompass={false}
+        capturePointerMove={true}
+        style={{
+          right: 10,
+          top: 10,
+        }}
+      />
+      <ScaleControl
+        maxWidth={100}
+        unit="metric"
+        style={{
+          right: 10,
+          bottom: 25,
+        }}
+      />
       {children}
     </DeckGL>
   );

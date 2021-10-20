@@ -7,21 +7,39 @@ export interface GenericMark<T> {
 }
 
 type CustomSliderProps<T> = {
-  marks: GenericMark<T>[];
+  marks: T[]; //GenericMark<T>[];
   value: T;
   onChange: (newVal: T) => void;
+  showMarkLabelsFor?: T[];
 } & Omit<ComponentProps<typeof Slider>, 'marks' | 'value' | 'onChange' | 'min' | 'max' | 'step' | 'scale'>;
 
-export const CustomNumberSlider: FC<CustomSliderProps<number>> = ({ marks, value, onChange, ...otherProps }) => {
-  const integerMarks = useMemo(() => marks.map((m, idx) => ({ value: idx, label: m.label })), [marks]);
-  const integerValue = useMemo(() => marks.findIndex((m) => m.value === value), [marks, value]);
+export const CustomNumberSlider: FC<CustomSliderProps<number>> = ({
+  marks,
+  value,
+  onChange,
+  showMarkLabelsFor,
+  ...otherProps
+}) => {
+  const showLabelLookup = useMemo(
+    () => showMarkLabelsFor && Object.fromEntries(showMarkLabelsFor.map((ml) => [ml, true])),
+    [showMarkLabelsFor],
+  );
+  const integerMarks = useMemo(() => {
+    return marks.map((m, idx) => ({
+      value: idx,
+      label: !showLabelLookup || showLabelLookup[m] ? m.toString() : null,
+    }));
+  }, [marks, showLabelLookup]);
+  const integerValue = useMemo(() => marks.findIndex((m) => m === value), [marks, value]);
 
   const handleIntegerChange = useCallback(
     (e: ChangeEvent<{}>, value: number) => {
-      onChange(marks[value].value);
+      onChange(marks[value]);
     },
     [marks, onChange],
   );
+
+  const valueLabelFunction = useCallback((value) => marks[value].toString(), [value]);
 
   return (
     <Slider
@@ -31,6 +49,8 @@ export const CustomNumberSlider: FC<CustomSliderProps<number>> = ({ marks, value
       min={0}
       max={marks.length - 1}
       step={1}
+      valueLabelFormat={valueLabelFunction}
+      getAriaValueText={valueLabelFunction}
       {...otherProps}
     />
   );

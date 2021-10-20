@@ -3,18 +3,20 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { readPixelsToArray } from '@luma.gl/core';
 
-import { MapParams, useMapLayersFunction } from './use-map-layers';
+import { useDeckLayersSpec, useMapLayersFunction } from './use-map-layers';
 import { MapViewport } from './MapViewport';
 import { MapTooltip } from './tooltip/MapTooltip';
-import { FeatureSidebar } from '../FeatureSidebar';
+import { FeatureSidebar } from '../features/FeatureSidebar';
 import { TooltipContent } from './tooltip/TooltipContent';
 import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
-import _ from 'lodash';
+import { MapLegend } from './legend/MapLegend';
+import { LegendContent } from './legend/LegendContent';
 
 export interface RasterHover {
   type: 'raster';
   deckLayer: string;
+  logicalLayer: string;
   color: any;
   info: any;
 }
@@ -22,91 +24,137 @@ export interface RasterHover {
 export interface VectorHover {
   type: 'vector';
   deckLayer: string;
+  logicalLayer: string;
   feature: any;
   info: any;
 }
 
+export interface FeatureSelection {
+  feature: MapboxGeoJSONFeature;
+  sourceDeckLayer: string;
+  sourceLogicalLayer: string;
+}
+
 export type HoveredObject = VectorHover | RasterHover;
 
+function processRasterHover(layerId, info): RasterHover {
+  const { bitmap, sourceLayer } = info;
+  if (bitmap) {
+    const pixelColor = readPixelsToArray(sourceLayer.props.image, {
+      sourceX: bitmap.pixel[0],
+      sourceY: bitmap.pixel[1],
+      sourceWidth: 1,
+      sourceHeight: 1,
+      sourceType: undefined,
+    });
+    if (pixelColor[3]) {
+      return {
+        type: 'raster',
+        deckLayer: layerId,
+        logicalLayer: DECK_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: null }) ?? layerId,
+        color: pixelColor,
+        info,
+      };
+    } else return null;
+  }
+}
+
+function processVectorHover(layerId, info): VectorHover {
+  const { object } = info;
+
+  return {
+    type: 'vector',
+    deckLayer: layerId,
+    logicalLayer: DECK_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: object }) ?? layerId,
+    feature: object,
+    info,
+  };
+}
+
+const pickingRadius = 8;
+const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
+
 export const DataMap = ({ background, view, layerSelection }) => {
-  const [hoveredObjects, setHoveredObjects] = useState<HoveredObject[]>([]);
+  const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
+  const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
 
-  const [selectedFeatures, setSelectedFeatures] = useState<MapboxGeoJSONFeature[]>([]);
+  const [selectedFeature, setSelectedFeature] = useState<VectorHover>(null);
 
-  const mapContentParams = useMemo<MapParams>(
-    () => ({
-      background,
-      view,
-      dataLayerSelection: layerSelection,
-      highlightedFeature: selectedFeatures?.[0],
-    }),
-    [background, view, layerSelection, selectedFeatures],
-  );
+  const deckLayersSpec = useDeckLayersSpec(layerSelection, view);
 
-  const onHover = useCallback((info: any, deck: DeckGL) => {
-    const { x, y } = info;
+  const deckIds = useMemo(() => Object.keys(deckLayersSpec), [deckLayersSpec]);
+  const rasterLayerIds = useMemo(() => deckIds.filter((l: string) => l.match(rasterRegex)), [deckIds]);
+  const vectorLayerIds = useMemo(() => deckIds.filter((l: string) => !l.match(rasterRegex)), [deckIds]);
 
-    const newHoveredObjects: HoveredObject[] = [];
+  const onHover = useCallback(
+    (info: any, deck: DeckGL) => {
+      const { x, y } = info;
 
-    if (info.object || info.bitmap) {
-      const pickedObjects = deck.pickMultipleObjects({ x, y, radius: 20 });
+      const newHoveredVectors: VectorHover[] = [];
+      const newHoveredRasters: RasterHover[] = [];
+
+      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: pickingRadius });
+
+      if (pickedVectorInfo) {
+        const layerId = pickedVectorInfo.layer.id;
+        newHoveredVectors.push(processVectorHover(layerId, pickedVectorInfo));
+      }
+
+      const pickedObjects = deck.pickMultipleObjects({ x, y, layerIds: rasterLayerIds });
       for (const picked of pickedObjects) {
         const layerId = picked.layer.id;
         const deckLayerDefinition = DECK_LAYERS[layerId];
         if (deckLayerDefinition.spatialType === 'raster') {
-          const { bitmap, sourceLayer } = picked;
-          if (bitmap) {
-            const pixelColor = readPixelsToArray(sourceLayer.props.image, {
-              sourceX: bitmap.pixel[0],
-              sourceY: bitmap.pixel[1],
-              sourceWidth: 1,
-              sourceHeight: 1,
-              sourceType: undefined,
-            });
-            if (pixelColor[3]) {
-              newHoveredObjects.push({
-                type: 'raster',
-                deckLayer: layerId,
-                color: pixelColor,
-                info: picked,
-              });
-            }
-          }
+          const rasterHover = processRasterHover(layerId, picked);
+
+          if (rasterHover) newHoveredRasters.push(rasterHover);
         } else {
-          const { object } = picked;
-          newHoveredObjects.push({
-            type: 'vector',
-            deckLayer: layerId,
-            feature: object,
-            info: picked,
-          });
+          // it's not expected to get any non-raster layers here
         }
       }
-    }
+      setHoveredVectors(newHoveredVectors);
+      setHoveredRasters(newHoveredRasters);
+      setHoverXY([x, y]);
+    },
+    [rasterLayerIds, vectorLayerIds],
+  );
 
-    setHoveredObjects(newHoveredObjects);
-    setHoverXY([x, y]);
-  }, []);
+  const onClick = useCallback(
+    (info: any, deck: DeckGL) => {
+      const { x, y } = info;
+      const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: pickingRadius });
 
-  const onLayerClick = useCallback((info: any) => {
-    if (!info.bitmap && info.object) {
-      setSelectedFeatures([info.object]);
-    } else {
-      setSelectedFeatures([]);
-    }
-  }, []);
+      if (pickedVectorInfo) {
+        setSelectedFeature(processVectorHover(pickedVectorInfo.layer.id, pickedVectorInfo));
+      } else {
+        setSelectedFeature(null);
+      }
+    },
+    [vectorLayerIds],
+  );
 
-  const deckLayersFunction = useMapLayersFunction(mapContentParams, onHover);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec);
 
   return (
     <>
-      <MapViewport layersFunction={deckLayersFunction} background={background} onHover={onHover} onClick={onLayerClick}>
+      <MapViewport
+        layersFunction={deckLayersFunction}
+        background={background}
+        onHover={onHover}
+        onClick={onClick}
+        pickingRadius={pickingRadius}
+      >
         <MapTooltip tooltipXY={hoverXY}>
-          {hoveredObjects.length ? <TooltipContent hoveredObjects={hoveredObjects} /> : null}
+          {hoveredRasters.length || hoveredVectors.length ? (
+            <TooltipContent hoveredVectors={hoveredVectors} hoveredRasters={hoveredRasters} />
+          ) : null}
         </MapTooltip>
       </MapViewport>
-      {selectedFeatures.length !== 0 && <FeatureSidebar feature={selectedFeatures[0]} />}
+      {selectedFeature && <FeatureSidebar featureSelection={selectedFeature} />}
+      <MapLegend>
+        <LegendContent deckLayersSpec={deckLayersSpec} />
+      </MapLegend>
     </>
   );
 };

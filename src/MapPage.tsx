@@ -7,8 +7,10 @@ import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, VIEWS } from './config/views';
 import { BackgroundName } from './config/backgrounds';
-import { LayerName, LAYERS } from './config/layers';
+import { LayerName } from './config/layers';
 import { HazardsControl } from './controls/HazardsControl';
+import { useNetworkSelection } from './controls/use-network-selection';
+import { useHazardSelection } from './controls/use-hazard-selection';
 
 interface MapViewProps {
   view: ViewName;
@@ -20,12 +22,21 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [background, setBackground] = useState<BackgroundName>('light');
 
   const viewLayerNames = useMemo<LayerName[]>(() => VIEWS[view].layers as LayerName[], [view]);
-  const layerDefinitions = useMemo(
-    () => viewLayerNames.map((layerName) => ({ ...LAYERS[layerName], key: layerName })),
-    [viewLayerNames],
+  // const layerDefinitions = useMemo(
+  //   () => viewLayerNames.map((layerName) => ({ ...LAYERS[layerName], key: layerName })),
+  //   [viewLayerNames],
+  // );
+
+  const { networkSelection, setNetworkSelection, networkVisibilitySet } = useNetworkSelection();
+  const { hazardShow, hazardOptions, hazardParams, setSingleHazardParam, setSingleHazardShow, hazardVisibilitySet } =
+    useHazardSelection();
+
+  const visibilitySets = useMemo(
+    () => [networkVisibilitySet ?? {}, hazardVisibilitySet ?? {}],
+    [networkVisibilitySet, hazardVisibilitySet],
   );
 
-  const { layerSelection, updateLayerSelection } = useLayerSelection(viewLayerNames);
+  const layerSelection = useLayerSelection(viewLayerNames, visibilitySets);
 
   return (
     <>
@@ -35,11 +46,24 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
           {view === 'overview' && (
             <>
               <NetworkControl
-                dataLayers={layerDefinitions}
-                layerVisibility={layerSelection}
-                onLayerVisChange={updateLayerSelection}
+                networkSelection={networkSelection}
+                onNetworkSelection={setNetworkSelection}
+                // dataLayers={layerDefinitions}
+                // layerVisibility={layerSelection}
+                // onLayerVisChange={updateLayerSelection}
               />
-              <HazardsControl layerVisibility={layerSelection} onLayerVisibilityUpdate={updateLayerSelection} />
+              <HazardsControl
+                hazardParams={hazardParams}
+                hazardShow={hazardShow}
+                hazardOptions={hazardOptions}
+                onSingleHazardParam={setSingleHazardParam}
+                onSingleHazardShow={setSingleHazardShow}
+                // hazardSelection={hazardSelection}
+                // onHazardSelection={setHazardSelection}
+
+                // layerVisibility={layerSelection}
+                // onLayerVisibilityUpdate={updateLayerSelection}
+              />
             </>
           )}
           <BackgroundControl background={background} onBackgroundChange={setBackground} />

@@ -1,31 +1,42 @@
-import { useCallback, useState } from 'react';
+import { useMemo } from 'react';
+// import { useCallback, useMemo, useState } from 'react';
 import { LayerName } from '../config/layers';
 
-export function useLayerSelection(layers: LayerName[]) {
-  const [layerSelection, setLayerSelection] = useState<Record<LayerName, boolean>>(
-    Object.fromEntries(layers.map((l) => [l, false])) as Record<LayerName, boolean>,
-  );
+export type VisibilitySet = Record<string, boolean>;
 
-  const updateLayerSelection = useCallback(
-    (selectionUpdate: Record<string, boolean>) => {
-      setLayerSelection({ ...layerSelection, ...selectionUpdate });
+export function useLayerSelection(layers: LayerName[], visibilitySets: VisibilitySet[]) {
+  //Object.fromEntries(layers.map((l) => [l, false]));
+
+  const layerSelection = useMemo(
+    () => {
+      const baseLayerSelection = {};
+      return Object.assign(baseLayerSelection, ...visibilitySets);
     },
-    [layerSelection],
+    [visibilitySets],
   );
 
-  const selectSingleLayer = useCallback(
-    (layerName: LayerName) => {
-      setLayerSelection({
-        ...(Object.fromEntries(layers.map((l) => [l, false])) as Record<LayerName, boolean>),
-        [layerName]: true,
-      });
-    },
-    [layers],
-  );
+  // const updateLayerSelection = useCallback(
+  //   (selectionUpdate: Record<string, boolean>) => {
+  //     setLayerSelection({ ...layerSelection, ...selectionUpdate });
+  //   },
+  //   [layerSelection],
+  // );
 
-  return {
-    layerSelection,
-    updateLayerSelection,
-    selectSingleLayer,
-  };
+  // const selectSingleLayer = useCallback(
+  //   (layerName: LayerName) => {
+  //     setLayerSelection({
+  //       ...(Object.fromEntries(layers.map((l) => [l, false])) as Record<LayerName, boolean>),
+  //       [layerName]: true,
+  //     });
+  //   },
+  //   [layers],
+  // );
+
+  // return {
+  //   layerSelection,
+  //   updateLayerSelection,
+  //   selectSingleLayer,
+  // };
+
+  return layerSelection;
 }
