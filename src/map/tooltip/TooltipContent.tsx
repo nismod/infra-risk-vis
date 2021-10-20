@@ -22,8 +22,9 @@ const VectorHoverDescription: FC<{ hoveredObject: VectorHover }> = ({ hoveredObj
 
   return (
     <div>
-      <strong style={{ color: logicalLayerSpec?.color ?? '#333' }}>
-        {title} (ID {f.id})
+      <span style={{color: logicalLayerSpec?.color ?? '#333'}}>■</span>&nbsp;
+      <strong>
+        {title} (ID: {f.properties.asset_id})
       </strong>
     </div>
   );
@@ -37,9 +38,8 @@ const RasterHoverDescription: FC<{ hoveredObject: RasterHover }> = ({ hoveredObj
   const title = logicalLayerSpec.label;
 
   return (
-    <div
-      style={{ backgroundColor: `rgb(${color[0]},${color[1]},${color[2]})`, color: '#000' }}
-    >
+    <div>
+      <span style={{color: `rgb(${color[0]},${color[1]},${color[2]})`}}>■</span>&nbsp;
       <strong>{title}</strong>
     </div>
   );
