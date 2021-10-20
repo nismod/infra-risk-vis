@@ -84,11 +84,9 @@ Install the raster tileserver - Terracotta
 
 Suggest installing using conda:
 
-```
-conda create --name infrariskvis python=3.8 numpy rasterio shapely crick
-conda activate infrariskvis
-pip install terracotta[recommended]
-```
+    conda create --name infrariskvis python=3.8 numpy rasterio shapely crick
+    conda activate infrariskvis
+    pip install terracotta[recommended]
 
 ## Run
 
@@ -101,23 +99,15 @@ Run the tileserver directly (from the root of the project):
 
     npm run vector
 
-Open a browser to view the tileserver:
-
-    firefox http://localhost:8080/
-
 ### Run the raster tileserver
 
 Prepare the raster tileserver database:
 
-```
-npm run raster-init
-```
+    npm run raster-init
 
 Run the raster tileserver:
 
-```
-npm run raster
-```
+    npm run raster
 
 ### Run the app
 

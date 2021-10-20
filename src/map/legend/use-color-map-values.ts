@@ -7,7 +7,7 @@ export function useColorMapValues(colorScheme: string, stretchRange: [number, nu
     loading,
     error,
     data: { colormap: colorMapValues = null } = {},
-  } = useFetch(`http://localhost:5000/colormap?colormap=${colorScheme}&stretch_range=[${rangeMin},${rangeMax}]`, {}, [
+  } = useFetch(`/raster/colormap?colormap=${colorScheme}&stretch_range=[${rangeMin},${rangeMax}]`, {}, [
     colorScheme,
     rangeMin,
     rangeMax,

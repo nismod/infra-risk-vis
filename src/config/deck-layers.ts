@@ -72,7 +72,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_edges_high.json',
+          data: '/vector/data/elec_edges_high.json',
           getLineColor: COLORS.electricity_high.deck,
         },
         lineStyle(zoom),
@@ -85,7 +85,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_edges_low.json',
+          data: '/vector/data/elec_edges_low.json',
           refinementStrategy: 'no-overlap',
           getLineColor: COLORS.electricity_low.deck,
         },
@@ -99,7 +99,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_nodes_source.json',
+          data: '/vector/data/elec_nodes_source.json',
           getFillColor: COLORS.electricity_high.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -115,7 +115,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_nodes_sink.json',
+          data: '/vector/data/elec_nodes_sink.json',
           getFillColor: COLORS.electricity_low.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -131,7 +131,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_nodes_junction.json',
+          data: '/vector/data/elec_nodes_junction.json',
           getFillColor: COLORS.electricity_unknown.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -147,7 +147,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/rail_edges.json',
+          data: '/vector/data/rail_edges.json',
           getLineColor: COLORS.railway.deck,
         },
         lineStyle(zoom),
@@ -160,7 +160,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/rail_nodes.json',
+          data: '/vector/data/rail_nodes.json',
           getFillColor: COLORS.railway.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -175,7 +175,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/road_edges.json',
+          data: '/vector/data/road_edges.json',
           getLineColor: (x) => {
             const roadClassProp = x.properties.road_class;
             const roadClassEnum = roadClassLookup[roadClassProp];
@@ -193,7 +193,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/road_bridges.json',
+          data: '/vector/data/road_bridges.json',
           getFillColor: COLORS.bridges.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -207,7 +207,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
       new MVTLayer(props, {
-        data: 'http://localhost:8080/data/airport_areas.json',
+        data: '/vector/data/airport_areas.json',
         getFillColor: COLORS.airports.deck,
         stroked: true,
         getLineColor: [0, 0, 0],
@@ -220,7 +220,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
     spatialType: 'vector',
     fn: ({ props, zoom }) =>
       new MVTLayer(props, {
-        data: 'http://localhost:8080/data/port_areas.json',
+        data: '/vector/data/port_areas.json',
         getFillColor: COLORS.ports.deck,
         stroked: true,
         getLineColor: [255, 255, 255],
@@ -234,7 +234,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_potable_edges.json',
+          data: '/vector/data/water_potable_edges.json',
           getLineColor: COLORS.water_edges.deck,
         },
         lineStyle(zoom),
@@ -247,7 +247,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_potable_nodes.json',
+          data: '/vector/data/water_potable_nodes.json',
           getFillColor: COLORS.water_abstraction.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -262,7 +262,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_irrigation_edges.json',
+          data: '/vector/data/water_irrigation_edges.json',
           getLineColor: COLORS.water_edges.deck,
         },
         lineStyle(zoom),
@@ -275,7 +275,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_irrigation_nodes.json',
+          data: '/vector/data/water_irrigation_nodes.json',
           getFillColor: COLORS.water_abstraction.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -291,7 +291,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_waste_edges.json',
+          data: '/vector/data/water_waste_edges.json',
           getLineColor: COLORS.water_edges.deck,
         },
         lineStyle(zoom),
@@ -304,7 +304,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_waste_nodes.json',
+          data: '/vector/data/water_waste_nodes.json',
           getFillColor: COLORS.water_abstraction.deck,
           stroked: true,
           getLineColor: [255, 255, 255],
@@ -839,7 +839,7 @@ function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
         props,
         {
           id,
-          data: `http://localhost:5000/singleband/${hazardType}/${returnPeriod}/${rcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
+          data: `/raster/singleband/${hazardType}/${returnPeriod}/${rcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
           refinementStrategy,
         },
       );
