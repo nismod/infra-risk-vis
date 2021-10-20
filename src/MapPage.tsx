@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Box, Drawer, Toolbar } from '@material-ui/core';
+import { Box, Checkbox, Drawer, FormControlLabel, Toolbar } from '@material-ui/core';
 
 import { DataMap } from './map/DataMap';
 import { BackgroundControl } from './controls/BackgroundControl';
@@ -36,6 +36,8 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
     [networkVisibilitySet, hazardVisibilitySet],
   );
 
+  const [showDamages, setShowDamages] = useState(false);
+
   const layerSelection = useLayerSelection(viewLayerNames, visibilitySets);
 
   return (
@@ -52,6 +54,10 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
                 // layerVisibility={layerSelection}
                 // onLayerVisChange={updateLayerSelection}
               />
+              <FormControlLabel
+                control={<Checkbox checked={showDamages} onChange={(e, checked) => setShowDamages(checked)} />}
+                label="Map damages"
+              ></FormControlLabel>
               <HazardsControl
                 hazardParams={hazardParams}
                 hazardShow={hazardShow}
@@ -70,7 +76,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
         </Box>
       </Drawer>
       <Box position="absolute" top={64} left={sidebarWidth} right={0} bottom={0}>
-        <DataMap background={background} layerSelection={layerSelection} view={view} />
+        <DataMap background={background} layerSelection={layerSelection} view={view} showDamages={showDamages} />
       </Box>
     </>
   );

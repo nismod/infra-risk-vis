@@ -74,7 +74,7 @@ function processVectorHover(layerId, info): VectorHover {
 const pickingRadius = 8;
 const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
 
-export const DataMap = ({ background, view, layerSelection }) => {
+export const DataMap = ({ background, view, layerSelection, showDamages }) => {
   const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
   const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
@@ -134,7 +134,7 @@ export const DataMap = ({ background, view, layerSelection }) => {
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(deckLayersSpec);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, showDamages);
 
   return (
     <>

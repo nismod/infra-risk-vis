@@ -17,10 +17,10 @@ function getDeckLayersSpec(dataLayerSelection: Record<LayerName, boolean>, view:
   const deckLayers = {};
 
   for (const layerName of VIEWS[view].layers) {
-    if (dataLayerSelection[layerName] === undefined) continue;
+    if (dataLayerSelection[layerName] == null) continue;
 
     const layerDefinition = LAYERS[layerName] as LayerDefinition;
-    if (layerDefinition === undefined) throw new Error(`Logical layer '${layerName}' is not defined`);
+    if (layerDefinition == null) throw new Error(`Logical layer '${layerName}' is not defined`);
 
     const deckLayerSpec = layerDefinition.deckLayer;
 
@@ -48,8 +48,14 @@ function getDeckLayersSpec(dataLayerSelection: Record<LayerName, boolean>, view:
   return deckLayers;
 }
 
-function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number) {
+const damageMapProps = {
+  styleParams: { colorMap: { colorScheme: 'damages', colorField: 'cyclone__rcp_4.5__epoch_2050__conf_None' } },
+};
+
+function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number, showDamages: boolean) {
   const resLayers = [];
+  const damageProps = showDamages ? damageMapProps : {};
+
   for (const [deckLayerName, allParams] of Object.entries(deckLayersSpec)) {
     const deckLayerConfig = DECK_LAYERS[deckLayerName];
     const anyVisible = Object.values(allParams.visibility).some((x) => x);
@@ -62,7 +68,7 @@ function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number) {
       maxZoom: 20,
     };
 
-    resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom }));
+    resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, ...damageProps }));
   }
 
   return resLayers;
@@ -72,6 +78,6 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec) {
-  return useCallback(({ zoom }) => getDeckLayers(deckLayersSpec, zoom), [deckLayersSpec]);
+export function useMapLayersFunction(deckLayersSpec, showDamages) {
+  return useCallback(({ zoom }) => getDeckLayers(deckLayersSpec, zoom, showDamages), [deckLayersSpec, showDamages]);
 }

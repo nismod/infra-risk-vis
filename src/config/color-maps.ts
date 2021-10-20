@@ -1,4 +1,7 @@
-export const COLOR_MAPS = {
+import { scaleSequential } from 'd3-scale';
+import { interpolateOrRd } from 'd3-scale-chromatic';
+
+export const RASTER_COLOR_MAPS = {
   fluvial: {
     scheme: 'blues',
     range: [0, 10],
@@ -14,5 +17,12 @@ export const COLOR_MAPS = {
   cyclone: {
     scheme: 'reds',
     range: [0, 75],
+  },
+};
+
+export const VECTOR_COLOR_MAPS = {
+  damages: {
+    scale: scaleSequential([0, 1000], interpolateOrRd),
+    empty: '#ccc',
   },
 };

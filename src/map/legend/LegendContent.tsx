@@ -1,5 +1,6 @@
 import { Box, Typography } from '@material-ui/core';
-import { COLOR_MAPS } from '../../config/color-maps';
+
+import { RASTER_COLOR_MAPS } from '../../config/color-maps';
 import { DECK_LAYERS } from '../../config/deck-layers';
 import { LAYERS } from '../../config/layers';
 import { useColorMapValues } from '../legend/use-color-map-values';
@@ -29,7 +30,7 @@ const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
   } = deckLayerParams;
   const logicalLayerConfig = LAYERS[logicalLayer];
 
-  const { scheme, range } = COLOR_MAPS[params.hazardType];
+  const { scheme, range } = RASTER_COLOR_MAPS[params.hazardType];
 
   const { error, loading, colorMapValues } = useColorMapValues(scheme, range);
 
