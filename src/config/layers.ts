@@ -1,4 +1,4 @@
-import { titleCase } from 'vega-lite';
+// import { titleCase } from 'vega-lite';
 import { makeConfig } from '../helpers';
 import { COLORS } from './colors';
 
@@ -6,7 +6,7 @@ export interface LayerDefinition {
   deckLayer: string | { baseName: string; params: any };
   deckLayerParams?: any;
   label: string;
-  type: string; //'line' | 'circle' | 'raster';
+  type: string; //'line' | 'circle' | 'raster' | 'polygon';
   color: string;
   getId?: (x) => string;
 }
@@ -53,7 +53,7 @@ function hazardLayer<
 
 /* Line widths:
 
--) elec_edges_high, 
+-) elec_edges_high,
 base: 1,
 stops: [
   [7, 1],
@@ -97,24 +97,38 @@ stops: [
 export const LAYERS = makeConfig([
   {
     id: 'elec_edges_high',
-    deckLayer: 'elec_edges',
+    deckLayer: 'elec_edges_high',
     type: 'line',
     label: 'Power Lines (High Voltage)',
     color: COLORS.electricity_high.css,
   },
   {
     id: 'elec_edges_low',
-    deckLayer: 'elec_edges',
+    deckLayer: 'elec_edges_low',
     type: 'line',
     label: 'Power Lines (Low Voltage)',
     color: COLORS.electricity_low.css,
   },
   {
-    id: 'elec_nodes',
-    deckLayer: 'elec_nodes',
+    id: 'elec_nodes_source',
+    deckLayer: 'elec_nodes_source',
     type: 'circle',
-    label: 'Power Nodes',
+    label: 'Power Nodes (Generation)',
     color: COLORS.electricity_high.css,
+  },
+  {
+    id: 'elec_nodes_junction',
+    deckLayer: 'elec_nodes_junction',
+    type: 'circle',
+    label: 'Power Nodes (Junctions)',
+    color: COLORS.electricity_unknown.css,
+  },
+  {
+    id: 'elec_nodes_sink',
+    deckLayer: 'elec_nodes_sink',
+    type: 'circle',
+    label: 'Power Nodes (Demand)',
+    color: COLORS.electricity_low.css,
   },
   {
     id: 'rail_edges',
@@ -145,10 +159,24 @@ export const LAYERS = makeConfig([
     color: COLORS.bridges.css,
   },
   {
+    id: 'airport_areas',
+    deckLayer: 'airport_areas',
+    type: 'polygon',
+    label: 'Airports',
+    color: COLORS.airports.css,
+  },
+  {
+    id: 'port_areas',
+    deckLayer: 'port_areas',
+    type: 'polygon',
+    label: 'Ports',
+    color: COLORS.ports.css,
+  },
+  {
     id: 'water_potable_edges',
     deckLayer: 'water_potable_edges',
     type: 'line',
-    label: 'Water Supply Network',
+    label: 'Water Supply Pipelines',
     color: COLORS.water_edges.css,
   },
   {
@@ -156,6 +184,34 @@ export const LAYERS = makeConfig([
     deckLayer: 'water_potable_nodes',
     type: 'circle',
     label: 'Water Supply Facilities',
+    color: COLORS.water_abstraction.css,
+  },
+  {
+    id: 'water_irrigation_edges',
+    deckLayer: 'water_irrigation_edges',
+    type: 'line',
+    label: 'Irrigation Canals',
+    color: COLORS.water_abstraction.css,
+  },
+  {
+    id: 'water_irrigation_nodes',
+    deckLayer: 'water_irrigation_nodes',
+    type: 'circle',
+    label: 'Irrigation facilities',
+    color: COLORS.water_abstraction.css,
+  },
+  {
+    id: 'water_waste_edges',
+    deckLayer: 'water_waste_edges',
+    type: 'line',
+    label: 'Wastewater Pipelines',
+    color: COLORS.water_abstraction.css,
+  },
+  {
+    id: 'water_waste_nodes',
+    deckLayer: 'water_waste_nodes',
+    type: 'circle',
+    label: 'Wastewater Facilities',
     color: COLORS.water_abstraction.css,
   },
 

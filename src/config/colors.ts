@@ -20,6 +20,9 @@ export const COLORS = makeColorConfig({
 
   bridges: '#941339',
 
+  airports: '#ccc',
+  ports: '#000',
+
   water_edges: '#314386',
   water_abstraction: '#4d49bc',
 });

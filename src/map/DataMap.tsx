@@ -10,7 +10,6 @@ import { FeatureSidebar } from '../features/FeatureSidebar';
 import { TooltipContent } from './tooltip/TooltipContent';
 import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
-import _ from 'lodash';
 import { MapLegend } from './legend/MapLegend';
 import { LegendContent } from './legend/LegendContent';
 
