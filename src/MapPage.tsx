@@ -17,6 +17,18 @@ interface MapViewProps {
 
 const sidebarWidth = 360;
 
+function firstTrue(object) {
+  const trueKeys = Object.entries(object).filter(([key, value]) => value).map((([key]) => key));
+  return trueKeys[0];
+}
+const rcpLookup = {
+  '2x6': '2.6',
+  '4x5': '4.5',
+  '8x5': '8.5',
+  baseline: 'baseline'
+}
+
+
 export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [background, setBackground] = useState<BackgroundName>('light');
 
@@ -29,8 +41,22 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [showDamages, setShowDamages] = useState(false);
 
   const { networkSelection, setNetworkSelection, networkVisibilitySet } = useNetworkSelection();
-  const { hazardShow, hazardOptions, hazardParams, setSingleHazardParam, setSingleHazardShow, hazardVisibilitySet } =
+  const { hazardSelection, hazardOptions, hazardParams, setSingleHazardParam, setSingleHazardShow, hazardVisibilitySet } =
     useHazardSelection(showDamages);
+
+  const riskMapSelectedHazard = useMemo(() => showDamages ? firstTrue(hazardSelection): null, [showDamages, hazardSelection]);
+
+  const styleParams = useMemo(() => {
+    if(!riskMapSelectedHazard) return {};
+
+    const {rcp, epoch, confidence} = hazardParams[riskMapSelectedHazard];
+
+    return { colorMap: {
+      colorScheme: 'damages',
+      colorField: `${riskMapSelectedHazard}__rcp_${rcpLookup[rcp]}__epoch_${epoch}__conf_${confidence}`
+    }
+  }
+}, [riskMapSelectedHazard, hazardParams]);
 
   const visibilitySets = useMemo(
     () => [networkVisibilitySet ?? {}, hazardVisibilitySet ?? {}],
@@ -49,9 +75,6 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
               <NetworkControl
                 networkSelection={networkSelection}
                 onNetworkSelection={setNetworkSelection}
-                // dataLayers={layerDefinitions}
-                // layerVisibility={layerSelection}
-                // onLayerVisChange={updateLayerSelection}
               />
               <FormControlLabel
                 control={<Checkbox checked={showDamages} onChange={(e, checked) => setShowDamages(checked)} />}
@@ -59,16 +82,11 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
               ></FormControlLabel>
               <HazardsControl
                 hazardParams={hazardParams}
-                hazardShow={hazardShow}
+                hazardShow={hazardSelection}
                 hazardOptions={hazardOptions}
                 onSingleHazardParam={setSingleHazardParam}
                 onSingleHazardShow={setSingleHazardShow}
                 showDamages={showDamages}
-                // hazardSelection={hazardSelection}
-                // onHazardSelection={setHazardSelection}
-
-                // layerVisibility={layerSelection}
-                // onLayerVisibilityUpdate={updateLayerSelection}
               />
             </>
           )}
@@ -79,8 +97,8 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
           background={background}
           onBackground={setBackground}
           layerSelection={layerSelection}
+          styleParams={styleParams}
           view={view}
-          showDamages={showDamages}
         />
       </Box>
     </>

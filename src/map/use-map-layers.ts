@@ -52,9 +52,8 @@ const damageMapProps = {
   styleParams: { colorMap: { colorScheme: 'damages', colorField: 'cyclone__rcp_4.5__epoch_2050__conf_None' } },
 };
 
-function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number, showDamages: boolean) {
+function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number, styleParams: any) {
   const resLayers = [];
-  const damageProps = showDamages ? damageMapProps : {};
 
   for (const [deckLayerName, allParams] of Object.entries(deckLayersSpec)) {
     const deckLayerConfig = DECK_LAYERS[deckLayerName];
@@ -68,7 +67,7 @@ function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number, showDa
       maxZoom: 20,
     };
 
-    resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, ...damageProps }));
+    resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, styleParams }));
   }
 
   return resLayers;
@@ -78,6 +77,6 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec, showDamages) {
-  return useCallback(({ zoom }) => getDeckLayers(deckLayersSpec, zoom, showDamages), [deckLayersSpec, showDamages]);
+export function useMapLayersFunction(deckLayersSpec, styleParams) {
+  return useCallback(({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams), [deckLayersSpec, styleParams]);
 }

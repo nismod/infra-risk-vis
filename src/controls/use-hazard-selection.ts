@@ -100,14 +100,14 @@ export interface SingleHazardSelection {
 
 const hazardTypes = Object.keys(hazardConfig);
 
-function makeShowDict() {
+function baseSelection() {
   return Object.fromEntries(hazardTypes.map((ht) => [ht, false]));
 }
 
 export type HazardSelectionSet = { [k: string]: SingleHazardSelection };
 
 export const useHazardSelection = (forceSingle = false) => {
-  const [hazardShow, setHazardShow] = useState(makeShowDict());
+  const [hazardSelection, setHazardSelection] = useState(baseSelection());
   const [hazardParams, setHazardParams] = useState(
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDefaults])),
   );
@@ -118,23 +118,22 @@ export const useHazardSelection = (forceSingle = false) => {
 
   useEffect(() => {
     if (forceSingle) {
-      let trueKeys = Object.entries(hazardShow)
+      let selectedKeys = Object.entries(hazardSelection)
         .filter(([key, value]) => value)
-        .map(([key, value]) => key);
-      if (trueKeys.length > 1) {
-        const firstKey = trueKeys[0];
-
-        setHazardShow({ ...makeShowDict(), [firstKey]: true });
+        .map(([key]) => key);
+      if (selectedKeys.length > 1) {
+        const firstKey = selectedKeys[0];
+        setHazardSelection({ ...baseSelection(), [firstKey]: true });
       }
     }
-  }, [forceSingle, hazardShow]);
+  }, [forceSingle, hazardSelection]);
 
-  const updateHazardShow = useCallback(
+  const updateHazardSelection = useCallback(
     (hazardType: string, show: boolean) => {
-      const base = forceSingle ? makeShowDict() : hazardShow;
-      setHazardShow({ ...base, [hazardType]: show });
+      const base = forceSingle ? baseSelection() : hazardSelection;
+      setHazardSelection({ ...base, [hazardType]: show });
     },
-    [forceSingle, hazardShow],
+    [forceSingle, hazardSelection],
   );
 
   const updatedHazardParam = useCallback(
@@ -166,18 +165,18 @@ export const useHazardSelection = (forceSingle = false) => {
     const visibility: any = {};
 
     for (const hazardType of hazardTypes) {
-      if (hazardShow[hazardType]) {
+      if (hazardSelection[hazardType]) {
         visibility[getHazardId({ ...hazardParams[hazardType], hazardType })] = true;
       }
     }
     return visibility;
-  }, [hazardShow, hazardParams]);
+  }, [hazardSelection, hazardParams]);
 
   return {
-    hazardShow,
+    hazardSelection,
     hazardParams,
     hazardOptions,
-    setSingleHazardShow: updateHazardShow,
+    setSingleHazardShow: updateHazardSelection,
     setSingleHazardParam: updatedHazardParam,
     hazardVisibilitySet,
   };
