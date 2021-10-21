@@ -400,8 +400,8 @@ const RailEdgeDetails: FC<DetailsProps> = ({ f }) => (
         value={`${f.from_node}–${f.to_node}`}
       />
       <DataItem
-        label="Type"
-        value={`${f.asset_type}/${f.type}`}
+        label="Owner"
+        value={f.type}
       />
       <DataItem
         label="Status"
