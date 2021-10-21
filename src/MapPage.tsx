@@ -2,7 +2,6 @@ import React, { FC, useMemo, useState } from 'react';
 import { Box, Checkbox, Drawer, FormControlLabel, Toolbar, Typography } from '@material-ui/core';
 
 import { DataMap } from './map/DataMap';
-import { BackgroundControl } from './controls/BackgroundControl';
 import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, VIEWS } from './config/views';
@@ -73,11 +72,16 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
               />
             </>
           )}
-          <BackgroundControl background={background} onBackgroundChange={setBackground} />
         </Box>
       </Drawer>
       <Box position="absolute" top={64} left={sidebarWidth} right={0} bottom={0}>
-        <DataMap background={background} layerSelection={layerSelection} view={view} showDamages={showDamages} />
+        <DataMap
+          background={background}
+          onBackground={setBackground}
+          layerSelection={layerSelection}
+          view={view}
+          showDamages={showDamages}
+        />
       </Box>
     </>
   );
