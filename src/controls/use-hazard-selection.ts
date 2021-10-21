@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { getHazardId } from '../config/layers';
 
-const hazardConfig = {
+export const hazardConfig = {
   fluvial: {
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],

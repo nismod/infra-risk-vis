@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
 
-import { titleCase, isNumeric } from '../helpers';
+import { titleCase, isNumeric, numFormat } from '../helpers';
 import { LayerDefinition } from '../config/layers';
+import { RiskSection } from './RiskSection';
 
 interface FeatureSidebarContentProps {
   f: any;
@@ -70,6 +71,7 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, layer
         <span style={{ color: layer.color ?? '#333' }}>■</span>&nbsp;{layer.label}
       </Typography>
       {details}
+      <RiskSection f={f} />
     </>
   );
 };
@@ -79,11 +81,10 @@ interface DataItemProps {
   value: any
 }
 
-const FORMATTER = Intl.NumberFormat('en-GB', { maximumSignificantDigits: 3 });
 
 const DataItem: FC<DataItemProps> = ({ label, value }) => {
   if (isNumeric(value)) {
-    value = FORMATTER.format(value)
+    value = numFormat(value)
   }
   return (
     <ListItem disableGutters style={{padding: 0}}>
@@ -101,11 +102,9 @@ interface DetailSubheaderProps {
 }
 
 const DetailSubheader: FC<DetailSubheaderProps> = ({ id }) => (
-  <>
-    <Typography variant="caption" component="p">
-      ID: <span className="asset_id">{id}</span>
-    </Typography>
-  </>
+  <Typography variant="caption" component="p">
+    ID: <span className="asset_id">{id}</span>
+  </Typography>
 );
 
 interface DetailsProps {
@@ -144,7 +143,7 @@ const AirportDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.unit})`}
-        value={`${FORMATTER.format(f.maximum_damage)} (${FORMATTER.format(f.maximum_damage_lower)}–${FORMATTER.format(f.maximum_damage_upper)})`}
+        value={`${numFormat(f.maximum_damage)} (${numFormat(f.maximum_damage_lower)}–${numFormat(f.maximum_damage_upper)})`}
       />
       <DataItem
         label="Source"
@@ -172,7 +171,7 @@ const PowerLineDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_uom})`}
-        value={`${FORMATTER.format(f.cost_avg)} (${FORMATTER.format(f.cost_min)}–${FORMATTER.format(f.cost_max)})`}
+        value={`${numFormat(f.cost_avg)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
       />
       <DataItem
         label="Source"
@@ -196,7 +195,7 @@ const PowerGenerationNodeDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_uom})`}
-        value={`${FORMATTER.format(f.cost_avg)} (${FORMATTER.format(f.cost_min)}–${FORMATTER.format(f.cost_max)})`}
+        value={`${numFormat(f.cost_avg)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
       />
       <DataItem
         label="Source"
@@ -239,7 +238,7 @@ const PowerJunctionNodeDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_uom})`}
-        value={`${FORMATTER.format(f.cost_avg)} (${FORMATTER.format(f.cost_min)}–${FORMATTER.format(f.cost_max)})`}
+        value={`${numFormat(f.cost_avg)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
       />
       <DataItem
         label="Source"
@@ -256,7 +255,7 @@ const IrrigationDetails: FC<DetailsProps> = ({ f }) => (
     <List>
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)}`}
+        value={`${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)}`}
       />
       <DataItem
         label="Source"
@@ -289,7 +288,7 @@ const WaterPipelineDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)}`}
+        value={`${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)}`}
       />
       <DataItem
         label="Source"
@@ -338,7 +337,7 @@ const PortDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.unit})`}
-        value={`${FORMATTER.format(f.maximum_damage)} (${FORMATTER.format(f.maximum_damage_lower)}–${FORMATTER.format(f.maximum_damage_upper)})`}
+        value={`${numFormat(f.maximum_damage)} (${numFormat(f.maximum_damage_lower)}–${numFormat(f.maximum_damage_upper)})`}
       />
       <DataItem
         label="Source"
@@ -376,7 +375,7 @@ const WaterSupplyNodeDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)}`}
+        value={`${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)}`}
       />
       <DataItem
         label="Source"
@@ -412,7 +411,7 @@ const RailEdgeDetails: FC<DetailsProps> = ({ f }) => (
         value={f.rail_length_m}
       />
       <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}value={`${FORMATTER.format(f.mean_damage_cost)} (${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)})`}
+        label={`Rehabilitation cost (${f.cost_unit})`}value={`${numFormat(f.mean_damage_cost)} (${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)})`}
       />
     </List>
   </>
@@ -433,7 +432,7 @@ const RailNodeDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.mean_damage_cost)} (${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)})`}
+        value={`${numFormat(f.mean_damage_cost)} (${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)})`}
       />
     </List>
   </>
@@ -474,11 +473,11 @@ const RoadEdgeDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.mean_damage_cost)} (${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)})`}
+        value={`${numFormat(f.mean_damage_cost)} (${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)})`}
       />
       <DataItem
         label={`Reopening cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.mean_reopen_cost)} (${FORMATTER.format(f.min_reopen_cost)}–${FORMATTER.format(f.max_reopen_cost)})`}
+        value={`${numFormat(f.mean_reopen_cost)} (${numFormat(f.min_reopen_cost)}–${numFormat(f.max_reopen_cost)})`}
       />
     </List>
   </>
@@ -495,11 +494,11 @@ const BridgeDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.mean_damage_cost)} (${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)})`}
+        value={`${numFormat(f.mean_damage_cost)} (${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)})`}
       />
       <DataItem
         label={`Reopening cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.mean_reopen_cost)} (${FORMATTER.format(f.min_reopen_cost)}–${FORMATTER.format(f.max_reopen_cost)})`}
+        value={`${numFormat(f.mean_reopen_cost)} (${numFormat(f.min_reopen_cost)}–${numFormat(f.max_reopen_cost)})`}
       />
     </List>
   </>
@@ -524,7 +523,7 @@ const WastewaterNodeDetails: FC<DetailsProps> = ({ f }) => (
       />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${FORMATTER.format(f.min_damage_cost)}–${FORMATTER.format(f.max_damage_cost)}`}
+        value={`${numFormat(f.min_damage_cost)}–${numFormat(f.max_damage_cost)}`}
       />
       <DataItem
         label="Source"
