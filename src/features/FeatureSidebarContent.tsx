@@ -86,7 +86,7 @@ const DataItem: FC<DataItemProps> = ({ label, value }) => {
     value = FORMATTER.format(value)
   }
   return (
-    <ListItem disableGutters>
+    <ListItem disableGutters style={{padding: 0}}>
       <ListItemText
         primary={label}
         primaryTypographyProps={{ variant: 'caption' }}
