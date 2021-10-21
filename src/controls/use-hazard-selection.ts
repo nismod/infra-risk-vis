@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getHazardId } from '../config/layers';
 
 const hazardConfig = {
@@ -82,8 +82,6 @@ const hazardConfig = {
   },
 };
 
-const hazardTypes = Object.keys(hazardConfig);
-
 export interface SingleHazardSelection {
   show: boolean;
   paramSelection: {
@@ -100,10 +98,16 @@ export interface SingleHazardSelection {
   };
 }
 
+const hazardTypes = Object.keys(hazardConfig);
+
+function makeShowDict() {
+  return Object.fromEntries(hazardTypes.map((ht) => [ht, false]));
+}
+
 export type HazardSelectionSet = { [k: string]: SingleHazardSelection };
 
-export const useHazardSelection = () => {
-  const [hazardShow, setHazardShow] = useState(Object.fromEntries(hazardTypes.map((ht) => [ht, false])));
+export const useHazardSelection = (forceSingle = false) => {
+  const [hazardShow, setHazardShow] = useState(makeShowDict());
   const [hazardParams, setHazardParams] = useState(
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDefaults])),
   );
@@ -112,11 +116,25 @@ export const useHazardSelection = () => {
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDomains])),
   );
 
+  useEffect(() => {
+    if (forceSingle) {
+      let trueKeys = Object.entries(hazardShow)
+        .filter(([key, value]) => value)
+        .map(([key, value]) => key);
+      if (trueKeys.length > 1) {
+        const firstKey = trueKeys[0];
+
+        setHazardShow({ ...makeShowDict(), [firstKey]: true });
+      }
+    }
+  }, [forceSingle, hazardShow]);
+
   const updateHazardShow = useCallback(
     (hazardType: string, show: boolean) => {
-      setHazardShow({ ...hazardShow, [hazardType]: show });
+      const base = forceSingle ? makeShowDict() : hazardShow;
+      setHazardShow({ ...base, [hazardType]: show });
     },
-    [hazardShow],
+    [forceSingle, hazardShow],
   );
 
   const updatedHazardParam = useCallback(

@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Checkbox,
   FormControl,
@@ -28,8 +31,19 @@ function epochLabel(value) {
   return value;
 }
 
-const HazardSection = ({ children }) => <Box mb={4}>{children}</Box>;
-const InputSection = ({ children }) => <Box mb={2}>{children}</Box>;
+const HazardSection = ({ show, onShow, label, children }) => (
+  <Accordion expanded={show} onChange={onShow}>
+    <AccordionSummary>
+      <Typography>{label}</Typography>
+    </AccordionSummary>
+    <AccordionDetails>{children}</AccordionDetails>
+  </Accordion>
+);
+const InputSection = ({ children }) => (
+  <Box mb={2} width="100%">
+    {children}
+  </Box>
+);
 
 export const HazardsControl = ({
   hazardShow,
@@ -37,23 +51,16 @@ export const HazardsControl = ({
   hazardParams,
   onSingleHazardShow,
   onSingleHazardParam,
+  showDamages,
 }) => {
+  const handleChange = (hazardType) => (e, isExpanded) => {
+    onSingleHazardShow(hazardType, isExpanded);
+  };
+
   return (
     <Box mb={1}>
-      <Typography variant="h6">Hazard Layers</Typography>
-      <HazardSection>
-        <FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox
-                color="primary"
-                checked={hazardShow.fluvial}
-                onChange={(e) => onSingleHazardShow('fluvial', e.currentTarget.checked)}
-              />
-            }
-            label="River Flooding"
-          />
-        </FormControl>
+      <Typography variant="h6">Hazards</Typography>
+      <HazardSection show={hazardShow.fluvial} onShow={handleChange('fluvial')} label="River Flooding">
         <FormControl disabled={!hazardShow.fluvial} fullWidth>
           <FormLabel>Return Period</FormLabel>
           <CustomNumberSlider
@@ -64,19 +71,7 @@ export const HazardsControl = ({
           />
         </FormControl>
       </HazardSection>
-      <HazardSection>
-        <FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox
-                color="primary"
-                checked={hazardShow.surface}
-                onChange={(e) => onSingleHazardShow('surface', e.currentTarget.checked)}
-              />
-            }
-            label="Surface Flooding"
-          />
-        </FormControl>
+      <HazardSection show={hazardShow.surface} onShow={handleChange('surface')} label="Surface Flooding">
         <FormControl disabled={!hazardShow.surface} fullWidth>
           <FormLabel>Return Period</FormLabel>
           <CustomNumberSlider
@@ -87,21 +82,7 @@ export const HazardsControl = ({
           />
         </FormControl>
       </HazardSection>
-      <HazardSection>
-        <Box mb={1}>
-          <FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={hazardShow.coastal}
-                  onChange={(e) => onSingleHazardShow('coastal', e.currentTarget.checked)}
-                />
-              }
-              label="Coastal Flooding"
-            />
-          </FormControl>
-        </Box>
+      <HazardSection show={hazardShow.coastal} onShow={handleChange('coastal')} label="Coastal Flooding">
         <InputSection>
           <FormControl disabled={!hazardShow.coastal} component="fieldset" fullWidth>
             <FormLabel>Return Period</FormLabel>
@@ -138,19 +119,7 @@ export const HazardsControl = ({
           </FormControl>
         </InputSection>
       </HazardSection>
-      <HazardSection>
-        <FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox
-                color="primary"
-                checked={hazardShow.cyclone}
-                onChange={(e) => onSingleHazardShow('cyclone', e.currentTarget.checked)}
-              />
-            }
-            label="Cyclones"
-          />
-        </FormControl>
+      <HazardSection show={hazardShow.cyclone} onShow={handleChange('cyclone')} label="Cyclones">
         <InputSection>
           <FormControl disabled={!hazardShow.cyclone} component="fieldset" fullWidth>
             <FormLabel>Return Period</FormLabel>
