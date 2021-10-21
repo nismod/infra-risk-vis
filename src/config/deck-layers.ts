@@ -115,7 +115,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_edges_high.json',
+          data: '/vector/data/elec_edges_high.json',
         },
         vectorColor('stroke', COLORS.electricity_high.deck, styleParams),
         lineStyle(zoom),
@@ -128,7 +128,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_edges_low.json',
+          data: '/vector/data/elec_edges_low.json',
         },
         vectorColor('stroke', COLORS.electricity_low.deck, styleParams),
         lineStyle(zoom),
@@ -141,7 +141,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_nodes_source.json',
+          data: '/vector/data/elec_nodes_source.json',
         },
         border(),
         vectorColor('fill', COLORS.electricity_high.deck, styleParams),
@@ -155,7 +155,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_nodes_sink.json',
+          data: '/vector/data/elec_nodes_sink.json',
         },
         border(),
         vectorColor('fill', COLORS.electricity_low.deck, styleParams),
@@ -169,7 +169,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/elec_nodes_junction.json',
+          data: '/vector/data/elec_nodes_junction.json',
         },
         border(),
         vectorColor('fill', COLORS.electricity_unknown.deck, styleParams),
@@ -183,7 +183,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/rail_edges.json',
+          data: '/vector/data/rail_edges.json',
         },
         vectorColor('stroke', COLORS.railway.deck, styleParams),
         lineStyle(zoom),
@@ -196,7 +196,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/rail_nodes.json',
+          data: '/vector/data/rail_nodes.json',
         },
         border(),
         vectorColor('fill', COLORS.railway.deck, styleParams),
@@ -210,7 +210,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/road_edges.json',
+          data: '/vector/data/road_edges.json',
         },
         vectorColor('stroke', (x) => roadColor[roadClassLookup[x.properties.road_class]], styleParams),
         lineStyle(zoom),
@@ -223,7 +223,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/road_bridges.json',
+          data: '/vector/data/road_bridges.json',
         },
         border(),
         vectorColor('fill', COLORS.bridges.deck, styleParams),
@@ -237,7 +237,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/airport_areas.json',
+          data: '/vector/data/airport_areas.json',
         },
         border([0, 0, 0]),
         vectorColor('fill', COLORS.airports.deck, styleParams),
@@ -250,7 +250,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/port_areas.json',
+          data: '/vector/data/port_areas.json',
         },
         border(),
         vectorColor('fill', COLORS.ports.deck, styleParams),
@@ -263,7 +263,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_potable_edges.json',
+          data: '/vector/data/water_potable_edges.json',
         },
         lineStyle(zoom),
         vectorColor('stroke', COLORS.water_edges.deck, styleParams),
@@ -276,7 +276,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_potable_nodes.json',
+          data: '/vector/data/water_potable_nodes.json',
         },
         border(),
         pointRadius(zoom),
@@ -290,7 +290,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_irrigation_edges.json',
+          data: '/vector/data/water_irrigation_edges.json',
         },
         lineStyle(zoom),
         vectorColor('stroke', COLORS.water_edges.deck, styleParams),
@@ -303,7 +303,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_irrigation_nodes.json',
+          data: '/vector/data/water_irrigation_nodes.json',
         },
         border(),
         pointRadius(zoom),
@@ -317,7 +317,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_waste_edges.json',
+          data: '/vector/data/water_waste_edges.json',
         },
         lineStyle(zoom),
 
@@ -331,7 +331,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
       infrastructureLayer(
         props,
         {
-          data: 'http://localhost:8080/data/water_waste_nodes.json',
+          data: '/vector/data/water_waste_nodes.json',
         },
         border(),
         pointRadius(zoom),
