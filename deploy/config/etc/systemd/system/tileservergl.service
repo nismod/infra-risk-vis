@@ -1,0 +1,14 @@
+[Unit]
+Description=Tileserver GL light
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/var/www/tileserver/vector
+ExecStart=/usr/local/lib/node/node-v14.15.1/bin/tileserver-gl-light
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

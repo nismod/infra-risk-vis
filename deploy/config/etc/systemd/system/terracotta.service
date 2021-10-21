@@ -1,0 +1,19 @@
+[Unit]
+Description=Gunicorn instance to serve Terracotta
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/var/www/tileserver/raster
+Environment="TC_DRIVER_PATH=/var/www/tileserver/raster/terracotta.sqlite"
+ExecStart=gunicorn \
+            --workers 3 \
+            --bind unix:terracotta.sock \
+            -m 007 \
+            terracotta.server.app:app
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
