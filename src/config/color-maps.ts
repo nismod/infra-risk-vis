@@ -1,5 +1,5 @@
 import { scaleSequential } from 'd3-scale';
-import { interpolateOrRd } from 'd3-scale-chromatic';
+import * as d3 from 'd3-scale-chromatic';
 
 export const RASTER_COLOR_MAPS = {
   fluvial: {
@@ -22,7 +22,7 @@ export const RASTER_COLOR_MAPS = {
 
 export const VECTOR_COLOR_MAPS = {
   damages: {
-    scale: scaleSequential([0, 1000], interpolateOrRd),
+    scale: scaleSequential([1000, 0], d3.interpolateInferno),
     empty: '#ccc',
   },
 };
