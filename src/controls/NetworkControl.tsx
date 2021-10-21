@@ -8,6 +8,14 @@ interface NetworkControlProps {
   onNetworkSelection: (visUpdate: Record<string, boolean>) => void; //TODO change record key type to LayerName
 }
 
+const LayerLabel = ({ layerConfig: { label, type, color } }) => {
+  return (
+    <Typography>
+      <Box className={type === 'line' ? 'dot line' : 'dot'} style={{ backgroundColor: color }}></Box>
+      {label}
+    </Typography>
+  );
+};
 export const NetworkControl: FC<NetworkControlProps> = ({ networkSelection, onNetworkSelection }) => {
   const networkLayers = useMemo(() => Object.keys(networkSelection), [networkSelection]);
 
@@ -15,34 +23,26 @@ export const NetworkControl: FC<NetworkControlProps> = ({ networkSelection, onNe
     <Box mb={2}>
       <Typography variant="h6">Infrastructure Layers</Typography>
       <FormControl component="fieldset">
-        {networkLayers.map((layerName) => {
-          const { label, type, color } = LAYERS[layerName];
-          const checked = networkSelection[layerName];
-          return (
-            <FormGroup row key={'toggleLayer' + layerName}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    data-layer={layerName}
-                    color="primary"
-                    checked={checked}
-                    value={layerName}
-                    name={'toggleLayerCheckbox' + layerName}
-                    onChange={(e) =>
-                      onNetworkSelection({ ...networkSelection, [e.target.value as LayerName]: e.target.checked })
-                    }
-                  />
+        {networkLayers.map((layerName) => (
+          <FormControlLabel
+            key={layerName}
+            style={{ marginBottom: -12 }}
+            control={
+              <Checkbox
+                data-layer={layerName}
+                color="default"
+                checked={networkSelection[layerName]}
+                value={layerName}
+                name={'toggleLayerCheckbox' + layerName}
+                onChange={(e) =>
+                  onNetworkSelection({ ...networkSelection, [e.target.value as LayerName]: e.target.checked })
                 }
-                label={
-                  <>
-                    <span className={type === 'line' ? 'dot line' : 'dot'} style={{ backgroundColor: color }}></span>
-                    {label}
-                  </>
-                }
-              ></FormControlLabel>
-            </FormGroup>
-          );
-        })}
+                // style={{ padding: 4 }}
+              />
+            }
+            label={<LayerLabel layerConfig={LAYERS[layerName]} />}
+          ></FormControlLabel>
+        ))}
       </FormControl>
     </Box>
   );
