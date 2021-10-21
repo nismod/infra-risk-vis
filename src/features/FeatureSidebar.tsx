@@ -15,7 +15,7 @@ export const FeatureSidebar: FC<FeatureSidebarProps> = ({ featureSelection }) =>
   const logicalLayerConfig = LAYERS[logicalLayer];
 
   return (
-    <Box position="absolute" top={10} right={0} width={400}>
+    <Box position="absolute" top={10} right={50} width={400}>
       <Paper>
         <Box p={3} overflow="auto" maxHeight="calc(100vh - 125px)">
           <FeatureSidebarContent f={f} layer={logicalLayerConfig} />
