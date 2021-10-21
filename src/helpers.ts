@@ -41,3 +41,8 @@ export function makeConfig<C, K extends string>(cfg: (C & { id: K })[]) {
     (x) => x,
   );
 }
+
+// see discussion at https://stackoverflow.com/questions/23437476/in-typescript-how-to-check-if-a-string-is-numeric
+export function isNumeric(val: any): boolean {
+  return !(val instanceof Array) && (val - parseFloat(val) + 1) >= 0;
+}
