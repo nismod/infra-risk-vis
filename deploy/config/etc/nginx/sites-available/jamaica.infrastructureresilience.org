@@ -13,7 +13,7 @@ upstream vector_tileserver {
 }
 
 upstream raster_tileserver {
-	server 127.0.0.1:5000;
+	server unix:/var/www/tileserver/raster/terracotta.sock;
 }
 
 server {
@@ -48,11 +48,6 @@ server {
 		try_files $uri $uri/ /index.html;
 	}
 
-	location @index {
-		add_header Cache-Control "no-store, no-cache, must-revalidate";
-		expires 0;
-		try_files /index.html =404;
-	}
 
 	location /static {
 		# basic authentication - use htpasswd to add users
@@ -73,7 +68,8 @@ server {
 		auth_basic_user_file /etc/nginx/.htpasswd;
 
 		proxy_pass http://vector_tileserver;
-		proxy_set_header Host $host;
+		rewrite ^/vector/(.+) /$1 break;
+		proxy_set_header Host $host/vector;
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 		proxy_set_header X-Forwarded-Proto $scheme;
@@ -85,6 +81,7 @@ server {
 		auth_basic_user_file /etc/nginx/.htpasswd;
 
 		proxy_pass http://raster_tileserver;
+		rewrite ^/raster/(.+) /$1 break;
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -112,3 +109,4 @@ server {
 	server_name jamaica.infrastructureresilience.org;
 	return 404; # managed by Certbot
 }
+

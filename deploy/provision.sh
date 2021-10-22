@@ -12,13 +12,17 @@ sudo apt-get install -y \
   software-properties-common \
   build-essential \
   gdal-bin \
-  libgdal-dev
+  libgdal-dev \
+  python3-pip \
+  apache2-utils
 
 # Set up SSL
 sudo snap install core
 sudo snap refresh core
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+# TODO - this is interactive, prompts for email, agreement, domain
 sudo certbot certonly --nginx
 
 # Install node
@@ -47,4 +51,12 @@ npm config set python /usr/bin/python3
 npm i -g tileserver-gl-light
 
 # Install raster tileserver
-sudo pip install cython gunicorn terracotta[recommended]
+sudo pip install cython # must be available first to build dependencies
+sudo pip install gunicorn terracotta[recommended]
+
+sudo mkdir -p /var/www/tileserver/raster/data
+sudo mkdir -p /var/www/tileserver/vector/data
+sudo chown -R :ubuntu /var/www/
+sudo chmod 775 /var/www/html/
+sudo chmod 664 /var/www/html/*.html
+sudo chmod -R  775 /var/www/tileserver/

@@ -24,6 +24,19 @@ Install [terraform](https://www.terraform.io/) then run:
 `provision.sh` contains installation instructions for an Ubuntu 20.04 server to
 install NGINX, setup SSL using CertBot, install node and tileserver-gl-light
 
+  sudo touch /etc/nginx/.htpasswd
+  sudo htpasswd -B /etc/nginx/.htpasswd username
+
+Getting terracotta running under gunicorn (TODO look at setting up gunicorn socket as service)
+
+    sudo chown :www-data /var/www/tileserver/raster/terracotta.sock
+    sudo -u www-data curl --unix-socket /var/www/tileserver/raster/terracotta.sock http
+
+    terracotta ingest \
+      "/var/www/tileserver/raster/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif" \
+      -o "/var/www/tileserver/raster/terracotta.sqlite"
+
+
 `config/` directory contains:
 
 - nginx config to serve frontend assets directly and proxy tile requests to the

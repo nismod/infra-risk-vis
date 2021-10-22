@@ -14,15 +14,19 @@ echo "Running in ${pwd}"
 npm run build
 
 # built files for frontend
-rsync -rvz build/ ubuntu@seasia.infrastructureresilience.org:/var/www/html
+rsync -rvz build/ ubuntu@jamaica.infrastructureresilience.org:/var/www/html
 
-# data and config for tileserver
-rsync -rvz data/ ubuntu@seasia.infrastructureresilience.org:/var/www/tileserver/data
-rsync -rvz styles/ ubuntu@seasia.infrastructureresilience.org:/var/www/tileserver/styles
-rsync -rvz fonts/ ubuntu@seasia.infrastructureresilience.org:/var/www/tileserver/fonts
-rsync -rvz config.json ubuntu@seasia.infrastructureresilience.org:/var/www/tileserver
+# vector
+rsync -rvz tileserver/vector/data/ ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/vector/data
+rsync -rvz tileserver/vector/fonts/ ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/vector/fonts
+rsync -rvz tileserver/vector/config.json ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/vector
+
+# raster
+rsync -rvz tileserver/raster/data/ ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster/data
+rsync -rvz tileserver/raster/terracotta.sqlite ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster
+rsync -rvz tileserver/raster/config.toml ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster
 
 # restart tileserver
-ssh ubuntu@seasia.infrastructureresilience.org 'sudo service tileserver restart'
+ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service tileserver restart'
 
 popd
