@@ -33,7 +33,7 @@ export const RiskSection: FC<RiskSectionProps> = ({ f }) => {
       }
     }
     return items;
-  });
+  }).flat();
 
   return (
     <>
@@ -59,7 +59,10 @@ export const RiskSection: FC<RiskSectionProps> = ({ f }) => {
           </Table>
         </TableContainer>
       )
-      : <Typography variant="body1">No exposure direct damages estimated.</Typography>
+      : <Typography
+          variant="body2"
+          color="textSecondary"
+        >No exposure direct damages estimated.</Typography>
     }
     </>
   );
