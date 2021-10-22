@@ -26,7 +26,7 @@ function invertColorScale(colorScale) {
 export const VECTOR_COLOR_MAPS = {
   damages: {
     scale: invertColorScale(d3.interpolateInferno),
-    range: [0, 1000],
+    range: [0, 1000000],
     empty: '#ccc',
   },
 };
