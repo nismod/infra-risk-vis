@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from 'react';
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Typography } from '@material-ui/core';
+import { Box, Checkbox, FormControl, FormControlLabel, Typography } from '@material-ui/core';
 
 import { LayerName, LAYERS } from '../config/layers';
 
@@ -10,10 +10,12 @@ interface NetworkControlProps {
 
 const LayerLabel = ({ layerConfig: { label, type, color } }) => {
   return (
-    <Typography>
-      <Box className={type === 'line' ? 'dot line' : 'dot'} style={{ backgroundColor: color }}></Box>
-      {label}
-    </Typography>
+    <>
+      <Typography>
+        <Box component="span" className={type === 'line' ? 'dot line' : 'dot'} style={{ backgroundColor: color }}></Box>
+        {label}
+      </Typography>
+    </>
   );
 };
 export const NetworkControl: FC<NetworkControlProps> = ({ networkSelection, onNetworkSelection }) => {

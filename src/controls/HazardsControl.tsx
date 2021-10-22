@@ -55,7 +55,7 @@ export const HazardsControl = ({
   onSingleHazardParam,
   showDamages,
   showDamageRaster,
-  onShowDamageRaster
+  onShowDamageRaster,
 }) => {
   const handleChange = (hazardType) => (e, isExpanded) => {
     onSingleHazardShow(hazardType, isExpanded);
@@ -64,17 +64,22 @@ export const HazardsControl = ({
   return (
     <Box mb={1}>
       <Box mt={2} mb={1}>
-      <Grid container justify="space-between">
-        <Grid item>
-          <Typography variant="h6">Hazards</Typography>
-        </Grid>
-        {
-        showDamages && <Grid item>
-          <FormControlLabel control={<Switch checked={showDamageRaster} onChange={(e, checked) => onShowDamageRaster(checked)}></Switch>} label="Show hazard raster" labelPlacement="start"/>
+        <Grid container justifyContent="space-between">
+          <Grid item>
+            <Typography variant="h6">Hazards</Typography>
           </Grid>
-        }
-      </Grid>
-
+          {showDamages && (
+            <Grid item>
+              <FormControlLabel
+                control={
+                  <Switch checked={showDamageRaster} onChange={(e, checked) => onShowDamageRaster(checked)}></Switch>
+                }
+                label="Show hazard raster"
+                labelPlacement="start"
+              />
+            </Grid>
+          )}
+        </Grid>
       </Box>
       <HazardSection show={hazardShow.fluvial} onShow={handleChange('fluvial')} label="River Flooding">
         <FormControl disabled={!hazardShow.fluvial} fullWidth>
