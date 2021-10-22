@@ -38,11 +38,11 @@ const HazardSection = ({ show, onShow, label, children }) => (
     <AccordionSummary>
       <Typography>{label}</Typography>
     </AccordionSummary>
-    <AccordionDetails>{children}</AccordionDetails>
+    <AccordionDetails style={{ display: 'block' }}>{children}</AccordionDetails>
   </Accordion>
 );
 const InputSection = ({ children }) => (
-  <Box mb={2} width="100%">
+  <Box mb={2} flexGrow={1} width="100%">
     {children}
   </Box>
 );
@@ -116,7 +116,7 @@ export const HazardsControl = ({
           </FormControl>
         </InputSection>
         <InputSection>
-          <FormControl disabled={!hazardShow.coastal} variant="standard">
+          <FormControl disabled={!hazardShow.coastal} variant="standard" style={{ width: '50%' }}>
             <InputLabel>Epoch</InputLabel>
             <Select
               value={hazardParams.coastal.epoch}
@@ -127,7 +127,7 @@ export const HazardsControl = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl disabled={!hazardShow.coastal}>
+          <FormControl disabled={!hazardShow.coastal} style={{ width: '50%' }}>
             <InputLabel>RCP</InputLabel>
             <Select
               value={hazardParams.coastal.rcp}
@@ -155,7 +155,7 @@ export const HazardsControl = ({
           </FormControl>
         </InputSection>
         <InputSection>
-          <FormControl disabled={!hazardShow.cyclone} variant="standard">
+          <FormControl disabled={!hazardShow.cyclone} variant="standard" style={{ width: '50%' }}>
             <InputLabel>Epoch</InputLabel>
             <Select
               value={hazardParams.cyclone.epoch}
@@ -166,7 +166,7 @@ export const HazardsControl = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl disabled={!hazardShow.cyclone}>
+          <FormControl disabled={!hazardShow.cyclone} style={{ width: '50%' }}>
             <InputLabel>RCP</InputLabel>
             <Select
               value={hazardParams.cyclone.rcp}
