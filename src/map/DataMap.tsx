@@ -12,6 +12,7 @@ import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
 import { MapLegend } from './legend/MapLegend';
 import { LegendContent } from './legend/LegendContent';
+import { MapLayerSelection } from './MapLayerSelection';
 
 export interface RasterHover {
   type: 'raster';
@@ -74,7 +75,7 @@ function processVectorHover(layerId, info): VectorHover {
 const pickingRadius = 8;
 const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
 
-export const DataMap = ({ background, view, layerSelection }) => {
+export const DataMap = ({ background, view, layerSelection, styleParams, onBackground }) => {
   const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
   const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
@@ -134,7 +135,7 @@ export const DataMap = ({ background, view, layerSelection }) => {
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(deckLayersSpec);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams);
 
   return (
     <>
@@ -151,9 +152,10 @@ export const DataMap = ({ background, view, layerSelection }) => {
           ) : null}
         </MapTooltip>
       </MapViewport>
+      <MapLayerSelection background={background} onBackground={onBackground} />
       {selectedFeature && <FeatureSidebar featureSelection={selectedFeature} />}
       <MapLegend>
-        <LegendContent deckLayersSpec={deckLayersSpec} />
+        <LegendContent deckLayersSpec={deckLayersSpec} styleParams={styleParams}/>
       </MapLegend>
     </>
   );

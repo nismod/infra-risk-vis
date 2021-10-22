@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getHazardId } from '../config/layers';
 
 export const hazardConfig = {
@@ -82,8 +82,6 @@ export const hazardConfig = {
   },
 };
 
-const hazardTypes = Object.keys(hazardConfig);
-
 export interface SingleHazardSelection {
   show: boolean;
   paramSelection: {
@@ -100,10 +98,16 @@ export interface SingleHazardSelection {
   };
 }
 
+const hazardTypes = Object.keys(hazardConfig);
+
+function baseSelection() {
+  return Object.fromEntries(hazardTypes.map((ht) => [ht, false]));
+}
+
 export type HazardSelectionSet = { [k: string]: SingleHazardSelection };
 
-export const useHazardSelection = () => {
-  const [hazardShow, setHazardShow] = useState(Object.fromEntries(hazardTypes.map((ht) => [ht, false])));
+export const useHazardSelection = (forceSingle = false, onlySelect = false) => {
+  const [hazardSelection, setHazardSelection] = useState(baseSelection());
   const [hazardParams, setHazardParams] = useState(
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDefaults])),
   );
@@ -112,11 +116,24 @@ export const useHazardSelection = () => {
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDomains])),
   );
 
-  const updateHazardShow = useCallback(
+  useEffect(() => {
+    if (forceSingle) {
+      let selectedKeys = Object.entries(hazardSelection)
+        .filter(([key, value]) => value)
+        .map(([key]) => key);
+      if (selectedKeys.length > 1) {
+        const firstKey = selectedKeys[0];
+        setHazardSelection({ ...baseSelection(), [firstKey]: true });
+      }
+    }
+  }, [forceSingle, hazardSelection]);
+
+  const updateHazardSelection = useCallback(
     (hazardType: string, show: boolean) => {
-      setHazardShow({ ...hazardShow, [hazardType]: show });
+      const base = forceSingle ? baseSelection() : hazardSelection;
+      setHazardSelection({ ...base, [hazardType]: show });
     },
-    [hazardShow],
+    [forceSingle, hazardSelection],
   );
 
   const updatedHazardParam = useCallback(
@@ -147,19 +164,21 @@ export const useHazardSelection = () => {
   const hazardVisibilitySet = useMemo(() => {
     const visibility: any = {};
 
+    if(onlySelect) return visibility;
+
     for (const hazardType of hazardTypes) {
-      if (hazardShow[hazardType]) {
+      if (hazardSelection[hazardType]) {
         visibility[getHazardId({ ...hazardParams[hazardType], hazardType })] = true;
       }
     }
     return visibility;
-  }, [hazardShow, hazardParams]);
+  }, [hazardSelection, hazardParams, onlySelect]);
 
   return {
-    hazardShow,
+    hazardSelection,
     hazardParams,
     hazardOptions,
-    setSingleHazardShow: updateHazardShow,
+    setSingleHazardShow: updateHazardSelection,
     setSingleHazardParam: updatedHazardParam,
     hazardVisibilitySet,
   };

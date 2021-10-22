@@ -1,8 +1,9 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Box, Drawer, Toolbar } from '@material-ui/core';
+import { Box, Drawer, Toolbar, Typography } from '@material-ui/core';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { DataMap } from './map/DataMap';
-import { BackgroundControl } from './controls/BackgroundControl';
 import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, VIEWS } from './config/views';
@@ -18,6 +19,19 @@ interface MapViewProps {
 
 const sidebarWidth = 360;
 
+function firstTrue(object) {
+  const trueKeys = Object.entries(object)
+    .filter(([key, value]) => value)
+    .map(([key]) => key);
+  return trueKeys[0];
+}
+const rcpLookup = {
+  '2x6': '2.6',
+  '4x5': '4.5',
+  '8x5': '8.5',
+  baseline: 'baseline',
+};
+
 export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [background, setBackground] = useState<BackgroundName>('light');
 
@@ -27,9 +41,37 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   //   [viewLayerNames],
   // );
 
+  const [mode, setMode] = useState<'input' | 'direct-damages'>('input');
+  const showDamages = mode === 'direct-damages';
+  const [showDamageRaster, setShowDamageRaster] = useState(true);
+
   const { networkSelection, setNetworkSelection, networkVisibilitySet } = useNetworkSelection();
-  const { hazardShow, hazardOptions, hazardParams, setSingleHazardParam, setSingleHazardShow, hazardVisibilitySet } =
-    useHazardSelection();
+  const {
+    hazardSelection,
+    hazardOptions,
+    hazardParams,
+    setSingleHazardParam,
+    setSingleHazardShow,
+    hazardVisibilitySet,
+  } = useHazardSelection(showDamages, showDamages && !showDamageRaster);
+
+  const riskMapSelectedHazard = useMemo(
+    () => (showDamages ? firstTrue(hazardSelection) : null),
+    [showDamages, hazardSelection],
+  );
+
+  const styleParams = useMemo(() => {
+    if (!riskMapSelectedHazard) return {};
+
+    const { rcp, epoch } = hazardParams[riskMapSelectedHazard];
+
+    return {
+      colorMap: {
+        colorScheme: 'damages',
+        colorField: `${riskMapSelectedHazard}__rcp_${rcpLookup[rcp]}__epoch_${epoch}__conf_None`,
+      },
+    };
+  }, [riskMapSelectedHazard, hazardParams]);
 
   const visibilitySets = useMemo(
     () => [networkVisibilitySet ?? {}, hazardVisibilitySet ?? {}],
@@ -45,32 +87,46 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
           <Toolbar /> {/* Prevents app bar from concealing content*/}
           {view === 'overview' && (
             <>
-              <NetworkControl
-                networkSelection={networkSelection}
-                onNetworkSelection={setNetworkSelection}
-                // dataLayers={layerDefinitions}
-                // layerVisibility={layerSelection}
-                // onLayerVisChange={updateLayerSelection}
-              />
+              <NetworkControl networkSelection={networkSelection} onNetworkSelection={setNetworkSelection} />
+              <Box mb={1}>
+                <Typography variant="h6">View Mode</Typography>
+              </Box>
+              <ToggleButtonGroup
+                size="small"
+                exclusive
+                value={mode}
+                onChange={(e, value) => setMode(value)}
+                style={{ display: 'flex', flexDirection: 'row', justifyItems: 'stretch' }}
+              >
+                <ToggleButton style={{ width: '50%' }} value="input">
+                  Input Data
+                </ToggleButton>
+                <ToggleButton style={{ width: '50%' }} value="direct-damages">
+                  Direct Damages
+                </ToggleButton>
+              </ToggleButtonGroup>
               <HazardsControl
                 hazardParams={hazardParams}
-                hazardShow={hazardShow}
+                hazardShow={hazardSelection}
                 hazardOptions={hazardOptions}
                 onSingleHazardParam={setSingleHazardParam}
                 onSingleHazardShow={setSingleHazardShow}
-                // hazardSelection={hazardSelection}
-                // onHazardSelection={setHazardSelection}
-
-                // layerVisibility={layerSelection}
-                // onLayerVisibilityUpdate={updateLayerSelection}
+                showDamages={showDamages}
+                showDamageRaster={showDamageRaster}
+                onShowDamageRaster={setShowDamageRaster}
               />
             </>
           )}
-          <BackgroundControl background={background} onBackgroundChange={setBackground} />
         </Box>
       </Drawer>
       <Box position="absolute" top={64} left={sidebarWidth} right={0} bottom={0}>
-        <DataMap background={background} layerSelection={layerSelection} view={view} />
+        <DataMap
+          background={background}
+          onBackground={setBackground}
+          layerSelection={layerSelection}
+          styleParams={styleParams}
+          view={view}
+        />
       </Box>
     </>
   );
