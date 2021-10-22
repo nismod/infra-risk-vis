@@ -26,33 +26,33 @@ const LegendGradient = ({ colorMapValues }) => {
   );
 };
 
-const GradientLegend = ({label, range, colorMapValues}) => (
-<Box mb={2}>
-      <Typography>{label}</Typography>
-      <Box
-        height={legendHeight + 2}
-        width={255}
-        bgcolor="#ccc"
-        display="flex"
-        flexDirection="row"
-        border="1px solid gray"
-      >
-        {colorMapValues && <LegendGradient colorMapValues={colorMapValues} />}
-      </Box>
-      <Box height={10} position="relative">
-        {colorMapValues && (
-          <>
-            <Box position="absolute" left={0}>
-            <Typography>{range[0].toLocaleString()}</Typography>
-            </Box>
-            <Box position="absolute" right={0}>
-            <Typography>{range[1].toLocaleString()}</Typography>
-            </Box>
-          </>
-        )}
-      </Box>
+const GradientLegend = ({ label, range, colorMapValues }) => (
+  <Box mb={2}>
+    <Typography>{label}</Typography>
+    <Box
+      height={legendHeight + 2}
+      width={255}
+      bgcolor="#ccc"
+      display="flex"
+      flexDirection="row"
+      border="1px solid gray"
+    >
+      {colorMapValues && <LegendGradient colorMapValues={colorMapValues} />}
     </Box>
-)
+    <Box height={10} position="relative">
+      {colorMapValues && (
+        <>
+          <Box position="absolute" left={0}>
+            <Typography>{range[0].toLocaleString()}</Typography>
+          </Box>
+          <Box position="absolute" right={0}>
+            <Typography>{range[1].toLocaleString()}</Typography>
+          </Box>
+        </>
+      )}
+    </Box>
+  </Box>
+);
 
 const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
   const {
@@ -65,27 +65,33 @@ const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
 
   const { error, loading, colorMapValues } = useRasterColorMapValues(scheme, range);
 
-  return <GradientLegend label={logicalLayerConfig.label} range={range} colorMapValues={!(error || loading) ? colorMapValues : null} />;
-}
+  return (
+    <GradientLegend
+      label={logicalLayerConfig.label}
+      range={range}
+      colorMapValues={!(error || loading) ? colorMapValues : null}
+    />
+  );
+};
 
 const DamagesLegend = ({ styleParams }) => {
   const {
-    colorMap: {colorScheme}
+    colorMap: { colorScheme },
   } = styleParams;
 
   const { scale, range } = VECTOR_COLOR_MAPS[colorScheme];
-  const  [rangeMin, rangeMax] = range;
+  const [rangeMin, rangeMax] = range;
 
   const colorMapValues = useMemo(() => {
     const scaleFn = d3Scale.scaleSequential([rangeMin, rangeMax], scale);
 
-    return d3Array.ticks(rangeMin, rangeMax, 255).map(x => ({value: x, color: scaleFn(x)}))
+    return d3Array.ticks(rangeMin, rangeMax, 255).map((x) => ({ value: x, color: scaleFn(x) }));
   }, [scale, rangeMin, rangeMax]);
 
   // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
 
   return <GradientLegend label="Direct Damages" range={range} colorMapValues={colorMapValues} />;
-}
+};
 
 export const LegendContent = ({ deckLayersSpec, styleParams }) => {
   return (
@@ -102,7 +108,7 @@ export const LegendContent = ({ deckLayersSpec, styleParams }) => {
 
         return null;
       })}
-      {styleParams.colorMap && <DamagesLegend styleParams={styleParams}/>}
+      {styleParams.colorMap && <DamagesLegend styleParams={styleParams} />}
     </>
   );
 };
