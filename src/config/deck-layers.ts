@@ -1,4 +1,4 @@
-import { MVTLayer, TileLayer, BitmapLayer } from 'deck.gl';
+import { MVTLayer, TileLayer, BitmapLayer, GeoJsonLayer } from 'deck.gl';
 import GL from '@luma.gl/constants';
 import { rgb } from 'd3-color';
 import * as d3 from 'd3-scale';
@@ -103,6 +103,20 @@ function border(color = [255, 255, 255]) {
     getLineColor: color,
     lineWidthMinPixels: 1,
   };
+}
+
+export function selectionLayer(feature, zoom) {
+  return new GeoJsonLayer(
+    {
+      id: 'selection',
+      data: [feature],
+      getFillColor: [0, 255, 255],
+      getLineColor: [0, 255, 255],
+      pickable: false,
+    },
+    lineStyle(zoom),
+    pointRadius(zoom),
+  );
 }
 
 export const DECK_LAYERS = makeConfig<any, string>([

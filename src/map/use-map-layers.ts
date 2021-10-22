@@ -3,7 +3,8 @@ import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
-import { DECK_LAYERS } from '../config/deck-layers';
+import { DECK_LAYERS, selectionLayer } from '../config/deck-layers';
+import { VectorHover } from './DataMap';
 
 /**
  * get map style and layers definition based on:
@@ -48,11 +49,12 @@ function getDeckLayersSpec(dataLayerSelection: Record<LayerName, boolean>, view:
   return deckLayers;
 }
 
-const damageMapProps = {
-  styleParams: { colorMap: { colorScheme: 'damages', colorField: 'cyclone__rcp_4.5__epoch_2050__conf_None' } },
-};
-
-function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number, styleParams: any) {
+function getDeckLayers(
+  deckLayersSpec: Record<string, any>,
+  zoom: number,
+  styleParams: any,
+  selectedFeature: VectorHover,
+) {
   const resLayers = [];
 
   for (const [deckLayerName, allParams] of Object.entries(deckLayersSpec)) {
@@ -72,6 +74,12 @@ function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number, styleP
     }
   }
 
+  if (selectedFeature) {
+    const { feature } = selectedFeature;
+
+    resLayers.push(selectionLayer(feature, zoom));
+  }
+
   return resLayers;
 }
 
@@ -79,6 +87,9 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec, styleParams) {
-  return useCallback(({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams), [deckLayersSpec, styleParams]);
+export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature) {
+  return useCallback(
+    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature),
+    [deckLayersSpec, styleParams, selectedFeature],
+  );
 }

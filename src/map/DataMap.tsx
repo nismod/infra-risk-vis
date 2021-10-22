@@ -30,12 +30,6 @@ export interface VectorHover {
   info: any;
 }
 
-export interface FeatureSelection {
-  feature: MapboxGeoJSONFeature;
-  sourceDeckLayer: string;
-  sourceLogicalLayer: string;
-}
-
 export type HoveredObject = VectorHover | RasterHover;
 
 function processRasterHover(layerId, info): RasterHover {
@@ -135,7 +129,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature);
 
   return (
     <>
@@ -155,7 +149,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
       <MapLayerSelection background={background} onBackground={onBackground} />
       {selectedFeature && <FeatureSidebar featureSelection={selectedFeature} />}
       <MapLegend>
-        <LegendContent deckLayersSpec={deckLayersSpec} styleParams={styleParams}/>
+        <LegendContent deckLayersSpec={deckLayersSpec} styleParams={styleParams} />
       </MapLegend>
     </>
   );
