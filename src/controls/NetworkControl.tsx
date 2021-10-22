@@ -21,7 +21,7 @@ export const NetworkControl: FC<NetworkControlProps> = ({ networkSelection, onNe
 
   return (
     <Box mb={2}>
-      <Typography variant="h6">Infrastructure Layers</Typography>
+      <Typography variant="h6">Infrastructure Assets</Typography>
       <FormControl component="fieldset">
         {networkLayers.map((layerName) => (
           <FormControlLabel

@@ -7,9 +7,11 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   Typography,
 } from '@material-ui/core';
 
@@ -52,6 +54,8 @@ export const HazardsControl = ({
   onSingleHazardShow,
   onSingleHazardParam,
   showDamages,
+  showDamageRaster,
+  onShowDamageRaster
 }) => {
   const handleChange = (hazardType) => (e, isExpanded) => {
     onSingleHazardShow(hazardType, isExpanded);
@@ -59,7 +63,19 @@ export const HazardsControl = ({
 
   return (
     <Box mb={1}>
-      <Typography variant="h6">Hazards</Typography>
+      <Box mt={2} mb={1}>
+      <Grid container justify="space-between">
+        <Grid item>
+          <Typography variant="h6">Hazards</Typography>
+        </Grid>
+        {
+        showDamages && <Grid item>
+          <FormControlLabel control={<Switch checked={showDamageRaster} onChange={(e, checked) => onShowDamageRaster(checked)}></Switch>} label="Show hazard raster" labelPlacement="start"/>
+          </Grid>
+        }
+      </Grid>
+
+      </Box>
       <HazardSection show={hazardShow.fluvial} onShow={handleChange('fluvial')} label="River Flooding">
         <FormControl disabled={!hazardShow.fluvial} fullWidth>
           <FormLabel>Return Period</FormLabel>

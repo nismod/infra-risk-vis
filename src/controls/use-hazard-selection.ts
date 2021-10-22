@@ -106,7 +106,7 @@ function baseSelection() {
 
 export type HazardSelectionSet = { [k: string]: SingleHazardSelection };
 
-export const useHazardSelection = (forceSingle = false) => {
+export const useHazardSelection = (forceSingle = false, onlySelect = false) => {
   const [hazardSelection, setHazardSelection] = useState(baseSelection());
   const [hazardParams, setHazardParams] = useState(
     Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDefaults])),
@@ -164,13 +164,15 @@ export const useHazardSelection = (forceSingle = false) => {
   const hazardVisibilitySet = useMemo(() => {
     const visibility: any = {};
 
+    if(onlySelect) return visibility;
+
     for (const hazardType of hazardTypes) {
       if (hazardSelection[hazardType]) {
         visibility[getHazardId({ ...hazardParams[hazardType], hazardType })] = true;
       }
     }
     return visibility;
-  }, [hazardSelection, hazardParams]);
+  }, [hazardSelection, hazardParams, onlySelect]);
 
   return {
     hazardSelection,
