@@ -27,6 +27,6 @@ rsync -rvz tileserver/raster/terracotta.sqlite ubuntu@jamaica.infrastructureresi
 rsync -rvz tileserver/raster/config.toml ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster
 
 # restart tileserver
-ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service tileserver restart'
+ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service tileservergl restart'
 
 popd
