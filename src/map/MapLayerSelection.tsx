@@ -18,7 +18,7 @@ export const MapLayerSelection = ({ background, onBackground }) => {
 
   // const currentConfig = config[background];
   return (
-    <Box position="absolute" top={0} left={0} m={1} zIndex={1000}>
+    <Box position="absolute" top={0} left={0} ml={3} m={1} zIndex={1000}>
       <ButtonGroup>
         <Button
           aria-label="Toggle map background"

@@ -4,6 +4,10 @@
 .MuiAppBar-root {
   z-index: 1201 !important;
 }
+.MuiDrawer-paper {
+  overflow-x: hidden;
+}
+
 .nav-brand {
   margin-right: 12px;
 }
