@@ -23,7 +23,6 @@ rsync -rvz tileserver/vector/config.json ubuntu@jamaica.infrastructureresilience
 
 # raster
 rsync -rvz tileserver/raster/data/ ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster/data
-rsync -rvz tileserver/raster/terracotta.sqlite ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster
 rsync -rvz tileserver/raster/config.toml ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster
 
 # restart tileserver
