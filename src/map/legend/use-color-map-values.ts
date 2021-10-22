@@ -1,6 +1,6 @@
 import { useFetch } from 'use-http';
 
-export function useColorMapValues(colorScheme: string, stretchRange: [number, number]) {
+export function useRasterColorMapValues(colorScheme: string, stretchRange: [number, number]) {
   const [rangeMin, rangeMax] = stretchRange;
 
   const {
@@ -13,5 +13,5 @@ export function useColorMapValues(colorScheme: string, stretchRange: [number, nu
     rangeMax,
   ]);
 
-  return { loading, error, colorMapValues };
+  return { loading, error, colorMapValues: colorMapValues?.map(({value, rgba: [r, g, b]}) => ({value, color: `rgb(${r},${g},${b})`})) };
 }

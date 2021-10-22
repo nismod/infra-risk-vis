@@ -1,21 +1,24 @@
 import { Box, Typography } from '@material-ui/core';
+import { useMemo } from 'react';
+import * as d3Scale from 'd3-scale';
+import * as d3Array from 'd3-array';
 
-import { RASTER_COLOR_MAPS } from '../../config/color-maps';
+import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from '../../config/color-maps';
 import { DECK_LAYERS } from '../../config/deck-layers';
 import { LAYERS } from '../../config/layers';
-import { useColorMapValues } from '../legend/use-color-map-values';
+import { useRasterColorMapValues } from '../legend/use-color-map-values';
 
 const legendHeight = 10;
 
-const RasterLegendGradient = ({ colorMapValues }) => {
+const LegendGradient = ({ colorMapValues }) => {
   return (
     <>
-      {colorMapValues.map(({ rgba: [r, g, b], value }) => (
+      {colorMapValues.map(({ color, value }) => (
         <Box
           // key={`${value}-${r}-${g}-${b}`}
           height={legendHeight}
           width={1}
-          bgcolor={`rgb(${r},${g},${b})`}
+          bgcolor={color}
           title={value.toFixed(3)}
         ></Box>
       ))}
@@ -23,20 +26,9 @@ const RasterLegendGradient = ({ colorMapValues }) => {
   );
 };
 
-const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
-  const {
-    sourceLogicalLayers: [logicalLayer],
-    params,
-  } = deckLayerParams;
-  const logicalLayerConfig = LAYERS[logicalLayer];
-
-  const { scheme, range } = RASTER_COLOR_MAPS[params.hazardType];
-
-  const { error, loading, colorMapValues } = useColorMapValues(scheme, range);
-
-  return (
-    <Box mb={2}>
-      <Typography>{logicalLayerConfig.label}</Typography>
+const GradientLegend = ({label, range, colorMapValues}) => (
+<Box mb={2}>
+      <Typography>{label}</Typography>
       <Box
         height={legendHeight + 2}
         width={255}
@@ -45,10 +37,10 @@ const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
         flexDirection="row"
         border="1px solid gray"
       >
-        {!loading && !error && <RasterLegendGradient colorMapValues={colorMapValues} />}
+        {colorMapValues && <LegendGradient colorMapValues={colorMapValues} />}
       </Box>
       <Box height={10} position="relative">
-        {!loading && !error && (
+        {colorMapValues && (
           <>
             <Box position="absolute" left={0}>
               <Typography>{range[0]}</Typography>
@@ -60,10 +52,42 @@ const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
         )}
       </Box>
     </Box>
-  );
-};
+)
 
-export const LegendContent = ({ deckLayersSpec }) => {
+const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
+  const {
+    sourceLogicalLayers: [logicalLayer],
+    params,
+  } = deckLayerParams;
+  const logicalLayerConfig = LAYERS[logicalLayer];
+
+  const { scheme, range } = RASTER_COLOR_MAPS[params.hazardType];
+
+  const { error, loading, colorMapValues } = useRasterColorMapValues(scheme, range);
+
+  return <GradientLegend label={logicalLayerConfig.label} range={range} colorMapValues={!(error || loading) ? colorMapValues : null} />;
+}
+
+const DamagesLegend = ({ styleParams }) => {
+  const {
+    colorMap: {colorScheme}
+  } = styleParams;
+
+  const { scale, range } = VECTOR_COLOR_MAPS[colorScheme];
+  const  [rangeMin, rangeMax] = range;
+
+  const colorMapValues = useMemo(() => {
+    const scaleFn = d3Scale.scaleSequential([rangeMin, rangeMax], scale);
+
+    return d3Array.ticks(rangeMin, rangeMax, 255).map(x => ({value: x, color: scaleFn(x)}))
+  }, [scale, rangeMin, rangeMax]);
+
+  // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
+
+  return <GradientLegend label="Direct Damages" range={range} colorMapValues={colorMapValues} />;
+}
+
+export const LegendContent = ({ deckLayersSpec, styleParams }) => {
   return (
     <>
       {/* <Typography variant="h6">Legend</Typography> */}
@@ -78,6 +102,7 @@ export const LegendContent = ({ deckLayersSpec }) => {
 
         return null;
       })}
+      {styleParams.colorMap && <DamagesLegend styleParams={styleParams}/>}
     </>
   );
 };

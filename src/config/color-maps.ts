@@ -1,4 +1,3 @@
-import { scaleSequential } from 'd3-scale';
 import * as d3 from 'd3-scale-chromatic';
 
 export const RASTER_COLOR_MAPS = {
@@ -20,9 +19,14 @@ export const RASTER_COLOR_MAPS = {
   },
 };
 
+function invertColorScale(colorScale) {
+  return (i) => colorScale(1 - i);
+}
+
 export const VECTOR_COLOR_MAPS = {
   damages: {
-    scale: scaleSequential([1000, 0], d3.interpolateInferno),
+    scale: invertColorScale(d3.interpolateInferno),
+    range: [0, 1000],
     empty: '#ccc',
   },
 };

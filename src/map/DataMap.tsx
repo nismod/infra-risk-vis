@@ -155,7 +155,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
       <MapLayerSelection background={background} onBackground={onBackground} />
       {selectedFeature && <FeatureSidebar featureSelection={selectedFeature} />}
       <MapLegend>
-        <LegendContent deckLayersSpec={deckLayersSpec} />
+        <LegendContent deckLayersSpec={deckLayersSpec} styleParams={styleParams}/>
       </MapLegend>
     </>
   );

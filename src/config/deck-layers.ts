@@ -1,9 +1,10 @@
 import { MVTLayer, TileLayer, BitmapLayer } from 'deck.gl';
 import GL from '@luma.gl/constants';
 import { rgb } from 'd3-color';
+import * as d3 from 'd3-scale';
 
 import { COLORS } from './colors';
-import { makeConfig } from '../helpers';
+import { colorCssToRgb, makeConfig } from '../helpers';
 import { getHazardId } from './layers';
 import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from './color-maps';
 
@@ -65,11 +66,6 @@ function infrastructureLayer(...props) {
   );
 }
 
-function d3ToDeckColor(d3Color) {
-  const { r, g, b } = rgb(d3Color);
-  return [r, g, b];
-}
-
 interface ColorMapDefinition {
   colorScheme: string;
   colorField: string;
@@ -84,11 +80,13 @@ interface ColorMapDefinition {
 // }
 function makeColorMap(definition: ColorMapDefinition) {
   const { colorScheme, colorField } = definition;
-  const { scale, empty } = VECTOR_COLOR_MAPS[colorScheme];
+  const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
+
+  const scaleFn = d3.scaleSequential(range, scale);
 
   return (f) => {
     const value = f.properties[colorField];
-    return d3ToDeckColor(value == null || value === 0 ? empty : scale(value));
+    return colorCssToRgb(value == null || value === 0 ? empty : scaleFn(value));
   };
 }
 
