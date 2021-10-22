@@ -8,6 +8,7 @@ export interface LayerDefinition {
   label: string;
   type: string; //'line' | 'circle' | 'raster' | 'polygon';
   color: string;
+  id: string;
   getId?: (x) => string;
 }
 

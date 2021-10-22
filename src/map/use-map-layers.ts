@@ -67,7 +67,9 @@ function getDeckLayers(deckLayersSpec: Record<string, any>, zoom: number, styleP
       maxZoom: 20,
     };
 
-    resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, styleParams }));
+    if (anyVisible) {
+      resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, styleParams }));
+    }
   }
 
   return resLayers;

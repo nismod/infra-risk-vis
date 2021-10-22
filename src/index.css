@@ -29,82 +29,9 @@ article {
   margin: 0 auto;
   font-size: 1.2rem;
 }
-article h1,
-article h2 {
-  font-weight: bold;
-}
-article h1 {
-  font-size: 1.75rem;
-}
-article h2 {
-  font-size: 1.2rem;
-  margin-top: 1rem;
-}
-article .alert {
-  margin-top: 1rem;
-}
 /**
  * Map and controls
  */
-.custom-map-control {
-  position: absolute;
-  z-index: 999;
-  background-color: #fff;
-  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
-  padding: 5px;
-  max-height: calc(100vh - 7rem);
-  overflow-y: scroll;
-}
-.custom-map-control.top-left {
-  top: 10px;
-  left: 10px;
-  max-width: 18rem;
-}
-.custom-map-control small {
-  display: block;
-  line-height: 1.2;
-  margin: 0.2rem 0;
-}
-.custom-map-control.top-right {
-  top: 10px;
-  right: 50px;
-}
-.custom-map-control.bottom-left {
-  bottom: 10px;
-  left: 10px;
-}
-.custom-map-control.bottom-right {
-  bottom: 39px;
-  overflow: hidden;
-  font: 10px/20px Helvetica Neue, Arial, Helvetica, sans-serif;
-  right: 10px;
-}
-.custom-map-control .h4 {
-  font-weight: bold;
-  font-size: 1rem;
-  padding-bottom: 2px;
-  border-bottom: 2px solid #000066;
-}
-.custom-map-control .h5,
-.custom-map-control summary {
-  font-weight: bold;
-  font-size: 1rem;
-}
-.custom-map-control .h5 {
-  margin: 0.5rem 0 0.25rem;
-}
-.selected-feature {
-  overflow: scroll;
-  width: 40rem;
-}
-.selected-feature pre {
-  overflow: visible;
-  white-space: pre;
-}
-.position-control {
-  font-size: 0.8rem;
-}
 .mapboxgl-ctrl-logo {
   display: none !important;
 }

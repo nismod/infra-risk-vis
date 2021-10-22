@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { Box, List, ListItem, ListItemText, Paper, Typography } from '@material-ui/core';
+import { Box, Paper } from '@material-ui/core';
 
-import { titleCase } from '../helpers';
 import { VectorHover } from '../map/DataMap';
 import { LAYERS } from '../config/layers';
+import { FeatureSidebarContent } from './FeatureSidebarContent';
 
 interface FeatureSidebarProps {
   featureSelection: VectorHover;
@@ -12,31 +12,13 @@ interface FeatureSidebarProps {
 export const FeatureSidebar: FC<FeatureSidebarProps> = ({ featureSelection }) => {
   const { feature, logicalLayer } = featureSelection;
   const f = feature.properties;
-
   const logicalLayerConfig = LAYERS[logicalLayer];
 
   return (
-    <Box position="absolute" top={0} right={0} width={300} m={2}>
+    <Box position="absolute" top={10} right={50} width={400}>
       <Paper>
-        <Box p={3} overflow="auto" height="90vh">
-          <Typography variant="h6">Selected Asset</Typography>
-          <Typography variant="body1" style={{ color: logicalLayerConfig.color }}>
-            {logicalLayerConfig.label}
-          </Typography>
-          <pre style={{ display: 'none' }}>
-            <code>{JSON.stringify(f, null, 2)}</code>
-          </pre>
-          <List>
-            {Object.entries(f).map(([key, value]) => (
-              <ListItem key={key}>
-                <ListItemText
-                  primary={titleCase(key.replace(/_/g, ' '))}
-                  primaryTypographyProps={{ variant: 'caption' }}
-                  secondary={value === ' ' ? '-' : value || '-'}
-                />
-              </ListItem>
-            ))}
-          </List>
+        <Box p={3} overflow="auto" maxHeight="calc(100vh - 125px)">
+          <FeatureSidebarContent f={f} layer={logicalLayerConfig} />
         </Box>
       </Paper>
     </Box>
