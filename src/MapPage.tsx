@@ -63,12 +63,12 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   const styleParams = useMemo(() => {
     if (!riskMapSelectedHazard) return {};
 
-    const { rcp, epoch, confidence } = hazardParams[riskMapSelectedHazard];
+    const { rcp, epoch } = hazardParams[riskMapSelectedHazard];
 
     return {
       colorMap: {
         colorScheme: 'damages',
-        colorField: `${riskMapSelectedHazard}__rcp_${rcpLookup[rcp]}__epoch_${epoch}__conf_${confidence}`,
+        colorField: `${riskMapSelectedHazard}__rcp_${rcpLookup[rcp]}__epoch_${epoch}__conf_None`,
       },
     };
   }, [riskMapSelectedHazard, hazardParams]);
