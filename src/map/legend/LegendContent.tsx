@@ -43,10 +43,10 @@ const GradientLegend = ({label, range, colorMapValues}) => (
         {colorMapValues && (
           <>
             <Box position="absolute" left={0}>
-              <Typography>{range[0]}</Typography>
+            <Typography>{range[0].toLocaleString()}</Typography>
             </Box>
             <Box position="absolute" right={0}>
-              <Typography>{range[1]}</Typography>
+            <Typography>{range[1].toLocaleString()}</Typography>
             </Box>
           </>
         )}
