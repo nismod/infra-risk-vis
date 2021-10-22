@@ -60,7 +60,7 @@ const RasterHoverDescription: FC<{ hoveredObject: RasterHover }> = ({ hoveredObj
     <div>
       <span style={{ color: colorString }}>■</span>&nbsp;
       <strong>{title}</strong>
-      {rasterValueLookup?.[colorString] && <span>: {rasterValueLookup[colorString].toFixed(2)}</span>}
+      {rasterValueLookup?.[colorString] && <span>: {rasterValueLookup[colorString].toFixed(1)}</span>}
     </div>
   );
 };
