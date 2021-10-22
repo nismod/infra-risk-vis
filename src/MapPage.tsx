@@ -53,7 +53,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
     setSingleHazardParam,
     setSingleHazardShow,
     hazardVisibilitySet,
-  } = useHazardSelection(showDamages, !showDamageRaster);
+  } = useHazardSelection(showDamages, showDamages && !showDamageRaster);
 
   const riskMapSelectedHazard = useMemo(
     () => (showDamages ? firstTrue(hazardSelection) : null),
