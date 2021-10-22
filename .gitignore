@@ -18,6 +18,11 @@ NOTES
 
 # build
 build/
+.terraform
+*.tfstate
+*.tfstate.backup
+*.hcl
+
 
 # tileserver database
 terracotta.sqlite

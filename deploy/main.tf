@@ -21,19 +21,19 @@ provider "aws" {
 //
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "opsis-aws-deployer"
-  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID/agWHjzCIYme1o4plGWbtHbDDLpI/csKhDFdKoSKCr opsis-aws"
+  key_name   = "opsis-aws-deployer-jamaica"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAjX5yhc7GWROTVOM8r92rO6MEUyKt/JfTCQzCY/lNi9 opsis-aws-jamaica"
 }
 
-resource "aws_default_vpc" "default" {
+resource "aws_default_vpc" "jamaica" {
   tags = {
-    Name = "Default VPC"
+    Name = "Jamaica VPC"
   }
 }
 
 resource "aws_security_group" "access_http_ssh" {
-  name = "access_http_ssh"
-  vpc_id = aws_default_vpc.default.id
+  name = "access_jamaica"
+  vpc_id = aws_default_vpc.jamaica.id
   ingress {
     from_port   = 22
     to_port     = 22
@@ -81,7 +81,7 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_instance" "seasia" {
+resource "aws_instance" "jamaica" {
   instance_type = var.instance_type
   ami = data.aws_ami.ubuntu.id
 
@@ -101,14 +101,14 @@ data "aws_route53_zone" "selected" {
   name = "infrastructureresilience.org."
 }
 
-resource "aws_route53_record" "seasia" {
+resource "aws_route53_record" "jamaica" {
   zone_id = data.aws_route53_zone.selected.zone_id
   name    = var.SITE_URL
   type    = "A"
   ttl     = "300"
-  records = [aws_instance.seasia.public_ip]
+  records = [aws_instance.jamaica.public_ip]
 }
 
-output "seasia-public_ip" {
-  value = aws_instance.seasia.public_ip
+output "jamaica-public_ip" {
+  value = aws_instance.jamaica.public_ip
 }
