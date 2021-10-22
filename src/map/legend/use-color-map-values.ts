@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useFetch } from 'use-http';
 
 export function useRasterColorMapValues(colorScheme: string, stretchRange: [number, number]) {
@@ -7,11 +8,20 @@ export function useRasterColorMapValues(colorScheme: string, stretchRange: [numb
     loading,
     error,
     data: { colormap: colorMapValues = null } = {},
-  } = useFetch(`/raster/colormap?colormap=${colorScheme}&stretch_range=[${rangeMin},${rangeMax}]`, {}, [
+  } = useFetch(`/raster/colormap?colormap=${colorScheme}&stretch_range=[${rangeMin},${rangeMax}]`, { persist: true }, [
     colorScheme,
     rangeMin,
     rangeMax,
   ]);
 
-  return { loading, error, colorMapValues: colorMapValues?.map(({value, rgba: [r, g, b]}) => ({value, color: `rgb(${r},${g},${b})`})) };
+  const result = useMemo(
+    () => colorMapValues?.map(({ value, rgba: [r, g, b] }) => ({ value, color: `rgb(${r},${g},${b})` })),
+    [colorMapValues],
+  );
+
+  return {
+    loading,
+    error,
+    colorMapValues: result,
+  };
 }

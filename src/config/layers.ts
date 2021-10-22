@@ -6,6 +6,7 @@ export interface LayerDefinition {
   deckLayer: string | { baseName: string; params: any };
   deckLayerParams?: any;
   label: string;
+  dataUnit?: string;
   type: string; //'line' | 'circle' | 'raster' | 'polygon';
   color: string;
   id: string;
@@ -47,6 +48,7 @@ function hazardLayer<
     deckLayer: { baseName: 'hazard', params: { hazardType, returnPeriod, rcp, epoch, confidence } },
     type: 'raster',
     label, //: `${titleCase(hazardType)}`,
+    dataUnit: 'm',
     color: '#aaaaaa',
     getId: getHazardId,
   } as LayerDefinition & { id: typeof id };

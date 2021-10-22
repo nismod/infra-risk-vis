@@ -83,7 +83,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   return (
     <>
       <Drawer variant="permanent">
-        <Box p={3} width={sidebarWidth}>
+        <Box pt={2} p={4} width={sidebarWidth} boxSizing="border-box">
           <Toolbar /> {/* Prevents app bar from concealing content*/}
           {view === 'overview' && (
             <>
