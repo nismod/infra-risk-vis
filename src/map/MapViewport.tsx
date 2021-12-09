@@ -12,8 +12,6 @@ import _ from 'lodash';
 
 import { backgroundConfig, BackgroundName } from '../config/backgrounds';
 
-const MAPBOX_KEY = 'pk.eyJ1IjoidG9tcnVzc2VsbCIsImEiOiJjaXZpMTFpdGkwMDQ1MnptcTh4ZzRzeXNsIn0.ZSvSOHSsWBQ44QNhA71M6Q';
-
 function visible(isVisible: boolean): 'visible' | 'none' {
   return isVisible ? 'visible' : 'none';
 }
@@ -68,9 +66,9 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, pick
       onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
       ContextProvider={MapContext.Provider}
     >
-      <StaticMap mapStyle={backgroundStyle} mapboxApiAccessToken={MAPBOX_KEY} attributionControl={false} />
+      <StaticMap mapStyle={backgroundStyle} attributionControl={false} />
       <AttributionControl
-        customAttribution='Background map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>, satellite imagery via &copy; <a href="https://www.mapbox.com/">MapBox</a>'
+        customAttribution='Background map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>. Satellite imagery: <a href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020)'
         compact={false}
         style={{
           right: 0,

@@ -28,14 +28,15 @@ export const backgroundConfig = makeConfig([
     source: {
       id: 'satellite',
       type: 'raster',
-      url: 'mapbox://mapbox.satellite',
+      tiles: [
+        'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.png'
+      ],
       tileSize: 256,
     },
     layer: {
       id: 'bg-satellite',
       source: 'satellite',
       type: 'raster',
-      'source-layer': 'mapbox_satellite_full',
     },
   },
 ]);
