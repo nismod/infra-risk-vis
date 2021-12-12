@@ -17,15 +17,8 @@ import {
 
 import { CustomNumberSlider } from './CustomSlider';
 
-const rcpLookup = {
-  baseline: 'Baseline',
-  '2x6': '2.6',
-  '4x5': '4.5',
-  '8x5': '8.5',
-};
-
 function rcpLabel(value) {
-  return rcpLookup[value];
+  return value === 'baseline' ? 'Baseline' : value;
 }
 
 function epochLabel(value) {

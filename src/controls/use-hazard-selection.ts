@@ -38,7 +38,7 @@ export const hazardConfig = {
     paramDomains: {
       returnPeriod: [1, 2, 5, 10, 50, 100],
       epoch: [2010, 2030, 2050, 2070, 2100],
-      rcp: ['baseline', '2x6', '4x5', '8x5'],
+      rcp: ['baseline', '2.6', '4.5', '8.5'],
 
       confidence: ['None'],
     },
@@ -52,8 +52,8 @@ export const hazardConfig = {
     paramDependencies: {
       rcp: ({ epoch }) => {
         if (epoch === 2010) return ['baseline'];
-        if (epoch === 2050 || epoch === 2100) return ['2x6', '4x5', '8x5'];
-        if (epoch === 2030 || epoch === 2070) return ['4x5', '8x5'];
+        if (epoch === 2050 || epoch === 2100) return ['2.6', '4.5', '8.5'];
+        if (epoch === 2030 || epoch === 2070) return ['4.5', '8.5'];
       },
     },
   },
@@ -64,7 +64,7 @@ export const hazardConfig = {
         6000, 7000, 8000, 9000, 10000,
       ],
       epoch: [2010, 2050, 2100],
-      rcp: ['baseline', '4x5', '8x5'],
+      rcp: ['baseline', '4.5', '8.5'],
       confidence: [5, 50, 95],
     },
     paramDefaults: {
@@ -76,7 +76,7 @@ export const hazardConfig = {
     paramDependencies: {
       rcp: ({ epoch }) => {
         if (epoch === 2010) return ['baseline'];
-        if (epoch === 2050 || epoch === 2100) return ['4x5', '8x5'];
+        if (epoch === 2050 || epoch === 2100) return ['4.5', '8.5'];
       },
     },
   },

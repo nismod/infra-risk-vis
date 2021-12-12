@@ -14,16 +14,15 @@ export const RiskSection: FC<RiskSectionProps> = ({ f }) => {
   const rows = Object.entries(hazardConfig).map(([hazardType, hazard]) => {
     const items = [];
     for (const rcp of hazard.paramDomains.rcp) {
-      const rcp_label = rcp.replace('x','.');
       for (const epoch of hazard.paramDomains.epoch) {
         // TODO check risk data for confidence
         // for (const confidence of hazard.paramDomains.confidence) {
-        const risk_key = `${hazardType}__rcp_${rcp_label}__epoch_${epoch}__conf_None`
+        const risk_key = `${hazardType}__rcp_${rcp}__epoch_${epoch}__conf_None`
         if (f[risk_key]) {
           items.push((
           <TableRow key={risk_key}>
             <TableCell>{hazardType}</TableCell>
-            <TableCell>{rcp_label}</TableCell>
+            <TableCell>{rcp}</TableCell>
             <TableCell>{epoch}</TableCell>
             <TableCell align="right">{numFormat(f[risk_key])}</TableCell>
           </TableRow>
