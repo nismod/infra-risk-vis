@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Typography } from '@material-ui/core';
 
 import { LayerDefinition } from '../config/layers';
 import { RiskSection } from './RiskSection';
+import { EADChartSection } from './EADChartSection';
 import {
   AirportDetails,
   BridgeDetails,
@@ -20,6 +21,7 @@ import {
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
 } from './detail-components';
+import { hazardConfig } from '../controls/use-hazard-selection';
 
 var componentMapping = {
   airport_areas: AirportDetails,
@@ -46,9 +48,27 @@ interface FeatureSidebarContentProps {
   layer: LayerDefinition;
 }
 
+function getFeatureEadData(f: any) {
+  const eadData = [];
+  for (const [hazardType, hazard] of Object.entries(hazardConfig)) {
+    for (const rcp of hazard.paramDomains.rcp) {
+      for (const epoch of hazard.paramDomains.epoch) {
+        // TODO check risk data for confidence
+        // for (const confidence of hazard.paramDomains.confidence) {
+        const riskKey = `${hazardType}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+        if (f[riskKey]) {
+          eadData.push({ key: riskKey, hazardType, rcp, epoch: epoch.toString(), ead: f[riskKey] });
+        }
+        // }
+      }
+    }
+  }
+  return eadData;
+}
+
 export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, layer }) => {
   const DetailsComponent = componentMapping[layer.id] ?? DefaultDetails;
-
+  const eadData = useMemo(() => getFeatureEadData(f), [f]);
   return (
     <>
       <pre id="feature_debug" style={{ display: 'none' }}>
@@ -58,7 +78,8 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, layer
         <span style={{ color: layer.color ?? '#333' }}>■</span>&nbsp;{layer.label}
       </Typography>
       <DetailsComponent f={f} />
-      <RiskSection f={f} />
+      <RiskSection eadData={eadData} />
+      <EADChartSection eadData={eadData} />
     </>
   );
 };
