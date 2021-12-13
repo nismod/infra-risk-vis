@@ -11,6 +11,7 @@ export const EADChart = createClassFromSpec({
       point: {
         filled: true,
       },
+      tooltip: true,
     },
     encoding: {
       x: { field: 'epoch', timeUnit: 'year', title: 'Year' },
@@ -24,6 +25,12 @@ export const EADChart = createClassFromSpec({
           direction: 'horizontal',
         },
       },
+      // the tooltip encoding needs to replicate the field definitions in order to customise their ordering
+      tooltip: [
+        { field: 'ead', type: 'quantitative', format: ',.3r', title: 'EAD' },
+        { field: 'rcp', title: 'RCP' },
+        { field: 'epoch', timeUnit: 'year', title: 'Year' },
+      ],
     },
   },
 });
