@@ -1,17 +1,43 @@
 import React from 'react';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert'; // MUIv4 has Alert in "lab" - v5 has it by default
 
 export const IntroPage = () => (
   <article>
     <h1>Jamaica Infrastructure Risk Assessment Tool</h1>
 
-    <p>This prototype tool presents infrastructure risk analytics for Jamaica.</p>
+    <p>This prototype tool presents infrastructure risk analytics for
+    Jamaica.</p>
 
-    <p>
-      The modelling and analysis presented here aim to support climate adaptation decision-making by identifying spatial
-      criticalities and risks under current and future hazard scenarios. It comprises a direct damage estimation and an
-      indirect economic loss estimation of GDP disruptions due to asset failures and service disruption.
-    </p>
+    <Alert severity="info">The systemic risk analysis results shown in this
+    tool contain licensed data that must not be shared outside the Government of
+    Jamaica. By accessing the tool, you acknowledge that you understand this and
+    agree not to download any data or share your access credentials with anyone
+    else.</Alert>
+
+    <br></br>
+
+    <Alert
+      severity="success"
+      action={
+        <Button color="inherit" size="small">
+          <a href="https://github.com/nismod/infra-risk-vis/issues">
+            REPORT
+          </a>
+        </Button>
+      }
+    >
+
+    The tool is under active development. Please tell us if anything is not
+    working as it should and suggest potential improvements.
+
+    </Alert>
+
+    <p>The modelling and analysis presented here aim to support climate
+    adaptation decision-making by identifying spatial criticalities and risks
+    under current and future hazard scenarios. It comprises a direct damage
+    estimation and an indirect economic loss estimation of GDP disruptions due
+    to asset failures and service disruption.</p>
 
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
