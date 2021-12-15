@@ -48,6 +48,10 @@ interface FeatureSidebarContentProps {
   layer: LayerDefinition;
 }
 
+function getRcpNumber(rcp) {
+  if (rcp === 'baseline') return 0;
+  return Number.parseFloat(rcp);
+}
 function getFeatureEadData(f: any) {
   const eadData = [];
   for (const [hazardType, hazard] of Object.entries(hazardConfig)) {
@@ -57,7 +61,14 @@ function getFeatureEadData(f: any) {
         // for (const confidence of hazard.paramDomains.confidence) {
         const riskKey = `${hazardType}__rcp_${rcp}__epoch_${epoch}__conf_None`;
         if (f[riskKey]) {
-          eadData.push({ key: riskKey, hazardType, rcp, epoch: epoch.toString(), ead: f[riskKey] });
+          eadData.push({
+            key: riskKey,
+            hazardType,
+            rcp,
+            rcpNumber: getRcpNumber(rcp),
+            epoch: epoch.toString(),
+            ead: f[riskKey],
+          });
         }
         // }
       }

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { Box, Typography } from '@material-ui/core';
 
 import { titleCase } from '../helpers';
@@ -8,7 +8,10 @@ import { EADChart } from './charts/EADChart';
 export const EADChartSection: FC<{ eadData: any }> = ({ eadData }) => {
   // TODO enable hazard selection
   const selectedHazard = eadData.map((x) => x.hazardType)[0];
-  const selectedData = selectedHazard ? eadData.filter((x) => x.hazardType === selectedHazard) : null;
+  const selectedData = useMemo(
+    () => (selectedHazard ? eadData.filter((x) => x.hazardType === selectedHazard) : null),
+    [selectedHazard, eadData],
+  );
   return (
     <Box py={2}>
       <Typography variant="subtitle2">
@@ -21,7 +24,9 @@ export const EADChartSection: FC<{ eadData: any }> = ({ eadData }) => {
           }}
           actions={false}
           padding={0}
-          width={260}
+          width={260} // this is currently picked to fit the chart to the sidebar width
+          height={150}
+          renderer="svg"
         />
       ) : (
         <Typography variant="body2" color="textSecondary">
