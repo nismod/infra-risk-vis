@@ -1,33 +1,49 @@
 import { FC, useMemo } from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, MenuItem, Select, Typography } from '@material-ui/core';
 
-import { titleCase } from '../helpers';
+import { titleCase, unique } from '../helpers';
+import { useSelect } from '../hooks/use-select';
 
 import { EADChart } from './charts/EADChart';
 
-export const EADChartSection: FC<{ eadData: any }> = ({ eadData }) => {
-  // TODO enable hazard selection
-  const selectedHazard = eadData.map((x) => x.hazardType)[0];
+interface EADDataPoint {
+  hazardType: string;
+}
+export const EADChartSection: FC<{ eadData: EADDataPoint[] }> = ({ eadData }) => {
+  const hazards = useMemo(() => unique(eadData.map((d) => d.hazardType)), [eadData]);
+  const [selectedHazard, setSelectedHazard] = useSelect(hazards);
+
   const selectedData = useMemo(
     () => (selectedHazard ? eadData.filter((x) => x.hazardType === selectedHazard) : null),
     [selectedHazard, eadData],
   );
   return (
     <Box py={2}>
-      <Typography variant="subtitle2">
-        Expected Annual Damages (EAD) {selectedData && <>&ndash; {titleCase(selectedHazard)}</>}
-      </Typography>
+      <Box sx={{ justifyContent: 'space-between' }}>
+        <Typography variant="subtitle2">Expected Annual Damages (EAD)</Typography>
+        {hazards.length !== 0 && (
+          <Select value={selectedHazard ?? ''} onChange={(e) => setSelectedHazard(e.target.value as string)}>
+            {hazards.map((h) => (
+              <MenuItem key={h} value={h}>
+                {titleCase(h)}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      </Box>
       {selectedData ? (
-        <EADChart
-          data={{
-            table: selectedData,
-          }}
-          actions={false}
-          padding={0}
-          width={260} // this is currently picked to fit the chart to the sidebar width
-          height={150}
-          renderer="svg"
-        />
+        <Box mt={1}>
+          <EADChart
+            data={{
+              table: selectedData,
+            }}
+            actions={false}
+            padding={0}
+            width={260} // this is currently picked to fit the chart to the sidebar width
+            height={150}
+            renderer="svg"
+          />
+        </Box>
       ) : (
         <Typography variant="body2" color="textSecondary">
           No exposure direct damages estimated.
