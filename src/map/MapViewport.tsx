@@ -1,5 +1,6 @@
 import DeckGL from 'deck.gl';
-import { useMemo, useRef, useState } from 'react';
+import { easeCubic } from 'd3-ease';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AttributionControl,
   MapContext,
@@ -7,6 +8,7 @@ import {
   NavigationControl,
   ScaleControl,
   StaticMap,
+  FlyToInterpolator,
 } from 'react-map-gl';
 import _ from 'lodash';
 
@@ -26,8 +28,31 @@ function makeMapboxConfig(background: BackgroundName) {
   };
 }
 
-export const MapViewport = ({ layersFunction, background, onHover, onClick, pickingRadius, children }) => {
-  const [viewport, setViewport] = useState({
+interface ViewTarget {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
+
+interface MapViewportProps {
+  layersFunction: any;
+  background: BackgroundName;
+  onHover: any;
+  onClick: any;
+  pickingRadius: number;
+  viewTarget: ViewTarget;
+}
+
+export const MapViewport: FC<MapViewportProps> = ({
+  layersFunction,
+  background,
+  onHover,
+  onClick,
+  pickingRadius,
+  viewTarget,
+  children,
+}) => {
+  const [viewport, setViewport] = useState<any>({
     latitude: 18.14,
     longitude: -77.28,
     zoom: 8,
@@ -35,6 +60,18 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, pick
     maxZoom: 16,
     maxPitch: 0,
   });
+
+  useEffect(() => {
+    if (viewTarget != null) {
+      setViewport({
+        ...viewport,
+        ...viewTarget,
+        transitionDuration: 1500,
+        transitionInterpolator: new FlyToInterpolator(),
+        transitionEasing: easeCubic,
+      });
+    }
+  }, [viewTarget]);
 
   const deckRef = useRef<DeckGL<MapContextProps>>();
 

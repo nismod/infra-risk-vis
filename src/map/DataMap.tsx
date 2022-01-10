@@ -1,4 +1,3 @@
-import { MapboxGeoJSONFeature } from 'mapbox-gl';
 import { useCallback, useMemo, useState } from 'react';
 
 import { readPixelsToArray } from '@luma.gl/core';
@@ -11,8 +10,10 @@ import { TooltipContent } from './tooltip/TooltipContent';
 import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
 import { MapLegend } from './legend/MapLegend';
+import { MapSearch } from './search/MapSearch';
 import { LegendContent } from './legend/LegendContent';
 import { MapLayerSelection } from './MapLayerSelection';
+import { Box } from '@material-ui/core';
 
 export interface RasterHover {
   type: 'raster';
@@ -131,6 +132,8 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
 
   const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature);
 
+  const [searchTarget, setSearchTarget] = useState(null);
+
   return (
     <>
       <MapViewport
@@ -139,6 +142,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
         onHover={onHover}
         onClick={onClick}
         pickingRadius={pickingRadius}
+        viewTarget={searchTarget}
       >
         <MapTooltip tooltipXY={hoverXY}>
           {hoveredRasters.length || hoveredVectors.length ? (
@@ -146,11 +150,28 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
           ) : null}
         </MapTooltip>
       </MapViewport>
-      <MapLayerSelection background={background} onBackground={onBackground} />
+      <Box position="absolute" top={0} left={0} ml={3} m={1} zIndex={1000}>
+        <Box mt={1}>
+          <MapLayerSelection background={background} onBackground={onBackground} />
+        </Box>
+        <Box mt={1}>
+          <MapSearch
+            onPlaceSelect={({ latitude, longitude }) => {
+              setSearchTarget({
+                latitude,
+                longitude,
+                zoom: 12,
+              });
+            }}
+          />
+        </Box>
+      </Box>
+      <Box position="absolute" bottom={0} left={0} m={1} ml={3} zIndex={1000}>
+        <MapLegend>
+          <LegendContent deckLayersSpec={deckLayersSpec} styleParams={styleParams} />
+        </MapLegend>
+      </Box>
       {selectedFeature && <FeatureSidebar featureSelection={selectedFeature} />}
-      <MapLegend>
-        <LegendContent deckLayersSpec={deckLayersSpec} styleParams={styleParams} />
-      </MapLegend>
     </>
   );
 };

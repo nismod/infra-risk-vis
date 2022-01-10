@@ -18,24 +18,22 @@ export const MapLayerSelection = ({ background, onBackground }) => {
 
   // const currentConfig = config[background];
   return (
-    <Box position="absolute" top={0} left={0} ml={3} m={1} zIndex={1000}>
-      <ButtonGroup>
-        <Button
-          aria-label="Toggle map background"
-          onClick={() => onBackground(other)}
-          onMouseEnter={() => setShowHint(true)}
-          onMouseLeave={() => setShowHint(false)}
-          variant="contained"
-          style={{ paddingInline: 0, backgroundColor: 'white' }}
-        >
-          <LayersIcon />
+    <ButtonGroup>
+      <Button
+        aria-label="Toggle map background"
+        onClick={() => onBackground(other)}
+        onMouseEnter={() => setShowHint(true)}
+        onMouseLeave={() => setShowHint(false)}
+        variant="contained"
+        style={{ paddingInline: 0, backgroundColor: 'white' }}
+      >
+        <LayersIcon />
+      </Button>
+      {showHint && (
+        <Button variant="contained" color="default" style={{ textTransform: 'none' }}>
+          <Typography>Switch to {config[other].label} background</Typography>
         </Button>
-        {showHint && (
-          <Button variant="contained" color="default" style={{ textTransform: 'none' }}>
-            <Typography>Switch to {config[other].label} background</Typography>
-          </Button>
-        )}
-      </ButtonGroup>
-    </Box>
+      )}
+    </ButtonGroup>
   );
 };
