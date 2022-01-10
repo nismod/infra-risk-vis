@@ -25,12 +25,6 @@ function firstTrue(object) {
     .map(([key]) => key);
   return trueKeys[0];
 }
-const rcpLookup = {
-  '2x6': '2.6',
-  '4x5': '4.5',
-  '8x5': '8.5',
-  baseline: 'baseline',
-};
 
 export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [background, setBackground] = useState<BackgroundName>('light');
@@ -68,7 +62,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
     return {
       colorMap: {
         colorScheme: 'damages',
-        colorField: `${riskMapSelectedHazard}__rcp_${rcpLookup[rcp]}__epoch_${epoch}__conf_None`,
+        colorField: `${riskMapSelectedHazard}__rcp_${rcp}__epoch_${epoch}__conf_None`,
       },
     };
   }, [riskMapSelectedHazard, hazardParams]);

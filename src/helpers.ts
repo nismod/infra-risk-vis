@@ -23,7 +23,7 @@ export function numFormat(n: number) {
   return FORMATTER.format(n);
 }
 
-export function unique(arr) {
+export function unique<T>(arr: T[]) {
   return Array.from(new Set(arr));
 }
 
@@ -50,5 +50,5 @@ export function makeConfig<C, K extends string>(cfg: (C & { id: K })[]) {
 
 // see discussion at https://stackoverflow.com/questions/23437476/in-typescript-how-to-check-if-a-string-is-numeric
 export function isNumeric(val: any): boolean {
-  return !(val instanceof Array) && (val - parseFloat(val) + 1) >= 0;
+  return !(val instanceof Array) && val - parseFloat(val) + 1 >= 0;
 }
