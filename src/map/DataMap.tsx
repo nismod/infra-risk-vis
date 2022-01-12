@@ -14,6 +14,8 @@ import { MapSearch } from './search/MapSearch';
 import { LegendContent } from './legend/LegendContent';
 import { MapLayerSelection } from './MapLayerSelection';
 import { Box } from '@material-ui/core';
+import { placeSearchSelectedResultState } from './search/search-state';
+import { useRecoilValue } from 'recoil';
 
 export interface RasterHover {
   type: 'raster';
@@ -132,7 +134,16 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
 
   const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature);
 
-  const [searchTarget, setSearchTarget] = useState(null);
+  const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);
+  const searchTarget = useMemo(
+    () =>
+      selectedSearchResult && {
+        latitude: selectedSearchResult.latitude,
+        longitude: selectedSearchResult.longitude,
+        zoom: 12,
+      },
+    [selectedSearchResult],
+  );
 
   return (
     <>
@@ -155,15 +166,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
           <MapLayerSelection background={background} onBackground={onBackground} />
         </Box>
         <Box mt={1}>
-          <MapSearch
-            onPlaceSelect={({ latitude, longitude }) => {
-              setSearchTarget({
-                latitude,
-                longitude,
-                zoom: 12,
-              });
-            }}
-          />
+          <MapSearch />
         </Box>
       </Box>
       <Box position="absolute" bottom={0} left={0} m={1} ml={3} zIndex={1000}>
