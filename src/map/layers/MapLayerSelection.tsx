@@ -1,6 +1,9 @@
-import { Box, Button, ButtonGroup, Typography } from '@material-ui/core';
+import { Button, ButtonGroup, Typography } from '@material-ui/core';
 import { Layers as LayersIcon } from '@material-ui/icons';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+
+import { backgroundState } from './layers-state';
 
 const config = {
   satellite: {
@@ -11,7 +14,8 @@ const config = {
   },
 };
 
-export const MapLayerSelection = ({ background, onBackground }) => {
+export const MapLayerSelection = () => {
+  const [background, setBackground] = useRecoilState(backgroundState);
   const [showHint, setShowHint] = useState(false);
 
   const other = background === 'satellite' ? 'light' : 'satellite';
@@ -21,7 +25,7 @@ export const MapLayerSelection = ({ background, onBackground }) => {
     <ButtonGroup>
       <Button
         aria-label="Toggle map background"
-        onClick={() => onBackground(other)}
+        onClick={() => setBackground(other)}
         onMouseEnter={() => setShowHint(true)}
         onMouseLeave={() => setShowHint(false)}
         variant="contained"

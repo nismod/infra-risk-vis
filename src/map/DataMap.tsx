@@ -12,10 +12,11 @@ import { DECK_LAYERS } from '../config/deck-layers';
 import { MapLegend } from './legend/MapLegend';
 import { MapSearch } from './search/MapSearch';
 import { LegendContent } from './legend/LegendContent';
-import { MapLayerSelection } from './MapLayerSelection';
+import { MapLayerSelection } from './layers/MapLayerSelection';
 import { Box } from '@material-ui/core';
 import { placeSearchSelectedResultState } from './search/search-state';
 import { useRecoilValue } from 'recoil';
+import { backgroundState } from './layers/layers-state';
 
 export interface RasterHover {
   type: 'raster';
@@ -72,7 +73,8 @@ function processVectorHover(layerId, info): VectorHover {
 const pickingRadius = 8;
 const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
 
-export const DataMap = ({ background, view, layerSelection, styleParams, onBackground }) => {
+export const DataMap = ({ view, layerSelection, styleParams }) => {
+  const background = useRecoilValue(backgroundState);
   const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
   const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
@@ -155,10 +157,10 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
       </MapViewport>
       <Box position="absolute" top={0} left={0} ml={3} m={1} zIndex={1000}>
         <Box mt={1}>
-          <MapLayerSelection background={background} onBackground={onBackground} />
+          <MapSearch />
         </Box>
         <Box mt={1}>
-          <MapSearch />
+          <MapLayerSelection />
         </Box>
       </Box>
       <Box position="absolute" bottom={0} left={0} m={1} ml={3} zIndex={1000}>
