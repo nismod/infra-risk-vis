@@ -135,15 +135,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
   const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature);
 
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);
-  const searchTarget = useMemo(
-    () =>
-      selectedSearchResult && {
-        latitude: selectedSearchResult.latitude,
-        longitude: selectedSearchResult.longitude,
-        zoom: 12,
-      },
-    [selectedSearchResult],
-  );
+  const searchBounds = selectedSearchResult?.boundingBox;
 
   return (
     <>
@@ -153,7 +145,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
         onHover={onHover}
         onClick={onClick}
         pickingRadius={pickingRadius}
-        viewTarget={searchTarget}
+        targetBounds={searchBounds}
       >
         <MapTooltip tooltipXY={hoverXY}>
           {hoveredRasters.length || hoveredVectors.length ? (
