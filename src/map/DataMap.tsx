@@ -132,7 +132,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, true);
 
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);
   const searchBounds = selectedSearchResult?.boundingBox;
