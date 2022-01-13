@@ -9,9 +9,11 @@ import { MapPage } from './MapPage';
 import './index.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { ViewName } from './config/views';
+import { RecoilRoot } from 'recoil';
 
 export const App = () => {
   return (
+    <RecoilRoot>
     <Router>
       <CssBaseline />
       <Nav />
@@ -23,5 +25,6 @@ export const App = () => {
         <Route path="/:view(overview)" render={({ match: { params } }) => <MapPage view={params.view as ViewName} />} />
       </Switch>
     </Router>
+    </RecoilRoot>
   );
 };

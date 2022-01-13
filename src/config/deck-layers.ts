@@ -106,7 +106,7 @@ function border(color = [255, 255, 255]) {
 }
 
 export function selectionLayer(feature, zoom) {
-  return new GeoJsonLayer(
+  return new GeoJsonLayer<any>(
     {
       id: 'selection',
       data: [feature],

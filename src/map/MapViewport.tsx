@@ -1,5 +1,5 @@
 import DeckGL from 'deck.gl';
-import { useMemo, useRef, useState } from 'react';
+import { FC, useMemo, useRef, useState } from 'react';
 import {
   AttributionControl,
   MapContext,
@@ -11,6 +11,8 @@ import {
 import _ from 'lodash';
 
 import { backgroundConfig, BackgroundName } from '../config/backgrounds';
+import { BoundingBox } from './search/search-state';
+import { MapBoundsFitter } from './MapBoundsFitter';
 
 function visible(isVisible: boolean): 'visible' | 'none' {
   return isVisible ? 'visible' : 'none';
@@ -26,8 +28,25 @@ function makeMapboxConfig(background: BackgroundName) {
   };
 }
 
-export const MapViewport = ({ layersFunction, background, onHover, onClick, pickingRadius, children }) => {
-  const [viewport, setViewport] = useState({
+interface MapViewportProps {
+  layersFunction: any;
+  background: BackgroundName;
+  onHover: any;
+  onClick: any;
+  pickingRadius: number;
+  targetBounds: BoundingBox;
+}
+
+export const MapViewport: FC<MapViewportProps> = ({
+  layersFunction,
+  background,
+  onHover,
+  onClick,
+  pickingRadius,
+  targetBounds,
+  children,
+}) => {
+  const [viewState, setViewState] = useState<any>({
     latitude: 18.14,
     longitude: -77.28,
     zoom: 8,
@@ -38,7 +57,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, pick
 
   const deckRef = useRef<DeckGL<MapContextProps>>();
 
-  const zoom = viewport.zoom;
+  const zoom = viewState.zoom;
 
   const backgroundStyle = useMemo(() => makeMapboxConfig(background), [background]);
   const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom]);
@@ -51,8 +70,8 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, pick
       }}
       getCursor={() => 'default'}
       controller={true}
-      viewState={viewport}
-      onViewStateChange={({ viewState }) => setViewport(viewState)}
+      viewState={viewState}
+      onViewStateChange={({ viewState }) => setViewState(viewState)}
       layers={layers}
       layerFilter={({ layer, renderPass }) => {
         if (renderPass === 'picking:hover') {
@@ -66,6 +85,7 @@ export const MapViewport = ({ layersFunction, background, onHover, onClick, pick
       onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
       ContextProvider={MapContext.Provider}
     >
+      <MapBoundsFitter boundingBox={targetBounds} viewState={viewState} onViewState={setViewState} />
       <StaticMap mapStyle={backgroundStyle} attributionControl={false} />
       <AttributionControl
         customAttribution='Background map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>. Satellite imagery: <a href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020)'
