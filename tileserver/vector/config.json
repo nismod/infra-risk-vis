@@ -8,6 +8,12 @@
   },
   "styles": {},
   "data": {
+    "boundaries_parish": {
+      "mbtiles": "boundaries_parish.mbtiles"
+    },
+    "boundaries_community": {
+      "mbtiles": "boundaries_community.mbtiles"
+    },
     "airport_areas": {
       "mbtiles": "airport_areas.mbtiles"
     },

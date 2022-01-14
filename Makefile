@@ -8,21 +8,27 @@ endif
 current_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 
-.PHONY: all clean vector networks raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters
+.PHONY: all clean vector networks raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters boundaries boundaries-parish boundaries-community
 
 all: vector raster
 
 
-vector: ./tileserver/vector/data/boundaries.mbtiles networks
-
-./tileserver/vector/data/boundaries.mbtiles:
-	cp ./incoming_data/boundaries.mbtiles $@
+vector: networks boundaries
 
 networks:
 	"$(current_dir)/etl/vector/process_all.py" --raw "${RAW_DATA_DIR}" --out "$(current_dir)/tileserver/vector/data"
 
 clean-vector:
 	rm ./tileserver/data/*.mbtiles
+
+
+boundaries-parish:
+	"$(current_dir)/etl/vector/process_boundaries.sh" "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg" "$(current_dir)/tileserver/vector/data/boundaries_parish.mbtiles" parish admin1
+
+boundaries-community:
+	"$(current_dir)/etl/vector/process_boundaries.sh" "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg" "$(current_dir)/tileserver/vector/data/boundaries_community.mbtiles" community admin2
+
+boundaries: boundaries-parish boundaries-community
 
 
 RASTER_BASE_COMMAND = "$(current_dir)/etl/raster/process_all.py" --raw "${RAW_DATA_DIR}" --out "$(current_dir)/tileserver/raster/input"
