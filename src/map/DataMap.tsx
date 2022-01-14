@@ -16,7 +16,7 @@ import { MapLayerSelection } from './layers/MapLayerSelection';
 import { Box } from '@material-ui/core';
 import { placeSearchSelectedResultState } from './search/search-state';
 import { useRecoilValue } from 'recoil';
-import { backgroundState } from './layers/layers-state';
+import { backgroundState, showLabelsState } from './layers/layers-state';
 
 export interface RasterHover {
   type: 'raster';
@@ -75,6 +75,8 @@ const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
 
 export const DataMap = ({ view, layerSelection, styleParams }) => {
   const background = useRecoilValue(backgroundState);
+  const showLabels = useRecoilValue(showLabelsState);
+
   const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
   const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
@@ -134,7 +136,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, true);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels);
 
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);
   const searchBounds = selectedSearchResult?.boundingBox;

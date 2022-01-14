@@ -1,9 +1,9 @@
-import { Button, ButtonGroup, Typography } from '@material-ui/core';
+import { Box, Button, Checkbox, FormControlLabel, Paper, Typography } from '@material-ui/core';
 import { Layers as LayersIcon } from '@material-ui/icons';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { backgroundState } from './layers-state';
+import { backgroundState, showLabelsState } from './layers-state';
 
 const config = {
   satellite: {
@@ -15,29 +15,49 @@ const config = {
 };
 
 export const MapLayerSelection = () => {
+  const [showPopover, setShowPopover] = useState(false);
+
   const [background, setBackground] = useRecoilState(backgroundState);
-  const [showHint, setShowHint] = useState(false);
+  const [showLabels, setShowLabels] = useRecoilState(showLabelsState);
 
   const other = background === 'satellite' ? 'light' : 'satellite';
 
-  // const currentConfig = config[background];
+  const buttonStyle = showPopover ? { borderTopRightRadius: 0, borderBottomRightRadius: 0 } : {};
   return (
-    <ButtonGroup>
+    <Box
+      onMouseEnter={() => setShowPopover(true)}
+      onMouseLeave={() => setShowPopover(false)}
+      style={{ display: 'flex', pointerEvents: 'none' }}
+    >
       <Button
         aria-label="Toggle map background"
         onClick={() => setBackground(other)}
-        onMouseEnter={() => setShowHint(true)}
-        onMouseLeave={() => setShowHint(false)}
         variant="contained"
-        style={{ paddingInline: 0, backgroundColor: 'white' }}
+        style={{
+          paddingInline: 0,
+          backgroundColor: 'white',
+          minWidth: 'auto',
+          width: '40px',
+          height: '36px',
+          pointerEvents: 'auto',
+          ...buttonStyle,
+        }}
       >
         <LayersIcon />
       </Button>
-      {showHint && (
-        <Button variant="contained" color="default" style={{ textTransform: 'none' }}>
-          <Typography>Switch to {config[other].label} background</Typography>
-        </Button>
+      {showPopover && (
+        <Paper style={{ overflow: 'hidden', pointerEvents: 'auto', borderTopLeftRadius: 0 }}>
+          <Box px={2} py="6px" height={36} bgcolor="#ddd" display="flex">
+            <Typography>Switch to {config[other].label} background</Typography>
+          </Box>
+          <Box px={2}>
+            <FormControlLabel
+              label="Show labels"
+              control={<Checkbox checked={showLabels} onChange={(e, checked) => setShowLabels(checked)} />}
+            />
+          </Box>
+        </Paper>
       )}
-    </ButtonGroup>
+    </Box>
   );
 };
