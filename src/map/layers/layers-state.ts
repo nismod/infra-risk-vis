@@ -11,3 +11,8 @@ export const showLabelsState = atom<boolean>({
   key: 'showLabels',
   default: true,
 });
+
+export const showRegionsState = atom<boolean>({
+  key: 'showRegions',
+  default: false,
+});

@@ -3,7 +3,7 @@ import { Layers as LayersIcon } from '@material-ui/icons';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { backgroundState, showLabelsState } from './layers-state';
+import { backgroundState, showLabelsState, showRegionsState } from './layers-state';
 
 const config = {
   satellite: {
@@ -19,6 +19,7 @@ export const MapLayerSelection = () => {
 
   const [background, setBackground] = useRecoilState(backgroundState);
   const [showLabels, setShowLabels] = useRecoilState(showLabelsState);
+  const [showRegions, setShowRegions] = useRecoilState(showRegionsState);
 
   const other = background === 'satellite' ? 'light' : 'satellite';
 
@@ -51,10 +52,18 @@ export const MapLayerSelection = () => {
             <Typography>Switch to {config[other].label} background</Typography>
           </Box>
           <Box px={2}>
-            <FormControlLabel
-              label="Show labels"
-              control={<Checkbox checked={showLabels} onChange={(e, checked) => setShowLabels(checked)} />}
-            />
+            <Box>
+              <FormControlLabel
+                label="Show labels"
+                control={<Checkbox checked={showLabels} onChange={(e, checked) => setShowLabels(checked)} />}
+              />
+            </Box>
+            <Box>
+              <FormControlLabel
+                label="Show boundaries"
+                control={<Checkbox checked={showRegions} onChange={(e, checked) => setShowRegions(checked)} />}
+              />
+            </Box>
           </Box>
         </Paper>
       )}

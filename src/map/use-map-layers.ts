@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
-import { DECK_LAYERS, labelsLayer, selectionLayer } from '../config/deck-layers';
+import { boundariesLayer, DECK_LAYERS, labelsLayer, selectionLayer } from '../config/deck-layers';
 import { VectorHover } from './DataMap';
 
 /**
@@ -55,8 +55,14 @@ function getDeckLayers(
   styleParams: any,
   selectedFeature: VectorHover,
   showLabels: boolean,
+  showRegions: boolean,
 ) {
   const resLayers = [];
+
+  if (showRegions) {
+    resLayers.push(boundariesLayer('parish'));
+    resLayers.push(boundariesLayer('community'));
+  }
 
   for (const [deckLayerName, allParams] of Object.entries(deckLayersSpec)) {
     const deckLayerConfig = DECK_LAYERS[deckLayerName];
@@ -92,9 +98,9 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels) {
+export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions) {
   return useCallback(
-    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature, showLabels),
-    [deckLayersSpec, styleParams, selectedFeature, showLabels],
+    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature, showLabels, showRegions),
+    [deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions],
   );
 }
