@@ -90,6 +90,10 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
   const rasterLayerIds = useMemo(() => deckIds.filter((l: string) => l.match(rasterRegex)), [deckIds]);
   const vectorLayerIds = useMemo(() => deckIds.filter((l: string) => !l.match(rasterRegex)), [deckIds]);
 
+  // taken from Leaflet source: https://github.com/Leaflet/Leaflet/blob/ee71642691c2c71605bacff69456760cfbc80a2a/src/core/Browser.js#L119
+  var isRetina =
+    (window.devicePixelRatio || (window.screen as any).deviceXDPI / (window.screen as any).logicalXDPI) > 1;
+
   const onHover = useCallback(
     (info: any, deck: DeckGL) => {
       const { x, y } = info;
@@ -143,6 +147,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
     selectedFeature,
     showLabels,
     showRegions,
+    isRetina,
   );
 
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);

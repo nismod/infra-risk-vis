@@ -1,18 +1,10 @@
-import { Box, Button, Checkbox, FormControlLabel, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Checkbox, FormControlLabel, Paper } from '@material-ui/core';
 import { Layers as LayersIcon } from '@material-ui/icons';
-import { useState } from 'react';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { backgroundState, showLabelsState, showRegionsState } from './layers-state';
-
-const config = {
-  satellite: {
-    label: 'Satellite',
-  },
-  light: {
-    label: 'Map',
-  },
-};
 
 export const MapLayerSelection = () => {
   const [showPopover, setShowPopover] = useState(false);
@@ -23,6 +15,19 @@ export const MapLayerSelection = () => {
 
   const other = background === 'satellite' ? 'light' : 'satellite';
 
+  const handleBackground = useCallback(
+    (e, newBackground) => {
+      // when user presses the currently active option
+      if (newBackground == null) {
+        // toggle to the other option
+        setBackground(other);
+      } else {
+        setBackground(newBackground);
+      }
+    },
+    [setBackground, other],
+  );
+
   const buttonStyle = showPopover ? { borderTopRightRadius: 0, borderBottomRightRadius: 0 } : {};
   return (
     <Box
@@ -32,7 +37,6 @@ export const MapLayerSelection = () => {
     >
       <Button
         aria-label="Toggle map background"
-        onClick={() => setBackground(other)}
         variant="contained"
         style={{
           paddingInline: 0,
@@ -48,8 +52,11 @@ export const MapLayerSelection = () => {
       </Button>
       {showPopover && (
         <Paper style={{ overflow: 'hidden', pointerEvents: 'auto', borderTopLeftRadius: 0 }}>
-          <Box px={2} py="6px" height={36} bgcolor="#ddd" display="flex">
-            <Typography>Switch to {config[other].label} background</Typography>
+          <Box px={2} py="6px" height={36} display="flex" borderBottom="1px solid #ddd">
+            <ToggleButtonGroup exclusive color="primary" value={background} onChange={handleBackground}>
+              <ToggleButton value="light">Map</ToggleButton>
+              <ToggleButton value="satellite">Satellite</ToggleButton>
+            </ToggleButtonGroup>
           </Box>
           <Box px={2}>
             <Box>

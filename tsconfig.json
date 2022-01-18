@@ -20,7 +20,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": false,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "*",
+        "./node_modules/@danmarshall/deckgl-typings/*"
+      ]
+    }
   },
   "include": [
     "src/index.tsx"

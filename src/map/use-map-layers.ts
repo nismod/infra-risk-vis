@@ -56,6 +56,7 @@ function getDeckLayers(
   selectedFeature: VectorHover,
   showLabels: boolean,
   showRegions: boolean,
+  isRetina: boolean,
 ) {
   const resLayers = [];
 
@@ -88,7 +89,7 @@ function getDeckLayers(
   }
 
   if (showLabels) {
-    resLayers.push(labelsLayer(true));
+    resLayers.push(labelsLayer(isRetina));
   }
 
   return resLayers;
@@ -98,9 +99,9 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions) {
+export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions, isRetina) {
   return useCallback(
-    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature, showLabels, showRegions),
-    [deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions],
+    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature, showLabels, showRegions, isRetina),
+    [deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions, isRetina],
   );
 }

@@ -129,7 +129,7 @@ export function labelsLayer(isRetina: boolean) {
     },
     {
       id: 'labels',
-      tileSize: isRetina ? 512 : 256,
+      tileSize: 256,
       data: [
         `https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}${scale}.png`,
         `https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}${scale}.png`,
