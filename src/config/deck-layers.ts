@@ -152,7 +152,7 @@ export function boundariesLayer(level: 'parish' | 'community') {
       getLineWidth: level === 'parish' ? 2 : 1,
       lineWidthUnits: 'pixels',
     } as any,
-    border([190, 190, 190, 255]),
+    border([190, 190, 190, 255]) as any,
   );
 }
 
