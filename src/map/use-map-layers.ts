@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
-import { DECK_LAYERS, selectionLayer } from '../config/deck-layers';
+import { DECK_LAYERS, labelsLayer, selectionLayer } from '../config/deck-layers';
 import { VectorHover } from './DataMap';
 
 /**
@@ -54,6 +54,8 @@ function getDeckLayers(
   zoom: number,
   styleParams: any,
   selectedFeature: VectorHover,
+  showLabels: boolean,
+  isRetina: boolean,
 ) {
   const resLayers = [];
 
@@ -80,6 +82,10 @@ function getDeckLayers(
     resLayers.push(selectionLayer(feature, zoom));
   }
 
+  if (showLabels) {
+    resLayers.push(labelsLayer(isRetina));
+  }
+
   return resLayers;
 }
 
@@ -87,9 +93,9 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature) {
+export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, isRetina) {
   return useCallback(
-    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature),
-    [deckLayersSpec, styleParams, selectedFeature],
+    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature, showLabels, isRetina),
+    [deckLayersSpec, styleParams, selectedFeature, showLabels, isRetina],
   );
 }

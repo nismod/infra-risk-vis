@@ -12,10 +12,11 @@ import { DECK_LAYERS } from '../config/deck-layers';
 import { MapLegend } from './legend/MapLegend';
 import { MapSearch } from './search/MapSearch';
 import { LegendContent } from './legend/LegendContent';
-import { MapLayerSelection } from './MapLayerSelection';
+import { MapLayerSelection } from './layers/MapLayerSelection';
 import { Box } from '@material-ui/core';
 import { placeSearchSelectedResultState } from './search/search-state';
 import { useRecoilValue } from 'recoil';
+import { backgroundState, showLabelsState } from './layers/layers-state';
 
 export interface RasterHover {
   type: 'raster';
@@ -72,7 +73,10 @@ function processVectorHover(layerId, info): VectorHover {
 const pickingRadius = 8;
 const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
 
-export const DataMap = ({ background, view, layerSelection, styleParams, onBackground }) => {
+export const DataMap = ({ view, layerSelection, styleParams }) => {
+  const background = useRecoilValue(backgroundState);
+  const showLabels = useRecoilValue(showLabelsState);
+
   const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
   const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
@@ -84,6 +88,10 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
   const deckIds = useMemo(() => Object.keys(deckLayersSpec), [deckLayersSpec]);
   const rasterLayerIds = useMemo(() => deckIds.filter((l: string) => l.match(rasterRegex)), [deckIds]);
   const vectorLayerIds = useMemo(() => deckIds.filter((l: string) => !l.match(rasterRegex)), [deckIds]);
+
+  // taken from Leaflet source: https://github.com/Leaflet/Leaflet/blob/ee71642691c2c71605bacff69456760cfbc80a2a/src/core/Browser.js#L119
+  var isRetina =
+    (window.devicePixelRatio || (window.screen as any).deviceXDPI / (window.screen as any).logicalXDPI) > 1;
 
   const onHover = useCallback(
     (info: any, deck: DeckGL) => {
@@ -132,7 +140,7 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature);
+  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, isRetina);
 
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);
   const searchBounds = selectedSearchResult?.boundingBox;
@@ -155,10 +163,10 @@ export const DataMap = ({ background, view, layerSelection, styleParams, onBackg
       </MapViewport>
       <Box position="absolute" top={0} left={0} ml={3} m={1} zIndex={1000}>
         <Box mt={1}>
-          <MapLayerSelection background={background} onBackground={onBackground} />
+          <MapSearch />
         </Box>
         <Box mt={1}>
-          <MapSearch />
+          <MapLayerSelection />
         </Box>
       </Box>
       <Box position="absolute" bottom={0} left={0} m={1} ml={3} zIndex={1000}>

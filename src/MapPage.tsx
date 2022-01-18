@@ -7,7 +7,6 @@ import { DataMap } from './map/DataMap';
 import { NetworkControl } from './controls/NetworkControl';
 import { useLayerSelection } from './controls/use-layer-selection';
 import { ViewName, VIEWS } from './config/views';
-import { BackgroundName } from './config/backgrounds';
 import { LayerName } from './config/layers';
 import { HazardsControl } from './controls/HazardsControl';
 import { useNetworkSelection } from './controls/use-network-selection';
@@ -27,8 +26,6 @@ function firstTrue(object) {
 }
 
 export const MapPage: FC<MapViewProps> = ({ view }) => {
-  const [background, setBackground] = useState<BackgroundName>('light');
-
   const viewLayerNames = useMemo<LayerName[]>(() => VIEWS[view].layers as LayerName[], [view]);
   // const layerDefinitions = useMemo(
   //   () => viewLayerNames.map((layerName) => ({ ...LAYERS[layerName], key: layerName })),
@@ -114,13 +111,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
         </Box>
       </Drawer>
       <Box position="absolute" top={64} left={sidebarWidth} right={0} bottom={0}>
-        <DataMap
-          background={background}
-          onBackground={setBackground}
-          layerSelection={layerSelection}
-          styleParams={styleParams}
-          view={view}
-        />
+        <DataMap layerSelection={layerSelection} styleParams={styleParams} view={view} />
       </Box>
     </>
   );
