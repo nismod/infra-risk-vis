@@ -3,7 +3,11 @@ import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
-import { boundariesLayer, DECK_LAYERS, labelsLayer, selectionLayer } from '../config/deck-layers';
+import { DECK_LAYERS } from '../config/deck-layers';
+import { boundariesLayer } from '../config/deck-layers/boundaries-layer';
+import { selectionLayer } from '../config/deck-layers/selection-layer';
+import { labelsLayer } from '../config/deck-layers/labels-layer';
+
 import { VectorHover } from './DataMap';
 
 /**
