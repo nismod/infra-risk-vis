@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
 import { DECK_LAYERS } from '../config/deck-layers';
-import { boundariesLayer } from '../config/deck-layers/boundaries-layer';
+import { boundariesLayer, BoundaryLevel } from '../config/deck-layers/boundaries-layer';
 import { selectionLayer } from '../config/deck-layers/selection-layer';
 import { labelsLayer } from '../config/deck-layers/labels-layer';
 
@@ -59,14 +59,14 @@ function getDeckLayers(
   styleParams: any,
   selectedFeature: VectorHover,
   showLabels: boolean,
-  showRegions: boolean,
+  showBoundaries: boolean,
+  boundaryLevel: BoundaryLevel,
   isRetina: boolean,
 ) {
   const resLayers = [];
 
-  if (showRegions) {
-    resLayers.push(boundariesLayer('parish'));
-    resLayers.push(boundariesLayer('community'));
+  if (showBoundaries) {
+    resLayers.push(boundariesLayer(boundaryLevel));
   }
 
   for (const [deckLayerName, allParams] of Object.entries(deckLayersSpec)) {
@@ -103,9 +103,27 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions, isRetina) {
+export function useMapLayersFunction(
+  deckLayersSpec,
+  styleParams,
+  selectedFeature,
+  showLabels,
+  showBoundaries,
+  boundaryLevel,
+  isRetina,
+) {
   return useCallback(
-    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature, showLabels, showRegions, isRetina),
-    [deckLayersSpec, styleParams, selectedFeature, showLabels, showRegions, isRetina],
+    ({ zoom }) =>
+      getDeckLayers(
+        deckLayersSpec,
+        zoom,
+        styleParams,
+        selectedFeature,
+        showLabels,
+        showBoundaries,
+        boundaryLevel,
+        isRetina,
+      ),
+    [deckLayersSpec, styleParams, selectedFeature, showLabels, showBoundaries, boundaryLevel, isRetina],
   );
 }

@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { BoundaryLevel } from 'src/config/deck-layers/boundaries-layer';
 
 import { BackgroundName } from '../../config/backgrounds';
 
@@ -12,7 +13,12 @@ export const showLabelsState = atom<boolean>({
   default: true,
 });
 
-export const showRegionsState = atom<boolean>({
-  key: 'showRegions',
+export const showBoundariesState = atom<boolean>({
+  key: 'showBoundaries',
   default: false,
+});
+
+export const boundaryLevelState = atom<BoundaryLevel>({
+  key: 'boundaryLevel',
+  default: 'parish',
 });
