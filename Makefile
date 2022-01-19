@@ -8,10 +8,13 @@ endif
 current_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 
-.PHONY: all clean vector networks raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters boundaries boundaries-parish boundaries-community
+.PHONY: all clean vector networks raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters boundaries boundaries-parish boundaries-community boundaries-subdivision
 
 all: vector raster
 
+
+# ======
+# Networks vector data
 
 vector: networks boundaries
 
@@ -22,14 +25,27 @@ clean-vector:
 	rm ./tileserver/data/*.mbtiles
 
 
+# ======
+# Administrative boundaries
+
+BOUNDARY_COMMAND = "$(current_dir)/etl/vector/process_boundaries.sh"
+BOUNDARY_FILE = "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg"
+BOUNDARY_OUT_BASE_PATH = "$(current_dir)/tileserver/vector/data"
+
 boundaries-parish:
-	"$(current_dir)/etl/vector/process_boundaries.sh" "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg" "$(current_dir)/tileserver/vector/data/boundaries_parish.mbtiles" parish admin1
+	 "$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_parish.mbtiles" parish admin1
 
 boundaries-community:
-	"$(current_dir)/etl/vector/process_boundaries.sh" "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg" "$(current_dir)/tileserver/vector/data/boundaries_community.mbtiles" community admin2
+	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_community.mbtiles" community admin2
 
-boundaries: boundaries-parish boundaries-community
+boundaries-subdivision:
+	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_subdivision.mbtiles" community admin3
 
+boundaries: boundaries-parish boundaries-community boundaries-subdivision
+
+
+# ======
+# Hazard raster data
 
 RASTER_BASE_COMMAND = "$(current_dir)/etl/raster/process_all.py" --raw "${RAW_DATA_DIR}" --out "$(current_dir)/tileserver/raster/input"
 

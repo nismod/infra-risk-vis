@@ -14,6 +14,9 @@
     "boundaries_community": {
       "mbtiles": "boundaries_community.mbtiles"
     },
+    "boundaries_subdivision": {
+      "mbtiles": "boundaries_subdivision.mbtiles"
+    },
     "airport_areas": {
       "mbtiles": "airport_areas.mbtiles"
     },
