@@ -150,6 +150,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
     showBoundaries,
     boundaryLevel,
     isRetina,
+    background,
   );
 
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);

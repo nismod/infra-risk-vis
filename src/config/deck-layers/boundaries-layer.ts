@@ -1,30 +1,89 @@
 import { MVTLayer } from 'deck.gl';
+import { BackgroundName } from '../backgrounds';
 
 import { border } from './utils';
 
-export type BoundaryLevel = 'parish' | 'community' | 'subdivision';
+export type BoundaryLevel = 'parish' | 'community' | 'enumeration';
 
-function boundaryWidth(level: BoundaryLevel) {
-  if (level === 'parish') {
-    return 2.5;
-  } else if (level === 'community') {
-    return 1.5;
-  } else if (level === 'subdivision') {
-    return 1;
-  }
+interface BoundaryConfig {
+  fieldName: string;
+  minZoom: number;
+  showLabels: boolean;
 }
+
+const boundaryConfig: Record<BoundaryLevel, BoundaryConfig> = {
+  parish: {
+    fieldName: 'PARISH',
+    minZoom: 9,
+    showLabels: true,
+  },
+  community: {
+    fieldName: 'COMMUNITY',
+    minZoom: 13,
+    showLabels: false,
+  },
+  enumeration: {
+    fieldName: 'ED',
+    minZoom: 13,
+    showLabels: false,
+  },
+};
 
 export function boundariesLayer(level: BoundaryLevel) {
   return new MVTLayer(
     {
       id: `boundaries-${level}`,
       data: `/vector/data/boundaries_${level}.json`,
+      loadOptions: {
+        mvt: {
+          layers: ['polygons'],
+        },
+      },
       binary: true,
-      filled: false,
+      filled: true,
+      getFillColor: [255, 255, 255, 0],
+      // pickable: true,
+      autoHighlight: true,
+      highlightColor: [0, 255, 255],
+      stroked: true,
       refinementStrategy: 'best-available',
-      getLineWidth: boundaryWidth(level),
       lineWidthUnits: 'pixels',
     } as any,
-    border([190, 190, 190, 255]) as any,
+    border([150, 150, 150, 255]) as any,
+  );
+}
+
+export function boundaryLabelsLayer(level: BoundaryLevel, background: BackgroundName) {
+  const config = boundaryConfig[level];
+
+  const color = background === 'satellite' ? [240, 240, 240, 255] : [90, 90, 90, 255];
+  return (
+    config.showLabels &&
+    new MVTLayer({
+      id: `boundaries-${level}-text`,
+      data: `/vector/data/boundaries_${level}_labels.json`,
+      loadOptions: {
+        mvt: {
+          layers: ['labels'],
+        },
+      },
+      binary: false,
+      minZoom: config.minZoom,
+      pointType: 'text',
+      getText: (f) => f.properties[config.fieldName],
+      getTextSize: 24,
+      getTextColor: color,
+      textFontFamily: 'Arial',
+      textFontWeight: 'bold',
+
+      // won't work before deck.gl v8.7.0 is released (textFontSettings isn't mapped correctly)
+      // see https://github.com/visgl/deck.gl/pull/6336
+      //
+      // textOutlineColor: [255, 255, 255, 255],
+      // textOutlineWidth: 1,
+      // textFontSettings: {
+      //   sdf: true,
+      // },
+    } as any)
   );
 }

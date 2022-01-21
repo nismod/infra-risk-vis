@@ -8,7 +8,7 @@ endif
 current_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 
-.PHONY: all clean vector networks raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters boundaries boundaries-parish boundaries-community boundaries-subdivision
+.PHONY: all clean vector networks raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters boundaries boundaries-parish boundaries-community boundaries-enumeration
 
 all: vector raster
 
@@ -33,15 +33,15 @@ BOUNDARY_FILE = "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg"
 BOUNDARY_OUT_BASE_PATH = "$(current_dir)/tileserver/vector/data"
 
 boundaries-parish:
-	 "$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_parish.mbtiles" parish admin1
+	 "$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_parish.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_parish_labels.mbtiles" parish admin1
 
 boundaries-community:
-	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_community.mbtiles" community admin2
+	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_community.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_community_labels.mbtiles" community admin2
 
-boundaries-subdivision:
-	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_subdivision.mbtiles" community admin3
+boundaries-enumeration:
+	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_enumeration.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_enumeration_labels.mbtiles" community admin3
 
-boundaries: boundaries-parish boundaries-community boundaries-subdivision
+boundaries: boundaries-parish boundaries-community boundaries-enumeration
 
 
 # ======

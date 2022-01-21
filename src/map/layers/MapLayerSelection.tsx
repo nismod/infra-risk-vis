@@ -77,7 +77,7 @@ export const MapLayerSelection = () => {
               </Box>
               <Box>
                 <FormControlLabel
-                  label="Show boundaries"
+                  label="Show regions"
                   control={<Checkbox checked={showBoundaries} onChange={(e, checked) => setShowRegions(checked)} />}
                 />
                 {showBoundaries && (
@@ -85,7 +85,7 @@ export const MapLayerSelection = () => {
                     <RadioGroup value={boundaryLevel} onChange={handleBoundaryLevel}>
                       <FormControlLabel value="parish" label="Parishes" control={<Radio />} />
                       <FormControlLabel value="community" label="Communities" control={<Radio />} />
-                      <FormControlLabel value="subdivision" label="Subdivisions" control={<Radio />} />
+                      <FormControlLabel value="enumeration" label="Enumeration Districts" control={<Radio />} />
                     </RadioGroup>
                   </Box>
                 )}

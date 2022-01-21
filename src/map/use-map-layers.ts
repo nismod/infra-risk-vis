@@ -4,11 +4,12 @@ import _ from 'lodash';
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
 import { DECK_LAYERS } from '../config/deck-layers';
-import { boundariesLayer, BoundaryLevel } from '../config/deck-layers/boundaries-layer';
+import { boundariesLayer, boundaryLabelsLayer, BoundaryLevel } from '../config/deck-layers/boundaries-layer';
 import { selectionLayer } from '../config/deck-layers/selection-layer';
 import { labelsLayer } from '../config/deck-layers/labels-layer';
 
 import { VectorHover } from './DataMap';
+import { BackgroundName } from 'src/config/backgrounds';
 
 /**
  * get map style and layers definition based on:
@@ -62,6 +63,7 @@ function getDeckLayers(
   showBoundaries: boolean,
   boundaryLevel: BoundaryLevel,
   isRetina: boolean,
+  background: BackgroundName,
 ) {
   const resLayers = [];
 
@@ -94,6 +96,9 @@ function getDeckLayers(
 
   if (showLabels) {
     resLayers.push(labelsLayer(isRetina));
+    if (showBoundaries) {
+      resLayers.push(boundaryLabelsLayer(boundaryLevel, background));
+    }
   }
 
   return resLayers;
@@ -111,6 +116,7 @@ export function useMapLayersFunction(
   showBoundaries,
   boundaryLevel,
   isRetina,
+  background,
 ) {
   return useCallback(
     ({ zoom }) =>
@@ -123,7 +129,8 @@ export function useMapLayersFunction(
         showBoundaries,
         boundaryLevel,
         isRetina,
+        background,
       ),
-    [deckLayersSpec, styleParams, selectedFeature, showLabels, showBoundaries, boundaryLevel, isRetina],
+    [deckLayersSpec, styleParams, selectedFeature, showLabels, showBoundaries, boundaryLevel, isRetina, background],
   );
 }
