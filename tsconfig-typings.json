@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "./node_modules/@danmarshall/deckgl-typings/*",
+        "*"
+      ]
+    }
+  }
+}

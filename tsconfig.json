@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig-typings.json",
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -21,13 +22,6 @@
     "jsx": "react-jsx",
     "noImplicitAny": false,
     "downlevelIteration": true,
-    "baseUrl": "./",
-    "paths": {
-      "*": [
-        "*",
-        "./node_modules/@danmarshall/deckgl-typings/*"
-      ]
-    }
   },
   "include": [
     "src/index.tsx"
