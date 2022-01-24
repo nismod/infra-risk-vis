@@ -151,7 +151,6 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
         const layerId = pickedRegion.layer.id;
         newPickedRegion = processRegionHover(layerId, pickedRegion);
       }
-      console.log(newPickedRegion?.feature.properties);
 
       setHoveredVectors(newHoveredVectors);
       setHoveredRasters(newHoveredRasters);
