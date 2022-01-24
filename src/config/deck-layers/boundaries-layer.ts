@@ -11,7 +11,7 @@ interface BoundaryConfig {
   showLabels: boolean;
 }
 
-const boundaryConfig: Record<BoundaryLevel, BoundaryConfig> = {
+export const boundaryConfig: Record<BoundaryLevel, BoundaryConfig> = {
   parish: {
     fieldName: 'PARISH',
     minZoom: 9,
@@ -42,9 +42,7 @@ export function boundariesLayer(level: BoundaryLevel) {
       binary: true,
       filled: true,
       getFillColor: [255, 255, 255, 0],
-      // pickable: true,
-      autoHighlight: true,
-      highlightColor: [0, 255, 255],
+      pickable: true,
       stroked: true,
       refinementStrategy: 'best-available',
       lineWidthUnits: 'pixels',

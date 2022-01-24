@@ -1,15 +1,17 @@
 import { Box, Typography } from '@material-ui/core';
 import { FC } from 'react';
 
-import { RasterHover, VectorHover } from '../DataMap';
+import { RasterHover, RegionHover, VectorHover } from '../DataMap';
 
 import { VectorHoverDescription } from './content/VectorHoverDescription';
 import { RasterHoverDescription } from './content/RasterHoverDescription';
+import { RegionHoverDescription } from './content/RegionHoverDescription';
 
 export const TooltipContent: FC<{
   hoveredVectors: VectorHover[];
   hoveredRasters: RasterHover[];
-}> = ({ hoveredVectors, hoveredRasters }) => {
+  hoveredRegion: RegionHover;
+}> = ({ hoveredVectors, hoveredRasters, hoveredRegion }) => {
   return (
     <>
       {hoveredVectors.length ? (
@@ -26,6 +28,11 @@ export const TooltipContent: FC<{
           {hoveredRasters.map((hr) => (
             <RasterHoverDescription hoveredObject={hr} key={`${hr.deckLayer}-${hr.color}`} />
           ))}
+        </Box>
+      ) : null}
+      {(hoveredRasters.length || hoveredVectors.length) && hoveredRegion ? (
+        <Box>
+          <RegionHoverDescription hoveredObject={hoveredRegion} />
         </Box>
       ) : null}
     </>
