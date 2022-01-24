@@ -3,8 +3,13 @@ import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
-import { DECK_LAYERS, labelsLayer, selectionLayer } from '../config/deck-layers';
+import { DECK_LAYERS } from '../config/deck-layers';
+import { boundariesLayer, boundaryLabelsLayer, BoundaryLevel } from '../config/deck-layers/boundaries-layer';
+import { selectionLayer } from '../config/deck-layers/selection-layer';
+import { labelsLayer } from '../config/deck-layers/labels-layer';
+
 import { VectorHover } from './DataMap';
+import { BackgroundName } from 'src/config/backgrounds';
 
 /**
  * get map style and layers definition based on:
@@ -55,9 +60,16 @@ function getDeckLayers(
   styleParams: any,
   selectedFeature: VectorHover,
   showLabels: boolean,
+  showBoundaries: boolean,
+  boundaryLevel: BoundaryLevel,
   isRetina: boolean,
+  background: BackgroundName,
 ) {
   const resLayers = [];
+
+  if (showBoundaries) {
+    resLayers.push(boundariesLayer(boundaryLevel));
+  }
 
   for (const [deckLayerName, allParams] of Object.entries(deckLayersSpec)) {
     const deckLayerConfig = DECK_LAYERS[deckLayerName];
@@ -84,6 +96,9 @@ function getDeckLayers(
 
   if (showLabels) {
     resLayers.push(labelsLayer(isRetina));
+    if (showBoundaries) {
+      resLayers.push(boundaryLabelsLayer(boundaryLevel, background));
+    }
   }
 
   return resLayers;
@@ -93,9 +108,29 @@ export function useDeckLayersSpec(dataLayerSelection, view) {
   return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
-export function useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, isRetina) {
+export function useMapLayersFunction(
+  deckLayersSpec,
+  styleParams,
+  selectedFeature,
+  showLabels,
+  showBoundaries,
+  boundaryLevel,
+  isRetina,
+  background,
+) {
   return useCallback(
-    ({ zoom }) => getDeckLayers(deckLayersSpec, zoom, styleParams, selectedFeature, showLabels, isRetina),
-    [deckLayersSpec, styleParams, selectedFeature, showLabels, isRetina],
+    ({ zoom }) =>
+      getDeckLayers(
+        deckLayersSpec,
+        zoom,
+        styleParams,
+        selectedFeature,
+        showLabels,
+        showBoundaries,
+        boundaryLevel,
+        isRetina,
+        background,
+      ),
+    [deckLayersSpec, styleParams, selectedFeature, showLabels, showBoundaries, boundaryLevel, isRetina, background],
   );
 }

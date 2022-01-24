@@ -75,8 +75,8 @@ export const MapViewport: FC<MapViewportProps> = ({
       layers={layers}
       layerFilter={({ layer, renderPass }) => {
         if (renderPass === 'picking:hover') {
-          // don't render raster layers on hover picking pass (but render them for manual picking)
-          if (layer.id.match(/^(coastal|fluvial|surface|cyclone)/)) return false;
+          // don't render raster and region layers on hover picking pass (but render them for manual picking)
+          if (layer.id.match(/^(coastal|fluvial|surface|cyclone|boundaries)/)) return false;
         }
         return true;
       }}

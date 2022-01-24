@@ -15,8 +15,9 @@ import { LegendContent } from './legend/LegendContent';
 import { MapLayerSelection } from './layers/MapLayerSelection';
 import { Box } from '@material-ui/core';
 import { placeSearchSelectedResultState } from './search/search-state';
-import { useRecoilValue } from 'recoil';
-import { backgroundState, showLabelsState } from './layers/layers-state';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers/layers-state';
+import { regionHoverState } from './hover/hover-state';
 
 export interface RasterHover {
   type: 'raster';
@@ -32,6 +33,12 @@ export interface VectorHover {
   logicalLayer: string;
   feature: any;
   info: any;
+}
+
+export interface RegionHover {
+  type: 'region';
+  deckLayer: string;
+  feature: any;
 }
 
 export type HoveredObject = VectorHover | RasterHover;
@@ -70,15 +77,29 @@ function processVectorHover(layerId, info): VectorHover {
   };
 }
 
+function processRegionHover(layerId, info): RegionHover {
+  const { object } = info;
+
+  return {
+    type: 'region',
+    deckLayer: layerId,
+    feature: object,
+  };
+}
+
 const pickingRadius = 8;
 const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
+const boundaryLayerIds = ['boundaries-parish', 'boundaries-community', 'boundaries-enumeration'];
 
 export const DataMap = ({ view, layerSelection, styleParams }) => {
   const background = useRecoilValue(backgroundState);
   const showLabels = useRecoilValue(showLabelsState);
+  const showBoundaries = useRecoilValue(showBoundariesState);
+  const boundaryLevel = useRecoilValue(boundaryLevelState);
 
   const [hoveredVectors, setHoveredVectors] = useState<VectorHover[]>([]);
   const [hoveredRasters, setHoveredRasters] = useState<RasterHover[]>([]);
+  const [hoveredRegion, setHoveredRegion] = useRecoilState(regionHoverState);
   const [hoverXY, setHoverXY] = useState<[number, number]>(null);
 
   const [selectedFeature, setSelectedFeature] = useState<VectorHover>(null);
@@ -99,6 +120,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
 
       const newHoveredVectors: VectorHover[] = [];
       const newHoveredRasters: RasterHover[] = [];
+      let newPickedRegion: RegionHover = null;
 
       const pickedVectorInfo = deck.pickObject({ x, y, layerIds: vectorLayerIds, radius: pickingRadius });
 
@@ -119,8 +141,20 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
           // it's not expected to get any non-raster layers here
         }
       }
+
+      const pickedRegion = deck.pickObject({
+        x,
+        y,
+        layerIds: boundaryLayerIds,
+      });
+      if (pickedRegion) {
+        const layerId = pickedRegion.layer.id;
+        newPickedRegion = processRegionHover(layerId, pickedRegion);
+      }
+
       setHoveredVectors(newHoveredVectors);
       setHoveredRasters(newHoveredRasters);
+      setHoveredRegion(newPickedRegion);
       setHoverXY([x, y]);
     },
     [rasterLayerIds, vectorLayerIds],
@@ -140,7 +174,16 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
     [vectorLayerIds],
   );
 
-  const deckLayersFunction = useMapLayersFunction(deckLayersSpec, styleParams, selectedFeature, showLabels, isRetina);
+  const deckLayersFunction = useMapLayersFunction(
+    deckLayersSpec,
+    styleParams,
+    selectedFeature,
+    showLabels,
+    showBoundaries,
+    boundaryLevel,
+    isRetina,
+    background,
+  );
 
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);
   const searchBounds = selectedSearchResult?.boundingBox;
@@ -157,7 +200,11 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
       >
         <MapTooltip tooltipXY={hoverXY}>
           {hoveredRasters.length || hoveredVectors.length ? (
-            <TooltipContent hoveredVectors={hoveredVectors} hoveredRasters={hoveredRasters} />
+            <TooltipContent
+              hoveredVectors={hoveredVectors}
+              hoveredRasters={hoveredRasters}
+              hoveredRegion={hoveredRegion}
+            />
           ) : null}
         </MapTooltip>
       </MapViewport>

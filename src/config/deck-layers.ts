@@ -1,31 +1,9 @@
-import { MVTLayer, TileLayer, BitmapLayer, GeoJsonLayer } from 'deck.gl';
-import GL from '@luma.gl/constants';
-import { rgb } from 'd3-color';
-import * as d3 from 'd3-scale';
+import { makeConfig } from '../helpers';
 
 import { COLORS } from './colors';
-import { colorCssToRgb, makeConfig } from '../helpers';
-import { getHazardId } from './layers';
-import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from './color-maps';
-
-const lineStyle = (zoom) => ({
-  getLineWidth: 15,
-  lineWidthUnit: 'meters',
-  lineWidthMinPixels: 1,
-  lineWidthMaxPixels: 5,
-  lineJointRounded: true,
-  lineCapRounded: true,
-
-  // widthScale: 2 ** (15 - zoom),
-});
-
-const pointRadius = (zoom) => ({
-  getPointRadius: 20,
-  pointRadiusUnit: 'meters',
-  pointRadiusMinPixels: 3,
-  pointRadiusMaxPixels: 10,
-  // radiusScale: 2 ** (15 - zoom),
-});
+import { border, lineStyle, pointRadius, vectorColor } from './deck-layers/utils';
+import { hazardDeckLayer } from './deck-layers/hazard-layer';
+import { infrastructureLayer } from './deck-layers/infrastructure-layer';
 
 enum RoadClass {
   class_a = 'class_a',
@@ -53,93 +31,6 @@ const roadColor = {
   [RoadClass.track]: COLORS.roads_unknown.deck,
   [RoadClass.other]: COLORS.roads_unknown.deck,
 };
-
-function infrastructureLayer(...props) {
-  return new MVTLayer(
-    {
-      binary: true,
-      autoHighlight: true,
-      highlightColor: [0, 255, 255, 255],
-      refinementStrategy: 'best-available',
-    } as any,
-    ...props,
-  );
-}
-
-interface ColorMapDefinition {
-  colorScheme: string;
-  colorField: string;
-}
-
-// function lineColor(colorMapFn) {
-
-// }
-
-// function pointColor(colorMapFn) {
-
-// }
-function makeColorMap(definition: ColorMapDefinition) {
-  const { colorScheme, colorField } = definition;
-  const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
-
-  const scaleFn = d3.scaleSequential(range, scale);
-
-  return (f) => {
-    const value = f.properties[colorField];
-    return colorCssToRgb(value == null || value === 0 ? empty : scaleFn(value));
-  };
-}
-
-function vectorColor(type: 'fill' | 'stroke', defaultValue, styleParams) {
-  const prop = styleParams?.colorMap ? makeColorMap(styleParams.colorMap) : defaultValue;
-
-  if (type === 'fill') return { getFillColor: prop, updateTriggers: { getFillColor: [styleParams] } };
-  else if (type === 'stroke') return { getLineColor: prop, updateTriggers: { getLineColor: [styleParams] } };
-}
-
-function border(color = [255, 255, 255]) {
-  return {
-    stroked: true,
-    getLineColor: color,
-    lineWidthMinPixels: 1,
-  };
-}
-
-export function selectionLayer(feature, zoom) {
-  return new GeoJsonLayer<any>(
-    {
-      id: 'selection',
-      data: [feature],
-      getFillColor: [0, 255, 255],
-      getLineColor: [0, 255, 255],
-      pickable: false,
-    },
-    lineStyle(zoom),
-    pointRadius(zoom),
-  );
-}
-
-export function labelsLayer(isRetina: boolean) {
-  const scale = isRetina ? '@2x' : '';
-
-  return rasterTileLayer(
-    {
-      [GL.TEXTURE_MAG_FILTER]: GL.NEAREST,
-      transparentColor: [255, 255, 255, 0],
-    },
-    {
-      id: 'labels',
-      tileSize: 256,
-      data: [
-        `https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}${scale}.png`,
-        `https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}${scale}.png`,
-        `https://c.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}${scale}.png`,
-        `https://d.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}${scale}.png`,
-      ],
-      refinementStrategy: 'no-overlap',
-    },
-  );
-}
 
 export const DECK_LAYERS = makeConfig<any, string>([
   {
@@ -875,59 +766,3 @@ export const DECK_LAYERS = makeConfig<any, string>([
   hazardDeckLayer('cyclone', 10000, 'baseline', 2010, 50),
   hazardDeckLayer('cyclone', 10000, 'baseline', 2010, 95),
 ]);
-
-function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
-  const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence }); //`hazard_${hazardType}_${returnPeriod}`;
-
-  const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;
-  const refinementStrategy = hazardType === 'cyclone' ? 'best-available' : 'no-overlap';
-
-  const sanitisedRcp = rcp.replace('.', 'x');
-
-  return {
-    id,
-    spatialType: 'raster',
-    dataParams: { hazardType, returnPeriod, rcp, epoch, confidence },
-    fn: ({ props, zoom, params: { hazardType, returnPeriod, rcp, epoch, confidence } }) => {
-      const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
-
-      return rasterTileLayer(
-        {
-          textureParameters: {
-            [GL.TEXTURE_MAG_FILTER]: magFilter,
-            // [GL.TEXTURE_MAG_FILTER]: zoom < 12 ? GL.NEAREST : GL.NEAREST_MIPMAP_LINEAR,
-          },
-        },
-        props,
-        {
-          id,
-          data: `/raster/singleband/${hazardType}/${returnPeriod}/${sanitisedRcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
-          refinementStrategy,
-        },
-      );
-    },
-  };
-}
-
-function getBoundsForTile(tileProps) {
-  const {
-    bbox: { west, south, east, north },
-  } = tileProps;
-
-  return [west, south, east, north];
-}
-
-function rasterTileLayer(bitmapProps, ...props) {
-  return new TileLayer(...props, {
-    renderSubLayers: (tileProps) =>
-      new BitmapLayer(
-        tileProps,
-        {
-          data: null,
-          image: tileProps.data,
-          bounds: getBoundsForTile(tileProps.tile),
-        },
-        bitmapProps,
-      ),
-  });
-}
