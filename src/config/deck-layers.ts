@@ -203,7 +203,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
           data: '/vector/data/water_potable_edges.json',
         },
         lineStyle(zoom),
-        vectorColor('stroke', COLORS.water_edges.deck, styleParams),
+        vectorColor('stroke', COLORS.water_supply.deck, styleParams),
       ),
   },
   {
@@ -218,7 +218,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
         },
         border(),
         pointRadius(zoom),
-        vectorColor('fill', COLORS.water_abstraction.deck, styleParams),
+        vectorColor('fill', COLORS.water_supply.deck, styleParams),
       ),
   },
   {
@@ -232,7 +232,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
           data: '/vector/data/water_irrigation_edges.json',
         },
         lineStyle(zoom),
-        vectorColor('stroke', COLORS.water_edges.deck, styleParams),
+        vectorColor('stroke', COLORS.water_irrigation.deck, styleParams),
       ),
   },
   {
@@ -247,7 +247,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
         },
         border(),
         pointRadius(zoom),
-        vectorColor('fill', COLORS.water_abstraction.deck, styleParams),
+        vectorColor('fill', COLORS.water_irrigation.deck, styleParams),
       ),
   },
   {
@@ -262,7 +262,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
         },
         lineStyle(zoom),
 
-        vectorColor('stroke', COLORS.water_edges.deck, styleParams),
+        vectorColor('stroke', COLORS.water_wastewater.deck, styleParams),
       ),
   },
   {
@@ -277,7 +277,7 @@ export const DECK_LAYERS = makeConfig<any, string>([
         },
         border(),
         pointRadius(zoom),
-        vectorColor('fill', COLORS.water_abstraction.deck, styleParams),
+        vectorColor('fill', COLORS.water_wastewater.deck, styleParams),
       ),
   },
 
