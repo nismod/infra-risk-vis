@@ -10,6 +10,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
+  Radio,
   Select,
   Switch,
   Typography,
@@ -26,14 +27,26 @@ function epochLabel(value) {
   return value;
 }
 
-const HazardSection = ({ show, onShow, label, children }) => (
-  <Accordion expanded={show} onChange={onShow}>
-    <AccordionSummary>
-      <Typography>{label}</Typography>
-    </AccordionSummary>
-    <AccordionDetails style={{ display: 'block' }}>{children}</AccordionDetails>
-  </Accordion>
-);
+const HazardSection = ({ show, onShow, label, forceSingle, children }) => {
+  return (
+    <Accordion expanded={show} onChange={onShow}>
+      <AccordionSummary>
+        <FormControlLabel
+          control={
+            forceSingle ? <Radio checked={show} onChange={onShow} /> : <Checkbox checked={show} onChange={onShow} />
+          }
+          label={label}
+          onClick={
+            // clicking on checkbox label shouldn't also trigger accordion change because then nothing happens
+            (e) => e.preventDefault()
+          }
+        />
+      </AccordionSummary>
+      <AccordionDetails style={{ display: 'block' }}>{children}</AccordionDetails>
+    </Accordion>
+  );
+};
+
 const InputSection = ({ children }) => (
   <Box mb={2} flexGrow={1} width="100%">
     {children}
@@ -49,6 +62,7 @@ export const HazardsControl = ({
   showDamages,
   showDamageRaster,
   onShowDamageRaster,
+  forceSingle,
 }) => {
   const handleChange = (hazardType) => (e, isExpanded) => {
     onSingleHazardShow(hazardType, isExpanded);
@@ -74,7 +88,12 @@ export const HazardsControl = ({
           )}
         </Grid>
       </Box>
-      <HazardSection show={hazardShow.fluvial} onShow={handleChange('fluvial')} label="River Flooding">
+      <HazardSection
+        show={hazardShow.fluvial}
+        onShow={handleChange('fluvial')}
+        label="River Flooding"
+        forceSingle={forceSingle}
+      >
         <FormControl disabled={!hazardShow.fluvial} fullWidth>
           <FormLabel>Return Period</FormLabel>
           <CustomNumberSlider
@@ -85,7 +104,12 @@ export const HazardsControl = ({
           />
         </FormControl>
       </HazardSection>
-      <HazardSection show={hazardShow.surface} onShow={handleChange('surface')} label="Surface Flooding">
+      <HazardSection
+        show={hazardShow.surface}
+        onShow={handleChange('surface')}
+        label="Surface Flooding"
+        forceSingle={forceSingle}
+      >
         <FormControl disabled={!hazardShow.surface} fullWidth>
           <FormLabel>Return Period</FormLabel>
           <CustomNumberSlider
@@ -96,7 +120,12 @@ export const HazardsControl = ({
           />
         </FormControl>
       </HazardSection>
-      <HazardSection show={hazardShow.coastal} onShow={handleChange('coastal')} label="Coastal Flooding">
+      <HazardSection
+        show={hazardShow.coastal}
+        onShow={handleChange('coastal')}
+        label="Coastal Flooding"
+        forceSingle={forceSingle}
+      >
         <InputSection>
           <FormControl disabled={!hazardShow.coastal} component="fieldset" fullWidth>
             <FormLabel>Return Period</FormLabel>
@@ -133,7 +162,12 @@ export const HazardsControl = ({
           </FormControl>
         </InputSection>
       </HazardSection>
-      <HazardSection show={hazardShow.cyclone} onShow={handleChange('cyclone')} label="Cyclones">
+      <HazardSection
+        show={hazardShow.cyclone}
+        onShow={handleChange('cyclone')}
+        label="Cyclones"
+        forceSingle={forceSingle}
+      >
         <InputSection>
           <FormControl disabled={!hazardShow.cyclone} component="fieldset" fullWidth>
             <FormLabel>Return Period</FormLabel>

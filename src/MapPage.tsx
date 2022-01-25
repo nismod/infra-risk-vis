@@ -37,6 +37,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [showDamageRaster, setShowDamageRaster] = useState(true);
 
   const { networkSelection, setNetworkSelection, networkVisibilitySet } = useNetworkSelection();
+  const forceSingleHazard = showDamages;
   const {
     hazardSelection,
     hazardOptions,
@@ -44,7 +45,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
     setSingleHazardParam,
     setSingleHazardShow,
     hazardVisibilitySet,
-  } = useHazardSelection(showDamages, showDamages && !showDamageRaster);
+  } = useHazardSelection(forceSingleHazard, forceSingleHazard && !showDamageRaster);
 
   const riskMapSelectedHazard = useMemo(
     () => (showDamages ? firstTrue(hazardSelection) : null),
@@ -105,6 +106,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
                 showDamages={showDamages}
                 showDamageRaster={showDamageRaster}
                 onShowDamageRaster={setShowDamageRaster}
+                forceSingle={forceSingleHazard}
               />
             </>
           )}
