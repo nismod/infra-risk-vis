@@ -20,6 +20,7 @@ export function labelsLayer(isRetina: boolean) {
         `https://d.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}${scale}.png`,
       ],
       refinementStrategy: 'no-overlap',
+      getPolygonOffset: ({ layerIndex }) => [0, -layerIndex * 100 - 2000],
     },
   );
 }

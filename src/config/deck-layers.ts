@@ -36,8 +36,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'elec_edges_high',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/elec_edges_high.json',
@@ -49,8 +50,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'elec_edges_low',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/elec_edges_low.json',
@@ -62,8 +64,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'elec_nodes_source',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/elec_nodes_source.json',
@@ -76,8 +79,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'elec_nodes_sink',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/elec_nodes_sink.json',
@@ -90,8 +94,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'elec_nodes_junction',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/elec_nodes_junction.json',
@@ -104,8 +109,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'rail_edges',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/rail_edges.json',
@@ -117,8 +123,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'rail_nodes',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/rail_nodes.json',
@@ -131,8 +138,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'road_edges',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/road_edges.json',
@@ -144,8 +152,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'road_bridges',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/road_bridges.json',
@@ -158,8 +167,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'airport_areas',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/airport_areas.json',
@@ -171,8 +181,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'port_areas',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/port_areas.json',
@@ -184,8 +195,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'water_potable_edges',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/water_potable_edges.json',
@@ -197,8 +209,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'water_potable_nodes',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/water_potable_nodes.json',
@@ -211,8 +224,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'water_irrigation_edges',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/water_irrigation_edges.json',
@@ -224,8 +238,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'water_irrigation_nodes',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/water_irrigation_nodes.json',
@@ -238,8 +253,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'water_waste_edges',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/water_waste_edges.json',
@@ -252,8 +268,9 @@ export const DECK_LAYERS = makeConfig<any, string>([
   {
     id: 'water_waste_nodes',
     spatialType: 'vector',
-    fn: ({ props, zoom, styleParams }) =>
+    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
+        { selectedFeatureId },
         props,
         {
           data: '/vector/data/water_waste_nodes.json',

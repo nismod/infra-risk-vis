@@ -5,7 +5,6 @@ import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
 import { DECK_LAYERS } from '../config/deck-layers';
 import { boundariesLayer, boundaryLabelsLayer, BoundaryLevel } from '../config/deck-layers/boundaries-layer';
-import { selectionLayer } from '../config/deck-layers/selection-layer';
 import { labelsLayer } from '../config/deck-layers/labels-layer';
 
 import { VectorHover } from './DataMap';
@@ -83,15 +82,14 @@ function getDeckLayers(
       maxZoom: 20,
     };
 
-    if (anyVisible) {
-      resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, styleParams }));
+    let selectedFeatureId;
+    if (selectedFeature?.deckLayer === deckLayerName) {
+      selectedFeatureId = selectedFeature.feature.id;
     }
-  }
 
-  if (selectedFeature) {
-    const { feature } = selectedFeature;
-
-    resLayers.push(selectionLayer(feature, zoom));
+    if (anyVisible) {
+      resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, styleParams, selectedFeatureId }));
+    }
   }
 
   if (showLabels) {
