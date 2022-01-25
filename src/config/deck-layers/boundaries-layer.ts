@@ -73,6 +73,7 @@ export function boundaryLabelsLayer(level: BoundaryLevel, background: Background
       getTextColor: color,
       textFontFamily: 'Arial',
       textFontWeight: 'bold',
+      getPolygonOffset: ({ layerIndex }) => [0, -layerIndex * 100 - 2000],
 
       // won't work before deck.gl v8.7.0 is released (textFontSettings isn't mapped correctly)
       // see https://github.com/visgl/deck.gl/pull/6336
