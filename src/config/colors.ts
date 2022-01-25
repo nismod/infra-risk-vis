@@ -23,6 +23,7 @@ export const COLORS = makeColorConfig({
   airports: '#ccc',
   ports: '#000',
 
-  water_edges: '#314386',
-  water_abstraction: '#4d49bc',
+  water_supply: '#83B4FF',
+  water_irrigation: '#0091C1',
+  water_wastewater: '#4d49bc',
 });
