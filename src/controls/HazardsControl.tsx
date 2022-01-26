@@ -145,7 +145,9 @@ export const HazardsControl = ({
               onChange={(e) => onSingleHazardParam('coastal', 'epoch', e.target.value)}
             >
               {hazardOptions.coastal.epoch.map((epoch) => (
-                <MenuItem value={epoch}>{epochLabel(epoch)}</MenuItem>
+                <MenuItem key={epoch} value={epoch}>
+                  {epochLabel(epoch)}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -156,7 +158,9 @@ export const HazardsControl = ({
               onChange={(e) => onSingleHazardParam('coastal', 'rcp', e.target.value)}
             >
               {hazardOptions.coastal.rcp.map((rcp) => (
-                <MenuItem value={rcp}>{rcpLabel(rcp)}</MenuItem>
+                <MenuItem key={rcp} value={rcp}>
+                  {rcpLabel(rcp)}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -189,7 +193,9 @@ export const HazardsControl = ({
               onChange={(e) => onSingleHazardParam('cyclone', 'epoch', e.target.value)}
             >
               {hazardOptions.cyclone.epoch.map((epoch) => (
-                <MenuItem value={epoch}>{epochLabel(epoch)}</MenuItem>
+                <MenuItem key={epoch} value={epoch}>
+                  {epochLabel(epoch)}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -200,7 +206,9 @@ export const HazardsControl = ({
               onChange={(e) => onSingleHazardParam('cyclone', 'rcp', e.target.value)}
             >
               {hazardOptions.cyclone.rcp.map((rcp) => (
-                <MenuItem value={rcp}>{rcpLabel(rcp)}</MenuItem>
+                <MenuItem key={rcp} value={rcp}>
+                  {rcpLabel(rcp)}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
