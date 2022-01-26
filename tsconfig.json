@@ -21,7 +21,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "noImplicitAny": false,
-    "downlevelIteration": true,
+    "downlevelIteration": true
   },
   "include": [
     "src/index.tsx"
