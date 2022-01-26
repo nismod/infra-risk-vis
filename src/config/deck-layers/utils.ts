@@ -1,5 +1,5 @@
 import * as d3 from 'd3-scale';
-import { colorCssToRgb } from 'src/helpers';
+import { colorCssToRgb } from '../../helpers';
 import { VECTOR_COLOR_MAPS } from '../color-maps';
 
 export const mergeUpdateTriggers = (...propsArray) => {
