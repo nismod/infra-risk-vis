@@ -10,7 +10,9 @@ import { ViewName, VIEWS } from './config/views';
 import { LayerName } from './config/layers';
 import { HazardsControl } from './controls/HazardsControl';
 import { useNetworkSelection } from './controls/use-network-selection';
-import { useHazardSelection } from './controls/use-hazard-selection';
+import { useHazardSelection } from './controls/hazards/use-hazard-selection';
+import { useHazardVisibility } from './controls/hazards/use-hazard-visibility';
+import { useHazardParams } from './controls/hazards/use-hazard-params';
 
 interface MapViewProps {
   view: ViewName;
@@ -38,14 +40,15 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
 
   const { networkSelection, setNetworkSelection, networkVisibilitySet } = useNetworkSelection();
   const forceSingleHazard = showDamages;
-  const {
+  const { hazardSelection, setSingleHazardShow } = useHazardSelection(forceSingleHazard);
+
+  const { hazardOptions, hazardParams, setSingleHazardParam } = useHazardParams();
+
+  const hazardVisibilitySet = useHazardVisibility(
     hazardSelection,
-    hazardOptions,
     hazardParams,
-    setSingleHazardParam,
-    setSingleHazardShow,
-    hazardVisibilitySet,
-  } = useHazardSelection(forceSingleHazard, forceSingleHazard && !showDamageRaster);
+    forceSingleHazard && !showDamageRaster,
+  );
 
   const riskMapSelectedHazard = useMemo(
     () => (showDamages ? firstTrue(hazardSelection) : null),
