@@ -36,17 +36,18 @@ export const pointRadius = (zoom) => ({
 
 export interface ColorMapDefinition {
   colorScheme: string;
-  colorField: string;
+  colorField: string | Function;
 }
 
 function makeColorMap(definition: ColorMapDefinition) {
   const { colorScheme, colorField } = definition;
   const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
 
+  const accessorFn = typeof colorField === 'string' ? (f) => f.properties[colorField] : colorField;
   const scaleFn = d3.scaleSequential(range, scale);
 
   return (f) => {
-    const value = f.properties[colorField];
+    const value = accessorFn(f);
     return colorCssToRgb(value == null || value === 0 ? empty : scaleFn(value));
   };
 }

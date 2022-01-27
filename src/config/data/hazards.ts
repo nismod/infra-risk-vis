@@ -1,4 +1,13 @@
-export const hazardConfig = {
+import { DataParamConfig } from './types';
+
+export interface HazardParams {
+  returnPeriod: number;
+  epoch: number;
+  rcp: string;
+  confidence: string | number;
+}
+
+export const hazardConfig: Record<string, DataParamConfig<HazardParams>> = {
   fluvial: {
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],

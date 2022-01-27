@@ -1,36 +1,47 @@
+import _ from 'lodash';
 import { useCallback, useState } from 'react';
 
-import { hazardConfig, hazardTypes } from '../../config/data/hazards';
+import { hazardConfig, HazardParams } from '../../config/data/hazards';
+import { ParamDependencies, ParamDomains } from '../../config/data/types';
+
+function resolveDependencies<P extends object = HazardParams>(
+  updatedParams: P,
+  paramDomains: ParamDomains<P>,
+  paramDependencies: ParamDependencies<P>,
+): [P, ParamDomains<P>] {
+  const resolvedParams = { ...updatedParams };
+  const newSingleHazardOptions: ParamDomains<P> = {} as any;
+
+  for (const [param, paramValue] of Object.entries(updatedParams)) {
+    const newParamOptions = paramDependencies[param]?.(updatedParams) ?? paramDomains[param];
+
+    // if the new options don't include the current param value, switch value to the first option
+    if (!newParamOptions.includes(paramValue)) {
+      resolvedParams[param] = newParamOptions[0];
+    }
+
+    newSingleHazardOptions[param] = newParamOptions;
+  }
+  return [resolvedParams, newSingleHazardOptions];
+}
 
 export const useHazardParams = () => {
-  const [hazardParams, setHazardParams] = useState(
-    Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDefaults])),
-  );
-
-  const [hazardOptions, setHazardOptions] = useState(
-    Object.fromEntries(hazardTypes.map((ht) => [ht, hazardConfig[ht].paramDomains])),
-  );
+  const [hazardParams, setHazardParams] = useState(_.mapValues(hazardConfig, 'paramDefaults'));
+  const [hazardOptions, setHazardOptions] = useState(_.mapValues(hazardConfig, 'paramDomains'));
 
   const updatedHazardParam = useCallback(
     (hazardType: string, paramName: string, paramValue: any) => {
       const { paramDomains, paramDependencies = {} } = hazardConfig[hazardType];
       const oldParams = hazardParams[hazardType];
 
-      const newSingleHazardParams = { ...oldParams, [paramName]: paramValue };
-      const newSingleHazardOptions = {};
+      const updatedSingleHazardParams = { ...oldParams, [paramName]: paramValue };
+      const [resolvedSingleHazardParams, newSingleHazardOptions] = resolveDependencies(
+        updatedSingleHazardParams,
+        paramDomains,
+        paramDependencies,
+      );
 
-      for (const [param, paramValue] of Object.entries(newSingleHazardParams)) {
-        const newParamOptions = paramDependencies[param]?.(newSingleHazardParams) ?? paramDomains[param];
-
-        // if the new options don't include the current param value, switch value to the first option
-        if (!newParamOptions.includes(paramValue)) {
-          newSingleHazardParams[param] = newParamOptions[0];
-        }
-
-        newSingleHazardOptions[param] = newParamOptions;
-      }
-
-      setHazardParams({ ...hazardParams, [hazardType]: newSingleHazardParams });
+      setHazardParams({ ...hazardParams, [hazardType]: resolvedSingleHazardParams });
       setHazardOptions({ ...hazardOptions, [hazardType]: newSingleHazardOptions });
     },
     [hazardOptions, hazardParams],

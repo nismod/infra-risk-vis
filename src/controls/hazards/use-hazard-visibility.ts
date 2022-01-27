@@ -3,11 +3,9 @@ import { useMemo } from 'react';
 import { hazardTypes } from '../../config/data/hazards';
 import { getHazardId } from '../../config/layers';
 
-export const useHazardVisibility = (hazardSelection, hazardParams, onlySelect) => {
+export const useHazardVisibility = (hazardSelection, hazardParams) => {
   return useMemo(() => {
     const visibility: any = {};
-
-    if (onlySelect) return visibility;
 
     for (const hazardType of hazardTypes) {
       if (hazardSelection[hazardType]) {
@@ -15,5 +13,5 @@ export const useHazardVisibility = (hazardSelection, hazardParams, onlySelect) =
       }
     }
     return visibility;
-  }, [hazardSelection, hazardParams, onlySelect]);
+  }, [hazardSelection, hazardParams]);
 };

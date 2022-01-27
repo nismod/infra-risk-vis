@@ -20,12 +20,12 @@ export interface SingleHazardSelection {
 
 export type HazardSelectionSet = { [k: string]: SingleHazardSelection };
 
-function baseSelection() {
+function emptySelection() {
   return Object.fromEntries(hazardTypes.map((ht) => [ht, false]));
 }
 
 export const useHazardSelection = (forceSingle = false) => {
-  const [hazardSelection, setHazardSelection] = useState(baseSelection());
+  const [hazardSelection, setHazardSelection] = useState(emptySelection());
 
   useEffect(() => {
     if (forceSingle) {
@@ -34,21 +34,26 @@ export const useHazardSelection = (forceSingle = false) => {
         .map(([key]) => key);
       if (selectedKeys.length > 1) {
         const firstKey = selectedKeys[0];
-        setHazardSelection({ ...baseSelection(), [firstKey]: true });
+        setHazardSelection({ ...emptySelection(), [firstKey]: true });
       }
     }
   }, [forceSingle, hazardSelection]);
 
   const updateHazardSelection = useCallback(
     (hazardType: string, show: boolean) => {
-      const base = forceSingle ? baseSelection() : hazardSelection;
+      const base = forceSingle ? emptySelection() : hazardSelection;
       setHazardSelection({ ...base, [hazardType]: show });
     },
     [forceSingle, hazardSelection],
   );
 
+  const clearSelection = useCallback(() => {
+    setHazardSelection(emptySelection());
+  }, []);
+
   return {
     hazardSelection,
     setSingleHazardShow: updateHazardSelection,
+    clearSelection,
   };
 };

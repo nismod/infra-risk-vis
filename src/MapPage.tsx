@@ -1,13 +1,12 @@
-import React, { FC, useMemo, useState } from 'react';
+import _ from 'lodash';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { Box, Drawer, Toolbar, Typography } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import { DataMap } from './map/DataMap';
 import { NetworkControl } from './controls/NetworkControl';
-import { useLayerSelection } from './controls/use-layer-selection';
-import { ViewName, VIEWS } from './config/views';
-import { LayerName } from './config/layers';
+import { ViewName } from './config/views';
 import { HazardsControl } from './controls/HazardsControl';
 import { useNetworkSelection } from './controls/use-network-selection';
 import { useHazardSelection } from './controls/hazards/use-hazard-selection';
@@ -27,53 +26,95 @@ function firstTrue(object) {
   return trueKeys[0];
 }
 
-export const MapPage: FC<MapViewProps> = ({ view }) => {
-  const viewLayerNames = useMemo<LayerName[]>(() => VIEWS[view].layers as LayerName[], [view]);
-  // const layerDefinitions = useMemo(
-  //   () => viewLayerNames.map((layerName) => ({ ...LAYERS[layerName], key: layerName })),
-  //   [viewLayerNames],
-  // );
+function getEadKey(hazard: string, rcp: string, epoch: number) {
+  return `${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+}
 
+function getTotalDamagesAccessor(rcp, epoch) {
+  return (f) =>
+    _.sum(['fluvial', 'surface', 'coastal', 'cyclone'].map((ht) => f.properties[getEadKey(ht, rcp, epoch)] ?? 0));
+}
+
+function getDamageMapStyleParams(showTotalDamages, totalDamageParams, hazardParams, selectedHazard) {
+  const { rcp, epoch } = showTotalDamages ? totalDamageParams : hazardParams[selectedHazard];
+
+  const colorField = showTotalDamages ? getTotalDamagesAccessor(rcp, epoch) : getEadKey(selectedHazard, rcp, epoch);
+
+  return {
+    colorMap: {
+      colorScheme: 'damages',
+      colorField,
+    },
+  };
+}
+
+export const MapPage: FC<MapViewProps> = ({ view }) => {
   const [mode, setMode] = useState<'input' | 'direct-damages'>('input');
   const showDamages = mode === 'direct-damages';
   const [showDamageRaster, setShowDamageRaster] = useState(true);
+  const [showTotalDamages, setShowTotalDamages] = useState(false);
 
   const { networkSelection, setNetworkSelection, networkVisibilitySet } = useNetworkSelection();
   const forceSingleHazard = showDamages;
-  const { hazardSelection, setSingleHazardShow } = useHazardSelection(forceSingleHazard);
+  const {
+    hazardSelection,
+    setSingleHazardShow,
+    clearSelection: clearHazardSelection,
+  } = useHazardSelection(forceSingleHazard);
 
   const { hazardOptions, hazardParams, setSingleHazardParam } = useHazardParams();
 
-  const hazardVisibilitySet = useHazardVisibility(
-    hazardSelection,
-    hazardParams,
-    forceSingleHazard && !showDamageRaster,
+  let hazardVisibilitySet = useHazardVisibility(hazardSelection, hazardParams);
+  const showHazard = !showDamages || showDamageRaster;
+  hazardVisibilitySet = showHazard ? hazardVisibilitySet : {};
+
+  const totalDamageParams = useMemo(
+    () => ({
+      rcp: 'baseline',
+      epoch: 2010,
+    }),
+    [],
+  );
+  const totalDamageOptions = useMemo(
+    () => ({
+      rcp: ['baseline'],
+      epoch: [2010],
+    }),
+    [],
   );
 
-  const riskMapSelectedHazard = useMemo(
-    () => (showDamages ? firstTrue(hazardSelection) : null),
-    [showDamages, hazardSelection],
+  const handleShowTotalDamages = useCallback(
+    (e, show) => {
+      setShowTotalDamages(show);
+      if (show) {
+        clearHazardSelection();
+      }
+    },
+    [clearHazardSelection],
   );
+
+  const handleSingleHazardShow = useCallback(
+    (hazardType, show) => {
+      setSingleHazardShow(hazardType, show);
+      if (show) {
+        setShowTotalDamages(false);
+      }
+    },
+    [setSingleHazardShow],
+  );
+
+  const riskMapSelectedHazard = useMemo(() => firstTrue(hazardSelection), [hazardSelection]);
 
   const styleParams = useMemo(() => {
-    if (!riskMapSelectedHazard) return {};
+    if (!showDamages || !(riskMapSelectedHazard || showTotalDamages)) return {};
 
-    const { rcp, epoch } = hazardParams[riskMapSelectedHazard];
+    return getDamageMapStyleParams(showTotalDamages, totalDamageParams, hazardParams, riskMapSelectedHazard);
+  }, [showDamages, riskMapSelectedHazard, hazardParams, showTotalDamages, totalDamageParams]);
 
-    return {
-      colorMap: {
-        colorScheme: 'damages',
-        colorField: `${riskMapSelectedHazard}__rcp_${rcp}__epoch_${epoch}__conf_None`,
-      },
-    };
-  }, [riskMapSelectedHazard, hazardParams]);
-
-  const visibilitySets = useMemo(
-    () => [networkVisibilitySet ?? {}, hazardVisibilitySet ?? {}],
+  const layerSelection = useMemo(
+    () => Object.assign({}, networkVisibilitySet ?? {}, hazardVisibilitySet ?? {}),
     [networkVisibilitySet, hazardVisibilitySet],
   );
-
-  const layerSelection = useLayerSelection(viewLayerNames, visibilitySets);
 
   return (
     <>
@@ -105,11 +146,15 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
                 hazardShow={hazardSelection}
                 hazardOptions={hazardOptions}
                 onSingleHazardParam={setSingleHazardParam}
-                onSingleHazardShow={setSingleHazardShow}
+                onSingleHazardShow={handleSingleHazardShow}
                 showDamages={showDamages}
                 showDamageRaster={showDamageRaster}
                 onShowDamageRaster={setShowDamageRaster}
-                forceSingle={forceSingleHazard}
+                showTotalDamages={showTotalDamages}
+                onShowTotalDamages={handleShowTotalDamages}
+                totalDamagesParams={totalDamageParams}
+                totalDamagesOptions={totalDamageOptions}
+                onSingleTotalDamagesParam={() => {}}
               />
             </>
           )}

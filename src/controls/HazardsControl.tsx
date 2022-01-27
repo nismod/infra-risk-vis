@@ -62,11 +62,16 @@ export const HazardsControl = ({
   showDamages,
   showDamageRaster,
   onShowDamageRaster,
-  forceSingle,
+  showTotalDamages,
+  onShowTotalDamages,
+  totalDamagesParams,
+  totalDamagesOptions,
+  onSingleTotalDamagesParam,
 }) => {
   const handleChange = (hazardType) => (e, isExpanded) => {
     onSingleHazardShow(hazardType, isExpanded);
   };
+  const forceSingle = showDamages;
 
   return (
     <Box mb={1}>
@@ -88,6 +93,40 @@ export const HazardsControl = ({
           )}
         </Grid>
       </Box>
+      {showDamages && (
+        <HazardSection
+          show={showTotalDamages}
+          onShow={onShowTotalDamages}
+          label="Total Damages"
+          forceSingle={forceSingle}
+        >
+          <InputSection>
+            <FormControl disabled={!showTotalDamages} variant="standard" style={{ width: '50%' }}>
+              <InputLabel>Epoch</InputLabel>
+              <Select
+                value={totalDamagesParams.epoch}
+                onChange={(e) => onSingleTotalDamagesParam('epoch', e.target.value)}
+              >
+                {totalDamagesOptions.epoch.map((epoch) => (
+                  <MenuItem key={epoch} value={epoch}>
+                    {epochLabel(epoch)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl disabled={!showTotalDamages} style={{ width: '50%' }}>
+              <InputLabel>RCP</InputLabel>
+              <Select value={totalDamagesParams.rcp} onChange={(e) => onSingleTotalDamagesParam('rcp', e.target.value)}>
+                {totalDamagesOptions.rcp.map((rcp) => (
+                  <MenuItem key={rcp} value={rcp}>
+                    {rcpLabel(rcp)}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </InputSection>
+        </HazardSection>
+      )}
       <HazardSection
         show={hazardShow.fluvial}
         onShow={handleChange('fluvial')}
