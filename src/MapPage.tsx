@@ -12,6 +12,8 @@ import { useNetworkSelection } from './controls/use-network-selection';
 import { useHazardSelection } from './controls/hazards/use-hazard-selection';
 import { useHazardVisibility } from './controls/hazards/use-hazard-visibility';
 import { useHazardParams } from './controls/hazards/use-hazard-params';
+import { useDataParams } from './controls/use-data-params';
+import { totalDamagesConfig } from './config/data/total-damages';
 
 interface MapViewProps {
   view: ViewName;
@@ -68,20 +70,11 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   const showHazard = !showDamages || showDamageRaster;
   hazardVisibilitySet = showHazard ? hazardVisibilitySet : {};
 
-  const totalDamageParams = useMemo(
-    () => ({
-      rcp: 'baseline',
-      epoch: 2010,
-    }),
-    [],
-  );
-  const totalDamageOptions = useMemo(
-    () => ({
-      rcp: ['baseline'],
-      epoch: [2010],
-    }),
-    [],
-  );
+  const {
+    params: totalDamageParams,
+    options: totalDamageOptions,
+    updateParam: updateTotalDamageParam,
+  } = useDataParams(totalDamagesConfig);
 
   const handleShowTotalDamages = useCallback(
     (e, show) => {
@@ -93,7 +86,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
     [clearHazardSelection],
   );
 
-  const handleSingleHazardShow = useCallback(
+  const handleShowSingleHazard = useCallback(
     (hazardType, show) => {
       setSingleHazardShow(hazardType, show);
       if (show) {
@@ -146,7 +139,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
                 hazardShow={hazardSelection}
                 hazardOptions={hazardOptions}
                 onSingleHazardParam={setSingleHazardParam}
-                onSingleHazardShow={handleSingleHazardShow}
+                onSingleHazardShow={handleShowSingleHazard}
                 showDamages={showDamages}
                 showDamageRaster={showDamageRaster}
                 onShowDamageRaster={setShowDamageRaster}
@@ -154,7 +147,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
                 onShowTotalDamages={handleShowTotalDamages}
                 totalDamagesParams={totalDamageParams}
                 totalDamagesOptions={totalDamageOptions}
-                onSingleTotalDamagesParam={() => {}}
+                onSingleTotalDamagesParam={updateTotalDamageParam}
               />
             </>
           )}
