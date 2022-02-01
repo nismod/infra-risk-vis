@@ -64,7 +64,7 @@ export const MapLayerSelection = () => {
         <Paper style={{ overflow: 'hidden', borderTopLeftRadius: 0 }}>
           <Box width={220}>
             <Box px={2} py="6px" height={37} display="flex" borderBottom="1px solid #ddd">
-              <ToggleButtonGroup exclusive color="primary" value={background} onChange={handleBackground}>
+              <ToggleButtonGroup exclusive color="primary" value={background} onChange={handleBackground} fullWidth>
                 <ToggleButton value="light">Map</ToggleButton>
                 <ToggleButton value="satellite">Satellite</ToggleButton>
               </ToggleButtonGroup>
