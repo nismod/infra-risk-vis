@@ -1,14 +1,17 @@
-import React, { FC, useMemo } from 'react';
-import { Box, Checkbox, FormControl, FormControlLabel, Typography } from '@material-ui/core';
+import React, { FC, useCallback } from 'react';
+import { Box, Typography } from '@material-ui/core';
 
-import { LayerName, LAYERS } from '../config/layers';
+import { LAYERS } from '../config/layers';
+import { CheckboxTree } from './checkbox-tree/CheckboxTree';
+import { networkLayersConfig } from '../config/data/networks';
+import _ from 'lodash';
 
 interface NetworkControlProps {
   networkSelection: Record<string, boolean>;
   onNetworkSelection: (visUpdate: Record<string, boolean>) => void; //TODO change record key type to LayerName
 }
 
-const LayerLabel = ({ layerConfig: { label, type, color } }) => {
+const LayerLabel = ({ label, type, color }) => {
   return (
     <>
       <Typography>
@@ -19,33 +22,24 @@ const LayerLabel = ({ layerConfig: { label, type, color } }) => {
   );
 };
 export const NetworkControl: FC<NetworkControlProps> = ({ networkSelection, onNetworkSelection }) => {
-  const networkLayers = useMemo(() => Object.keys(networkSelection), [networkSelection]);
+  const handleSelected = useCallback(
+    (newSelected: string[]) => {
+      onNetworkSelection({
+        ..._.mapValues(networkSelection, () => false),
+        ..._.fromPairs(newSelected.map((id) => [id, true])),
+      });
+    },
+    [networkSelection, onNetworkSelection],
+  );
 
   return (
     <Box mb={2}>
       <Typography variant="h6">Infrastructure Assets</Typography>
-      <FormControl component="fieldset">
-        {networkLayers.map((layerName) => (
-          <FormControlLabel
-            key={layerName}
-            style={{ marginBottom: -12 }}
-            control={
-              <Checkbox
-                data-layer={layerName}
-                color="default"
-                checked={networkSelection[layerName]}
-                value={layerName}
-                name={'toggleLayerCheckbox' + layerName}
-                onChange={(e) =>
-                  onNetworkSelection({ ...networkSelection, [e.target.value as LayerName]: e.target.checked })
-                }
-                // style={{ padding: 4 }}
-              />
-            }
-            label={<LayerLabel layerConfig={LAYERS[layerName]} />}
-          ></FormControlLabel>
-        ))}
-      </FormControl>
+      <CheckboxTree
+        nodes={networkLayersConfig}
+        getLabel={(node) => (node.children ? node.label : <LayerLabel {...LAYERS[node.id]} label={node.label} />)}
+        onSelected={handleSelected}
+      />
     </Box>
   );
 };

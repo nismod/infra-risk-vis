@@ -15,6 +15,7 @@
     "d3-scale-chromatic": "^3.0.0",
     "deck.gl": "^8.6.6",
     "http-proxy-middleware": "^2.0.1",
+    "immer": "^9.0.12",
     "lodash": "^4.17.21",
     "mapbox-gl": "^1.13.1",
     "react": "^16.14.0",
@@ -26,6 +27,7 @@
     "recoil": "^0.5.2",
     "tileserver-gl-light": "^3.1.1",
     "use-http": "^1.0.26",
+    "use-immer": "^0.6.0",
     "vega": "^5.19.1",
     "vega-lite": "^5.0.0"
   },

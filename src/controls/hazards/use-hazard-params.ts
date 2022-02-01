@@ -1,55 +1,38 @@
 import _ from 'lodash';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
-import { hazardConfig, HazardParams } from '../../config/data/hazards';
-import { ParamDependencies, ParamDomains } from '../../config/data/types';
-
-function resolveDependencies<P extends object = HazardParams>(
-  updatedParams: P,
-  paramDomains: ParamDomains<P>,
-  paramDependencies: ParamDependencies<P>,
-): [P, ParamDomains<P>] {
-  const resolvedParams = { ...updatedParams };
-  const newSingleHazardOptions: ParamDomains<P> = {} as any;
-
-  for (const [param, paramValue] of Object.entries(updatedParams)) {
-    const newParamOptions = paramDependencies[param]?.(updatedParams) ?? paramDomains[param];
-
-    // if the new options don't include the current param value, switch value to the first option
-    if (!newParamOptions.includes(paramValue)) {
-      resolvedParams[param] = newParamOptions[0];
-    }
-
-    newSingleHazardOptions[param] = newParamOptions;
-  }
-  return [resolvedParams, newSingleHazardOptions];
-}
+import { hazardConfig } from '../../config/data/hazards';
+import { useDataParams } from '../use-data-params';
 
 export const useHazardParams = () => {
-  const [hazardParams, setHazardParams] = useState(_.mapValues(hazardConfig, 'paramDefaults'));
-  const [hazardOptions, setHazardOptions] = useState(_.mapValues(hazardConfig, 'paramDomains'));
+  const fluvialState = useDataParams(hazardConfig.fluvial);
+  const surfaceState = useDataParams(hazardConfig.surface);
+  const coastalState = useDataParams(hazardConfig.coastal);
+  const cycloneState = useDataParams(hazardConfig.cyclone);
 
-  const updatedHazardParam = useCallback(
-    (hazardType: string, paramName: string, paramValue: any) => {
-      const { paramDomains, paramDependencies = {} } = hazardConfig[hazardType];
-      const oldParams = hazardParams[hazardType];
-
-      const updatedSingleHazardParams = { ...oldParams, [paramName]: paramValue };
-      const [resolvedSingleHazardParams, newSingleHazardOptions] = resolveDependencies(
-        updatedSingleHazardParams,
-        paramDomains,
-        paramDependencies,
-      );
-
-      setHazardParams({ ...hazardParams, [hazardType]: resolvedSingleHazardParams });
-      setHazardOptions({ ...hazardOptions, [hazardType]: newSingleHazardOptions });
-    },
-    [hazardOptions, hazardParams],
+  const state = useMemo(
+    () => ({
+      fluvial: fluvialState,
+      surface: surfaceState,
+      coastal: coastalState,
+      cyclone: cycloneState,
+    }),
+    [fluvialState, surfaceState, coastalState, cycloneState],
   );
+
+  const updateParam = useCallback(
+    (hazardType: string, paramName: string, paramValue: any) => {
+      state[hazardType].updateParam(paramName, paramValue);
+    },
+    [state],
+  );
+
+  const hazardParams = _.mapValues(state, (x) => x.params);
+  const hazardOptions = _.mapValues(state, (x) => x.options);
 
   return {
     hazardParams,
     hazardOptions,
-    setSingleHazardParam: updatedHazardParam,
+    setSingleHazardParam: updateParam,
   };
 };
