@@ -1,6 +1,7 @@
 # data folders
 node_modules/
-data
+tileserver/raster/data
+tileserver/vector/data
 incoming_data/
 intermediate_data/
 *.zip

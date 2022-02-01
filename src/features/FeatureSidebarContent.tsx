@@ -21,7 +21,7 @@ import {
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
 } from './detail-components';
-import { hazardConfig } from '../controls/use-hazard-selection';
+import { hazardConfig } from '../config/data/hazards';
 
 var componentMapping = {
   airport_areas: AirportDetails,
