@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert'; // MUIv4 has Alert in "lab" - v5 has it by default
+import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 export const IntroPage = () => (
   <article>

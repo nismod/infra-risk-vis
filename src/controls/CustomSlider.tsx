@@ -1,5 +1,5 @@
-import { ChangeEvent, ComponentProps, FC, useCallback, useMemo } from 'react';
-import { Slider } from '@material-ui/core';
+import { ComponentProps, FC, useCallback, useMemo } from 'react';
+import { Slider } from '@mui/material';
 
 export interface GenericMark<T> {
   value: T;
@@ -33,7 +33,7 @@ export const CustomNumberSlider: FC<CustomSliderProps<number>> = ({
   const integerValue = useMemo(() => marks.findIndex((m) => m === value), [marks, value]);
 
   const handleIntegerChange = useCallback(
-    (e: ChangeEvent<{}>, value: number) => {
+    (e: Event, value: number) => {
       onChange(marks[value]);
     },
     [marks, onChange],

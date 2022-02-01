@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
-import { createMuiTheme, CssBaseline, ThemeProvider, Toolbar } from '@material-ui/core';
+import { createMuiTheme, CssBaseline, ThemeProvider, Toolbar } from '@mui/material';
 
 import { Nav } from './Nav';
 import { IntroPage } from './IntroPage';

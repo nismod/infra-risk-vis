@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
-import Typography from '@material-ui/core/Typography';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 import { numFormat } from '../helpers';
 

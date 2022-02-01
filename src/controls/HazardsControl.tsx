@@ -14,7 +14,7 @@ import {
   Select,
   Switch,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { CustomNumberSlider } from './CustomSlider';
 

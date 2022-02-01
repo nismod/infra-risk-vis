@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography } from '@mui/material';
 
 import { titleCase, isNumeric, numFormat } from '../helpers';
 

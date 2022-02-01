@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, Paper } from '@material-ui/core';
+import { Box, Paper } from '@mui/material';
 
 import { VectorHover } from '../map/DataMap';
 import { LAYERS } from '../config/layers';

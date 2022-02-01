@@ -1,5 +1,5 @@
-import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { TextField } from '@mui/material';
+import { Autocomplete } from '@mui/lab';
 import { useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
@@ -27,7 +27,7 @@ export const MapSearchField = () => {
       onClose={() => setSearchResultsOpen(false)}
       onChange={(e, value, reason) => {
         // ignore the change if it's because user pressed enter
-        if (reason !== 'create-option') {
+        if (reason !== 'createOption') {
           setSelectedSearchResult(value);
         }
       }}

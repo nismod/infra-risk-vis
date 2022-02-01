@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import _ from 'lodash';
 
-import { TreeView } from '@material-ui/lab';
-import { ExpandMore as ExpandMoreIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
+import { TreeView } from '@mui/lab';
+import { ExpandMore as ExpandMoreIcon, ChevronRight as ChevronRightIcon } from '@mui/icons-material';
 
 import { dfs, getDescendants, TreeNode } from './tree-node';
 import { CheckboxTreeItem } from './CheckboxTreeItem';

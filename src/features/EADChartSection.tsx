@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { Box, MenuItem, Select, Typography } from '@material-ui/core';
+import { Box, MenuItem, Select, Typography } from '@mui/material';
 
 import { titleCase, unique } from '../helpers';
 import { useSelect } from '../hooks/use-select';
