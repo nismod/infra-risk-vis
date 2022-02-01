@@ -1,4 +1,4 @@
-import { TreeNode } from '../../controls/RecursiveTreeView';
+import { TreeNode } from '../../controls/checkbox-tree/tree-node';
 
 interface NetworkLayerData {
   label: string;

@@ -1,8 +1,8 @@
 import React, { FC, useCallback } from 'react';
-import { Box, FormControl, Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 
 import { LAYERS } from '../config/layers';
-import RecursiveTreeView from './RecursiveTreeView';
+import { CheckboxTree } from './checkbox-tree/CheckboxTree';
 import { networkLayersConfig } from '../config/data/networks';
 import _ from 'lodash';
 
@@ -35,13 +35,11 @@ export const NetworkControl: FC<NetworkControlProps> = ({ networkSelection, onNe
   return (
     <Box mb={2}>
       <Typography variant="h6">Infrastructure Assets</Typography>
-      {/* <FormControl component="fieldset"> */}
-      <RecursiveTreeView
+      <CheckboxTree
         nodes={networkLayersConfig}
         getLabel={(node) => (node.children ? node.label : <LayerLabel {...LAYERS[node.id]} label={node.label} />)}
         onSelected={handleSelected}
       />
-      {/* </FormControl> */}
     </Box>
   );
 };
