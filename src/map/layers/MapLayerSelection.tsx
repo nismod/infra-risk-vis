@@ -51,6 +51,7 @@ export const MapLayerSelection = () => {
         style={{
           paddingInline: 0,
           backgroundColor: 'white',
+          color: 'black',
           minWidth: 'auto',
           width: '40px',
           height: '36px',

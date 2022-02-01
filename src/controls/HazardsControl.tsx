@@ -114,7 +114,7 @@ export const HazardsControl = ({
                 ))}
               </Select>
             </FormControl>
-            <FormControl disabled={!showTotalDamages} style={{ width: '50%' }}>
+            <FormControl disabled={!showTotalDamages} variant="standard" style={{ width: '50%' }}>
               <InputLabel>RCP</InputLabel>
               <Select value={totalDamagesParams.rcp} onChange={(e) => onSingleTotalDamagesParam('rcp', e.target.value)}>
                 {totalDamagesOptions.rcp.map((rcp) => (
@@ -190,7 +190,7 @@ export const HazardsControl = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl disabled={!hazardShow.coastal} style={{ width: '50%' }}>
+          <FormControl disabled={!hazardShow.coastal} variant="standard" style={{ width: '50%' }}>
             <InputLabel>RCP</InputLabel>
             <Select
               value={hazardParams.coastal.rcp}
@@ -238,7 +238,7 @@ export const HazardsControl = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl disabled={!hazardShow.cyclone} style={{ width: '50%' }}>
+          <FormControl disabled={!hazardShow.cyclone} variant="standard" style={{ width: '50%' }}>
             <InputLabel>RCP</InputLabel>
             <Select
               value={hazardParams.cyclone.rcp}

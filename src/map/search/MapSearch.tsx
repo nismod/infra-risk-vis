@@ -32,7 +32,7 @@ export const MapSearch = () => {
                 backgroundColor: 'white',
                 color: 'black',
               }}
-            >
+              size="large">
               <SearchIcon />
             </IconButton>
             {expanded && (
