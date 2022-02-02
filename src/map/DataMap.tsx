@@ -209,10 +209,10 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
         </MapTooltip>
       </MapViewport>
       <Box position="absolute" top={0} left={0} ml={3} m={1} zIndex={1000}>
-        <Box mt={1}>
+        <Box mb={1}>
           <MapSearch />
         </Box>
-        <Box mt={1}>
+        <Box mb={1}>
           <MapLayerSelection />
         </Box>
       </Box>

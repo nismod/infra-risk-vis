@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 export const Nav = () => {
   return (
-    <AppBar position="fixed">
+    <AppBar position="fixed" style={{ backgroundColor: '#3f51b5' }}>
       <Toolbar>
         <Typography variant="h6">
           <span className="nav-brand">Infrastructure Risk Assessment</span>
