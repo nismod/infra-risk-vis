@@ -1,5 +1,5 @@
-import { Checkbox, FormControlLabel } from '@material-ui/core';
-import { TreeItem } from '@material-ui/lab';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import { TreeItem } from '@mui/lab';
 import { CheckboxTreeState } from './CheckboxTree';
 import { TreeNode } from './tree-node';
 

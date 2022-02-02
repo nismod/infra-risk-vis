@@ -1,5 +1,5 @@
 import React, { FC, useMemo } from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 import { LayerDefinition } from '../config/layers';
 import { RiskSection } from './RiskSection';

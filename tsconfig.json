@@ -24,6 +24,6 @@
     "downlevelIteration": true
   },
   "include": [
-    "src/index.tsx"
+    "src"
   ]
 }

@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import { FC, useCallback, useMemo, useState } from 'react';
-import { Box, Drawer, Toolbar, Typography } from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { Box, Drawer, Toolbar, Typography, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 import { DataMap } from './map/DataMap';
 import { NetworkControl } from './controls/NetworkControl';
@@ -112,7 +110,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   return (
     <>
       <Drawer variant="permanent">
-        <Box pt={2} p={4} width={sidebarWidth} boxSizing="border-box">
+        <Box p={4} pt={2} width={sidebarWidth} boxSizing="border-box">
           <Toolbar /> {/* Prevents app bar from concealing content*/}
           {view === 'overview' && (
             <>

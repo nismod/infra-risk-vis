@@ -13,7 +13,7 @@ import { MapLegend } from './legend/MapLegend';
 import { MapSearch } from './search/MapSearch';
 import { LegendContent } from './legend/LegendContent';
 import { MapLayerSelection } from './layers/MapLayerSelection';
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { placeSearchSelectedResultState } from './search/search-state';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers/layers-state';
@@ -209,10 +209,10 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
         </MapTooltip>
       </MapViewport>
       <Box position="absolute" top={0} left={0} ml={3} m={1} zIndex={1000}>
-        <Box mt={1}>
+        <Box mb={1}>
           <MapSearch />
         </Box>
-        <Box mt={1}>
+        <Box mb={1}>
           <MapLayerSelection />
         </Box>
       </Box>

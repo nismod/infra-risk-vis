@@ -1,5 +1,5 @@
 import { FC, useMemo } from 'react';
-import { Box, MenuItem, Select, Typography } from '@material-ui/core';
+import { Box, MenuItem, Select, Typography } from '@mui/material';
 
 import { titleCase, unique } from '../helpers';
 import { useSelect } from '../hooks/use-select';
@@ -22,7 +22,11 @@ export const EADChartSection: FC<{ eadData: EADDataPoint[] }> = ({ eadData }) =>
       <Box sx={{ justifyContent: 'space-between' }}>
         <Typography variant="subtitle2">Expected Annual Damages (EAD)</Typography>
         {hazards.length !== 0 && (
-          <Select value={selectedHazard ?? ''} onChange={(e) => setSelectedHazard(e.target.value as string)}>
+          <Select
+            variant="standard"
+            value={selectedHazard ?? ''}
+            onChange={(e) => setSelectedHazard(e.target.value as string)}
+          >
             {hazards.map((h) => (
               <MenuItem key={h} value={h}>
                 {titleCase(h)}

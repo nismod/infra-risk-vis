@@ -1,6 +1,6 @@
-import { Box, Button, Checkbox, FormControlLabel, Paper, Radio, RadioGroup } from '@material-ui/core';
-import { Layers as LayersIcon } from '@material-ui/icons';
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
+import { Box, Button, Checkbox, FormControlLabel, Paper, Radio, RadioGroup } from '@mui/material';
+import { Layers as LayersIcon } from '@mui/icons-material';
+import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
 import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -51,6 +51,7 @@ export const MapLayerSelection = () => {
         style={{
           paddingInline: 0,
           backgroundColor: 'white',
+          color: 'black',
           minWidth: 'auto',
           width: '40px',
           height: '36px',
@@ -63,7 +64,7 @@ export const MapLayerSelection = () => {
         <Paper style={{ overflow: 'hidden', borderTopLeftRadius: 0 }}>
           <Box width={220}>
             <Box px={2} py="6px" height={37} display="flex" borderBottom="1px solid #ddd">
-              <ToggleButtonGroup exclusive color="primary" value={background} onChange={handleBackground}>
+              <ToggleButtonGroup exclusive color="primary" value={background} onChange={handleBackground} fullWidth>
                 <ToggleButton value="light">Map</ToggleButton>
                 <ToggleButton value="satellite">Satellite</ToggleButton>
               </ToggleButtonGroup>

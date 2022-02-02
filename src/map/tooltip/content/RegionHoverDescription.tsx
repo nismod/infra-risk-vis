@@ -1,5 +1,5 @@
 import { useRecoilValue } from 'recoil';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 import { boundaryConfig, BoundaryLevel } from '../../../config/deck-layers/boundaries-layer';
 import { boundaryLevelState } from '../../layers/layers-state';

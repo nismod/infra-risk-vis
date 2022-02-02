@@ -1,5 +1,5 @@
-import { Box, ClickAwayListener, IconButton, Paper } from '@material-ui/core';
-import { Search as SearchIcon } from '@material-ui/icons';
+import { Box, ClickAwayListener, IconButton, Paper } from '@mui/material';
+import { Search as SearchIcon } from '@mui/icons-material';
 import { useRecoilState } from 'recoil';
 
 import { placeSearchActiveState } from './search-state';
@@ -32,7 +32,7 @@ export const MapSearch = () => {
                 backgroundColor: 'white',
                 color: 'black',
               }}
-            >
+              size="large">
               <SearchIcon />
             </IconButton>
             {expanded && (

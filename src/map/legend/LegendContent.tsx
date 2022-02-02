@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import * as d3Scale from 'd3-scale';
 import * as d3Array from 'd3-array';
