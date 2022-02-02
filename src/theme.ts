@@ -6,4 +6,10 @@ declare module '@mui/styles/defaultTheme' {
   interface DefaultTheme extends Theme {}
 }
 
-export const theme = createTheme({});
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#3f51b5',
+    },
+  },
+});
