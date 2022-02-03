@@ -2,7 +2,14 @@ import { useEffect, useState } from 'react';
 import { useFetch } from 'use-http';
 import { useDebounceCallback } from '@react-hook/debounce';
 
-import { PlaceSearchResult } from './search-state';
+import { BoundingBox } from 'lib/map/MapViewport';
+
+export interface PlaceSearchResult {
+  label: string;
+  latitude: number;
+  longitude: number;
+  boundingBox: BoundingBox;
+}
 
 interface NominatimSearchResult {
   display_name: string;

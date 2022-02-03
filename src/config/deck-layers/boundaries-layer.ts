@@ -1,7 +1,8 @@
 import { MVTLayer } from 'deck.gl';
-import { BackgroundName } from '../backgrounds';
 
-import { border } from './utils';
+import { border } from 'lib/deck-layers/utils';
+
+import { BackgroundName } from '../backgrounds';
 
 export type BoundaryLevel = 'parish' | 'community' | 'enumeration';
 

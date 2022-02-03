@@ -1,5 +1,6 @@
 // import { titleCase } from 'vega-lite';
-import { makeConfig } from '../helpers';
+import { makeConfig } from 'lib/helpers';
+
 import { COLORS } from './colors';
 
 export interface LayerDefinition {

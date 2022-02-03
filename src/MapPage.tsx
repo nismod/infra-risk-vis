@@ -10,7 +10,7 @@ import { useNetworkSelection } from './controls/use-network-selection';
 import { useHazardSelection } from './controls/hazards/use-hazard-selection';
 import { useHazardVisibility } from './controls/hazards/use-hazard-visibility';
 import { useHazardParams } from './controls/hazards/use-hazard-params';
-import { useDataParams } from './controls/use-data-params';
+import { useDataParams } from './lib/controls/use-data-params';
 import { totalDamagesConfig } from './config/data/total-damages';
 
 interface MapViewProps {

@@ -1,7 +1,7 @@
-import { makeConfig } from '../helpers';
+import { makeConfig } from 'lib/helpers';
+import { border, lineStyle, pointRadius, vectorColor } from 'lib/deck-layers/utils';
 
 import { COLORS } from './colors';
-import { border, lineStyle, pointRadius, vectorColor } from './deck-layers/utils';
 import { hazardDeckLayer } from './deck-layers/hazard-layer';
 import { infrastructureLayer } from './deck-layers/infrastructure-layer';
 

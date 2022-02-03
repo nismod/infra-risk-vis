@@ -1,4 +1,5 @@
 import * as d3 from 'd3-color';
+import _ from 'lodash';
 
 /**
  * Common helper functions
@@ -46,6 +47,10 @@ export function makeConfig<C, K extends string>(cfg: (C & { id: K })[]) {
     (x) => x.id,
     (x) => x,
   );
+}
+
+export function makeColorConfig<K extends string>(cfg: Record<K, string>) {
+  return _.mapValues(cfg, (c) => ({ css: c, deck: colorCssToRgb(c) }));
 }
 
 // see discussion at https://stackoverflow.com/questions/23437476/in-typescript-how-to-check-if-a-string-is-numeric

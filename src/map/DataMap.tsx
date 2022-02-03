@@ -2,19 +2,20 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { readPixelsToArray } from '@luma.gl/core';
 
+import { MapTooltip } from 'lib/map/MapTooltip';
+import { MapViewport } from 'lib/map/MapViewport';
+import { MapSearch } from 'lib/map/place-search/MapSearch';
+import { placeSearchSelectedResultState } from 'lib/map/place-search/search-state';
+
 import { useDeckLayersSpec, useMapLayersFunction } from './use-map-layers';
-import { MapViewport } from './MapViewport';
-import { MapTooltip } from './tooltip/MapTooltip';
 import { FeatureSidebar } from '../features/FeatureSidebar';
 import { TooltipContent } from './tooltip/TooltipContent';
 import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
 import { MapLegend } from './legend/MapLegend';
-import { MapSearch } from './search/MapSearch';
 import { LegendContent } from './legend/LegendContent';
 import { MapLayerSelection } from './layers/MapLayerSelection';
 import { Box } from '@mui/material';
-import { placeSearchSelectedResultState } from './search/search-state';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers/layers-state';
 import { regionHoverState } from './hover/hover-state';

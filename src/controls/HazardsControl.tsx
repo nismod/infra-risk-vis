@@ -16,7 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { CustomNumberSlider } from './CustomSlider';
+import { CustomNumberSlider } from 'lib/controls/CustomSlider';
 
 function rcpLabel(value) {
   return value === 'baseline' ? 'Baseline' : value;

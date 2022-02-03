@@ -1,9 +1,9 @@
 import GL from '@luma.gl/constants';
 
+import { rasterTileLayer } from 'lib/deck-layers/raster-tile-layer';
+
 import { RASTER_COLOR_MAPS } from '../color-maps';
 import { getHazardId } from '../layers';
-
-import { rasterTileLayer } from './raster-tile-layer';
 
 export function hazardDeckLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
   const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence }); //`hazard_${hazardType}_${returnPeriod}`;

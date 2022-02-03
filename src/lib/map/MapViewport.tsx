@@ -10,9 +10,16 @@ import {
 } from 'react-map-gl';
 import _ from 'lodash';
 
-import { backgroundConfig, BackgroundName } from '../config/backgrounds';
-import { BoundingBox } from './search/search-state';
 import { MapBoundsFitter } from './MapBoundsFitter';
+
+import { backgroundConfig, BackgroundName } from '../../config/backgrounds';
+
+export interface BoundingBox {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
 
 function visible(isVisible: boolean): 'visible' | 'none' {
   return isVisible ? 'visible' : 'none';

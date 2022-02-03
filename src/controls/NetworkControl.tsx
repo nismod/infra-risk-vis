@@ -1,10 +1,11 @@
+import _ from 'lodash';
 import React, { FC, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 
+import { CheckboxTree } from 'lib/controls/checkbox-tree/CheckboxTree';
+
 import { LAYERS } from '../config/layers';
-import { CheckboxTree } from './checkbox-tree/CheckboxTree';
 import { networkLayersConfig } from '../config/data/networks';
-import _ from 'lodash';
 
 interface NetworkControlProps {
   networkSelection: Record<string, boolean>;

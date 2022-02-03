@@ -8,7 +8,7 @@ import { boundariesLayer, boundaryLabelsLayer, BoundaryLevel } from '../config/d
 import { labelsLayer } from '../config/deck-layers/labels-layer';
 
 import { VectorHover } from './DataMap';
-import { BackgroundName } from 'src/config/backgrounds';
+import { BackgroundName } from '../config/backgrounds';
 
 /**
  * get map style and layers definition based on:

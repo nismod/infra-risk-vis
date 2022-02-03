@@ -1,4 +1,4 @@
-import { makeConfig } from '../helpers';
+import { makeConfig } from 'lib/helpers';
 
 export const VIEWS = makeConfig([
   {
