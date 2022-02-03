@@ -1,24 +1,25 @@
 import { useCallback, useMemo, useState } from 'react';
-
+import { useRecoilState, useRecoilValue } from 'recoil';
+import DeckGL from 'deck.gl';
+import { Box } from '@mui/material';
 import { readPixelsToArray } from '@luma.gl/core';
+import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-gl';
 
 import { MapTooltip } from 'lib/map/MapTooltip';
 import { MapViewport } from 'lib/map/MapViewport';
 import { MapSearch } from 'lib/map/place-search/MapSearch';
 import { placeSearchSelectedResultState } from 'lib/map/place-search/search-state';
 
-import { useDeckLayersSpec, useMapLayersFunction } from './use-map-layers';
-import { FeatureSidebar } from '../features/FeatureSidebar';
-import { TooltipContent } from './tooltip/TooltipContent';
-import DeckGL from 'deck.gl';
 import { DECK_LAYERS } from '../config/deck-layers';
+import { FeatureSidebar } from '../features/FeatureSidebar';
+import { useDeckLayersSpec, useMapLayersFunction } from './use-map-layers';
+import { TooltipContent } from './tooltip/TooltipContent';
 import { MapLegend } from './legend/MapLegend';
-import { LegendContent } from './legend/LegendContent';
 import { MapLayerSelection } from './layers/MapLayerSelection';
-import { Box } from '@mui/material';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { LegendContent } from './legend/LegendContent';
 import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers/layers-state';
 import { regionHoverState } from './hover/hover-state';
+import { useBackgroundConfig } from './use-background-config';
 
 export interface RasterHover {
   type: 'raster';
@@ -186,19 +187,53 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
     background,
   );
 
+  const backgroundStyle = useBackgroundConfig(background);
+
   const selectedSearchResult = useRecoilValue(placeSearchSelectedResultState);
   const searchBounds = selectedSearchResult?.boundingBox;
 
   return (
     <>
       <MapViewport
+        initialViewState={{
+          latitude: 18.14,
+          longitude: -77.28,
+          zoom: 8,
+          minZoom: 3,
+          maxZoom: 16,
+          maxPitch: 0,
+        }}
         layersFunction={deckLayersFunction}
-        background={background}
+        backgroundStyle={backgroundStyle}
         onHover={onHover}
         onClick={onClick}
         pickingRadius={pickingRadius}
         targetBounds={searchBounds}
       >
+        <AttributionControl
+          customAttribution='Background map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>. Satellite imagery: <a href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020)'
+          compact={false}
+          style={{
+            right: 0,
+            bottom: 0,
+          }}
+        />
+        <NavigationControl
+          showCompass={false}
+          capturePointerMove={true}
+          style={{
+            right: 10,
+            top: 10,
+          }}
+        />
+        <ScaleControl
+          maxWidth={100}
+          unit="metric"
+          style={{
+            right: 10,
+            bottom: 25,
+          }}
+        />
         <MapTooltip tooltipXY={hoverXY}>
           {hoveredRasters.length || hoveredVectors.length ? (
             <TooltipContent

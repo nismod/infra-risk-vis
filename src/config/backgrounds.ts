@@ -1,6 +1,6 @@
 import { makeConfig } from 'lib/helpers';
 
-export const backgroundConfig = makeConfig([
+export const BACKGROUNDS = makeConfig([
   {
     id: 'light',
     label: 'Map',
@@ -41,4 +41,4 @@ export const backgroundConfig = makeConfig([
   },
 ]);
 
-export type BackgroundName = keyof typeof backgroundConfig;
+export type BackgroundName = keyof typeof BACKGROUNDS;
