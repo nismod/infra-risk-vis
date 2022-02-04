@@ -89,6 +89,15 @@ function processRegionHover(layerId, info): RegionHover {
   };
 }
 
+const layerFilter = ({ layer, renderPass }) => {
+  console.log(layer.id);
+  if (renderPass === 'picking:hover') {
+    // don't render raster and region layers on hover picking pass (but render them for manual picking)
+    if (layer.id.match(/^(coastal|fluvial|surface|cyclone|boundaries)/)) return false;
+  }
+  return true;
+};
+
 const pickingRadius = 8;
 const rasterRegex = /^(coastal|fluvial|surface|cyclone)/;
 const boundaryLayerIds = ['boundaries-parish', 'boundaries-community', 'boundaries-enumeration'];
@@ -207,6 +216,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
         backgroundStyle={backgroundStyle}
         onHover={onHover}
         onClick={onClick}
+        layerRenderFilter={layerFilter}
         pickingRadius={pickingRadius}
         targetBounds={searchBounds}
       >

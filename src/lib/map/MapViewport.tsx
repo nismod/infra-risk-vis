@@ -1,4 +1,4 @@
-import DeckGL from 'deck.gl';
+import DeckGL, { DeckProps } from 'deck.gl';
 import { FC, useMemo, useRef, useState } from 'react';
 import { MapContext, MapContextProps, StaticMap } from 'react-map-gl';
 
@@ -17,9 +17,9 @@ interface MapViewportProps {
   backgroundStyle: object;
   onHover: any;
   onClick: any;
+  layerRenderFilter: DeckProps['layerFilter'];
   pickingRadius: number;
   targetBounds: BoundingBox;
-  attribution?: string;
 }
 
 export const MapViewport: FC<MapViewportProps> = ({
@@ -28,6 +28,7 @@ export const MapViewport: FC<MapViewportProps> = ({
   backgroundStyle,
   onHover,
   onClick,
+  layerRenderFilter,
   pickingRadius,
   targetBounds,
   children,
@@ -51,13 +52,7 @@ export const MapViewport: FC<MapViewportProps> = ({
       viewState={viewState}
       onViewStateChange={({ viewState }) => setViewState(viewState)}
       layers={layers}
-      layerFilter={({ layer, renderPass }) => {
-        if (renderPass === 'picking:hover') {
-          // don't render raster and region layers on hover picking pass (but render them for manual picking)
-          if (layer.id.match(/^(coastal|fluvial|surface|cyclone|boundaries)/)) return false;
-        }
-        return true;
-      }}
+      layerFilter={layerRenderFilter}
       pickingRadius={pickingRadius}
       onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
       onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
