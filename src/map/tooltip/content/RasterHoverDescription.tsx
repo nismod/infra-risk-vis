@@ -1,7 +1,7 @@
 import { FC, useMemo } from 'react';
 
 import { RASTER_COLOR_MAPS } from '../../../config/color-maps';
-import { DECK_LAYERS } from '../../../config/deck-layers';
+import { VIEW_LAYERS } from '../../../config/view-layers';
 import { LAYERS } from '../../../config/layers';
 
 import { RasterHover } from '../../DataMap';
@@ -22,7 +22,7 @@ export const RasterHoverDescription: FC<{ hoveredObject: RasterHover }> = ({ hov
   const { label, dataUnit } = LAYERS[logicalLayer];
   const {
     dataParams: { hazardType },
-  } = DECK_LAYERS[deckLayer];
+  } = VIEW_LAYERS[deckLayer];
   const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
 
   const title = `${label} (${dataUnit})`;

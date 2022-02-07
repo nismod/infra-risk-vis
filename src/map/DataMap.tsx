@@ -10,9 +10,9 @@ import { MapViewport } from 'lib/map/MapViewport';
 import { MapSearch } from 'lib/map/place-search/MapSearch';
 import { placeSearchSelectedResultState } from 'lib/map/place-search/search-state';
 
-import { DECK_LAYERS } from '../config/deck-layers';
+import { VIEW_LAYERS } from '../config/view-layers';
 import { FeatureSidebar } from '../features/FeatureSidebar';
-import { useDeckLayersSpec, useMapLayersFunction } from './use-map-layers';
+import { useViewLayersSpec, useMapLayersFunction } from './use-map-layers';
 import { TooltipContent } from './tooltip/TooltipContent';
 import { MapLegend } from './legend/MapLegend';
 import { MapLayerSelection } from './layers/MapLayerSelection';
@@ -59,7 +59,7 @@ function processRasterHover(layerId, info): RasterHover {
       return {
         type: 'raster',
         deckLayer: layerId,
-        logicalLayer: DECK_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: null }) ?? layerId,
+        logicalLayer: VIEW_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: null }) ?? layerId,
         color: pixelColor,
         info,
       };
@@ -73,7 +73,7 @@ function processVectorHover(layerId, info): VectorHover {
   return {
     type: 'vector',
     deckLayer: layerId,
-    logicalLayer: DECK_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: object }) ?? layerId,
+    logicalLayer: VIEW_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: object }) ?? layerId,
     feature: object,
     info,
   };
@@ -115,11 +115,11 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
 
   const [selectedFeature, setSelectedFeature] = useState<VectorHover>(null);
 
-  const deckLayersSpec = useDeckLayersSpec(layerSelection, view);
+  const viewLayersSpec = useViewLayersSpec(layerSelection, view);
 
-  const deckIds = useMemo(() => Object.keys(deckLayersSpec), [deckLayersSpec]);
-  const rasterLayerIds = useMemo(() => deckIds.filter((l: string) => l.match(rasterRegex)), [deckIds]);
-  const vectorLayerIds = useMemo(() => deckIds.filter((l: string) => !l.match(rasterRegex)), [deckIds]);
+  const viewLayerIds = useMemo(() => Object.keys(viewLayersSpec), [viewLayersSpec]);
+  const rasterLayerIds = useMemo(() => viewLayerIds.filter((l: string) => l.match(rasterRegex)), [viewLayerIds]);
+  const vectorLayerIds = useMemo(() => viewLayerIds.filter((l: string) => !l.match(rasterRegex)), [viewLayerIds]);
 
   // taken from Leaflet source: https://github.com/Leaflet/Leaflet/blob/ee71642691c2c71605bacff69456760cfbc80a2a/src/core/Browser.js#L119
   var isRetina =
@@ -143,8 +143,8 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
       const pickedObjects = deck.pickMultipleObjects({ x, y, layerIds: rasterLayerIds });
       for (const picked of pickedObjects) {
         const layerId = picked.layer.id;
-        const deckLayerDefinition = DECK_LAYERS[layerId];
-        if (deckLayerDefinition.spatialType === 'raster') {
+        const viewLayerDefinition = VIEW_LAYERS[layerId];
+        if (viewLayerDefinition.spatialType === 'raster') {
           const rasterHover = processRasterHover(layerId, picked);
 
           if (rasterHover) newHoveredRasters.push(rasterHover);
@@ -186,7 +186,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
   );
 
   const deckLayersFunction = useMapLayersFunction(
-    deckLayersSpec,
+    viewLayersSpec,
     styleParams,
     selectedFeature,
     showLabels,
@@ -264,7 +264,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
       </Box>
       <Box position="absolute" bottom={0} left={0} m={1} ml={3} zIndex={1000}>
         <MapLegend>
-          <LegendContent deckLayersSpec={deckLayersSpec} styleParams={styleParams} />
+          <LegendContent viewLayersSpec={viewLayersSpec} styleParams={styleParams} />
         </MapLegend>
       </Box>
       {selectedFeature && <FeatureSidebar featureSelection={selectedFeature} />}

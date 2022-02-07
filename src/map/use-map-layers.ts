@@ -3,12 +3,7 @@ import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
-import { DECK_LAYERS } from '../config/deck-layers';
-import { boundariesLayer, boundaryLabelsLayer, BoundaryLevel } from '../config/deck-layers/boundaries-layer';
-import { labelsLayer } from '../config/deck-layers/labels-layer';
-
-import { VectorHover } from './DataMap';
-import { BackgroundName } from '../config/backgrounds';
+import { getDeckLayers } from 'config/get-deck-layers';
 
 /**
  * get map style and layers definition based on:
@@ -18,96 +13,53 @@ import { BackgroundName } from '../config/backgrounds';
  * - any highlights / selections
  */
 
-function getDeckLayersSpec(dataLayerSelection: Record<LayerName, boolean>, view: ViewName) {
-  const deckLayers = {};
+function getSingleViewLayerConfig({ getId, viewLayer }: LayerDefinition) {
+  let name: string;
+  let dataParams: any;
+  if (typeof viewLayer === 'object') {
+    dataParams = viewLayer.params;
+    name = getId?.(dataParams) ?? viewLayer.baseName;
+  } else {
+    name = viewLayer;
+  }
 
-  for (const layerName of VIEWS[view].layers) {
-    if (dataLayerSelection[layerName] == null) continue;
+  return {
+    name,
+    dataParams,
+  };
+}
 
-    const layerDefinition = LAYERS[layerName] as LayerDefinition;
-    if (layerDefinition == null) throw new Error(`Logical layer '${layerName}' is not defined`);
+function getViewLayersSpec(logicalLayerSelection: Record<LayerName, boolean>, view: ViewName) {
+  const viewLayerSpec = {};
 
-    const deckLayerSpec = layerDefinition.deckLayer;
+  for (const logicalLayerName of VIEWS[view].layers) {
+    if (logicalLayerSelection[logicalLayerName] == null) continue;
 
-    let deckLayerName: string;
-    let dataParams: any;
-    if (typeof deckLayerSpec === 'object') {
-      deckLayerName = deckLayerSpec.baseName;
-      dataParams = deckLayerSpec.params;
-      if (layerDefinition.getId) {
-        deckLayerName = layerDefinition.getId(dataParams);
-      }
-    } else {
-      deckLayerName = deckLayerSpec;
-    }
+    const logicalLayerDefinition = LAYERS[logicalLayerName] as LayerDefinition;
+    if (logicalLayerDefinition == null) throw new Error(`Logical layer '${logicalLayerName}' is not defined`);
 
-    deckLayers[deckLayerName] = _.merge({}, deckLayers[deckLayerName], {
+    const { name, dataParams } = getSingleViewLayerConfig(logicalLayerDefinition);
+
+    const singleViewLayerSpec = {
       visibility: {
-        [layerName]: !!dataLayerSelection[layerName],
+        [logicalLayerName]: !!logicalLayerSelection[logicalLayerName],
       },
       params: dataParams ?? {},
-      sourceLogicalLayers: [layerName],
-    });
-  }
-
-  return deckLayers;
-}
-
-function getDeckLayers(
-  deckLayersSpec: Record<string, any>,
-  zoom: number,
-  styleParams: any,
-  selectedFeature: VectorHover,
-  showLabels: boolean,
-  showBoundaries: boolean,
-  boundaryLevel: BoundaryLevel,
-  isRetina: boolean,
-  background: BackgroundName,
-) {
-  const resLayers = [];
-
-  if (showBoundaries) {
-    resLayers.push(boundariesLayer(boundaryLevel));
-  }
-
-  for (const [deckLayerName, allParams] of Object.entries(deckLayersSpec)) {
-    const deckLayerConfig = DECK_LAYERS[deckLayerName];
-    const anyVisible = Object.values(allParams.visibility).some((x) => x);
-
-    let props: any = {
-      id: deckLayerName,
-      pickable: true,
-      visible: anyVisible,
-      minZoom: 3,
-      maxZoom: 20,
+      sourceLogicalLayers: [logicalLayerName],
     };
 
-    let selectedFeatureId;
-    if (selectedFeature?.deckLayer === deckLayerName) {
-      selectedFeatureId = selectedFeature.feature.id;
-    }
-
-    if (anyVisible) {
-      resLayers.push(deckLayerConfig.fn({ props, ...allParams, zoom, styleParams, selectedFeatureId }));
-    }
+    viewLayerSpec[name] = _.merge({}, viewLayerSpec[name], singleViewLayerSpec);
   }
 
-  if (showLabels) {
-    resLayers.push(labelsLayer(isRetina));
-    if (showBoundaries) {
-      resLayers.push(boundaryLabelsLayer(boundaryLevel, background));
-    }
-  }
-
-  return resLayers;
+  return viewLayerSpec;
 }
 
-export function useDeckLayersSpec(dataLayerSelection, view) {
-  return useMemo(() => getDeckLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
+export function useViewLayersSpec(dataLayerSelection, view) {
+  return useMemo(() => getViewLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
 }
 
 export function useMapLayersFunction(
-  deckLayersSpec,
+  viewLayersSpec,
   styleParams,
   selectedFeature,
   showLabels,
@@ -119,7 +71,7 @@ export function useMapLayersFunction(
   return useCallback(
     ({ zoom }) =>
       getDeckLayers(
-        deckLayersSpec,
+        viewLayersSpec,
         zoom,
         styleParams,
         selectedFeature,
@@ -129,6 +81,6 @@ export function useMapLayersFunction(
         isRetina,
         background,
       ),
-    [deckLayersSpec, styleParams, selectedFeature, showLabels, showBoundaries, boundaryLevel, isRetina, background],
+    [viewLayersSpec, styleParams, selectedFeature, showLabels, showBoundaries, boundaryLevel, isRetina, background],
   );
 }
