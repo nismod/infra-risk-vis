@@ -1,16 +1,16 @@
 import React, { FC } from 'react';
 import { Box, Paper } from '@mui/material';
 
-import { VectorHover } from '../map/DataMap';
 import { LAYERS } from '../config/layers';
 import { FeatureSidebarContent } from './FeatureSidebarContent';
+import { InteractionTarget } from 'lib/map/interactions/use-interactions';
 
 interface FeatureSidebarProps {
-  featureSelection: VectorHover;
+  featureSelection: InteractionTarget<any>;
 }
 
 export const FeatureSidebar: FC<FeatureSidebarProps> = ({ featureSelection }) => {
-  const { feature, logicalLayer } = featureSelection;
+  const { target: feature, logicalLayer } = featureSelection;
   const f = feature.properties;
   const logicalLayerConfig = LAYERS[logicalLayer];
 

@@ -16,9 +16,9 @@ interface MapViewportProps {
   layersFunction: any;
   backgroundStyle: object;
   onHover: any;
-  onClick: any;
+  onClick?: any;
   layerRenderFilter: DeckProps['layerFilter'];
-  pickingRadius: number;
+  pickingRadius?: number;
   targetBounds: BoundingBox;
 }
 
@@ -53,9 +53,9 @@ export const MapViewport: FC<MapViewportProps> = ({
       onViewStateChange={({ viewState }) => setViewState(viewState)}
       layers={layers}
       layerFilter={layerRenderFilter}
-      pickingRadius={pickingRadius}
       onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
-      onClick={(info) => deckRef.current && onClick(info, deckRef.current)}
+      onClick={(info) => deckRef.current && onClick?.(info, deckRef.current)}
+      pickingRadius={pickingRadius}
       ContextProvider={MapContext.Provider}
     >
       <StaticMap mapStyle={backgroundStyle} attributionControl={false} />

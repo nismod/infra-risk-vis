@@ -1,10 +1,10 @@
+import { InteractionTarget } from 'lib/map/interactions/use-interactions';
 import { FC } from 'react';
 
 import { LAYERS } from '../../../config/layers';
-import { VectorHover } from '../../DataMap';
 
-export const VectorHoverDescription: FC<{ hoveredObject: VectorHover }> = ({ hoveredObject }) => {
-  const f = hoveredObject.feature;
+export const VectorHoverDescription: FC<{ hoveredObject: InteractionTarget<any> }> = ({ hoveredObject }) => {
+  const f = hoveredObject.target;
   // const sourceDeckLayer = hoveredObject.deckLayer;
   const sourceLogicalLayer = hoveredObject.logicalLayer;
   const logicalLayerSpec = LAYERS[sourceLogicalLayer];

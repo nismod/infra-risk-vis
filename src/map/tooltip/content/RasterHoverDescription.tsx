@@ -4,9 +4,8 @@ import { RASTER_COLOR_MAPS } from '../../../config/color-maps';
 import { VIEW_LAYERS } from '../../../config/view-layers';
 import { LAYERS } from '../../../config/layers';
 
-import { RasterHover } from '../../DataMap';
-
 import { useRasterColorMapValues } from '../../legend/use-color-map-values';
+import { InteractionTarget } from 'lib/map/interactions/use-interactions';
 
 function useRasterColorMapLookup(colorMapValues) {
   return useMemo(
@@ -15,14 +14,14 @@ function useRasterColorMapLookup(colorMapValues) {
   );
 }
 
-export const RasterHoverDescription: FC<{ hoveredObject: RasterHover }> = ({ hoveredObject }) => {
-  const { color } = hoveredObject;
+export const RasterHoverDescription: FC<{ hoveredObject: InteractionTarget<any> }> = ({ hoveredObject }) => {
+  const { target: color } = hoveredObject;
 
-  const { logicalLayer, deckLayer } = hoveredObject;
+  const { logicalLayer, viewLayer } = hoveredObject;
   const { label, dataUnit } = LAYERS[logicalLayer];
   const {
     dataParams: { hazardType },
-  } = VIEW_LAYERS[deckLayer];
+  } = VIEW_LAYERS[viewLayer];
   const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
 
   const title = `${label} (${dataUnit})`;

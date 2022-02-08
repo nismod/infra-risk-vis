@@ -17,7 +17,7 @@ export const RegionHoverDescription = ({ hoveredObject }) => {
   return (
     <>
       <Typography component="h6">{levelLabel}</Typography>
-      <Typography>{hoveredObject.feature.properties[boundaryConfig[boundaryLevel].fieldName]}</Typography>
+      <Typography>{hoveredObject.target.properties[boundaryConfig[boundaryLevel].fieldName]}</Typography>
     </>
   );
 };

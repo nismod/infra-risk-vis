@@ -1,11 +1,12 @@
 import { Box, Paper } from '@mui/material';
 import React, { FC } from 'react';
+import { useRecoilValue } from 'recoil';
 
-interface MapTooltipProps {
-  tooltipXY: [number, number];
-}
+import { hoverPositionState } from 'lib/map/interactions/interaction-state';
 
-export const MapTooltip: FC<MapTooltipProps> = ({ tooltipXY, children }) => {
+export const MapTooltip: FC<{}> = ({ children }) => {
+  const tooltipXY = useRecoilValue(hoverPositionState);
+
   return tooltipXY && React.Children.count(children) ? (
     <div
       style={{

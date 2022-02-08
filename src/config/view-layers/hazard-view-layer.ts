@@ -16,6 +16,7 @@ export function hazardViewLayer(hazardType, returnPeriod, rcp, epoch, confidence
   return {
     id,
     spatialType: 'raster',
+    interactionGroup: 'hazards',
     dataParams: { hazardType, returnPeriod, rcp, epoch, confidence },
     fn: ({ props, zoom, params: { hazardType, returnPeriod, rcp, epoch, confidence } }) => {
       const { scheme, range } = RASTER_COLOR_MAPS[hazardType];

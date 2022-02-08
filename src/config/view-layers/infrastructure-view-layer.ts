@@ -4,6 +4,7 @@ export const infrastructureViewLayer = (id: string, customFn: ({ zoom, stylePara
   return {
     id,
     spatialType: 'vector',
+    interactionGroup: 'assets',
     fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
       infrastructureLayer(
         { selectedFeatureId },

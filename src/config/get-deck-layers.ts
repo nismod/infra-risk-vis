@@ -1,4 +1,5 @@
-import { VectorHover } from 'map/DataMap';
+import { InteractionTarget } from 'lib/map/interactions/use-interactions';
+
 import { BackgroundName } from './backgrounds';
 import { boundariesLayer, boundaryLabelsLayer, BoundaryLevel } from './deck-layers/boundaries-layer';
 import { labelsLayer } from './deck-layers/labels-layer';
@@ -8,7 +9,7 @@ function getDataDeckLayers(
   viewLayersSpec: Record<string, any>,
   zoom: number,
   styleParams: any,
-  selectedFeature: VectorHover,
+  selectedFeature: InteractionTarget<any>,
 ) {
   return Object.entries(viewLayersSpec).map(([viewLayerName, viewLayerParams]) => {
     const viewLayerConfig = VIEW_LAYERS[viewLayerName];
@@ -23,8 +24,8 @@ function getDataDeckLayers(
     };
 
     let selectedFeatureId;
-    if (selectedFeature?.deckLayer === viewLayerName) {
-      selectedFeatureId = selectedFeature.feature.id;
+    if (selectedFeature?.viewLayer === viewLayerName) {
+      selectedFeatureId = selectedFeature.target.id;
     }
 
     if (anyVisible) {
@@ -39,7 +40,7 @@ export function getDeckLayers(
   viewLayersSpec: Record<string, any>,
   zoom: number,
   styleParams: any,
-  selectedFeature: VectorHover,
+  selectedFeature: InteractionTarget<any>,
   showLabels: boolean,
   showBoundaries: boolean,
   boundaryLevel: BoundaryLevel,
