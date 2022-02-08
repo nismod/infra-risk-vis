@@ -9,7 +9,6 @@ export function hazardViewLayer(hazardType, returnPeriod, rcp, epoch, confidence
   const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence }); //`hazard_${hazardType}_${returnPeriod}`;
 
   const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;
-  const refinementStrategy = hazardType === 'cyclone' ? 'best-available' : 'no-overlap';
 
   const sanitisedRcp = rcp.replace('.', 'x');
 
@@ -32,7 +31,7 @@ export function hazardViewLayer(hazardType, returnPeriod, rcp, epoch, confidence
         {
           id,
           data: `/raster/singleband/${hazardType}/${returnPeriod}/${sanitisedRcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
-          refinementStrategy,
+          refinementStrategy: 'no-overlap',
         },
       );
     },
