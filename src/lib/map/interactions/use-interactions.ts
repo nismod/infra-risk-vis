@@ -97,17 +97,16 @@ function useSetInteractionGroupState(
   });
 }
 
-export function useInteractions(
-  viewLayers: ViewLayer[],
-  interactionGroups: Record<string, InteractionGroupConfig>,
-  primaryGroup: string,
-) {
+export function useInteractions(viewLayers: ViewLayer[], interactionGroups: InteractionGroupConfig[]) {
   const setHoverXY = useSetRecoilState(hoverPositionState);
 
   const setInteractionGroupHover = useSetInteractionGroupState(hoverState);
   const setInteractionGroupSelection = useSetInteractionGroupState(selectionState);
 
-  const primaryGroupPickingRadius = interactionGroups[primaryGroup].pickingRadius;
+  const interactionGroupLookup = useMemo(() => _.keyBy(interactionGroups, 'id'), [interactionGroups]);
+
+  const primaryGroup = interactionGroups[0].id;
+  const primaryGroupPickingRadius = interactionGroupLookup[primaryGroup].pickingRadius;
 
   const interactiveLayers = useMemo(() => viewLayers.filter((x) => x.interactionGroup), [viewLayers]);
   const viewLayerLookup = useMemo(() => _.keyBy(interactiveLayers, (layer) => layer.id), [interactiveLayers]);
@@ -122,7 +121,7 @@ export function useInteractions(
 
       for (const [groupName, layers] of Object.entries(activeGroups)) {
         const layerIds = layers.map((layer) => layer.id);
-        const interactionGroup = interactionGroups[groupName];
+        const interactionGroup = interactionGroupLookup[groupName];
         const { type, pickingRadius: radius, pickMultiple } = interactionGroup;
 
         const pickingParams = { x, y, layerIds, radius };
@@ -145,7 +144,7 @@ export function useInteractions(
 
       setHoverXY([x, y]);
     },
-    [activeGroups, interactionGroups, setHoverXY, setInteractionGroupHover, viewLayerLookup],
+    [activeGroups, interactionGroupLookup, setHoverXY, setInteractionGroupHover, viewLayerLookup],
   );
 
   const onClick = useCallback(
@@ -154,7 +153,7 @@ export function useInteractions(
       for (const [groupName, layers] of Object.entries(activeGroups)) {
         const layerIds = layers.map((layer) => layer.id);
 
-        const interactionGroup = interactionGroups[groupName];
+        const interactionGroup = interactionGroupLookup[groupName];
         const { type, pickingRadius: radius } = interactionGroup;
 
         // currently only supports selecting vector features
@@ -166,7 +165,7 @@ export function useInteractions(
         }
       }
     },
-    [activeGroups, interactionGroups, setInteractionGroupSelection, viewLayerLookup],
+    [activeGroups, interactionGroupLookup, setInteractionGroupSelection, viewLayerLookup],
   );
 
   /**

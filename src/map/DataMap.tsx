@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-gl';
 
 import { flattenLayers } from 'lib/layer-tree';
 import { selectionState } from 'lib/map/interactions/interaction-state';
-import { InteractionGroupConfig, useInteractions } from 'lib/map/interactions/use-interactions';
+import { useInteractions } from 'lib/map/interactions/use-interactions';
 import { MapTooltip } from 'lib/map/MapTooltip';
 import { MapViewport } from 'lib/map/MapViewport';
 import { MapSearch } from 'lib/map/place-search/MapSearch';
@@ -23,7 +23,6 @@ import { MapLayerSelection } from './layers/MapLayerSelection';
 import { LegendContent } from './legend/LegendContent';
 import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers/layers-state';
 import { useBackgroundConfig } from './use-background-config';
-import { RegionHoverDescription } from './tooltip/content/RegionHoverDescription';
 
 export const DataMap = ({ view, layerSelection, styleParams }) => {
   const background = useRecoilValue(backgroundState);
@@ -32,7 +31,6 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
   const boundaryLevel = useRecoilValue(boundaryLevelState);
 
   const selectedAsset = useRecoilValue(selectionState('assets'));
-  const selectedRegion = useRecoilValue(selectionState('regions'));
 
   const viewLayersSpec = useMemo(() => getViewLayersSpec(layerSelection, view), [layerSelection, view]);
 
@@ -57,11 +55,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
     [background, boundaryLevel, isRetina, selectedAsset, showBoundaries, showLabels, styleParams, viewLayersSpec],
   );
 
-  const { onHover, onClick, layerFilter, pickingRadius } = useInteractions(
-    viewLayers,
-    INTERACTION_GROUPS as Record<string, InteractionGroupConfig>,
-    'assets',
-  );
+  const { onHover, onClick, layerFilter, pickingRadius } = useInteractions(viewLayers, INTERACTION_GROUPS);
 
   const deckLayersFunction = useMemo(
     () => getDeckLayersFunction(viewLayers, viewLayersSpec, styleParams, selectedAsset),
@@ -134,15 +128,6 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
         </MapLegend>
       </Box>
       {selectedAsset && <FeatureSidebar featureSelection={selectedAsset} />}
-      {selectedRegion && (
-        <Box position="absolute" bottom={0} right={0} m={1} ml={1} zIndex={2000}>
-          <Paper>
-            <Typography variant="h6">
-              <RegionHoverDescription hoveredObject={selectedRegion} />
-            </Typography>
-          </Paper>
-        </Box>
-      )}
     </>
   );
 };
