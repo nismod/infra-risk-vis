@@ -1,4 +1,3 @@
-import { Box, Paper } from '@mui/material';
 import React, { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 
@@ -17,9 +16,7 @@ export const MapTooltip: FC<{}> = ({ children }) => {
         top: tooltipXY[1],
       }}
     >
-      <Paper>
-        <Box p={1}>{children}</Box>
-      </Paper>
+      {children}
     </div>
   ) : null;
 };

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
 
 import { VectorHoverDescription } from './content/VectorHoverDescription';
@@ -20,26 +20,28 @@ export const TooltipContent: FC = () => {
   if (!doShow) return null;
 
   return (
-    <>
-      {assetsHovered ? (
-        <Box mb={2}>
-          <Typography>Asset</Typography>
-          <VectorHoverDescription hoveredObject={hoveredVector} />
-        </Box>
-      ) : null}
-      {hazardsHovered ? (
-        <Box>
-          <Typography>Hazards</Typography>
-          {hoveredRasters.map((hr) => (
-            <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer}-${hr.target}`} />
-          ))}
-        </Box>
-      ) : null}
-      {doShow && hoveredRegion ? (
-        <Box>
-          <RegionHoverDescription hoveredObject={hoveredRegion} />
-        </Box>
-      ) : null}
-    </>
+    <Paper>
+      <Box p={1}>
+        {assetsHovered ? (
+          <Box mb={2}>
+            <Typography>Asset</Typography>
+            <VectorHoverDescription hoveredObject={hoveredVector} />
+          </Box>
+        ) : null}
+        {hazardsHovered ? (
+          <Box>
+            <Typography>Hazards</Typography>
+            {hoveredRasters.map((hr) => (
+              <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer}-${hr.target}`} />
+            ))}
+          </Box>
+        ) : null}
+        {doShow && hoveredRegion ? (
+          <Box>
+            <RegionHoverDescription hoveredObject={hoveredRegion} />
+          </Box>
+        ) : null}
+      </Box>
+    </Paper>
   );
 };
