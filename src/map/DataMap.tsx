@@ -60,6 +60,7 @@ export const DataMap = ({ view, layerSelection, styleParams }) => {
   const { onHover, onClick, layerFilter, pickingRadius } = useInteractions(
     viewLayers,
     INTERACTION_GROUPS as Record<string, InteractionGroupConfig>,
+    'assets',
   );
 
   const deckLayersFunction = useMemo(

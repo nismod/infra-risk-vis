@@ -14,6 +14,7 @@ export interface InteractionGroupConfig {
   type: InteractionStyle;
   pickingRadius?: number;
   pickMultiple?: boolean;
+  usesAutoHighlight?: boolean;
 }
 
 export interface InteractionTarget<T> {
@@ -96,11 +97,17 @@ function useSetInteractionGroupState(
   });
 }
 
-export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Record<string, InteractionGroupConfig>) {
+export function useInteractions(
+  viewLayers: ViewLayer[],
+  interactionGroups: Record<string, InteractionGroupConfig>,
+  primaryGroup: string,
+) {
   const setHoverXY = useSetRecoilState(hoverPositionState);
 
   const setInteractionGroupHover = useSetInteractionGroupState(hoverState);
   const setInteractionGroupSelection = useSetInteractionGroupState(selectionState);
+
+  const primaryGroupPickingRadius = interactionGroups[primaryGroup].pickingRadius;
 
   const interactiveLayers = useMemo(() => viewLayers.filter((x) => x.interactionGroup), [viewLayers]);
   const viewLayerLookup = useMemo(() => _.keyBy(interactiveLayers, (layer) => layer.id), [interactiveLayers]);
@@ -162,10 +169,23 @@ export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Reco
     [activeGroups, interactionGroups, setInteractionGroupSelection, viewLayerLookup],
   );
 
+  /**
+   * Interaction groups which should be rendered during the hover picking pass
+   */
+  const hoverPassGroups = useMemo(
+    () =>
+      new Set(
+        _.filter(interactionGroups, (group) => group.id === primaryGroup || group.usesAutoHighlight).map(
+          (group) => group.id,
+        ),
+      ),
+    [interactionGroups, primaryGroup],
+  );
+
   const layerFilter = ({ layer, renderPass }) => {
     if (renderPass === 'picking:hover') {
-      // don't render raster and region layers on hover picking pass (but render them for manual picking)
-      if (layer.id.match(/^(coastal|fluvial|surface|cyclone|boundaries)/)) return false;
+      const viewLayer = viewLayerLookup[layer.id];
+      return hoverPassGroups.has(viewLayer.interactionGroup);
     }
     return true;
   };
@@ -174,6 +194,6 @@ export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Reco
     onHover,
     onClick,
     layerFilter,
-    pickingRadius: 8,
+    pickingRadius: primaryGroupPickingRadius,
   };
 }
