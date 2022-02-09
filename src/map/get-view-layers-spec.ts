@@ -1,17 +1,7 @@
-import { useCallback, useMemo } from 'react';
 import _ from 'lodash';
 
 import { LayerDefinition, LayerName, LAYERS } from '../config/layers';
 import { ViewName, VIEWS } from '../config/views';
-import { getDeckLayers } from 'config/get-deck-layers';
-
-/**
- * get map style and layers definition based on:
- * - selected background
- * - selected layers, filters
- * - selected data visualisation
- * - any highlights / selections
- */
 
 function getSingleViewLayerConfig({ getId, viewLayer }: LayerDefinition) {
   let name: string;
@@ -29,7 +19,16 @@ function getSingleViewLayerConfig({ getId, viewLayer }: LayerDefinition) {
   };
 }
 
-function getViewLayersSpec(logicalLayerSelection: Record<LayerName, boolean>, view: ViewName) {
+export interface ViewLayerParams {
+  visibility: Record<string, boolean>;
+  params: object;
+  sourceLogicalLayers: string[];
+}
+
+export function getViewLayersSpec(
+  logicalLayerSelection: Record<LayerName, boolean>,
+  view: ViewName,
+): Record<string, ViewLayerParams> {
   const viewLayerSpec = {};
 
   for (const logicalLayerName of VIEWS[view].layers) {
@@ -52,35 +51,4 @@ function getViewLayersSpec(logicalLayerSelection: Record<LayerName, boolean>, vi
   }
 
   return viewLayerSpec;
-}
-
-export function useViewLayersSpec(dataLayerSelection, view) {
-  return useMemo(() => getViewLayersSpec(dataLayerSelection, view), [dataLayerSelection, view]);
-}
-
-export function useMapLayersFunction(
-  viewLayersSpec,
-  styleParams,
-  selectedFeature,
-  showLabels,
-  showBoundaries,
-  boundaryLevel,
-  isRetina,
-  background,
-) {
-  return useCallback(
-    ({ zoom }) =>
-      getDeckLayers(
-        viewLayersSpec,
-        zoom,
-        styleParams,
-        selectedFeature,
-        showLabels,
-        showBoundaries,
-        boundaryLevel,
-        isRetina,
-        background,
-      ),
-    [viewLayersSpec, styleParams, selectedFeature, showLabels, showBoundaries, boundaryLevel, isRetina, background],
-  );
 }

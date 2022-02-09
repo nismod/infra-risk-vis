@@ -1,13 +1,14 @@
 import { infrastructureLayer } from 'config/deck-layers/infrastructure-layer';
+import { ViewLayer } from 'lib/view-layers';
 
-export const infrastructureViewLayer = (id: string, customFn: ({ zoom, styleParams }) => object[]) => {
+export function infrastructureViewLayer(id: string, customFn: ({ zoom, styleParams }) => object[]): ViewLayer {
   return {
     id,
     spatialType: 'vector',
     interactionGroup: 'assets',
-    fn: ({ props, zoom, styleParams, selectedFeatureId }) =>
+    fn: ({ props, zoom, styleParams, selection }) =>
       infrastructureLayer(
-        { selectedFeatureId },
+        { selectedFeatureId: selection?.target.feature.id },
         props,
         {
           data: `/vector/data/${id}.json`,
@@ -15,4 +16,4 @@ export const infrastructureViewLayer = (id: string, customFn: ({ zoom, stylePara
         ...customFn({ zoom, styleParams }),
       ),
   };
-};
+}

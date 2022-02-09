@@ -11,8 +11,7 @@ import { InteractionTarget } from 'lib/map/interactions/use-interactions';
 export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
   const hoveredRasters = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
-  const hoveredRegion = useRecoilValue(hoverState('regions'));
-  console.log(hoveredVector, hoveredRasters, hoveredRegion);
+  const hoveredRegion = useRecoilValue(hoverState('regions')) as InteractionTarget<any>;
 
   const assetsHovered = hasHover(hoveredVector);
   const hazardsHovered = hasHover(hoveredRasters);

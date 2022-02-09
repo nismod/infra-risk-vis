@@ -5,7 +5,7 @@ import { VIEW_LAYERS } from '../../../config/view-layers';
 import { LAYERS } from '../../../config/layers';
 
 import { useRasterColorMapValues } from '../../legend/use-color-map-values';
-import { InteractionTarget } from 'lib/map/interactions/use-interactions';
+import { InteractionTarget, RasterTarget } from 'lib/map/interactions/use-interactions';
 
 function useRasterColorMapLookup(colorMapValues) {
   return useMemo(
@@ -14,8 +14,8 @@ function useRasterColorMapLookup(colorMapValues) {
   );
 }
 
-export const RasterHoverDescription: FC<{ hoveredObject: InteractionTarget<any> }> = ({ hoveredObject }) => {
-  const { target: color } = hoveredObject;
+export const RasterHoverDescription: FC<{ hoveredObject: InteractionTarget<RasterTarget> }> = ({ hoveredObject }) => {
+  const { color } = hoveredObject.target;
 
   const { logicalLayer, viewLayer } = hoveredObject;
   const { label, dataUnit } = LAYERS[logicalLayer];

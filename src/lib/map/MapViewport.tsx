@@ -13,7 +13,7 @@ export interface BoundingBox {
 
 interface MapViewportProps {
   initialViewState: any;
-  layersFunction: any;
+  layersFunction: ({ zoom }) => any[];
   backgroundStyle: object;
   onHover: any;
   onClick?: any;

@@ -3,14 +3,17 @@ import { Box, Paper } from '@mui/material';
 
 import { LAYERS } from '../config/layers';
 import { FeatureSidebarContent } from './FeatureSidebarContent';
-import { InteractionTarget } from 'lib/map/interactions/use-interactions';
+import { InteractionTarget, VectorTarget } from 'lib/map/interactions/use-interactions';
 
 interface FeatureSidebarProps {
-  featureSelection: InteractionTarget<any>;
+  featureSelection: InteractionTarget<VectorTarget>;
 }
 
 export const FeatureSidebar: FC<FeatureSidebarProps> = ({ featureSelection }) => {
-  const { target: feature, logicalLayer } = featureSelection;
+  const {
+    target: { feature },
+    logicalLayer,
+  } = featureSelection;
   const f = feature.properties;
   const logicalLayerConfig = LAYERS[logicalLayer];
 

@@ -33,7 +33,7 @@ export const boundaryConfig: Record<BoundaryLevel, BoundaryConfig> = {
 export function boundariesLayer(level: BoundaryLevel) {
   return new MVTLayer(
     {
-      id: `boundaries-${level}`,
+      id: `boundaries_${level}`,
       data: `/vector/data/boundaries_${level}.json`,
       loadOptions: {
         mvt: {
@@ -59,7 +59,7 @@ export function boundaryLabelsLayer(level: BoundaryLevel, background: Background
   return (
     config.showLabels &&
     new MVTLayer({
-      id: `boundaries-${level}-text`,
+      id: `boundaries_${level}-text`,
       data: `/vector/data/boundaries_${level}_labels.json`,
       loadOptions: {
         mvt: {

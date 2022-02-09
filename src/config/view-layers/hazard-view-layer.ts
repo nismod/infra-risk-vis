@@ -1,11 +1,12 @@
 import GL from '@luma.gl/constants';
 
 import { rasterTileLayer } from 'lib/deck-layers/raster-tile-layer';
+import { ViewLayer } from 'lib/view-layers';
 
 import { RASTER_COLOR_MAPS } from '../color-maps';
 import { getHazardId } from '../layers';
 
-export function hazardViewLayer(hazardType, returnPeriod, rcp, epoch, confidence) {
+export function hazardViewLayer(hazardType, returnPeriod, rcp, epoch, confidence): ViewLayer {
   const id = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence }); //`hazard_${hazardType}_${returnPeriod}`;
 
   const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;

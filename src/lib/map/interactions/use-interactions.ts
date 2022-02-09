@@ -1,19 +1,19 @@
-import DeckGL from 'deck.gl';
+import DeckGL, { Deck, PickInfo } from 'deck.gl';
 import { readPixelsToArray } from '@luma.gl/core';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
-import { useRecoilCallback, useSetRecoilState } from 'recoil';
+import { RecoilState, useRecoilCallback, useSetRecoilState } from 'recoil';
 
-import { VIEW_LAYERS } from 'config/view-layers';
+import { ViewLayer } from 'lib/view-layers';
 
-import { hoverState, hoverPositionState } from './interaction-state';
+import { hoverState, hoverPositionState, selectionState } from './interaction-state';
 
+export type InteractionStyle = 'vector' | 'raster';
 export interface InteractionGroupConfig {
   id: string;
-  type: 'vector' | 'raster';
-  options?: {
-    pickingRadius?: number;
-  };
+  type: InteractionStyle;
+  pickingRadius?: number;
+  pickMultiple?: boolean;
 }
 
 export interface InteractionTarget<T> {
@@ -26,7 +26,11 @@ export interface InteractionTarget<T> {
   target: T;
 }
 
-function processRasterHover(layerId, info): InteractionTarget<any> {
+export interface RasterTarget {
+  color: [number, number, number, number];
+}
+
+function processRasterTarget(info: any): RasterTarget {
   const { bitmap, sourceLayer } = info;
   if (bitmap) {
     const pixelColor = readPixelsToArray(sourceLayer.props.image, {
@@ -37,110 +41,126 @@ function processRasterHover(layerId, info): InteractionTarget<any> {
       sourceType: undefined,
     });
 
-    return pixelColor[3] ? pixelColor : null;
+    return pixelColor[3]
+      ? {
+          color: pixelColor,
+        }
+      : null;
   }
 }
+export interface VectorTarget {
+  feature: any;
+}
 
-const pickingRadius = 8;
+function processVectorTarget(info: PickInfo<any>): VectorTarget {
+  const { object } = info;
 
-export function useInteractions(
-  viewLayersSpec: Record<string, any>,
-  interactionGroups: Record<string, InteractionGroupConfig>,
+  return object
+    ? {
+        feature: object,
+      }
+    : null;
+}
+
+function processTargetByType(type: InteractionStyle, info: PickInfo<any>) {
+  return type === 'raster' ? processRasterTarget(info) : processVectorTarget(info);
+}
+
+function processPickedObject(
+  info: PickInfo<any>,
+  type: InteractionStyle,
+  groupName: string,
+  viewLayerLookup: Record<string, ViewLayer>,
 ) {
-  /**
-   * {
-   *  assets: [elec_edges_high, elec_edges_low, water_irrigation_nodes, water_irrigation_edges],
-   *  hazard: [hazard__rp_m, ],
-   *  region: ['boundaries-parish', 'boundaries-community', 'boundaries-enumeration']
-   * }
-   */
+  const layerId = info.layer.id;
+  const target = processTargetByType(type, info);
 
-  const setHoverXY = useSetRecoilState(hoverPositionState);
+  return (
+    target && {
+      interactionGroup: groupName,
+      interactionStyle: type,
+      viewLayer: layerId,
+      logicalLayer: viewLayerLookup[layerId].getLogicalLayer?.({ deckLayerId: layerId, target }) ?? layerId,
+      target,
+    }
+  );
+}
 
-  const setInteractionGroupHover = useRecoilCallback(({ set }) => {
-    return (interactionGroup: string, target: InteractionTarget<any> | InteractionTarget<any>[]) => {
-      set(hoverState(interactionGroup), target);
+function useSetInteractionGroupState(
+  state: (group: string) => RecoilState<InteractionTarget<any> | InteractionTarget<any>[]>,
+) {
+  return useRecoilCallback(({ set }) => {
+    return (groupName: string, value: InteractionTarget<any> | InteractionTarget<any>[]) => {
+      set(state(groupName), value);
     };
   });
+}
 
+export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Record<string, InteractionGroupConfig>) {
+  const setHoverXY = useSetRecoilState(hoverPositionState);
+
+  const setInteractionGroupHover = useSetInteractionGroupState(hoverState);
+  const setInteractionGroupSelection = useSetInteractionGroupState(selectionState);
+
+  const interactiveLayers = useMemo(() => viewLayers.filter((x) => x.interactionGroup), [viewLayers]);
+  const viewLayerLookup = useMemo(() => _.keyBy(interactiveLayers, (layer) => layer.id), [interactiveLayers]);
   const activeGroups = useMemo(
-    () => _.groupBy(_.keys(viewLayersSpec), (layerName) => VIEW_LAYERS[layerName].interactionGroup),
-    [viewLayersSpec],
+    () => _.groupBy(interactiveLayers, (layer) => layer.interactionGroup),
+    [interactiveLayers],
   );
 
-  console.log(activeGroups);
-
   const onHover = useCallback(
-    (info: any, deck: DeckGL) => {
+    (info: any, deck: Deck) => {
       const { x, y } = info;
 
-      for (const [groupName, layerIds] of Object.entries(activeGroups)) {
-        if (layerIds.length === 0) {
-          setInteractionGroupHover(groupName, null);
-          continue;
-        }
-
+      for (const [groupName, layers] of Object.entries(activeGroups)) {
+        const layerIds = layers.map((layer) => layer.id);
         const interactionGroup = interactionGroups[groupName];
+        const { type, pickingRadius: radius, pickMultiple } = interactionGroup;
 
-        if (interactionGroup.type === 'vector') {
-          const pickedVectorInfo = deck.pickObject({ x, y, layerIds, radius: interactionGroup.options?.pickingRadius });
+        const pickingParams = { x, y, layerIds, radius };
 
-          if (pickedVectorInfo) {
-            const layerId = pickedVectorInfo.layer.id;
-            const { object } = pickedVectorInfo;
+        if (pickMultiple) {
+          const pickedObjects: PickInfo<any>[] = deck.pickMultipleObjects(pickingParams);
+          const interactionTargets: InteractionTarget<any>[] = pickedObjects
+            .map((info) => processPickedObject(info, type, groupName, viewLayerLookup))
+            .filter(Boolean);
 
-            setInteractionGroupHover(groupName, {
-              interactionGroup: groupName,
-              interactionStyle: interactionGroup.type,
-              viewLayer: layerId,
-              logicalLayer:
-                VIEW_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: object }) ?? layerId,
-              target: object,
-            });
-          } else {
-            setInteractionGroupHover(groupName, null);
-          }
-        } else if (interactionGroup.type === 'raster') {
-          const pickedObjects = deck.pickMultipleObjects({ x, y, layerIds });
-          const interactionTargets: InteractionTarget<any>[] = [];
-          for (const info of pickedObjects) {
-            const layerId = info.layer.id;
-
-            const rasterTarget = processRasterHover(layerId, info);
-
-            if (rasterTarget) {
-              interactionTargets.push({
-                interactionGroup: groupName,
-                interactionStyle: interactionGroup.type,
-                viewLayer: layerId,
-                logicalLayer:
-                  VIEW_LAYERS[layerId].getLogicalLayer?.({ deckLayerId: layerId, feature: null }) ?? layerId,
-                target: rasterTarget,
-              });
-            }
-          }
           setInteractionGroupHover(groupName, interactionTargets);
+        } else {
+          const info: PickInfo<any> = deck.pickObject(pickingParams);
+          let interactionTarget: InteractionTarget<any> =
+            info && processPickedObject(info, type, groupName, viewLayerLookup);
+
+          setInteractionGroupHover(groupName, interactionTarget);
         }
       }
 
       setHoverXY([x, y]);
     },
-    [activeGroups, interactionGroups, setHoverXY, setInteractionGroupHover],
+    [activeGroups, interactionGroups, setHoverXY, setInteractionGroupHover, viewLayerLookup],
   );
 
-  // const onClick = useCallback(
-  //   (info: any, deck: DeckGL) => {
-  //     const { x, y } = info;
-  //     const pickedVectorInfo = deck.pickObject({ x, y, layerIds: activeGroups, radius: pickingRadius });
+  const onClick = useCallback(
+    (info: any, deck: DeckGL) => {
+      const { x, y } = info;
+      for (const [groupName, layers] of Object.entries(activeGroups)) {
+        const layerIds = layers.map((layer) => layer.id);
 
-  //     if (pickedVectorInfo) {
-  //       setSelectedFeature(processVectorHover(pickedVectorInfo.layer.id, pickedVectorInfo));
-  //     } else {
-  //       setSelectedFeature(null);
-  //     }
-  //   },
-  //   [vectorLayerIds],
-  // );
+        const interactionGroup = interactionGroups[groupName];
+        const { type, pickingRadius: radius } = interactionGroup;
+
+        // currently only supports selecting vector features
+        if (interactionGroup.type === 'vector') {
+          const info = deck.pickObject({ x, y, layerIds, radius });
+          let selectionTarget = info && processPickedObject(info, type, groupName, viewLayerLookup);
+
+          setInteractionGroupSelection(groupName, selectionTarget);
+        }
+      }
+    },
+    [activeGroups, interactionGroups, setInteractionGroupSelection, viewLayerLookup],
+  );
 
   const layerFilter = ({ layer, renderPass }) => {
     if (renderPass === 'picking:hover') {
@@ -152,7 +172,7 @@ export function useInteractions(
 
   return {
     onHover,
-    // onClick,
+    onClick,
     layerFilter,
     pickingRadius: 8,
   };

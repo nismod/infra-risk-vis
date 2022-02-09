@@ -4,6 +4,7 @@ import { border, lineStyle, pointRadius, vectorColor } from 'lib/deck-layers/uti
 import { COLORS } from './colors';
 import { hazardViewLayer } from './view-layers/hazard-view-layer';
 import { infrastructureViewLayer } from './view-layers/infrastructure-view-layer';
+import { ViewLayer } from 'lib/view-layers';
 
 enum RoadClass {
   class_a = 'class_a',
@@ -32,7 +33,7 @@ const roadColor = {
   [RoadClass.other]: COLORS.roads_unknown.deck,
 };
 
-export const VIEW_LAYERS = makeConfig<any, string>([
+export const VIEW_LAYERS = makeConfig<ViewLayer, string>([
   infrastructureViewLayer('elec_edges_high', ({ zoom, styleParams }) => [
     vectorColor('stroke', COLORS.electricity_high.deck, styleParams),
     lineStyle(zoom),

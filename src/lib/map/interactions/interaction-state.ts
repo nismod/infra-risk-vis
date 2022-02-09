@@ -17,3 +17,8 @@ export const hoverPositionState = atom({
   key: 'hoverPosition',
   default: null,
 });
+
+export const selectionState = atomFamily<InteractionTarget<any>, string>({
+  key: 'selectionState',
+  default: null,
+});
