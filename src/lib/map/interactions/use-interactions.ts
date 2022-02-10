@@ -1,12 +1,13 @@
 import DeckGL, { Deck, PickInfo } from 'deck.gl';
 import { readPixelsToArray } from '@luma.gl/core';
 import _ from 'lodash';
-import { useCallback, useMemo } from 'react';
-import { RecoilState, useRecoilCallback, useSetRecoilState } from 'recoil';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useRecoilCallback, useSetRecoilState } from 'recoil';
 
 import { ViewLayer } from 'lib/view-layers';
 
-import { hoverState, hoverPositionState, selectionState } from './interaction-state';
+import { hoverState, hoverPositionState, selectionState, allowedGroupLayersState } from './interaction-state';
+import { RecoilStateFamily } from 'lib/recoil/types';
 
 export type InteractionStyle = 'vector' | 'raster';
 export interface InteractionGroupConfig {
@@ -88,11 +89,11 @@ function processPickedObject(
 }
 
 function useSetInteractionGroupState(
-  state: (group: string) => RecoilState<InteractionTarget<any> | InteractionTarget<any>[]>,
+  stateFamily: RecoilStateFamily<InteractionTarget<any> | InteractionTarget<any>[], string>,
 ) {
   return useRecoilCallback(({ set }) => {
     return (groupName: string, value: InteractionTarget<any> | InteractionTarget<any>[]) => {
-      set(state(groupName), value);
+      set(stateFamily(groupName), value);
     };
   });
 }
@@ -114,6 +115,12 @@ export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Inte
     () => _.groupBy(interactiveLayers, (layer) => layer.interactionGroup),
     [interactiveLayers],
   );
+
+  const setAllowedGroupLayers = useSetRecoilState(allowedGroupLayersState);
+
+  useEffect(() => {
+    setAllowedGroupLayers(_.mapValues(activeGroups, (layers) => layers.map((layer) => layer.id)));
+  }, [activeGroups, setAllowedGroupLayers]);
 
   const onHover = useCallback(
     (info: any, deck: Deck) => {
