@@ -16,6 +16,7 @@ export const INTERACTION_GROUPS: InteractionGroupConfig[] = [
   {
     id: 'regions',
     type: 'vector',
+    pickingRadius: 8,
     pickMultiple: false,
   },
 ];
