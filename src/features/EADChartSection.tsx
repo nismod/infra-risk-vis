@@ -1,8 +1,8 @@
 import { FC, useMemo } from 'react';
 import { Box, MenuItem, Select, Typography } from '@mui/material';
 
-import { titleCase, unique } from '../helpers';
-import { useSelect } from '../hooks/use-select';
+import { titleCase, unique } from 'lib/helpers';
+import { useSelect } from 'lib/hooks/use-select';
 
 import { EADChart } from './charts/EADChart';
 

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
-import { numFormat } from '../helpers';
+import { numFormat } from 'lib/helpers';
 
 interface RiskSectionProps {
   eadData: any;

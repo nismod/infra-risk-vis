@@ -1,6 +1,6 @@
-import { makeConfig } from '../helpers';
+import { makeConfig } from 'lib/helpers';
 
-export const backgroundConfig = makeConfig([
+export const BACKGROUNDS = makeConfig([
   {
     id: 'light',
     label: 'Map',
@@ -29,7 +29,7 @@ export const backgroundConfig = makeConfig([
       id: 'satellite',
       type: 'raster',
       tiles: [
-        'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.png'
+        'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/GoogleMapsCompatible/{z}/{y}/{x}.png',
       ],
       tileSize: 256,
     },
@@ -41,4 +41,4 @@ export const backgroundConfig = makeConfig([
   },
 ]);
 
-export type BackgroundName = keyof typeof backgroundConfig;
+export type BackgroundName = keyof typeof BACKGROUNDS;

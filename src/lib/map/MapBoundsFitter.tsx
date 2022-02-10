@@ -3,7 +3,7 @@ import { MapContext, FlyToInterpolator } from 'react-map-gl';
 
 import { easeCubic } from 'd3-ease';
 
-import { useChangeEffect } from '../hooks/use-change-effect';
+import { useChangeEffect } from 'lib/hooks/use-change-effect';
 
 type DeckBoundingBox = [[number, number], [number, number]];
 

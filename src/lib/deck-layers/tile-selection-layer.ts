@@ -1,5 +1,6 @@
 import { GeoJsonLayer } from 'deck.gl';
 import { DataFilterExtension } from '@deck.gl/extensions';
+
 import { mergeUpdateTriggers } from './utils';
 
 export function tileSelectionLayer(tileProps, selectedFeatureId) {
