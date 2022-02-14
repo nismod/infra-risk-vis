@@ -27,7 +27,7 @@ export const App = () => {
                 <IntroPage />
               </Route>
               <Route
-                path="/:view(overview)"
+                path="/:view(exposure|risk|adaptation|prioritization)"
                 render={({ match: { params } }) => <MapPage view={params.view as ViewName} />}
               />
             </Switch>

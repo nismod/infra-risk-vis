@@ -112,7 +112,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
       <Drawer variant="permanent">
         <Box p={4} pt={2} width={sidebarWidth} boxSizing="border-box">
           <Toolbar /> {/* Prevents app bar from concealing content*/}
-          {view === 'overview' && (
+          {view === 'exposure' && (
             <>
               <NetworkControl networkSelection={networkSelection} onNetworkSelection={setNetworkSelection} />
               <Box mb={1}>

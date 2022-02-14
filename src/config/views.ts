@@ -2,7 +2,7 @@ import { makeConfig } from 'lib/helpers';
 
 export const VIEWS = makeConfig([
   {
-    id: 'overview',
+    id: 'exposure',
     layers: [
       'cyclone__rp_10__rcp_4.5__epoch_2050__conf_5',
       'cyclone__rp_10__rcp_4.5__epoch_2050__conf_50',
@@ -524,6 +524,18 @@ export const VIEWS = makeConfig([
       'water_waste_edges',
       'water_waste_nodes',
     ],
+  },
+  {
+    id: 'risk',
+    layers: [],
+  },
+  {
+    id: 'adaptation',
+    layers: [],
+  },
+  {
+    id: 'prioritization',
+    layers: [],
   },
 ]);
 
