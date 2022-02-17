@@ -1,5 +1,20 @@
 # Deploy
 
+The site can run on a single Linux virtual machine.
+
+The virtual machine runs several processes:
+- Nginx reverse proxy and static file server, receives requests from the web,
+  terminates SSL connections and handles basic authentication.
+- Frontend React application, built using node and npm. On the server this is
+  built into static files (HTML/JS/CSS).
+- Vector tileserver, tileserver-gl-light, depends on nodejs
+- Raster tileserver, terracotta, depends on gunicorn and Python
+
+The frontend application source code is held in
+[this repository](https://github.com/nismod/infra-risk-vis/) and this guide
+assumes that it is built using node and npm locally on a development machine.
+It would be possible to build directly on the server in a working directory.
+
 To build and deploy the site:
 
 - provision a server
@@ -32,19 +47,26 @@ terraform apply # rerun after any change to main.tf
 `provision.sh` contains installation instructions for an Ubuntu 20.04 server to
 install NGINX, setup SSL using CertBot, install node and tileserver-gl-light
 
+Create a password file for HTTP Basic Authentication:
+
 ```bash
 sudo touch /etc/nginx/.htpasswd
-sudo htpasswd -B /etc/nginx/.htpasswd username
 ```
 
-Configure terracotta to run under gunicorn.
+Add a user to the password file (will prompt for password):
+
+```bash
+sudo htpasswd -B /etc/nginx/.htpasswd new-username
+```
+
+Configure terracotta to run under gunicorn:
 
 ```bash
 sudo chown :www-data /var/www/tileserver/raster/terracotta.sock
 sudo -u www-data curl --unix-socket /var/www/tileserver/raster/terracotta.sock http
 ```
 
-Transfer tileserver raster data to the server, then ingest to terracotta.
+Transfer tileserver raster data to the server, then ingest to terracotta:
 
 ```bash
 terracotta ingest \
