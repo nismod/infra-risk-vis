@@ -1,9 +1,4 @@
-import _ from 'lodash';
-import { colorCssToRgb } from '../helpers';
-
-function makeColorConfig<K extends string>(cfg: Record<K, string>) {
-  return _.mapValues(cfg, (c) => ({ css: c, deck: colorCssToRgb(c) }));
-}
+import { makeColorConfig } from 'lib/helpers';
 
 export const COLORS = makeColorConfig({
   electricity_high: '#eca926',

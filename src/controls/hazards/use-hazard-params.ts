@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 
+import { useDataParams } from 'lib/controls/use-data-params';
+
 import { hazardConfig } from '../../config/data/hazards';
-import { useDataParams } from '../use-data-params';
 
 export const useHazardParams = () => {
   const fluvialState = useDataParams(hazardConfig.fluvial);

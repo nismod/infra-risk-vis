@@ -27,7 +27,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0",
     "react-vega": "^7.4.2",
-    "recoil": "^0.5.2",
+    "recoil": "^0.6.1",
     "tileserver-gl-light": "^3.1.1",
     "use-http": "^1.0.26",
     "use-immer": "^0.6.0",

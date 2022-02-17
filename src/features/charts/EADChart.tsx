@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { VegaLite } from 'react-vega';
-import { unique } from '../../helpers';
+
+import { unique } from 'lib/helpers';
 
 const makeSpec = (yearValues: number[]) => ({
   $schema: 'https://vega.github.io/schema/vega-lite/v5.json',

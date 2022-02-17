@@ -4,7 +4,7 @@ import * as d3Scale from 'd3-scale';
 import * as d3Array from 'd3-array';
 
 import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from '../../config/color-maps';
-import { DECK_LAYERS } from '../../config/deck-layers';
+import { VIEW_LAYERS } from '../../config/view-layers';
 import { LAYERS } from '../../config/layers';
 import { useRasterColorMapValues } from '../legend/use-color-map-values';
 
@@ -93,12 +93,12 @@ const DamagesLegend = ({ styleParams }) => {
   return <GradientLegend label="Direct Damages" range={range} colorMapValues={colorMapValues} />;
 };
 
-export const LegendContent = ({ deckLayersSpec, styleParams }) => {
+export const LegendContent = ({ viewLayersSpec, styleParams }) => {
   return (
     <>
       {/* <Typography variant="h6">Legend</Typography> */}
-      {Object.entries(deckLayersSpec).map(([deckLayerName, params]) => {
-        const deckLayerConfig = DECK_LAYERS[deckLayerName];
+      {Object.entries(viewLayersSpec).map(([deckLayerName, params]) => {
+        const deckLayerConfig = VIEW_LAYERS[deckLayerName];
 
         if (deckLayerConfig.spatialType === 'raster') {
           return (

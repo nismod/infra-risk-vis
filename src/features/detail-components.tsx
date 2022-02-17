@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { List, ListItem, ListItemText, Typography } from '@mui/material';
 
-import { titleCase, isNumeric, numFormat } from '../helpers';
+import { titleCase, isNumeric, numFormat } from 'lib/helpers';
 
 interface DataItemProps {
   label: string;
@@ -39,16 +39,18 @@ interface DetailsProps {
 }
 
 export const DefaultDetails: FC<DetailsProps> = ({ f }) => {
-  return <>
-    <Typography variant="h6" component="h1">
-      Asset
-    </Typography>
-    <List>
-      {Object.entries(f).map(([key, value]) => (
-        <DataItem key={key} label={titleCase(key.replace(/_/g, ' '))} value={value} />
-      ))}
-    </List>
-  </>;
+  return (
+    <>
+      <Typography variant="h6" component="h1">
+        Asset
+      </Typography>
+      <List>
+        {Object.entries(f).map(([key, value]) => (
+          <DataItem key={key} label={titleCase(key.replace(/_/g, ' '))} value={value} />
+        ))}
+      </List>
+    </>
+  );
 };
 
 export const AirportDetails: FC<DetailsProps> = ({ f }) => (

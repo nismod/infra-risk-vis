@@ -1,6 +1,7 @@
 import { MVTLayer, GeoJsonLayer } from 'deck.gl';
-import { tileSelectionLayer } from './tile-selection-layer';
-import { mergeUpdateTriggers } from './utils';
+
+import { tileSelectionLayer } from 'lib/deck-layers/tile-selection-layer';
+import { mergeUpdateTriggers } from 'lib/deck-layers/utils';
 
 export function infrastructureLayer({ selectedFeatureId }, ...props) {
   return new MVTLayer(

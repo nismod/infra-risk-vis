@@ -1,4 +1,4 @@
-import { DataParamConfig } from './types';
+import { DataParamConfig } from 'lib/controls/use-data-params';
 
 interface TotalDamagesParams {
   rcp: string;
