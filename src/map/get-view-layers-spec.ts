@@ -26,7 +26,7 @@ export interface ViewLayerParams {
 }
 
 export function getViewLayersSpec(
-  logicalLayerSelection: Record<LayerName, boolean>,
+  logicalLayerSelection: Record<string, boolean>,
   view: ViewName,
 ): Record<string, ViewLayerParams> {
   const viewLayerSpec = {};

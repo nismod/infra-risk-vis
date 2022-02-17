@@ -1,50 +1,34 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
-  Checkbox,
   FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
-  InputLabel,
   MenuItem,
-  Radio,
   Select,
   Switch,
   Typography,
 } from '@mui/material';
+import { Children } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
+import { ToggleSection, ToggleSectionGroup } from 'lib/controls/accordion-toggle/ToggleSection';
 import { CustomNumberSlider } from 'lib/controls/CustomSlider';
 
-function rcpLabel(value) {
-  return value === 'baseline' ? 'Baseline' : value;
-}
+import {
+  damageSourceSelectionState,
+  showDamageRasterState,
+  showDirectDamagesState,
+} from 'state/damage-mapping/damage-map';
+import { dataParamOptionsState, dataParamState, useUpdateDataParam } from '../state/data-params';
+import { hazardSelectionState } from '../state/hazards/hazard-selection';
 
-function epochLabel(value) {
-  if (value === 2010) return 'Present';
-  return value;
-}
+const DataParam = ({ group, id, children }) => {
+  const value = useRecoilValue(dataParamState({ group, param: id }));
+  const updateValue = useUpdateDataParam(group, id);
+  const options = useRecoilValue(dataParamOptionsState({ group, param: id }));
 
-const HazardSection = ({ show, onShow, label, forceSingle, children }) => {
-  return (
-    <Accordion expanded={show} onChange={onShow}>
-      <AccordionSummary>
-        <FormControlLabel
-          control={
-            forceSingle ? <Radio checked={show} onChange={onShow} /> : <Checkbox checked={show} onChange={onShow} />
-          }
-          label={label}
-          onClick={
-            // clicking on checkbox label shouldn't also trigger accordion change because then nothing happens
-            (e) => e.preventDefault()
-          }
-        />
-      </AccordionSummary>
-      <AccordionDetails style={{ display: 'block' }}>{children}</AccordionDetails>
-    </Accordion>
-  );
+  return typeof children === 'function' ? children({ value: value, onChange: updateValue, options }) : children;
 };
 
 const InputSection = ({ children }) => (
@@ -53,25 +37,95 @@ const InputSection = ({ children }) => (
   </Box>
 );
 
-export const HazardsControl = ({
-  hazardShow,
-  hazardOptions,
-  hazardParams,
-  onSingleHazardShow,
-  onSingleHazardParam,
-  showDamages,
-  showDamageRaster,
-  onShowDamageRaster,
-  showTotalDamages,
-  onShowTotalDamages,
-  totalDamagesParams,
-  totalDamagesOptions,
-  onSingleTotalDamagesParam,
-}) => {
-  const handleChange = (hazardType) => (e, isExpanded) => {
-    onSingleHazardShow(hazardType, isExpanded);
-  };
+const ShowDamageRasterToggle = () => {
+  const [showDamageRaster, setShowDamageRaster] = useRecoilState(showDamageRasterState);
+
+  return (
+    <Grid item>
+      <FormControlLabel
+        control={<Switch checked={showDamageRaster} onChange={(e, checked) => setShowDamageRaster(checked)}></Switch>}
+        label="Show hazard raster"
+        labelPlacement="start"
+      />
+    </Grid>
+  );
+};
+
+const ReturnPeriodControl = ({ group, ...otherProps }) => {
+  return (
+    <FormControl fullWidth>
+      <FormLabel>Return Period</FormLabel>
+      <DataParam group={group} id="returnPeriod">
+        {({ value, onChange, options }) => (
+          <CustomNumberSlider marks={options} value={value} onChange={onChange} {...otherProps} />
+        )}
+      </DataParam>
+    </FormControl>
+  );
+};
+
+function epochLabel(value) {
+  if (value === 2010) return 'Present';
+  return value;
+}
+
+const EpochControl = ({ group }) => {
+  return (
+    <FormControl fullWidth>
+      <FormLabel>Epoch</FormLabel>
+      <DataParam group={group} id="epoch">
+        {({ value, onChange, options }) => (
+          <Select variant="standard" value={value} onChange={(e) => onChange(e.target.value)} fullWidth>
+            {options.map((epoch) => (
+              <MenuItem key={epoch} value={epoch}>
+                {epochLabel(epoch)}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      </DataParam>
+    </FormControl>
+  );
+};
+
+function rcpLabel(value) {
+  return value === 'baseline' ? 'Baseline' : value;
+}
+
+const RCPControl = ({ group }) => {
+  return (
+    <FormControl fullWidth>
+      <FormLabel>RCP</FormLabel>
+      <DataParam group={group} id="rcp">
+        {({ value, onChange, options }) => (
+          <Select variant="standard" value={value} onChange={(e) => onChange(e.target.value)} fullWidth>
+            {options.map((rcp) => (
+              <MenuItem key={rcp} value={rcp}>
+                {rcpLabel(rcp)}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
+      </DataParam>
+    </FormControl>
+  );
+};
+
+const ParamRow = ({ children }) => (
+  <Grid container spacing={1}>
+    {Children.map(children, (child) => (
+      <Grid item xs>
+        {child}
+      </Grid>
+    ))}
+  </Grid>
+);
+
+export const HazardsControl = () => {
+  const showDamages = useRecoilValue(showDirectDamagesState);
   const forceSingle = showDamages;
+
+  const selectionState = showDamages ? damageSourceSelectionState : hazardSelectionState;
 
   return (
     <Box mb={1}>
@@ -80,179 +134,57 @@ export const HazardsControl = ({
           <Grid item>
             <Typography variant="h6">Hazards</Typography>
           </Grid>
-          {showDamages && (
-            <Grid item>
-              <FormControlLabel
-                control={
-                  <Switch checked={showDamageRaster} onChange={(e, checked) => onShowDamageRaster(checked)}></Switch>
-                }
-                label="Show hazard raster"
-                labelPlacement="start"
-              />
-            </Grid>
-          )}
+          {showDamages ? <ShowDamageRasterToggle /> : null}
         </Grid>
       </Box>
-      {showDamages && (
-        <HazardSection
-          show={showTotalDamages}
-          onShow={onShowTotalDamages}
-          label="Total Damages"
-          forceSingle={forceSingle}
-        >
+      <ToggleSectionGroup toggleState={selectionState}>
+        {showDamages && (
+          <ToggleSection id="total-damages" label="Total Damages" forceSingle={forceSingle}>
+            <InputSection>
+              <ParamRow>
+                <EpochControl group="total-damages" />
+                <RCPControl group="total-damages" />
+              </ParamRow>
+            </InputSection>
+          </ToggleSection>
+        )}
+
+        <ToggleSection id="fluvial" label="River Flooding" forceSingle={forceSingle}>
+          <ReturnPeriodControl group="fluvial" param="returnPeriod" />
+        </ToggleSection>
+
+        <ToggleSection id="surface" label="Surface Flooding" forceSingle={forceSingle}>
+          <ReturnPeriodControl group="surface" param="returnPeriod" />
+        </ToggleSection>
+
+        <ToggleSection id="coastal" label="Coastal Flooding" forceSingle={forceSingle}>
           <InputSection>
-            <FormControl disabled={!showTotalDamages} variant="standard" style={{ width: '50%' }}>
-              <InputLabel>Epoch</InputLabel>
-              <Select
-                value={totalDamagesParams.epoch}
-                onChange={(e) => onSingleTotalDamagesParam('epoch', e.target.value)}
-              >
-                {totalDamagesOptions.epoch.map((epoch) => (
-                  <MenuItem key={epoch} value={epoch}>
-                    {epochLabel(epoch)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl disabled={!showTotalDamages} variant="standard" style={{ width: '50%' }}>
-              <InputLabel>RCP</InputLabel>
-              <Select value={totalDamagesParams.rcp} onChange={(e) => onSingleTotalDamagesParam('rcp', e.target.value)}>
-                {totalDamagesOptions.rcp.map((rcp) => (
-                  <MenuItem key={rcp} value={rcp}>
-                    {rcpLabel(rcp)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <ReturnPeriodControl group="coastal" param="returnPeriod" />
           </InputSection>
-        </HazardSection>
-      )}
-      <HazardSection
-        show={hazardShow.fluvial}
-        onShow={handleChange('fluvial')}
-        label="River Flooding"
-        forceSingle={forceSingle}
-      >
-        <FormControl disabled={!hazardShow.fluvial} fullWidth>
-          <FormLabel>Return Period</FormLabel>
-          <CustomNumberSlider
-            marks={hazardOptions.fluvial.returnPeriod}
-            value={hazardParams.fluvial.returnPeriod}
-            onChange={(v) => onSingleHazardParam('fluvial', 'returnPeriod', v)}
-            disabled={!hazardShow.fluvial}
-          />
-        </FormControl>
-      </HazardSection>
-      <HazardSection
-        show={hazardShow.surface}
-        onShow={handleChange('surface')}
-        label="Surface Flooding"
-        forceSingle={forceSingle}
-      >
-        <FormControl disabled={!hazardShow.surface} fullWidth>
-          <FormLabel>Return Period</FormLabel>
-          <CustomNumberSlider
-            marks={hazardOptions.surface.returnPeriod}
-            value={hazardParams.surface.returnPeriod}
-            onChange={(v) => onSingleHazardParam('surface', 'returnPeriod', v)}
-            disabled={!hazardShow.surface}
-          />
-        </FormControl>
-      </HazardSection>
-      <HazardSection
-        show={hazardShow.coastal}
-        onShow={handleChange('coastal')}
-        label="Coastal Flooding"
-        forceSingle={forceSingle}
-      >
-        <InputSection>
-          <FormControl disabled={!hazardShow.coastal} component="fieldset" fullWidth>
-            <FormLabel>Return Period</FormLabel>
-            <CustomNumberSlider
-              marks={hazardOptions.coastal.returnPeriod}
-              value={hazardParams.coastal.returnPeriod}
-              onChange={(v) => onSingleHazardParam('coastal', 'returnPeriod', v)}
-              disabled={!hazardShow.coastal}
-            />
-          </FormControl>
-        </InputSection>
-        <InputSection>
-          <FormControl disabled={!hazardShow.coastal} variant="standard" style={{ width: '50%' }}>
-            <InputLabel>Epoch</InputLabel>
-            <Select
-              value={hazardParams.coastal.epoch}
-              onChange={(e) => onSingleHazardParam('coastal', 'epoch', e.target.value)}
-            >
-              {hazardOptions.coastal.epoch.map((epoch) => (
-                <MenuItem key={epoch} value={epoch}>
-                  {epochLabel(epoch)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl disabled={!hazardShow.coastal} variant="standard" style={{ width: '50%' }}>
-            <InputLabel>RCP</InputLabel>
-            <Select
-              value={hazardParams.coastal.rcp}
-              onChange={(e) => onSingleHazardParam('coastal', 'rcp', e.target.value)}
-            >
-              {hazardOptions.coastal.rcp.map((rcp) => (
-                <MenuItem key={rcp} value={rcp}>
-                  {rcpLabel(rcp)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </InputSection>
-      </HazardSection>
-      <HazardSection
-        show={hazardShow.cyclone}
-        onShow={handleChange('cyclone')}
-        label="Cyclones"
-        forceSingle={forceSingle}
-      >
-        <InputSection>
-          <FormControl disabled={!hazardShow.cyclone} component="fieldset" fullWidth>
-            <FormLabel>Return Period</FormLabel>
-            <CustomNumberSlider
-              marks={hazardOptions.cyclone.returnPeriod}
-              value={hazardParams.cyclone.returnPeriod}
-              onChange={(v) => onSingleHazardParam('cyclone', 'returnPeriod', v)}
-              disabled={!hazardShow.cyclone}
+          <InputSection>
+            <ParamRow>
+              <EpochControl group="coastal" />
+              <RCPControl group="coastal" />
+            </ParamRow>
+          </InputSection>
+        </ToggleSection>
+
+        <ToggleSection id="cyclone" label="Cyclones" forceSingle={forceSingle}>
+          <InputSection>
+            <ReturnPeriodControl
+              group="cyclone"
               valueLabelDisplay="auto"
               showMarkLabelsFor={[10, 50, 100, 500, 1000, 5000, 10000]}
             />
-          </FormControl>
-        </InputSection>
-        <InputSection>
-          <FormControl disabled={!hazardShow.cyclone} variant="standard" style={{ width: '50%' }}>
-            <InputLabel>Epoch</InputLabel>
-            <Select
-              value={hazardParams.cyclone.epoch}
-              onChange={(e) => onSingleHazardParam('cyclone', 'epoch', e.target.value)}
-            >
-              {hazardOptions.cyclone.epoch.map((epoch) => (
-                <MenuItem key={epoch} value={epoch}>
-                  {epochLabel(epoch)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl disabled={!hazardShow.cyclone} variant="standard" style={{ width: '50%' }}>
-            <InputLabel>RCP</InputLabel>
-            <Select
-              value={hazardParams.cyclone.rcp}
-              onChange={(e) => onSingleHazardParam('cyclone', 'rcp', e.target.value)}
-            >
-              {hazardOptions.cyclone.rcp.map((rcp) => (
-                <MenuItem key={rcp} value={rcp}>
-                  {rcpLabel(rcp)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </InputSection>
-      </HazardSection>
+          </InputSection>
+          <InputSection>
+            <ParamRow>
+              <EpochControl group="cyclone" />
+              <RCPControl group="cyclone" />
+            </ParamRow>
+          </InputSection>
+        </ToggleSection>
+      </ToggleSectionGroup>
     </Box>
   );
 };

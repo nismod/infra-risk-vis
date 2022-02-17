@@ -1,4 +1,4 @@
-import { DataParamConfig } from 'lib/controls/use-data-params';
+import { DataParamGroupConfig } from 'lib/controls/data-params';
 
 export interface HazardParams {
   returnPeriod: number;
@@ -7,7 +7,7 @@ export interface HazardParams {
   confidence: string | number;
 }
 
-export const hazardConfig: Record<string, DataParamConfig<HazardParams>> = {
+export const hazardConfig: Record<string, DataParamGroupConfig<HazardParams>> = {
   fluvial: {
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],

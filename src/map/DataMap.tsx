@@ -23,8 +23,13 @@ import { MapLayerSelection } from './layers/MapLayerSelection';
 import { LegendContent } from './legend/LegendContent';
 import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers/layers-state';
 import { useBackgroundConfig } from './use-background-config';
+import { styleParamsState } from 'state/style-params';
+import { layerVisibilityState } from 'state/layer-visibility';
 
-export const DataMap = ({ view, layerSelection, styleParams }) => {
+export const DataMap = ({ view }) => {
+  const layerSelection = useRecoilValue(layerVisibilityState);
+  const styleParams = useRecoilValue(styleParamsState);
+
   const background = useRecoilValue(backgroundState);
   const showLabels = useRecoilValue(showLabelsState);
   const showBoundaries = useRecoilValue(showBoundariesState);

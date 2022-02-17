@@ -1,16 +1,13 @@
 import _ from 'lodash';
-import React, { FC, useCallback } from 'react';
+import { FC, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import { CheckboxTree } from 'lib/controls/checkbox-tree/CheckboxTree';
 
 import { LAYERS } from '../config/layers';
 import { networkLayersConfig } from '../config/data/networks';
-
-interface NetworkControlProps {
-  networkSelection: Record<string, boolean>;
-  onNetworkSelection: (visUpdate: Record<string, boolean>) => void; //TODO change record key type to LayerName
-}
+import { useRecoilState } from 'recoil';
+import { networkSelectionState } from 'state/network-selection';
 
 const LayerLabel = ({ label, type, color }) => {
   return (
@@ -22,15 +19,17 @@ const LayerLabel = ({ label, type, color }) => {
     </>
   );
 };
-export const NetworkControl: FC<NetworkControlProps> = ({ networkSelection, onNetworkSelection }) => {
+export const NetworkControl: FC<{}> = () => {
+  const [networkSelection, setNetworkSelection] = useRecoilState(networkSelectionState);
+
   const handleSelected = useCallback(
     (newSelected: string[]) => {
-      onNetworkSelection({
+      setNetworkSelection({
         ..._.mapValues(networkSelection, () => false),
         ..._.fromPairs(newSelected.map((id) => [id, true])),
       });
     },
-    [networkSelection, onNetworkSelection],
+    [networkSelection, setNetworkSelection],
   );
 
   return (
