@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import * as d3Scale from 'd3-scale';
 import * as d3Array from 'd3-array';
 
@@ -11,23 +11,20 @@ import { ViewLayer, ViewLayerParams } from 'lib/data-map/view-layers';
 
 const legendHeight = 10;
 
-const LegendGradient = ({ colorMapValues }) => {
+const LegendGradient: FC<{
+  colorMapValues: any[];
+  getValueLabel: (value: number) => string;
+}> = ({ colorMapValues, getValueLabel }) => {
   return (
     <>
-      {colorMapValues.map(({ color, value }) => (
-        <Box
-          // key={`${value}-${r}-${g}-${b}`}
-          height={legendHeight}
-          width={1}
-          bgcolor={color}
-          title={value.toFixed(3)}
-        ></Box>
+      {colorMapValues.map(({ color, value }, i) => (
+        <Box key={i} height={legendHeight} width={1} bgcolor={color} title={getValueLabel(value)} />
       ))}
     </>
   );
 };
 
-const GradientLegend = ({ label, range, colorMapValues }) => (
+const GradientLegend = ({ label, range, colorMapValues, getValueLabel }) => (
   <Box mb={2}>
     <Typography>{label}</Typography>
     <Box
@@ -38,16 +35,16 @@ const GradientLegend = ({ label, range, colorMapValues }) => (
       flexDirection="row"
       border="1px solid gray"
     >
-      {colorMapValues && <LegendGradient colorMapValues={colorMapValues} />}
+      {colorMapValues && <LegendGradient colorMapValues={colorMapValues} getValueLabel={getValueLabel} />}
     </Box>
     <Box height={10} position="relative">
       {colorMapValues && (
         <>
           <Box position="absolute" left={0}>
-            <Typography>{range[0].toLocaleString()}</Typography>
+            <Typography>{getValueLabel(range[0])}</Typography>
           </Box>
           <Box position="absolute" right={0}>
-            <Typography>{range[1].toLocaleString()}</Typography>
+            <Typography>{getValueLabel(range[1])}</Typography>
           </Box>
         </>
       )}
@@ -59,12 +56,21 @@ const RasterLegend: FC<{ viewLayer: ViewLayer }> = ({ viewLayer }) => {
   const {
     params: { hazardType },
   } = viewLayer;
-  const { label } = HAZARDS_METADATA[hazardType];
+  const { label, dataUnit } = HAZARDS_METADATA[hazardType];
   const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
 
   const { error, loading, colorMapValues } = useRasterColorMapValues(scheme, range);
 
-  return <GradientLegend label={label} range={range} colorMapValues={!(error || loading) ? colorMapValues : null} />;
+  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()} ${dataUnit}`, [dataUnit]);
+
+  return (
+    <GradientLegend
+      label={label}
+      range={range}
+      colorMapValues={!(error || loading) ? colorMapValues : null}
+      getValueLabel={getValueLabel}
+    />
+  );
 };
 
 const DamagesLegend = ({ styleParams }) => {
@@ -81,9 +87,18 @@ const DamagesLegend = ({ styleParams }) => {
     return d3Array.ticks(rangeMin, rangeMax, 255).map((x) => ({ value: x, color: scaleFn(x) }));
   }, [scale, rangeMin, rangeMax]);
 
+  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()}$`, []);
+
   // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
 
-  return <GradientLegend label="Direct Damages" range={range} colorMapValues={colorMapValues} />;
+  return (
+    <GradientLegend
+      label="Direct Damages"
+      range={range}
+      colorMapValues={colorMapValues}
+      getValueLabel={getValueLabel}
+    />
+  );
 };
 
 export const LegendContent: FC<{ viewLayers: ViewLayer[]; viewLayersParams: Record<string, ViewLayerParams> }> = ({

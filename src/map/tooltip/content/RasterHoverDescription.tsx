@@ -26,17 +26,22 @@ export const RasterHoverDescription: FC<{ hoveredObject: InteractionTarget<Raste
   const { label, dataUnit } = HAZARDS_METADATA[id];
   const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
 
-  const title = `${label} (${dataUnit})`;
+  const title = `${label}`;
 
   const { colorMapValues } = useRasterColorMapValues(scheme, range);
   const rasterValueLookup = useRasterColorMapLookup(colorMapValues);
 
   const colorString = `rgb(${color[0]},${color[1]},${color[2]})`;
+  const value = rasterValueLookup?.[colorString];
   return (
     <div>
       <span style={{ color: colorString }}>■</span>&nbsp;
       <strong>{title}</strong>
-      {rasterValueLookup?.[colorString] && <span>: {rasterValueLookup[colorString].toFixed(1)}</span>}
+      {rasterValueLookup?.[colorString] && (
+        <span>
+          : {value?.toFixed(1)} {value != null ? dataUnit : ''}
+        </span>
+      )}
     </div>
   );
 };
