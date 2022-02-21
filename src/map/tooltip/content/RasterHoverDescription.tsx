@@ -37,11 +37,11 @@ export const RasterHoverDescription: FC<{ hoveredObject: InteractionTarget<Raste
     <div>
       <span style={{ color: colorString }}>■</span>&nbsp;
       <strong>{title}</strong>
-      {rasterValueLookup?.[colorString] && (
+      {value != null ? (
         <span>
           : {value?.toFixed(1)} {value != null ? dataUnit : ''}
         </span>
-      )}
+      ) : null}
     </div>
   );
 };
