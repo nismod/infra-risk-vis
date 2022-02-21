@@ -54,7 +54,6 @@ export const allowedGroupLayersState = selector<AllowedGroupLayers>({
   get: ({ get }) => get(allowedGroupLayersImpl),
   set: ({ get, set, reset }, newAllowedGroups) => {
     const oldAllowedGroupLayers = get(allowedGroupLayersImpl);
-    console.log(oldAllowedGroupLayers, newAllowedGroups);
     if (isReset(newAllowedGroups)) {
       _.forEach(oldAllowedGroupLayers, (layers, group) => {
         reset(hoverState(group));

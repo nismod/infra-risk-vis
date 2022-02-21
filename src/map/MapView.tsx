@@ -24,7 +24,6 @@ import { useEffect } from 'react';
 export const MapView = ({ view }) => {
   const background = useRecoilValue(backgroundState);
   const viewLayers = useRecoilValue(viewLayersFlatState);
-  console.debug(viewLayers);
   const saveViewLayers = useSaveViewLayers();
 
   useEffect(() => {
