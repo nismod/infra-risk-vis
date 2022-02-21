@@ -4,7 +4,7 @@ interface NetworkLayerData {
   label: string;
 }
 
-export const networkLayersConfig: TreeNode<NetworkLayerData>[] = [
+export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
   {
     id: 'power',
     label: 'Power',

@@ -1,4 +1,4 @@
-import { hazardTypes } from 'config/data/hazards';
+import { HAZARD_LAYER_NAMES } from 'config/hazards/metadata';
 import _ from 'lodash';
 import { selector } from 'recoil';
 import {
@@ -21,7 +21,7 @@ export const hazardVisibilityState = selector({
         };
       }
     } else {
-      return _.fromPairs(hazardTypes.map((group) => [group, get(hazardSelectionState(group))]));
+      return _.fromPairs(HAZARD_LAYER_NAMES.map((group) => [group, get(hazardSelectionState(group))]));
     }
   },
 });

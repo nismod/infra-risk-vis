@@ -7,7 +7,7 @@ export interface HazardParams {
   confidence: string | number;
 }
 
-export const hazardConfig: Record<string, DataParamGroupConfig<HazardParams>> = {
+export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> = {
   fluvial: {
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],
@@ -87,5 +87,3 @@ export const hazardConfig: Record<string, DataParamGroupConfig<HazardParams>> = 
     },
   },
 };
-
-export const hazardTypes = Object.keys(hazardConfig);

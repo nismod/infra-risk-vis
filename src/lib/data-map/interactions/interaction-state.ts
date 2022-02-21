@@ -29,14 +29,14 @@ export const selectionState = atomFamily<InteractionTarget<any>, string>({
   default: null,
 });
 
-type AllowedGroups = Record<string, string[]>;
+type AllowedGroupLayers = Record<string, string[]>;
 
-const allowedGroupLayersImpl = atom<AllowedGroups>({
+const allowedGroupLayersImpl = atom<AllowedGroupLayers>({
   key: 'allowedGroupLayersImpl',
   default: {},
 });
 
-function filterOneOrArray(items, filter: (item) => boolean) {
+function filterOneOrArray<T>(items: T | T[], filter: (item: T) => boolean) {
   if (Array.isArray(items)) {
     return items.filter(filter);
   } else {
@@ -46,22 +46,23 @@ function filterOneOrArray(items, filter: (item) => boolean) {
 
 function filterTargets(oldHoverTargets: IT, allowedLayers: string[]): IT {
   const newLayerFilter = new Set(allowedLayers);
-  return filterOneOrArray(oldHoverTargets, (target) => newLayerFilter.has(target.viewLayer));
+  return filterOneOrArray(oldHoverTargets, (target) => newLayerFilter.has(target.viewLayer.id));
 }
 
-export const allowedGroupLayersState = selector<AllowedGroups>({
+export const allowedGroupLayersState = selector<AllowedGroupLayers>({
   key: 'allowedGroupLayersState',
   get: ({ get }) => get(allowedGroupLayersImpl),
-  set: ({ get, set, reset }, newValue) => {
-    const oldValue = get(allowedGroupLayersImpl);
-    if (isReset(newValue)) {
-      _.forEach(oldValue, (layers, group) => {
+  set: ({ get, set, reset }, newAllowedGroups) => {
+    const oldAllowedGroupLayers = get(allowedGroupLayersImpl);
+    console.log(oldAllowedGroupLayers, newAllowedGroups);
+    if (isReset(newAllowedGroups)) {
+      _.forEach(oldAllowedGroupLayers, (layers, group) => {
         reset(hoverState(group));
         reset(selectionState(group));
       });
     } else {
-      for (const group of Object.keys(oldValue)) {
-        const newAllowedLayers = newValue[group];
+      for (const group of Object.keys(oldAllowedGroupLayers)) {
+        const newAllowedLayers = newAllowedGroups[group];
 
         if (newAllowedLayers == null || newAllowedLayers.length === 0) {
           reset(hoverState(group));
@@ -76,6 +77,6 @@ export const allowedGroupLayersState = selector<AllowedGroups>({
       }
     }
 
-    set(allowedGroupLayersImpl, newValue);
+    set(allowedGroupLayersImpl, newAllowedGroups);
   },
 });

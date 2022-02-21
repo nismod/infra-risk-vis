@@ -1,12 +1,11 @@
 import { FC } from 'react';
 import { Box, Drawer, Toolbar } from '@mui/material';
 
-import { DataMap } from './map/DataMap';
-import { ViewName } from './config/views';
+import { MapView } from './map/MapView';
 import { SidebarContent } from 'sidebar/SidebarContent';
 
 interface MapViewProps {
-  view: ViewName;
+  view: string;
 }
 
 const sidebarWidth = 360;
@@ -21,7 +20,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
         </Box>
       </Drawer>
       <Box position="absolute" top={64} left={sidebarWidth} right={0} bottom={0}>
-        <DataMap view={view} />
+        <MapView view={view} />
       </Box>
     </>
   );

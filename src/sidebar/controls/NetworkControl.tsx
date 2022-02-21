@@ -4,10 +4,10 @@ import { Box, Typography } from '@mui/material';
 
 import { CheckboxTree } from 'lib/controls/checkbox-tree/CheckboxTree';
 
-import { LAYERS } from '../config/layers';
-import { networkLayersConfig } from '../config/data/networks';
+import { NETWORK_LAYERS_HIERARCHY } from 'config/networks/hierarchy';
 import { useRecoilState } from 'recoil';
 import { networkSelectionState } from 'state/network-selection';
+import { NETWORKS_METADATA } from 'config/networks/metadata';
 
 const LayerLabel = ({ label, type, color }) => {
   return (
@@ -36,8 +36,10 @@ export const NetworkControl: FC<{}> = () => {
     <Box mb={2}>
       <Typography variant="h6">Infrastructure Assets</Typography>
       <CheckboxTree
-        nodes={networkLayersConfig}
-        getLabel={(node) => (node.children ? node.label : <LayerLabel {...LAYERS[node.id]} label={node.label} />)}
+        nodes={NETWORK_LAYERS_HIERARCHY}
+        getLabel={(node) =>
+          node.children ? node.label : <LayerLabel {...NETWORKS_METADATA[node.id]} label={node.label} />
+        }
         onSelected={handleSelected}
       />
     </Box>

@@ -1,4 +1,4 @@
-import { hazardConfig } from 'config/data/hazards';
+import { HAZARD_DOMAINS } from 'config/hazards/domains';
 import { totalDamagesConfig } from 'config/data/total-damages';
 import { DataParamGroupConfig, Param, ParamDomain, resolveParamDependencies } from 'lib/controls/data-params';
 import { toDictionary } from 'lib/helpers';
@@ -12,7 +12,7 @@ export type DataParamParam = Readonly<{
 }>;
 
 const dataParamConfig: Record<string, DataParamGroupConfig> = {
-  ...hazardConfig,
+  ...HAZARD_DOMAINS,
   'total-damages': totalDamagesConfig,
 };
 

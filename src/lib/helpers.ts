@@ -57,3 +57,7 @@ export function makeColorConfig<K extends string>(cfg: Record<K, string>) {
 export function isNumeric(val: any): boolean {
   return !(val instanceof Array) && val - parseFloat(val) + 1 >= 0;
 }
+
+export function truthyKeys(obj: Record<string, any>) {
+  return Object.keys(obj).filter((k) => obj[k]);
+}

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useFetch } from 'use-http';
 import { useDebounceCallback } from '@react-hook/debounce';
 
-import { BoundingBox } from 'lib/map/MapViewport';
+import { BoundingBox } from '../MapBoundsFitter';
 
 export interface PlaceSearchResult {
   label: string;

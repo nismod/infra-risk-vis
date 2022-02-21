@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { hoverPositionState } from 'lib/map/interactions/interaction-state';
+import { hoverPositionState } from './interactions/interaction-state';
 
-export const MapTooltip: FC<{}> = ({ children }) => {
+export const DataMapTooltip: FC<{}> = ({ children }) => {
   const tooltipXY = useRecoilValue(hoverPositionState);
 
   return tooltipXY && React.Children.count(children) ? (

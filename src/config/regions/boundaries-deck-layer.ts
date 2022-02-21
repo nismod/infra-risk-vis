@@ -30,7 +30,7 @@ export const boundaryConfig: Record<BoundaryLevel, BoundaryConfig> = {
   },
 };
 
-export function boundariesLayer(level: BoundaryLevel) {
+export function boundariesDeckLayer(level: BoundaryLevel) {
   return new MVTLayer(
     {
       id: `boundaries_${level}`,
@@ -52,10 +52,13 @@ export function boundariesLayer(level: BoundaryLevel) {
   );
 }
 
+const LIGHT_TEXT = [240, 240, 240, 255];
+const DARK_TEXT = [90, 90, 90, 255];
+
 export function boundaryLabelsLayer(level: BoundaryLevel, background: BackgroundName) {
   const config = boundaryConfig[level];
 
-  const color = background === 'satellite' ? [240, 240, 240, 255] : [90, 90, 90, 255];
+  const color = background === 'satellite' ? LIGHT_TEXT : DARK_TEXT;
   return (
     config.showLabels &&
     new MVTLayer({

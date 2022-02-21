@@ -1,10 +1,11 @@
-import { boundariesLayer, BoundaryLevel } from 'config/deck-layers/boundaries-layer';
+import { boundariesDeckLayer, BoundaryLevel } from './boundaries-deck-layer';
 
 export function boundariesViewLayer(boundaryLevel: BoundaryLevel) {
   return {
     id: `boundaries_${boundaryLevel}`,
+    group: 'regions',
     spatialType: 'vector',
     interactionGroup: 'regions',
-    fn: () => boundariesLayer(boundaryLevel),
+    fn: () => boundariesDeckLayer(boundaryLevel),
   };
 }

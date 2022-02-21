@@ -1,9 +1,9 @@
 import { useRecoilValue } from 'recoil';
 import { Typography } from '@mui/material';
 
-import { boundaryConfig, BoundaryLevel } from '../../../config/deck-layers/boundaries-layer';
+import { boundaryConfig, BoundaryLevel } from '../../../config/regions/boundaries-deck-layer';
 import { boundaryLevelState } from '../../layers/layers-state';
-import { InteractionTarget, VectorTarget } from 'lib/map/interactions/use-interactions';
+import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
 
 const labels: Record<BoundaryLevel, string> = {
   parish: 'Parish',

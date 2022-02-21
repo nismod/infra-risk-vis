@@ -1,26 +1,7 @@
+import { NETWORK_LAYER_NAMES } from 'config/networks/metadata';
 import { atom } from 'recoil';
-
-const networkLayers = [
-  'elec_edges_high',
-  'elec_edges_low',
-  'elec_nodes_source',
-  'elec_nodes_sink',
-  'elec_nodes_junction',
-  'rail_edges',
-  'rail_nodes',
-  'road_edges',
-  'road_bridges',
-  'port_areas',
-  'airport_areas',
-  'water_potable_edges',
-  'water_potable_nodes',
-  'water_irrigation_edges',
-  'water_irrigation_nodes',
-  'water_waste_edges',
-  'water_waste_nodes',
-];
 
 export const networkSelectionState = atom({
   key: 'networkSelectionState',
-  default: Object.fromEntries(networkLayers.map((nl) => [nl, false])),
+  default: Object.fromEntries(NETWORK_LAYER_NAMES.map((nl) => [nl, false])),
 });

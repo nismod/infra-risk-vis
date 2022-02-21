@@ -1,27 +1,26 @@
 import React, { FC } from 'react';
 import { Box, Paper } from '@mui/material';
 
-import { LAYERS } from '../config/layers';
 import { FeatureSidebarContent } from './FeatureSidebarContent';
-import { InteractionTarget, VectorTarget } from 'lib/map/interactions/use-interactions';
+import { useRecoilValue } from 'recoil';
+import { selectionState } from 'lib/data-map/interactions/interaction-state';
 
-interface FeatureSidebarProps {
-  featureSelection: InteractionTarget<VectorTarget>;
-}
+export const FeatureSidebar: FC<{}> = () => {
+  const featureSelection = useRecoilValue(selectionState('assets'));
 
-export const FeatureSidebar: FC<FeatureSidebarProps> = ({ featureSelection }) => {
+  if (!featureSelection) return null;
+
   const {
     target: { feature },
-    logicalLayer,
+    viewLayer,
   } = featureSelection;
   const f = feature.properties;
-  const logicalLayerConfig = LAYERS[logicalLayer];
 
   return (
     <Box position="absolute" top={10} right={50} width={400}>
       <Paper>
         <Box p={3} maxHeight="calc(100vh - 125px)" style={{ overflowY: 'scroll' }}>
-          <FeatureSidebarContent f={f} layer={logicalLayerConfig} />
+          <FeatureSidebarContent f={f} viewLayer={viewLayer} />
         </Box>
       </Paper>
     </Box>

@@ -1,26 +1,34 @@
-import { InteractionTarget } from './map/interactions/use-interactions';
+import { InteractionTarget } from './interactions/use-interactions';
 
 export interface ViewLayerFunctionOptions {
-  props: any;
+  deckProps: any;
   zoom: number;
-  params: any;
-  styleParams: object;
-  selection: InteractionTarget<any>;
+  styleParams?: object;
+  selection?: InteractionTarget<any>;
 }
 
 export interface ViewLayer {
   id: string;
+  params?: any;
+  group: string;
   fn: (options: ViewLayerFunctionOptions) => any;
   spatialType?: string;
   interactionGroup?: string;
-  dataParams?: any;
   getLogicalLayer?: (options: any) => string;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {
   return {
     id,
+    group: null,
     interactionGroup: null,
     fn,
   };
+}
+
+export interface ViewLayerParams {
+  visibility?: Record<string, boolean>;
+  sourceLogicalLayers?: string[];
+  selection?: any;
+  styleParams?: any;
 }

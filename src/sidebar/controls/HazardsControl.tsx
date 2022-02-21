@@ -20,8 +20,8 @@ import {
   showDamageRasterState,
   showDirectDamagesState,
 } from 'state/damage-mapping/damage-map';
-import { dataParamOptionsState, dataParamState, useUpdateDataParam } from '../state/data-params';
-import { hazardSelectionState } from '../state/hazards/hazard-selection';
+import { dataParamOptionsState, dataParamState, useUpdateDataParam } from '../../state/data-params';
+import { hazardSelectionState } from '../../state/hazards/hazard-selection';
 
 const DataParam = ({ group, id, children }) => {
   const value = useRecoilValue(dataParamState({ group, param: id }));

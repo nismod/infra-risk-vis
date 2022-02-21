@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
-import { HazardsControl } from 'controls/HazardsControl';
-import { NetworkControl } from 'controls/NetworkControl';
+import { HazardsControl } from './controls/HazardsControl';
+import { NetworkControl } from './controls/NetworkControl';
 import { ViewModeToggle } from './ViewModeToggle';
 
 export const SidebarContent = ({ view }) => {

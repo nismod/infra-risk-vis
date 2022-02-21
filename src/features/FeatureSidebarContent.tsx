@@ -1,7 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import { Typography } from '@mui/material';
 
-import { LayerDefinition } from '../config/layers';
 import { RiskSection } from './RiskSection';
 import { EADChartSection } from './EADChartSection';
 import {
@@ -21,7 +20,9 @@ import {
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
 } from './detail-components';
-import { hazardConfig } from '../config/data/hazards';
+import { HAZARD_DOMAINS } from '../config/hazards/domains';
+import { ViewLayer } from 'lib/data-map/view-layers';
+import { NETWORKS_METADATA } from 'config/networks/metadata';
 
 var componentMapping = {
   airport_areas: AirportDetails,
@@ -45,7 +46,7 @@ var componentMapping = {
 
 interface FeatureSidebarContentProps {
   f: any;
-  layer: LayerDefinition;
+  viewLayer: ViewLayer;
 }
 
 function getRcpNumber(rcp) {
@@ -54,7 +55,7 @@ function getRcpNumber(rcp) {
 }
 function getFeatureEadData(f: any) {
   const eadData = [];
-  for (const [hazardType, hazard] of Object.entries(hazardConfig)) {
+  for (const [hazardType, hazard] of Object.entries(HAZARD_DOMAINS)) {
     for (const rcp of hazard.paramDomains.rcp) {
       for (const epoch of hazard.paramDomains.epoch) {
         // TODO check risk data for confidence
@@ -77,8 +78,10 @@ function getFeatureEadData(f: any) {
   return eadData;
 }
 
-export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, layer }) => {
-  const DetailsComponent = componentMapping[layer.id] ?? DefaultDetails;
+export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, viewLayer }) => {
+  const DetailsComponent = componentMapping[viewLayer.id] ?? DefaultDetails;
+  const { color, label } = NETWORKS_METADATA[viewLayer.id];
+
   const eadData = useMemo(() => getFeatureEadData(f), [f]);
   return (
     <>
@@ -86,7 +89,7 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, layer
         <code>{JSON.stringify(f, null, 2)}</code>
       </pre>
       <Typography variant="caption">
-        <span style={{ color: layer.color ?? '#333' }}>■</span>&nbsp;{layer.label}
+        <span style={{ color: color ?? '#333' }}>■</span>&nbsp;{label}
       </Typography>
       <DetailsComponent f={f} />
       <RiskSection eadData={eadData} />

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilCallback, useSetRecoilState } from 'recoil';
 
-import { ViewLayer } from 'lib/view-layers';
+import { ViewLayer } from '../view-layers';
 
 import { hoverState, hoverPositionState, selectionState, allowedGroupLayersState } from './interaction-state';
 import { RecoilStateFamily } from 'lib/recoil/types';
@@ -22,8 +22,8 @@ export interface InteractionTarget<T> {
   interactionGroup: string;
   interactionStyle: string;
 
-  viewLayer: string;
-  logicalLayer: string;
+  viewLayer: ViewLayer;
+  // logicalLayer: string;
 
   target: T;
 }
@@ -73,16 +73,17 @@ function processPickedObject(
   type: InteractionStyle,
   groupName: string,
   viewLayerLookup: Record<string, ViewLayer>,
+  lookupViewForDeck: (deckLayerId: string) => string,
 ) {
-  const layerId = info.layer.id;
+  const deckLayerId = info.layer.id;
+  const viewLayerId = lookupViewForDeck(deckLayerId);
   const target = processTargetByType(type, info);
 
   return (
     target && {
       interactionGroup: groupName,
       interactionStyle: type,
-      viewLayer: layerId,
-      logicalLayer: viewLayerLookup[layerId].getLogicalLayer?.({ deckLayerId: layerId, target }) ?? layerId,
+      viewLayer: viewLayerLookup[viewLayerId],
       target,
     }
   );
@@ -98,7 +99,11 @@ function useSetInteractionGroupState(
   });
 }
 
-export function useInteractions(viewLayers: ViewLayer[], interactionGroups: InteractionGroupConfig[]) {
+export function useInteractions(
+  viewLayers: ViewLayer[],
+  lookupViewForDeck: (deckLayerId: string) => string,
+  interactionGroups: InteractionGroupConfig[],
+) {
   const setHoverXY = useSetRecoilState(hoverPositionState);
 
   const setInteractionGroupHover = useSetInteractionGroupState(hoverState);
@@ -112,14 +117,14 @@ export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Inte
   const interactiveLayers = useMemo(() => viewLayers.filter((x) => x.interactionGroup), [viewLayers]);
   const viewLayerLookup = useMemo(() => _.keyBy(interactiveLayers, (layer) => layer.id), [interactiveLayers]);
   const activeGroups = useMemo(
-    () => _.groupBy(interactiveLayers, (layer) => layer.interactionGroup),
+    () => _.groupBy(interactiveLayers, (viewLayer) => viewLayer.interactionGroup),
     [interactiveLayers],
   );
 
   const setAllowedGroupLayers = useSetRecoilState(allowedGroupLayersState);
 
   useEffect(() => {
-    setAllowedGroupLayers(_.mapValues(activeGroups, (layers) => layers.map((layer) => layer.id)));
+    setAllowedGroupLayers(_.mapValues(activeGroups, (viewLayers) => viewLayers.map((viewLayer) => viewLayer.id)));
   }, [activeGroups, setAllowedGroupLayers]);
 
   const onHover = useCallback(
@@ -136,14 +141,14 @@ export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Inte
         if (pickMultiple) {
           const pickedObjects: PickInfo<any>[] = deck.pickMultipleObjects(pickingParams);
           const interactionTargets: InteractionTarget<any>[] = pickedObjects
-            .map((info) => processPickedObject(info, type, groupName, viewLayerLookup))
+            .map((info) => processPickedObject(info, type, groupName, viewLayerLookup, lookupViewForDeck))
             .filter(Boolean);
 
           setInteractionGroupHover(groupName, interactionTargets);
         } else {
           const info: PickInfo<any> = deck.pickObject(pickingParams);
           let interactionTarget: InteractionTarget<any> =
-            info && processPickedObject(info, type, groupName, viewLayerLookup);
+            info && processPickedObject(info, type, groupName, viewLayerLookup, lookupViewForDeck);
 
           setInteractionGroupHover(groupName, interactionTarget);
         }
@@ -151,28 +156,28 @@ export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Inte
 
       setHoverXY([x, y]);
     },
-    [activeGroups, interactionGroupLookup, setHoverXY, setInteractionGroupHover, viewLayerLookup],
+    [activeGroups, lookupViewForDeck, interactionGroupLookup, setHoverXY, setInteractionGroupHover, viewLayerLookup],
   );
 
   const onClick = useCallback(
     (info: any, deck: DeckGL) => {
       const { x, y } = info;
-      for (const [groupName, layers] of Object.entries(activeGroups)) {
-        const layerIds = layers.map((layer) => layer.id);
+      for (const [groupName, viewLayers] of Object.entries(activeGroups)) {
+        const viewLayerIds = viewLayers.map((layer) => layer.id);
 
         const interactionGroup = interactionGroupLookup[groupName];
         const { type, pickingRadius: radius } = interactionGroup;
 
         // currently only supports selecting vector features
         if (interactionGroup.type === 'vector') {
-          const info = deck.pickObject({ x, y, layerIds, radius });
-          let selectionTarget = info && processPickedObject(info, type, groupName, viewLayerLookup);
+          const info = deck.pickObject({ x, y, layerIds: viewLayerIds, radius });
+          let selectionTarget = info && processPickedObject(info, type, groupName, viewLayerLookup, lookupViewForDeck);
 
           setInteractionGroupSelection(groupName, selectionTarget);
         }
       }
     },
-    [activeGroups, interactionGroupLookup, setInteractionGroupSelection, viewLayerLookup],
+    [activeGroups, lookupViewForDeck, interactionGroupLookup, setInteractionGroupSelection, viewLayerLookup],
   );
 
   /**
@@ -188,10 +193,12 @@ export function useInteractions(viewLayers: ViewLayer[], interactionGroups: Inte
     [interactionGroups, primaryGroup],
   );
 
-  const layerFilter = ({ layer, renderPass }) => {
+  const layerFilter = ({ layer: deckLayer, renderPass }) => {
     if (renderPass === 'picking:hover') {
-      const viewLayer = viewLayerLookup[layer.id];
-      return hoverPassGroups.has(viewLayer.interactionGroup);
+      const viewLayerId = lookupViewForDeck(deckLayer.id);
+      const interactionGroup = viewLayerId && viewLayerLookup[viewLayerId]?.interactionGroup;
+
+      return interactionGroup ? hoverPassGroups.has(interactionGroup) : false;
     }
     return true;
   };
