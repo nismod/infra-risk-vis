@@ -8,6 +8,9 @@ import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from '../../config/color-maps';
 import { useRasterColorMapValues } from '../legend/use-color-map-values';
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
 import { ViewLayer, ViewLayerParams } from 'lib/data-map/view-layers';
+import { useRecoilValue } from 'recoil';
+import { viewLayersFlatState } from 'state/layers/view-layers-flat';
+import { viewLayersParamsState } from 'state/layers/view-layers-params';
 
 const legendHeight = 10;
 
@@ -101,10 +104,10 @@ const DamagesLegend = ({ styleParams }) => {
   );
 };
 
-export const LegendContent: FC<{ viewLayers: ViewLayer[]; viewLayersParams: Record<string, ViewLayerParams> }> = ({
-  viewLayers,
-  viewLayersParams,
-}) => {
+export const LegendContent: FC<{}> = () => {
+  const viewLayers = useRecoilValue(viewLayersFlatState);
+  const viewLayersParams = useRecoilValue(viewLayersParamsState);
+
   const hazardViewLayers = [];
   let damageStyleParams = null;
 

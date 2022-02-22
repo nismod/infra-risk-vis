@@ -1,19 +1,54 @@
-import { Box, Typography } from '@mui/material';
+import { ArrowDropUp, ArrowRight } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { viewModeState } from 'state/view-mode';
 import { HazardsControl } from './controls/HazardsControl';
 import { NetworkControl } from './controls/NetworkControl';
 import { ViewModeToggle } from './ViewModeToggle';
 
-export const SidebarContent = ({ view }) => {
+const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
+  const [expanded, setExpanded] = useState(false);
   return (
-    view === 'exposure' && (
-      <>
-        <NetworkControl />
-        <Box mb={1}>
-          <Typography variant="h6">View Mode</Typography>
-          <ViewModeToggle />
-        </Box>
-        <HazardsControl />
-      </>
-    )
+    <Accordion expanded={expanded} onChange={(e, expanded) => setExpanded(expanded)} sx={{ pointerEvents: 'auto' }}>
+      <AccordionSummary expandIcon={expanded ? <ArrowDropUp /> : <ArrowRight />}>
+        <Typography variant="h6">{title}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>{children}</AccordionDetails>
+    </Accordion>
   );
+};
+
+export const SidebarContent = ({ view }) => {
+  const setViewMode = useSetRecoilState(viewModeState);
+
+  useEffect(() => {
+    const viewMode = view === 'risk' ? 'direct-damages' : 'input';
+    setViewMode(viewMode);
+  }, [setViewMode, view]);
+
+  if (view === 'exposure')
+    return (
+      <>
+        <SidebarSection title="Built Assets">
+          <NetworkControl />
+        </SidebarSection>
+        <SidebarSection title="Hazards">
+          <HazardsControl />
+        </SidebarSection>
+        <SidebarSection title="Regions">Nothing</SidebarSection>
+      </>
+    );
+  else if (view === 'risk')
+    return (
+      <>
+        <SidebarSection title="Built Assets">
+          <NetworkControl />
+        </SidebarSection>
+        <SidebarSection title="Hazards">
+          <HazardsControl />
+        </SidebarSection>
+        <SidebarSection title="Regions"></SidebarSection>
+      </>
+    );
 };

@@ -41,13 +41,11 @@ const ShowDamageRasterToggle = () => {
   const [showDamageRaster, setShowDamageRaster] = useRecoilState(showDamageRasterState);
 
   return (
-    <Grid item>
-      <FormControlLabel
-        control={<Switch checked={showDamageRaster} onChange={(e, checked) => setShowDamageRaster(checked)}></Switch>}
-        label="Show hazard raster"
-        labelPlacement="start"
-      />
-    </Grid>
+    <FormControlLabel
+      control={<Switch checked={showDamageRaster} onChange={(e, checked) => setShowDamageRaster(checked)}></Switch>}
+      label="Show hazard raster"
+      labelPlacement="start"
+    />
   );
 };
 
@@ -131,10 +129,11 @@ export const HazardsControl = () => {
     <Box mb={1}>
       <Box mt={2} mb={1}>
         <Grid container justifyContent="space-between">
-          <Grid item>
-            <Typography variant="h6">Hazards</Typography>
-          </Grid>
-          {showDamages ? <ShowDamageRasterToggle /> : null}
+          {showDamages ? (
+            <Grid item>
+              <ShowDamageRasterToggle />
+            </Grid>
+          ) : null}
         </Grid>
       </Box>
       <ToggleSectionGroup toggleState={selectionState}>
