@@ -16,7 +16,7 @@ export function populationViewLayer(): ViewLayer {
         {
           data: `/vector/data/population.json`,
         },
-        vectorColor('fill', '#ccc', { colorMap: { colorScheme: 'population', colorField: 'population' } }),
+        vectorColor('fill', '#ccc', { colorMap: { colorScheme: 'population', colorField: 'population_density_per_km2' } }),
         // ...customFn({ zoom, styleParams }),
       ),
   };
