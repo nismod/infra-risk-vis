@@ -79,6 +79,9 @@
     },
     "water_waste_nodes": {
       "mbtiles": "water_waste_nodes.mbtiles"
+    },
+    "population": {
+      "mbtiles": "population.mbtiles"
     }
   }
 }

@@ -14,6 +14,14 @@ import { isRetinaState } from 'state/is-retina';
 import { HazardParams } from 'config/hazards/domains';
 import { LayerTree } from 'lib/layer-tree';
 
+import { showPopulationState } from '../population';
+import { populationViewLayer } from 'config/regions/population-view-layer';
+
+const populationLayerState = selector<ViewLayer>({
+  key: 'populationLayerState',
+  get: ({ get }) => get(showPopulationState) && populationViewLayer(),
+});
+
 const hazardLayerState = selector<ViewLayer[]>({
   key: 'hazardLayerState',
   get: ({ get }) =>
@@ -39,6 +47,8 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
     return [
       // administrative region boundaries
       showBoundaries && boundariesViewLayer(get(boundaryLevelState)),
+
+      get(populationLayerState),
 
       // hazard data layers
       get(hazardLayerState),

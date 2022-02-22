@@ -1,7 +1,16 @@
 import { ArrowDropUp, ArrowRight } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+} from '@mui/material';
 import { FC, useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { showPopulationState } from 'state/population';
 import { viewModeState } from 'state/view-mode';
 import { HazardsControl } from './controls/HazardsControl';
 import { NetworkControl } from './controls/NetworkControl';
@@ -19,6 +28,16 @@ const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
   );
 };
 
+const PopulationToggle = () => {
+  const [showPopulation, setShowPopulation] = useRecoilState(showPopulationState);
+
+  return (
+    <FormControlLabel
+      label="Show Population Map"
+      control={<Checkbox checked={showPopulation} onChange={(e, checked) => setShowPopulation(checked)} />}
+    />
+  );
+};
 export const SidebarContent = ({ view }) => {
   const setViewMode = useSetRecoilState(viewModeState);
 
@@ -36,7 +55,9 @@ export const SidebarContent = ({ view }) => {
         <SidebarSection title="Hazards">
           <HazardsControl />
         </SidebarSection>
-        <SidebarSection title="Regions">Nothing</SidebarSection>
+        <SidebarSection title="Regions">
+          <PopulationToggle />
+        </SidebarSection>
       </>
     );
   else if (view === 'risk')
@@ -48,7 +69,9 @@ export const SidebarContent = ({ view }) => {
         <SidebarSection title="Hazards">
           <HazardsControl />
         </SidebarSection>
-        <SidebarSection title="Regions"></SidebarSection>
+        <SidebarSection title="Regions">
+          <PopulationToggle />
+        </SidebarSection>
       </>
     );
 };
