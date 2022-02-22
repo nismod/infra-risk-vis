@@ -32,6 +32,11 @@ const roadColor = {
   [RoadClass.other]: COLORS.roads_unknown.deck,
 };
 
+const roadsViewLayer = infrastructureViewLayer('road_edges', ({ zoom, styleParams }) => [
+  vectorColor('stroke', (x) => roadColor[roadClassLookup[x.properties.road_class]], styleParams),
+  lineStyle(zoom),
+]);
+
 export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
   infrastructureViewLayer('elec_edges_high', ({ zoom, styleParams }) => [
     vectorColor('stroke', COLORS.electricity_high.deck, styleParams),
@@ -65,10 +70,7 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     vectorColor('fill', COLORS.railway.deck, styleParams),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('road_edges', ({ zoom, styleParams }) => [
-    vectorColor('stroke', (x) => roadColor[roadClassLookup[x.properties.road_class]], styleParams),
-    lineStyle(zoom),
-  ]),
+  roadsViewLayer,
   infrastructureViewLayer('road_bridges', ({ zoom, styleParams }) => [
     border(),
     vectorColor('fill', COLORS.bridges.deck, styleParams),
