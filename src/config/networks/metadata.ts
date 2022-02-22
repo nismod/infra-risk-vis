@@ -152,7 +152,7 @@ export const NETWORKS_METADATA = makeConfig([
     id: 'buildings',
     type: 'square',
     label: 'Buildings',
-    color: COLORS.buildings.css,
+    color: COLORS.buildings_unknown.css,
   },
 ]);
 
