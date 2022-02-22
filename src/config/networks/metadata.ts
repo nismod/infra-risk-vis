@@ -148,6 +148,12 @@ export const NETWORKS_METADATA = makeConfig([
     label: 'Wastewater Facilities',
     color: COLORS.water_wastewater.css,
   },
+  {
+    id: 'buildings',
+    type: 'square',
+    label: 'Buildings',
+    color: COLORS.buildings.css,
+  },
 ]);
 
 export const NETWORK_LAYER_NAMES = [

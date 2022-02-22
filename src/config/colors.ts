@@ -21,4 +21,6 @@ export const COLORS = makeColorConfig({
   water_supply: '#83B4FF',
   water_irrigation: '#0091C1',
   water_wastewater: '#4d49bc',
+
+  buildings: '#999',
 });

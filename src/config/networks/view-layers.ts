@@ -109,4 +109,9 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     pointRadius(zoom),
     vectorColor('fill', COLORS.water_wastewater.deck, styleParams),
   ]),
+  infrastructureViewLayer('buildings', ({ zoom, styleParams }) => [
+    { minZoom: 12 },
+    border(COLORS.buildings.deck),
+    vectorColor('fill', COLORS.buildings.deck, styleParams),
+  ]),
 ]);

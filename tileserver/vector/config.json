@@ -26,6 +26,9 @@
     "boundaries_enumeration_labels": {
       "mbtiles": "boundaries_enumeration_labels.mbtiles"
     },
+    "buildings": {
+      "mbtiles": "buildings.mbtiles"
+    },
     "airport_areas": {
       "mbtiles": "airport_areas.mbtiles"
     },
