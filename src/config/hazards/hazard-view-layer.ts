@@ -51,6 +51,7 @@ export function hazardViewLayer(hazardType: string, hazardParams: HazardParams):
             [GL.TEXTURE_MAG_FILTER]: magFilter,
             // [GL.TEXTURE_MAG_FILTER]: zoom < 12 ? GL.NEAREST : GL.NEAREST_MIPMAP_LINEAR,
           },
+          opacity: hazardType === 'cyclone' ? 0.6 : 1,
         },
         deckProps,
         {
