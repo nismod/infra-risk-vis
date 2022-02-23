@@ -12,8 +12,17 @@ import { MapBoundsFitter } from 'lib/map/MapBoundsFitter';
 import { useSaveViewLayers, viewLayersParamsState } from 'state/layers/view-layers-params';
 import { viewLayersFlatState } from 'state/layers/view-layers-flat';
 import { useEffect } from 'react';
+import { DataMapTooltip } from 'lib/data-map/DataMapTooltip';
+import { TooltipContent } from './tooltip/TooltipContent';
+import { Box } from '@mui/material';
+import { MapSearch } from 'lib/map/place-search/MapSearch';
+import { MapLayerSelection } from './layers/MapLayerSelection';
+import { MapLegend } from './legend/MapLegend';
+import { LegendContent } from './legend/LegendContent';
+import { FeatureSidebar } from 'features/FeatureSidebar';
+import { globalStyleVariables } from 'theme';
 
-export const MapView = ({ view, children }) => {
+export const MapView = ({ view }) => {
   const background = useRecoilValue(backgroundState);
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const saveViewLayers = useSaveViewLayers();
@@ -43,7 +52,27 @@ export const MapView = ({ view, children }) => {
       viewLayersParams={viewLayersParams}
       interactionGroups={INTERACTION_GROUPS}
       backgroundStyle={backgroundStyle}
-      uiOverlays={children}
+      uiOverlays={
+        <>
+          <DataMapTooltip>
+            <TooltipContent />
+          </DataMapTooltip>
+          <Box position="absolute" top={0} left={globalStyleVariables.sidebarWidth + 10} ml={3} m={1} zIndex={1000}>
+            <Box mb={1}>
+              <MapSearch />
+            </Box>
+            <Box mb={1}>
+              <MapLayerSelection />
+            </Box>
+          </Box>
+          <Box position="absolute" bottom={0} left={globalStyleVariables.sidebarWidth + 10} m={1} ml={3} zIndex={1000}>
+            <MapLegend>
+              <LegendContent />
+            </MapLegend>
+          </Box>
+          <FeatureSidebar />
+        </>
+      }
     >
       <MapBoundsFitter boundingBox={searchBounds} />
 
