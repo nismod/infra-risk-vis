@@ -3,7 +3,7 @@ import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, Tabl
 
 export const IntroPage = () => (
   <article>
-    <h1>Jamaica Infrastructure Risk Assessment Tool</h1>
+    <h1>Jamaica Systemic Risk Assessment Tool</h1>
 
     <p>This prototype tool presents infrastructure risk analytics for
     Jamaica.</p>
