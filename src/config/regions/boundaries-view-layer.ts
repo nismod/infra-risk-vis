@@ -1,4 +1,5 @@
-import { boundariesDeckLayer, BoundaryLevel } from './boundaries-deck-layer';
+import { boundariesDeckLayer } from './boundaries-deck-layer';
+import { BoundaryLevel } from './metadata';
 
 export function boundariesViewLayer(boundaryLevel: BoundaryLevel) {
   return {
@@ -6,6 +7,9 @@ export function boundariesViewLayer(boundaryLevel: BoundaryLevel) {
     group: 'regions',
     spatialType: 'vector',
     interactionGroup: 'regions',
+    params: {
+      boundaryLevel,
+    },
     fn: () => boundariesDeckLayer(boundaryLevel),
   };
 }

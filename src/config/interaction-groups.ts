@@ -1,6 +1,7 @@
 import { InteractionGroupConfig } from 'lib/data-map/interactions/use-interactions';
+import { makeConfig } from 'lib/helpers';
 
-export const INTERACTION_GROUPS: InteractionGroupConfig[] = [
+export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
   {
     id: 'assets',
     type: 'vector',
@@ -19,4 +20,4 @@ export const INTERACTION_GROUPS: InteractionGroupConfig[] = [
     pickingRadius: 8,
     pickMultiple: false,
   },
-];
+]);

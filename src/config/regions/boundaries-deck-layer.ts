@@ -3,32 +3,7 @@ import { MVTLayer } from 'deck.gl';
 import { border } from 'lib/deck-layers/utils';
 
 import { BackgroundName } from '../backgrounds';
-
-export type BoundaryLevel = 'parish' | 'community' | 'enumeration';
-
-interface BoundaryConfig {
-  fieldName: string;
-  minZoom: number;
-  showLabels: boolean;
-}
-
-export const boundaryConfig: Record<BoundaryLevel, BoundaryConfig> = {
-  parish: {
-    fieldName: 'PARISH',
-    minZoom: 9,
-    showLabels: true,
-  },
-  community: {
-    fieldName: 'COMMUNITY',
-    minZoom: 13,
-    showLabels: false,
-  },
-  enumeration: {
-    fieldName: 'ED',
-    minZoom: 13,
-    showLabels: false,
-  },
-};
+import { BoundaryLevel, REGIONS_METADATA } from './metadata';
 
 export function boundariesDeckLayer(level: BoundaryLevel) {
   return new MVTLayer(
@@ -56,7 +31,7 @@ const LIGHT_TEXT = [240, 240, 240, 255];
 const DARK_TEXT = [90, 90, 90, 255];
 
 export function boundaryLabelsLayer(level: BoundaryLevel, background: BackgroundName) {
-  const config = boundaryConfig[level];
+  const config = REGIONS_METADATA[level];
 
   const color = background === 'satellite' ? LIGHT_TEXT : DARK_TEXT;
   return (

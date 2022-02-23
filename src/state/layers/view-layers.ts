@@ -17,11 +17,6 @@ import { LayerTree } from 'lib/layer-tree';
 import { showPopulationState } from '../population';
 import { populationViewLayer } from 'config/regions/population-view-layer';
 
-const populationLayerState = selector<ViewLayer>({
-  key: 'populationLayerState',
-  get: ({ get }) => get(showPopulationState) && populationViewLayer(),
-});
-
 const hazardLayerState = selector<ViewLayer[]>({
   key: 'hazardLayerState',
   get: ({ get }) =>
@@ -45,10 +40,10 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
     const isRetina = get(isRetinaState);
 
     return [
-      // administrative region boundaries
-      showBoundaries && boundariesViewLayer(get(boundaryLevelState)),
-
-      get(populationLayerState),
+      // administrative region boundaries or population density
+      get(showPopulationState)
+        ? populationViewLayer(boundaryLevel)
+        : showBoundaries && boundariesViewLayer(boundaryLevel),
 
       // hazard data layers
       get(hazardLayerState),

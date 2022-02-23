@@ -4,8 +4,6 @@ import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-g
 import { DataMap } from 'lib/data-map/DataMap';
 import { placeSearchSelectedResultState } from 'lib/map/place-search/search-state';
 
-import { INTERACTION_GROUPS } from 'config/interaction-groups';
-
 import { backgroundState } from './layers/layers-state';
 import { useBackgroundConfig } from './use-background-config';
 import { MapBoundsFitter } from 'lib/map/MapBoundsFitter';
@@ -21,6 +19,8 @@ import { MapLegend } from './legend/MapLegend';
 import { LegendContent } from './legend/LegendContent';
 import { FeatureSidebar } from 'features/FeatureSidebar';
 import { globalStyleVariables } from 'theme';
+import { RegionDetails } from 'details/regions/RegionDetails';
+import { interactionGroupsState } from '../state/layers/interaction-groups';
 
 export const MapView = ({ view }) => {
   const background = useRecoilValue(backgroundState);
@@ -32,6 +32,8 @@ export const MapView = ({ view }) => {
   }, [saveViewLayers, viewLayers]);
 
   const viewLayersParams = useRecoilValue(viewLayersParamsState);
+
+  const interactionGroups = useRecoilValue(interactionGroupsState);
 
   const backgroundStyle = useBackgroundConfig(background);
 
@@ -50,7 +52,7 @@ export const MapView = ({ view }) => {
       }}
       viewLayers={viewLayers}
       viewLayersParams={viewLayersParams}
-      interactionGroups={INTERACTION_GROUPS}
+      interactionGroups={interactionGroups}
       backgroundStyle={backgroundStyle}
       uiOverlays={
         <>
@@ -70,7 +72,10 @@ export const MapView = ({ view }) => {
               <LegendContent />
             </MapLegend>
           </Box>
-          <FeatureSidebar />
+          <Box position="absolute" top={10} right={50} width={globalStyleVariables.detailsSidebarWidth}>
+            <FeatureSidebar />
+            <RegionDetails />
+          </Box>
         </>
       }
     >

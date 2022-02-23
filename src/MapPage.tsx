@@ -21,12 +21,9 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
         zIndex={1000}
         overflow="auto"
         boxSizing="border-box"
-        my={1}
         sx={{ pointerEvents: 'none' }}
       >
-        <Box px={1}>
-          {/* <Toolbar /> */}
-          {/* Prevents app bar from concealing content*/}
+        <Box pl={1} pt={1} sx={{ pointerEvents: 'auto' }}>
           <SidebarContent view={view} />
         </Box>
       </Box>

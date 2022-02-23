@@ -7,15 +7,19 @@ import { RasterHoverDescription } from './content/RasterHoverDescription';
 import { RegionHoverDescription } from './content/RegionHoverDescription';
 import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-state';
 import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
+import { showPopulationState } from 'state/population';
 
 export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
   const hoveredRasters = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
   const hoveredRegion = useRecoilValue(hoverState('regions')) as InteractionTarget<any>;
 
+  const regionDataShown = useRecoilValue(showPopulationState);
+
   const assetsHovered = hasHover(hoveredVector);
   const hazardsHovered = hasHover(hoveredRasters);
-  const doShow = assetsHovered || hazardsHovered;
+  const regionsHovered = hasHover(hoveredRegion);
+  const doShow = assetsHovered || hazardsHovered || (regionDataShown && regionsHovered);
 
   if (!doShow) return null;
 
@@ -36,7 +40,7 @@ export const TooltipContent: FC = () => {
             ))}
           </Box>
         ) : null}
-        {doShow && hoveredRegion ? (
+        {regionsHovered ? (
           <Box>
             <RegionHoverDescription hoveredObject={hoveredRegion} />
           </Box>
