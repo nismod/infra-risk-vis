@@ -1,32 +1,30 @@
 import { Box, Typography } from '@mui/material';
-import { useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import * as d3Scale from 'd3-scale';
 import * as d3Array from 'd3-array';
 
 import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from '../../config/color-maps';
-import { VIEW_LAYERS } from '../../config/view-layers';
-import { LAYERS } from '../../config/layers';
+
 import { useRasterColorMapValues } from '../legend/use-color-map-values';
+import { HAZARDS_METADATA } from 'config/hazards/metadata';
+import { ViewLayer, ViewLayerParams } from 'lib/data-map/view-layers';
 
 const legendHeight = 10;
 
-const LegendGradient = ({ colorMapValues }) => {
+const LegendGradient: FC<{
+  colorMapValues: any[];
+  getValueLabel: (value: number) => string;
+}> = ({ colorMapValues, getValueLabel }) => {
   return (
     <>
-      {colorMapValues.map(({ color, value }) => (
-        <Box
-          // key={`${value}-${r}-${g}-${b}`}
-          height={legendHeight}
-          width={1}
-          bgcolor={color}
-          title={value.toFixed(3)}
-        ></Box>
+      {colorMapValues.map(({ color, value }, i) => (
+        <Box key={i} height={legendHeight} width={1} bgcolor={color} title={getValueLabel(value)} />
       ))}
     </>
   );
 };
 
-const GradientLegend = ({ label, range, colorMapValues }) => (
+const GradientLegend = ({ label, range, colorMapValues, getValueLabel }) => (
   <Box mb={2}>
     <Typography>{label}</Typography>
     <Box
@@ -37,16 +35,16 @@ const GradientLegend = ({ label, range, colorMapValues }) => (
       flexDirection="row"
       border="1px solid gray"
     >
-      {colorMapValues && <LegendGradient colorMapValues={colorMapValues} />}
+      {colorMapValues && <LegendGradient colorMapValues={colorMapValues} getValueLabel={getValueLabel} />}
     </Box>
     <Box height={10} position="relative">
       {colorMapValues && (
         <>
           <Box position="absolute" left={0}>
-            <Typography>{range[0].toLocaleString()}</Typography>
+            <Typography>{getValueLabel(range[0])}</Typography>
           </Box>
           <Box position="absolute" right={0}>
-            <Typography>{range[1].toLocaleString()}</Typography>
+            <Typography>{getValueLabel(range[1])}</Typography>
           </Box>
         </>
       )}
@@ -54,22 +52,23 @@ const GradientLegend = ({ label, range, colorMapValues }) => (
   </Box>
 );
 
-const RasterLegend = ({ deckLayerName, deckLayerParams }) => {
+const RasterLegend: FC<{ viewLayer: ViewLayer }> = ({ viewLayer }) => {
   const {
-    sourceLogicalLayers: [logicalLayer],
-    params,
-  } = deckLayerParams;
-  const logicalLayerConfig = LAYERS[logicalLayer];
-
-  const { scheme, range } = RASTER_COLOR_MAPS[params.hazardType];
+    params: { hazardType },
+  } = viewLayer;
+  const { label, dataUnit } = HAZARDS_METADATA[hazardType];
+  const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
 
   const { error, loading, colorMapValues } = useRasterColorMapValues(scheme, range);
 
+  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()} ${dataUnit}`, [dataUnit]);
+
   return (
     <GradientLegend
-      label={logicalLayerConfig.label}
+      label={label}
       range={range}
       colorMapValues={!(error || loading) ? colorMapValues : null}
+      getValueLabel={getValueLabel}
     />
   );
 };
@@ -88,27 +87,46 @@ const DamagesLegend = ({ styleParams }) => {
     return d3Array.ticks(rangeMin, rangeMax, 255).map((x) => ({ value: x, color: scaleFn(x) }));
   }, [scale, rangeMin, rangeMax]);
 
+  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()}$`, []);
+
   // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
 
-  return <GradientLegend label="Direct Damages" range={range} colorMapValues={colorMapValues} />;
+  return (
+    <GradientLegend
+      label="Direct Damages"
+      range={range}
+      colorMapValues={colorMapValues}
+      getValueLabel={getValueLabel}
+    />
+  );
 };
 
-export const LegendContent = ({ viewLayersSpec, styleParams }) => {
+export const LegendContent: FC<{ viewLayers: ViewLayer[]; viewLayersParams: Record<string, ViewLayerParams> }> = ({
+  viewLayers,
+  viewLayersParams,
+}) => {
+  const hazardViewLayers = [];
+  let damageStyleParams = null;
+
+  viewLayers.forEach((viewLayer) => {
+    if (viewLayer.spatialType === 'raster') {
+      hazardViewLayers.push(viewLayer);
+    } else {
+      const { styleParams } = viewLayersParams[viewLayer.id];
+
+      // save the first styleParams for damages
+      if (styleParams?.colorMap?.colorScheme === 'damages' && !damageStyleParams) {
+        damageStyleParams = styleParams;
+      }
+    }
+  });
+
   return (
     <>
-      {/* <Typography variant="h6">Legend</Typography> */}
-      {Object.entries(viewLayersSpec).map(([deckLayerName, params]) => {
-        const deckLayerConfig = VIEW_LAYERS[deckLayerName];
-
-        if (deckLayerConfig.spatialType === 'raster') {
-          return (
-            <RasterLegend key={deckLayerName} deckLayerName={deckLayerName} deckLayerParams={params}></RasterLegend>
-          );
-        }
-
-        return null;
-      })}
-      {styleParams.colorMap && <DamagesLegend styleParams={styleParams} />}
+      {hazardViewLayers.map((viewLayer) =>
+        viewLayer.spatialType === 'raster' ? <RasterLegend key={viewLayer.id} viewLayer={viewLayer} /> : null,
+      )}
+      {damageStyleParams && <DamagesLegend styleParams={damageStyleParams} />}
     </>
   );
 };

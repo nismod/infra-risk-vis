@@ -107,7 +107,13 @@ export function CheckboxTree<T>({
     <>
       <TreeView defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
         {nodes.map((node) => (
-          <CheckboxTreeItem root={node} checkboxState={checkboxState} handleChange={handleChange} getLabel={getLabel} />
+          <CheckboxTreeItem
+            key={node.id}
+            root={node}
+            checkboxState={checkboxState}
+            handleChange={handleChange}
+            getLabel={getLabel}
+          />
         ))}
       </TreeView>
     </>

@@ -1,11 +1,11 @@
-import { DataParamConfig } from 'lib/controls/use-data-params';
+import { DataParamGroupConfig } from 'lib/controls/data-params';
 
 interface TotalDamagesParams {
   rcp: string;
   epoch: number;
 }
 
-export const totalDamagesConfig: DataParamConfig<TotalDamagesParams> = {
+export const totalDamagesConfig: DataParamGroupConfig<TotalDamagesParams> = {
   paramDefaults: {
     rcp: 'baseline',
     epoch: 2010,

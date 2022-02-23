@@ -1,14 +1,27 @@
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import { MapContext, FlyToInterpolator } from 'react-map-gl';
 
 import { easeCubic } from 'd3-ease';
 
 import { useChangeEffect } from 'lib/hooks/use-change-effect';
+import { ViewStateContext } from 'lib/data-map/DeckMap';
 
 type DeckBoundingBox = [[number, number], [number, number]];
 
-export const MapBoundsFitter = ({ boundingBox, viewState, onViewState }) => {
+export interface BoundingBox {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+interface MapBoundsFitterProps {
+  boundingBox: BoundingBox;
+}
+
+export const MapBoundsFitter: FC<MapBoundsFitterProps> = ({ boundingBox }) => {
   const { viewport } = useContext(MapContext);
+  const { viewState, setViewState } = useContext(ViewStateContext);
 
   useChangeEffect(
     () => {
@@ -18,18 +31,19 @@ export const MapBoundsFitter = ({ boundingBox, viewState, onViewState }) => {
           [boundingBox.maxX, boundingBox.maxY],
         ];
         const { latitude, longitude, zoom } = viewport.fitBounds(deckBbox, { padding: 20 });
-        onViewState({
+
+        setViewState({
           ...viewState,
           latitude,
           longitude,
           zoom,
           transitionDuration: 1500,
-          transitionInterpolator: new FlyToInterpolator(),
+          transitionInterpolator: new FlyToInterpolator() as any,
           transitionEasing: easeCubic,
         });
       }
     },
-    [boundingBox, viewState, onViewState, viewport],
+    [boundingBox, viewState, setViewState, viewport],
     [boundingBox],
   );
 

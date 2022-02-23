@@ -1,12 +1,12 @@
 import { Box, Paper, Typography } from '@mui/material';
 import { FC } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { VectorHoverDescription } from './content/VectorHoverDescription';
 import { RasterHoverDescription } from './content/RasterHoverDescription';
 import { RegionHoverDescription } from './content/RegionHoverDescription';
-import { useRecoilValue } from 'recoil';
-import { hasHover, hoverState } from 'lib/map/interactions/interaction-state';
-import { InteractionTarget } from 'lib/map/interactions/use-interactions';
+import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-state';
+import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
 
 export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
@@ -32,7 +32,7 @@ export const TooltipContent: FC = () => {
           <Box>
             <Typography>Hazards</Typography>
             {hoveredRasters.map((hr) => (
-              <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer}-${hr.target}`} />
+              <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
             ))}
           </Box>
         ) : null}

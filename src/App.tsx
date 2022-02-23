@@ -1,4 +1,5 @@
 import React from 'react';
+import { RecoilRoot } from 'recoil';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { CssBaseline, StyledEngineProvider, Toolbar } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -6,12 +7,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Nav } from './Nav';
 import { IntroPage } from './IntroPage';
 import { MapPage } from './MapPage';
+import { theme } from './theme';
 
 import './index.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { ViewName } from './config/views';
-import { RecoilRoot } from 'recoil';
-import { theme } from './theme';
 
 export const App = () => {
   return (
@@ -27,8 +26,8 @@ export const App = () => {
                 <IntroPage />
               </Route>
               <Route
-                path="/:view(overview)"
-                render={({ match: { params } }) => <MapPage view={params.view as ViewName} />}
+                path="/:view(exposure|risk|adaptation|prioritization)"
+                render={({ match: { params } }) => <MapPage view={params.view} />}
               />
             </Switch>
           </Router>

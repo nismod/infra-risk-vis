@@ -38,6 +38,7 @@ export function CheckboxTreeItem<T>({
     >
       {root.children?.map((node) => (
         <CheckboxTreeItem
+          key={node.id}
           root={node}
           handleChange={handleChange}
           checkboxState={checkboxState}

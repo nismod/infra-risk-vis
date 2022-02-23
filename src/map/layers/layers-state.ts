@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { BoundaryLevel } from '../../config/deck-layers/boundaries-layer';
+import { BoundaryLevel } from '../../config/regions/boundaries-deck-layer';
 
 import { BackgroundName } from '../../config/backgrounds';
 

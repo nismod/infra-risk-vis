@@ -1,6 +1,15 @@
-import { Box, Button, Checkbox, FormControlLabel, Paper, Radio, RadioGroup } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Paper,
+  Radio,
+  RadioGroup,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
 import { Layers as LayersIcon } from '@mui/icons-material';
-import { ToggleButton, ToggleButtonGroup } from '@mui/lab';
 import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
