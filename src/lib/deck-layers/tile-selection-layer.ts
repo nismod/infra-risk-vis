@@ -18,7 +18,7 @@ export function tileSelectionLayer(tileProps, selectedFeatureId) {
       getLineColor: [0, 255, 255, 255],
 
       // use on-GPU filter extension to only show the selected feature
-      getFilterValue: (x) => (x.id == selectedFeatureId ? 1 : 0),
+      getFilterValue: (x) => (x.id === selectedFeatureId ? 1 : 0),
       filterRange: [1, 1],
       extensions: [new DataFilterExtension({ filterSize: 1 })],
     } as any,

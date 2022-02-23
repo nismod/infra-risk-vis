@@ -1,5 +1,4 @@
 import { ViewLayer } from 'lib/data-map/view-layers';
-import { MVTLayer } from 'deck.gl';
 import { infrastructureDeckLayer } from 'config/networks/infrastructure-deck-layer';
 import { border, vectorColor } from 'lib/deck-layers/utils';
 import { BoundaryLevel } from './metadata';
