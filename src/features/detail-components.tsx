@@ -9,7 +9,7 @@ interface DataItemProps {
   value: any;
 }
 
-const DataItem: FC<DataItemProps> = ({ label, value }) => {
+export const DataItem: FC<DataItemProps> = ({ label, value }) => {
   if (isNumeric(value)) {
     value = numFormat(value);
   }
@@ -38,17 +38,23 @@ interface DetailsProps {
   f: any;
 }
 
+export const DefaultDetailsList: FC<DetailsProps> = ({ f }) => {
+  return (
+    <List>
+      {Object.entries(f).map(([key, value]) => (
+        <DataItem key={key} label={titleCase(key.replace(/_/g, ' '))} value={value} />
+      ))}
+    </List>
+  );
+};
+
 export const DefaultDetails: FC<DetailsProps> = ({ f }) => {
   return (
     <>
       <Typography variant="h6" component="h1">
         Asset
       </Typography>
-      <List>
-        {Object.entries(f).map(([key, value]) => (
-          <DataItem key={key} label={titleCase(key.replace(/_/g, ' '))} value={value} />
-        ))}
-      </List>
+      <DefaultDetailsList f={f} />
     </>
   );
 };

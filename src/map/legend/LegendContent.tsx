@@ -11,6 +11,7 @@ import { ViewLayer, ViewLayerParams } from 'lib/data-map/view-layers';
 import { useRecoilValue } from 'recoil';
 import { viewLayersFlatState } from 'state/layers/view-layers-flat';
 import { viewLayersParamsState } from 'state/layers/view-layers-params';
+import { showPopulationState } from 'state/population';
 
 const legendHeight = 10;
 
@@ -104,9 +105,34 @@ const DamagesLegend = ({ styleParams }) => {
   );
 };
 
+const PopulationLegend = () => {
+  const { scale, range } = VECTOR_COLOR_MAPS['population'];
+  const [rangeMin, rangeMax] = range;
+
+  const colorMapValues = useMemo(() => {
+    const scaleFn = d3Scale.scaleSequential([rangeMin, rangeMax], scale);
+
+    return d3Array.ticks(rangeMin, rangeMax, 255).map((x) => ({ value: x, color: scaleFn(x) }));
+  }, [scale, rangeMin, rangeMax]);
+
+  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()}/km²`, []);
+
+  // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
+
+  return (
+    <GradientLegend
+      label="Population density"
+      range={range}
+      colorMapValues={colorMapValues}
+      getValueLabel={getValueLabel}
+    />
+  );
+};
+
 export const LegendContent: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const viewLayersParams = useRecoilValue(viewLayersParamsState);
+  const showPopulation = useRecoilValue(showPopulationState);
 
   const hazardViewLayers = [];
   let damageStyleParams = null;
@@ -130,6 +156,7 @@ export const LegendContent: FC<{}> = () => {
         viewLayer.spatialType === 'raster' ? <RasterLegend key={viewLayer.id} viewLayer={viewLayer} /> : null,
       )}
       {damageStyleParams && <DamagesLegend styleParams={damageStyleParams} />}
+      {showPopulation && <PopulationLegend />}
     </>
   );
 };

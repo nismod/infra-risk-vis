@@ -14,6 +14,7 @@ import { showPopulationState } from 'state/population';
 import { viewModeState } from 'state/view-mode';
 import { HazardsControl } from './controls/HazardsControl';
 import { NetworkControl } from './controls/NetworkControl';
+import { RegionsControl } from './controls/RegionsControl';
 import { ViewModeToggle } from './ViewModeToggle';
 
 const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
@@ -28,16 +29,6 @@ const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
   );
 };
 
-const PopulationToggle = () => {
-  const [showPopulation, setShowPopulation] = useRecoilState(showPopulationState);
-
-  return (
-    <FormControlLabel
-      label="Show Population Map"
-      control={<Checkbox checked={showPopulation} onChange={(e, checked) => setShowPopulation(checked)} />}
-    />
-  );
-};
 export const SidebarContent = ({ view }) => {
   const setViewMode = useSetRecoilState(viewModeState);
 
@@ -56,7 +47,7 @@ export const SidebarContent = ({ view }) => {
           <HazardsControl />
         </SidebarSection>
         <SidebarSection title="Regions">
-          <PopulationToggle />
+          <RegionsControl />
         </SidebarSection>
       </>
     );
@@ -70,7 +61,7 @@ export const SidebarContent = ({ view }) => {
           <HazardsControl />
         </SidebarSection>
         <SidebarSection title="Regions">
-          <PopulationToggle />
+          <RegionsControl />
         </SidebarSection>
       </>
     );

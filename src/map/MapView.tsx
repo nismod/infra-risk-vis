@@ -73,8 +73,12 @@ export const MapView = ({ view }) => {
             </MapLegend>
           </Box>
           <Box position="absolute" top={10} right={50} width={globalStyleVariables.detailsSidebarWidth}>
-            <FeatureSidebar />
-            <RegionDetails />
+            <Box mb={2}>
+              <FeatureSidebar />
+            </Box>
+            <Box mb={2}>
+              <RegionDetails />
+            </Box>
           </Box>
         </>
       }

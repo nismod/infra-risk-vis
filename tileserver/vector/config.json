@@ -8,23 +8,17 @@
   },
   "styles": {},
   "data": {
-    "boundaries_parish": {
-      "mbtiles": "boundaries_parish.mbtiles"
+    "regions_parish": {
+      "mbtiles": "regions_parish.mbtiles"
     },
-    "boundaries_community": {
-      "mbtiles": "boundaries_community.mbtiles"
+    "regions_enumeration": {
+      "mbtiles": "regions_enumeration.mbtiles"
     },
-    "boundaries_enumeration": {
-      "mbtiles": "boundaries_enumeration.mbtiles"
+    "regions_parish_labels": {
+      "mbtiles": "regions_parish_labels.mbtiles"
     },
-    "boundaries_parish_labels": {
-      "mbtiles": "boundaries_parish_labels.mbtiles"
-    },
-    "boundaries_community_labels": {
-      "mbtiles": "boundaries_community_labels.mbtiles"
-    },
-    "boundaries_enumeration_labels": {
-      "mbtiles": "boundaries_enumeration_labels.mbtiles"
+    "regions_enumeration_labels": {
+      "mbtiles": "regions_enumeration_labels.mbtiles"
     },
     "buildings": {
       "mbtiles": "buildings.mbtiles"
@@ -79,9 +73,6 @@
     },
     "water_waste_nodes": {
       "mbtiles": "water_waste_nodes.mbtiles"
-    },
-    "population": {
-      "mbtiles": "population.mbtiles"
     }
   }
 }

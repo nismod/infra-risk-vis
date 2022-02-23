@@ -9,12 +9,7 @@ export function boundariesDeckLayer(level: BoundaryLevel) {
   return new MVTLayer(
     {
       id: `boundaries_${level}`,
-      data: `/vector/data/boundaries_${level}.json`,
-      loadOptions: {
-        mvt: {
-          layers: ['polygons'],
-        },
-      },
+      data: `/vector/data/regions_${level}.json`,
       binary: true,
       filled: true,
       getFillColor: [255, 255, 255, 0],
@@ -38,7 +33,7 @@ export function boundaryLabelsLayer(level: BoundaryLevel, background: Background
     config.showLabels &&
     new MVTLayer({
       id: `boundaries_${level}-text`,
-      data: `/vector/data/boundaries_${level}_labels.json`,
+      data: `/vector/data/regions_${level}_labels.json`,
       loadOptions: {
         mvt: {
           layers: ['labels'],

@@ -27,17 +27,20 @@ export const singleViewLayerParamsState = selectorFamily<ViewLayerParams, string
     ({ get }) => {
       const viewLayer = get(viewLayerState(viewLayerId));
 
+      const layerParams: any = {};
+
+      if (viewLayer == null) return layerParams;
+
+      const interactionGroup = viewLayer.interactionGroup;
+      const groupSelection = get(selectionState(interactionGroup));
+
+      layerParams.selection = groupSelection?.viewLayer.id === viewLayer.id ? groupSelection : null;
+
       if (viewLayer?.group === 'infrastructure') {
-        const interactionGroup = viewLayer.interactionGroup;
-        const groupSelection = get(selectionState(interactionGroup));
+        layerParams.styleParams = get(styleParamsState);
+      }
 
-        const styleParams = get(styleParamsState);
-
-        return {
-          styleParams,
-          selection: groupSelection?.viewLayer.id === viewLayer.id ? groupSelection : null,
-        };
-      } else return {};
+      return layerParams;
     },
 });
 

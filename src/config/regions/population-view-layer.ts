@@ -10,14 +10,14 @@ export function populationViewLayer(boundaryLevel: BoundaryLevel): ViewLayer {
     spatialType: 'vector',
     group: 'regions',
     params: {
-      boundaryLevel: 'enumeration',
+      boundaryLevel,
     },
     fn: ({ deckProps, zoom, styleParams, selection }) =>
       infrastructureDeckLayer(
         { selectedFeatureId: selection?.target.feature.id },
         deckProps,
         {
-          data: `/vector/data/population.json`,
+          data: `/vector/data/regions_${boundaryLevel}.json`,
         },
         border([20, 20, 20, 255]),
         vectorColor('fill', '#ccc', {

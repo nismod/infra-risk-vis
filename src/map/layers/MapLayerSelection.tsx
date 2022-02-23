@@ -14,6 +14,7 @@ import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers-state';
+import { BoundaryLevelSelection } from './BoundaryLevelSelection';
 
 export const MapLayerSelection = () => {
   const [showPopover, setShowPopover] = useState(false);
@@ -21,7 +22,6 @@ export const MapLayerSelection = () => {
   const [background, setBackground] = useRecoilState(backgroundState);
   const [showLabels, setShowLabels] = useRecoilState(showLabelsState);
   const [showBoundaries, setShowRegions] = useRecoilState(showBoundariesState);
-  const [boundaryLevel, setBoundaryLevel] = useRecoilState(boundaryLevelState);
 
   const other = background === 'satellite' ? 'light' : 'satellite';
 
@@ -36,15 +36,6 @@ export const MapLayerSelection = () => {
       }
     },
     [setBackground, other],
-  );
-
-  const handleBoundaryLevel = useCallback(
-    (e, newBoundaryLevel) => {
-      if (newBoundaryLevel != null) {
-        setBoundaryLevel(newBoundaryLevel);
-      }
-    },
-    [setBoundaryLevel],
   );
 
   const buttonStyle = showPopover ? { borderTopRightRadius: 0, borderBottomRightRadius: 0 } : {};
@@ -92,11 +83,7 @@ export const MapLayerSelection = () => {
                 />
                 {showBoundaries && (
                   <Box ml={4}>
-                    <RadioGroup value={boundaryLevel} onChange={handleBoundaryLevel}>
-                      <FormControlLabel value="parish" label="Parishes" control={<Radio />} />
-                      <FormControlLabel value="community" label="Communities" control={<Radio />} />
-                      <FormControlLabel value="enumeration" label="Enumeration Districts" control={<Radio />} />
-                    </RadioGroup>
+                    <BoundaryLevelSelection />
                   </Box>
                 )}
               </Box>

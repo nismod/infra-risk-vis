@@ -33,7 +33,7 @@ export const TooltipContent: FC = () => {
           </Box>
         ) : null}
         {hazardsHovered ? (
-          <Box>
+          <Box mb={2}>
             <Typography>Hazards</Typography>
             {hoveredRasters.map((hr) => (
               <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
