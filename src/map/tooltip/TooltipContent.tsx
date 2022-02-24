@@ -25,7 +25,7 @@ export const TooltipContent: FC = () => {
 
   return (
     <Paper>
-      <Box p={1}>
+      <Box p={1} minWidth={200}>
         {assetsHovered ? (
           <Box mb={2}>
             <Typography>Asset</Typography>

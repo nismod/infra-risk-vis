@@ -27,7 +27,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
           <SidebarContent view={view} />
         </Box>
       </Box>
-      <Box position="absolute" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
+      <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
         <MapView view={view} />
       </Box>
     </>
