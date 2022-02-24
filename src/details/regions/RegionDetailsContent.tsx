@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { REGIONS_METADATA } from 'config/regions/metadata';
-import { DataItem, DefaultDetailsList } from 'features/detail-components';
+import { DataItem } from 'features/detail-components';
 import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
 import { FC } from 'react';
 

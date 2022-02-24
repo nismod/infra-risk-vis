@@ -1,21 +1,11 @@
 import { ArrowDropUp, ArrowRight } from '@mui/icons-material';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Checkbox,
-  FormControlLabel,
-  Typography,
-} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { showPopulationState } from 'state/population';
+import { useSetRecoilState } from 'recoil';
 import { viewModeState } from 'state/view-mode';
 import { HazardsControl } from './controls/HazardsControl';
 import { NetworkControl } from './controls/NetworkControl';
 import { RegionsControl } from './controls/RegionsControl';
-import { ViewModeToggle } from './ViewModeToggle';
 
 const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
   const [expanded, setExpanded] = useState(false);

@@ -6,9 +6,9 @@ export interface BoundaryConfig {
   labelPlural: string;
 }
 
-export type BoundaryLevel = 'parish' | 'community' | 'enumeration';
+export type RegionLevel = 'parish' | 'community' | 'enumeration';
 
-export const REGIONS_METADATA: Record<BoundaryLevel, BoundaryConfig> = {
+export const REGIONS_METADATA: Record<RegionLevel, BoundaryConfig> = {
   parish: {
     fieldName: 'PARISH',
     minZoom: 9,

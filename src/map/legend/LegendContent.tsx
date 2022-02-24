@@ -7,11 +7,11 @@ import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from '../../config/color-maps';
 
 import { useRasterColorMapValues } from '../legend/use-color-map-values';
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
-import { ViewLayer, ViewLayerParams } from 'lib/data-map/view-layers';
+import { ViewLayer } from 'lib/data-map/view-layers';
 import { useRecoilValue } from 'recoil';
 import { viewLayersFlatState } from 'state/layers/view-layers-flat';
 import { viewLayersParamsState } from 'state/layers/view-layers-params';
-import { showPopulationState } from 'state/population';
+import { showPopulationState } from 'state/regions';
 
 const legendHeight = 10;
 

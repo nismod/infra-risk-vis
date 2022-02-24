@@ -1,7 +1,7 @@
-import { boundariesDeckLayer } from './boundaries-deck-layer';
-import { BoundaryLevel } from './metadata';
+import { regionBoundariesDeckLayer } from './region-boundaries-deck-layer';
+import { RegionLevel } from './metadata';
 
-export function boundariesViewLayer(boundaryLevel: BoundaryLevel) {
+export function regionBoundariesViewLayer(boundaryLevel: RegionLevel) {
   return {
     id: `boundaries_${boundaryLevel}`,
     group: 'regions',
@@ -10,6 +10,6 @@ export function boundariesViewLayer(boundaryLevel: BoundaryLevel) {
     params: {
       boundaryLevel,
     },
-    fn: () => boundariesDeckLayer(boundaryLevel),
+    fn: () => regionBoundariesDeckLayer(boundaryLevel),
   };
 }

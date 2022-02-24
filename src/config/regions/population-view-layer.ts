@@ -1,9 +1,9 @@
 import { ViewLayer } from 'lib/data-map/view-layers';
 import { infrastructureDeckLayer } from 'config/networks/infrastructure-deck-layer';
 import { border, vectorColor } from 'lib/deck-layers/utils';
-import { BoundaryLevel } from './metadata';
+import { RegionLevel } from './metadata';
 
-export function populationViewLayer(boundaryLevel: BoundaryLevel): ViewLayer {
+export function populationViewLayer(boundaryLevel: RegionLevel): ViewLayer {
   return {
     id: `population_${boundaryLevel}`,
     interactionGroup: 'regions',

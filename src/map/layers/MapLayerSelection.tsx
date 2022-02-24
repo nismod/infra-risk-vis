@@ -1,27 +1,15 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Paper,
-  Radio,
-  RadioGroup,
-  ToggleButton,
-  ToggleButtonGroup,
-} from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { Layers as LayersIcon } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { backgroundState, showLabelsState, showBoundariesState, boundaryLevelState } from './layers-state';
-import { BoundaryLevelSelection } from './BoundaryLevelSelection';
+import { backgroundState, showLabelsState } from './layers-state';
 
 export const MapLayerSelection = () => {
   const [showPopover, setShowPopover] = useState(false);
 
   const [background, setBackground] = useRecoilState(backgroundState);
   const [showLabels, setShowLabels] = useRecoilState(showLabelsState);
-  const [showBoundaries, setShowRegions] = useRecoilState(showBoundariesState);
 
   const other = background === 'satellite' ? 'light' : 'satellite';
 
@@ -75,17 +63,6 @@ export const MapLayerSelection = () => {
                   label="Show labels"
                   control={<Checkbox checked={showLabels} onChange={(e, checked) => setShowLabels(checked)} />}
                 />
-              </Box>
-              <Box>
-                <FormControlLabel
-                  label="Show regions"
-                  control={<Checkbox checked={showBoundaries} onChange={(e, checked) => setShowRegions(checked)} />}
-                />
-                {showBoundaries && (
-                  <Box ml={4}>
-                    <BoundaryLevelSelection />
-                  </Box>
-                )}
               </Box>
             </Box>
           </Box>

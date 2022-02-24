@@ -1,31 +1,12 @@
 import { MVTLayer } from 'deck.gl';
 
-import { border } from 'lib/deck-layers/utils';
-
-import { BackgroundName } from '../backgrounds';
-import { BoundaryLevel, REGIONS_METADATA } from './metadata';
-
-export function boundariesDeckLayer(level: BoundaryLevel) {
-  return new MVTLayer(
-    {
-      id: `boundaries_${level}`,
-      data: `/vector/data/regions_${level}.json`,
-      binary: true,
-      filled: true,
-      getFillColor: [255, 255, 255, 0],
-      pickable: true,
-      stroked: true,
-      refinementStrategy: 'best-available',
-      lineWidthUnits: 'pixels',
-    } as any,
-    border([150, 150, 150, 255]) as any,
-  );
-}
+import { BackgroundName } from 'config/backgrounds';
+import { RegionLevel, REGIONS_METADATA } from './metadata';
 
 const LIGHT_TEXT = [240, 240, 240, 255];
 const DARK_TEXT = [90, 90, 90, 255];
 
-export function boundaryLabelsLayer(level: BoundaryLevel, background: BackgroundName) {
+export function regionLabelsDeckLayer(level: RegionLevel, background: BackgroundName) {
   const config = REGIONS_METADATA[level];
 
   const color = background === 'satellite' ? LIGHT_TEXT : DARK_TEXT;

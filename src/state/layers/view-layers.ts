@@ -1,8 +1,8 @@
-import { boundaryLabelsLayer } from 'config/regions/boundaries-deck-layer';
-import { boundariesViewLayer } from 'config/regions/boundaries-view-layer';
+import { regionLabelsDeckLayer } from 'config/regions/region-labels-deck-layer';
+import { regionBoundariesViewLayer } from 'config/regions/boundaries-view-layer';
 import { hazardViewLayer } from 'config/hazards/hazard-view-layer';
 import { ViewLayer, viewOnlyLayer } from 'lib/data-map/view-layers';
-import { backgroundState, boundaryLevelState, showBoundariesState, showLabelsState } from 'map/layers/layers-state';
+import { backgroundState, showLabelsState } from 'map/layers/layers-state';
 import { selector } from 'recoil';
 import { dataParamsByGroupState } from 'state/data-params';
 import { hazardVisibilityState } from 'state/hazards/hazard-visibility';
@@ -14,8 +14,8 @@ import { isRetinaState } from 'state/is-retina';
 import { HazardParams } from 'config/hazards/domains';
 import { LayerTree } from 'lib/layer-tree';
 
-import { showPopulationState } from '../population';
 import { populationViewLayer } from 'config/regions/population-view-layer';
+import { regionLevelState, showPopulationState, showRegionsState } from 'state/regions';
 
 const hazardLayerState = selector<ViewLayer[]>({
   key: 'hazardLayerState',
@@ -33,8 +33,8 @@ const networkLayersState = selector<ViewLayer[]>({
 export const viewLayersState = selector<LayerTree<ViewLayer>>({
   key: 'viewLayersState',
   get: ({ get }) => {
-    const showBoundaries = get(showBoundariesState);
-    const boundaryLevel = get(boundaryLevelState);
+    const showRegions = get(showRegionsState);
+    const boundaryLevel = get(regionLevelState);
     const background = get(backgroundState);
     const showLabels = get(showLabelsState);
     const isRetina = get(isRetinaState);
@@ -43,7 +43,7 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
       // administrative region boundaries or population density
       get(showPopulationState)
         ? populationViewLayer(boundaryLevel)
-        : showBoundaries && boundariesViewLayer(boundaryLevel),
+        : showRegions && regionBoundariesViewLayer(boundaryLevel),
 
       // hazard data layers
       get(hazardLayerState),
@@ -56,8 +56,8 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
         viewOnlyLayer('labels', () => labelsLayer(isRetina)),
 
         // administrative regions labels
-        showBoundaries &&
-          viewOnlyLayer(`boundaries_${boundaryLevel}-text`, () => boundaryLabelsLayer(boundaryLevel, background)),
+        showRegions &&
+          viewOnlyLayer(`boundaries_${boundaryLevel}-text`, () => regionLabelsDeckLayer(boundaryLevel, background)),
       ],
     ];
   },

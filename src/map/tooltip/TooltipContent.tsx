@@ -7,7 +7,7 @@ import { RasterHoverDescription } from './content/RasterHoverDescription';
 import { RegionHoverDescription } from './content/RegionHoverDescription';
 import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-state';
 import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
-import { showPopulationState } from 'state/population';
+import { showPopulationState } from 'state/regions';
 
 export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
