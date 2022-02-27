@@ -24,17 +24,16 @@ clean-networks:
 
 
 # ======
-# Administrative boundaries
+# Administrative regions
 
-BOUNDARY_COMMAND = "$(current_dir)/etl/vector/process_boundaries.sh"
-BOUNDARY_FILE = "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg"
-BOUNDARY_OUT_BASE_PATH = "$(current_dir)/tileserver/vector/data"
+REGION_COMMAND = "$(current_dir)/etl/vector/process_regions.sh"
+REGION_OUT_BASE_PATH = "$(current_dir)/tileserver/vector/data"
 
 regions-parish:
-	 "$(BOUNDARY_COMMAND)" "${RAW_DATA_DIR}/regions/regions_parish.gpkg" "$(BOUNDARY_OUT_BASE_PATH)/regions_parish.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/regions_parish_labels.mbtiles" polygons
+	 "$(REGION_COMMAND)" "${RAW_DATA_DIR}/regions/regions_parish.gpkg" "$(REGION_OUT_BASE_PATH)/regions_parish.mbtiles" "$(REGION_OUT_BASE_PATH)/regions_parish_labels.mbtiles" polygons
 
 regions-enumeration:
-	"$(BOUNDARY_COMMAND)" "${RAW_DATA_DIR}/regions/regions_enumeration.gpkg" "$(BOUNDARY_OUT_BASE_PATH)/regions_enumeration.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/regions_enumeration_labels.mbtiles" polygons
+	"$(REGION_COMMAND)" "${RAW_DATA_DIR}/regions/regions_enumeration.gpkg" "$(REGION_OUT_BASE_PATH)/regions_enumeration.mbtiles" "$(REGION_OUT_BASE_PATH)/regions_enumeration_labels.mbtiles" polygons
 
 regions: regions-parish regions-enumeration
 

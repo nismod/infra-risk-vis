@@ -29,12 +29,14 @@ cat polygons.json | geojson-polygon-labels > labels.json \
   --include-bbox
 
 tippecanoe \
+  --generate-ids \
   --read-parallel \
   --output="$POLYGON_OUTPUT_FILE" \
   --force \
   polygons.json
 
 tippecanoe \
+  --generate-ids \
   --read-parallel \
   --output="$LABEL_OUTPUT_FILE" \
   --force \
