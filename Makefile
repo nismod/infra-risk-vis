@@ -8,20 +8,18 @@ endif
 current_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 
-.PHONY: all clean vector networks raster raster-fluvial raster-surface raster-coastal raster-cyclone clean-vector clean-rasters boundaries boundaries-parish boundaries-community boundaries-enumeration
+.PHONY: all clean networks raster regions raster-fluvial raster-surface raster-coastal raster-cyclone clean-networks clean-rasters regions-parish regions-enumeration
 
-all: vector raster
+all: networks raster regions
 
 
 # ======
 # Networks vector data
 
-vector: networks boundaries
-
 networks:
 	"$(current_dir)/etl/vector/process_all.py" --raw "${RAW_DATA_DIR}" --out "$(current_dir)/tileserver/vector/data"
 
-clean-vector:
+clean-networks:
 	rm ./tileserver/data/*.mbtiles
 
 
@@ -32,16 +30,13 @@ BOUNDARY_COMMAND = "$(current_dir)/etl/vector/process_boundaries.sh"
 BOUNDARY_FILE = "${RAW_DATA_DIR}/boundaries/admin_boundaries.gpkg"
 BOUNDARY_OUT_BASE_PATH = "$(current_dir)/tileserver/vector/data"
 
-boundaries-parish:
-	 "$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_parish.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_parish_labels.mbtiles" parish admin1
+regions-parish:
+	 "$(BOUNDARY_COMMAND)" "${RAW_DATA_DIR}/regions/regions_parish.gpkg" "$(BOUNDARY_OUT_BASE_PATH)/regions_parish.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/regions_parish_labels.mbtiles" polygons
 
-boundaries-community:
-	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_community.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_community_labels.mbtiles" community admin2
+regions-enumeration:
+	"$(BOUNDARY_COMMAND)" "${RAW_DATA_DIR}/regions/regions_enumeration.gpkg" "$(BOUNDARY_OUT_BASE_PATH)/regions_enumeration.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/regions_enumeration_labels.mbtiles" polygons
 
-boundaries-enumeration:
-	"$(BOUNDARY_COMMAND)" "$(BOUNDARY_FILE)" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_enumeration.mbtiles" "$(BOUNDARY_OUT_BASE_PATH)/boundaries_enumeration_labels.mbtiles" community admin3
-
-boundaries: boundaries-parish boundaries-community boundaries-enumeration
+regions: regions-parish regions-enumeration
 
 
 # ======
@@ -69,4 +64,4 @@ clean-raster:
 	rm ./tileserver-raster/data/*.tif
 
 
-clean: clean-vector clean-raster
+clean: clean-networks clean-raster
