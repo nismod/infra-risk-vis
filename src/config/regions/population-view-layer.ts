@@ -19,7 +19,7 @@ export function populationViewLayer(boundaryLevel: RegionLevel): ViewLayer {
         {
           data: `/vector/data/regions_${boundaryLevel}.json`,
         },
-        border([20, 20, 20, 255]),
+        zoom > 12 ? border([40, 40, 40, 255]) : {},
         vectorColor('fill', '#ccc', {
           colorMap: { colorScheme: 'population', colorField: 'population_density_per_km2' },
         }),

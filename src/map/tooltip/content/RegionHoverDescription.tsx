@@ -13,7 +13,7 @@ export const RegionHoverDescription = ({ hoveredObject }: { hoveredObject: Inter
   return (
     <>
       <Typography component="h6">{metadata.labelSingular}</Typography>
-      <Typography>{hoveredObject.target.feature.properties[metadata.fieldName]}</Typography>
+      <Typography fontWeight="bold">{hoveredObject.target.feature.properties[metadata.fieldName]}</Typography>
       {showPopulation && (
         <Typography>Population: {hoveredObject.target.feature.properties['population'].toLocaleString()}</Typography>
       )}
