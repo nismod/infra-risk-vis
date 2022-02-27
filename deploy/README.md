@@ -83,3 +83,16 @@ terracotta ingest \
 `deploy.sh` builds the frontend for deployment, uploads the build directory,
 data and tileserver config to a server, and restarts the tileservers. It assumes
 that whoever runs the script has ssh/public key access to the server.
+
+## Deploy update
+
+Usually this involves running `deploy.sh` and that will be sufficient.
+
+If you need to restart the raster tileserver:
+
+```bash
+# restart the service
+sudo service restart terracotta
+# check nginx can access the socket
+sudo chown :www-data /var/www/tileserver/raster/terracotta.sock
+```

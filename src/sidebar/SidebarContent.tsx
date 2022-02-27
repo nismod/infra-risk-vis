@@ -1,7 +1,8 @@
 import { ArrowDropUp, ArrowRight } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
+
 import { viewModeState } from 'state/view-mode';
 import { HazardsControl } from './controls/HazardsControl';
 import { NetworkControl } from './controls/NetworkControl';
@@ -19,6 +20,13 @@ const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
   );
 };
 
+const viewLabels = {
+  exposure: 'Exposure',
+  risk: 'Risk',
+  adaptation: 'Adaptation',
+  prioritization: 'Prioritization',
+};
+
 export const SidebarContent = ({ view }) => {
   const setViewMode = useSetRecoilState(viewModeState);
 
@@ -27,32 +35,43 @@ export const SidebarContent = ({ view }) => {
     setViewMode(viewMode);
   }, [setViewMode, view]);
 
-  if (view === 'exposure')
-    return (
-      <>
-        <SidebarSection title="Built Assets">
-          <NetworkControl />
-        </SidebarSection>
-        <SidebarSection title="Hazards">
-          <HazardsControl />
-        </SidebarSection>
-        <SidebarSection title="Regions">
-          <RegionsControl />
-        </SidebarSection>
-      </>
-    );
-  else if (view === 'risk')
-    return (
-      <>
-        <SidebarSection title="Built Assets">
-          <NetworkControl />
-        </SidebarSection>
-        <SidebarSection title="Hazards">
-          <HazardsControl />
-        </SidebarSection>
-        <SidebarSection title="Regions">
-          <RegionsControl />
-        </SidebarSection>
-      </>
-    );
+  switch (view) {
+    case 'exposure':
+      return (
+        <>
+          <SidebarSection title="Built Assets">
+            <NetworkControl />
+          </SidebarSection>
+          <SidebarSection title="Hazards">
+            <HazardsControl />
+          </SidebarSection>
+          <SidebarSection title="Regions">
+            <RegionsControl />
+          </SidebarSection>
+        </>
+      );
+    case 'risk':
+      return (
+        <>
+          <SidebarSection title="Built Assets">
+            <NetworkControl />
+          </SidebarSection>
+          <SidebarSection title="Hazards">
+            <HazardsControl />
+          </SidebarSection>
+          <SidebarSection title="Regions">
+            <RegionsControl />
+          </SidebarSection>
+        </>
+      );
+    default: {
+      const viewLabel = viewLabels[view];
+
+      if (viewLabel) {
+        return <Alert severity="info">{viewLabel}: Coming soon.</Alert>;
+      } else {
+        return <Alert severity="error">Unknown view!</Alert>;
+      }
+    }
+  }
 };
