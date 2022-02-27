@@ -17,12 +17,10 @@ export const FeatureSidebar: FC<{}> = () => {
   const f = feature.properties;
 
   return (
-    <Box position="absolute" top={10} right={50} width={400}>
-      <Paper>
-        <Box p={3} maxHeight="calc(100vh - 125px)" style={{ overflowY: 'scroll' }}>
-          <FeatureSidebarContent f={f} viewLayer={viewLayer} />
-        </Box>
-      </Paper>
-    </Box>
+    <Paper>
+      <Box p={3} maxHeight="60vh" style={{ overflowY: 'scroll' }}>
+        <FeatureSidebarContent f={f} viewLayer={viewLayer} />
+      </Box>
+    </Paper>
   );
 };

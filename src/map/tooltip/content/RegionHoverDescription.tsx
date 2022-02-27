@@ -1,24 +1,22 @@
-import { useRecoilValue } from 'recoil';
 import { Typography } from '@mui/material';
 
-import { boundaryConfig, BoundaryLevel } from '../../../config/regions/boundaries-deck-layer';
-import { boundaryLevelState } from '../../layers/layers-state';
+import { REGIONS_METADATA } from '../../../config/regions/metadata';
 import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
-
-const labels: Record<BoundaryLevel, string> = {
-  parish: 'Parish',
-  community: 'Community',
-  enumeration: 'Enumeration District',
-};
+import { useRecoilValue } from 'recoil';
+import { showPopulationState } from 'state/regions';
 
 export const RegionHoverDescription = ({ hoveredObject }: { hoveredObject: InteractionTarget<VectorTarget> }) => {
-  const boundaryLevel = useRecoilValue(boundaryLevelState);
-  const levelLabel = labels[boundaryLevel];
+  const metadata = REGIONS_METADATA[hoveredObject.viewLayer.params.regionLevel];
+
+  const showPopulation = useRecoilValue(showPopulationState);
 
   return (
     <>
-      <Typography component="h6">{levelLabel}</Typography>
-      <Typography>{hoveredObject.target.feature.properties[boundaryConfig[boundaryLevel].fieldName]}</Typography>
+      <Typography component="h6">{metadata.labelSingular}</Typography>
+      <Typography fontWeight="bold">{hoveredObject.target.feature.properties[metadata.fieldName]}</Typography>
+      {showPopulation && (
+        <Typography>Population: {hoveredObject.target.feature.properties['population'].toLocaleString()}</Typography>
+      )}
     </>
   );
 };

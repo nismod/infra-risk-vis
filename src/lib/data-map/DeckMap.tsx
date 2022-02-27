@@ -1,5 +1,6 @@
+import { Box } from '@mui/material';
 import DeckGL, { DeckProps } from 'deck.gl';
-import { Children, createContext, FC, ReactNode, useMemo, useRef, useState } from 'react';
+import { createContext, FC, ReactNode, useMemo, useRef, useState } from 'react';
 import { MapContext, MapContextProps } from 'react-map-gl';
 
 interface DeckMapProps {
@@ -66,11 +67,8 @@ export const DeckMap: FC<DeckMapProps> = ({
             height: '100%',
             zIndex: 1,
           }}
-          onClick={(e) => e.stopPropagation()}
         >
-          {Children.map(uiOverlays, (child) => (
-            <div style={{ pointerEvents: 'auto' }}>{child}</div>
-          ))}
+          <Box sx={{ pointerEvents: 'auto' }}>{uiOverlays}</Box>
         </div>
       )}
     </ViewStateContext.Provider>

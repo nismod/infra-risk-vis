@@ -1,4 +1,8 @@
 export const HAZARDS_METADATA = {
+  cyclone: {
+    label: 'Cyclone',
+    dataUnit: 'm/s',
+  },
   fluvial: {
     label: 'River Flooding',
     dataUnit: 'm',
@@ -10,10 +14,6 @@ export const HAZARDS_METADATA = {
   coastal: {
     label: 'Coastal Flooding',
     dataUnit: 'm',
-  },
-  cyclone: {
-    label: 'Cyclone',
-    dataUnit: 'km/h', //TODO: check this
   },
 };
 

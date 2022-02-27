@@ -33,15 +33,12 @@ export const NetworkControl: FC<{}> = () => {
   );
 
   return (
-    <Box mb={2}>
-      <Typography variant="h6">Infrastructure Assets</Typography>
-      <CheckboxTree
-        nodes={NETWORK_LAYERS_HIERARCHY}
-        getLabel={(node) =>
-          node.children ? node.label : <LayerLabel {...NETWORKS_METADATA[node.id]} label={node.label} />
-        }
-        onSelected={handleSelected}
-      />
-    </Box>
+    <CheckboxTree
+      nodes={NETWORK_LAYERS_HIERARCHY}
+      getLabel={(node) =>
+        node.children ? node.label : <LayerLabel {...NETWORKS_METADATA[node.id]} label={node.label} />
+      }
+      onSelected={handleSelected}
+    />
   );
 };

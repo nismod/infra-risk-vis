@@ -1,11 +1,16 @@
-import { boundariesDeckLayer, BoundaryLevel } from './boundaries-deck-layer';
+import { regionBoundariesDeckLayer } from './region-boundaries-deck-layer';
+import { RegionLevel } from './metadata';
+import { ViewLayer } from 'lib/data-map/view-layers';
 
-export function boundariesViewLayer(boundaryLevel: BoundaryLevel) {
+export function regionBoundariesViewLayer(regionLevel: RegionLevel): ViewLayer {
   return {
-    id: `boundaries_${boundaryLevel}`,
+    id: `boundaries_${regionLevel}`,
     group: 'regions',
     spatialType: 'vector',
     interactionGroup: 'regions',
-    fn: () => boundariesDeckLayer(boundaryLevel),
+    params: {
+      regionLevel,
+    },
+    fn: () => regionBoundariesDeckLayer(regionLevel),
   };
 }

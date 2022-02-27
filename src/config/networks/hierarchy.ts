@@ -133,4 +133,8 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
       },
     ],
   },
+  {
+    id: 'buildings',
+    label: 'Buildings',
+  },
 ];

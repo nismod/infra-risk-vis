@@ -9,8 +9,7 @@ set -o errexit
 INPUT_FILE=$1
 POLYGON_OUTPUT_FILE=$2
 LABEL_OUTPUT_FILE=$3
-OUTPUT_LAYER_NAME=$4
-INPUT_LAYER_NAME=${5:-""}
+INPUT_LAYER_NAME=$4
 
 rm -f polygons.json labels.json
 
@@ -30,12 +29,14 @@ cat polygons.json | geojson-polygon-labels > labels.json \
   --include-bbox
 
 tippecanoe \
+  --generate-ids \
   --read-parallel \
   --output="$POLYGON_OUTPUT_FILE" \
   --force \
   polygons.json
 
 tippecanoe \
+  --generate-ids \
   --read-parallel \
   --output="$LABEL_OUTPUT_FILE" \
   --force \

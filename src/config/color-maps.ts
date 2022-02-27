@@ -29,4 +29,9 @@ export const VECTOR_COLOR_MAPS = {
     range: [0, 1000000],
     empty: '#ccc',
   },
+  population: {
+    scale: d3.interpolateInferno,
+    range: [0, 10000],
+    empty: '#ccc',
+  },
 };
