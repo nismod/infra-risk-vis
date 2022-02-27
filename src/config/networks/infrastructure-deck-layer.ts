@@ -1,21 +1,24 @@
 import { MVTLayer, GeoJsonLayer } from 'deck.gl';
 
-import { tileSelectionLayer } from 'lib/deck-layers/tile-selection-layer';
+import { tileSelectionLayer, TileSelectionLayerOptions } from 'lib/deck-layers/tile-selection-layer';
 import { mergeUpdateTriggers } from 'lib/deck-layers/utils';
 
-export function infrastructureDeckLayer({ selectedFeatureId }, ...props) {
+export function infrastructureDeckLayer(selectionLayerParams: TileSelectionLayerOptions, ...props) {
   return new MVTLayer(
     {
       binary: false,
       autoHighlight: true,
       highlightColor: [0, 255, 255, 255],
       refinementStrategy: 'best-available',
-      renderSubLayers: (tileProps) => [new GeoJsonLayer(tileProps), tileSelectionLayer(tileProps, selectedFeatureId)],
+      renderSubLayers: (tileProps) => [
+        new GeoJsonLayer(tileProps),
+        tileSelectionLayer(tileProps, selectionLayerParams),
+      ],
     } as any,
     ...props,
     mergeUpdateTriggers(...props, {
       updateTriggers: {
-        renderSubLayers: [selectedFeatureId],
+        renderSubLayers: [selectionLayerParams.selectedFeatureId],
       },
     }),
   );

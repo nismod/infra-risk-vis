@@ -5,7 +5,7 @@ import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
 import { FC } from 'react';
 
 export const RegionDetailsContent: FC<{ selectedRegion: InteractionTarget<any> }> = ({ selectedRegion }) => {
-  const metadata = REGIONS_METADATA[selectedRegion.viewLayer.params.boundaryLevel];
+  const metadata = REGIONS_METADATA[selectedRegion.viewLayer.params.regionLevel];
   const f = selectedRegion.target.feature.properties;
 
   return (

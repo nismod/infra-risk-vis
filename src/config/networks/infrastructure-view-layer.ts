@@ -9,7 +9,7 @@ export function infrastructureViewLayer(id: string, customFn: ({ zoom, stylePara
     interactionGroup: 'assets',
     fn: ({ deckProps, zoom, styleParams, selection }) =>
       infrastructureDeckLayer(
-        { selectedFeatureId: selection?.target.feature.id },
+        { selectedFeatureId: selection?.target.feature.id, polygonOffset: -1000 },
         deckProps,
         {
           data: `/vector/data/${id}.json`,

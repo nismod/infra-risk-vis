@@ -6,7 +6,7 @@ export interface BoundaryConfig {
   labelPlural: string;
 }
 
-export type RegionLevel = 'parish' | 'community' | 'enumeration';
+export type RegionLevel = 'parish' | 'enumeration';
 
 export const REGIONS_METADATA: Record<RegionLevel, BoundaryConfig> = {
   parish: {
@@ -15,13 +15,6 @@ export const REGIONS_METADATA: Record<RegionLevel, BoundaryConfig> = {
     showLabels: true,
     labelSingular: 'Parish',
     labelPlural: 'Parishes',
-  },
-  community: {
-    fieldName: 'COMMUNITY',
-    minZoom: 13,
-    showLabels: false,
-    labelSingular: 'Community',
-    labelPlural: 'Communities',
   },
   enumeration: {
     fieldName: 'ED',

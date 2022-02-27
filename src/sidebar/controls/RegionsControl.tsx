@@ -4,11 +4,11 @@ import { RegionLevel } from 'config/regions/metadata';
 import { regionDataState, RegionDataType, regionLevelState } from 'state/regions';
 
 export const RegionLevelSelection = () => {
-  const [boundaryLevel, setBoundaryLevel] = useRecoilState(regionLevelState);
+  const [regionLevel, setRegionLevel] = useRecoilState(regionLevelState);
   return (
     <FormControl component="fieldset">
       <FormLabel>Administrative division</FormLabel>
-      <RadioGroup value={boundaryLevel} onChange={(e, value) => setBoundaryLevel(value as RegionLevel)}>
+      <RadioGroup value={regionLevel} onChange={(e, value) => setRegionLevel(value as RegionLevel)}>
         <FormControlLabel value="parish" label="Parishes" control={<Radio unselectable="off" />} />
         <FormControlLabel value="enumeration" label="Enumeration Districts" control={<Radio unselectable="off" />} />
       </RadioGroup>

@@ -34,7 +34,7 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
   key: 'viewLayersState',
   get: ({ get }) => {
     const showRegions = get(showRegionsState);
-    const boundaryLevel = get(regionLevelState);
+    const regionLevel = get(regionLevelState);
     const background = get(backgroundState);
     const showLabels = get(showLabelsState);
     const isRetina = get(isRetinaState);
@@ -42,8 +42,8 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
     return [
       // administrative region boundaries or population density
       get(showPopulationState)
-        ? populationViewLayer(boundaryLevel)
-        : showRegions && regionBoundariesViewLayer(boundaryLevel),
+        ? populationViewLayer(regionLevel)
+        : showRegions && regionBoundariesViewLayer(regionLevel),
 
       // hazard data layers
       get(hazardLayerState),
@@ -57,7 +57,7 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
 
         // administrative regions labels
         showRegions &&
-          viewOnlyLayer(`boundaries_${boundaryLevel}-text`, () => regionLabelsDeckLayer(boundaryLevel, background)),
+          viewOnlyLayer(`boundaries_${regionLevel}-text`, () => regionLabelsDeckLayer(regionLevel, background)),
       ],
     ];
   },

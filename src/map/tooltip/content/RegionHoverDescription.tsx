@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { showPopulationState } from 'state/regions';
 
 export const RegionHoverDescription = ({ hoveredObject }: { hoveredObject: InteractionTarget<VectorTarget> }) => {
-  const metadata = REGIONS_METADATA[hoveredObject.viewLayer.params.boundaryLevel];
+  const metadata = REGIONS_METADATA[hoveredObject.viewLayer.params.regionLevel];
 
   const showPopulation = useRecoilValue(showPopulationState);
 
