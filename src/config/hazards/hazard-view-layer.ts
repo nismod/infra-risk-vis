@@ -5,6 +5,7 @@ import { rasterTileLayer } from 'lib/deck-layers/raster-tile-layer';
 import { ViewLayer } from 'lib/data-map/view-layers';
 
 import { RASTER_COLOR_MAPS } from '../color-maps';
+import { HAZARD_SOURCE } from './source';
 
 export function getHazardId<
   F extends string, //'fluvial' | 'surface' | 'coastal' | 'cyclone',
@@ -32,9 +33,8 @@ export function hazardViewLayer(hazardType: string, hazardParams: HazardParams):
   const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;
 
   const { returnPeriod, rcp, epoch, confidence } = hazardParams;
-  const sanitisedRcp = rcp.replace('.', 'x');
 
-  const deckId = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence }); //`hazard_${hazardType}_${returnPeriod}`;
+  const deckId = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence });
 
   return {
     id: hazardType,
@@ -56,7 +56,7 @@ export function hazardViewLayer(hazardType: string, hazardParams: HazardParams):
         deckProps,
         {
           id: `${hazardType}@${deckId}`, // follow the convention viewLayerId@deckLayerId
-          data: `/raster/singleband/${hazardType}/${returnPeriod}/${sanitisedRcp}/${epoch}/${confidence}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
+          data: HAZARD_SOURCE.getDataUrl({ hazardType, hazardParams }, { scheme, range }),
           refinementStrategy: 'no-overlap',
         },
       );
