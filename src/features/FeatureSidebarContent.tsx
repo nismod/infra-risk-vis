@@ -23,6 +23,7 @@ import {
 import { HAZARD_DOMAINS } from '../config/hazards/domains';
 import { ViewLayer } from 'lib/data-map/view-layers';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
+import { ColorBox } from 'map/tooltip/content/ColorBox';
 
 var componentMapping = {
   airport_areas: AirportDetails,
@@ -89,7 +90,8 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, viewL
         <code>{JSON.stringify(f, null, 2)}</code>
       </pre>
       <Typography variant="caption">
-        <span style={{ color: color ?? '#333' }}>■</span>&nbsp;{label}
+        <ColorBox color={color ?? '#333'} />
+        {label}
       </Typography>
       <DetailsComponent f={f} />
       <RiskSection eadData={eadData} />

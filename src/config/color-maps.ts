@@ -19,8 +19,8 @@ export const RASTER_COLOR_MAPS = {
   },
 };
 
-function invertColorScale(colorScale) {
-  return (i, n) => colorScale(1 - i, n);
+function invertColorScale<T>(colorScale: (t: number, n: number) => T) {
+  return (i: number, n: number) => colorScale(1 - i, n);
 }
 
 export const VECTOR_COLOR_MAPS = {

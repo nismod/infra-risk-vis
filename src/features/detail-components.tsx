@@ -14,7 +14,7 @@ export const DataItem: FC<DataItemProps> = ({ label, value }) => {
     value = numFormat(value);
   }
   return (
-    <ListItem disableGutters style={{ padding: 0 }}>
+    <ListItem disableGutters disablePadding>
       <ListItemText
         primary={label}
         primaryTypographyProps={{ variant: 'caption' }}

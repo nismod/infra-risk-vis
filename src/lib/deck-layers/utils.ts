@@ -39,17 +39,20 @@ export interface ColorMapDefinition {
   colorField: string | Function;
 }
 
+export function colorMap(scale: (t: number, n?: number) => string, range: number[], empty: string) {
+  const scaleFn = d3.scaleSequential<string>(range, scale);
+
+  return (value) => (value == null ? empty : scaleFn(value));
+}
+
 function makeColorMap(definition: ColorMapDefinition) {
   const { colorScheme, colorField } = definition;
   const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
 
   const accessorFn = typeof colorField === 'string' ? (f) => f.properties[colorField] : colorField;
-  const scaleFn = d3.scaleSequential(range, scale);
+  const colorFn = colorMap(scale, range, empty);
 
-  return (f) => {
-    const value = accessorFn(f);
-    return colorCssToRgb(value == null || value === 0 ? empty : scaleFn(value));
-  };
+  return (f) => colorCssToRgb(colorFn(accessorFn(f)));
 }
 
 export function vectorColor(type: 'fill' | 'stroke', defaultValue, styleParams) {
