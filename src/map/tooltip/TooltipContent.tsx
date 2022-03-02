@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 
@@ -8,6 +8,12 @@ import { RegionHoverDescription } from './content/RegionHoverDescription';
 import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-state';
 import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
 import { showPopulationState } from 'state/regions';
+
+const TooltipSection = ({ children }) => (
+  <Box p={1} borderBottom="1px solid #ccc">
+    {children}
+  </Box>
+);
 
 export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
@@ -25,25 +31,23 @@ export const TooltipContent: FC = () => {
 
   return (
     <Paper>
-      <Box p={1} minWidth={200}>
+      <Box minWidth={200}>
         {assetsHovered ? (
-          <Box mb={2}>
-            <Typography>Asset</Typography>
+          <TooltipSection>
             <VectorHoverDescription hoveredObject={hoveredVector} />
-          </Box>
+          </TooltipSection>
         ) : null}
         {hazardsHovered ? (
-          <Box mb={2}>
-            <Typography>Hazards</Typography>
+          <TooltipSection>
             {hoveredRasters.map((hr) => (
               <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
             ))}
-          </Box>
+          </TooltipSection>
         ) : null}
         {regionsHovered ? (
-          <Box>
+          <TooltipSection>
             <RegionHoverDescription hoveredObject={hoveredRegion} />
-          </Box>
+          </TooltipSection>
         ) : null}
       </Box>
     </Paper>
