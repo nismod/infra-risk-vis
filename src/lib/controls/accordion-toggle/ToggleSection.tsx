@@ -29,7 +29,7 @@ export const ToggleSection: FC<ToggleSectionProps> = ({ id, label, forceSingle =
   const handleShow = useHandleCheckbox(setShow);
 
   return (
-    <Accordion expanded={show} onChange={handleShow}>
+    <Accordion disableGutters expanded={show} onChange={handleShow}>
       <AccordionSummary>
         <FormControlLabel
           control={
