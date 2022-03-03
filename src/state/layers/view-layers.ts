@@ -17,6 +17,7 @@ import { LayerTree } from 'lib/layer-tree';
 import { populationViewLayer } from 'config/regions/population-view-layer';
 import { regionLevelState, showPopulationState } from 'state/regions';
 import { showLayerState } from 'state/show-layers';
+import { buildingsViewLayer } from 'config/buildings/buildings-view-layer';
 
 const hazardLayerState = selector<ViewLayer[]>({
   key: 'hazardLayerState',
@@ -51,6 +52,8 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
         (get(showPopulationState) ? populationViewLayer(regionLevel) : regionBoundariesViewLayer(regionLevel)),
       // hazard data layers
       get(hazardLayerState),
+
+      get(showLayerState('buildings')) && buildingsViewLayer(),
 
       // network data layers
       get(networkLayersState),

@@ -6,6 +6,7 @@ import { viewModeState } from 'state/view-mode';
 import { HazardsSection } from './hazards/HazardsSection';
 import { NetworksSection } from './networks/NetworksSection';
 import { RegionsSection } from './regions/RegionsSection';
+import { SidebarSection } from './SidebarSection';
 
 const viewLabels = {
   exposure: 'Exposure',
@@ -28,6 +29,7 @@ export const SidebarContent: FC<{ view: string }> = ({ view }) => {
       return (
         <>
           <NetworksSection />
+          <SidebarSection id="buildings" title="Buildings"></SidebarSection>
           <HazardsSection />
           <RegionsSection />
         </>
