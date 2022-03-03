@@ -1,15 +1,21 @@
 import { ArrowDropUp, ArrowRight } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { FC, useEffect } from 'react';
+import { atomFamily, useRecoilState, useSetRecoilState } from 'recoil';
 
 import { viewModeState } from 'state/view-mode';
 import { HazardsControl } from './controls/HazardsControl';
 import { NetworkControl } from './controls/NetworkControl';
 import { RegionsControl } from './controls/RegionsControl';
 
-const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
-  const [expanded, setExpanded] = useState(false);
+const sidebarSectionExpandedState = atomFamily({
+  key: 'sidebarSectionExpandedState',
+  default: false,
+});
+
+const SidebarSection: FC<{ id: string; title: string }> = ({ id, title, children }) => {
+  const [expanded, setExpanded] = useRecoilState(sidebarSectionExpandedState(id));
+
   return (
     <Accordion expanded={expanded} onChange={(e, expanded) => setExpanded(expanded)} sx={{ pointerEvents: 'auto' }}>
       <AccordionSummary expandIcon={expanded ? <ArrowDropUp /> : <ArrowRight />}>
@@ -39,13 +45,13 @@ export const SidebarContent = ({ view }) => {
     case 'exposure':
       return (
         <>
-          <SidebarSection title="Built Assets">
+          <SidebarSection id="assets" title="Built Assets">
             <NetworkControl />
           </SidebarSection>
-          <SidebarSection title="Hazards">
+          <SidebarSection id="hazards" title="Hazards">
             <HazardsControl />
           </SidebarSection>
-          <SidebarSection title="Regions">
+          <SidebarSection id="regions" title="Regions">
             <RegionsControl />
           </SidebarSection>
         </>
@@ -53,13 +59,13 @@ export const SidebarContent = ({ view }) => {
     case 'risk':
       return (
         <>
-          <SidebarSection title="Built Assets">
+          <SidebarSection id="assets" title="Built Assets">
             <NetworkControl />
           </SidebarSection>
-          <SidebarSection title="Hazards">
+          <SidebarSection id="hazards" title="Hazards">
             <HazardsControl />
           </SidebarSection>
-          <SidebarSection title="Regions">
+          <SidebarSection id="regions" title="Regions">
             <RegionsControl />
           </SidebarSection>
         </>
