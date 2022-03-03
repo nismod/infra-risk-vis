@@ -1,11 +1,6 @@
 import { RegionLevel } from 'config/regions/metadata';
 import { atom, selector } from 'recoil';
 
-export const showRegionsState = atom<boolean>({
-  key: 'showRegionsState',
-  default: true,
-});
-
 export const regionLevelState = atom<RegionLevel>({
   key: 'regionLevelState',
   default: 'parish',

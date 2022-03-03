@@ -15,25 +15,31 @@ import { HazardParams } from 'config/hazards/domains';
 import { LayerTree } from 'lib/layer-tree';
 
 import { populationViewLayer } from 'config/regions/population-view-layer';
-import { regionLevelState, showPopulationState, showRegionsState } from 'state/regions';
+import { regionLevelState, showPopulationState } from 'state/regions';
+import { showLayerState } from 'state/show-layers';
 
 const hazardLayerState = selector<ViewLayer[]>({
   key: 'hazardLayerState',
   get: ({ get }) =>
-    truthyKeys(get(hazardVisibilityState)).map((hazard) =>
-      hazardViewLayer(hazard, get(dataParamsByGroupState(hazard)) as HazardParams),
-    ),
+    get(showLayerState('hazards'))
+      ? truthyKeys(get(hazardVisibilityState)).map((hazard) =>
+          hazardViewLayer(hazard, get(dataParamsByGroupState(hazard)) as HazardParams),
+        )
+      : [],
 });
 
 const networkLayersState = selector<ViewLayer[]>({
   key: 'networkLayersState',
-  get: ({ get }) => truthyKeys(get(networkSelectionState)).map((network) => INFRASTRUCTURE_VIEW_LAYERS[network]),
+  get: ({ get }) =>
+    get(showLayerState('assets'))
+      ? truthyKeys(get(networkSelectionState)).map((network) => INFRASTRUCTURE_VIEW_LAYERS[network])
+      : [],
 });
 
 export const viewLayersState = selector<LayerTree<ViewLayer>>({
   key: 'viewLayersState',
   get: ({ get }) => {
-    const showRegions = get(showRegionsState);
+    const showRegions = get(showLayerState('regions'));
     const regionLevel = get(regionLevelState);
     const background = get(backgroundState);
     const showLabels = get(showLabelsState);
@@ -41,10 +47,8 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
 
     return [
       // administrative region boundaries or population density
-      get(showPopulationState)
-        ? populationViewLayer(regionLevel)
-        : showRegions && regionBoundariesViewLayer(regionLevel),
-
+      showRegions &&
+        (get(showPopulationState) ? populationViewLayer(regionLevel) : regionBoundariesViewLayer(regionLevel)),
       // hazard data layers
       get(hazardLayerState),
 

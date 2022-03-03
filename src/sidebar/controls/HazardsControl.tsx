@@ -1,25 +1,11 @@
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  MenuItem,
-  Select,
-  Switch,
-  Typography,
-} from '@mui/material';
+import { Box, FormControl, FormLabel, Grid, MenuItem, Select } from '@mui/material';
 import { Children } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import { ToggleSection, ToggleSectionGroup } from 'lib/controls/accordion-toggle/ToggleSection';
 import { CustomNumberSlider } from 'lib/controls/CustomSlider';
 
-import {
-  damageSourceSelectionState,
-  showDamageRasterState,
-  showDirectDamagesState,
-} from 'state/damage-mapping/damage-map';
+import { damageSourceSelectionState, showDirectDamagesState } from 'state/damage-mapping/damage-map';
 import { dataParamOptionsState, dataParamState, useUpdateDataParam } from '../../state/data-params';
 import { hazardSelectionState } from '../../state/hazards/hazard-selection';
 
@@ -36,18 +22,6 @@ const InputSection = ({ children }) => (
     {children}
   </Box>
 );
-
-const ShowDamageRasterToggle = () => {
-  const [showDamageRaster, setShowDamageRaster] = useRecoilState(showDamageRasterState);
-
-  return (
-    <FormControlLabel
-      control={<Switch checked={showDamageRaster} onChange={(e, checked) => setShowDamageRaster(checked)}></Switch>}
-      label="Show hazard raster"
-      labelPlacement="start"
-    />
-  );
-};
 
 const ReturnPeriodControl = ({ group, ...otherProps }) => {
   return (
@@ -127,15 +101,6 @@ export const HazardsControl = () => {
 
   return (
     <Box mb={1}>
-      <Box mt={2} mb={1}>
-        <Grid container justifyContent="space-between">
-          {showDamages ? (
-            <Grid item>
-              <ShowDamageRasterToggle />
-            </Grid>
-          ) : null}
-        </Grid>
-      </Box>
       <ToggleSectionGroup toggleState={selectionState}>
         {showDamages && (
           <ToggleSection id="total-damages" label="Total Damages" forceSingle={forceSingle}>

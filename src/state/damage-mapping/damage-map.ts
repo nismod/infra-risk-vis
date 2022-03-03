@@ -6,11 +6,6 @@ export const showDirectDamagesState = selector({
   get: ({ get }) => get(viewModeState) === 'direct-damages',
 });
 
-export const showDamageRasterState = atom({
-  key: 'showDamageRasterState',
-  default: true,
-});
-
 export const selectedDamageSourceState = atom({
   key: 'damageSourceSelectionImpl',
   default: 'total-damages',
