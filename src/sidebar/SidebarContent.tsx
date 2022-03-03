@@ -32,13 +32,16 @@ const SidebarSection: FC<{ id: string; title: string }> = ({ id, title, children
           '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
             transform: 'rotate(90deg)',
           },
+          '& .MuiAccordionSummary-content': {
+            marginY: '6px',
+          },
           flexDirection: 'row-reverse', // this puts the expand icon to the left of the summary bar
         }}
         expandIcon={<ArrowRight />}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h6">{title}</Typography>
+            <Typography>{title}</Typography>
           </Box>
           <Box>
             <IconButton
