@@ -3,10 +3,9 @@ import { FC, useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
 import { viewModeState } from 'state/view-mode';
-import { HazardsControl } from './controls/HazardsControl';
-import { NetworkControl } from './controls/NetworkControl';
-import { RegionsControl } from './controls/RegionsControl';
-import { SidebarSection } from './SidebarSection';
+import { HazardsSection } from './hazards/HazardsSection';
+import { NetworksSection } from './networks/NetworksSection';
+import { RegionsSection } from './regions/RegionsSection';
 
 const viewLabels = {
   exposure: 'Exposure',
@@ -25,31 +24,12 @@ export const SidebarContent: FC<{ view: string }> = ({ view }) => {
 
   switch (view) {
     case 'exposure':
-      return (
-        <>
-          <SidebarSection id="assets" title="Built Assets">
-            <NetworkControl />
-          </SidebarSection>
-          <SidebarSection id="hazards" title="Hazards">
-            <HazardsControl />
-          </SidebarSection>
-          <SidebarSection id="regions" title="Regions">
-            <RegionsControl />
-          </SidebarSection>
-        </>
-      );
     case 'risk':
       return (
         <>
-          <SidebarSection id="assets" title="Built Assets">
-            <NetworkControl />
-          </SidebarSection>
-          <SidebarSection id="hazards" title="Hazards">
-            <HazardsControl />
-          </SidebarSection>
-          <SidebarSection id="regions" title="Regions">
-            <RegionsControl />
-          </SidebarSection>
+          <NetworksSection />
+          <HazardsSection />
+          <RegionsSection />
         </>
       );
     default: {
