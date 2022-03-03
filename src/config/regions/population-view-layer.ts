@@ -1,5 +1,5 @@
 import { ViewLayer } from 'lib/data-map/view-layers';
-import { infrastructureDeckLayer } from 'config/networks/infrastructure-deck-layer';
+import { vectorDeckLayer } from 'lib/deck-layers/vector-deck-layer';
 import { border, vectorColor } from 'lib/deck-layers/utils';
 import { RegionLevel } from './metadata';
 import { REGIONS_SOURCE } from './source';
@@ -16,7 +16,7 @@ export function populationViewLayer(regionLevel: RegionLevel): ViewLayer {
       regionLevel,
     },
     fn: ({ deckProps, zoom, styleParams, selection }) =>
-      infrastructureDeckLayer(
+      vectorDeckLayer(
         { selectedFeatureId: selection?.target.feature.id },
         deckProps,
         {
