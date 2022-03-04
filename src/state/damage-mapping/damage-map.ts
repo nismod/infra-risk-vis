@@ -19,13 +19,8 @@ export const damageSourceSelectionState = selectorFamily<boolean, string>({
       get(selectedDamageSourceState) === damageSourceId,
   set:
     (damageSourceId) =>
-    ({ get, set }, newValue) => {
-      const currentDamageSourceId = get(selectedDamageSourceState);
-      if (newValue === false) {
-        if (damageSourceId === currentDamageSourceId) {
-          set(selectedDamageSourceState, null);
-        }
-      } else {
+    ({ set }, newValue) => {
+      if (newValue !== false) {
         set(selectedDamageSourceState, damageSourceId);
       }
     },
