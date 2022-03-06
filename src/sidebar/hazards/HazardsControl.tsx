@@ -100,7 +100,7 @@ export const HazardsControl = () => {
   const selectionState = showDamages ? damageSourceSelectionState : hazardSelectionState;
 
   return (
-    <Box mb={1}>
+    <>
       <ToggleSectionGroup toggleState={selectionState}>
         {showDamages && (
           <ToggleSection id="total-damages" label="Total Damages" forceSingle={forceSingle}>
@@ -149,6 +149,6 @@ export const HazardsControl = () => {
           </InputSection>
         </ToggleSection>
       </ToggleSectionGroup>
-    </Box>
+    </>
   );
 };

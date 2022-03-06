@@ -1,11 +1,14 @@
 import { FC } from 'react';
 import { HazardsControl } from './HazardsControl';
-import { SidebarSection } from 'sidebar/SidebarSection';
+import { SidebarPanel } from 'sidebar/SidebarPanel';
+import { Box } from '@mui/system';
 
 export const HazardsSection: FC<{}> = () => {
   return (
-    <SidebarSection id="hazards" title="Hazards">
-      <HazardsControl />
-    </SidebarSection>
+    <SidebarPanel id="hazards" title="Hazards">
+      <Box p={2}>
+        <HazardsControl />
+      </Box>
+    </SidebarPanel>
   );
 };

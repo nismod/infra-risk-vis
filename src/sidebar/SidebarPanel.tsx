@@ -9,7 +9,7 @@ const sidebarSectionExpandedState = atomFamily({
   default: false,
 });
 
-export const SidebarSection: FC<{ id: string; title: string }> = ({ id, title, children }) => {
+export const SidebarPanel: FC<{ id: string; title: string }> = ({ id, title, children }) => {
   const [expanded, setExpanded] = useRecoilState(sidebarSectionExpandedState(id));
 
   return (
@@ -18,7 +18,7 @@ export const SidebarSection: FC<{ id: string; title: string }> = ({ id, title, c
       square // clears the original border radius so that we can set our own
       expanded={expanded}
       onChange={(e, expanded) => setExpanded(expanded)}
-      sx={{ pointerEvents: 'auto', marginBottom: 1, borderRadius: 1 }}
+      sx={{ pointerEvents: 'auto', marginBottom: 1, borderRadius: 1, overflow: 'hidden' }}
     >
       <AccordionSummary
         sx={{
@@ -28,6 +28,7 @@ export const SidebarSection: FC<{ id: string; title: string }> = ({ id, title, c
           '& .MuiAccordionSummary-content': {
             marginY: '6px',
           },
+          paddingX: '6px',
           flexDirection: 'row-reverse', // this puts the expand icon to the left of the summary bar
         }}
         expandIcon={<ArrowRight />}
@@ -41,7 +42,7 @@ export const SidebarSection: FC<{ id: string; title: string }> = ({ id, title, c
           </Box>
         </Box>
       </AccordionSummary>
-      <AccordionDetails>{children}</AccordionDetails>
+      <AccordionDetails sx={{ padding: 0 }}>{children}</AccordionDetails>
     </Accordion>
   );
 };

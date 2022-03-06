@@ -1,12 +1,10 @@
 import { Alert } from '@mui/material';
-import { FC, useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { FC } from 'react';
 
-import { viewModeState } from 'state/view-mode';
+import { BuildingsSection } from './buildings/BuildingsSection';
 import { HazardsSection } from './hazards/HazardsSection';
 import { NetworksSection } from './networks/NetworksSection';
 import { RegionsSection } from './regions/RegionsSection';
-import { SidebarSection } from './SidebarSection';
 
 const viewLabels = {
   exposure: 'Exposure',
@@ -16,20 +14,13 @@ const viewLabels = {
 };
 
 export const SidebarContent: FC<{ view: string }> = ({ view }) => {
-  const setViewMode = useSetRecoilState(viewModeState);
-
-  useEffect(() => {
-    const viewMode = view === 'risk' ? 'direct-damages' : 'input';
-    setViewMode(viewMode);
-  }, [setViewMode, view]);
-
   switch (view) {
     case 'exposure':
     case 'risk':
       return (
         <>
           <NetworksSection />
-          <SidebarSection id="buildings" title="Buildings"></SidebarSection>
+          <BuildingsSection />
           <HazardsSection />
           <RegionsSection />
         </>

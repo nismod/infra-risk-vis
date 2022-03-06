@@ -1,9 +1,9 @@
 import { atom, selector, selectorFamily } from 'recoil';
-import { viewModeState } from '../view-mode';
+import { networksStyleState } from 'state/networks/networks-style';
 
 export const showDirectDamagesState = selector({
   key: 'showDamagesState',
-  get: ({ get }) => get(viewModeState) === 'direct-damages',
+  get: ({ get }) => get(networksStyleState) === 'direct-damages',
 });
 
 export const selectedDamageSourceState = atom({

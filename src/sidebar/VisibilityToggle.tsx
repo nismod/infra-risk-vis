@@ -8,6 +8,7 @@ export const VisibilityToggle = ({ id }) => {
 
   return (
     <IconButton
+      title={visibility ? 'Hide layer' : 'Show layer'}
       onClick={(e) => {
         setVisibility((visibility) => !visibility);
         e.stopPropagation();
