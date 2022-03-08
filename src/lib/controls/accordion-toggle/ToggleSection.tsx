@@ -21,15 +21,22 @@ interface ToggleSectionProps {
   id: string;
   label: string;
   forceSingle?: boolean;
+  disabled?: boolean;
 }
 
-export const ToggleSection: FC<ToggleSectionProps> = ({ id, label, forceSingle = false, children }) => {
+export const ToggleSection: FC<ToggleSectionProps> = ({
+  id,
+  label,
+  forceSingle = false,
+  disabled = false,
+  children,
+}) => {
   const toggleState = useContext(ToggleStateContext);
   const [show, setShow] = useRecoilState(toggleState(id));
   const handleShow = useHandleCheckbox(setShow);
 
   return (
-    <Accordion disableGutters expanded={show} onChange={handleShow}>
+    <Accordion disableGutters disabled={disabled} expanded={show} onChange={handleShow}>
       <AccordionSummary>
         <FormControlLabel
           control={

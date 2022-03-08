@@ -4,48 +4,37 @@ import { DataParamGroupConfig, Param, ParamDomain, resolveParamDependencies } fr
 import { toDictionary } from 'lib/helpers';
 import { groupedFamily } from 'lib/recoil/grouped-family';
 import _ from 'lodash';
-import { atomFamily, selectorFamily, useRecoilTransaction_UNSTABLE } from 'recoil';
+import { atomFamily, useRecoilTransaction_UNSTABLE } from 'recoil';
 
 export type DataParamParam = Readonly<{
   group: string;
   param: string;
 }>;
 
-const dataParamConfig: Record<string, DataParamGroupConfig> = {
+export const dataParamConfig: Record<string, DataParamGroupConfig> = {
   ...HAZARD_DOMAINS,
   'total-damages': totalDamagesConfig,
 };
 
-export const dataParamGroupConfigState = atomFamily<DataParamGroupConfig, string>({
-  key: 'dataParamGroupConfigState',
-  default: (group) => dataParamConfig[group],
-});
+const dataParamNamesByGroup = _.mapValues(dataParamConfig, (groupConfig) => _.keys(groupConfig.paramDefaults));
 
-export const dataParamNamesByGroupState = selectorFamily<string[], string>({
-  key: 'dataParamNamesByGroupState',
-  get:
-    (group) =>
-    ({ get }) =>
-      Object.keys(get(dataParamGroupConfigState(group)).paramDefaults),
-});
+const dataParamDefaultsByGroup = _.mapValues(dataParamConfig, (groupConfig) =>
+  resolveParamDependencies(groupConfig.paramDefaults, groupConfig),
+);
 
-// TODO: remove duplication of default calculation between dataParamState and dataParamOptionsState
 export const dataParamState = atomFamily<Param, DataParamParam>({
   key: 'dataParamState',
-  default: ({ group, param }) => {
-    const groupConfig = dataParamConfig[group];
-    const [resolvedParams] = resolveParamDependencies(groupConfig.paramDefaults, groupConfig);
-    return resolvedParams[param];
-  },
+  default: ({ group, param }: DataParamParam) => dataParamDefaultsByGroup[group][0][param],
 });
 
 export const dataParamOptionsState = atomFamily<ParamDomain, DataParamParam>({
   key: 'dataParamOptionsState',
-  default: ({ group, param }) => {
-    const groupConfig = dataParamConfig[group];
-    const [, resolvedOptions] = resolveParamDependencies(groupConfig.paramDefaults, groupConfig);
-    return resolvedOptions[param];
-  },
+  default: ({ group, param }: DataParamParam) => dataParamDefaultsByGroup[group][1][param],
+});
+
+const dataParamNamesByGroupState = atomFamily({
+  key: 'dataParamNamesByGroupState',
+  default: (group: string) => dataParamNamesByGroup[group],
 });
 
 export const dataParamsByGroupState = groupedFamily<Param, DataParamParam>(
@@ -66,14 +55,13 @@ export function useUpdateDataParam(group: string, paramId: string) {
   return useRecoilTransaction_UNSTABLE(
     ({ get, set }) =>
       (newValue) => {
-        // need to construct group params dict manually as useRecoilTransaction doesn't support reading selectors
-        const paramNames = _.keys(dataParamConfig[group].paramDefaults);
+        const paramNames = dataParamNamesByGroup[group];
         const groupParams = toDictionary(
           paramNames,
           (param) => param,
           (param) => get(dataParamState({ group, param })),
         );
-        const groupConfig = get(dataParamGroupConfigState(group));
+        const groupConfig = dataParamConfig[group];
 
         const [resolvedParams, resolvedOptions] = resolveParamDependencies<Record<string, any>>(
           { ...groupParams, [paramId]: newValue },

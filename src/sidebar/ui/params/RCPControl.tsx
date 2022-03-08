@@ -5,9 +5,9 @@ function rcpLabel(value) {
   return value === 'baseline' ? 'Baseline' : value;
 }
 
-export const RCPControl = ({ group }) => {
+export const RCPControl = ({ group, disabled = false }) => {
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth disabled={disabled}>
       <FormLabel>RCP</FormLabel>
       <DataParam group={group} id="rcp">
         {({ value, onChange, options }) => (

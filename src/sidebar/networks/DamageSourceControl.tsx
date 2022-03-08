@@ -1,14 +1,23 @@
 import { Box, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup } from '@mui/material';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { InputSection } from 'sidebar/ui/InputSection';
 import { InputRow } from 'sidebar/ui/InputRow';
 import { EpochControl } from 'sidebar/ui/params/EpochControl';
 import { RCPControl } from 'sidebar/ui/params/RCPControl';
 
-import { selectedDamageSourceState } from 'state/damage-mapping/damage-map';
+import { selectedDamageSourceState, useUpdateDamageSource } from 'state/damage-mapping/damage-map';
+import { useInitDirectDamages } from '../../state/damage-mapping/damage-map';
+import { useEffect } from 'react';
 
 export const DamageSourceControl = () => {
-  const [selectedDamageSource, setSelectedDamageSource] = useRecoilState(selectedDamageSourceState);
+  const selectedDamageSource = useRecoilValue(selectedDamageSourceState);
+  const updateDamageSource = useUpdateDamageSource();
+
+  const initDirectDamages = useInitDirectDamages();
+
+  useEffect(() => {
+    initDirectDamages();
+  }, [initDirectDamages]);
 
   return (
     <Box my={2}>
@@ -17,7 +26,7 @@ export const DamageSourceControl = () => {
           <InputSection>
             <FormControl>
               <FormLabel>Damage Source</FormLabel>
-              <RadioGroup value={selectedDamageSource} onChange={(e, value) => setSelectedDamageSource(value)}>
+              <RadioGroup value={selectedDamageSource} onChange={(e, value) => updateDamageSource(value)}>
                 <FormControlLabel label="Total Damages" control={<Radio value="total-damages" />} />
                 <FormControlLabel label="River Flooding" control={<Radio value="fluvial" />} />
                 <FormControlLabel label="Surface Flooding" control={<Radio value="surface" />} />

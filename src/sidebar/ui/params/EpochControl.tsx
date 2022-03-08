@@ -6,9 +6,9 @@ function epochLabel(value) {
   return value;
 }
 
-export const EpochControl = ({ group }) => {
+export const EpochControl = ({ group, disabled = false }) => {
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth disabled={disabled}>
       <FormLabel>Epoch</FormLabel>
       <DataParam group={group} id="epoch">
         {({ value, onChange, options }) => (
