@@ -20,8 +20,8 @@ export const SidebarContent: FC<{ view: string }> = ({ view }) => {
       return (
         <>
           <NetworksSection />
-          <BuildingsSection />
           <HazardsSection />
+          <BuildingsSection />
           <RegionsSection />
         </>
       );

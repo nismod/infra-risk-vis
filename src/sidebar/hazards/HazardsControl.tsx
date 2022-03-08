@@ -18,7 +18,7 @@ export const HazardsControl = () => {
     <>
       {showDirectDamages ? (
         <Box my={1}>
-          <Alert severity="info">Hazard is shown for the selected damage source</Alert>
+          <Alert severity="info">Hazard layer selection is currently driven by the direct damages style</Alert>
         </Box>
       ) : null}
       <ToggleSectionGroup toggleState={hazardSelectionState}>

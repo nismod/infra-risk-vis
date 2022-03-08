@@ -20,7 +20,7 @@ export const DamageSourceControl = () => {
   }, [initDirectDamages]);
 
   return (
-    <Box my={2}>
+    <Box mt={2}>
       <Paper>
         <Box p={2}>
           <InputSection>
