@@ -1,4 +1,4 @@
-import { selectedDamageSourceState } from './damage-map';
+import { damageSourceState } from './damage-map';
 import { dataParamsByGroupState } from '../data-params';
 import { selector } from 'recoil';
 
@@ -35,7 +35,7 @@ function getEadAccessor(eadSource: string, rcp: string, epoch: number) {
 export const eadAccessorState = selector({
   key: 'eadAccessorState',
   get: ({ get }) => {
-    const eadSource = get(selectedDamageSourceState);
+    const eadSource = get(damageSourceState);
     if (eadSource == null) return null;
     const eadParams = get(dataParamsByGroupState(eadSource));
 

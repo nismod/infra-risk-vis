@@ -1,6 +1,6 @@
 export const HAZARDS_METADATA = {
   cyclone: {
-    label: 'Cyclone',
+    label: 'Cyclones',
     dataUnit: 'm/s',
   },
   fluvial: {
@@ -17,4 +17,5 @@ export const HAZARDS_METADATA = {
   },
 };
 
-export const HAZARD_LAYER_NAMES = Object.keys(HAZARDS_METADATA);
+export const HAZARDS_MAP_ORDER = ['cyclone', 'fluvial', 'surface', 'coastal'];
+export const HAZARDS_UI_ORDER = ['fluvial', 'surface', 'coastal', 'cyclone'];

@@ -5,7 +5,8 @@ import { MapView } from './map/MapView';
 import { SidebarContent } from 'sidebar/SidebarContent';
 import { globalStyleVariables } from 'theme';
 import { useSyncRecoilState } from 'lib/recoil/sync-state';
-import { viewState } from 'state/view';
+import { viewState, viewStateEffect } from 'state/view';
+import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
 
 interface MapViewProps {
   view: string;
@@ -44,6 +45,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
 
   return (
     <>
+      <StateEffectRoot state={viewState} effect={viewStateEffect} />
       <SidebarLayout>
         <SidebarContent />
       </SidebarLayout>

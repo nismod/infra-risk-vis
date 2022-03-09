@@ -7,7 +7,7 @@ import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-i
 import { colorMap } from 'lib/deck-layers/utils';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import { selectedDamageSourceState, showDirectDamagesState } from 'state/damage-mapping/damage-map';
+import { damageSourceState, showDirectDamagesState } from 'state/damage-mapping/damage-map';
 import { eadAccessorState } from 'state/damage-mapping/damage-style-params';
 import { ColorBox } from './ColorBox';
 
@@ -27,7 +27,7 @@ const damageColorSpec = VECTOR_COLOR_MAPS['damages'];
 const damageColorFn = colorMap(damageColorSpec.scale, damageColorSpec.range, damageColorSpec.empty);
 
 const DirectDamagesDescription: FC<{ feature: any }> = ({ feature }) => {
-  const damageSource = useRecoilValue(selectedDamageSourceState);
+  const damageSource = useRecoilValue(damageSourceState);
   const eadAccessor = useRecoilValue(eadAccessorState);
 
   const value = eadAccessor?.(feature);

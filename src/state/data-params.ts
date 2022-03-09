@@ -16,7 +16,7 @@ export const dataParamConfig: Record<string, DataParamGroupConfig> = {
   'total-damages': totalDamagesConfig,
 };
 
-const dataParamNamesByGroup = _.mapValues(dataParamConfig, (groupConfig) => _.keys(groupConfig.paramDefaults));
+export const dataParamNamesByGroup = _.mapValues(dataParamConfig, (groupConfig) => _.keys(groupConfig.paramDefaults));
 
 const dataParamDefaultsByGroup = _.mapValues(dataParamConfig, (groupConfig) =>
   resolveParamDependencies(groupConfig.paramDefaults, groupConfig),
