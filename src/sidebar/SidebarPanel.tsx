@@ -1,13 +1,9 @@
 import { ArrowRight } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import { FC } from 'react';
-import { atomFamily, useRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
+import { sidebarSectionExpandedState } from 'state/sections';
 import { VisibilityToggle } from './VisibilityToggle';
-
-const sidebarSectionExpandedState = atomFamily({
-  key: 'sidebarSectionExpandedState',
-  default: false,
-});
 
 export const SidebarPanel: FC<{ id: string; title: string }> = ({ id, title, children }) => {
   const [expanded, setExpanded] = useRecoilState(sidebarSectionExpandedState(id));

@@ -16,13 +16,13 @@ import { LayerTree } from 'lib/layer-tree';
 
 import { populationViewLayer } from 'config/regions/population-view-layer';
 import { regionLevelState, showPopulationState } from 'state/regions';
-import { showLayerState } from 'state/show-layers';
+import { sectionVisibilityState } from 'state/sections';
 import { buildingsViewLayer } from 'config/buildings/buildings-view-layer';
 
 const hazardLayerState = selector<ViewLayer[]>({
   key: 'hazardLayerState',
   get: ({ get }) =>
-    get(showLayerState('hazards'))
+    get(sectionVisibilityState('hazards'))
       ? truthyKeys(get(hazardVisibilityState)).map((hazard) =>
           hazardViewLayer(hazard, get(dataParamsByGroupState(hazard)) as HazardParams),
         )
@@ -32,7 +32,7 @@ const hazardLayerState = selector<ViewLayer[]>({
 const networkLayersState = selector<ViewLayer[]>({
   key: 'networkLayersState',
   get: ({ get }) =>
-    get(showLayerState('assets'))
+    get(sectionVisibilityState('assets'))
       ? truthyKeys(get(networkSelectionState)).map((network) => INFRASTRUCTURE_VIEW_LAYERS[network])
       : [],
 });
@@ -40,7 +40,7 @@ const networkLayersState = selector<ViewLayer[]>({
 export const viewLayersState = selector<LayerTree<ViewLayer>>({
   key: 'viewLayersState',
   get: ({ get }) => {
-    const showRegions = get(showLayerState('regions'));
+    const showRegions = get(sectionVisibilityState('regions'));
     const regionLevel = get(regionLevelState);
     const background = get(backgroundState);
     const showLabels = get(showLabelsState);
@@ -53,7 +53,7 @@ export const viewLayersState = selector<LayerTree<ViewLayer>>({
       // hazard data layers
       get(hazardLayerState),
 
-      get(showLayerState('buildings')) && buildingsViewLayer(),
+      get(sectionVisibilityState('buildings')) && buildingsViewLayer(),
 
       // network data layers
       get(networkLayersState),

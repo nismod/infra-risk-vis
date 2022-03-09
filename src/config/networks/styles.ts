@@ -1,12 +1,12 @@
-export const NETWORK_STYLES = [
-  {
-    label: 'Asset type',
-    value: 'type',
-  },
-  {
-    label: 'Direct damages',
-    value: 'direct-damages',
-  },
-];
+import { makeConfig } from 'lib/helpers';
 
-export const NETWORKS_DEFAULT_STYLE = 'type';
+export const NETWORK_STYLES = makeConfig([
+  {
+    id: 'type',
+    label: 'Asset type',
+  },
+  {
+    id: 'direct-damages',
+    label: 'Direct damages',
+  },
+]);

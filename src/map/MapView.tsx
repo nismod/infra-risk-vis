@@ -22,7 +22,7 @@ import { globalStyleVariables } from 'theme';
 import { RegionDetails } from 'details/regions/RegionDetails';
 import { interactionGroupsState } from '../state/layers/interaction-groups';
 
-export const MapView = ({ view }) => {
+export const MapView = () => {
   const background = useRecoilValue(backgroundState);
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const saveViewLayers = useSaveViewLayers();

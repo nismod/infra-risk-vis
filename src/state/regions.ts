@@ -1,15 +1,15 @@
 import { RegionLevel } from 'config/regions/metadata';
-import { REGION_DEFAULT_STYLE } from 'config/regions/styles';
 import { atom, selector } from 'recoil';
+import { sectionStyleValueState } from './sections';
 
 export const regionLevelState = atom<RegionLevel>({
   key: 'regionLevelState',
   default: 'parish',
 });
 
-export const regionsStyleState = atom({
-  key: 'regionDataState',
-  default: REGION_DEFAULT_STYLE,
+export const regionsStyleState = selector({
+  key: 'regionsStyleState',
+  get: ({ get }) => get(sectionStyleValueState('regions')),
 });
 
 export const showPopulationState = selector({

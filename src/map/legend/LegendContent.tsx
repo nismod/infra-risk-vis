@@ -12,7 +12,7 @@ import { useRecoilValue } from 'recoil';
 import { viewLayersFlatState } from 'state/layers/view-layers-flat';
 import { viewLayersParamsState } from 'state/layers/view-layers-params';
 import { showPopulationState } from 'state/regions';
-import { showLayerState } from 'state/show-layers';
+import { sectionVisibilityState } from 'state/sections';
 
 const legendHeight = 10;
 
@@ -133,7 +133,7 @@ const PopulationLegend = () => {
 export const LegendContent: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const viewLayersParams = useRecoilValue(viewLayersParamsState);
-  const showRegions = useRecoilValue(showLayerState('regions'));
+  const showRegions = useRecoilValue(sectionVisibilityState('regions'));
   const showPopulation = useRecoilValue(showPopulationState);
 
   const hazardViewLayers = [];

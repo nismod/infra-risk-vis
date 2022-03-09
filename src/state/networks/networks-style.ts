@@ -1,7 +1,7 @@
-import { NETWORKS_DEFAULT_STYLE } from 'config/networks/styles';
-import { atom } from 'recoil';
+import { selector } from 'recoil';
+import { sectionStyleValueState } from '../sections';
 
-export const networksStyleState = atom({
+export const networksStyleState = selector({
   key: 'networksStyleState',
-  default: NETWORKS_DEFAULT_STYLE,
+  get: ({ get }) => get(sectionStyleValueState('assets')),
 });

@@ -1,5 +1,7 @@
 import { Alert } from '@mui/material';
 import { FC } from 'react';
+import { useRecoilValue } from 'recoil';
+import { viewState } from 'state/view';
 
 import { BuildingsSection } from './buildings/BuildingsSection';
 import { HazardsSection } from './hazards/HazardsSection';
@@ -13,7 +15,8 @@ const viewLabels = {
   prioritization: 'Prioritization',
 };
 
-export const SidebarContent: FC<{ view: string }> = ({ view }) => {
+export const SidebarContent: FC<{}> = () => {
+  const view = useRecoilValue(viewState);
   switch (view) {
     case 'exposure':
     case 'risk':

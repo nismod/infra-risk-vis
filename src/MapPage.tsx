@@ -4,6 +4,8 @@ import { Box } from '@mui/material';
 import { MapView } from './map/MapView';
 import { SidebarContent } from 'sidebar/SidebarContent';
 import { globalStyleVariables } from 'theme';
+import { useSyncRecoilState } from 'lib/recoil/sync-state';
+import { viewState } from 'state/view';
 
 interface MapViewProps {
   view: string;
@@ -38,13 +40,15 @@ const SidebarLayout = ({ children }) => (
 );
 
 export const MapPage: FC<MapViewProps> = ({ view }) => {
+  useSyncRecoilState(viewState, view);
+
   return (
     <>
       <SidebarLayout>
-        <SidebarContent view={view} />
+        <SidebarContent />
       </SidebarLayout>
       <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
-        <MapView view={view} />
+        <MapView />
       </Box>
     </>
   );

@@ -1,30 +1,26 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { uniqueId } from 'lodash';
 import { FC, useState } from 'react';
-import { RecoilState, useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { sectionStyleOptionsState, sectionStyleValueState } from 'state/sections';
 
-interface StyleSelectionOption {
-  label: string;
-  value: string;
-}
+export const StyleSelection: FC<{ id: string }> = ({ id }) => {
+  const [value, setValue] = useRecoilState(sectionStyleValueState(id));
+  const options = useRecoilValue(sectionStyleOptionsState(id));
 
-export const StyleSelection: FC<{ state: RecoilState<string>; options: StyleSelectionOption[]; defaultValue: string }> =
-  ({ state, options }) => {
-    const id = useState(uniqueId('style-selection-'));
-    const labelId = `${id}-input-label`;
+  const htmlId = useState(uniqueId('style-selection-'));
+  const labelId = `${htmlId}-input-label`;
 
-    const [value, setValue] = useRecoilState(state);
-
-    return (
-      <FormControl fullWidth>
-        <InputLabel id={labelId}>Layer style</InputLabel>
-        <Select labelId={labelId} label="Layer style" value={value} onChange={(e) => setValue(e.target.value)}>
-          {options.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    );
-  };
+  return (
+    <FormControl fullWidth>
+      <InputLabel id={labelId}>Layer style</InputLabel>
+      <Select labelId={labelId} label="Layer style" value={value} onChange={(e) => setValue(e.target.value)}>
+        {options.map((option) => (
+          <MenuItem key={option.id} value={option.id}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
