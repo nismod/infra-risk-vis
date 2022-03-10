@@ -6,7 +6,7 @@ import { backgroundState, showLabelsState } from 'map/layers/layers-state';
 import { selector } from 'recoil';
 import { dataParamsByGroupState } from 'state/data-params';
 import { hazardVisibilityState } from 'state/hazards/hazard-visibility';
-import { networkSelectionState } from 'state/network-selection';
+import { networkSelectionState } from 'state/networks/network-selection';
 import { truthyKeys } from 'lib/helpers';
 import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
 import { labelsLayer } from 'config/deck-layers/labels-layer';
@@ -33,7 +33,7 @@ const networkLayersState = selector<ViewLayer[]>({
   key: 'networkLayersState',
   get: ({ get }) =>
     get(sectionVisibilityState('assets'))
-      ? truthyKeys(get(networkSelectionState)).map((network) => INFRASTRUCTURE_VIEW_LAYERS[network])
+      ? get(networkSelectionState).map((network) => INFRASTRUCTURE_VIEW_LAYERS[network])
       : [],
 });
 
