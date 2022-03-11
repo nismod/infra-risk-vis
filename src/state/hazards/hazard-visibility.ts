@@ -1,19 +1,15 @@
-import { HAZARD_LAYER_NAMES } from 'config/hazards/metadata';
-import _ from 'lodash';
 import { selector } from 'recoil';
-import {
-  selectedDamageSourceState,
-  showDamageRasterState,
-  showDirectDamagesState,
-} from 'state/damage-mapping/damage-map';
-import { hazardSelectionState } from './hazard-selection';
+
+import { HAZARDS_MAP_ORDER } from 'config/hazards/metadata';
+import { damageSourceState, showDirectDamagesState } from 'state/damage-mapping/damage-map';
+import { getHazardSelectionAggregate } from './hazard-selection';
 
 export const hazardVisibilityState = selector({
   key: 'hazardVisibilityState',
   get: ({ get }) => {
     if (get(showDirectDamagesState)) {
-      const selectedDamageSource = get(selectedDamageSourceState);
-      if (selectedDamageSource === 'total-damages' || !get(showDamageRasterState)) {
+      const selectedDamageSource = get(damageSourceState);
+      if (selectedDamageSource === 'total-damages') {
         return {};
       } else {
         return {
@@ -21,7 +17,7 @@ export const hazardVisibilityState = selector({
         };
       }
     } else {
-      return _.fromPairs(HAZARD_LAYER_NAMES.map((group) => [group, get(hazardSelectionState(group))]));
+      return getHazardSelectionAggregate({ get }, HAZARDS_MAP_ORDER);
     }
   },
 });

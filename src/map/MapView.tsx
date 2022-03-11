@@ -22,7 +22,7 @@ import { globalStyleVariables } from 'theme';
 import { RegionDetails } from 'details/regions/RegionDetails';
 import { interactionGroupsState } from '../state/layers/interaction-groups';
 
-export const MapView = ({ view }) => {
+export const MapView = () => {
   const background = useRecoilValue(backgroundState);
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const saveViewLayers = useSaveViewLayers();
@@ -59,7 +59,7 @@ export const MapView = ({ view }) => {
           <DataMapTooltip>
             <TooltipContent />
           </DataMapTooltip>
-          <Box position="absolute" top={0} left={globalStyleVariables.sidebarWidth + 10} ml={3} m={1} zIndex={1000}>
+          <Box position="absolute" top={0} left={globalStyleVariables.sidebarWidth} ml={3} m={1} zIndex={1000}>
             <Box mb={1}>
               <MapSearch />
             </Box>
@@ -67,7 +67,7 @@ export const MapView = ({ view }) => {
               <MapLayerSelection />
             </Box>
           </Box>
-          <Box position="absolute" bottom={0} left={globalStyleVariables.sidebarWidth + 10} m={1} ml={3} zIndex={1000}>
+          <Box position="absolute" bottom={0} left={globalStyleVariables.sidebarWidth} m={1} ml={1} zIndex={1000}>
             <MapLegend>
               <LegendContent />
             </MapLegend>

@@ -37,45 +37,6 @@ const roadsViewLayer = infrastructureViewLayer('road_edges', ({ zoom, styleParam
   lineStyle(zoom),
 ]);
 
-enum BuildingType {
-  commercial = 'commercial',
-  industrial = 'industrial',
-  institutional = 'institutional',
-  mixed_use = 'mixed_use',
-  other = 'other',
-  recreation = 'recreation',
-  residential = 'residential',
-  resort = 'resort',
-}
-
-const buildingTypeLookup = {
-  Commercial: BuildingType.commercial,
-  Industrial: BuildingType.industrial,
-  Institutional: BuildingType.institutional,
-  'Mixed Use': BuildingType.mixed_use,
-  Other: BuildingType.other,
-  Recreation: BuildingType.recreation,
-  Residential: BuildingType.residential,
-  Resort: BuildingType.resort,
-};
-
-const buildingColor = {
-  [BuildingType.commercial]: COLORS.buildings_commercial.deck,
-  [BuildingType.industrial]: COLORS.buildings_industrial.deck,
-  [BuildingType.institutional]: COLORS.buildings_institutional.deck,
-  [BuildingType.mixed_use]: COLORS.buildings_mixed_use.deck,
-  [BuildingType.other]: COLORS.buildings_other.deck,
-  [BuildingType.recreation]: COLORS.buildings_recreation.deck,
-  [BuildingType.residential]: COLORS.buildings_residential.deck,
-  [BuildingType.resort]: COLORS.buildings_resort.deck,
-};
-
-const buildingsViewLayer = infrastructureViewLayer('buildings', ({ zoom, styleParams }) => [
-  { minZoom: 12 },
-  border(COLORS.buildings_unknown.deck),
-  vectorColor('fill', (x) => buildingColor[buildingTypeLookup[x.properties.building_type]], styleParams),
-]);
-
 export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
   infrastructureViewLayer('elec_edges_high', ({ zoom, styleParams }) => [
     vectorColor('stroke', COLORS.electricity_high.deck, styleParams),
@@ -150,5 +111,4 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     pointRadius(zoom),
     vectorColor('fill', COLORS.water_wastewater.deck, styleParams),
   ]),
-  buildingsViewLayer,
 ]);

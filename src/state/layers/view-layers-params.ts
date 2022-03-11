@@ -36,7 +36,7 @@ export const singleViewLayerParamsState = selectorFamily<ViewLayerParams, string
 
       layerParams.selection = groupSelection?.viewLayer.id === viewLayer.id ? groupSelection : null;
 
-      if (viewLayer?.group === 'infrastructure') {
+      if (viewLayer?.group === 'assets') {
         layerParams.styleParams = get(styleParamsState);
       }
 

@@ -3,7 +3,7 @@ import { MVTLayer, GeoJsonLayer } from 'deck.gl';
 import { tileSelectionLayer, TileSelectionLayerOptions } from 'lib/deck-layers/tile-selection-layer';
 import { mergeUpdateTriggers } from 'lib/deck-layers/utils';
 
-export function infrastructureDeckLayer(selectionLayerParams: TileSelectionLayerOptions, ...props) {
+export function vectorDeckLayer(selectionLayerParams: TileSelectionLayerOptions, ...props) {
   return new MVTLayer(
     {
       binary: false,

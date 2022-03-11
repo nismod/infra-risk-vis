@@ -1,12 +1,15 @@
-import _ from 'lodash';
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import { CheckboxTree } from 'lib/controls/checkbox-tree/CheckboxTree';
 
 import { NETWORK_LAYERS_HIERARCHY } from 'config/networks/hierarchy';
 import { useRecoilState } from 'recoil';
-import { networkSelectionState } from 'state/network-selection';
+import {
+  networkTreeCheckboxState,
+  networkTreeConfig,
+  networkTreeExpandedState,
+} from 'state/networks/network-selection';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
 
 const LayerLabel = ({ label, type, color }) => {
@@ -19,26 +22,22 @@ const LayerLabel = ({ label, type, color }) => {
     </>
   );
 };
-export const NetworkControl: FC<{}> = () => {
-  const [networkSelection, setNetworkSelection] = useRecoilState(networkSelectionState);
 
-  const handleSelected = useCallback(
-    (newSelected: string[]) => {
-      setNetworkSelection({
-        ..._.mapValues(networkSelection, () => false),
-        ..._.fromPairs(newSelected.map((id) => [id, true])),
-      });
-    },
-    [networkSelection, setNetworkSelection],
-  );
+export const NetworkControl: FC<{}> = () => {
+  const [checkboxState, setCheckboxState] = useRecoilState(networkTreeCheckboxState);
+  const [expanded, setExpanded] = useRecoilState(networkTreeExpandedState);
 
   return (
     <CheckboxTree
       nodes={NETWORK_LAYERS_HIERARCHY}
+      config={networkTreeConfig}
       getLabel={(node) =>
         node.children ? node.label : <LayerLabel {...NETWORKS_METADATA[node.id]} label={node.label} />
       }
-      onSelected={handleSelected}
+      checkboxState={checkboxState}
+      onCheckboxState={setCheckboxState}
+      expanded={expanded}
+      onExpanded={setExpanded}
     />
   );
 };

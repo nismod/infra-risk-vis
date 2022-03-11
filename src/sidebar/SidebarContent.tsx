@@ -1,24 +1,13 @@
-import { ArrowDropUp, ArrowRight } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Alert, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { Alert } from '@mui/material';
+import { FC } from 'react';
+import { useRecoilValue } from 'recoil';
 
-import { viewModeState } from 'state/view-mode';
-import { HazardsControl } from './controls/HazardsControl';
-import { NetworkControl } from './controls/NetworkControl';
-import { RegionsControl } from './controls/RegionsControl';
+import { viewState } from 'state/view';
 
-const SidebarSection: FC<{ title: string }> = ({ title, children }) => {
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <Accordion expanded={expanded} onChange={(e, expanded) => setExpanded(expanded)} sx={{ pointerEvents: 'auto' }}>
-      <AccordionSummary expandIcon={expanded ? <ArrowDropUp /> : <ArrowRight />}>
-        <Typography variant="h6">{title}</Typography>
-      </AccordionSummary>
-      <AccordionDetails>{children}</AccordionDetails>
-    </Accordion>
-  );
-};
+import { BuildingsSection } from './buildings/BuildingsSection';
+import { HazardsSection } from './hazards/HazardsSection';
+import { NetworksSection } from './networks/NetworksSection';
+import { RegionsSection } from './regions/RegionsSection';
 
 const viewLabels = {
   exposure: 'Exposure',
@@ -27,41 +16,17 @@ const viewLabels = {
   prioritization: 'Prioritization',
 };
 
-export const SidebarContent = ({ view }) => {
-  const setViewMode = useSetRecoilState(viewModeState);
-
-  useEffect(() => {
-    const viewMode = view === 'risk' ? 'direct-damages' : 'input';
-    setViewMode(viewMode);
-  }, [setViewMode, view]);
-
+export const SidebarContent: FC<{}> = () => {
+  const view = useRecoilValue(viewState);
   switch (view) {
     case 'exposure':
-      return (
-        <>
-          <SidebarSection title="Built Assets">
-            <NetworkControl />
-          </SidebarSection>
-          <SidebarSection title="Hazards">
-            <HazardsControl />
-          </SidebarSection>
-          <SidebarSection title="Regions">
-            <RegionsControl />
-          </SidebarSection>
-        </>
-      );
     case 'risk':
       return (
         <>
-          <SidebarSection title="Built Assets">
-            <NetworkControl />
-          </SidebarSection>
-          <SidebarSection title="Hazards">
-            <HazardsControl />
-          </SidebarSection>
-          <SidebarSection title="Regions">
-            <RegionsControl />
-          </SidebarSection>
+          <NetworksSection />
+          <HazardsSection />
+          <BuildingsSection />
+          <RegionsSection />
         </>
       );
     default: {

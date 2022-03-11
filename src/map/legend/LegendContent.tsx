@@ -12,6 +12,7 @@ import { useRecoilValue } from 'recoil';
 import { viewLayersFlatState } from 'state/layers/view-layers-flat';
 import { viewLayersParamsState } from 'state/layers/view-layers-params';
 import { showPopulationState } from 'state/regions';
+import { sectionVisibilityState } from 'state/sections';
 
 const legendHeight = 10;
 
@@ -132,6 +133,7 @@ const PopulationLegend = () => {
 export const LegendContent: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const viewLayersParams = useRecoilValue(viewLayersParamsState);
+  const showRegions = useRecoilValue(sectionVisibilityState('regions'));
   const showPopulation = useRecoilValue(showPopulationState);
 
   const hazardViewLayers = [];
@@ -156,7 +158,7 @@ export const LegendContent: FC<{}> = () => {
         viewLayer.spatialType === 'raster' ? <RasterLegend key={viewLayer.id} viewLayer={viewLayer} /> : null,
       )}
       {damageStyleParams && <DamagesLegend styleParams={damageStyleParams} />}
-      {showPopulation && <PopulationLegend />}
+      {showRegions && showPopulation && <PopulationLegend />}
     </>
   );
 };
