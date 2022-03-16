@@ -21,7 +21,7 @@ export const DamageSourceControl = () => {
           <Box p={2}>
             <InputSection>
               <FormControl>
-                <FormLabel>Damage Source</FormLabel>
+                <FormLabel>Hazard</FormLabel>
                 <RadioGroup value={damageSource} onChange={(e, value) => setDamageSource(value)}>
                   <FormControlLabel label="Total Damages" control={<Radio value="total-damages" />} />
                   {HAZARDS_UI_ORDER.map((hazard) => (

@@ -13,7 +13,7 @@ export const RegionDetails = () => {
 
   return (
     <Paper>
-      <Box p={3} maxHeight="30vh" style={{ overflowY: 'scroll' }} position="relative">
+      <Box p={3} position="relative">
         <Box position="absolute" top={0} right={0} p={2}>
           <IconButton onClick={() => clearSelectedRegion()} title="Deselect region">
             <Close />
