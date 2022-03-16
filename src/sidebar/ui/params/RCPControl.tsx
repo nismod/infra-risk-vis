@@ -8,7 +8,7 @@ function rcpLabel(value) {
 export const RCPControl = ({ group, disabled = false }) => {
   return (
     <FormControl fullWidth disabled={disabled}>
-      <FormLabel>RCP</FormLabel>
+      <FormLabel><abbr title="Representative Concentration Pathway (Climate Scenario)">RCP</abbr></FormLabel>
       <DataParam group={group} id="rcp">
         {({ value, onChange, options }) => (
           <Select variant="standard" value={value} onChange={(e) => onChange(e.target.value)} fullWidth>
