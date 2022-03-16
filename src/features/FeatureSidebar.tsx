@@ -18,7 +18,7 @@ export const FeatureSidebar: FC<{}> = () => {
 
   return (
     <Paper>
-      <Box p={3} maxHeight="60vh" style={{ overflowY: 'scroll' }}>
+      <Box p={3}>
         <FeatureSidebarContent f={f} viewLayer={viewLayer} />
       </Box>
     </Paper>

@@ -72,7 +72,7 @@ export const MapView = () => {
               <LegendContent />
             </MapLegend>
           </Box>
-          <Box position="absolute" top={10} right={50} width={globalStyleVariables.detailsSidebarWidth}>
+          <Box position="absolute" top={10} bottom={70} right={50} style={{ overflowY: 'scroll' }} width={globalStyleVariables.detailsSidebarWidth}>
             <Box mb={2}>
               <FeatureSidebar />
             </Box>
