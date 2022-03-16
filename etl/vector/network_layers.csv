@@ -1,0 +1,23 @@
+path,layer_name,spatial_type,where_filter,output_layer_name
+networks/transport/airport_polygon.gpkg,areas,polygon,,airport_areas
+networks/transport/port_polygon.gpkg,areas,polygon,,port_areas
+networks/transport/rail.gpkg,nodes,point,,rail_nodes
+networks/transport/rail.gpkg,edges,line,,rail_edges
+networks/transport/roads.gpkg,nodes,point,asset_type='bridge',road_bridges
+networks/transport/roads.gpkg,edges,line,road_class='CLASS A',road_edges_class_a
+networks/transport/roads.gpkg,edges,line,road_class='CLASS B',road_edges_class_b
+networks/transport/roads.gpkg,edges,line,road_class='CLASS C',road_edges_class_c
+networks/transport/roads.gpkg,edges,line,road_class='METRO',road_edges_metro
+networks/transport/roads.gpkg,edges,line,road_class='TRACK',road_edges_track
+networks/transport/roads.gpkg,edges,line,road_class='OTHER',road_edges_other
+networks/water/irrigation_assets_NIC.gpkg,nodes,point,,water_irrigation_nodes
+networks/water/irrigation_assets_NIC.gpkg,edges,line,,water_irrigation_edges
+networks/water/potable_facilities_NWC.gpkg,nodes,point,,water_potable_nodes
+networks/water/pipelines_NWC.gpkg,edges,line,asset_type='potable',water_potable_edges
+networks/water/waste_water_facilities_NWC.gpkg,nodes,point,,water_waste_nodes
+networks/water/pipelines_NWC.gpkg,edges,line,(asset_type='sewer_gravity') OR (asset_type='sewer_pressure'),water_waste_edges
+networks/energy/electricity_network_v3.1.gpkg,edges,line,asset_type='High Voltage',elec_edges_high
+networks/energy/electricity_network_v3.1.gpkg,edges,line,asset_type='Low Voltage',elec_edges_low
+networks/energy/electricity_network_v3.1.gpkg,nodes,point,asset_type='sink',elec_nodes_sink
+networks/energy/electricity_network_v3.1.gpkg,nodes,point,asset_type='source',elec_nodes_source
+networks/energy/electricity_network_v3.1.gpkg,nodes,point,asset_type='junction',elec_nodes_junction
