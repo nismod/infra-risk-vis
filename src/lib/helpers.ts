@@ -18,10 +18,8 @@ export function titleCase(str: string) {
   return splitStr.join(' ');
 }
 
-const FORMATTER = Intl.NumberFormat('en-GB', { maximumSignificantDigits: 3 });
-
-export function numFormat(n: number) {
-  return FORMATTER.format(n);
+export function numFormat(n: number, maximumSignificantDigits: number=3) {
+  return n.toLocaleString(undefined, { maximumSignificantDigits })
 }
 
 export function unique<T>(arr: T[]) {
