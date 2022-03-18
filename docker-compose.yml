@@ -29,6 +29,11 @@ services:
     build: ./backend
     ports: 
       - 8888:80
+    environment:
+      - PGHOST=db
+      - PGDATABASE=jamaica
+      - PGUSER=docker
+      - PGPASSWORD=docker
 
   # dbbackups:
   #   image: kartoza/pg-backup:14.0
