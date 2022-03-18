@@ -8,6 +8,7 @@ fastapi = "*"
 geoalchemy2 = "*"
 uvicorn = "*"
 psycopg2 = "*"
+shapely = "*"
 
 [dev-packages]
 black = "*"
