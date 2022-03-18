@@ -26,7 +26,7 @@ services:
       test: "exit 0"
 
   api:
-    build: ./api
+    build: ./backend
     ports: 
       - 8888:80
 
