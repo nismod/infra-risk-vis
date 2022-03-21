@@ -12,7 +12,7 @@ class Feature(Base):
     layer = Column(String, index=True, nullable=False)
     sublayer = Column(String)
     properties = Column(JSON, nullable=False)
-    geom = Column(Geometry("GEOMETRY", srid=3448), nullable=False)
+    geom = Column(Geometry("GEOMETRY", srid=4326), nullable=False)
 
     damages = relationship("Damage")
 
