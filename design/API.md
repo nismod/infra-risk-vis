@@ -8,12 +8,12 @@ Design document for specifying the structure of data sent from the asset/feature
 
 ```ts
 interface AssetDamage {
-  hazard: string;
+  hazard: string | 'total';
   rcp: string;
   epoch: number;
   rp: number | 'EA';
-  damage_type: 'D' | 'EL';
-  damage_relation: 'direct' | 'indirect' | 'combined';
+
+  damage_type: 'direct' | 'indirect' | 'combined';
   protection_standard: number | 'undefended';
 
   min: number;
