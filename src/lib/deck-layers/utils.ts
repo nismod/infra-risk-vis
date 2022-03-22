@@ -2,19 +2,6 @@ import * as d3 from 'd3-scale';
 import { colorCssToRgb } from 'lib/helpers';
 import { VECTOR_COLOR_MAPS } from '../../config/color-maps';
 
-export const mergeUpdateTriggers = (...propsArray) => {
-  const updateTriggers = {};
-  for (const props of propsArray) {
-    const triggers = props.updateTriggers;
-    if (triggers) {
-      for (const [key, value] of Object.entries(triggers)) {
-        updateTriggers[key] = value;
-      }
-    }
-  }
-  return { updateTriggers };
-};
-
 export const lineStyle = (zoom) => ({
   getLineWidth: 15,
   lineWidthUnit: 'meters',

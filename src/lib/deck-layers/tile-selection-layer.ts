@@ -1,7 +1,7 @@
 import { GeoJsonLayer } from 'deck.gl';
 import { DataFilterExtension } from '@deck.gl/extensions';
 
-import { mergeUpdateTriggers } from './utils';
+import { mergeDeckProps } from './merge-props';
 
 export interface TileSelectionLayerOptions {
   selectedFeatureId: number | null;
@@ -18,9 +18,8 @@ export function tileSelectionLayer(
     polygonOffset = 0,
   }: TileSelectionLayerOptions,
 ) {
-  const layer = new GeoJsonLayer<{ id: any }>(
-    tileProps,
-    {
+  return new GeoJsonLayer<{ id: any }>(
+    mergeDeckProps(tileProps, {
       id: tileProps.id + '-selection',
       pickable: false,
       getPolygonOffset: ({ layerIndex }) => [0, -layerIndex * 100 + polygonOffset],
@@ -32,17 +31,15 @@ export function tileSelectionLayer(
       getFillColor: selectionFillColor,
       getLineColor: selectionLineColor,
 
-      // use on-GPU filter extension to only show the selected feature
-      getFilterValue: (x) => (x.id === selectedFeatureId ? 1 : 0),
-      filterRange: [1, 1],
-      extensions: [new DataFilterExtension({ filterSize: 1 })],
-    } as any,
-    mergeUpdateTriggers(tileProps, {
       updateTriggers: {
         getLineWidth: [selectedFeatureId],
         getFilterValue: [selectedFeatureId],
       },
+
+      // use on-GPU filter extension to only show the selected feature
+      getFilterValue: (x) => (x.id === selectedFeatureId ? 1 : 0),
+      filterRange: [1, 1],
+      extensions: [new DataFilterExtension({ filterSize: 1 })],
     }),
   );
-  return layer;
 }
