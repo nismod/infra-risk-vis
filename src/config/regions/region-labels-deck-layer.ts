@@ -1,4 +1,4 @@
-import { MVTLayer } from 'deck.gl';
+import { mvtLayer } from 'lib/deck-layers/base';
 
 import { BackgroundName } from 'config/backgrounds';
 import { RegionLevel, REGIONS_METADATA } from './metadata';
@@ -12,7 +12,7 @@ export function regionLabelsDeckLayer(level: RegionLevel, background: Background
   const color = background === 'satellite' ? LIGHT_TEXT : DARK_TEXT;
   return (
     config.showLabels &&
-    new MVTLayer({
+    mvtLayer({
       id: `boundaries_${level}-text`,
       data: `/vector/data/regions_${level}_labels.json`,
       loadOptions: {
@@ -38,6 +38,6 @@ export function regionLabelsDeckLayer(level: RegionLevel, background: Background
       // textFontSettings: {
       //   sdf: true,
       // },
-    } as any)
+    })
   );
 }

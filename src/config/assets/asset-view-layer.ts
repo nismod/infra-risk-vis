@@ -1,5 +1,5 @@
 import { ViewLayer } from 'lib/data-map/view-layers';
-import { vectorDeckLayer } from 'lib/deck-layers/vector-deck-layer';
+import { selectableMvtLayer } from 'lib/deck-layers/selectable-mvt-layer';
 import { ASSETS_SOURCE } from './source';
 
 interface ViewLayerMetadata {
@@ -25,7 +25,7 @@ export function assetViewLayer(
       assetId,
     },
     fn: ({ deckProps, zoom, styleParams, selection }) =>
-      vectorDeckLayer(
+      selectableMvtLayer(
         { selectedFeatureId: selection?.target.feature.id, polygonOffset: selectionPolygonOffset },
         deckProps,
         {

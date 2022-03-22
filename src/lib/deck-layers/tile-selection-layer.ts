@@ -1,7 +1,6 @@
-import { GeoJsonLayer } from 'deck.gl';
 import { DataFilterExtension } from '@deck.gl/extensions';
 
-import { mergeDeckProps } from './merge-props';
+import { geoJsonLayer } from './base';
 
 export interface TileSelectionLayerOptions {
   selectedFeatureId: number | null;
@@ -18,28 +17,26 @@ export function tileSelectionLayer(
     polygonOffset = 0,
   }: TileSelectionLayerOptions,
 ) {
-  return new GeoJsonLayer<{ id: any }>(
-    mergeDeckProps(tileProps, {
-      id: tileProps.id + '-selection',
-      pickable: false,
-      getPolygonOffset: ({ layerIndex }) => [0, -layerIndex * 100 + polygonOffset],
-      visible: selectedFeatureId != null,
-      refinementStrategy: 'no-overlap',
+  return geoJsonLayer(tileProps, {
+    id: tileProps.id + '-selection',
+    pickable: false,
+    getPolygonOffset: ({ layerIndex }) => [0, -layerIndex * 100 + polygonOffset],
+    visible: selectedFeatureId != null,
+    refinementStrategy: 'no-overlap',
 
-      getLineWidth: 2,
-      lineWidthUnits: 'pixels',
-      getFillColor: selectionFillColor,
-      getLineColor: selectionLineColor,
+    getLineWidth: 2,
+    lineWidthUnits: 'pixels',
+    getFillColor: selectionFillColor,
+    getLineColor: selectionLineColor,
 
-      updateTriggers: {
-        getLineWidth: [selectedFeatureId],
-        getFilterValue: [selectedFeatureId],
-      },
+    updateTriggers: {
+      getLineWidth: [selectedFeatureId],
+      getFilterValue: [selectedFeatureId],
+    },
 
-      // use on-GPU filter extension to only show the selected feature
-      getFilterValue: (x) => (x.id === selectedFeatureId ? 1 : 0),
-      filterRange: [1, 1],
-      extensions: [new DataFilterExtension({ filterSize: 1 })],
-    }),
-  );
+    // use on-GPU filter extension to only show the selected feature
+    getFilterValue: (x) => (x.id === selectedFeatureId ? 1 : 0),
+    filterRange: [1, 1],
+    extensions: [new DataFilterExtension({ filterSize: 1 })],
+  });
 }
