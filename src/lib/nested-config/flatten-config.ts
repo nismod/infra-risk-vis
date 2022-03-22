@@ -1,4 +1,4 @@
-export type ConfigTree<T> = (ConfigTree<T> | false | null | undefined | T)[];
+import { ConfigTree } from './config-tree';
 
 export function flattenConfig<T>(configs: ConfigTree<T>) {
   const res: T[] = [];

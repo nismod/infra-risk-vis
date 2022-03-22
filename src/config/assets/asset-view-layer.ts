@@ -1,5 +1,5 @@
 import { ViewLayer } from 'lib/data-map/view-layers';
-import { selectableMvtLayer } from 'lib/deck-layers/selectable-mvt-layer';
+import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 import { ASSETS_SOURCE } from './source';
 
 interface ViewLayerMetadata {

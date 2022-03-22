@@ -1,5 +1,5 @@
 import { ViewLayer } from 'lib/data-map/view-layers';
-import { selectableMvtLayer } from 'lib/deck-layers/selectable-mvt-layer';
+import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 import { border, vectorColor } from 'lib/deck-layers/utils';
 import { RegionLevel } from './metadata';
 import { REGIONS_SOURCE } from './source';

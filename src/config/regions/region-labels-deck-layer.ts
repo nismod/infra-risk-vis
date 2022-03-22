@@ -1,4 +1,4 @@
-import { mvtLayer } from 'lib/deck-layers/base';
+import { mvtLayer } from 'lib/deck/layers/base';
 
 import { BackgroundName } from 'config/backgrounds';
 import { RegionLevel, REGIONS_METADATA } from './metadata';

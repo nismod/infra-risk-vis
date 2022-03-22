@@ -1,7 +1,7 @@
 import GL from '@luma.gl/constants';
 import { HazardParams } from 'config/hazards/domains';
 
-import { rasterTileLayer } from 'lib/deck-layers/raster-tile-layer';
+import { rasterTileLayer } from 'lib/deck/layers/raster-tile-layer';
 import { ViewLayer } from 'lib/data-map/view-layers';
 
 import { RASTER_COLOR_MAPS } from '../color-maps';

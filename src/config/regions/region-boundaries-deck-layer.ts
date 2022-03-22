@@ -1,4 +1,4 @@
-import { mvtLayer } from 'lib/deck-layers/base';
+import { mvtLayer } from 'lib/deck/layers/base';
 
 import { border } from 'lib/deck-layers/utils';
 

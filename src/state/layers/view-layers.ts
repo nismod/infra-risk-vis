@@ -12,7 +12,7 @@ import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
 import { labelsLayer } from 'config/deck-layers/labels-layer';
 import { isRetinaState } from 'state/is-retina';
 import { HazardParams } from 'config/hazards/domains';
-import { ConfigTree } from 'lib/config-tree';
+import { ConfigTree } from 'lib/nested-config/config-tree';
 
 import { populationViewLayer } from 'config/regions/population-view-layer';
 import { regionLevelState, showPopulationState } from 'state/regions';
