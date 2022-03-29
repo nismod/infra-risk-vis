@@ -31,4 +31,6 @@ export const COLORS = makeColorConfig({
   buildings_residential: '#fdc086',
   buildings_resort: '#999',
   buildings_unknown: '#999',
+
+  regions_no_data: '#ccc',
 });

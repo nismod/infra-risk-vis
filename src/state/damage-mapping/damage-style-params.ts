@@ -1,6 +1,7 @@
 import { damageSourceState } from './damage-map';
 import { dataParamsByGroupState } from '../data-params';
 import { selector } from 'recoil';
+import { Accessor, withTriggers } from 'lib/deck/props/getters';
 
 function getEadKey(hazard: string, rcp: string, epoch: number) {
   return `${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
@@ -21,15 +22,20 @@ function sumOrNone(arr: number[]): number | null {
   return result;
 }
 
-function getEadAccessor(eadSource: string, rcp: string, epoch: number) {
+function getEadAccessor(eadSource: string, rcp: string, epoch: number): Accessor<any> {
+  let fn: any;
   if (eadSource === 'total-damages') {
-    return (f) => {
-      const values = ['fluvial', 'surface', 'coastal', 'cyclone'].map((ht) => f.properties[getEadKey(ht, rcp, epoch)]);
+    fn = (f) => {
+      const values = ['fluvial', 'surface', 'coastal', 'cyclone'].map(
+        (ht) => f.properties[getEadKey(ht, rcp, epoch)],
+      );
       return sumOrNone(values);
     };
   } else {
-    return (f) => f.properties[getEadKey(eadSource, rcp, epoch)];
+    fn = (f) => f.properties[getEadKey(eadSource, rcp, epoch)];
   }
+
+  return withTriggers(fn, [eadSource, rcp, epoch]);
 }
 
 export const eadAccessorState = selector({

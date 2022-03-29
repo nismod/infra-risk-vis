@@ -1,4 +1,7 @@
+import _ from 'lodash';
 import * as d3 from 'd3-scale-chromatic';
+import { colorMap } from 'lib/color-map';
+import { Accessor, withTriggers } from 'lib/deck/props/getters';
 
 export const RASTER_COLOR_MAPS = {
   fluvial: {
@@ -35,3 +38,11 @@ export const VECTOR_COLOR_MAPS = {
     empty: '#ccc',
   },
 };
+
+export const colorMapFromScheme = _.memoize(function (
+  colorScheme: string,
+): Accessor<string, any> {
+  const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
+
+  return withTriggers(colorMap(scale, range, empty), [colorScheme]);
+});

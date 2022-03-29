@@ -15,6 +15,11 @@ export interface DataMapProps {
   uiOverlays?: ReactNode;
 }
 
+// set a convention where the view layer id is either the first part of the deck id before the @ sign, or it's the whole id
+function lookupViewForDeck(deckLayerId: string) {
+  return deckLayerId.split('@')[0];
+}
+
 export const DataMap: FC<DataMapProps> = ({
   initialViewState,
   viewLayers,
@@ -24,12 +29,6 @@ export const DataMap: FC<DataMapProps> = ({
   uiOverlays,
   children,
 }) => {
-  // set a convention where the view layer id is either the first part of the deck id before the @ sign, or it's the whole id
-  const lookupViewForDeck = useCallback((deckLayerId: string) => {
-    const viewLayerId = deckLayerId.split('@')[0];
-    return viewLayerId;
-  }, []);
-
   const { onHover, onClick, layerFilter, pickingRadius } = useInteractions(
     viewLayers,
     lookupViewForDeck,

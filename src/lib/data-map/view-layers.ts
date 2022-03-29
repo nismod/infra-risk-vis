@@ -14,7 +14,6 @@ export interface ViewLayer {
   fn: (options: ViewLayerFunctionOptions) => any;
   spatialType?: string;
   interactionGroup?: string;
-  getLogicalLayer?: (options: any) => string;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {
@@ -27,8 +26,6 @@ export function viewOnlyLayer(id, fn): ViewLayer {
 }
 
 export interface ViewLayerParams {
-  visibility?: Record<string, boolean>;
-  sourceLogicalLayers?: string[];
   selection?: any;
   styleParams?: any;
 }

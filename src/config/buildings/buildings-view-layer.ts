@@ -1,7 +1,7 @@
 import { ViewLayer } from 'lib/data-map/view-layers';
 import { COLORS } from 'config/colors';
 import { assetViewLayer } from 'config/assets/asset-view-layer';
-import { border, vectorColor } from 'lib/deck-layers/utils';
+import { border, fillColor } from 'lib/deck/props/style';
 
 enum BuildingType {
   commercial = 'commercial',
@@ -48,7 +48,7 @@ export function buildingsViewLayer(): ViewLayer {
     ({ zoom, styleParams }) => [
       { minZoom: 12 },
       border(COLORS.buildings_unknown.deck),
-      vectorColor('fill', (x) => buildingColor[buildingTypeLookup[x.properties.building_type]], styleParams),
+      fillColor((x) => buildingColor[buildingTypeLookup[x.properties.building_type]]),
     ],
   );
 }
