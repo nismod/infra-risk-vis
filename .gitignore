@@ -11,11 +11,13 @@ intermediate_data/
 *.bak
 public/*.csv
 public/**/*.csv
+.snakemake
 
 # local config
 .env
 TODO
 NOTES
+venv
 
 # build
 build/
