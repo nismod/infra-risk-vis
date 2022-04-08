@@ -9,6 +9,7 @@ import sys
 
 this_directory = Path(__file__).parent.resolve()
 vector_script_path = this_directory / 'prepare_vector.sh'
+csv_path = this_directory / 'network_layers.csv'
 
 
 def run_single_processing(in_file_path: Path, out_file_path: Path, layer_name: str, output_layer_name: str, spatial_type: str, where_filter: str, **kwargs):
@@ -19,8 +20,6 @@ def run_single_processing(in_file_path: Path, out_file_path: Path, layer_name: s
 
 
 def process_vector_datasets(raw: Path, out: Path):
-  infrastructure_dir = raw / 'networks'
-  csv_path = infrastructure_dir / 'network_layers.csv'
   assert csv_path.is_file(), f"{csv_path} is not a file"
 
   with csv_path.open() as f:
