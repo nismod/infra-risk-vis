@@ -1,23 +1,35 @@
+from enum import Enum
+from typing import Any, Generic, Literal, TypeVar
 from pydantic import BaseModel
+from pydantic.generics import GenericModel
 
 
 class FeatureBase(BaseModel):
-    id: str
+    id: int
+    string_id: str
     layer: str
     sublayer: str | None
     properties: dict
 
 
-class DamageBase(BaseModel):
+class DamageType(str, Enum):
+    direct = "direct"
+    indirect = "indirect"
+    combined = "combined"
+
+
+class DamageParams(BaseModel):
     hazard: str
     rcp: str
     epoch: str
-    EAD_undefended_min: float
-    EAD_undefended_mean: float
-    EAD_undefended_max: float
-    EAEL_undefended_min: float
-    EAEL_undefended_mean: float
-    EAEL_undefended_max: float
+    damage_type: DamageType
+    protection_standard: int
+
+
+class DamageBase(DamageParams):
+    min: float
+    mean: float
+    max: float
 
 
 class Damage(DamageBase):
@@ -30,3 +42,8 @@ class Feature(FeatureBase):
 
     class Config:
         orm_mode = True
+
+
+AttributeT = TypeVar("AttributeT")
+
+AttributeLookup = dict[int, AttributeT]
