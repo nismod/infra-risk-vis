@@ -45,6 +45,7 @@ export function buildingsViewLayer(): ViewLayer {
       interactionGroup: 'assets',
     },
     -1000,
+    null,
     ({ zoom, styleParams }) => [
       { minZoom: 12 },
       border(COLORS.buildings_unknown.deck),

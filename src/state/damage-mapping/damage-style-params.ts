@@ -26,9 +26,7 @@ function getEadAccessor(eadSource: string, rcp: string, epoch: number): Accessor
   let fn: any;
   if (eadSource === 'total-damages') {
     fn = (f) => {
-      const values = ['fluvial', 'surface', 'coastal', 'cyclone'].map(
-        (ht) => f.properties[getEadKey(ht, rcp, epoch)],
-      );
+      const values = ['fluvial', 'surface', 'coastal', 'cyclone'].map((ht) => f.properties[getEadKey(ht, rcp, epoch)]);
       return sumOrNone(values);
     };
   } else {
@@ -38,27 +36,37 @@ function getEadAccessor(eadSource: string, rcp: string, epoch: number): Accessor
   return withTriggers(fn, [eadSource, rcp, epoch]);
 }
 
-export const eadAccessorState = selector({
+export const eadFieldSpecState = selector({
   key: 'eadAccessorState',
   get: ({ get }) => {
     const eadSource = get(damageSourceState);
     if (eadSource == null) return null;
     const eadParams = get(dataParamsByGroupState(eadSource));
 
-    return getEadAccessor(eadSource, eadParams.rcp, eadParams.epoch);
+    return {
+      variable: 'damages',
+      params: {
+        damage_type: 'direct',
+        hazard: eadSource,
+        rcp: eadParams.rcp,
+        epoch: eadParams.epoch,
+        protection_standard: 0,
+      },
+    };
+    // return getEadAccessor(eadSource, eadParams.rcp, eadParams.epoch);
   },
 });
 
 export const damageMapStyleParamsState = selector({
   key: 'damageMapStyleParamsState',
   get: ({ get }) => {
-    const eadAccessor = get(eadAccessorState);
-    if (eadAccessor == null) return {};
+    const eadFieldSpec = get(eadFieldSpecState);
+    if (eadFieldSpec == null) return {};
 
     return {
       colorMap: {
         colorScheme: 'damages',
-        colorField: eadAccessor,
+        colorField: eadFieldSpec,
       },
     };
   },

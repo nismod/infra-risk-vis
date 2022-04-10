@@ -20,13 +20,18 @@ export function populationViewLayer(regionLevel: RegionLevel): ViewLayer {
     },
     fn: ({ deckProps, zoom, selection }) =>
       selectableMvtLayer(
-        { selectedFeatureId: selection?.target.feature.id },
+        { selectionOptions: { selectedFeatureId: selection?.target.feature.id } },
         deckProps,
         {
           data: source.getDataUrl({ regionLevel }),
         },
         (regionLevel === 'parish' || zoom > 12) && border([40, 40, 40, 255]),
-        fillColor(dataColorMap(featureProperty('population_density_per_km2'), colorMapFromScheme('population'))),
+        fillColor(
+          dataColorMap(
+            featureProperty('population_density_per_km2'),
+            colorMapFromScheme('population'),
+          ),
+        ),
         {
           highlightColor: [0, 255, 255, 100],
         },
