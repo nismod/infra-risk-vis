@@ -11,9 +11,11 @@ from backend.db.models import Feature
 
 def make_feature_properties(feature: Feature):
     properties = dict(feature.properties)
+    properties["id"] = feature.string_id
     for damage in feature.damages:
-        key = f"{damage.hazard}__rcp_{damage.rcp}__epoch_{damage.epoch}__conf_None"
-        properties[key] = damage.EAD_undefended_mean
+        if damage.damage_type == "direct" and damage.protection_standard == 0:
+            key = f"{damage.hazard}__rcp_{damage.rcp}__epoch_{damage.epoch}__conf_None"
+            properties[key] = damage.mean
     return properties
 
 
