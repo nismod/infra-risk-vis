@@ -1,8 +1,11 @@
-import { ViewLayer } from 'lib/data-map/view-layers';
+import { ViewLayer, ViewLayerFunctionOptions } from 'lib/data-map/view-layers';
 import { assetViewLayer } from 'config/assets/asset-view-layer';
-import { assetDataManager } from 'config/assets/data-accessor';
+import { assetDataAccessFunction } from 'config/assets/data-accessor';
 
-export function infrastructureViewLayer(assetId: string, customFn: ({ zoom, styleParams }) => object[]): ViewLayer {
+export function infrastructureViewLayer(
+  assetId: string,
+  customFn: ({ zoom, styleParams }: ViewLayerFunctionOptions) => object[],
+): ViewLayer {
   return assetViewLayer(
     assetId,
     {
@@ -11,7 +14,7 @@ export function infrastructureViewLayer(assetId: string, customFn: ({ zoom, styl
       interactionGroup: 'assets',
     },
     -1000,
-    assetDataManager,
     customFn,
+    assetDataAccessFunction(assetId),
   );
 }

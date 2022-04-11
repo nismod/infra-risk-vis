@@ -44,8 +44,8 @@ export const eadFieldSpecState = selector({
     const eadParams = get(dataParamsByGroupState(eadSource));
 
     return {
-      variable: 'damages',
-      params: {
+      field: 'damages',
+      fieldParams: {
         damage_type: 'direct',
         hazard: eadSource,
         rcp: eadParams.rcp,

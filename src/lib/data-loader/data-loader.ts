@@ -109,7 +109,6 @@ export class DataLoader<T = any> {
     if (newData) {
       this._updateTrigger += 1;
       this.subscribers?.forEach((subscriber) => subscriber(this));
-      console.log('Updated extra data', this._updateTrigger);
     }
   }
 

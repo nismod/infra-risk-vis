@@ -9,7 +9,7 @@ import { ViewLayer } from 'lib/data-map/view-layers';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 import { damageSourceState, showDirectDamagesState } from 'state/damage-mapping/damage-map';
-import { eadFieldSpecState } from 'state/damage-mapping/damage-style-params';
+import { damageMapStyleParamsState } from 'state/damage-mapping/damage-style-params';
 import { ColorBox } from './ColorBox';
 
 function getSourceLabel(eadSource: string) {
@@ -34,8 +34,8 @@ const damageColorFn = colorMap(damageColorSpec.scale, damageColorSpec.range, dam
 
 const DirectDamagesDescription: FC<{ viewLayer: ViewLayer; feature: any }> = ({ viewLayer, feature }) => {
   const damageSource = useRecoilValue(damageSourceState);
-  const eadFieldSpec = useRecoilValue(eadFieldSpecState);
-  const eadAccessor = viewLayer.dataManager.getDataAccessor(viewLayer.id, eadFieldSpec);
+  const styleParams = useRecoilValue(damageMapStyleParamsState);
+  const eadAccessor = viewLayer.dataAccessFn?.({ styleParams }).dataAccessor;
 
   const value = eadAccessor?.(feature);
   const color = damageColorFn(value);
@@ -69,7 +69,7 @@ export const VectorHoverDescription: FC<{
         {title}
       </Typography>
 
-      <DataItem label="ID" value={f.properties.asset_id} />
+      <DataItem label="ID" value={f.properties.string_id} />
       {showDirectDamages && <DirectDamagesDescription viewLayer={hoveredObject.viewLayer} feature={f} />}
     </>
   );

@@ -2,6 +2,7 @@ import { ViewLayer } from 'lib/data-map/view-layers';
 import { COLORS } from 'config/colors';
 import { assetViewLayer } from 'config/assets/asset-view-layer';
 import { border, fillColor } from 'lib/deck/props/style';
+import { assetDataAccessFunction } from 'config/assets/data-accessor';
 
 enum BuildingType {
   commercial = 'commercial',
@@ -45,11 +46,11 @@ export function buildingsViewLayer(): ViewLayer {
       interactionGroup: 'assets',
     },
     -1000,
-    null,
     ({ zoom, styleParams }) => [
       { minZoom: 12 },
       border(COLORS.buildings_unknown.deck),
       fillColor((x) => buildingColor[buildingTypeLookup[x.properties.building_type]]),
     ],
+    assetDataAccessFunction('buildings'),
   );
 }

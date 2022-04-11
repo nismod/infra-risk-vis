@@ -1,11 +1,6 @@
 import { DataLoader } from 'lib/data-loader/data-loader';
-import { DataManager } from 'lib/data-map/view-layers';
+import { DataManager, FieldSpec } from 'lib/data-map/view-layers';
 import { extraProperty, featureProperty } from 'lib/deck/props/data-source';
-
-export interface FieldSpec {
-  field: string;
-  fieldParams?: any;
-}
 
 function getLoaderKey(layer: string, fieldSpec: FieldSpec) {
   return `${layer}__${fieldSpec.field}__${Object.entries(fieldSpec.fieldParams)
@@ -30,10 +25,22 @@ export class AssetDataManager implements DataManager {
     if (this.loaders[loaderKey] == null) {
       const loader = new DataLoader(layer, fieldSpec.field, fieldSpec.fieldParams);
       this.loaders[loaderKey] = loader;
-      // loader.subscribe();
     }
     return this.loaders[loaderKey];
   }
 }
 
 export const assetDataManager = new AssetDataManager();
+
+export function assetDataAccessFunction(layer: string) {
+  return ({ styleParams }) => {
+    if (styleParams?.colorMap) {
+      const { colorField } = styleParams.colorMap;
+
+      return {
+        dataAccessor: assetDataManager.getDataAccessor(layer, colorField),
+        dataLoader: assetDataManager.getDataLoader(layer, colorField),
+      };
+    }
+  };
+}
