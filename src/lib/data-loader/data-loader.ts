@@ -73,21 +73,32 @@ export class DataLoader<T = any> {
   // }
 
   private async requestMissingData(missingIds: number[]): Promise<Record<string, T>> {
-    const url = new URL(`/api/attributes/${this.field}`);
-    url.searchParams.append('layer', this.layer);
-    Object.entries(this.fieldParameters).forEach(([k, v]) => url.searchParams.append(k, v as string));
-    url.searchParams.append('ids', missingIds.join(','));
+    const path = `/api/attributes/${this.field}`;
 
-    const res = await fetch(url.toString());
+    const search = new URLSearchParams();
+    search.append('layer', this.layer);
+    Object.entries(this.fieldParameters).forEach(([k, v]) => search.append(k, v as string));
 
-    return await res.json();
+    const res = await fetch(`${path}?${search}`, {
+      method: 'POST',
+      body: JSON.stringify(missingIds),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (res.status !== 200) {
+      return {};
+    } else {
+      return await res.json();
+    }
   }
 
   private updateData(loadedData: Record<string, T>) {
     let newData = false;
     for (const [key, value] of Object.entries(loadedData)) {
       const numKey = parseInt(key, 10);
-      if (this.data.get(numKey) == null) {
+      if (this.data.get(numKey) === undefined) {
         newData = true;
         this.data.set(numKey, value);
       }
