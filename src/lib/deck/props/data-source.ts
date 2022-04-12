@@ -12,5 +12,5 @@ export const featureProperty = _.memoize(
 );
 
 export function extraProperty(dataLoader: DataLoader): Accessor<any> {
-  return withTriggers((f) => dataLoader.getData(f.id), [dataLoader.updateTrigger]);
+  return withTriggers((f) => dataLoader.getData(f.id), [dataLoader.id, dataLoader.updateTrigger]);
 }

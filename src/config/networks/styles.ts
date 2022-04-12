@@ -6,7 +6,7 @@ export const NETWORK_STYLES = makeConfig([
     label: 'Asset type',
   },
   {
-    id: 'direct-damages',
-    label: 'Direct damages',
+    id: 'damages',
+    label: 'Damages',
   },
 ]);

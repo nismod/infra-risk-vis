@@ -8,7 +8,7 @@ import { fillColor, strokeColor } from 'lib/deck/props/style';
 import { dataColorMap } from 'lib/deck/props/color-map';
 import { featureProperty } from 'lib/deck/props/data-source';
 import { colorMapFromScheme } from 'config/color-maps';
-import { assetDataManager } from 'config/assets/data-accessor';
+import { getAssetDataAccessor } from 'config/assets/data-access';
 
 enum RoadClass {
   class_a = 'class_a',
@@ -29,18 +29,18 @@ const roadClassLookup = {
 };
 
 const roadColor = {
-  [RoadClass.class_a]: COLORS.roads_class_a.deck,
-  [RoadClass.class_b]: COLORS.roads_class_b.deck,
-  [RoadClass.class_c]: COLORS.roads_class_c.deck,
-  [RoadClass.metro]: COLORS.roads_class_metro.deck,
-  [RoadClass.track]: COLORS.roads_unknown.deck,
-  [RoadClass.other]: COLORS.roads_unknown.deck,
+  [RoadClass.class_a]: COLORS.roads_class_a.css,
+  [RoadClass.class_b]: COLORS.roads_class_b.css,
+  [RoadClass.class_c]: COLORS.roads_class_c.css,
+  [RoadClass.metro]: COLORS.roads_class_metro.css,
+  [RoadClass.track]: COLORS.roads_unknown.css,
+  [RoadClass.other]: COLORS.roads_unknown.css,
 };
 
 function infraStyle(layer: string, defaultStyle, styleParams) {
   if (styleParams?.colorMap) {
     const { colorField, colorScheme } = styleParams.colorMap;
-    return dataColorMap(assetDataManager.getDataAccessor(layer, colorField), colorMapFromScheme(colorScheme));
+    return dataColorMap(getAssetDataAccessor(layer, colorField), colorMapFromScheme(colorScheme));
   }
   return defaultStyle;
 }

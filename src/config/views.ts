@@ -37,8 +37,8 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: true,
       visible: true,
 
-      styles: ['type', 'direct-damages'],
-      defaultStyle: 'direct-damages',
+      styles: ['type', 'damages'],
+      defaultStyle: 'damages',
     },
     hazards: {
       expanded: false,

@@ -7,11 +7,11 @@ import { ReturnPeriodControl } from 'sidebar/ui/params/ReturnPeriodControl';
 import { EpochControl } from 'sidebar/ui/params/EpochControl';
 import { RCPControl } from 'sidebar/ui/params/RCPControl';
 import { useRecoilValue } from 'recoil';
-import { showDirectDamagesState } from 'state/damage-mapping/damage-map';
+import { showDamagesState } from 'state/damage-mapping/damage-map';
 import { Alert, Box } from '@mui/material';
 
 export const HazardsControl = () => {
-  const showDirectDamages = useRecoilValue(showDirectDamagesState);
+  const showDirectDamages = useRecoilValue(showDamagesState);
   const disabled = showDirectDamages;
 
   return (
