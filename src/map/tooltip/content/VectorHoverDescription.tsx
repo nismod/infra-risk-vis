@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
-import { DataItem } from 'features/detail-components';
+import { DataItem } from 'details/features/detail-components';
 import { colorMap } from 'lib/color-map';
 import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
 import { ViewLayer } from 'lib/data-map/view-layers';

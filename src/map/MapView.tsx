@@ -17,7 +17,7 @@ import { MapSearch } from 'lib/map/place-search/MapSearch';
 import { MapLayerSelection } from './layers/MapLayerSelection';
 import { MapLegend } from './legend/MapLegend';
 import { LegendContent } from './legend/LegendContent';
-import { FeatureSidebar } from 'features/FeatureSidebar';
+import { FeatureSidebar } from 'details/features/FeatureSidebar';
 import { globalStyleVariables } from 'theme';
 import { RegionDetails } from 'details/regions/RegionDetails';
 import { interactionGroupsState } from '../state/layers/interaction-groups';

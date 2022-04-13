@@ -8,7 +8,7 @@ import { HAZARDS_METADATA } from 'config/hazards/metadata';
 import { useRasterColorMapValues } from '../../legend/use-color-map-values';
 import { ColorBox } from './ColorBox';
 import { Box } from '@mui/material';
-import { DataItem } from 'features/detail-components';
+import { DataItem } from 'details/features/detail-components';
 
 function useRasterColorMapLookup(colorMapValues) {
   return useMemo(

@@ -20,7 +20,7 @@ import {
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
 } from './detail-components';
-import { HAZARD_DOMAINS } from '../config/hazards/domains';
+import { HAZARD_DOMAINS } from '../../config/hazards/domains';
 import { ViewLayer } from 'lib/data-map/view-layers';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { ColorBox } from 'map/tooltip/content/ColorBox';
