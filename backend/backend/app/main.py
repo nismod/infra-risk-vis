@@ -1,23 +1,19 @@
-from fastapi import FastAPI, Depends, Path, Query
-from pydantic import Json
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
+from fastapi.routing import APIRoute
 
 from backend.db import models
 from backend.db.database import engine
 
-from . import schemas
-from .dependencies import get_db
-from .routers import attributes
+from .routers import attributes, features
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+
+def custom_generate_unique_id(route: APIRoute):
+    return f"{route.tags[0]}-{route.name}"
 
 
-@app.get("/features/{feature_id}", response_model=schemas.Feature)
-def read_feature(feature_id: int, db: Session = Depends(get_db)):
-    feature = db.query(models.Feature).filter(models.Feature.id == feature_id).one()
-    return feature
+app = FastAPI(generate_unique_id_function=custom_generate_unique_id)
 
-
+app.include_router(features.router, prefix="/features")
 app.include_router(attributes.router, prefix="/attributes")
