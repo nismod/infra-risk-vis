@@ -1,20 +1,24 @@
 import pandas
 
+
 configfile: "config.yml"
 
-network_layers = pandas.read_csv('network_layers.csv')
-hazard_layers = pandas.read_csv('hazard_layers.csv')
 
-rule vector_to_geojsonseq:
-  input:
-    network_layers.path
-  params:
-    layer=network_layers.output_layer_name,
-    filter=network_layers.where_filter
-  output:
-    expand("{layer}.geojsonld", layer=network_layers.output_layer_name)
-  run:
-    print(input)
+network_layers = pandas.read_csv("network_layers.csv")
+hazard_layers = pandas.read_csv("hazard_layers.csv")
+
+
+rule vector_to_db:
+    run:
+        pass
+
+
+rule db_to_geojsonseq:
+    output:
+        "{layer}.geojsonld",
+    run:
+        print(input)
+
 
 # shell:
 #   """
@@ -27,64 +31,66 @@ rule vector_to_geojsonseq:
 #     {layer}
 #   """
 
-rule geojsonseq_to_vector_tiles:
-  input:
-    file=rules.vector_to_geojsonseq.output,
-    layer="{layer}",
-  output:
-    "../tileserver/vector/data/{slug}.mbtiles"
-  shell:
-    """
-    if [ $SPATIAL_TYPE == 'line' ]# then
-      TIPPECANOE_OPTIONS="--drop-densest-as-needed --minimum-zoom=3 --maximum-zoom=15"
-    elif [ $SPATIAL_TYPE == 'polygon' ]# then
-      TIPPECANOE_OPTIONS="--drop-densest-as-needed --minimum-zoom=3 --maximum-zoom=15"
-    elif [ $SPATIAL_TYPE == 'point' ]# then
-      TIPPECANOE_OPTIONS="-zg"
 
-    tippecanoe \
-      --generate-ids \
-      --read-parallel \
-      --output={output} \
-      --layer={input.layer} \
-      $TIPPECANOE_OPTIONS \
-      --force \
-      {input.file}
-    """
+rule geojsonseq_to_vector_tiles:
+    input:
+        rules.db_to_geojsonseq.output,
+    output:
+        "../tileserver/vector/data/{slug}.mbtiles",
+    shell:
+        """
+        if [ $SPATIAL_TYPE == 'line' ]# then
+          TIPPECANOE_OPTIONS="--drop-densest-as-needed --minimum-zoom=3 --maximum-zoom=15"
+        elif [ $SPATIAL_TYPE == 'polygon' ]# then
+          TIPPECANOE_OPTIONS="--drop-densest-as-needed --minimum-zoom=3 --maximum-zoom=15"
+        elif [ $SPATIAL_TYPE == 'point' ]# then
+          TIPPECANOE_OPTIONS="-zg"
+
+        tippecanoe \
+          --generate-ids \
+          --read-parallel \
+          --output={output} \
+          --layer={slug} \
+          $TIPPECANOE_OPTIONS \
+          --force \
+          {input}
+        """
+
 
 rule raster_zero_nodata:
-  input:
-    hazard_layers.path
-  output:
-    temp("nodata-{slug}.tif")
-  shell:
-    """
-    NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
+    input:
+        hazard_layers.path,
+    output:
+        temp("nodata-{slug}.tif"),
+    shell:
+        """
+        NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
 
-    # handle case of NODATA == nan - the JSON output of gdalinfo will change
-    # nan to "NaN" so we need to reverse that for gdal_calc.py
-    if [ "$NODATA" == '"NaN"' ]# then
-      NODATA=nan
-    fi
+        # handle case of NODATA == nan - the JSON output of gdalinfo will change
+        # nan to "NaN" so we need to reverse that for gdal_calc.py
+        if [ "$NODATA" == '"NaN"' ]# then
+          NODATA=nan
+        fi
 
-    # replace zeros with NoData value
-    gdal_calc.py \
-      -A "{input}" \
-      --outfile="{output}" \
-      --overwrite \
-      --calc="numpy.where(A==0,$NODATA,A)" \
-      --hideNoData \
-      --NoDataValue=$NODATA
-    """
+        # replace zeros with NoData value
+        gdal_calc.py \
+          -A "{input}" \
+          --outfile="{output}" \
+          --overwrite \
+          --calc="numpy.where(A==0,$NODATA,A)" \
+          --hideNoData \
+          --NoDataValue=$NODATA
+        """
+
 
 rule raster_to_cog:
-  input:
-    rules.raster_zero_nodata.output
-  output:
-    "../tileserver/raster/data/{slug}.tif"
-  shell:
-    """
-    # translate to Cloud-Optimised GeoTIFF
-    # TODO tune COG conversion parameters
-    gdal_translate "$INPUT_FILE" "$OUTPUT_FILE" -of COG
-    """
+    input:
+        rules.raster_zero_nodata.output,
+    output:
+        "../tileserver/raster/data/{slug}.tif",
+    shell:
+        """
+        # translate to Cloud-Optimised GeoTIFF
+        # TODO tune COG conversion parameters
+        gdal_translate "{input}" "{output}" -of COG
+        """
