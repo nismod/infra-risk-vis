@@ -1,11 +1,10 @@
-import { MVTLayer } from 'deck.gl';
-
-import { border } from 'lib/deck-layers/utils';
+import { mvtLayer } from 'lib/deck/layers/base';
+import { border } from 'lib/deck/props/style';
 
 import { RegionLevel } from './metadata';
 
 export function regionBoundariesDeckLayer(level: RegionLevel) {
-  return new MVTLayer(
+  return mvtLayer(
     {
       id: `boundaries_${level}`,
       data: `/vector/data/regions_${level}.json`,
@@ -16,7 +15,7 @@ export function regionBoundariesDeckLayer(level: RegionLevel) {
       stroked: true,
       refinementStrategy: 'best-available',
       lineWidthUnits: 'pixels',
-    } as any,
-    border([150, 150, 150, 255]) as any,
+    },
+    border([150, 150, 150, 255]),
   );
 }

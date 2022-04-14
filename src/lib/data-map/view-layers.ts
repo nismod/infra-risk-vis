@@ -1,20 +1,45 @@
+import { DataLoader } from 'lib/data-loader/data-loader';
 import { InteractionTarget } from './interactions/use-interactions';
 
+export interface FieldSpec {
+  field: string;
+  fieldParams?: any;
+}
+
+export interface ColorMap {
+  colorField: FieldSpec;
+  colorScheme: string;
+}
+export interface StyleParams {
+  colorMap?: ColorMap;
+}
 export interface ViewLayerFunctionOptions {
   deckProps: any;
   zoom: number;
-  styleParams?: object;
+  styleParams?: StyleParams;
   selection?: InteractionTarget<any>;
 }
 
+export interface ViewLayerDataFunctionOptions {
+  styleParams?: StyleParams;
+}
+
+export interface DataManager {
+  getDataAccessor: (layer: string, fieldSpec: any) => (d: any) => any;
+  getDataLoader: (layer: string, fieldSpec: any) => DataLoader;
+}
+export interface DataAccess {
+  dataAccessor: (d: any) => any;
+  dataLoader: DataLoader;
+}
 export interface ViewLayer {
   id: string;
   params?: any;
   group: string;
   fn: (options: ViewLayerFunctionOptions) => any;
+  dataAccessFn?: (options: ViewLayerDataFunctionOptions) => DataAccess;
   spatialType?: string;
   interactionGroup?: string;
-  getLogicalLayer?: (options: any) => string;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {
@@ -27,8 +52,6 @@ export function viewOnlyLayer(id, fn): ViewLayer {
 }
 
 export interface ViewLayerParams {
-  visibility?: Record<string, boolean>;
-  sourceLogicalLayers?: string[];
   selection?: any;
   styleParams?: any;
 }

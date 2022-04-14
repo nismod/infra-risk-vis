@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { selectionState } from 'lib/data-map/interactions/interaction-state';
 import { styleParamsState } from 'state/style-params';
 
-export const viewLayerState = atomFamily({
+export const viewLayerState = atomFamily<ViewLayer, string>({
   key: 'viewLayerState',
   default: null,
 });
@@ -36,7 +36,7 @@ export const singleViewLayerParamsState = selectorFamily<ViewLayerParams, string
 
       layerParams.selection = groupSelection?.viewLayer.id === viewLayer.id ? groupSelection : null;
 
-      if (viewLayer?.group === 'assets') {
+      if (viewLayer?.group === 'networks') {
         layerParams.styleParams = get(styleParamsState);
       }
 

@@ -8,16 +8,16 @@
  */
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-module.exports = function(app) {
+module.exports = function (app) {
   app.use(
     '/vector',
     createProxyMiddleware({
       target: 'http://localhost:8080',
       changeOrigin: true,
       pathRewrite: {
-        '^/vector': '/' // remove base path
+        '^/vector': '/', // remove base path
       },
-    })
+    }),
   );
   app.use(
     '/raster',
@@ -25,8 +25,18 @@ module.exports = function(app) {
       target: 'http://localhost:5000',
       changeOrigin: true,
       pathRewrite: {
-        '^/raster': '/' // remove base path
+        '^/raster': '/', // remove base path
       },
-    })
+    }),
+  );
+  app.use(
+    '/api',
+    createProxyMiddleware({
+      target: 'http://localhost:8888',
+      changeOrigin: true,
+      pathRewrite: {
+        '^/api': '/', // remove base path
+      },
+    }),
   );
 };

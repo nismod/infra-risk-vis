@@ -59,3 +59,18 @@ export function isNumeric(val: any): boolean {
 export function truthyKeys(obj: Record<string, any>) {
   return Object.keys(obj).filter((k) => obj[k]);
 }
+
+/**
+ * Returns sum of array elements, or null if all elements are null
+ */
+export function sumOrNone(arr: number[]): number | null {
+  let result: number = null;
+
+  for (const x of arr) {
+    if (x != null) {
+      if (result == null) result = x;
+      else result += x;
+    }
+  }
+  return result;
+}

@@ -80,11 +80,15 @@ const RasterLegend: FC<{ viewLayer: ViewLayer }> = ({ viewLayer }) => {
 
 const DamagesLegend = ({ styleParams }) => {
   const {
-    colorMap: { colorScheme },
+    colorMap: { colorScheme, colorField },
   } = styleParams;
 
   const { scale, range } = VECTOR_COLOR_MAPS[colorScheme];
   const [rangeMin, rangeMax] = range;
+
+  const {
+    fieldParams: { damage_type },
+  } = colorField;
 
   const colorMapValues = useMemo(() => {
     const scaleFn = d3Scale.scaleSequential([rangeMin, rangeMax], scale);
@@ -95,15 +99,9 @@ const DamagesLegend = ({ styleParams }) => {
   const getValueLabel = useCallback((value: number) => `${value.toLocaleString()}$`, []);
 
   // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
+  const label = damage_type === 'direct' ? 'Direct Damages' : 'Economic Losses';
 
-  return (
-    <GradientLegend
-      label="Direct Damages"
-      range={range}
-      colorMapValues={colorMapValues}
-      getValueLabel={getValueLabel}
-    />
-  );
+  return <GradientLegend label={label} range={range} colorMapValues={colorMapValues} getValueLabel={getValueLabel} />;
 };
 
 const PopulationLegend = () => {

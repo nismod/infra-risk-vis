@@ -1,4 +1,4 @@
-import { TileLayer, BitmapLayer } from 'deck.gl';
+import { bitmapLayer, tileLayer } from './base';
 
 function getBoundsForTile(tileProps) {
   const {
@@ -9,9 +9,9 @@ function getBoundsForTile(tileProps) {
 }
 
 export function rasterTileLayer(bitmapProps, ...props) {
-  return new TileLayer(...props, {
+  return tileLayer(props, {
     renderSubLayers: (tileProps) =>
-      new BitmapLayer(
+      bitmapLayer(
         tileProps,
         {
           data: null,

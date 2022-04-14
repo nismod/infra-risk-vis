@@ -12,7 +12,7 @@ import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
 import { labelsLayer } from 'config/deck-layers/labels-layer';
 import { isRetinaState } from 'state/is-retina';
 import { HazardParams } from 'config/hazards/domains';
-import { LayerTree } from 'lib/layer-tree';
+import { ConfigTree } from 'lib/nested-config/config-tree';
 
 import { populationViewLayer } from 'config/regions/population-view-layer';
 import { regionLevelState, showPopulationState } from 'state/regions';
@@ -37,7 +37,7 @@ const networkLayersState = selector<ViewLayer[]>({
       : [],
 });
 
-export const viewLayersState = selector<LayerTree<ViewLayer>>({
+export const viewLayersState = selector<ConfigTree<ViewLayer>>({
   key: 'viewLayersState',
   get: ({ get }) => {
     const showRegions = get(sectionVisibilityState('regions'));

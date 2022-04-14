@@ -3,12 +3,13 @@ import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { DataItem } from 'features/detail-components';
+import { colorMap } from 'lib/color-map';
 import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
-import { colorMap } from 'lib/deck-layers/utils';
-import { FC } from 'react';
+import { ViewLayer } from 'lib/data-map/view-layers';
+import { FC, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { damageSourceState, showDirectDamagesState } from 'state/damage-mapping/damage-map';
-import { eadAccessorState } from 'state/damage-mapping/damage-style-params';
+import { damageSourceState, showDamagesState } from 'state/damage-mapping/damage-map';
+import { damageMapStyleParamsState, damagesFieldState } from 'state/damage-mapping/damage-style-params';
 import { ColorBox } from './ColorBox';
 
 function getSourceLabel(eadSource: string) {
@@ -20,22 +21,30 @@ function getSourceLabel(eadSource: string) {
 function formatDamagesValue(value: number) {
   if (value == null) return '-';
 
-  return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+  return (
+    value.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }) + ' $'
+  );
 }
 
 const damageColorSpec = VECTOR_COLOR_MAPS['damages'];
 const damageColorFn = colorMap(damageColorSpec.scale, damageColorSpec.range, damageColorSpec.empty);
 
-const DirectDamagesDescription: FC<{ feature: any }> = ({ feature }) => {
+const DamagesDescription: FC<{ viewLayer: ViewLayer; feature: any }> = ({ viewLayer, feature }) => {
   const damageSource = useRecoilValue(damageSourceState);
-  const eadAccessor = useRecoilValue(eadAccessorState);
+  const damagesFieldSpec = useRecoilValue(damagesFieldState);
+  const styleParams = useRecoilValue(damageMapStyleParamsState);
+  const eadAccessor = useMemo(() => viewLayer.dataAccessFn?.({ styleParams }).dataAccessor, [viewLayer, styleParams]);
 
   const value = eadAccessor?.(feature);
   const color = damageColorFn(value);
+  const variableLabel = damagesFieldSpec.fieldParams.damage_type === 'direct' ? 'Direct Damages' : 'Economic Losses';
   return (
     <Box>
       <DataItem
-        label={`Direct Damages (${getSourceLabel(damageSource)})`}
+        label={`${variableLabel} (${getSourceLabel(damageSource)})`}
         value={
           <>
             <ColorBox color={color} />
@@ -47,11 +56,17 @@ const DirectDamagesDescription: FC<{ feature: any }> = ({ feature }) => {
   );
 };
 
-export const VectorHoverDescription: FC<{ hoveredObject: InteractionTarget<VectorTarget> }> = ({ hoveredObject }) => {
-  const showDirectDamages = useRecoilValue(showDirectDamagesState);
+export const VectorHoverDescription: FC<{
+  hoveredObject: InteractionTarget<VectorTarget>;
+}> = ({ hoveredObject }) => {
+  const showDirectDamages = useRecoilValue(showDamagesState);
 
-  const f = hoveredObject.target.feature;
-  const { label: title, color = '#ccc' } = NETWORKS_METADATA[hoveredObject.viewLayer.params.assetId];
+  const {
+    viewLayer,
+    target: { feature },
+  } = hoveredObject;
+
+  const { label: title, color = '#ccc' } = NETWORKS_METADATA[viewLayer.params.assetId];
 
   return (
     <>
@@ -60,8 +75,10 @@ export const VectorHoverDescription: FC<{ hoveredObject: InteractionTarget<Vecto
         {title}
       </Typography>
 
-      <DataItem label="ID" value={f.properties.asset_id} />
-      {showDirectDamages && <DirectDamagesDescription feature={f} />}
+      <DataItem label="ID" value={feature.properties.asset_id} />
+      {viewLayer.group === 'networks' && showDirectDamages && (
+        <DamagesDescription viewLayer={viewLayer} feature={feature} />
+      )}
     </>
   );
 };

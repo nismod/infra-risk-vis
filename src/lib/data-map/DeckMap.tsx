@@ -6,6 +6,7 @@ import { MapContext, MapContextProps } from 'react-map-gl';
 interface DeckMapProps {
   initialViewState: any;
   layersFunction: ({ zoom }) => any[];
+  dataLoadTrigger?: number;
   onHover: any;
   onClick?: any;
   layerRenderFilter: DeckProps['layerFilter'];
@@ -21,6 +22,7 @@ export const ViewStateContext = createContext<{
 export const DeckMap: FC<DeckMapProps> = ({
   initialViewState,
   layersFunction,
+  dataLoadTrigger,
   onHover,
   onClick,
   layerRenderFilter,
@@ -34,7 +36,7 @@ export const DeckMap: FC<DeckMapProps> = ({
 
   const zoom = viewState.zoom;
 
-  const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom]);
+  const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom, dataLoadTrigger]);
 
   return (
     <ViewStateContext.Provider value={{ viewState, setViewState }}>

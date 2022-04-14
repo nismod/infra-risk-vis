@@ -1,5 +1,11 @@
-import { ViewLayer } from 'lib/data-map/view-layers';
-import { vectorDeckLayer } from 'lib/deck-layers/vector-deck-layer';
+import {
+  DataAccess,
+  StyleParams,
+  ViewLayer,
+  ViewLayerDataFunctionOptions,
+  ViewLayerFunctionOptions,
+} from 'lib/data-map/view-layers';
+import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 import { ASSETS_SOURCE } from './source';
 
 interface ViewLayerMetadata {
@@ -12,7 +18,8 @@ export function assetViewLayer(
   assetId: string,
   metadata: ViewLayerMetadata,
   selectionPolygonOffset: number,
-  customFn: ({ zoom, styleParams }) => object[],
+  customFn: ({ zoom, styleParams }: { zoom: number; styleParams?: StyleParams }) => object[],
+  customDataAccessFn: ({ styleParams }: ViewLayerDataFunctionOptions) => DataAccess,
 ): ViewLayer {
   const { group, spatialType, interactionGroup } = metadata;
 
@@ -24,14 +31,23 @@ export function assetViewLayer(
     params: {
       assetId,
     },
-    fn: ({ deckProps, zoom, styleParams, selection }) =>
-      vectorDeckLayer(
-        { selectedFeatureId: selection?.target.feature.id, polygonOffset: selectionPolygonOffset },
+    fn: ({ deckProps, zoom, styleParams, selection }: ViewLayerFunctionOptions) =>
+      selectableMvtLayer(
+        {
+          selectionOptions: {
+            selectedFeatureId: selection?.target.feature.id,
+            polygonOffset: selectionPolygonOffset,
+          },
+          dataLoaderOptions: {
+            dataLoader: customDataAccessFn?.({ styleParams })?.dataLoader,
+          },
+        },
         deckProps,
         {
           data: ASSETS_SOURCE.getDataUrl({ assetId }),
         },
         ...customFn({ zoom, styleParams }),
       ),
+    dataAccessFn: customDataAccessFn,
   };
 }

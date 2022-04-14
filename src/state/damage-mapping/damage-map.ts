@@ -6,14 +6,19 @@ import { dataParamOptionsState, dataParamState } from 'state/data-params';
 import { hazardSelectionState } from 'state/hazards/hazard-selection';
 import { networksStyleState } from 'state/networks/networks-style';
 
-export const showDirectDamagesState = selector({
+export const showDamagesState = selector({
   key: 'showDamagesState',
-  get: ({ get }) => get(networksStyleState) === 'direct-damages',
+  get: ({ get }) => get(networksStyleState) === 'damages',
 });
 
 export const damageSourceState = atom({
   key: 'damageSourceState',
   default: 'total-damages',
+});
+
+export const damageTypeState = atom({
+  key: 'damageTypeState',
+  default: 'direct',
 });
 
 export const damageSourceStateEffect = ({ get, set }, damageSource) => {

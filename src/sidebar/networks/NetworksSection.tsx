@@ -23,7 +23,7 @@ export const NetworksSection: FC<{}> = () => {
       <SidebarPanelSection variant="style">
         <StyleSelection id="assets" />
         <TransitionGroup>
-          {style === 'direct-damages' ? (
+          {style === 'damages' ? (
             <Collapse>
               <DamageSourceControl />
             </Collapse>
