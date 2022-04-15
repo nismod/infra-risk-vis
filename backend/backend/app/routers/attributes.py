@@ -6,7 +6,7 @@ from backend.db import models
 
 from .. import schemas
 
-router = APIRouter()
+router = APIRouter(tags=["attributes"])
 
 
 def get_damage_params(

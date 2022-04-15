@@ -74,3 +74,13 @@ export function sumOrNone(arr: number[]): number | null {
   }
   return result;
 }
+
+// adapted from https://stackoverflow.com/a/44661948/1478817
+export function downloadFile(content: string, mimeType: string, fileName: string) {
+  const element = document.createElement('a');
+  const file = new Blob([content], { type: mimeType });
+  element.href = URL.createObjectURL(file);
+  element.download = fileName;
+  document.body.appendChild(element); // Required for this to work in FireFox
+  element.click();
+}
