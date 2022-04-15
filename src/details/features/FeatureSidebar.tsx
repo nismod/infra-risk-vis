@@ -14,12 +14,11 @@ export const FeatureSidebar: FC<{}> = () => {
     target: { feature },
     viewLayer,
   } = featureSelection;
-  const f = feature.properties;
 
   return (
     <Paper>
       <Box p={3} maxHeight="60vh" style={{ overflowY: 'scroll' }}>
-        <FeatureSidebarContent f={f} viewLayer={viewLayer} />
+        <FeatureSidebarContent feature={feature} viewLayer={viewLayer} />
       </Box>
     </Paper>
   );

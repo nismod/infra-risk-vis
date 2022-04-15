@@ -1,8 +1,6 @@
-import React, { FC, useMemo } from 'react';
-import { Typography } from '@mui/material';
+import React, { FC, useEffect, useState } from 'react';
+import { Box, IconButton, Typography } from '@mui/material';
 
-import { RiskSection } from './RiskSection';
-import { EADChartSection } from './EADChartSection';
 import {
   AirportDetails,
   BridgeDetails,
@@ -20,10 +18,13 @@ import {
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
 } from './detail-components';
-import { HAZARD_DOMAINS } from '../../config/hazards/domains';
 import { ViewLayer } from 'lib/data-map/view-layers';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { ColorBox } from 'map/tooltip/content/ColorBox';
+import { ApiClient } from 'lib/api-client';
+import { DamagesSection } from './damages/DamagesSection';
+import { Download } from '@mui/icons-material';
+import { downloadFile } from 'lib/helpers';
 
 var componentMapping = {
   airport_areas: AirportDetails,
@@ -46,46 +47,20 @@ var componentMapping = {
 };
 
 interface FeatureSidebarContentProps {
-  f: any;
+  feature: any;
   viewLayer: ViewLayer;
 }
 
-function getRcpNumber(rcp) {
-  if (rcp === 'baseline') return 0;
-  return Number.parseFloat(rcp);
-}
-function getFeatureEadData(f: any) {
-  const eadData = [];
-  for (const [hazardType, hazard] of Object.entries(HAZARD_DOMAINS)) {
-    for (const rcp of hazard.paramDomains.rcp) {
-      for (const epoch of hazard.paramDomains.epoch) {
-        // TODO check risk data for confidence
-        // for (const confidence of hazard.paramDomains.confidence) {
-        const riskKey = `${hazardType}__rcp_${rcp}__epoch_${epoch}__conf_None`;
-        if (f[riskKey]) {
-          eadData.push({
-            key: riskKey,
-            hazardType,
-            rcp,
-            rcpNumber: getRcpNumber(rcp),
-            epoch: epoch.toString(),
-            ead: f[riskKey],
-          });
-        }
-        // }
-      }
-    }
-  }
-  return eadData;
-}
-
-export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, viewLayer }) => {
+export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ feature, viewLayer }) => {
   const DetailsComponent = componentMapping[viewLayer.id] ?? DefaultDetails;
   const { color, label } = NETWORKS_METADATA[viewLayer.id];
 
-  const eadData = useMemo(() => getFeatureEadData(f), [f]);
+  const f = feature.properties;
+
+  const [featureDetails] = useFeatureDetails(feature?.id);
+
   return (
-    <>
+    <Box position="relative">
       <pre id="feature_debug" style={{ display: 'none' }}>
         <code>{JSON.stringify(f, null, 2)}</code>
       </pre>
@@ -94,8 +69,61 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ f, viewL
         {label}
       </Typography>
       <DetailsComponent f={f} />
-      <RiskSection eadData={eadData} />
-      <EADChartSection eadData={eadData} />
-    </>
+      {featureDetails && (
+        <>
+          <IconButton
+            sx={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+            }}
+            title="Download CSV with feature metadata"
+            onClick={() => downloadFile(makeDetailsCsv(featureDetails), 'text/csv', `feature_${feature.id}.csv`)}
+          >
+            <Download />{' '}
+          </IconButton>
+          <DamagesSection fd={featureDetails} />
+        </>
+      )}
+    </Box>
   );
 };
+
+function makeDetailsCsv(fd) {
+  return (
+    'variable,value\n' +
+    Object.entries(fd.properties)
+      .map(([k, v]) => `${k},${v}`)
+      .join('\n')
+  );
+}
+
+const apiClient = new ApiClient({
+  BASE: '/api',
+});
+
+function useFeatureDetails(featureId: number) {
+  const [featureDetails, setFeatureDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setFeatureDetails(null);
+    setLoading(true);
+    setError(null);
+    if (featureId) {
+      apiClient.features
+        .featuresReadFeature(featureId)
+        .then((featureDetails) => {
+          setFeatureDetails(featureDetails);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error);
+          setLoading(false);
+        });
+    }
+  }, [featureId]);
+
+  return [featureDetails, loading, error];
+}
