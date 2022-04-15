@@ -33,3 +33,5 @@ terracotta.sqlite
 
 # python files
 __pycache__
+*.egg-info
+*.pyc

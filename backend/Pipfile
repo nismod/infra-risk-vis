@@ -9,6 +9,12 @@ geoalchemy2 = "*"
 uvicorn = "*"
 psycopg2 = "*"
 shapely = "*"
+snakemake = "*"
+pandas = "*"
+pygeos = "*"
+geopandas = "*"
+setuptools = "*"
+backend = {editable = true, path = "."}
 
 [dev-packages]
 black = "*"
