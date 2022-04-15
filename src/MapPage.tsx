@@ -2,6 +2,8 @@ import { FC } from 'react';
 import { Box } from '@mui/material';
 
 import { MapView } from './map/MapView';
+import { FeatureSidebar } from './features/FeatureSidebar';
+import { RegionDetails } from './details/regions/RegionDetails';
 import { SidebarContent } from 'sidebar/SidebarContent';
 import { globalStyleVariables } from 'theme';
 import { useSyncRecoilState } from 'lib/recoil/sync-state';
@@ -12,12 +14,13 @@ interface MapViewProps {
   view: string;
 }
 
-const SidebarLayout = ({ children }) => (
+const SidebarLayout = ({ top, bottom, left, right, children }) => (
   <Box
     position="absolute"
-    top={globalStyleVariables.navbarHeight}
-    left={0}
-    bottom={0}
+    top={globalStyleVariables.navbarHeight + top}
+    bottom={bottom}
+    left={left}
+    right={right}
     width={globalStyleVariables.sidebarWidth - 20}
     zIndex={1000}
     sx={{ pointerEvents: 'none' }}
@@ -46,12 +49,20 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   return (
     <>
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
-      <SidebarLayout>
+      <SidebarLayout top={0} left={0} bottom={0} right={undefined}>
         <SidebarContent />
       </SidebarLayout>
       <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
         <MapView />
       </Box>
+      <SidebarLayout top={0} left={undefined} bottom={70} right={70}>
+        <Box mb={2}>
+          <FeatureSidebar />
+        </Box>
+        <Box mb={2}>
+          <RegionDetails />
+        </Box>
+      </SidebarLayout>
     </>
   );
 };

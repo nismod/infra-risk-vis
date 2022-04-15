@@ -17,9 +17,7 @@ import { MapSearch } from 'lib/map/place-search/MapSearch';
 import { MapLayerSelection } from './layers/MapLayerSelection';
 import { MapLegend } from './legend/MapLegend';
 import { LegendContent } from './legend/LegendContent';
-import { FeatureSidebar } from 'details/features/FeatureSidebar';
 import { globalStyleVariables } from 'theme';
-import { RegionDetails } from 'details/regions/RegionDetails';
 import { interactionGroupsState } from '../state/layers/interaction-groups';
 
 export const MapView = () => {
@@ -71,14 +69,6 @@ export const MapView = () => {
             <MapLegend>
               <LegendContent />
             </MapLegend>
-          </Box>
-          <Box position="absolute" top={10} right={50} width={globalStyleVariables.detailsSidebarWidth}>
-            <Box mb={2}>
-              <FeatureSidebar />
-            </Box>
-            <Box mb={2}>
-              <RegionDetails />
-            </Box>
           </Box>
         </>
       }
