@@ -4,10 +4,11 @@
 import type { DamageType } from '../models/DamageType';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
 export class AttributesService {
+
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
      * Read Damages
@@ -21,7 +22,7 @@ export class AttributesService {
      * @returns number Successful Response
      * @throws ApiError
      */
-    public static attributesReadDamages(
+    public attributesReadDamages(
         layer: string,
         hazard: string,
         rcp: string,
@@ -30,7 +31,7 @@ export class AttributesService {
         protectionStandard: number,
         requestBody: Array<number>,
     ): CancelablePromise<Record<string, number>> {
-        return __request(OpenAPI, {
+        return this.httpRequest.request({
             method: 'POST',
             url: '/attributes/damages',
             query: {

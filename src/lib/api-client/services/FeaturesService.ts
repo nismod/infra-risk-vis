@@ -4,10 +4,11 @@
 import type { Feature } from '../models/Feature';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
 export class FeaturesService {
+
+    constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
      * Read Feature
@@ -15,10 +16,10 @@ export class FeaturesService {
      * @returns Feature Successful Response
      * @throws ApiError
      */
-    public static featuresReadFeature(
+    public featuresReadFeature(
         featureId: number,
     ): CancelablePromise<Feature> {
-        return __request(OpenAPI, {
+        return this.httpRequest.request({
             method: 'GET',
             url: '/features/{feature_id}',
             path: {
