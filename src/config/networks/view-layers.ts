@@ -6,7 +6,6 @@ import { infrastructureViewLayer } from './infrastructure-view-layer';
 import { ViewLayer } from 'lib/data-map/view-layers';
 import { fillColor, strokeColor } from 'lib/deck/props/style';
 import { dataColorMap } from 'lib/deck/props/color-map';
-import { featureProperty } from 'lib/deck/props/data-source';
 import { colorMapFromScheme } from 'config/color-maps';
 import { getAssetDataAccessor } from 'config/assets/data-access';
 
@@ -20,22 +19,37 @@ enum RoadClass {
 }
 
 const roadClassLookup = {
-  'CLASS A': RoadClass.class_a,
-  'CLASS B': RoadClass.class_b,
-  'CLASS C': RoadClass.class_c,
-  METRO: RoadClass.metro,
-  TRACK: RoadClass.track,
-  OTHER: RoadClass.other,
+  road_edges_class_a: RoadClass.class_a,
+  road_edges_class_b: RoadClass.class_b,
+  road_edges_class_c: RoadClass.class_c,
+  road_edges_metro: RoadClass.metro,
+  road_edges_track: RoadClass.track,
+  road_edges_other: RoadClass.other,
 };
 
 const roadColor = {
   [RoadClass.class_a]: COLORS.roads_class_a.css,
   [RoadClass.class_b]: COLORS.roads_class_b.css,
   [RoadClass.class_c]: COLORS.roads_class_c.css,
-  [RoadClass.metro]: COLORS.roads_class_metro.css,
+  [RoadClass.metro]: COLORS.roads_metro.css,
   [RoadClass.track]: COLORS.roads_unknown.css,
   [RoadClass.other]: COLORS.roads_unknown.css,
 };
+function roadsViewLayer(asset_id) {
+  return infrastructureViewLayer(asset_id, ({ zoom, styleParams }) => [
+    strokeColor(
+      infraStyle(
+        asset_id,
+        dataColorMap(
+          () => asset_id,
+          (x) => roadColor[roadClassLookup[x]],
+        ),
+        styleParams,
+      ),
+    ),
+    lineStyle(zoom),
+  ]);
+}
 
 function infraStyle(layer: string, defaultStyle, styleParams) {
   if (styleParams?.colorMap) {
@@ -44,8 +58,6 @@ function infraStyle(layer: string, defaultStyle, styleParams) {
   }
   return defaultStyle;
 }
-
-const roadDefaultStyle = dataColorMap(featureProperty('road_class'), (x) => roadColor[roadClassLookup[x]]);
 
 export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
   infrastructureViewLayer('elec_edges_high', ({ zoom, styleParams }) => [
@@ -80,10 +92,12 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     fillColor(infraStyle('rail_nodes', COLORS.railway.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('road_edges', ({ zoom, styleParams }) => [
-    strokeColor(infraStyle('road_edges', roadDefaultStyle, styleParams)),
-    lineStyle(zoom),
-  ]),
+  roadsViewLayer('road_edges_class_a'),
+  roadsViewLayer('road_edges_class_b'),
+  roadsViewLayer('road_edges_class_c'),
+  roadsViewLayer('road_edges_metro'),
+  roadsViewLayer('road_edges_track'),
+  roadsViewLayer('road_edges_other'),
   infrastructureViewLayer('road_bridges', ({ zoom, styleParams }) => [
     border(),
     fillColor(infraStyle('road_bridges', COLORS.bridges.deck, styleParams)),

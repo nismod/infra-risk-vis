@@ -53,8 +53,23 @@
     "road_bridges": {
       "mbtiles": "road_bridges.mbtiles"
     },
-    "road_edges": {
-      "mbtiles": "road_edges.mbtiles"
+    "road_edges_class_a": {
+      "mbtiles": "road_edges_class_a.mbtiles"
+    },
+    "road_edges_class_b": {
+      "mbtiles": "road_edges_class_b.mbtiles"
+    },
+    "road_edges_class_c": {
+      "mbtiles": "road_edges_class_c.mbtiles"
+    },
+    "road_edges_metro": {
+      "mbtiles": "road_edges_metro.mbtiles"
+    },
+    "road_edges_track": {
+      "mbtiles": "road_edges_track.mbtiles"
+    },
+    "road_edges_other": {
+      "mbtiles": "road_edges_other.mbtiles"
     },
     "water_irrigation_edges": {
       "mbtiles": "water_irrigation_edges.mbtiles"

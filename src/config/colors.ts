@@ -11,7 +11,7 @@ export const COLORS = makeColorConfig({
   roads_class_a: '#941339',
   roads_class_b: '#cb3e4e',
   roads_class_c: '#8471a8',
-  roads_class_metro: '#487dbc',
+  roads_metro: '#487dbc',
 
   bridges: '#941339',
 

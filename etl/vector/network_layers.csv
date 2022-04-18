@@ -4,7 +4,12 @@ networks/transport/port_polygon.gpkg,areas,polygon,,port_areas
 networks/transport/rail.gpkg,nodes,point,,rail_nodes
 networks/transport/rail.gpkg,edges,line,,rail_edges
 networks/transport/roads.gpkg,nodes,point,asset_type='bridge',road_bridges
-networks/transport/roads.gpkg,edges,line,,road_edges
+networks/transport/roads.gpkg,edges,line,road_class='CLASS A',road_edges_class_a
+networks/transport/roads.gpkg,edges,line,road_class='CLASS B',road_edges_class_b
+networks/transport/roads.gpkg,edges,line,road_class='CLASS C',road_edges_class_c
+networks/transport/roads.gpkg,edges,line,road_class='METRO',road_edges_metro
+networks/transport/roads.gpkg,edges,line,road_class='TRACK',road_edges_track
+networks/transport/roads.gpkg,edges,line,road_class='OTHER',road_edges_other
 networks/water/irrigation_assets_NIC.gpkg,nodes,point,,water_irrigation_nodes
 networks/water/irrigation_assets_NIC.gpkg,edges,line,,water_irrigation_edges
 networks/water/potable_facilities_NWC.gpkg,nodes,point,,water_potable_nodes

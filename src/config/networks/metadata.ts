@@ -89,9 +89,39 @@ export const NETWORKS_METADATA = makeConfig([
     color: COLORS.railway.css,
   },
   {
-    id: 'road_edges',
+    id: 'road_edges_class_a',
     type: 'line',
-    label: 'Roads',
+    label: 'Roads (Class A)',
+    color: COLORS.roads_class_a.css,
+  },
+  {
+    id: 'road_edges_class_b',
+    type: 'line',
+    label: 'Roads (Class B)',
+    color: COLORS.roads_class_b.css,
+  },
+  {
+    id: 'road_edges_class_c',
+    type: 'line',
+    label: 'Roads (Class C)',
+    color: COLORS.roads_class_c.css,
+  },
+  {
+    id: 'road_edges_metro',
+    type: 'line',
+    label: 'Roads (Metro)',
+    color: COLORS.roads_metro.css,
+  },
+  {
+    id: 'road_edges_track',
+    type: 'line',
+    label: 'Roads (Tracks)',
+    color: COLORS.roads_unknown.css,
+  },
+  {
+    id: 'road_edges_other',
+    type: 'line',
+    label: 'Roads (Other)',
     color: COLORS.roads_unknown.css,
   },
   {
