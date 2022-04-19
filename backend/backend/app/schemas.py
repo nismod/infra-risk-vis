@@ -32,13 +32,28 @@ class DamageBase(DamageParams):
     max: float
 
 
-class Damage(DamageBase):
+class DamageOut(DamageBase):
     class Config:
         orm_mode = True
 
 
-class Feature(FeatureBase):
-    damages: list[Damage] = []
+class FeatureOutBase(FeatureBase):
+    class Config:
+        orm_mode = True
+
+
+class FeatureOut(FeatureOutBase):
+    damages: list[DamageOut] = []
+
+
+SortFieldT = TypeVar("SortFieldT")
+
+
+class FeatureListItemOut(GenericModel, Generic[SortFieldT]):
+    id: int
+    string_id: str
+    bbox_wkt: str
+    value: SortFieldT
 
     class Config:
         orm_mode = True
