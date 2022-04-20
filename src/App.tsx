@@ -5,9 +5,9 @@ import { CssBaseline, StyledEngineProvider, Toolbar } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 
 import { Nav } from './Nav';
-import { IntroPage } from './IntroPage';
-import { MapPage } from './MapPage';
-import { DataPage } from './DataPage';
+import { IntroPage } from './pages/IntroPage';
+import { MapPage } from './pages/MapPage';
+import { DataPage } from './pages/DataPage';
 import { theme } from './theme';
 
 import './index.css';
