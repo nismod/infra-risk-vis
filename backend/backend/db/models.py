@@ -30,11 +30,7 @@ class ReturnPeriodDamage(Base):
     epoch = Column(Integer, nullable=False, primary_key=True)
     rp = Column(Integer, nullable=False, primary_key=True)
 
-    protection_standard = Column(Integer, nullable=False, primary_key=True)
-
-    exposure_amin = Column(Float)
-    exposure_mean = Column(Float)
-    exposure_amax = Column(Float)
+    exposure = Column(Float)
 
     damage_amin = Column(Float)
     damage_mean = Column(Float)

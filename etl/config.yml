@@ -2,3 +2,4 @@ analysis_data_dir: ./raw_data/
 network_layers: "network_layers.csv"
 network_tilelayers: "network_tilelayers.csv"
 hazard_layers: "hazard_layers.csv"
+damage_files: "damage_files.csv"

@@ -3,6 +3,7 @@ import subprocess
 import fiona
 import geopandas
 import pandas
+import pyarrow.parquet as pq
 
 from geoalchemy2.shape import to_shape
 from pyproj import CRS, Transformer
@@ -13,31 +14,47 @@ from sqlalchemy.orm import Session
 from tqdm import tqdm
 
 from backend.db.database import SessionLocal
-from backend.db.models import Feature
+from backend.db.models import (
+    Base,
+    Feature,
+    ExpectedDamage,
+    ReturnPeriodDamage,
+    NPVDamage,
+    AdaptationCostBenefit,
+)
+
 
 # Example config
 # - override by running:
 #    snakemake --cores=1 --configfile=config_local.yml all
 configfile: "config.yml"
-hazard_layers = pandas.read_csv(config['hazard_layers'])
-network_layers = pandas.read_csv(config['network_layers'])
-network_tilelayers = pandas.read_csv(config['network_tilelayers'])
+
+
+hazard_layers = pandas.read_csv(config["hazard_layers"])
+network_layers = pandas.read_csv(config["network_layers"])
+network_tilelayers = pandas.read_csv(config["network_tilelayers"])
+damage_rp_files = pandas.read_csv(config["damage_rp_files"])
+damage_exp_files = pandas.read_csv(config["damage_exp_files"])
+
 
 wildcard_constraints:
-    layer="[^/.]+"
+    layer="[^/]+",
+
 
 # Run all file-base jobs, after load_to_database
-rule all:
-    input:
-        # expand("../tileserver/vector/data/{layer}.mbtiles", layer=network_layers.output_layer_name)
-        # expand("../tileserver/raster/data/{slug}.tif", slug=hazard_layers.slug)
+# rule all:
+#     input:
+#         expand("../tileserver/vector/data/{layer}.mbtiles", layer=network_layers.output_layer_name)
+#         expand("../tileserver/raster/data/{slug}.tif", slug=hazard_layers.slug)
 
 
 # Prerequisite, not fully traced by file dependency
 #   snakemake --cores=all load_to_database
 rule load_to_database:
     input:
-        expand("vector/{layer}.txt", layer=network_layers.ref)
+        expand("logs/network/{layer}.txt", layer=network_layers.ref),
+        expand("logs/damages_rp/{layer}.txt", layer=damage_rp_files.ref),
+        expand("logs/damages_exp/{layer}.txt", layer=damage_exp_files.ref),
 
 
 def get_network_layer(layer_name):
@@ -74,7 +91,9 @@ def get_tilelayer(layer_name):
 
 def get_tilelayer_by_asset_type(props):
     try:
-        return network_tilelayers[network_tilelayers.asset_type == props['asset_type']].iloc[0]
+        return network_tilelayers[
+            network_tilelayers.asset_type == props["asset_type"]
+        ].iloc[0]
     except IndexError as e:
         print(f"Could not find {props['asset_type']} in tilelayers.")
         raise e
@@ -89,44 +108,44 @@ def get_tilelayers_by_network_source(network_source):
 
 
 def yield_features(layer):
-    """Read from file layer to modelled Features
-    """
+    """Read from file layer to modelled Features"""
     with fiona.open(get_network_layer_path(layer), layer=layer.gpkg_layer) as src:
         from_crs = src.crs
         to_crs = CRS.from_epsg(4326)
         t = Transformer.from_crs(from_crs, to_crs, always_xy=True).transform
+
         def to_2d(x, y, z=None):
             return (x, y)
 
         rename = {
-            layer.asset_id_column: 'asset_id',
-            layer.asset_type_column: 'asset_type',
-            layer.asset_min_cost_column: 'cost_min',
-            layer.asset_max_cost_column: 'cost_max',
-            layer.asset_mean_cost_column: 'cost_mean',
-            layer.asset_cost_unit_column: 'cost_unit',
-            layer.asset_reopen_cost_column: 'cost_reopen',
-            layer.asset_reopen_cost_unit_column: 'cost_reopen_unit',
+            layer.asset_id_column: "asset_id",
+            layer.asset_type_column: "asset_type",
+            layer.asset_min_cost_column: "cost_min",
+            layer.asset_max_cost_column: "cost_max",
+            layer.asset_mean_cost_column: "cost_mean",
+            layer.asset_cost_unit_column: "cost_unit",
+            layer.asset_reopen_cost_column: "cost_reopen",
+            layer.asset_reopen_cost_unit_column: "cost_reopen_unit",
         }
 
         for feature in src:
-            geom = transform(t, shape(feature['geometry']))
+            geom = transform(t, shape(feature["geometry"]))
             if geom.has_z:
                 geom = transform(to_2d, geom)
-            props = clean_props(feature['properties'], rename)
+            props = clean_props(feature["properties"], rename)
             # FIXME in the data
-            if layer.ref == 'transport_rail_edges':
-                props['asset_type'] = 'track'
+            if layer.ref == "transport_rail_edges":
+                props["asset_type"] = "track"
             tilelayer_details = get_tilelayer_by_asset_type(props)
-            props['sector'] = tilelayer_details.sector
-            props['subsector'] = tilelayer_details.sector
+            props["sector"] = tilelayer_details.sector
+            props["subsector"] = tilelayer_details.subsector
 
             yield Feature(
-                id=props['uid'],
-                string_id=props['asset_id'],
+                id=props["uid"],
+                string_id=props["asset_id"],
                 layer=tilelayer_details.layer,
                 properties=props,
-                geom=geom.wkt
+                geom=geom.wkt,
             )
 
 
@@ -134,7 +153,7 @@ rule networks_to_db:
     """Read from source directory to database
     """
     output:
-        "vector/{layer}.txt"
+        "logs/network/{layer}.txt",
     run:
         layer = get_network_layer(wildcards.layer)
         tilelayers = list(get_tilelayers_by_network_source(wildcards.layer))
@@ -143,36 +162,237 @@ rule networks_to_db:
             db.execute(delete(Feature).where(Feature.layer.in_(tilelayers)))
             db.commit()
 
-            for i, feature in tqdm(enumerate(yield_features(layer)), total=layer['count']):
+            for i, feature in tqdm(
+                enumerate(yield_features(layer)), total=layer["count"]
+            ):
                 db.add(feature)
                 if i % 1000 == 0:
                     db.commit()
             db.commit()
 
-        with open(str(output), 'w') as fh:
+        with open(str(output), "w") as fh:
             fh.write(f"Loaded to database.\n\n")
             fh.write(f"From:\n{get_network_layer_path(layer)}|{layer.gpkg_layer}\n\n")
             fh.write(f"Details:\n{str(layer)}\n")
 
 
-rule damages_to_db:
+def parse_rp_damage_batch(batch):
+    data = batch.to_pandas()
+    data_cols = [c for c in batch.schema.names if "rp" in c]
+
+    melted = (
+        data.melt(id_vars="uid", value_vars=data_cols)
+        .query("value > 0")
+        .reset_index(drop=True)
+    )
+
+    meta = melted.variable.str.extract(
+        r"^(\w+)__rp_(\d+)__rcp_([\w\d.]+)__epoch_(\d+)__?conf_([^_]+)_?(\w+)?"
+    )
+    meta.columns = ["hazard", "rp", "rcp", "epoch", "conf", "var"]
+    meta["var"].fillna("none", inplace=True)
+
+    return (
+        melted.join(meta)
+        .drop(columns="variable")
+        .pivot(
+            index=["uid", "hazard", "rp", "rcp", "epoch", "conf"],
+            columns="var",
+            values="value",
+        )
+        .query("conf == '50' or conf == 'None'")
+    )
+
+
+def yield_return_period_damages(exposure_fname, damage_fname, loss_fname):
+    batch_size = 100
+    exp_pf = pq.ParquetFile(exposure_fname)
+    exp_batches = exp_pf.iter_batches(batch_size)
+    dmg_pf = pq.ParquetFile(damage_fname)
+    dmg_batches = dmg_pf.iter_batches(batch_size)
+    loss_pf = pq.ParquetFile(loss_fname)
+    loss_batches = loss_pf.iter_batches(batch_size)
+
+    # Parquet files share asset order and number of rows
+    while True:
+        try:
+            exp_df = parse_rp_damage_batch(next(exp_batches)).rename(
+                columns={"none": "exposure"}
+            )
+            dmg_df = parse_rp_damage_batch(next(dmg_batches)).rename(
+                columns={
+                    "amin": "damage_amin",
+                    "mean": "damage_mean",
+                    "amax": "damage_amax",
+                }
+            )
+            loss_df = parse_rp_damage_batch(next(loss_batches)).rename(
+                columns={
+                    "amin": "loss_amin",
+                    "mean": "loss_mean",
+                    "amax": "loss_amax",
+                }
+            )
+            batch_df = exp_df.join(dmg_df).join(loss_df).fillna(0).reset_index()
+
+            # in case of data not having non-zero values in this batch
+            expected_columns = [
+                'damage_amin', 'damage_mean', 'damage_amax',
+                'loss_amin', 'loss_mean', 'loss_amax',
+                'exposure'
+            ]
+            ensure_columns(batch_df, expected_columns)
+
+            for row in batch_df.itertuples():
+                yield ReturnPeriodDamage(
+                    feature_id=row.uid,
+                    hazard=row.hazard,
+                    rcp=row.rcp,
+                    epoch=row.epoch,
+                    rp=row.rp,
+                    exposure=row.exposure,
+                    damage_amin=row.damage_amin,
+                    damage_mean=row.damage_mean,
+                    damage_amax=row.damage_amax,
+                    loss_amin=row.loss_amin,
+                    loss_mean=row.loss_mean,
+                    loss_amax=row.loss_amax,
+                )
+        except StopIteration:
+            break
+
+rule damages_rp_to_db:
     input:
         damage=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_damages.parquet",
         exposure=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_exposures.parquet",
         loss=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_losses.parquet",
+    output:
+        "logs/damages_rp/{layer}.txt",
+    run:
+        damage_rps = yield_return_period_damages(
+            input.exposure, input.damage, input.loss
+        )
+
+        db: Session
+        with SessionLocal() as db:
+            for i, damage_rp in enumerate(
+                tqdm(damage_rps, desc=f"{wildcards.layer}_rp")
+            ):
+                db.add(damage_rp)
+                if i % 10000 == 0:
+                    db.commit()
+            db.commit()
+
+        with open(str(output), "w") as fh:
+            fh.write(f"Loaded to database.\n\n")
+            fh.write(f"From:\n{input}\n\n")
+
+
+def parse_exp_damage_batch(batch):
+    data = batch.to_pandas()
+    data_cols = [c for c in batch.schema.names if "EA" in c]
+
+    # no protection_standard in list by default
+    id_vars = ["uid", "hazard", "rcp", "epoch"]
+    if "protection_standard" in batch.schema.names:
+        id_vars.append("protection_standard")
+
+    data = (
+        data.melt(id_vars=id_vars, value_vars=data_cols)
+        .query("value > 0")
+        .reset_index(drop=True)
+    )
+
+    meta = data.variable.str.extract(r"^([^_]+)_(\w+)_([^_]+)$")
+    meta.columns = ["damage", "defended", "var"]
+
+    data = data.join(meta)
+    if "protection_standard" not in batch.schema.names:
+        data["protection_standard"] = 0
+    else:
+        data.loc[data.defended == 'undefended', 'protection_standard'] = 0
+
+    try:
+        data = (
+            data.drop(columns="variable")
+            .pivot(
+                index=["uid", "hazard", "rcp", "epoch", "protection_standard"],
+                columns=["damage", "var"],
+                values="value",
+            )
+            .fillna(0)
+        )
+    except ValueError:
+        breakpoint()
+
+    data.columns = [f"{var.lower()}_{stat}" for var, stat in data.columns]
+
+    # in case of data not having non-zero values in this batch
+    expected_columns = [
+        'ead_amin', 'ead_mean', 'ead_amax',
+        'eael_amin', 'eael_mean', 'eael_amax',
+    ]
+    ensure_columns(data, expected_columns)
+
+    return data.reset_index()
+
+
+def ensure_columns(data, expected_columns):
+    for col in expected_columns:
+        if col not in data.columns:
+            data[col] = 0
+    return data
+
+
+def yield_expected_damages(expected_fname):
+    pf = pq.ParquetFile(expected_fname)
+    batch_size = 1000
+    batches = pf.iter_batches(batch_size)
+
+    for batch in batches:
+        batch_df = parse_exp_damage_batch(batch)
+        for row in batch_df.itertuples():
+            yield ExpectedDamage(
+                feature_id=row.uid,
+                hazard=row.hazard,
+                rcp=row.rcp,
+                epoch=row.epoch,
+                protection_standard=row.protection_standard,
+                ead_amin=row.ead_amin,
+                ead_mean=row.ead_mean,
+                ead_amax=row.ead_amax,
+                eael_amin=row.eael_amin,
+                eael_mean=row.eael_mean,
+                eael_amax=row.eael_amax,
+            )
+
+rule damages_exp_to_db:
+    input:
         expected=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_EAD_EAEL.parquet",
     output:
-        "vector/{layer}.damages.txt"
+        "logs/damages_exp/{layer}.txt",
     run:
-        # airport_polygon_areas
-        print(input.damage)
-        print(input.expected)
+        damage_exp = yield_expected_damages(input.expected)
+
+        db: Session
+        with SessionLocal() as db:
+            for i, damage_exp in enumerate(
+                tqdm(damage_exp, desc=f"{wildcards.layer}_exp")
+            ):
+                db.add(damage_exp)
+                if i % 1000 == 0:
+                    db.commit()
+            db.commit()
+
+        with open(str(output), "w") as fh:
+            fh.write(f"Loaded to database.\n\n")
+            fh.write(f"From:\n{input}\n\n")
 
 
 def make_feature_properties(feature: Feature):
     properties = {
-        "asset_id": feature.properties['asset_id'],
-        "asset_type": feature.properties['asset_type']
+        "asset_id": feature.properties["asset_id"],
+        "asset_type": feature.properties["asset_type"],
     }
     for damage in feature.damages:
         key = f"{damage.hazard}__rcp_{damage.rcp}__epoch_{damage.epoch}__conf_None"
@@ -201,9 +421,9 @@ rule db_to_geojsonseq:
     """Load from database to GeoJSONSeq
     """
     output:
-        "vector/{layer}.geojsonl"
+        "vector/{layer}.geojsonl",
     run:
-        with open(str(output), 'w') as fh:
+        with open(str(output), "w") as fh:
             for feature in yield_features_for_layer(wildcards.layer):
                 geojson = feature_as_geojson(feature)
                 fh.write(json.dumps(geojson, indent=None))
@@ -212,28 +432,37 @@ rule db_to_geojsonseq:
 
 rule geojsonseq_to_vector_tiles:
     input:
-        "vector/{layer}.geojsonl"
+        "vector/{layer}.geojsonl",
     output:
-        "../tileserver/vector/data/{layer}.mbtiles"
+        "../tileserver/vector/data/{layer}.mbtiles",
     run:
         layer = get_tilelayer(wildcards.layer)
-        if layer.spatial_type == 'line':
-          options=["--drop-densest-as-needed", "--minimum-zoom=3", "--maximum-zoom=15"]
-        elif layer.spatial_type == 'polygon':
-          options=["--drop-densest-as-needed", "--minimum-zoom=3", "--maximum-zoom=15"]
+        if layer.spatial_type == "line":
+            options = [
+                "--drop-densest-as-needed",
+                "--minimum-zoom=3",
+                "--maximum-zoom=15",
+            ]
+        elif layer.spatial_type == "polygon":
+            options = [
+                "--drop-densest-as-needed",
+                "--minimum-zoom=3",
+                "--maximum-zoom=15",
+            ]
         else:
-          options=["-zg"]
+            options = ["-zg"]
 
-        subprocess.run([
-            "tippecanoe",
-            "--use-attribute-for-id=uid",
-            "--read-parallel",
-            f"--output={output}",
-            f"--layer={wildcards.layer}"
-        ] + options + [
-            "--force",
-            f"{input}"
-        ])
+        subprocess.run(
+            [
+                "tippecanoe",
+                "--use-attribute-for-id=uid",
+                "--read-parallel",
+                f"--output={output}",
+                f"--layer={wildcards.layer}",
+            ]
+            + options
+            + ["--force", f"{input}"]
+        )
 
 
 rule raster_zero_nodata:

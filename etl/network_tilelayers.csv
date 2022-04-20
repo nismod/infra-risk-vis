@@ -33,7 +33,7 @@ water_potable_nodes,water,potable,Storage Tank,point,water_potable_nodes_tank
 water_potable_nodes,water,potable,Sump,point,water_potable_nodes_sump
 water_potable_nodes,water,potable,Treatment Plant,point,water_potable_nodes_tp
 water_pipelines,water,potable,potable,line,water_potable_edges
-water_wastewater_nodes,water,wastewater,Sump,point,water_waste_nodes_sump
+water_wastewater_nodes,water,wastewater,WW Sump,point,water_waste_nodes_sump
 water_wastewater_nodes,water,wastewater,WW Pump Station,point,water_waste_nodes_pump
 water_wastewater_nodes,water,wastewater,WW Relift Station,point,water_waste_nodes_relift
 water_wastewater_nodes,water,wastewater,WW Treatment Plant,point,water_waste_nodes_wwtp
