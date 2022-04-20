@@ -9,7 +9,6 @@ from . import schemas
 from .dependencies import get_db
 from .routers import attributes
 
-models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
