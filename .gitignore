@@ -9,6 +9,8 @@ intermediate_data/
 *.aux.xml
 *.tar.xz
 *.bak
+etl/vector/*.txt
+etl/*_test.csv
 public/*.csv
 public/**/*.csv
 .snakemake

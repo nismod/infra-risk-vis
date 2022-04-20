@@ -15,6 +15,8 @@ pygeos = "*"
 geopandas = "*"
 setuptools = "*"
 backend = {editable = true, path = "."}
+tqdm = "*"
+pyarrow = "*"
 
 [dev-packages]
 black = "*"

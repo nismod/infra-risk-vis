@@ -18,16 +18,18 @@ Outline of dependencies:
   `libgdal-dev libgeos-dev libpq-dev libproj-dev`
 
 Using `pipenv`:
-- run `pipenv install --dev` to install into dev environment
-- run `pipenv run ...` to run individual commands within the environment:
-  - `pipenv run python` for a REPL
-  - `pipenv run snakemake -s ../etl/Snakefile --cores 1` for snakemake
-  - `pipenv run uvicorn backend.app.main:app --host locahost --port 8888`
-    for the API server
+- run `pipenv install --dev` to install python packages
 - run `pipenv shell` to drop into a shell within the environment
+  - then move to `../etl` to run snakemake and still import database connection
+    and model classes from this package
+- or `pipenv run ...` to run individual commands within the environment:
+  - `pipenv run python` for a REPL
+  - `pipenv run psql` to connect to the database
+  - `pipenv run uvicorn backend.app.main:app --host localhost --port 8888`
+    for the API server
 
 Environment variables:
-- can use `.env` to define environment variables, `pipenv` will load them
-  automatically. Use
-  [`PG*`](https://www.postgresql.org/docs/current/libpq-envars.html) to define
-  database connection details. See `.env.example` for an example.
+- use `.env` to define environment variables, `pipenv` will load them
+  automatically
+- use [`PG*`](https://www.postgresql.org/docs/current/libpq-envars.html) to
+  define database connection details. See `.env.example` for an example
