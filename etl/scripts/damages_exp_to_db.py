@@ -36,8 +36,7 @@ def yield_expected_damages(expected_fname):
 
 
 def parse_exp_damage_batch(batch):
-    """Parse a parquet (arrow) row batch to pandas
-    """
+    """Parse a parquet (arrow) row batch to pandas"""
     data = batch.to_pandas()
     # parquet files come in "fat" format, with string column names representing
     # damage type, defended status, and min/mean/max suffix
@@ -64,7 +63,7 @@ def parse_exp_damage_batch(batch):
     if "protection_standard" not in batch.schema.names:
         data["protection_standard"] = 0
     else:
-        data.loc[data.defended == 'undefended', 'protection_standard'] = 0
+        data.loc[data.defended == "undefended", "protection_standard"] = 0
 
     # pivot back up so we end with a row per uid, hazard etc. (see index columns below)
     # and columns for each damage type, each with min/mean/max
@@ -83,8 +82,12 @@ def parse_exp_damage_batch(batch):
     # ensure all columns are present - may be missing in case the data didn't
     # have any non-zero values in this batch
     expected_columns = [
-        'ead_amin', 'ead_mean', 'ead_amax',
-        'eael_amin', 'eael_mean', 'eael_amax',
+        "ead_amin",
+        "ead_mean",
+        "ead_amax",
+        "eael_amin",
+        "eael_mean",
+        "eael_amax",
     ]
     ensure_columns(data, expected_columns)
 
@@ -112,9 +115,7 @@ if __name__ == "__main__":
 
     db: Session
     with SessionLocal() as db:
-        for i, damage_exp in enumerate(
-            tqdm(damage_exp, desc=f"{layer}_exp")
-        ):
+        for i, damage_exp in enumerate(tqdm(damage_exp, desc=f"{layer}_exp")):
             db.add(damage_exp)
             if i % 1000 == 0:
                 db.commit()

@@ -47,9 +47,13 @@ def yield_return_period_damages(exposure_fname, damage_fname, loss_fname):
 
             # in case of data not having non-zero values in this batch
             expected_columns = [
-                'damage_amin', 'damage_mean', 'damage_amax',
-                'loss_amin', 'loss_mean', 'loss_amax',
-                'exposure'
+                "damage_amin",
+                "damage_mean",
+                "damage_amax",
+                "loss_amin",
+                "loss_mean",
+                "loss_amax",
+                "exposure",
             ]
             ensure_columns(batch_df, expected_columns)
 
@@ -73,8 +77,7 @@ def yield_return_period_damages(exposure_fname, damage_fname, loss_fname):
 
 
 def parse_rp_damage_batch(batch):
-    """Parse a parquet (arrow) row batch to pandas
-    """
+    """Parse a parquet (arrow) row batch to pandas"""
     data = batch.to_pandas()
     data_cols = [c for c in batch.schema.names if "rp" in c]
 
@@ -121,15 +124,11 @@ if __name__ == "__main__":
         print("Expected to run from snakemake")
         exit()
 
-    damage_rps = yield_return_period_damages(
-        exposure, damage, loss
-    )
+    damage_rps = yield_return_period_damages(exposure, damage, loss)
 
     db: Session
     with SessionLocal() as db:
-        for i, damage_rp in enumerate(
-            tqdm(damage_rps, desc=f"{layer}_rp")
-        ):
+        for i, damage_rp in enumerate(tqdm(damage_rps, desc=f"{layer}_rp")):
             db.add(damage_rp)
             if i % 10000 == 0:
                 db.commit()

@@ -110,7 +110,7 @@ if __name__ == "__main__":
     try:
         layer = snakemake.wildcards.layer
         output = snakemake.output
-        analysis_data_dir = snakemake.config['analysis_data_dir']
+        analysis_data_dir = snakemake.config["analysis_data_dir"]
 
         network_layers = pandas.read_csv(snakemake.config["network_layers"])
         network_tilelayers = pandas.read_csv(snakemake.config["network_tilelayers"])
@@ -127,9 +127,7 @@ if __name__ == "__main__":
         db.execute(delete(Feature).where(Feature.layer.in_(tilelayers)))
         db.commit()
 
-        for i, feature in tqdm(
-            enumerate(yield_features(layer)), total=layer["count"]
-        ):
+        for i, feature in tqdm(enumerate(yield_features(layer)), total=layer["count"]):
             db.add(feature)
             if i % 1000 == 0:
                 db.commit()
@@ -137,5 +135,7 @@ if __name__ == "__main__":
 
     with open(str(output), "w") as fh:
         fh.write(f"Loaded to database.\n\n")
-        fh.write(f"From:\n{get_network_layer_path(layer, analysis_data_dir)}|{layer.gpkg_layer}\n\n")
+        fh.write(
+            f"From:\n{get_network_layer_path(layer, analysis_data_dir)}|{layer.gpkg_layer}\n\n"
+        )
         fh.write(f"Details:\n{str(layer)}\n")
