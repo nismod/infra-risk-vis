@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+import geopandas
 import pandas
 
 
@@ -111,6 +112,80 @@ rule geojsonseq_to_vector_tiles:
             + options
             + ["--force", f"{input}"]
         )
+
+rule extract_regions:
+    input:
+        population=f"{config['analysis_data_dir']}/processed_data/population/population.gpkg",
+        boundaries=f"{config['analysis_data_dir']}/processed_data/boundaries/admin_boundaries.gpkg",
+    output:
+        adm1="regions/regions_parish.geojsonl",
+        adm3="regions/regions_enumeration.geojsonl",
+    run:
+        adm3 = geopandas.read_file(str(input.population), layer="admin3")
+        adm3.PARISH = adm3.PARISH.str.replace(" ", "")
+        adm3.PARISH = adm3.PARISH.str.replace(".", ". ")
+        adm3.PARISH = adm3.PARISH.str.title()
+        adm3["population_density_per_km2"] = adm3.population / (adm3.geometry.area * 1e-6)
+        adm3 = adm3.to_crs(epsg=4326)
+        adm3.to_file(output.adm3, driver="GeoJSONSeq", index=False)
+
+        adm1_pop = adm3[['PARISH', 'population']].groupby('PARISH').sum()
+        adm1 = geopandas.read_file(str(input.boundaries), layer="admin1")
+        adm1 = adm1.set_index('PARISH').join(adm1_pop)
+        adm1["population_density_per_km2"] = adm1.population / (adm1.geometry.area * 1e-6)
+        adm1 = adm1.to_crs(epsg=4326).reset_index()
+        adm1.to_file(output.adm1, driver="GeoJSONSeq", index=False)
+
+
+rule region_labels:
+    input:
+        "regions/regions_{layer}.geojsonl"
+    output:
+        "regions/regions_{layer}_labels.geojsonl"
+    shell:
+        """
+        cat {input} | geojson-polygon-labels > {output} \
+            --ndjson \
+            --label=polylabel \
+            --style=largest \
+            --include-minzoom=9-16 \
+            --include-area \
+            --include-bbox
+        """
+
+
+rule region_mbtiles:
+    input:
+        "regions/{layer}.geojsonl"
+    output:
+        "regions/{layer}.mbtiles"
+    shell:
+        """
+        tippecanoe \
+            --generate-ids \
+            --read-parallel \
+            --output="{output}" \
+            --layer={wildcards.layer} \
+            --force \
+            {input}
+        """
+
+
+rule all_region_mbtiles:
+    input:
+        "regions/regions_parish.mbtiles",
+        "regions/regions_parish_labels.mbtiles",
+        "regions/regions_enumeration.mbtiles",
+        "regions/regions_enumeration_labels.mbtiles",
+    output:
+        "../tileserver/vector/data/regions_parish.mbtiles",
+        "../tileserver/vector/data/regions_parish_labels.mbtiles",
+        "../tileserver/vector/data/regions_enumeration.mbtiles",
+        "../tileserver/vector/data/regions_enumeration_labels.mbtiles",
+    shell:
+        """
+        mv regions/regions_*.mbtiles ../tileserver/vector/data/
+        """
 
 
 rule tileserver_vector_config:

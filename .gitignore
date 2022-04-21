@@ -12,6 +12,7 @@ intermediate_data/
 etl/*_test.csv
 etl/logs
 etl/vector
+etl/regions
 etl/config_local.yml
 public/*.csv
 public/**/*.csv
