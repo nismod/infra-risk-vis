@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 import pandas
@@ -107,6 +108,36 @@ rule geojsonseq_to_vector_tiles:
             + options
             + ["--force", f"{input}"]
         )
+
+
+rule tileserver_vector_config:
+    input:
+        expand("../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer),
+        "../tileserver/vector/data/regions_parish.mbtiles",
+        "../tileserver/vector/data/regions_parish_labels.mbtiles",
+        "../tileserver/vector/data/regions_enumeration.mbtiles",
+        "../tileserver/vector/data/regions_enumeration_labels.mbtiles",
+    output:
+        "../tileserver/vector/config.json"
+    run:
+        with open(str(output), 'w') as fh:
+            tileserver_vector_config = {
+                "options": {
+                    "paths": {
+                        "root": "",
+                        "fonts": "fonts",
+                        "mbtiles": "data"
+                    }
+                },
+                "styles": {}
+            }
+            data = {}
+            for fname in sorted(input):
+                fname = os.path.basename(fname)
+                data[fname.replace(".mbtiles","")] = {"mbtiles": fname}
+            tileserver_vector_config["data"] = data
+
+            json.dump(tileserver_vector_config, fh, indent=2)
 
 
 rule raster_zero_nodata:
