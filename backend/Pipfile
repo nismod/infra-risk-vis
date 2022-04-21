@@ -10,9 +10,19 @@ uvicorn = "*"
 psycopg2 = "*"
 shapely = "*"
 fastapi-pagination = "*"
+snakemake = "*"
+pandas = "*"
+pygeos = "*"
+geopandas = "*"
+setuptools = "*"
+backend = {editable = true, path = "."}
+tqdm = "*"
+pyarrow = "*"
+ujson = "*"
 
 [dev-packages]
 black = "*"
+snakefmt = "*"
 
 [requires]
 python_version = "3.10"

@@ -6,7 +6,6 @@ from backend.db.database import engine
 
 from .routers import attributes, features
 
-models.Base.metadata.create_all(bind=engine)
 
 
 def custom_generate_unique_id(route: APIRoute):
