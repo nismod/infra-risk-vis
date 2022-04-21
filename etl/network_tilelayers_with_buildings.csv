@@ -49,3 +49,11 @@ energy_nodes,power,generation,gas,point,elec_nodes_gas
 energy_nodes,power,generation,hydro,point,elec_nodes_hydro
 energy_nodes,power,generation,solar,point,elec_nodes_solar
 energy_nodes,power,generation,wind,point,elec_nodes_wind
+buildings,buildings,buildings,Commercial,polygon,buildings_commercial
+buildings,buildings,buildings,Industrial,polygon,buildings_industrial
+buildings,buildings,buildings,Institutional,polygon,buildings_institutional
+buildings,buildings,buildings,Mixed Use,polygon,buildings_mixed
+buildings,buildings,buildings,Other,polygon,buildings_other
+buildings,buildings,buildings,Recreation,polygon,buildings_recreation
+buildings,buildings,buildings,Residential,polygon,buildings_residential
+buildings,buildings,buildings,Resort,polygon,buildings_resort
