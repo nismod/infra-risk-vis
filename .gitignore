@@ -18,7 +18,8 @@ public/**/*.csv
 .snakemake
 
 # local config
-.env
+.env*
+!.env.example
 TODO
 NOTES
 venv
