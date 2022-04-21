@@ -4,7 +4,7 @@
 
 import type { DamageType } from './DamageType';
 
-export type Damage = {
+export type DamageOut = {
     hazard: string;
     rcp: string;
     epoch: string;

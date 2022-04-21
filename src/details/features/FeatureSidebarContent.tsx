@@ -113,7 +113,7 @@ function useFeatureDetails(featureId: number) {
     setError(null);
     if (featureId) {
       apiClient.features
-        .featuresReadFeature(featureId)
+        .featuresReadFeature({ featureId })
         .then((featureDetails) => {
           setFeatureDetails(featureDetails);
           setLoading(false);

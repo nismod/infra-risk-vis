@@ -2,7 +2,6 @@ import { Download } from '@mui/icons-material';
 import { IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { HAZARD_DOMAINS } from 'config/hazards/domains';
-import { Damage } from 'lib/api-client';
 import { downloadFile, titleCase, unique } from 'lib/helpers';
 import { useSelect } from 'lib/hooks/use-select';
 import _ from 'lodash';
@@ -28,6 +27,15 @@ const DAMAGES_ORDERING = (() => {
 
 function getDamageKey({ hazard, rcp, epoch }) {
   return `${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+}
+
+interface Damage {
+  hazard: string;
+  rcp: string;
+  epoch: number;
+  mean: number;
+  damage_type: string;
+  protection_standard: number;
 }
 
 function getDamageObject({ hazard, rcp, epoch, mean }: Damage) {

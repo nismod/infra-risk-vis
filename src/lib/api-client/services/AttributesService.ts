@@ -12,17 +12,18 @@ export class AttributesService {
 
     /**
      * Read Damages
-     * @param layer
-     * @param hazard
-     * @param rcp
-     * @param epoch
-     * @param damageType
-     * @param protectionStandard
-     * @param requestBody
      * @returns number Successful Response
      * @throws ApiError
      */
-    public attributesReadDamages(
+    public attributesReadDamages({
+        layer,
+        hazard,
+        rcp,
+        epoch,
+        damageType,
+        protectionStandard,
+        requestBody,
+    }: {
         layer: string,
         hazard: string,
         rcp: string,
@@ -30,7 +31,7 @@ export class AttributesService {
         damageType: DamageType,
         protectionStandard: number,
         requestBody: Array<number>,
-    ): CancelablePromise<Record<string, number>> {
+    }): CancelablePromise<Record<string, number>> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/attributes/damages',
