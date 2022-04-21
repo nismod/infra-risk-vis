@@ -9,6 +9,7 @@ import pandas
 #    snakemake --cores=1 --configfile=config_local.yml all
 configfile: "config.yml"
 
+
 # Read further configuration data from CSV
 hazard_layers = pandas.read_csv(config["hazard_layers"])
 network_layers = pandas.read_csv(config["network_layers"])
@@ -24,7 +25,9 @@ wildcard_constraints:
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
-        expand("../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer)
+        expand(
+            "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
+        ),
         # expand("../tileserver/raster/data/{slug}.tif", slug=hazard_layers.slug)
 
 
@@ -112,29 +115,25 @@ rule geojsonseq_to_vector_tiles:
 
 rule tileserver_vector_config:
     input:
-        expand("../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer),
+        expand(
+            "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
+        ),
         "../tileserver/vector/data/regions_parish.mbtiles",
         "../tileserver/vector/data/regions_parish_labels.mbtiles",
         "../tileserver/vector/data/regions_enumeration.mbtiles",
         "../tileserver/vector/data/regions_enumeration_labels.mbtiles",
     output:
-        "../tileserver/vector/config.json"
+        "../tileserver/vector/config.json",
     run:
-        with open(str(output), 'w') as fh:
+        with open(str(output), "w") as fh:
             tileserver_vector_config = {
-                "options": {
-                    "paths": {
-                        "root": "",
-                        "fonts": "fonts",
-                        "mbtiles": "data"
-                    }
-                },
-                "styles": {}
+                "options": {"paths": {"root": "", "fonts": "fonts", "mbtiles": "data"}},
+                "styles": {},
             }
             data = {}
             for fname in sorted(input):
                 fname = os.path.basename(fname)
-                data[fname.replace(".mbtiles","")] = {"mbtiles": fname}
+                data[fname.replace(".mbtiles", "")] = {"mbtiles": fname}
             tileserver_vector_config["data"] = data
 
             json.dump(tileserver_vector_config, fh, indent=2)
