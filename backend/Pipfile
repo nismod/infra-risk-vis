@@ -17,6 +17,7 @@ setuptools = "*"
 backend = {editable = true, path = "."}
 tqdm = "*"
 pyarrow = "*"
+ujson = "*"
 
 [dev-packages]
 black = "*"
