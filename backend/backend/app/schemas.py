@@ -18,7 +18,11 @@ class DamageType(str, Enum):
     combined = "combined"
 
 
-class DamageParams(BaseModel):
+class FieldParams(BaseModel):
+    pass
+
+
+class DamageParams(FieldParams):
     hazard: str
     rcp: str
     epoch: str
