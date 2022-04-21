@@ -4,13 +4,14 @@ import fiona
 import geopandas
 import pandas
 import pyarrow.parquet as pq
+import ujson as json
 
 from geoalchemy2.shape import to_shape
 from pyproj import CRS, Transformer
 from shapely.geometry import shape, mapping
 from shapely.ops import transform
 from sqlalchemy import delete
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from tqdm import tqdm
 
 from backend.db.database import SessionLocal
@@ -42,10 +43,10 @@ wildcard_constraints:
 
 
 # Run all file-base jobs, after load_to_database
-# rule all:
-#     input:
-#         expand("../tileserver/vector/data/{layer}.mbtiles", layer=network_layers.output_layer_name)
-#         expand("../tileserver/raster/data/{slug}.tif", slug=hazard_layers.slug)
+rule all:
+    input:
+        expand("../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer)
+        # expand("../tileserver/raster/data/{slug}.tif", slug=hazard_layers.slug)
 
 
 # Prerequisite, not fully traced by file dependency
@@ -312,18 +313,15 @@ def parse_exp_damage_batch(batch):
     else:
         data.loc[data.defended == 'undefended', 'protection_standard'] = 0
 
-    try:
-        data = (
-            data.drop(columns="variable")
-            .pivot(
-                index=["uid", "hazard", "rcp", "epoch", "protection_standard"],
-                columns=["damage", "var"],
-                values="value",
-            )
-            .fillna(0)
+    data = (
+        data.drop(columns="variable")
+        .pivot(
+            index=["uid", "hazard", "rcp", "epoch", "protection_standard"],
+            columns=["damage", "var"],
+            values="value",
         )
-    except ValueError:
-        breakpoint()
+        .fillna(0)
+    )
 
     data.columns = [f"{var.lower()}_{stat}" for var, stat in data.columns]
 
@@ -346,7 +344,7 @@ def ensure_columns(data, expected_columns):
 
 def yield_expected_damages(expected_fname):
     pf = pq.ParquetFile(expected_fname)
-    batch_size = 1000
+    batch_size = 100
     batches = pf.iter_batches(batch_size)
 
     for batch in batches:
@@ -389,19 +387,18 @@ rule damages_exp_to_db:
             fh.write(f"From:\n{input}\n\n")
 
 
-def make_feature_properties(feature: Feature):
+def feature_as_geojson(feature: Feature):
     properties = {
         "asset_id": feature.properties["asset_id"],
         "asset_type": feature.properties["asset_type"],
     }
-    for damage in feature.damages:
+    # sort so any higher protection standard will overwrite
+    damages = sorted(feature.damages_expected, key=attrgetter('protection_standard'))
+    for damage in damages:
         key = f"{damage.hazard}__rcp_{damage.rcp}__epoch_{damage.epoch}__conf_None"
-        properties[key] = damage.EAD_undefended_mean
-    return properties
+        properties[f"ead__{key}"] = damage.ead_mean
+        properties[f"eael__{key}"] = damage.eael_mean
 
-
-def feature_as_geojson(feature: Feature):
-    properties = make_feature_properties(feature)
     return {
         "type": "Feature",
         "id": feature.id,
@@ -413,8 +410,15 @@ def feature_as_geojson(feature: Feature):
 def yield_features_for_layer(layer: str):
     db: Session
     with SessionLocal() as db:
-        for feature in db.query(Feature).filter(Feature.layer == layer):
-            yield feature
+        query = (
+            db.query(Feature)
+            .options(selectinload(Feature.damages_expected))
+            .filter(Feature.layer == layer)
+            .execution_options(yield_per=1000)
+        )
+        for partition in db.execute(query).partitions(1000):
+            for (feature,) in partition:
+                yield feature
 
 
 rule db_to_geojsonseq:
@@ -424,9 +428,9 @@ rule db_to_geojsonseq:
         "vector/{layer}.geojsonl",
     run:
         with open(str(output), "w") as fh:
-            for feature in yield_features_for_layer(wildcards.layer):
+            for feature in tqdm(yield_features_for_layer(wildcards.layer)):
                 geojson = feature_as_geojson(feature)
-                fh.write(json.dumps(geojson, indent=None))
+                json.dump(geojson, fh, indent=0, ensure_ascii=False)
                 fh.write("\n")
 
 
