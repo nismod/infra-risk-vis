@@ -12,6 +12,7 @@ import { theme } from './theme';
 
 import './index.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { AssetListPage } from 'pages/AssetListPage';
 
 export const App = () => {
   return (
@@ -33,6 +34,10 @@ export const App = () => {
               <Route path="/data" exact>
                 <Toolbar /> {/* Prevents app bar from concealing content*/}
                 <DataPage />
+              </Route>
+              <Route path="/assets" exact>
+                <Toolbar /> {/* Prevents app bar from concealing content*/}
+                <AssetListPage />
               </Route>
             </Switch>
           </Router>
