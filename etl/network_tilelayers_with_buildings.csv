@@ -37,8 +37,8 @@ water_wastewater_nodes,water,wastewater,WW Sump,point,water_waste_nodes_sump
 water_wastewater_nodes,water,wastewater,WW Pump Station,point,water_waste_nodes_pump
 water_wastewater_nodes,water,wastewater,WW Relift Station,point,water_waste_nodes_relift
 water_wastewater_nodes,water,wastewater,WW Treatment Plant,point,water_waste_nodes_wwtp
-water_pipelines,water,wastewater,sewer_gravity,line,water_waste_edges
-water_pipelines,water,wastewater,sewer_pressure,line,water_waste_edges
+water_pipelines,water,wastewater,sewer_gravity,line,water_waste_sewer_gravity
+water_pipelines,water,wastewater,sewer_pressure,line,water_waste_sewer_pressure
 energy_edges,power,transmission,High Voltage,line,elec_edges_high
 energy_edges,power,transmission,Low Voltage,line,elec_edges_low
 energy_nodes,power,transmission,pole,point,elec_nodes_pole

@@ -41,9 +41,20 @@ rule load_to_database:
         expand("logs/damages_exp/{layer}.txt", layer=damage_exp_files.ref),
 
 
+rule feature_layers_to_db:
+    input:
+        config["network_tilelayers"],
+    output:
+        "logs/feature_layers.txt",
+    script:
+        "./scripts/feature_layers_to_db.py"
+
+
 rule networks_to_db:
     """Read from source directory to database
     """
+    input:
+        "logs/feature_layers.txt",
     output:
         "logs/network/{layer}.txt",
     script:
