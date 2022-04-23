@@ -18,8 +18,8 @@ export function titleCase(str: string) {
   return splitStr.join(' ');
 }
 
-export function numFormat(n: number, maximumSignificantDigits: number=3) {
-  return n.toLocaleString(undefined, { maximumSignificantDigits })
+export function numFormat(n: number, maximumSignificantDigits: number = 3) {
+  return n == undefined ? `${n}` : n.toLocaleString(undefined, { maximumSignificantDigits });
 }
 
 export function unique<T>(arr: T[]) {
