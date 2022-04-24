@@ -13,7 +13,7 @@ export const showDamagesState = selector({
 
 export const damageSourceState = atom({
   key: 'damageSourceState',
-  default: 'total-damages',
+  default: 'all',
 });
 
 export const damageTypeState = atom({
@@ -24,7 +24,7 @@ export const damageTypeState = atom({
 export const damageSourceStateEffect = ({ get, set }, damageSource) => {
   syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource);
 
-  if (damageSource !== 'total-damages') {
+  if (damageSource !== 'all') {
     const damageSourceReturnPeriodDomain = get(dataParamOptionsState({ group: damageSource, param: 'returnPeriod' }));
     const topReturnPeriod = damageSourceReturnPeriodDomain[damageSourceReturnPeriodDomain.length - 1];
 

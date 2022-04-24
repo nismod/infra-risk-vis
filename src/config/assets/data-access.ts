@@ -26,7 +26,7 @@ export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
       // load indirect damages from API
       return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
     }
-    if (hazard === 'total-damages') {
+    if (hazard === 'all') {
       return totalDamagesProperty(fieldParams);
     }
     return featureProperty(getDamageKey(hazard, rcp, epoch));

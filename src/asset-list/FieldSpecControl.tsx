@@ -42,7 +42,7 @@ function FieldParamsControl({ field, fieldParams, onFieldParams }) {
           value={fieldParams.hazard}
           onChange={(value) => handleParamChange('hazard', value)}
           options={[
-            { value: 'total-damages', label: 'All Hazards' },
+            { value: 'all', label: 'All Hazards' },
             { value: 'fluvial', label: 'River Flooding' },
             { value: 'surface', label: 'Surface Flooding' },
             { value: 'coastal', label: 'Coastal Flooding' },

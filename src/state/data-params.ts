@@ -13,7 +13,7 @@ export type DataParamParam = Readonly<{
 
 export const dataParamConfig: Record<string, DataParamGroupConfig> = {
   ...HAZARD_DOMAINS,
-  'total-damages': totalDamagesConfig,
+  all: totalDamagesConfig,
 };
 
 export const dataParamNamesByGroup = _.mapValues(dataParamConfig, (groupConfig) => _.keys(groupConfig.paramDefaults));

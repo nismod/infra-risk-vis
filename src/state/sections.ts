@@ -26,7 +26,7 @@ export const networksStyleStateEffect: StateEffect<string> = ({ get, set }, styl
   if (style === 'damages') {
     const hazardSelection = getHazardSelectionAggregate({ get }, HAZARDS_UI_ORDER);
     const visibleHazards = truthyKeys(hazardSelection);
-    const defaultDamageSource = visibleHazards[0] ?? 'total-damages';
+    const defaultDamageSource = visibleHazards[0] ?? 'all';
 
     set(damageSourceState, defaultDamageSource);
   }

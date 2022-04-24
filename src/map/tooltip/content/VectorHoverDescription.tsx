@@ -13,7 +13,7 @@ import { damageMapStyleParamsState, damagesFieldState } from 'state/damage-mappi
 import { ColorBox } from './ColorBox';
 
 function getSourceLabel(eadSource: string) {
-  if (eadSource === 'total-damages') return 'Total';
+  if (eadSource === 'all') return 'All Hazards';
 
   return HAZARDS_METADATA[eadSource].label;
 }
