@@ -39,27 +39,30 @@ export class FeaturesService {
      * @throws ApiError
      */
     public featuresReadSortedFeatures({
-        field,
+        fieldGroup,
         layer,
-        fieldParams,
+        field,
+        dimensions,
         page = 1,
         size = 50,
     }: {
-        field: string,
+        fieldGroup: string,
         layer: string,
-        fieldParams: string,
+        field: string,
+        dimensions: string,
         page?: number,
         size?: number,
     }): CancelablePromise<Page_FeatureListItemOut_float__> {
         return this.httpRequest.request({
             method: 'GET',
-            url: '/features/sorted-by/{field}',
+            url: '/features/sorted-by/{field_group}',
             path: {
-                'field': field,
+                'field_group': fieldGroup,
             },
             query: {
                 'layer': layer,
-                'field_params': fieldParams,
+                'field': field,
+                'dimensions': dimensions,
                 'page': page,
                 'size': size,
             },
