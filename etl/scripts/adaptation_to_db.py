@@ -38,11 +38,16 @@ def parse_adaptation(data):
 
     data = data.rename(
         columns={
-            "flood_protection_level": "protection_level",
             "flood_depth_protection_level": "protection_level",
             "cyclone_damage_curve_reduction": "protection_level",
         }
     )
+    # corner case for handling protection against "all" floods - set depth to 999
+    if "flood_protection_level" in data.columns:
+        data.loc[
+            data.flood_protection_level == "All", "flood_depth_protection_level"
+        ] = 999
+
     id_vars = ["uid", "adaptation_option", "protection_level", "adapt_cost_npv"]
 
     # melt to long format
@@ -98,7 +103,7 @@ def parse_adaptation(data):
 def ensure_columns(data, expected_columns):
     for col in expected_columns:
         if col not in data.columns:
-            logging.warn(f"Filling expected column '{col}' with zero")
+            logging.warning(f"Filling expected column '{col}' with zero")
             data[col] = 0
     return data
 
