@@ -136,6 +136,7 @@ rule geojsonseq_to_vector_tiles:
             + ["--force", f"{input}"]
         )
 
+
 rule extract_regions:
     input:
         population=f"{config['analysis_data_dir']}/processed_data/population/population.gpkg",
@@ -148,23 +149,27 @@ rule extract_regions:
         adm3.PARISH = adm3.PARISH.str.replace(" ", "")
         adm3.PARISH = adm3.PARISH.str.replace(".", ". ")
         adm3.PARISH = adm3.PARISH.str.title()
-        adm3["population_density_per_km2"] = adm3.population / (adm3.geometry.area * 1e-6)
+        adm3["population_density_per_km2"] = adm3.population / (
+            adm3.geometry.area * 1e-6
+        )
         adm3 = adm3.to_crs(epsg=4326)
         adm3.to_file(output.adm3, driver="GeoJSONSeq", index=False)
 
-        adm1_pop = adm3[['PARISH', 'population']].groupby('PARISH').sum()
+        adm1_pop = adm3[["PARISH", "population"]].groupby("PARISH").sum()
         adm1 = geopandas.read_file(str(input.boundaries), layer="admin1")
-        adm1 = adm1.set_index('PARISH').join(adm1_pop)
-        adm1["population_density_per_km2"] = adm1.population / (adm1.geometry.area * 1e-6)
+        adm1 = adm1.set_index("PARISH").join(adm1_pop)
+        adm1["population_density_per_km2"] = adm1.population / (
+            adm1.geometry.area * 1e-6
+        )
         adm1 = adm1.to_crs(epsg=4326).reset_index()
         adm1.to_file(output.adm1, driver="GeoJSONSeq", index=False)
 
 
 rule region_labels:
     input:
-        "regions/regions_{layer}.geojsonl"
+        "regions/regions_{layer}.geojsonl",
     output:
-        "regions/regions_{layer}_labels.geojsonl"
+        "regions/regions_{layer}_labels.geojsonl",
     shell:
         """
         cat {input} | geojson-polygon-labels > {output} \
@@ -179,9 +184,9 @@ rule region_labels:
 
 rule region_mbtiles:
     input:
-        "regions/{layer}.geojsonl"
+        "regions/{layer}.geojsonl",
     output:
-        "regions/{layer}.mbtiles"
+        "regions/{layer}.mbtiles",
     shell:
         """
         tippecanoe \
