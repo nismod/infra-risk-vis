@@ -45,7 +45,7 @@ def parse_adaptation(data):
     # corner case for handling protection against "all" floods - set depth to 999
     if "flood_protection_level" in data.columns:
         data.loc[
-            data.flood_protection_level == "All", "flood_depth_protection_level"
+            data.flood_protection_level == "All", "protection_level"
         ] = 999
 
     id_vars = ["uid", "adaptation_option", "protection_level", "adapt_cost_npv"]
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     db: Session
     with SessionLocal() as db:
         for i, damage_npv in enumerate(
-            tqdm(adaptation, desc=f"{layer_name}_adaptation")
+            tqdm(adaptation, desc=f"{layer_name}_adaptation", total=len(adaptation_df))
         ):
             db.add(damage_npv)
             if i % 1000 == 0:
