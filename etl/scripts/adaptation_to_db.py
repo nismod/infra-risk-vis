@@ -50,6 +50,10 @@ def parse_adaptation(data):
 
     id_vars = ["uid", "adaptation_option", "protection_level", "adapt_cost_npv"]
 
+    if data.duplicated(subset=id_vars).sum() > 0:
+        logging.warning("Dropping duplicated adaptation options")
+        data = data.drop_duplicates(subset=id_vars, keep='first')
+
     # melt to long format
     data = (
         data.melt(id_vars=id_vars, value_vars=data_cols)
