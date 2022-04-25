@@ -17,6 +17,7 @@ network_layers = pandas.read_csv(config["network_layers"])
 network_tilelayers = pandas.read_csv(config["network_tilelayers"])
 damage_rp_files = pandas.read_csv(config["damage_rp_files"])
 damage_exp_files = pandas.read_csv(config["damage_exp_files"])
+adaptation_files = pandas.read_csv(config["adaptation_files"])
 
 
 wildcard_constraints:
@@ -40,6 +41,12 @@ rule load_to_database:
         expand("logs/damages_rp/{layer}.txt", layer=damage_rp_files.ref),
         expand("logs/damages_exp/{layer}.txt", layer=damage_exp_files.ref),
         expand("logs/damages_npv/{layer}.txt", layer=network_layers.damage_ref),
+        expand(
+            "logs/adaptation/{hazard}/{layer}.txt",
+            zip,
+            hazard=adaptation_files.hazard,
+            layer=adaptation_files.damage_ref,
+        ),
 
 
 rule feature_layers_to_db:
@@ -91,6 +98,15 @@ rule damages_npv_to_db:
     script:
         "./scripts/damages_npv_to_db.py"
 
+
+rule adaptation_to_db:
+    input:
+        avoided_risk=f"{config['analysis_data_dir']}/results/adaptation_benefits_costs_bcr/{{hazard}}_{{layer}}_adaptation_costs_avoided_EAD_EAEL.csv",
+        uid=f"{config['analysis_data_dir']}/processed_data/networks_uids/id_lookups/{{layer}}_ids.parquet",
+    output:
+        "logs/adaptation/{hazard}/{layer}.txt",
+    script:
+        "./scripts/adaptation_to_db.py"
 
 
 rule db_to_geojsonseq:
