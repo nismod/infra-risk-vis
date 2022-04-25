@@ -86,9 +86,9 @@ const DamagesLegend = ({ styleParams }) => {
   const { scale, range } = VECTOR_COLOR_MAPS[colorScheme];
   const [rangeMin, rangeMax] = range;
 
-  const {
-    fieldParams: { damage_type },
-  } = colorField;
+  const { field } = colorField;
+
+  const isDirect = field.startsWith('ead') || field.startsWith('damages');
 
   const colorMapValues = useMemo(() => {
     const scaleFn = d3Scale.scaleSequential([rangeMin, rangeMax], scale);
@@ -99,7 +99,7 @@ const DamagesLegend = ({ styleParams }) => {
   const getValueLabel = useCallback((value: number) => `${value.toLocaleString()}$`, []);
 
   // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
-  const label = damage_type === 'direct' ? 'Direct Damages' : 'Economic Losses';
+  const label = isDirect ? 'Direct Damages' : 'Economic Losses';
 
   return <GradientLegend label={label} range={range} colorMapValues={colorMapValues} getValueLabel={getValueLabel} />;
 };

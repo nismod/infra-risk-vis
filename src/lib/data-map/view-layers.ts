@@ -2,8 +2,9 @@ import { DataLoader } from 'lib/data-loader/data-loader';
 import { InteractionTarget } from './interactions/use-interactions';
 
 export interface FieldSpec {
+  fieldGroup: string;
+  fieldDimensions?: any;
   field: string;
-  fieldParams?: any;
 }
 
 export interface ColorMap {

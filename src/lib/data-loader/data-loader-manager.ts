@@ -1,10 +1,9 @@
+import stringify from 'json-stable-stringify';
 import { FieldSpec } from 'lib/data-map/view-layers';
 import { DataLoader } from './data-loader';
 
 function getLoaderKey(layer: string, fieldSpec: FieldSpec) {
-  return `${layer}__${fieldSpec.field}__${Object.entries(fieldSpec.fieldParams)
-    .map(([k, v]) => `${k}_${v}`)
-    .join('__')}`;
+  return `${layer}__${stringify(fieldSpec)}`;
 }
 
 export class DataLoaderManager {
@@ -14,7 +13,8 @@ export class DataLoaderManager {
   public getDataLoader(layer: string, fieldSpec: FieldSpec) {
     const loaderKey = getLoaderKey(layer, fieldSpec);
     if (this.loaders[loaderKey] == null) {
-      const loader = new DataLoader(this.nextLoaderId.toString(), layer, fieldSpec.field, fieldSpec.fieldParams);
+      console.log(`Initialising data loader for ${layer} ${stringify(fieldSpec)}`);
+      const loader = new DataLoader(this.nextLoaderId.toString(), layer, fieldSpec);
       this.nextLoaderId += 1;
       this.loaders[loaderKey] = loader;
     }

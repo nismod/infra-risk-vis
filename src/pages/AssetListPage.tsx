@@ -2,6 +2,7 @@ import { Box, Stack, TablePagination, Typography } from '@mui/material';
 import { AssetTable } from 'asset-list/AssetTable';
 import { FieldSpecControl } from 'asset-list/FieldSpecControl';
 import { FeatureListItemOut_float_ } from 'lib/api-client';
+import { FieldSpec } from 'lib/data-map/view-layers';
 import { useCallback, useMemo, useState } from 'react';
 import { useSortedFeatures } from '../asset-list/use-sorted-features';
 
@@ -13,15 +14,15 @@ export const AssetListPage = () => {
 
   const sectorSpec = 'elec_edges_high'; // TODO: enable filtering by sector/subsector/asset type
 
-  const [fieldSpec, setFieldSpec] = useState({
-    field: 'damages',
-    fieldParams: {
-      damage_type: 'direct',
+  const [fieldSpec, setFieldSpec] = useState<FieldSpec>({
+    fieldGroup: 'damages_expected',
+    fieldDimensions: {
       hazard: 'cyclone',
       rcp: '4.5',
       epoch: 2050,
       protection_standard: 0,
     },
+    field: 'ead_mean',
   });
 
   const { features, pageInfo, loading, error } = useSortedFeatures(sectorSpec, fieldSpec, page, pageSize);

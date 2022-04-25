@@ -1,8 +1,9 @@
 import { damageSourceState, damageTypeState } from './damage-map';
 import { dataParamsByGroupState } from '../data-params';
 import { selector } from 'recoil';
+import { FieldSpec } from 'lib/data-map/view-layers';
 
-export const damagesFieldState = selector({
+export const damagesFieldState = selector<FieldSpec>({
   key: 'eadAccessorState',
   get: ({ get }) => {
     const damageSource = get(damageSourceState);
@@ -11,14 +12,14 @@ export const damagesFieldState = selector({
     const damageParams = get(dataParamsByGroupState(damageSource));
 
     return {
-      field: 'damages',
-      fieldParams: {
-        damage_type: damageType,
+      fieldGroup: 'damages_expected',
+      fieldDimensions: {
         hazard: damageSource,
         rcp: damageParams.rcp,
         epoch: damageParams.epoch,
         protection_standard: 0,
       },
+      field: damageType === 'direct' ? 'ead_mean' : 'eael_mean',
     };
   },
 });

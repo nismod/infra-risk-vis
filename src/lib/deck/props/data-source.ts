@@ -3,7 +3,7 @@ import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
 import { DataLoader } from 'lib/data-loader/data-loader';
 
-import { Accessor, withTriggers } from './getters';
+import { Accessor, withLoaderTriggers, withTriggers } from './getters';
 
 export const featureProperty = _.memoize(
   (field: string | Accessor<any, MapboxGeoJSONFeature>): Accessor<any, MapboxGeoJSONFeature> => {
@@ -12,5 +12,5 @@ export const featureProperty = _.memoize(
 );
 
 export function extraProperty(dataLoader: DataLoader): Accessor<any> {
-  return withTriggers((f) => dataLoader.getData(f.id), [dataLoader.id, dataLoader.updateTrigger]);
+  return withLoaderTriggers((f) => dataLoader.getData(f.id), dataLoader);
 }

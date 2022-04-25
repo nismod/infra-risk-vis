@@ -2,6 +2,7 @@ import { Download } from '@mui/icons-material';
 import { IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { HAZARD_DOMAINS } from 'config/hazards/domains';
+import { ExpectedDamage } from 'lib/api-client';
 import { downloadFile, titleCase, unique } from 'lib/helpers';
 import { useSelect } from 'lib/hooks/use-select';
 import _ from 'lodash';
@@ -29,30 +30,28 @@ function getDamageKey({ hazard, rcp, epoch }) {
   return `${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
 }
 
-interface Damage {
+interface ExpectedDamageCell {
+  key: string;
   hazard: string;
   rcp: string;
-  epoch: number;
-  mean: number;
-  damage_type: string;
-  protection_standard: number;
+  epoch: string;
+  ead: number;
 }
-
-function getDamageObject({ hazard, rcp, epoch, mean }: Damage) {
+function getExpectedDamageObject({ hazard, rcp, epoch, ead_mean }: ExpectedDamage): ExpectedDamageCell {
   return {
     key: getDamageKey({ hazard, rcp, epoch }),
     hazard,
     rcp,
     epoch: epoch.toString(),
-    ead: mean,
+    ead: ead_mean,
   };
 }
 
-function prepareDamages(damages: Damage[]) {
-  return damages.filter((d) => d.damage_type === 'direct' && d.protection_standard === 0).map(getDamageObject);
+function prepareExpectedDamages(expectedDamages: ExpectedDamage[]) {
+  return expectedDamages.filter((d) => d.protection_standard === 0).map(getExpectedDamageObject);
 }
 
-function orderDamages(damages: any[]) {
+function orderDamages(damages: ExpectedDamageCell[]) {
   const lookup = _.fromPairs(damages.map((d) => [d.key, d]));
 
   return DAMAGES_ORDERING.map(getDamageKey)
@@ -60,12 +59,12 @@ function orderDamages(damages: any[]) {
     .filter(Boolean);
 }
 
-function makeDamagesCsv(damages) {
+function makeDamagesCsv(damages: ExpectedDamageCell[]) {
   return 'hazard,rcp,epoch,ead\n' + damages.map((d) => `${d.hazard},${d.rcp},${d.epoch},${d.ead}`).join('\n');
 }
 
 export const DamagesSection = ({ fd }) => {
-  const damagesData = orderDamages(prepareDamages(fd?.damages ?? []));
+  const damagesData = orderDamages(prepareExpectedDamages(fd?.damages_expected ?? []));
 
   const hazards = useMemo(() => unique(damagesData.map((d) => d.hazard)), [damagesData]);
   const [selectedHazard, setSelectedHazard] = useSelect(hazards);

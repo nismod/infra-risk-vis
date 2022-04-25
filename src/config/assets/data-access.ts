@@ -4,32 +4,35 @@ import { extraProperty, featureProperty } from 'lib/deck/props/data-source';
 import { withTriggers } from 'lib/deck/props/getters';
 import { sumOrNone } from 'lib/helpers';
 
-function getDamageKey(hazard: string, rcp: string, epoch: number) {
-  return `${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+function getExpectedDirectDamageKey(isDirect: boolean, hazard: string, rcp: string, epoch: number) {
+  return `${isDirect ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
 }
 
 const hazardTypes = ['fluvial', 'surface', 'coastal', 'cyclone'];
 
-function totalDamagesProperty({ rcp, epoch }) {
-  const hazardProperties = hazardTypes.map((ht) => featureProperty(getDamageKey(ht, rcp, epoch)));
+function totalExpectedDirectDamagesProperty(isDirect: boolean, { rcp, epoch }) {
+  const hazardProperties = hazardTypes.map((ht) =>
+    featureProperty(getExpectedDirectDamageKey(isDirect, ht, rcp, epoch)),
+  );
 
   return withTriggers((f) => sumOrNone(hazardProperties.map((p) => p(f))), [rcp, epoch]);
 }
 
 export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
-  const { field, fieldParams } = fieldSpec;
+  const { fieldGroup, fieldDimensions, field } = fieldSpec;
 
-  if (field === 'damages') {
-    const { damage_type, hazard, rcp, epoch } = fieldParams;
+  if (fieldGroup === 'damages_expected') {
+    const { hazard, rcp, epoch } = fieldDimensions;
 
-    if (damage_type === 'indirect') {
-      // load indirect damages from API
-      return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
-    }
+    const isDirect = field.startsWith('ead_');
+
     if (hazard === 'all') {
-      return totalDamagesProperty(fieldParams);
+      return totalExpectedDirectDamagesProperty(isDirect, fieldDimensions);
     }
-    return featureProperty(getDamageKey(hazard, rcp, epoch));
+    return featureProperty(getExpectedDirectDamageKey(isDirect, hazard, rcp, epoch));
+  } else if (fieldGroup === 'damages_return_period') {
+    // return return period damages dynamically loaded from API
+    return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
   } else {
     // field other than damages - use field name as key
     return featureProperty(field);
@@ -41,9 +44,10 @@ export function assetDataAccessFunction(layer: string) {
     if (styleParams?.colorMap) {
       const { colorField } = styleParams.colorMap;
 
+      const accessor = getAssetDataAccessor(layer, colorField);
       return {
-        dataAccessor: getAssetDataAccessor(layer, colorField),
-        dataLoader: dataLoaderManager.getDataLoader(layer, colorField),
+        dataAccessor: accessor,
+        dataLoader: accessor.dataLoader,
       };
     }
   };

@@ -1,7 +1,7 @@
 import { ApiClient } from 'lib/api-client';
 import { FieldSpec } from 'lib/data-map/view-layers';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const apiClient = new ApiClient({
   BASE: 'api',
@@ -19,19 +19,20 @@ export const useSortedFeatures = (layer: string, fieldSpec: FieldSpec, page = 1,
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchFeatures = async () => {
+  const fetchFeatures = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const { field, fieldParams } = fieldSpec;
-      if (field !== 'damages') {
+      const { fieldGroup, fieldDimensions, field } = fieldSpec;
+      if (fieldGroup !== 'damages') {
         throw new Error('Only damages field is supported');
       }
       const response = await apiClient.features.featuresReadSortedFeatures({
         layer,
+        fieldGroup,
         field,
-        fieldParams: JSON.stringify(fieldParams),
+        dimensions: JSON.stringify(fieldDimensions),
         page,
         size: pageSize,
       });
@@ -43,11 +44,11 @@ export const useSortedFeatures = (layer: string, fieldSpec: FieldSpec, page = 1,
     }
 
     setLoading(false);
-  };
+  }, [layer, fieldSpec, page, pageSize]);
 
   useEffect(() => {
     fetchFeatures();
-  }, [fieldSpec, page, pageSize]);
+  }, [fetchFeatures, fieldSpec, page, pageSize]);
 
   return {
     features,
