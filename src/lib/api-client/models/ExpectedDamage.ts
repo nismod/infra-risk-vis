@@ -12,4 +12,5 @@ export type ExpectedDamage = {
     hazard: string;
     rcp: string;
     epoch: string;
+    protection_standard: number;
 };

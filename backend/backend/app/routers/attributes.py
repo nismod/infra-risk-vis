@@ -1,3 +1,4 @@
+from typing import Any
 from fastapi import APIRouter, Body, Depends
 from sqlalchemy.orm import Session
 
@@ -14,7 +15,7 @@ from .. import schemas
 router = APIRouter(tags=["attributes"])
 
 
-@router.post("/{field_group}", response_model=schemas.AttributeLookup[float | None])
+@router.post("/{field_group}", response_model=schemas.AttributeLookup[Any | None])
 def read_attributes(
     layer: str,
     field_group: str,

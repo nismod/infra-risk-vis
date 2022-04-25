@@ -10,7 +10,7 @@ export class AttributesService {
 
     /**
      * Read Attributes
-     * @returns number Successful Response
+     * @returns any Successful Response
      * @throws ApiError
      */
     public attributesReadAttributes({
@@ -25,7 +25,7 @@ export class AttributesService {
         field: string,
         dimensions: string,
         requestBody: Array<number>,
-    }): CancelablePromise<Record<string, number>> {
+    }): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'POST',
             url: '/attributes/{field_group}',
