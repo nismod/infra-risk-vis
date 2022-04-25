@@ -61,7 +61,26 @@ def parse_npv_damages(data):
 
     data.columns = [f"{var.lower()}_{stat}" for var, stat in data.columns]
 
+    # ensure all columns are present - may be missing in case the data didn't
+    # have any non-zero values in this batch
+    expected_columns = [
+        "ead_amin",
+        "ead_mean",
+        "ead_amax",
+        "eael_amin",
+        "eael_mean",
+        "eael_amax",
+    ]
+    ensure_columns(data, expected_columns)
+
     return data.reset_index()
+
+
+def ensure_columns(data, expected_columns):
+    for col in expected_columns:
+        if col not in data.columns:
+            data[col] = 0
+    return data
 
 
 if __name__ == "__main__":

@@ -39,6 +39,7 @@ rule load_to_database:
         expand("logs/network/{layer}.txt", layer=network_layers.ref),
         expand("logs/damages_rp/{layer}.txt", layer=damage_rp_files.ref),
         expand("logs/damages_exp/{layer}.txt", layer=damage_exp_files.ref),
+        expand("logs/damages_npv/{layer}.txt", layer=network_layers.damage_ref),
 
 
 rule feature_layers_to_db:
