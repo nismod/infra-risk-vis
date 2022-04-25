@@ -27,10 +27,10 @@ wildcard_constraints:
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
-        expand(
-            "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
-        ),
-        # expand("../tileserver/raster/data/{slug}.tif", slug=hazard_layers.slug)
+        # expand(
+        #     "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
+        # ),
+        expand("../tileserver/raster/data/{layer}.tif", layer=hazard_layers.key),
 
 
 # Prerequisite, not fully traced by file dependency
@@ -257,27 +257,45 @@ rule tileserver_vector_config:
 
             json.dump(tileserver_vector_config, fh, indent=2)
 
+rule raster_temp_file:
+    output:
+        temp("raster/link/{layer}.tif"),
+    run:
+        layer = get_hazard_layer(wildcards.layer, hazard_layers)
+        os.symlink(os.path.join(config["analysis_data_dir"], "processed_data", layer.path), str(output))
+
+
+def get_hazard_layer(layer_name, hazard_layers):
+    try:
+        return hazard_layers[hazard_layers.key == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in hazard layers.")
+        raise e
+
 
 rule raster_zero_nodata:
+    input:
+        rules.raster_temp_file.output,
     output:
-        temp("nodata-{slug}.tif"),
+        temp("raster/nodata/{layer}.tif"),
     shell:
         """
         NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
 
         # handle case of NODATA == nan - the JSON output of gdalinfo will change
         # nan to "NaN" so we need to reverse that for gdal_calc.py
-        if [ "$NODATA" == '"NaN"' ]# then
+        if [ "$NODATA" == '"NaN"' ]
+        then
           NODATA=nan
         fi
 
         # replace zeros with NoData value
         gdal_calc.py \
+          --quiet \
           -A "{input}" \
           --outfile="{output}" \
           --overwrite \
-          --calc="numpy.where(A==0,$NODATA,A)" \
-          --hideNoData \
+          --calc="numpy.where(A<=0,$NODATA,A)" \
           --NoDataValue=$NODATA
         """
 
@@ -286,10 +304,26 @@ rule raster_to_cog:
     input:
         rules.raster_zero_nodata.output,
     output:
-        "../tileserver/raster/data/{slug}.tif",
+        "../tileserver/raster/data/{layer}.tif",
     shell:
         """
         # translate to Cloud-Optimised GeoTIFF
-        # TODO tune COG conversion parameters or try terracotta optimize-rasters
-        gdal_translate "{input}" "{output}" -of COG
+        #
+        # could use gdalwarp directly - options chosen to match (reasonably
+        # closely) the output of `terracotta optimize-rasters`:
+        #
+        # gdalwarp "{input}" "{output}" \
+        #     -t_srs "EPSG:3857" \
+        #     -r near \
+        #     -of COG \
+        #     -co COMPRESS=DEFLATE \
+        #     -co BLOCKSIZE=256
+        #
+        terracotta optimize-rasters \
+            -o ../tileserver/raster/data/ \
+            --overwrite \
+            --reproject \
+            --nproc -1 \
+            --resampling-method nearest \
+            {input}
         """
