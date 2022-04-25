@@ -81,6 +81,17 @@ rule damages_exp_to_db:
         "./scripts/damages_exp_to_db.py"
 
 
+rule damages_npv_to_db:
+    input:
+        npv=f"{config['analysis_data_dir']}/results/loss_damage_npvs/{{layer}}_EAD_EAEL_npvs.csv",
+        uid=f"{config['analysis_data_dir']}/processed_data/networks_uids/id_lookups/{{layer}}_ids.parquet",
+    output:
+        "logs/damages_npv/{layer}.txt",
+    script:
+        "./scripts/damages_npv_to_db.py"
+
+
+
 rule db_to_geojsonseq:
     """Load from database to GeoJSONSeq
     """
