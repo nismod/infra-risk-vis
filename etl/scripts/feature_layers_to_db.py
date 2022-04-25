@@ -31,6 +31,4 @@ if __name__ == "__main__":
 
     with open(str(output), "w") as fh:
         fh.write(f"Loaded to database.\n\n")
-        fh.write(
-            f"From:\n{network_tilelayers_fname}\n\n"
-        )
+        fh.write(f"From:\n{network_tilelayers_fname}\n\n")

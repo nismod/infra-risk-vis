@@ -10,8 +10,7 @@ from backend.db.models import NPVDamage
 
 
 def yield_npv_damages(data):
-    """Generate NPVDamage database model objects.
-    """
+    """Generate NPVDamage database model objects."""
     for row in data.itertuples():
         yield NPVDamage(
             feature_id=row.uid,
@@ -94,7 +93,6 @@ if __name__ == "__main__":
     except NameError:
         print("Expected to run from snakemake")
         exit()
-
 
     network_layers = pandas.read_csv(network_layers_fname)
     try:
