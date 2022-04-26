@@ -12,8 +12,8 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],
 
-      rcp: ['baseline'],
-      epoch: [2010],
+      rcp: ['baseline', '2.6', '4.5', '8.5'],
+      epoch: [2010, 2050, 2080],
       confidence: ['None'],
     },
     paramDefaults: {
@@ -22,14 +22,20 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       rcp: 'baseline',
       epoch: 2010,
       confidence: 'None',
+    },
+    paramDependencies: {
+      rcp: ({ epoch }) => {
+        if (epoch === 2010) return ['baseline'];
+        else if (epoch === 2050 || epoch === 2080) return ['2.6', '4.5', '8.5'];
+      },
     },
   },
   surface: {
     paramDomains: {
       returnPeriod: [20, 50, 100, 200, 500, 1500],
 
-      rcp: ['baseline'],
-      epoch: [2010],
+      rcp: ['baseline', '2.6', '4.5', '8.5'],
+      epoch: [2010, 2050, 2080],
       confidence: ['None'],
     },
     paramDefaults: {
@@ -38,6 +44,12 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       rcp: 'baseline',
       epoch: 2010,
       confidence: 'None',
+    },
+    paramDependencies: {
+      rcp: ({ epoch }) => {
+        if (epoch === 2010) return ['baseline'];
+        else if (epoch === 2050 || epoch === 2080) return ['2.6', '4.5', '8.5'];
+      },
     },
   },
   coastal: {

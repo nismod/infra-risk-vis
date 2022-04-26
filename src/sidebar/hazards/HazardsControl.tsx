@@ -23,11 +23,27 @@ export const HazardsControl = () => {
       ) : null}
       <ToggleSectionGroup toggleState={hazardSelectionState}>
         <ToggleSection id="fluvial" label="River Flooding" disabled={disabled}>
-          <ReturnPeriodControl group="fluvial" param="returnPeriod" disabled={disabled} />
+          <InputSection>
+            <ReturnPeriodControl group="fluvial" param="returnPeriod" disabled={disabled} />
+          </InputSection>
+          <InputSection>
+            <InputRow>
+              <EpochControl group="fluvial" disabled={disabled} />
+              <RCPControl group="fluvial" disabled={disabled} />
+            </InputRow>
+          </InputSection>
         </ToggleSection>
 
         <ToggleSection id="surface" label="Surface Flooding" disabled={disabled}>
-          <ReturnPeriodControl group="surface" param="returnPeriod" disabled={disabled} />
+          <InputSection>
+            <ReturnPeriodControl group="surface" param="returnPeriod" disabled={disabled} />
+          </InputSection>
+          <InputSection>
+            <InputRow>
+              <EpochControl group="surface" disabled={disabled} />
+              <RCPControl group="surface" disabled={disabled} />
+            </InputRow>
+          </InputSection>
         </ToggleSection>
 
         <ToggleSection id="coastal" label="Coastal Flooding" disabled={disabled}>
