@@ -9,6 +9,14 @@ import { dataColorMap } from 'lib/deck/props/color-map';
 import { colorMapFromScheme } from 'config/color-maps';
 import { getAssetDataAccessor } from 'config/assets/data-access';
 
+function infraStyle(layer: string, defaultStyle, styleParams) {
+  if (styleParams?.colorMap) {
+    const { colorField, colorScheme } = styleParams.colorMap;
+    return dataColorMap(getAssetDataAccessor(layer, colorField), colorMapFromScheme(colorScheme));
+  }
+  return defaultStyle;
+}
+
 enum RoadClass {
   class_a = 'class_a',
   class_b = 'class_b',
@@ -51,12 +59,20 @@ function roadsViewLayer(asset_id) {
   ]);
 }
 
-function infraStyle(layer: string, defaultStyle, styleParams) {
-  if (styleParams?.colorMap) {
-    const { colorField, colorScheme } = styleParams.colorMap;
-    return dataColorMap(getAssetDataAccessor(layer, colorField), colorMapFromScheme(colorScheme));
-  }
-  return defaultStyle;
+function potableNodesViewLayer(asset_id) {
+  return infrastructureViewLayer(asset_id, ({ zoom, styleParams }) => [
+    border(),
+    pointRadius(zoom),
+    fillColor(infraStyle(asset_id, COLORS.water_supply.deck, styleParams)),
+  ]);
+}
+
+function electricitySourceViewLayer(asset_id) {
+  return infrastructureViewLayer(asset_id, ({ zoom, styleParams }) => [
+    border(),
+    fillColor(infraStyle(asset_id, COLORS.electricity_high.deck, styleParams)),
+    pointRadius(zoom),
+  ]);
 }
 
 export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
@@ -68,28 +84,38 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     strokeColor(infraStyle('elec_edges_low', COLORS.electricity_low.deck, styleParams)),
     lineStyle(zoom),
   ]),
-  infrastructureViewLayer('elec_nodes_source', ({ zoom, styleParams }) => [
+  electricitySourceViewLayer('elec_nodes_diesel'),
+  electricitySourceViewLayer('elec_nodes_gas'),
+  electricitySourceViewLayer('elec_nodes_hydro'),
+  electricitySourceViewLayer('elec_nodes_solar'),
+  electricitySourceViewLayer('elec_nodes_wind'),
+  infrastructureViewLayer('elec_nodes_demand', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('elec_nodes_source', COLORS.electricity_high.deck, styleParams)),
+    fillColor(infraStyle('elec_nodes_demand', COLORS.electricity_low.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('elec_nodes_sink', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('elec_nodes_pole', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('elec_nodes_sink', COLORS.electricity_low.deck, styleParams)),
+    fillColor(infraStyle('elec_nodes_pole', COLORS.electricity_unknown.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('elec_nodes_junction', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('elec_nodes_substation', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('elec_nodes_junction', COLORS.electricity_unknown.deck, styleParams)),
+    fillColor(infraStyle('elec_nodes_substation', COLORS.electricity_unknown.deck, styleParams)),
     pointRadius(zoom),
   ]),
   infrastructureViewLayer('rail_edges', ({ zoom, styleParams }) => [
     strokeColor(infraStyle('rail_edges', COLORS.railway.deck, styleParams)),
     lineStyle(zoom),
   ]),
-  infrastructureViewLayer('rail_nodes', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('rail_stations', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('rail_nodes', COLORS.railway.deck, styleParams)),
+    fillColor(infraStyle('rail_stations', COLORS.railway.deck, styleParams)),
+    pointRadius(zoom),
+  ]),
+  infrastructureViewLayer('rail_junctions', ({ zoom, styleParams }) => [
+    border(),
+    fillColor(infraStyle('rail_junctions', COLORS.railway.deck, styleParams)),
     pointRadius(zoom),
   ]),
   roadsViewLayer('road_edges_class_a'),
@@ -98,27 +124,58 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
   roadsViewLayer('road_edges_metro'),
   roadsViewLayer('road_edges_track'),
   roadsViewLayer('road_edges_other'),
+  infrastructureViewLayer('road_junctions', ({ zoom, styleParams }) => [
+    border(),
+    fillColor(infraStyle('road_junctions', COLORS.roads_unknown.deck, styleParams)),
+    pointRadius(zoom),
+  ]),
   infrastructureViewLayer('road_bridges', ({ zoom, styleParams }) => [
     border(),
     fillColor(infraStyle('road_bridges', COLORS.bridges.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('airport_areas', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('airport_runways', ({ zoom, styleParams }) => [
     border([0, 0, 0]),
-    fillColor(infraStyle('airport_areas', COLORS.airports.deck, styleParams)),
+    fillColor(infraStyle('airport_runways', COLORS.airports.deck, styleParams)),
   ]),
-  infrastructureViewLayer('port_areas', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('airport_terminals', ({ zoom, styleParams }) => [
+    border([0, 0, 0]),
+    fillColor(infraStyle('airport_terminals', COLORS.airports.deck, styleParams)),
+  ]),
+  infrastructureViewLayer('port_areas_break', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('port_areas', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('port_areas_break', COLORS.ports.deck, styleParams)),
   ]),
+  infrastructureViewLayer('port_areas_container', ({ zoom, styleParams }) => [
+    border(),
+    fillColor(infraStyle('port_areas_container', COLORS.ports.deck, styleParams)),
+  ]),
+  infrastructureViewLayer('port_areas_industry', ({ zoom, styleParams }) => [
+    border(),
+    fillColor(infraStyle('port_areas_industry', COLORS.ports.deck, styleParams)),
+  ]),
+  infrastructureViewLayer('port_areas_silo', ({ zoom, styleParams }) => [
+    border(),
+    fillColor(infraStyle('port_areas_silo', COLORS.ports.deck, styleParams)),
+  ]),
+  potableNodesViewLayer('water_potable_nodes_booster'),
+  potableNodesViewLayer('water_potable_nodes_catchment'),
+  potableNodesViewLayer('water_potable_nodes_entombment'),
+  potableNodesViewLayer('water_potable_nodes_filter'),
+  potableNodesViewLayer('water_potable_nodes_intake'),
+  potableNodesViewLayer('water_potable_nodes_well'),
+  potableNodesViewLayer('water_potable_nodes_pump'),
+  potableNodesViewLayer('water_potable_nodes_relift'),
+  potableNodesViewLayer('water_potable_nodes_reservoir'),
+  potableNodesViewLayer('water_potable_nodes_river_source'),
+  potableNodesViewLayer('water_potable_nodes_spring'),
+  potableNodesViewLayer('water_potable_nodes_tank'),
+  potableNodesViewLayer('water_potable_nodes_sump'),
+  potableNodesViewLayer('water_potable_nodes_tp'),
+
   infrastructureViewLayer('water_potable_edges', ({ zoom, styleParams }) => [
     lineStyle(zoom),
     strokeColor(infraStyle('water_potable_edges', COLORS.water_supply.deck, styleParams)),
-  ]),
-  infrastructureViewLayer('water_potable_nodes', ({ zoom, styleParams }) => [
-    border(),
-    pointRadius(zoom),
-    fillColor(infraStyle('water_potable_nodes', COLORS.water_supply.deck, styleParams)),
   ]),
   infrastructureViewLayer('water_irrigation_edges', ({ zoom, styleParams }) => [
     lineStyle(zoom),
