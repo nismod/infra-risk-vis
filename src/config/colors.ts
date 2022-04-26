@@ -25,7 +25,7 @@ export const COLORS = makeColorConfig({
   buildings_commercial: '#7fc97f',
   buildings_industrial: '#beaed4',
   buildings_institutional: '#999',
-  buildings_mixed_use: '#EF5F5F',
+  buildings_mixed: '#EF5F5F',
   buildings_other: '#999',
   buildings_recreation: '#999',
   buildings_residential: '#fdc086',
