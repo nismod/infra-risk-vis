@@ -139,13 +139,7 @@ rule geojsonseq_to_vector_tiles:
                 "--maximum-zoom=15",
             ]
         else:
-            # spatial_type is points
-            # check we have more than one feature, required for guessing zoom
-            num_features = int(subprocess.check_output(["wc", "-l", str(input)]).split()[0])
-            if num_features > 1:
-                options = ["--maximum-zoom=g"]
-            else:
-                options = ["--maximum-zoom=1"]
+            options = ["--maximum-zoom=15"]
 
         subprocess.run(
             [
