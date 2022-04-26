@@ -3,7 +3,6 @@ import { COLORS } from 'config/colors';
 import { assetViewLayer } from 'config/assets/asset-view-layer';
 import { border, fillColor } from 'lib/deck/props/style';
 import { assetDataAccessFunction } from 'config/assets/data-access';
-import { dataColorMap } from 'lib/deck/props/color-map';
 
 enum BuildingType {
   commercial = 'commercial',
@@ -17,14 +16,14 @@ enum BuildingType {
 }
 
 const buildingTypeLookup = {
-  Commercial: BuildingType.commercial,
-  Industrial: BuildingType.industrial,
-  Institutional: BuildingType.institutional,
-  'Mixed Use': BuildingType.mixed_use,
-  Other: BuildingType.other,
-  Recreation: BuildingType.recreation,
-  Residential: BuildingType.residential,
-  Resort: BuildingType.resort,
+  buildings_commercial: BuildingType.commercial,
+  buildings_industrial: BuildingType.industrial,
+  buildings_institutional: BuildingType.institutional,
+  buildings_mixed: BuildingType.mixed_use,
+  buildings_other: BuildingType.other,
+  buildings_recreation: BuildingType.recreation,
+  buildings_residential: BuildingType.residential,
+  buildings_resort: BuildingType.resort,
 };
 
 const buildingColor = {
@@ -50,12 +49,7 @@ export function buildingsViewLayer(building_type_id): ViewLayer {
     ({ zoom, styleParams }) => [
       { minZoom: 12 },
       border(COLORS.buildings_unknown.deck),
-      fillColor(
-        dataColorMap(
-          () => building_type_id,
-          (x) => buildingColor[buildingTypeLookup[x]],
-        ),
-      ),
+      fillColor(buildingColor[buildingTypeLookup[building_type_id]]),
     ],
     assetDataAccessFunction(building_type_id),
   );

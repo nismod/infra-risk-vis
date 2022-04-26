@@ -14,6 +14,30 @@
     "airport_terminals": {
       "mbtiles": "airport_terminals.mbtiles"
     },
+    "buildings_commercial": {
+      "mbtiles": "buildings_commercial.mbtiles"
+    },
+    "buildings_industrial": {
+      "mbtiles": "buildings_industrial.mbtiles"
+    },
+    "buildings_institutional": {
+      "mbtiles": "buildings_institutional.mbtiles"
+    },
+    "buildings_mixed": {
+      "mbtiles": "buildings_mixed.mbtiles"
+    },
+    "buildings_other": {
+      "mbtiles": "buildings_other.mbtiles"
+    },
+    "buildings_recreation": {
+      "mbtiles": "buildings_recreation.mbtiles"
+    },
+    "buildings_residential": {
+      "mbtiles": "buildings_residential.mbtiles"
+    },
+    "buildings_resort": {
+      "mbtiles": "buildings_resort.mbtiles"
+    },
     "elec_edges_high": {
       "mbtiles": "elec_edges_high.mbtiles"
     },

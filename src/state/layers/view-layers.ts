@@ -42,7 +42,7 @@ const buildingLayersState = selector<ViewLayer[]>({
   key: 'buildingLayersState',
   get: ({ get }) =>
     get(sectionVisibilityState('buildings'))
-      ? truthyKeys(buildingSelectionState).map((buildingType) => buildingsViewLayer(buildingType))
+      ? truthyKeys(get(buildingSelectionState)).map((buildingType) => buildingsViewLayer(buildingType))
       : [],
 });
 
