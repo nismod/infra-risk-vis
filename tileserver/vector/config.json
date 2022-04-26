@@ -14,6 +14,30 @@
     "airport_terminals": {
       "mbtiles": "airport_terminals.mbtiles"
     },
+    "buildings_commercial": {
+      "mbtiles": "buildings_commercial.mbtiles"
+    },
+    "buildings_industrial": {
+      "mbtiles": "buildings_industrial.mbtiles"
+    },
+    "buildings_institutional": {
+      "mbtiles": "buildings_institutional.mbtiles"
+    },
+    "buildings_mixed": {
+      "mbtiles": "buildings_mixed.mbtiles"
+    },
+    "buildings_other": {
+      "mbtiles": "buildings_other.mbtiles"
+    },
+    "buildings_recreation": {
+      "mbtiles": "buildings_recreation.mbtiles"
+    },
+    "buildings_residential": {
+      "mbtiles": "buildings_residential.mbtiles"
+    },
+    "buildings_resort": {
+      "mbtiles": "buildings_resort.mbtiles"
+    },
     "elec_edges_high": {
       "mbtiles": "elec_edges_high.mbtiles"
     },
@@ -152,9 +176,6 @@
     "water_potable_nodes_well": {
       "mbtiles": "water_potable_nodes_well.mbtiles"
     },
-    "water_waste_edges": {
-      "mbtiles": "water_waste_edges.mbtiles"
-    },
     "water_waste_nodes_pump": {
       "mbtiles": "water_waste_nodes_pump.mbtiles"
     },
@@ -166,6 +187,12 @@
     },
     "water_waste_nodes_wwtp": {
       "mbtiles": "water_waste_nodes_wwtp.mbtiles"
+    },
+    "water_waste_sewer_gravity": {
+      "mbtiles": "water_waste_sewer_gravity.mbtiles"
+    },
+    "water_waste_sewer_pressure": {
+      "mbtiles": "water_waste_sewer_pressure.mbtiles"
     }
   }
 }
