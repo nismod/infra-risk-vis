@@ -125,7 +125,7 @@ rule geojsonseq_to_vector_tiles:
         "../tileserver/vector/data/{layer}.mbtiles",
     run:
         layer = get_tilelayer(wildcards.layer, network_tilelayers)
-        
+        point_polygon_zoom_switch = 13
         if layer.spatial_type == "line":
             options = [
                 "--drop-densest-as-needed",
@@ -134,8 +134,8 @@ rule geojsonseq_to_vector_tiles:
             ]
         elif layer.spatial_type == "polygon":
             options = [
-                "--drop-densest-as-needed",
-                "--minimum-zoom=3",
+                "--drop-smallest-as-needed",
+                f"--minimum-zoom={point_polygon_zoom_switch}",
                 "--maximum-zoom=15",
             ]
         else:
@@ -156,8 +156,41 @@ rule geojsonseq_to_vector_tiles:
                 f"--layer={wildcards.layer}",
             ]
             + options
-            + ["--force", f"{input}"]
+            + ["--force", f"{input}"],
+            check=True
         )
+
+        if layer.spatial_type == "polygon":
+            # create points as centroids
+            input_basename = os.path.basename(str(input))
+            input_layer = input_basename.replace(".geojsonl", "")
+            tmp_output = f"vector/points/{input_basename}"
+            subprocess.run(
+                [
+                    "ogr2ogr",
+                    "-sql",
+                    f"SELECT ST_Centroid(geometry), * FROM {input_layer}",
+                    "-dialect",
+                    "sqlite",
+                    tmp_output,
+                    str(input)
+                ],
+                check=True
+            )
+            subprocess.run(
+                [
+                    "tippecanoe",
+                    "--use-attribute-for-id=uid",
+                    "--read-parallel",
+                    f"--output={output}",
+                    f"--layer={wildcards.layer}",
+                    "--drop-densest-as-needed",
+                    "--minimum-zoom=3",
+                    f"--maximum-zoom={point_polygon_zoom_switch - 1}",
+                    "--force", f"{tmp_output}"
+                ],
+                check=True
+            )
 
 
 def get_tilelayer(layer_name, network_tilelayers):
