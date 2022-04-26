@@ -317,3 +317,22 @@ export const WastewaterNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
     </List>
   </>
 );
+
+export const BuildingDetails: FC<DetailsComponentProps> = ({ f }) => (
+  <>
+    {f.name && (
+      <Typography variant="h6" component="h1">
+        {f.name}
+      </Typography>
+    )}
+    <DetailSubheader id={f.asset_id} />
+    <List>
+      <DataItem label="Source ID" value={f.osm_way_id} />
+      <DataItem label={`Total GDP (${f.GDP_unit})`} value={numFormat(f.total_GDP)} />
+      <DataItem
+        label={`Rehabilitation cost (${f.cost_unit})`}
+        value={`${numFormat(f.cost_mean)} ${paren(numRangeFormat(f.cost_min, f.cost_max))}`}
+      />
+    </List>
+  </>
+);

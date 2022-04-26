@@ -4,6 +4,7 @@ import { Box, IconButton, Typography } from '@mui/material';
 import {
   AirportDetails,
   BridgeDetails,
+  BuildingDetails,
   DefaultDetails,
   DetailsComponent,
   IrrigationDetails,
@@ -89,14 +90,14 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
   elec_nodes_solar: PowerGenerationNodeDetails,
   elec_nodes_wind: PowerGenerationNodeDetails,
 
-  buildings_commercial: DefaultDetails,
-  buildings_industrial: DefaultDetails,
-  buildings_residential: DefaultDetails,
-  buildings_other: DefaultDetails,
-  buildings_institutional: DefaultDetails,
-  buildings_mixed: DefaultDetails,
-  buildings_recreation: DefaultDetails,
-  buildings_resort: DefaultDetails,
+  buildings_commercial: BuildingDetails,
+  buildings_industrial: BuildingDetails,
+  buildings_residential: BuildingDetails,
+  buildings_other: BuildingDetails,
+  buildings_institutional: BuildingDetails,
+  buildings_mixed: BuildingDetails,
+  buildings_recreation: BuildingDetails,
+  buildings_resort: BuildingDetails,
 };
 
 interface FeatureSidebarContentProps {
