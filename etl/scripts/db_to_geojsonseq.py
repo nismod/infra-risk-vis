@@ -1,6 +1,6 @@
 """Write from database to GeoJSONSeq file for a single visualisation layer
 """
-from collections import attrgetter
+from operator import attrgetter
 
 import ujson as json
 
