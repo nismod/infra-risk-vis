@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Box } from '@mui/material';
 
-import { MapView } from './map/MapView';
-import { FeatureSidebar } from './details/features/FeatureSidebar';
-import { RegionDetails } from './details/regions/RegionDetails';
+import { MapView } from '../map/MapView';
+import { FeatureSidebar } from '../details/features/FeatureSidebar';
+import { RegionDetails } from '../details/regions/RegionDetails';
 import { SidebarContent } from 'sidebar/SidebarContent';
 import { globalStyleVariables } from 'theme';
 import { useSyncRecoilState } from 'lib/recoil/sync-state';
