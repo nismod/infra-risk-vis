@@ -113,8 +113,11 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ feature,
 
   return (
     <Box position="relative">
-      <pre id="feature_debug" style={{ display: 'none' }}>
-        <code>{JSON.stringify(f, null, 2)}</code>
+      <pre style={{ display: 'none' }}>
+        <code className="feature-debug">{JSON.stringify(f, null, 2)}</code>
+        {featureDetails && (
+          <code className="feature-details-debug">{JSON.stringify(featureDetails.properties, null, 2)}</code>
+        )}
       </pre>
       <Typography variant="caption">
         <ColorBox color={color ?? '#333'} />
