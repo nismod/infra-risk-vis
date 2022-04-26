@@ -143,9 +143,10 @@ rule geojsonseq_to_vector_tiles:
             ]
         else:
             options = [
-                "-rg",
+                "--drop-densest-as-needed",
                 "-Bg",
-                f"--maximum-zoom={max_zoom}"
+                f"--maximum-zoom={max_zoom}",
+                "--full-detail=12"
             ]
 
         subprocess.run(
