@@ -4,18 +4,16 @@ import { extraProperty, featureProperty } from 'lib/deck/props/data-source';
 import { withTriggers } from 'lib/deck/props/getters';
 import { sumOrNone } from 'lib/helpers';
 
-function getExpectedDirectDamageKey(isDirect: boolean, hazard: string, rcp: string, epoch: number) {
-  return `${isDirect ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+function getExpectedDamageKey(direct: boolean, hazard: string, rcp: string, epoch: number) {
+  return `${direct ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
 }
 
 const hazardTypes = ['fluvial', 'surface', 'coastal', 'cyclone'];
 
-function totalExpectedDirectDamagesProperty(isDirect: boolean, { rcp, epoch }) {
-  const hazardProperties = hazardTypes.map((ht) =>
-    featureProperty(getExpectedDirectDamageKey(isDirect, ht, rcp, epoch)),
-  );
+function totalExpectedDamagesProperty(direct: boolean, { rcp, epoch }) {
+  const hazardProperties = hazardTypes.map((ht) => featureProperty(getExpectedDamageKey(direct, ht, rcp, epoch)));
 
-  return withTriggers((f) => sumOrNone(hazardProperties.map((p) => p(f))), [rcp, epoch]);
+  return withTriggers((f) => sumOrNone(hazardProperties.map((p) => p(f))), [direct, rcp, epoch]);
 }
 
 export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
@@ -27,9 +25,9 @@ export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
     const isDirect = field.startsWith('ead_');
 
     if (hazard === 'all') {
-      return totalExpectedDirectDamagesProperty(isDirect, fieldDimensions);
+      return totalExpectedDamagesProperty(isDirect, fieldDimensions);
     }
-    return featureProperty(getExpectedDirectDamageKey(isDirect, hazard, rcp, epoch));
+    return featureProperty(getExpectedDamageKey(isDirect, hazard, rcp, epoch));
   } else if (fieldGroup === 'damages_return_period') {
     // return return period damages dynamically loaded from API
     return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
