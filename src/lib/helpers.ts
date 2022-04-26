@@ -20,7 +20,22 @@ export function titleCase(str: string) {
 }
 
 export function numFormat(n: number, maximumSignificantDigits: number = 3) {
-  return n == undefined ? `${n}` : n.toLocaleString(undefined, { maximumSignificantDigits });
+  return n == null ? `-` : n.toLocaleString(undefined, { maximumSignificantDigits });
+}
+
+export function numRangeFormat(n1: number, n2: number) {
+  if (n1 == null || n2 == null) return null;
+
+  return `${numFormat(n1)}–${numFormat(n2)}`;
+}
+
+/**
+ * Wrap value in parentheses, if value is not empty
+ * @param x value to wrap
+ * @returns string with parentheses or empty string
+ */
+export function paren(x: any) {
+  return x == null ? '' : `(${x})`;
 }
 
 export function unique<T>(arr: T[]) {
