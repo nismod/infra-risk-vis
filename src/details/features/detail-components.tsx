@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { ComponentType, FC } from 'react';
 
 import { List, ListItem, ListItemText, Typography } from '@mui/material';
 
@@ -34,11 +34,13 @@ const DetailSubheader: FC<DetailSubheaderProps> = ({ id }) => (
   </Typography>
 );
 
-interface DetailsProps {
+interface DetailsComponentProps {
   f: any;
 }
 
-export const DefaultDetailsList: FC<DetailsProps> = ({ f }) => {
+export type DetailsComponent = ComponentType<DetailsComponentProps>;
+
+export const DefaultDetailsList: FC<DetailsComponentProps> = ({ f }) => {
   return (
     <List>
       {Object.entries(f).map(([key, value]) => (
@@ -48,7 +50,7 @@ export const DefaultDetailsList: FC<DetailsProps> = ({ f }) => {
   );
 };
 
-export const DefaultDetails: FC<DetailsProps> = ({ f }) => {
+export const DefaultDetails: FC<DetailsComponentProps> = ({ f }) => {
   return (
     <>
       <Typography variant="h6" component="h1">
@@ -59,7 +61,7 @@ export const DefaultDetails: FC<DetailsProps> = ({ f }) => {
   );
 };
 
-export const AirportDetails: FC<DetailsProps> = ({ f }) => (
+export const AirportDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.name}
@@ -79,7 +81,7 @@ export const AirportDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const PowerLineDetails: FC<DetailsProps> = ({ f }) => (
+export const PowerLineDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.name ?? 'Power line'}
@@ -98,7 +100,7 @@ export const PowerLineDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const PowerGenerationNodeDetails: FC<DetailsProps> = ({ f }) => (
+export const PowerGenerationNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">{`${f.title}–${f.subtype}`}</Typography>
     <DetailSubheader id={f.asset_id} />
@@ -114,7 +116,7 @@ export const PowerGenerationNodeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const PowerDemandNodeDetails: FC<DetailsProps> = ({ f }) => (
+export const PowerDemandNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {titleCase(f.subtype)}
@@ -128,7 +130,7 @@ export const PowerDemandNodeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const PowerJunctionNodeDetails: FC<DetailsProps> = ({ f }) => (
+export const PowerJunctionNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {titleCase(f.subtype)}
@@ -145,7 +147,7 @@ export const PowerJunctionNodeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const IrrigationDetails: FC<DetailsProps> = ({ f }) => (
+export const IrrigationDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.asset}
@@ -162,7 +164,7 @@ export const IrrigationDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const WaterPipelineDetails: FC<DetailsProps> = ({ f }) => (
+export const WaterPipelineDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.asset}
@@ -182,7 +184,7 @@ export const WaterPipelineDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const PortDetails: FC<DetailsProps> = ({ f }) => (
+export const PortDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.name}
@@ -208,7 +210,7 @@ export const PortDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const WaterSupplyNodeDetails: FC<DetailsProps> = ({ f }) => (
+export const WaterSupplyNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.name}
@@ -229,7 +231,7 @@ export const WaterSupplyNodeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const RailEdgeDetails: FC<DetailsProps> = ({ f }) => (
+export const RailEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.rail_sect}
@@ -248,7 +250,7 @@ export const RailEdgeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const RailNodeDetails: FC<DetailsProps> = ({ f }) => (
+export const RailNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.Station}
@@ -265,7 +267,7 @@ export const RailNodeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const RoadEdgeDetails: FC<DetailsProps> = ({ f }) => (
+export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.street_name}
@@ -296,7 +298,7 @@ export const RoadEdgeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const BridgeDetails: FC<DetailsProps> = ({ f }) => (
+export const BridgeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {titleCase(f.asset_type)}
@@ -316,7 +318,7 @@ export const BridgeDetails: FC<DetailsProps> = ({ f }) => (
   </>
 );
 
-export const WastewaterNodeDetails: FC<DetailsProps> = ({ f }) => (
+export const WastewaterNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
       {f.Name}
