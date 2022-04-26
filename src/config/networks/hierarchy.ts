@@ -266,11 +266,11 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
             label: 'Wastewater Pipelines',
             children: [
               {
-                id: 'water_waste_edges_gravity',
+                id: 'water_waste_sewer_gravity',
                 label: 'Gravity',
               },
               {
-                id: 'water_waste_edges_pressure',
+                id: 'water_waste_sewer_pressure',
                 label: 'Pressure',
               },
             ],

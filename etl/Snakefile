@@ -17,6 +17,7 @@ network_layers = pandas.read_csv(config["network_layers"])
 network_tilelayers = pandas.read_csv(config["network_tilelayers"])
 damage_rp_files = pandas.read_csv(config["damage_rp_files"])
 damage_exp_files = pandas.read_csv(config["damage_exp_files"])
+adaptation_files = pandas.read_csv(config["adaptation_files"])
 
 
 wildcard_constraints:
@@ -26,10 +27,10 @@ wildcard_constraints:
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
-        expand(
-            "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
-        ),
-        # expand("../tileserver/raster/data/{slug}.tif", slug=hazard_layers.slug)
+        # expand(
+        #     "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
+        # ),
+        expand("../tileserver/raster/data/{layer}.tif", layer=hazard_layers.key),
 
 
 # Prerequisite, not fully traced by file dependency
@@ -39,11 +40,29 @@ rule load_to_database:
         expand("logs/network/{layer}.txt", layer=network_layers.ref),
         expand("logs/damages_rp/{layer}.txt", layer=damage_rp_files.ref),
         expand("logs/damages_exp/{layer}.txt", layer=damage_exp_files.ref),
+        expand("logs/damages_npv/{layer}.txt", layer=network_layers.damage_ref),
+        expand(
+            "logs/adaptation/{hazard}/{layer}.txt",
+            zip,
+            hazard=adaptation_files.hazard,
+            layer=adaptation_files.damage_ref,
+        ),
+
+
+rule feature_layers_to_db:
+    input:
+        config["network_tilelayers"],
+    output:
+        "logs/feature_layers.txt",
+    script:
+        "./scripts/feature_layers_to_db.py"
 
 
 rule networks_to_db:
     """Read from source directory to database
     """
+    input:
+        "logs/feature_layers.txt",
     output:
         "logs/network/{layer}.txt",
     script:
@@ -70,6 +89,26 @@ rule damages_exp_to_db:
         "./scripts/damages_exp_to_db.py"
 
 
+rule damages_npv_to_db:
+    input:
+        npv=f"{config['analysis_data_dir']}/results/loss_damage_npvs/{{layer}}_EAD_EAEL_npvs.csv",
+        uid=f"{config['analysis_data_dir']}/processed_data/networks_uids/id_lookups/{{layer}}_ids.parquet",
+    output:
+        "logs/damages_npv/{layer}.txt",
+    script:
+        "./scripts/damages_npv_to_db.py"
+
+
+rule adaptation_to_db:
+    input:
+        avoided_risk=f"{config['analysis_data_dir']}/results/adaptation_benefits_costs_bcr/{{hazard}}_{{layer}}_adaptation_costs_avoided_EAD_EAEL.csv",
+        uid=f"{config['analysis_data_dir']}/processed_data/networks_uids/id_lookups/{{layer}}_ids.parquet",
+    output:
+        "logs/adaptation/{hazard}/{layer}.txt",
+    script:
+        "./scripts/adaptation_to_db.py"
+
+
 rule db_to_geojsonseq:
     """Load from database to GeoJSONSeq
     """
@@ -85,7 +124,8 @@ rule geojsonseq_to_vector_tiles:
     output:
         "../tileserver/vector/data/{layer}.mbtiles",
     run:
-        layer = get_tilelayer(wildcards.layer)
+        layer = get_tilelayer(wildcards.layer, network_tilelayers)
+        point_polygon_zoom_switch = 13
         if layer.spatial_type == "line":
             options = [
                 "--drop-densest-as-needed",
@@ -94,12 +134,18 @@ rule geojsonseq_to_vector_tiles:
             ]
         elif layer.spatial_type == "polygon":
             options = [
-                "--drop-densest-as-needed",
-                "--minimum-zoom=3",
+                "--drop-smallest-as-needed",
+                f"--minimum-zoom={point_polygon_zoom_switch}",
                 "--maximum-zoom=15",
             ]
         else:
-            options = ["-zg"]
+            # spatial_type is points
+            # check we have more than one feature, required for guessing zoom
+            num_features = int(subprocess.check_output(["wc", "-l", str(input)]).split()[0])
+            if num_features > 1:
+                options = ["--maximum-zoom=g"]
+            else:
+                options = ["--maximum-zoom=1"]
 
         subprocess.run(
             [
@@ -110,8 +156,50 @@ rule geojsonseq_to_vector_tiles:
                 f"--layer={wildcards.layer}",
             ]
             + options
-            + ["--force", f"{input}"]
+            + ["--force", f"{input}"],
+            check=True
         )
+
+        if layer.spatial_type == "polygon":
+            # create points as centroids
+            input_basename = os.path.basename(str(input))
+            input_layer = input_basename.replace(".geojsonl", "")
+            tmp_output = f"vector/points/{input_basename}"
+            subprocess.run(
+                [
+                    "ogr2ogr",
+                    "-sql",
+                    f"SELECT ST_Centroid(geometry), * FROM {input_layer}",
+                    "-dialect",
+                    "sqlite",
+                    tmp_output,
+                    str(input)
+                ],
+                check=True
+            )
+            subprocess.run(
+                [
+                    "tippecanoe",
+                    "--use-attribute-for-id=uid",
+                    "--read-parallel",
+                    f"--output={output}",
+                    f"--layer={wildcards.layer}",
+                    "--drop-densest-as-needed",
+                    "--minimum-zoom=3",
+                    f"--maximum-zoom={point_polygon_zoom_switch - 1}",
+                    "--force", f"{tmp_output}"
+                ],
+                check=True
+            )
+
+
+def get_tilelayer(layer_name, network_tilelayers):
+    try:
+        return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in tilelayers.")
+        raise e
+
 
 rule extract_regions:
     input:
@@ -125,23 +213,27 @@ rule extract_regions:
         adm3.PARISH = adm3.PARISH.str.replace(" ", "")
         adm3.PARISH = adm3.PARISH.str.replace(".", ". ")
         adm3.PARISH = adm3.PARISH.str.title()
-        adm3["population_density_per_km2"] = adm3.population / (adm3.geometry.area * 1e-6)
+        adm3["population_density_per_km2"] = adm3.population / (
+            adm3.geometry.area * 1e-6
+        )
         adm3 = adm3.to_crs(epsg=4326)
         adm3.to_file(output.adm3, driver="GeoJSONSeq", index=False)
 
-        adm1_pop = adm3[['PARISH', 'population']].groupby('PARISH').sum()
+        adm1_pop = adm3[["PARISH", "population"]].groupby("PARISH").sum()
         adm1 = geopandas.read_file(str(input.boundaries), layer="admin1")
-        adm1 = adm1.set_index('PARISH').join(adm1_pop)
-        adm1["population_density_per_km2"] = adm1.population / (adm1.geometry.area * 1e-6)
+        adm1 = adm1.set_index("PARISH").join(adm1_pop)
+        adm1["population_density_per_km2"] = adm1.population / (
+            adm1.geometry.area * 1e-6
+        )
         adm1 = adm1.to_crs(epsg=4326).reset_index()
         adm1.to_file(output.adm1, driver="GeoJSONSeq", index=False)
 
 
 rule region_labels:
     input:
-        "regions/regions_{layer}.geojsonl"
+        "regions/regions_{layer}.geojsonl",
     output:
-        "regions/regions_{layer}_labels.geojsonl"
+        "regions/regions_{layer}_labels.geojsonl",
     shell:
         """
         cat {input} | geojson-polygon-labels > {output} \
@@ -156,9 +248,9 @@ rule region_labels:
 
 rule region_mbtiles:
     input:
-        "regions/{layer}.geojsonl"
+        "regions/{layer}.geojsonl",
     output:
-        "regions/{layer}.mbtiles"
+        "regions/{layer}.mbtiles",
     shell:
         """
         tippecanoe \
@@ -213,27 +305,50 @@ rule tileserver_vector_config:
 
             json.dump(tileserver_vector_config, fh, indent=2)
 
+rule raster_temp_file:
+    output:
+        temp("raster/link/{layer}.tif"),
+    run:
+        layer = get_hazard_layer(wildcards.layer, hazard_layers)
+        os.symlink(os.path.join(config["analysis_data_dir"], "processed_data", layer.path), str(output))
+
+
+def get_hazard_layer(layer_name, hazard_layers):
+    try:
+        return hazard_layers[hazard_layers.key == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in hazard layers.")
+        raise e
+
 
 rule raster_zero_nodata:
+    input:
+        rules.raster_temp_file.output,
     output:
-        temp("nodata-{slug}.tif"),
+        temp("raster/nodata/{layer}.tif"),
     shell:
         """
         NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
 
         # handle case of NODATA == nan - the JSON output of gdalinfo will change
         # nan to "NaN" so we need to reverse that for gdal_calc.py
-        if [ "$NODATA" == '"NaN"' ]# then
+        if [ "$NODATA" == '"NaN"' ]
+        then
+          NODATA=nan
+        fi
+
+        if [ "$NODATA" == 'null' ]
+        then
           NODATA=nan
         fi
 
         # replace zeros with NoData value
         gdal_calc.py \
+          --quiet \
           -A "{input}" \
           --outfile="{output}" \
           --overwrite \
-          --calc="numpy.where(A==0,$NODATA,A)" \
-          --hideNoData \
+          --calc="numpy.where(A<=0,$NODATA,A)" \
           --NoDataValue=$NODATA
         """
 
@@ -242,10 +357,26 @@ rule raster_to_cog:
     input:
         rules.raster_zero_nodata.output,
     output:
-        "../tileserver/raster/data/{slug}.tif",
+        "../tileserver/raster/data/{layer}.tif",
     shell:
         """
         # translate to Cloud-Optimised GeoTIFF
-        # TODO tune COG conversion parameters or try terracotta optimize-rasters
-        gdal_translate "{input}" "{output}" -of COG
+        #
+        # could use gdalwarp directly - options chosen to match (reasonably
+        # closely) the output of `terracotta optimize-rasters`:
+        #
+        # gdalwarp "{input}" "{output}" \
+        #     -t_srs "EPSG:3857" \
+        #     -r near \
+        #     -of COG \
+        #     -co COMPRESS=DEFLATE \
+        #     -co BLOCKSIZE=256
+        #
+        terracotta optimize-rasters \
+            -o ../tileserver/raster/data/ \
+            --overwrite \
+            --reproject \
+            --nproc -1 \
+            --resampling-method nearest \
+            {input}
         """

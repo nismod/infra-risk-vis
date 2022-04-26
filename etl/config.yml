@@ -2,4 +2,7 @@ analysis_data_dir: ./raw_data/
 network_layers: "network_layers.csv"
 network_tilelayers: "network_tilelayers.csv"
 hazard_layers: "hazard_layers.csv"
-damage_files: "damage_files.csv"
+damage_rp_files: "damage_rp_files.csv"
+damage_exp_files: "damage_exp_files.csv"
+damage_npv_files: "damage_npv_files.csv"
+adaptation_files: "adaptation_files.csv"

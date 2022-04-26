@@ -311,13 +311,13 @@ export const NETWORKS_METADATA = makeConfig([
     color: COLORS.water_irrigation.css,
   },
   {
-    id: 'water_waste_edges_gravity',
+    id: 'water_waste_sewer_gravity',
     type: 'line',
     label: 'Wastewater Pipelines (Gravity)',
     color: COLORS.water_wastewater.css,
   },
   {
-    id: 'water_waste_edges_pressure',
+    id: 'water_waste_sewer_pressure',
     type: 'line',
     label: 'Wastewater Pipelines (Pressure)',
     color: COLORS.water_wastewater.css,

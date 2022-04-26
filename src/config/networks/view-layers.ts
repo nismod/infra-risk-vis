@@ -194,13 +194,13 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     pointRadius(zoom),
     fillColor(infraStyle('water_irrigation_nodes', COLORS.water_irrigation.deck, styleParams)),
   ]),
-  infrastructureViewLayer('water_waste_edges_gravity', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('water_waste_sewer_gravity', ({ zoom, styleParams }) => [
     lineStyle(zoom),
-    strokeColor(infraStyle('water_waste_edges_gravity', COLORS.water_wastewater.deck, styleParams)),
+    strokeColor(infraStyle('water_waste_sewer_gravity', COLORS.water_wastewater.deck, styleParams)),
   ]),
-  infrastructureViewLayer('water_waste_edges_pressure', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('water_waste_sewer_pressure', ({ zoom, styleParams }) => [
     lineStyle(zoom),
-    strokeColor(infraStyle('water_waste_edges_pressure', COLORS.water_wastewater.deck, styleParams)),
+    strokeColor(infraStyle('water_waste_sewer_pressure', COLORS.water_wastewater.deck, styleParams)),
   ]),
   wastewaterNodesViewLayer('water_waste_nodes_sump'),
   wastewaterNodesViewLayer('water_waste_nodes_pump'),

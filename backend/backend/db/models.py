@@ -5,12 +5,21 @@ from geoalchemy2 import Geometry
 from .database import Base
 
 
+class FeatureLayer(Base):
+    __tablename__ = "feature_layers"
+    layer_name = Column(String, primary_key=True)
+    sector = Column(String, nullable=False)
+    subsector = Column(String, nullable=False)
+    asset_type = Column(String, nullable=False)
+
+    features = relationship("Feature")
+
+
 class Feature(Base):
     __tablename__ = "features"
     id = Column(Integer, primary_key=True)
     string_id = Column(String, nullable=False)
-    layer = Column(String, index=True, nullable=False)
-    sublayer = Column(String)
+    layer = Column(String, ForeignKey(FeatureLayer.layer_name), index=True, nullable=False)
     properties = Column(JSON, nullable=False)
     geom = Column(Geometry("GEOMETRY", srid=4326), nullable=False)
 

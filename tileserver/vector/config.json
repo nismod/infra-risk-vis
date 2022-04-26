@@ -176,9 +176,6 @@
     "water_potable_nodes_well": {
       "mbtiles": "water_potable_nodes_well.mbtiles"
     },
-    "water_waste_edges": {
-      "mbtiles": "water_waste_edges.mbtiles"
-    },
     "water_waste_nodes_pump": {
       "mbtiles": "water_waste_nodes_pump.mbtiles"
     },
@@ -190,6 +187,12 @@
     },
     "water_waste_nodes_wwtp": {
       "mbtiles": "water_waste_nodes_wwtp.mbtiles"
+    },
+    "water_waste_sewer_gravity": {
+      "mbtiles": "water_waste_sewer_gravity.mbtiles"
+    },
+    "water_waste_sewer_pressure": {
+      "mbtiles": "water_waste_sewer_pressure.mbtiles"
     }
   }
 }
