@@ -14,7 +14,7 @@ from backend.db.database import SessionLocal
 from backend.db.models import Feature
 
 
-def yield_features(layer):
+def yield_features(layer, network_tilelayers):
     """Read from file layer to modelled Features"""
     with fiona.open(get_network_layer_path(layer), layer=layer.gpkg_layer) as src:
         from_crs = src.crs
@@ -43,7 +43,7 @@ def yield_features(layer):
             # FIXME in the data
             if layer.ref == "transport_rail_edges":
                 props["asset_type"] = "track"
-            tilelayer_details = get_tilelayer_by_asset_type(props)
+            tilelayer_details = get_tilelayer_by_asset_type(layer.ref, props, network_tilelayers)
             props["sector"] = tilelayer_details.sector
             props["subsector"] = tilelayer_details.subsector
 
@@ -80,18 +80,11 @@ def get_network_layer_path(layer, analysis_data_dir):
     return f"{analysis_data_dir}/processed_data/networks_uids/{layer.path}"
 
 
-def get_tilelayer(layer_name, network_tilelayers):
-    try:
-        return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
-    except IndexError as e:
-        print(f"Could not find {layer_name} in tilelayers.")
-        raise e
-
-
-def get_tilelayer_by_asset_type(props, network_tilelayers):
+def get_tilelayer_by_asset_type(layer_ref, props, network_tilelayers):
     try:
         return network_tilelayers[
-            network_tilelayers.asset_type == props["asset_type"]
+            (network_tilelayers.asset_type == props["asset_type"])
+            & (network_tilelayers.ref == layer_ref)
         ].iloc[0]
     except IndexError as e:
         print(f"Could not find {props['asset_type']} in tilelayers.")
@@ -120,14 +113,14 @@ if __name__ == "__main__":
         exit()
 
     layer = get_network_layer(layer, network_layers)
-    tilelayers = list(get_tilelayers_by_network_source(layer))
+    tilelayers = list(get_tilelayers_by_network_source(layer, network_tilelayers))
 
     db: Session
     with SessionLocal() as db:
         db.execute(delete(Feature).where(Feature.layer.in_(tilelayers)))
         db.commit()
 
-        for i, feature in tqdm(enumerate(yield_features(layer)), total=layer["count"]):
+        for i, feature in tqdm(enumerate(yield_features(layer, network_tilelayers)), total=layer["count"]):
             db.add(feature)
             if i % 1000 == 0:
                 db.commit()

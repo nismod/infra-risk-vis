@@ -124,7 +124,8 @@ rule geojsonseq_to_vector_tiles:
     output:
         "../tileserver/vector/data/{layer}.mbtiles",
     run:
-        layer = get_tilelayer(wildcards.layer)
+        layer = get_tilelayer(wildcards.layer, network_tilelayers)
+        
         if layer.spatial_type == "line":
             options = [
                 "--drop-densest-as-needed",
@@ -157,6 +158,14 @@ rule geojsonseq_to_vector_tiles:
             + options
             + ["--force", f"{input}"]
         )
+
+
+def get_tilelayer(layer_name, network_tilelayers):
+    try:
+        return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in tilelayers.")
+        raise e
 
 
 rule extract_regions:
