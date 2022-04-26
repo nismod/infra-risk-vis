@@ -309,7 +309,7 @@ rule tileserver_vector_config:
 
 rule raster_temp_file:
     output:
-        temp("raster/link/{layer}.tif"),
+        "raster/link/{layer}.tif",
     run:
         layer = get_hazard_layer(wildcards.layer, hazard_layers)
         os.symlink(os.path.join(config["analysis_data_dir"], "processed_data", layer.path), str(output))
@@ -327,7 +327,7 @@ rule raster_zero_nodata:
     input:
         rules.raster_temp_file.output,
     output:
-        temp("raster/nodata/{layer}.tif"),
+        "raster/nodata/{layer}.tif",
     shell:
         """
         NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
@@ -351,7 +351,8 @@ rule raster_zero_nodata:
           --outfile="{output}" \
           --overwrite \
           --calc="numpy.where(A<=0,$NODATA,A)" \
-          --NoDataValue=$NODATA
+          --NoDataValue=$NODATA \
+          --hideNoData
         """
 
 
