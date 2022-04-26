@@ -125,21 +125,28 @@ rule geojsonseq_to_vector_tiles:
         "../tileserver/vector/data/{layer}.mbtiles",
     run:
         layer = get_tilelayer(wildcards.layer, network_tilelayers)
+
+        max_zoom = 20
         point_polygon_zoom_switch = 13
+
         if layer.spatial_type == "line":
             options = [
                 "--drop-densest-as-needed",
                 "--minimum-zoom=3",
-                "--maximum-zoom=15",
+                f"--maximum-zoom={max_zoom}",
             ]
         elif layer.spatial_type == "polygon":
             options = [
                 "--drop-smallest-as-needed",
                 f"--minimum-zoom={point_polygon_zoom_switch}",
-                "--maximum-zoom=15",
+                f"--maximum-zoom={max_zoom}",
             ]
         else:
-            options = ["--maximum-zoom=15"]
+            options = [
+                "-rg",
+                "-Bg",
+                f"--maximum-zoom={max_zoom}"
+            ]
 
         subprocess.run(
             [
