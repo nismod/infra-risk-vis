@@ -72,7 +72,8 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
   water_waste_nodes_pump: WastewaterNodeDetails,
   water_waste_nodes_relift: WastewaterNodeDetails,
   water_waste_nodes_wwtp: WastewaterNodeDetails,
-  water_waste_edges: WaterPipelineDetails,
+  water_waste_edges_gravity: WaterPipelineDetails,
+  water_waste_edges_pressure: WaterPipelineDetails,
 
   elec_edges_high: PowerLineDetails,
   elec_edges_low: PowerLineDetails,
