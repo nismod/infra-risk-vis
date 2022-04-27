@@ -40,15 +40,5 @@ export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
 }
 
 export function assetDataAccessFunction(layer: string) {
-  return ({ styleParams }) => {
-    if (styleParams?.colorMap) {
-      const { colorField } = styleParams.colorMap;
-
-      const accessor = getAssetDataAccessor(layer, colorField);
-      return {
-        dataAccessor: accessor,
-        dataLoader: accessor.dataLoader,
-      };
-    }
-  };
+  return (fieldSpec: FieldSpec) => fieldSpec && getAssetDataAccessor(layer, fieldSpec);
 }

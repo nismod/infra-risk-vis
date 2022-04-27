@@ -5,7 +5,7 @@ import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { DataItem } from 'details/features/detail-components';
 import { colorMap } from 'lib/color-map';
 import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
-import { StyleParams, ViewLayer } from 'lib/data-map/view-layers';
+import { ColorMap, FieldSpec, ViewLayer } from 'lib/data-map/view-layers';
 import { paren } from 'lib/helpers';
 import _ from 'lodash';
 import { FC, useMemo } from 'react';
@@ -19,74 +19,66 @@ function getSourceLabel(eadSource: string) {
   return HAZARDS_METADATA[eadSource].label;
 }
 
-function formatDamagesValue(value: number) {
-  if (value == null) return '-';
-
-  return (
-    value.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }) + ' $'
-  );
+function numFormatMoney(value: number) {
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
-const damageColorSpec = VECTOR_COLOR_MAPS['damages'];
-const damageColorFn = colorMap(damageColorSpec.scale, damageColorSpec.range, damageColorSpec.empty);
+interface FormatConfig {
+  getDataLabel: (viewLayer: ViewLayer, fieldSpec: FieldSpec) => string;
+  getValueFormatted: (value: any, viewLayer: ViewLayer, fieldSpec: FieldSpec) => string;
+}
 
-const DamagesDescription: FC<{ viewLayer: ViewLayer; feature: any; styleParams: StyleParams }> = ({
-  viewLayer,
-  feature,
-  styleParams,
-}) => {
-  const eadAccessor = useMemo(() => viewLayer.dataAccessFn?.({ styleParams }).dataAccessor, [viewLayer, styleParams]);
-
-  const fieldSpec = styleParams.colorMap.colorField;
-  const damageSource = styleParams.colorMap.colorField.fieldDimensions.hazard;
-  const value = eadAccessor?.(feature);
-  const color = damageColorFn(value);
-  const variableLabel = fieldSpec.field === 'ead_mean' ? 'Direct Damages' : 'Economic Losses';
-  return (
-    <Box>
-      <DataItem
-        label={`${variableLabel} (${getSourceLabel(damageSource)})`}
-        value={
-          <>
-            <ColorBox color={color} />
-            {formatDamagesValue(value)}
-          </>
-        }
-      />
-    </Box>
-  );
+const DATA_FORMATS: Record<string, FormatConfig> = {
+  damages_expected: {
+    getDataLabel: (viewLayer, colorField) => {
+      const variableLabel = colorField.field === 'ead_mean' ? 'Direct Damages' : 'Economic Losses';
+      const sourceLabel = getSourceLabel(colorField.fieldDimensions.hazard);
+      return `${variableLabel} (${sourceLabel})`;
+    },
+    getValueFormatted: (value, viewLayer, fieldSpec) => {
+      return value == null ? value : `${numFormatMoney(value)} $`;
+    },
+  },
+  adaptation: {
+    getDataLabel: (viewLayer, colorField) => {
+      return `${_.startCase(colorField.field)} ${paren(colorField.fieldDimensions.adaptation_name)}`;
+    },
+    getValueFormatted: (value, viewLayer, fieldSpec) => {
+      return value == null ? value : `${numFormatMoney(value)} $`;
+    },
+  },
 };
 
-const AdaptationDescription: FC<{ viewLayer: ViewLayer; feature: any; styleParams: StyleParams }> = ({
-  viewLayer,
-  feature,
-  styleParams,
-}) => {
-  const {
-    colorMap: { colorField, colorScheme },
-  } = styleParams;
-  const adaptationAccessor = useMemo(
-    () => viewLayer.dataAccessFn?.({ styleParams }).dataAccessor,
-    [viewLayer, styleParams],
-  );
-  const value = adaptationAccessor?.(feature);
+export const DataDescription: FC<{
+  viewLayer: ViewLayer;
+  feature: any;
+  colorMap: ColorMap;
+}> = ({ viewLayer, feature, colorMap: { colorField, colorScheme } }) => {
+  const accessor = useMemo(() => viewLayer.dataAccessFn?.(colorField), [viewLayer, colorField]);
+
+  const value = accessor?.(feature);
 
   const colorSpec = VECTOR_COLOR_MAPS[colorScheme];
   const colorFn = useMemo(() => colorMap(colorSpec.scale, colorSpec.range, colorSpec.empty), [colorSpec]);
 
   const color = colorFn(value);
 
+  const { getDataLabel, getValueFormatted } = DATA_FORMATS[colorField.fieldGroup];
+
+  const dataLabel = getDataLabel(viewLayer, colorField);
+  const formattedValue = getValueFormatted(value, viewLayer, colorField);
+
   return (
     <Box>
       <DataItem
-        label={`${_.startCase(colorField.field)} ${paren(colorField.fieldDimensions.adaptation_name)}`}
+        label={dataLabel}
         value={
           <>
             <ColorBox color={color} />
-            {formatDamagesValue(value)}
+            {formattedValue ?? '-'}
           </>
         }
       />
@@ -104,7 +96,7 @@ export const VectorHoverDescription: FC<{
 
   const layerParams = useRecoilValue(singleViewLayerParamsState(viewLayer.id));
   const { styleParams } = layerParams;
-  const { colorMap } = styleParams;
+  const { colorMap } = styleParams ?? {};
 
   const isDataMapped = colorMap != null;
 
@@ -118,12 +110,7 @@ export const VectorHoverDescription: FC<{
       </Typography>
 
       <DataItem label="ID" value={feature.properties.asset_id} />
-      {colorMap?.colorField.fieldGroup === 'damages_expected' && (
-        <DamagesDescription viewLayer={viewLayer} feature={feature} styleParams={styleParams} />
-      )}
-      {colorMap?.colorField.fieldGroup === 'adaptation' && (
-        <AdaptationDescription viewLayer={viewLayer} feature={feature} styleParams={styleParams} />
-      )}
+      {colorMap && <DataDescription viewLayer={viewLayer} feature={feature} colorMap={colorMap} />}
     </>
   );
 };

@@ -1,4 +1,5 @@
 import { DataLoader } from 'lib/data-loader/data-loader';
+import { Accessor } from 'lib/deck/props/getters';
 import { InteractionTarget } from './interactions/use-interactions';
 
 export interface FieldSpec {
@@ -21,24 +22,18 @@ export interface ViewLayerFunctionOptions {
   selection?: InteractionTarget<any>;
 }
 
-export interface ViewLayerDataFunctionOptions {
-  styleParams?: StyleParams;
-}
-
 export interface DataManager {
   getDataAccessor: (layer: string, fieldSpec: any) => (d: any) => any;
   getDataLoader: (layer: string, fieldSpec: any) => DataLoader;
 }
-export interface DataAccess {
-  dataAccessor: (d: any) => any;
-  dataLoader: DataLoader;
-}
+
+export type ViewLayerDataAccessFunction = (fieldSpec: FieldSpec) => Accessor<any>;
 export interface ViewLayer {
   id: string;
   params?: any;
   group: string;
   fn: (options: ViewLayerFunctionOptions) => any;
-  dataAccessFn?: (options: ViewLayerDataFunctionOptions) => DataAccess;
+  dataAccessFn?: ViewLayerDataAccessFunction;
   spatialType?: string;
   interactionGroup?: string;
 }

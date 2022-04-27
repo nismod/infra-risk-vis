@@ -1,8 +1,7 @@
 import {
-  DataAccess,
   StyleParams,
   ViewLayer,
-  ViewLayerDataFunctionOptions,
+  ViewLayerDataAccessFunction,
   ViewLayerFunctionOptions,
 } from 'lib/data-map/view-layers';
 import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
@@ -19,7 +18,7 @@ export function assetViewLayer(
   metadata: ViewLayerMetadata,
   selectionPolygonOffset: number,
   customFn: ({ zoom, styleParams }: { zoom: number; styleParams?: StyleParams }) => object[],
-  customDataAccessFn: ({ styleParams }: ViewLayerDataFunctionOptions) => DataAccess,
+  customDataAccessFn: ViewLayerDataAccessFunction,
 ): ViewLayer {
   const { group, spatialType, interactionGroup } = metadata;
 
@@ -39,7 +38,7 @@ export function assetViewLayer(
             polygonOffset: selectionPolygonOffset,
           },
           dataLoaderOptions: {
-            dataLoader: customDataAccessFn?.({ styleParams })?.dataLoader,
+            dataLoader: customDataAccessFn?.(styleParams?.colorMap?.colorField)?.dataLoader,
           },
         },
         deckProps,
