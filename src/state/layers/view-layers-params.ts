@@ -5,7 +5,7 @@ import { ViewLayer, ViewLayerParams } from 'lib/data-map/view-layers';
 import { viewLayersFlatState } from './view-layers-flat';
 import _ from 'lodash';
 import { selectionState } from 'lib/data-map/interactions/interaction-state';
-import { styleParamsState } from 'state/style-params';
+import { networkStyleParamsState } from './networks';
 
 export const viewLayerState = atomFamily<ViewLayer, string>({
   key: 'viewLayerState',
@@ -37,7 +37,7 @@ export const singleViewLayerParamsState = selectorFamily<ViewLayerParams, string
       layerParams.selection = groupSelection?.viewLayer.id === viewLayer.id ? groupSelection : null;
 
       if (viewLayer?.group === 'networks') {
-        layerParams.styleParams = get(styleParamsState);
+        layerParams.styleParams = get(networkStyleParamsState);
       }
 
       return layerParams;

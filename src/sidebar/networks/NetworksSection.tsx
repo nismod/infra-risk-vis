@@ -11,6 +11,7 @@ import { StyleSelection } from 'sidebar/StyleSelection';
 import { DamageSourceControl } from './DamageSourceControl';
 import { SidebarPanelSection } from 'sidebar/ui/SidebarPanelSection';
 import { networksStyleStateEffect, sectionStyleValueState } from 'state/sections';
+import { AdaptationControl } from './AdaptationControl';
 
 export const NetworksSection: FC<{}> = () => {
   const style = useRecoilValue(sectionStyleValueState('assets'));
@@ -26,6 +27,11 @@ export const NetworksSection: FC<{}> = () => {
           {style === 'damages' ? (
             <Collapse>
               <DamageSourceControl />
+            </Collapse>
+          ) : null}
+          {style === 'adaptation' ? (
+            <Collapse>
+              <AdaptationControl />
             </Collapse>
           ) : null}
         </TransitionGroup>

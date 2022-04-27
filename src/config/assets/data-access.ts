@@ -31,6 +31,8 @@ export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
   } else if (fieldGroup === 'damages_return_period') {
     // return return period damages dynamically loaded from API
     return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
+  } else if (fieldGroup === 'adaptation') {
+    return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
   } else {
     // field other than damages - use field name as key
     return featureProperty(field);

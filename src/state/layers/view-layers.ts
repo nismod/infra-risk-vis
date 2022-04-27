@@ -1,17 +1,11 @@
 import { regionLabelsDeckLayer } from 'config/regions/region-labels-deck-layer';
 import { regionBoundariesViewLayer } from 'config/regions/boundaries-view-layer';
-import { hazardViewLayer } from 'config/hazards/hazard-view-layer';
 import { ViewLayer, viewOnlyLayer } from 'lib/data-map/view-layers';
 import { backgroundState, showLabelsState } from 'map/layers/layers-state';
 import { selector } from 'recoil';
-import { dataParamsByGroupState } from 'state/data-params';
-import { hazardVisibilityState } from 'state/hazards/hazard-visibility';
-import { networkSelectionState } from 'state/networks/network-selection';
 import { truthyKeys } from 'lib/helpers';
-import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
 import { labelsLayer } from 'config/deck-layers/labels-layer';
 import { isRetinaState } from 'state/is-retina';
-import { HazardParams } from 'config/hazards/domains';
 import { ConfigTree } from 'lib/nested-config/config-tree';
 
 import { populationViewLayer } from 'config/regions/population-view-layer';
@@ -19,24 +13,8 @@ import { regionLevelState, showPopulationState } from 'state/regions';
 import { sectionVisibilityState } from 'state/sections';
 import { buildingsViewLayer } from 'config/buildings/buildings-view-layer';
 import { buildingSelectionState } from 'state/buildings';
-
-const hazardLayerState = selector<ViewLayer[]>({
-  key: 'hazardLayerState',
-  get: ({ get }) =>
-    get(sectionVisibilityState('hazards'))
-      ? truthyKeys(get(hazardVisibilityState)).map((hazard) =>
-          hazardViewLayer(hazard, get(dataParamsByGroupState(hazard)) as HazardParams),
-        )
-      : [],
-});
-
-const networkLayersState = selector<ViewLayer[]>({
-  key: 'networkLayersState',
-  get: ({ get }) =>
-    get(sectionVisibilityState('assets'))
-      ? get(networkSelectionState).map((network) => INFRASTRUCTURE_VIEW_LAYERS[network])
-      : [],
-});
+import { networkLayersState } from './networks';
+import { hazardLayerState } from './hazards';
 
 const buildingLayersState = selector<ViewLayer[]>({
   key: 'buildingLayersState',

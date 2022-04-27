@@ -59,4 +59,31 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       defaultStyle: 'boundaries',
     },
   },
+  adaptation: {
+    assets: {
+      expanded: true,
+      visible: true,
+
+      styles: ['type', 'damages', 'adaptation'],
+      defaultStyle: 'adaptation',
+    },
+    hazards: {
+      expanded: false,
+      visible: true,
+    },
+    buildings: {
+      expanded: false,
+      visible: false,
+
+      styles: ['type'],
+      defaultStyle: 'type',
+    },
+    regions: {
+      expanded: false,
+      visible: true,
+
+      styles: ['boundaries', 'population'],
+      defaultStyle: 'boundaries',
+    },
+  },
 };

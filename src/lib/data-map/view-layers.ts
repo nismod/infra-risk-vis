@@ -54,5 +54,5 @@ export function viewOnlyLayer(id, fn): ViewLayer {
 
 export interface ViewLayerParams {
   selection?: any;
-  styleParams?: any;
+  styleParams?: StyleParams;
 }

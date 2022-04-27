@@ -37,11 +37,19 @@ export const VECTOR_COLOR_MAPS = {
     range: [0, 10000],
     empty: '#ccc',
   },
+  adaptationAvoided: {
+    scale: d3.interpolateRdBu,
+    range: [0, 1000000],
+    empty: '#ccc',
+  },
+  adaptationCost: {
+    scale: d3.interpolateGreens,
+    range: [0, 1000000000],
+    empty: '#ccc',
+  },
 };
 
-export const colorMapFromScheme = _.memoize(function (
-  colorScheme: string,
-): Accessor<string, any> {
+export const colorMapFromScheme = _.memoize(function (colorScheme: string): Accessor<string, any> {
   const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
 
   return withTriggers(colorMap(scale, range, empty), [colorScheme]);
