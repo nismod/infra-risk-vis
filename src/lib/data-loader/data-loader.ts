@@ -1,12 +1,13 @@
+import { ApiClient } from 'lib/api-client';
+import { FieldSpec } from 'lib/data-map/view-layers';
+
 export type DataLoaderSubscriber = (loader: DataLoader) => void;
 
+const apiClient = new ApiClient({
+  BASE: '/api',
+});
 export class DataLoader<T = any> {
-  constructor(
-    public readonly id: string,
-    public readonly layer: string,
-    public readonly field: string,
-    public readonly fieldParameters: any,
-  ) {}
+  constructor(public readonly id: string, public readonly layer: string, public readonly fieldSpec: FieldSpec) {}
 
   private _updateTrigger: number = 1;
 
@@ -62,25 +63,15 @@ export class DataLoader<T = any> {
   }
 
   private async requestMissingData(missingIds: number[]): Promise<Record<string, T>> {
-    const path = `/api/attributes/${this.field}`;
-
-    const search = new URLSearchParams();
-    search.append('layer', this.layer);
-    Object.entries(this.fieldParameters).forEach(([k, v]) => search.append(k, v as string));
-
-    const res = await fetch(`${path}?${search}`, {
-      method: 'POST',
-      body: JSON.stringify(missingIds),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const { fieldGroup, field, fieldDimensions } = this.fieldSpec;
+    console.log(`Requesting missing data`, JSON.stringify(fieldDimensions), missingIds);
+    return await apiClient.attributes.attributesReadAttributes({
+      layer: this.layer,
+      fieldGroup,
+      field,
+      dimensions: JSON.stringify(fieldDimensions),
+      requestBody: missingIds,
     });
-
-    if (res.status !== 200) {
-      return {};
-    } else {
-      return await res.json();
-    }
   }
 
   private updateData(loadedData: Record<string, T>) {

@@ -13,7 +13,7 @@ import { damageMapStyleParamsState, damagesFieldState } from 'state/damage-mappi
 import { ColorBox } from './ColorBox';
 
 function getSourceLabel(eadSource: string) {
-  if (eadSource === 'total-damages') return 'Total';
+  if (eadSource === 'all') return 'All Hazards';
 
   return HAZARDS_METADATA[eadSource].label;
 }
@@ -40,7 +40,7 @@ const DamagesDescription: FC<{ viewLayer: ViewLayer; feature: any }> = ({ viewLa
 
   const value = eadAccessor?.(feature);
   const color = damageColorFn(value);
-  const variableLabel = damagesFieldSpec.fieldParams.damage_type === 'direct' ? 'Direct Damages' : 'Economic Losses';
+  const variableLabel = damagesFieldSpec.field === 'ead_mean' ? 'Direct Damages' : 'Economic Losses';
   return (
     <Box>
       <DataItem

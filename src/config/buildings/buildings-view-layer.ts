@@ -16,30 +16,30 @@ enum BuildingType {
 }
 
 const buildingTypeLookup = {
-  Commercial: BuildingType.commercial,
-  Industrial: BuildingType.industrial,
-  Institutional: BuildingType.institutional,
-  'Mixed Use': BuildingType.mixed_use,
-  Other: BuildingType.other,
-  Recreation: BuildingType.recreation,
-  Residential: BuildingType.residential,
-  Resort: BuildingType.resort,
+  buildings_commercial: BuildingType.commercial,
+  buildings_industrial: BuildingType.industrial,
+  buildings_institutional: BuildingType.institutional,
+  buildings_mixed: BuildingType.mixed_use,
+  buildings_other: BuildingType.other,
+  buildings_recreation: BuildingType.recreation,
+  buildings_residential: BuildingType.residential,
+  buildings_resort: BuildingType.resort,
 };
 
 const buildingColor = {
   [BuildingType.commercial]: COLORS.buildings_commercial.deck,
   [BuildingType.industrial]: COLORS.buildings_industrial.deck,
   [BuildingType.institutional]: COLORS.buildings_institutional.deck,
-  [BuildingType.mixed_use]: COLORS.buildings_mixed_use.deck,
+  [BuildingType.mixed_use]: COLORS.buildings_mixed.deck,
   [BuildingType.other]: COLORS.buildings_other.deck,
   [BuildingType.recreation]: COLORS.buildings_recreation.deck,
   [BuildingType.residential]: COLORS.buildings_residential.deck,
   [BuildingType.resort]: COLORS.buildings_resort.deck,
 };
 
-export function buildingsViewLayer(): ViewLayer {
+export function buildingsViewLayer(building_type_id): ViewLayer {
   return assetViewLayer(
-    'buildings',
+    building_type_id,
     {
       group: 'buildings',
       spatialType: 'vector',
@@ -49,8 +49,8 @@ export function buildingsViewLayer(): ViewLayer {
     ({ zoom, styleParams }) => [
       { minZoom: 12 },
       border(COLORS.buildings_unknown.deck),
-      fillColor((x) => buildingColor[buildingTypeLookup[x.properties.building_type]]),
+      fillColor(buildingColor[buildingTypeLookup[building_type_id]]),
     ],
-    assetDataAccessFunction('buildings'),
+    assetDataAccessFunction(building_type_id),
   );
 }

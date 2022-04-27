@@ -9,13 +9,21 @@ intermediate_data/
 *.aux.xml
 *.tar.xz
 *.bak
+etl/*_test.csv
+etl/logs
+etl/vector
+etl/regions
+etl/config_local.yml
 public/*.csv
 public/**/*.csv
+.snakemake
 
 # local config
-.env
+.env*
+!.env.example
 TODO
 NOTES
+venv
 
 # build
 build/
@@ -31,3 +39,5 @@ terracotta.sqlite
 
 # python files
 __pycache__
+*.egg-info
+*.pyc

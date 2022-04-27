@@ -18,37 +18,119 @@ class DamageType(str, Enum):
     combined = "combined"
 
 
-class FieldParams(BaseModel):
+class DataDimensions(BaseModel):
     pass
 
 
-class DamageParams(FieldParams):
+class DataVariables(BaseModel):
+    pass
+
+
+# Expected Damages
+class ExpectedDamagesDimensions(DataDimensions):
     hazard: str
     rcp: str
     epoch: str
-    damage_type: DamageType
     protection_standard: int
 
 
-class DamageBase(DamageParams):
-    min: float
-    mean: float
-    max: float
+class ExpectedDamagesVariables(DataVariables):
+    ead_amin: float
+    ead_mean: float
+    ead_amax: float
+    eael_amin: float
+    eael_mean: float
+    eael_amax: float
 
 
-class DamageOut(DamageBase):
+class ExpectedDamage(ExpectedDamagesDimensions, ExpectedDamagesVariables):
     class Config:
         orm_mode = True
 
 
+# Return Period Damages
+class ReturnPeriodDamagesDimensions(DataDimensions):
+    hazard: str
+    rcp: str
+    epoch: str
+    rp: int
+
+
+class ReturnPeriodDamagesVariables(DataVariables):
+    exposure: float
+    damage_amin: float
+    damage_mean: float
+    damage_amax: float
+    loss_amin: float
+    loss_mean: float
+    loss_amax: float
+
+
+class ReturnPeriodDamage(ReturnPeriodDamagesDimensions, ReturnPeriodDamagesVariables):
+    class Config:
+        orm_mode = True
+
+
+# NPV Damages
+class NPVDamagesDimensions(DataDimensions):
+    hazard: str
+    rcp: str
+
+
+class NPVDamagesVariables(DataVariables):
+    ead_amin: float
+    ead_mean: float
+    ead_amax: float
+    eael_amin: float
+    eael_mean: float
+    eael_amax: float
+
+
+class NPVDamage(NPVDamagesDimensions, NPVDamagesVariables):
+    class Config:
+        orm_mode = True
+
+
+# Adaptation Options
+
+
+class AdaptationDimensions(DataDimensions):
+    hazard: str
+    rcp: str
+
+
+class AdaptationVariables(DataVariables):
+    adaptation_name: str
+    adaptation_protection_level: float
+    adaptation_cost: float
+
+    avoided_ead_amin: float
+    avoided_ead_mean: float
+    avoided_ead_amax: float
+    avoided_eael_amin: float
+    avoided_eael_mean: float
+    avoided_eael_amax: float
+
+
+class Adaptation(AdaptationDimensions, AdaptationVariables):
+    class Config:
+        orm_mode = True
+
+
+# Features
 class FeatureOutBase(FeatureBase):
     class Config:
         orm_mode = True
 
 
 class FeatureOut(FeatureOutBase):
-    damages: list[DamageOut] = []
+    damages_expected: list[ExpectedDamage] = []
+    damages_return_period: list[ReturnPeriodDamage] = []
+    damages_npv: list[NPVDamage] = []
+    adaptations: list[Adaptation] = []
 
+
+# Features Sorted Lists
 
 SortFieldT = TypeVar("SortFieldT")
 
@@ -62,6 +144,8 @@ class FeatureListItemOut(GenericModel, Generic[SortFieldT]):
     class Config:
         orm_mode = True
 
+
+# Feature Attributes Lookups
 
 AttributeT = TypeVar("AttributeT")
 

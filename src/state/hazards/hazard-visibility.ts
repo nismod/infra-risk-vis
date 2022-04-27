@@ -9,7 +9,7 @@ export const hazardVisibilityState = selector({
   get: ({ get }) => {
     if (get(showDamagesState)) {
       const selectedDamageSource = get(damageSourceState);
-      if (selectedDamageSource === 'total-damages') {
+      if (selectedDamageSource === 'all') {
         return {};
       } else {
         return {

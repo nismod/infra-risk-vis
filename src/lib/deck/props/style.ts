@@ -34,7 +34,7 @@ export function vectorColor(type: 'fill' | 'stroke', getColor: GetColor) {
   return {
     [propName]: getColor,
     updateTriggers: {
-      [propName]: (getColor as any)?.updateTriggers ?? [],
+      [propName]: (getColor as any)?.updateTriggers ?? (typeof getColor === 'function' ? [] : undefined),
     },
   };
 }

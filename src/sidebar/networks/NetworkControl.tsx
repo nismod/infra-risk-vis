@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
 
 import { CheckboxTree } from 'lib/controls/checkbox-tree/CheckboxTree';
 
@@ -11,17 +10,7 @@ import {
   networkTreeExpandedState,
 } from 'state/networks/network-selection';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
-
-const LayerLabel = ({ label, type, color }) => {
-  return (
-    <>
-      <Typography>
-        <Box component="span" className={type === 'line' ? 'dot line' : 'dot'} style={{ backgroundColor: color }}></Box>
-        {label}
-      </Typography>
-    </>
-  );
-};
+import { LayerLabel } from 'sidebar/ui/LayerLabel';
 
 export const NetworkControl: FC<{}> = () => {
   const [checkboxState, setCheckboxState] = useRecoilState(networkTreeCheckboxState);

@@ -28,46 +28,24 @@ Other functionality planned (and incorporated in some way in previous versions):
 This README covers requirements and steps through how to prepare data for
 visualisation and how to run the tool.
 
-1. Data preparation requirements
-2. Prepare data
-3. Build and run requirements
-4. Run
+1. Data preparation
+3. Build and run
+4. Deployment
 
-## Data preparation requirements
+## Data preparation
 
-### GDAL tools
+The visualisation tool runs using prepared versions of analysis data and results
+- Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
+  a terracotta SQLite database
+- Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
+  Vector Tiles
 
-[ogr2ogr](https://www.gdal.org/ogr2ogr.html) and other GDAL programs are used for spatial data
-processing. On Ubuntu, run:
+See `./etl` directory for details.
 
-    sudo apt-get install gdal-bin
+## Build and run
 
-### Tippecanoe
-
-The data preparation steps use
-[Mapbox tippecanoe](https://github.com/mapbox/tippecanoe) to build vector tiles
-from large feature sets.
-
-The easiest way to install tippecanoe on OSX is with Homebrew:
-
-    brew install tippecanoe
-
-On Ubuntu it will usually be easiest to build from the source repository:
-
-    sudo apt-get install build-essential g++ libsqlite3-dev zlib1g-dev
-    git clone https://github.com/mapbox/tippecanoe
-    cd tippecanoe
-    make -j
-    make
-
-### Prepare datasets for visualisation
-
-The visualisation tool runs off MBTiles files which contain vector tiles of the
-data to visualise.
-
-> TODO update the documentation of this process
-
-## Build and run requirements
+Running the application requires several (local) server processes: the
+vector and raster tileservers, the app backend, and the app frontend.
 
 ### Node and npm
 
@@ -82,16 +60,11 @@ Install required packages. Run from the project root:
 
 Install the raster tileserver - Terracotta
 
-Suggest installing using conda:
+For example, installing using conda:
 
     conda create --name infrariskvis python=3.8 numpy rasterio shapely crick
     conda activate infrariskvis
     pip install terracotta[recommended]
-
-## Run
-
-Running the application currently requires three (local) server processes: the
-vector and raster tileservers, and the app itself.
 
 ### Run the vector tileserver
 
@@ -109,7 +82,24 @@ Run the raster tileserver:
 
     npm run raster
 
-### Run the app
+### Run the backend API server and database
+
+Two options here.
+
+Without docker, follow the notes in `./backend/README.md` to setup a development
+environment for python.
+
+Set up a postgres database and add connection details in `./backend/.env`.
+
+Run the api server:
+
+    cd ./backend
+    pipenv run uvicorn backend.app.main:app --host localhost --port 8888
+
+Alternatively, run `docker-compose` to run the API server in one container and
+postgres in another.
+
+### Run the frontend app in development mode
 
 Start the app server:
 
@@ -121,7 +111,11 @@ This should automatically open a browser tab. If not, open:
 
 ## Deployment
 
-See `./deploy` directory.
+The site can run on a single Linux machine or virtual machine, with a suggested
+configuration that deploys the server processes behind an Nginx reverse proxy
+in production modes.
+
+See `./deploy` directory for details.
 
 ## Acknowledgements
 

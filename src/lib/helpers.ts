@@ -11,6 +11,7 @@ export function commas(x) {
 }
 
 export function titleCase(str: string) {
+  if (str == null) return `${str}`;
   var splitStr = str.toLowerCase().split(' ');
   for (var k = 0; k < splitStr.length; k++) {
     splitStr[k] = splitStr[k].charAt(0).toUpperCase() + splitStr[k].substring(1);
@@ -18,8 +19,23 @@ export function titleCase(str: string) {
   return splitStr.join(' ');
 }
 
-export function numFormat(n: number, maximumSignificantDigits: number=3) {
-  return n.toLocaleString(undefined, { maximumSignificantDigits })
+export function numFormat(n: number, maximumSignificantDigits: number = 3) {
+  return n == null ? `-` : n.toLocaleString(undefined, { maximumSignificantDigits });
+}
+
+export function numRangeFormat(n1: number, n2: number) {
+  if (n1 == null || n2 == null) return null;
+
+  return `${numFormat(n1)}–${numFormat(n2)}`;
+}
+
+/**
+ * Wrap value in parentheses, if value is not empty
+ * @param x value to wrap
+ * @returns string with parentheses or empty string
+ */
+export function paren(x: any) {
+  return x == null ? '' : `(${x})`;
 }
 
 export function unique<T>(arr: T[]) {

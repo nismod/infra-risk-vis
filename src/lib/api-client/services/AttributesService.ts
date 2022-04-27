@@ -1,8 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { DamageType } from '../models/DamageType';
-
 import type { CancelablePromise } from '../core/CancelablePromise';
 import type { BaseHttpRequest } from '../core/BaseHttpRequest';
 
@@ -11,37 +9,33 @@ export class AttributesService {
     constructor(public readonly httpRequest: BaseHttpRequest) {}
 
     /**
-     * Read Damages
-     * @returns number Successful Response
+     * Read Attributes
+     * @returns any Successful Response
      * @throws ApiError
      */
-    public attributesReadDamages({
+    public attributesReadAttributes({
+        fieldGroup,
         layer,
-        hazard,
-        rcp,
-        epoch,
-        damageType,
-        protectionStandard,
+        field,
+        dimensions,
         requestBody,
     }: {
+        fieldGroup: string,
         layer: string,
-        hazard: string,
-        rcp: string,
-        epoch: string,
-        damageType: DamageType,
-        protectionStandard: number,
+        field: string,
+        dimensions: string,
         requestBody: Array<number>,
-    }): CancelablePromise<Record<string, number>> {
+    }): CancelablePromise<any> {
         return this.httpRequest.request({
             method: 'POST',
-            url: '/attributes/damages',
+            url: '/attributes/{field_group}',
+            path: {
+                'field_group': fieldGroup,
+            },
             query: {
                 'layer': layer,
-                'hazard': hazard,
-                'rcp': rcp,
-                'epoch': epoch,
-                'damage_type': damageType,
-                'protection_standard': protectionStandard,
+                'field': field,
+                'dimensions': dimensions,
             },
             body: requestBody,
             mediaType: 'application/json',

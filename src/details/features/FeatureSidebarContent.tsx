@@ -4,7 +4,9 @@ import { Box, IconButton, Typography } from '@mui/material';
 import {
   AirportDetails,
   BridgeDetails,
+  BuildingDetails,
   DefaultDetails,
+  DetailsComponent,
   IrrigationDetails,
   PortDetails,
   PowerDemandNodeDetails,
@@ -14,6 +16,7 @@ import {
   RailEdgeDetails,
   RailNodeDetails,
   RoadEdgeDetails,
+  RoadJunctionDetails,
   WastewaterNodeDetails,
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
@@ -26,24 +29,75 @@ import { DamagesSection } from './damages/DamagesSection';
 import { Download } from '@mui/icons-material';
 import { downloadFile } from 'lib/helpers';
 
-var componentMapping = {
-  airport_areas: AirportDetails,
-  elec_edges_high: PowerLineDetails,
-  elec_edges_low: PowerLineDetails,
-  elec_nodes_junction: PowerJunctionNodeDetails,
-  elec_nodes_sink: PowerDemandNodeDetails,
-  elec_nodes_source: PowerGenerationNodeDetails,
-  port_areas: PortDetails,
+var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> = {
+  airport_terminals: AirportDetails,
+  airport_runways: AirportDetails,
+
+  port_areas_break: PortDetails,
+  port_areas_container: PortDetails,
+  port_areas_industry: PortDetails,
+  port_areas_silo: PortDetails,
+
   rail_edges: RailEdgeDetails,
-  rail_nodes: RailNodeDetails,
+  rail_stations: RailNodeDetails,
+  rail_junctions: RailNodeDetails,
+
+  road_junctions: RoadJunctionDetails,
   road_bridges: BridgeDetails,
-  road_edges: RoadEdgeDetails,
+  road_edges_class_a: RoadEdgeDetails,
+  road_edges_class_b: RoadEdgeDetails,
+  road_edges_class_c: RoadEdgeDetails,
+  road_edges_metro: RoadEdgeDetails,
+  road_edges_track: RoadEdgeDetails,
+  road_edges_other: RoadEdgeDetails,
+
   water_irrigation_edges: IrrigationDetails,
   water_irrigation_nodes: IrrigationDetails,
-  water_potable_nodes: WaterSupplyNodeDetails,
+
+  water_potable_nodes_booster: WaterSupplyNodeDetails,
+  water_potable_nodes_catchment: WaterSupplyNodeDetails,
+  water_potable_nodes_entombment: WaterSupplyNodeDetails,
+  water_potable_nodes_filter: WaterSupplyNodeDetails,
+  water_potable_nodes_intake: WaterSupplyNodeDetails,
+  water_potable_nodes_well: WaterSupplyNodeDetails,
+  water_potable_nodes_pump: WaterSupplyNodeDetails,
+  water_potable_nodes_relift: WaterSupplyNodeDetails,
+  water_potable_nodes_reservoir: WaterSupplyNodeDetails,
+  water_potable_nodes_river_source: WaterSupplyNodeDetails,
+  water_potable_nodes_spring: WaterSupplyNodeDetails,
+  water_potable_nodes_tank: WaterSupplyNodeDetails,
+  water_potable_nodes_sump: WaterSupplyNodeDetails,
+  water_potable_nodes_tp: WaterSupplyNodeDetails,
   water_potable_edges: WaterPipelineDetails,
-  water_waste_edges: WaterPipelineDetails,
-  water_waste_nodes: WastewaterNodeDetails,
+
+  water_waste_nodes_sump: WastewaterNodeDetails,
+  water_waste_nodes_pump: WastewaterNodeDetails,
+  water_waste_nodes_relift: WastewaterNodeDetails,
+  water_waste_nodes_wwtp: WastewaterNodeDetails,
+  water_waste_sewer_gravity: WaterPipelineDetails,
+  water_waste_sewer_pressure: WaterPipelineDetails,
+
+  elec_edges_high: PowerLineDetails,
+  elec_edges_low: PowerLineDetails,
+  elec_nodes_pole: PowerJunctionNodeDetails,
+  elec_nodes_substation: PowerJunctionNodeDetails, // TODO create own component
+
+  elec_nodes_demand: PowerDemandNodeDetails,
+
+  elec_nodes_diesel: PowerGenerationNodeDetails,
+  elec_nodes_gas: PowerGenerationNodeDetails,
+  elec_nodes_hydro: PowerGenerationNodeDetails,
+  elec_nodes_solar: PowerGenerationNodeDetails,
+  elec_nodes_wind: PowerGenerationNodeDetails,
+
+  buildings_commercial: BuildingDetails,
+  buildings_industrial: BuildingDetails,
+  buildings_residential: BuildingDetails,
+  buildings_other: BuildingDetails,
+  buildings_institutional: BuildingDetails,
+  buildings_mixed: BuildingDetails,
+  buildings_recreation: BuildingDetails,
+  buildings_resort: BuildingDetails,
 };
 
 interface FeatureSidebarContentProps {
@@ -61,16 +115,19 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ feature,
 
   return (
     <Box position="relative">
-      <pre id="feature_debug" style={{ display: 'none' }}>
-        <code>{JSON.stringify(f, null, 2)}</code>
+      <pre style={{ display: 'none' }}>
+        <code className="feature-debug">{JSON.stringify(f, null, 2)}</code>
+        {featureDetails && (
+          <code className="feature-details-debug">{JSON.stringify(featureDetails.properties, null, 2)}</code>
+        )}
       </pre>
       <Typography variant="caption">
         <ColorBox color={color ?? '#333'} />
         {label}
       </Typography>
-      <DetailsComponent f={f} />
       {featureDetails && (
         <>
+          <DetailsComponent f={featureDetails.properties} />
           <IconButton
             sx={{
               position: 'absolute',

@@ -11,7 +11,7 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
     children: [
       {
         id: 'power-lines',
-        label: 'Power Lines',
+        label: 'Transmission',
         children: [
           {
             id: 'elec_edges_high',
@@ -21,25 +21,45 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
             id: 'elec_edges_low',
             label: 'Low Voltage',
           },
+          {
+            id: 'elec_nodes_pole',
+            label: 'Poles',
+          },
+          {
+            id: 'elec_nodes_substation',
+            label: 'Substations',
+          },
         ],
       },
       {
-        id: 'power-nodes',
-        label: 'Power Nodes',
+        id: 'elec_nodes_source',
+        label: 'Generation',
         children: [
           {
-            id: 'elec_nodes_source',
-            label: 'Generation',
+            id: 'elec_nodes_diesel',
+            label: 'Diesel',
           },
           {
-            id: 'elec_nodes_sink',
-            label: 'Demand',
+            id: 'elec_nodes_gas',
+            label: 'Gas',
           },
           {
-            id: 'elec_nodes_junction',
-            label: 'Junctions',
+            id: 'elec_nodes_hydro',
+            label: 'Hydro',
+          },
+          {
+            id: 'elec_nodes_solar',
+            label: 'Solar',
+          },
+          {
+            id: 'elec_nodes_wind',
+            label: 'Wind',
           },
         ],
+      },
+      {
+        id: 'elec_nodes_demand',
+        label: 'Demand',
       },
     ],
   },
@@ -56,8 +76,12 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
             label: 'Railways',
           },
           {
-            id: 'rail_nodes',
+            id: 'rail_stations',
             label: 'Stations',
+          },
+          {
+            id: 'rail_junctions',
+            label: 'Junctions',
           },
         ],
       },
@@ -96,6 +120,10 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
             ],
           },
           {
+            id: 'road_junctions',
+            label: 'Road Junctions',
+          },
+          {
             id: 'road_bridges',
             label: 'Bridges',
           },
@@ -104,10 +132,38 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
       {
         id: 'port_areas',
         label: 'Ports',
+        children: [
+          {
+            id: 'port_areas_break',
+            label: 'Break',
+          },
+          {
+            id: 'port_areas_container',
+            label: 'Container',
+          },
+          {
+            id: 'port_areas_industry',
+            label: 'Industry',
+          },
+          {
+            id: 'port_areas_silo',
+            label: 'Silo',
+          },
+        ],
       },
       {
-        id: 'airport_areas',
+        id: 'air',
         label: 'Airports',
+        children: [
+          {
+            id: 'airport_runways',
+            label: 'Runways',
+          },
+          {
+            id: 'airport_terminals',
+            label: 'Terminals',
+          },
+        ],
       },
     ],
   },
@@ -126,6 +182,64 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
           {
             id: 'water_potable_nodes',
             label: 'Supply Facilities',
+            children: [
+              {
+                id: 'water_potable_nodes_booster',
+                label: 'Booster Station',
+              },
+              {
+                id: 'water_potable_nodes_catchment',
+                label: 'Catchment',
+              },
+              {
+                id: 'water_potable_nodes_entombment',
+                label: 'Entombment',
+              },
+              {
+                id: 'water_potable_nodes_filter',
+                label: 'Filter Plant',
+              },
+              {
+                id: 'water_potable_nodes_intake',
+                label: 'Intake',
+              },
+              {
+                id: 'water_potable_nodes_well',
+                label: 'Production Well',
+              },
+              {
+                id: 'water_potable_nodes_pump',
+                label: 'Pump Station',
+              },
+              {
+                id: 'water_potable_nodes_relift',
+                label: 'Relift Station',
+              },
+              {
+                id: 'water_potable_nodes_reservoir',
+                label: 'Reservoir',
+              },
+              {
+                id: 'water_potable_nodes_river_source',
+                label: 'River Source',
+              },
+              {
+                id: 'water_potable_nodes_spring',
+                label: 'Spring',
+              },
+              {
+                id: 'water_potable_nodes_tank',
+                label: 'Storage Tank',
+              },
+              {
+                id: 'water_potable_nodes_sump',
+                label: 'Sump',
+              },
+              {
+                id: 'water_potable_nodes_tp',
+                label: 'Treatment Plant',
+              },
+            ],
           },
         ],
       },
@@ -150,10 +264,38 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
           {
             id: 'water_waste_edges',
             label: 'Wastewater Pipelines',
+            children: [
+              {
+                id: 'water_waste_sewer_gravity',
+                label: 'Gravity',
+              },
+              {
+                id: 'water_waste_sewer_pressure',
+                label: 'Pressure',
+              },
+            ],
           },
           {
             id: 'water_waste_nodes',
             label: 'Wastewater Facilities',
+            children: [
+              {
+                id: 'water_waste_nodes_sump',
+                label: 'Sump',
+              },
+              {
+                id: 'water_waste_nodes_pump',
+                label: 'Pump',
+              },
+              {
+                id: 'water_waste_nodes_relift',
+                label: 'Relift Station',
+              },
+              {
+                id: 'water_waste_nodes_wwtp',
+                label: 'Treatment Plant',
+              },
+            ],
           },
         ],
       },

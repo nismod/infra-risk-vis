@@ -39,22 +39,3 @@ article {
 .mapboxgl-ctrl-logo {
   display: none !important;
 }
-/**
- * Legend
- */
-.dot.line {
-  border-radius: 0;
-  height: 6px;
-  width: 12px;
-}
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: black;
-  background-color: black;
-  display: inline-block;
-  margin-right: 5px;
-  text-align: center;
-  margin-bottom: 1px;
-}
