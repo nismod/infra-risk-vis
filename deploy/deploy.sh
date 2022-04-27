@@ -32,9 +32,16 @@ pushd backend
   pipenv lock -r > requirements.txt
 popd
 rsync -rvz backend/requirements.txt ubuntu@jamaica.infrastructureresilience.org:/var/www/backend/
+
 # update requirements
 ssh ubuntu@jamaica.infrastructureresilience.org 'cd /var/www/backend && sudo python3.10 -m pip install -r requirements.txt'
+# restart backend
+ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service backend restart'
+ssh ubuntu@jamaica.infrastructureresilience.org 'sudo chown :www-data /var/www/backend/backend.sock'
 
+# restart backend
+ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service terracotta restart'
+ssh ubuntu@jamaica.infrastructureresilience.org 'sudo chown :www-data /var/www/tileserver/raster/terracotta.sock'
 
 # restart tileserver
 ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service tileservergl restart'
