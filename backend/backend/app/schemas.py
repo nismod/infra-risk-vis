@@ -97,11 +97,11 @@ class NPVDamage(NPVDamagesDimensions, NPVDamagesVariables):
 class AdaptationDimensions(DataDimensions):
     hazard: str
     rcp: str
+    adaptation_name: str
+    adaptation_protection_level: float
 
 
 class AdaptationVariables(DataVariables):
-    adaptation_name: str
-    adaptation_protection_level: float
     adaptation_cost: float
 
     avoided_ead_amin: float

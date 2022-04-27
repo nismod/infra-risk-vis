@@ -36,8 +36,21 @@ def add_damages_expected_value_query(
 # def add_damages_npv_value_query(fq: Query, dimesions: schemas.NPVDamagesDimensions, field: str):
 #     pass
 
-# def add_adaptation_value_query(fq: Query, dimesions: schemas.AdaptationDimensions, field: str):
-#     pass
+
+def add_adaptation_value_query(
+    fq: Query, dimensions: schemas.AdaptationDimensions, field: str
+):
+    q = fq.join(models.Feature.adaptation)
+    q = q.filter_by(
+        hazard=dimensions.hazard,
+        rcp=dimensions.rcp,
+        adaptation_name=dimensions.adaptation_name,
+        adaptation_protection_level=dimensions.adaptation_protection_level,
+    )
+
+    value: Column = getattr(models.AdaptationCostBenefit, field)
+
+    return q.add_column(value.label("value"))
 
 
 @dataclass
@@ -63,11 +76,11 @@ DATA_GROUP_CONFIGS: dict[str, DataGroupConfig] = {
     #     variables_schema=schemas.NPVDamagesVariables,
     #     add_value_query=add_damages_npv_value_query
     # ),
-    # "adaptation": DataGroupConfig(
-    #     dimensions_schema=schemas.AdaptationDimensions,
-    #     variables_schema=schemas.AdaptationVariables,
-    #     add_value_query=add_adaptation_value_query
-    # )
+    "adaptation": DataGroupConfig(
+        dimensions_schema=schemas.AdaptationDimensions,
+        variables_schema=schemas.AdaptationVariables,
+        add_value_query=add_adaptation_value_query,
+    ),
 }
 
 
