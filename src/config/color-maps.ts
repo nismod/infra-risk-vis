@@ -41,7 +41,7 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   },
   adaptationAvoided: {
     scale: d3Scale.scaleSequential,
-    scheme: d3ScaleChromatic.interpolateRdBu,
+    scheme: d3ScaleChromatic.interpolateBlues,
     range: [0, 1000000],
     empty: '#ccc',
   },
