@@ -5,6 +5,7 @@ import { toDictionary } from 'lib/helpers';
 import { groupedFamily } from 'lib/recoil/grouped-family';
 import _ from 'lodash';
 import { atomFamily, useRecoilTransaction_UNSTABLE } from 'recoil';
+import { adaptationDomainsConfig } from 'config/domains/adaptation';
 
 export type DataParamParam = Readonly<{
   group: string;
@@ -14,6 +15,7 @@ export type DataParamParam = Readonly<{
 export const dataParamConfig: Record<string, DataParamGroupConfig> = {
   ...HAZARD_DOMAINS,
   all: totalDamagesConfig,
+  adaptation: adaptationDomainsConfig,
 };
 
 export const dataParamNamesByGroup = _.mapValues(dataParamConfig, (groupConfig) => _.keys(groupConfig.paramDefaults));

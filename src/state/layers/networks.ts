@@ -3,6 +3,7 @@ import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
 import { ViewLayer, StyleParams, ColorSpec } from 'lib/data-map/view-layers';
 import { atom, selector } from 'recoil';
 import { damageMapStyleParamsState } from 'state/damage-mapping/damage-style-params';
+import { dataParamsByGroupState } from 'state/data-params';
 import { networkSelectionState } from 'state/networks/network-selection';
 import { networksStyleState } from 'state/networks/networks-style';
 import { sectionVisibilityState } from 'state/sections';
@@ -24,6 +25,7 @@ export const adaptationStyleParamsState = selector<StyleParams>({
   key: 'adaptationStyleParamsState',
   get: ({ get }) => {
     const field = get(adaptationFieldState);
+    const { hazard, rcp, adaptation_name, adaptation_protection_level } = get(dataParamsByGroupState('adaptation'));
 
     let colorSpec: ColorSpec;
     if (field === 'adaptation_cost') {
@@ -37,10 +39,10 @@ export const adaptationStyleParamsState = selector<StyleParams>({
         fieldSpec: {
           fieldGroup: 'adaptation',
           fieldDimensions: {
-            hazard: 'flooding',
-            rcp: '8.5',
-            adaptation_name: 'Elevate the roads',
-            adaptation_protection_level: 1,
+            hazard,
+            rcp,
+            adaptation_name,
+            adaptation_protection_level,
           },
           field,
         },

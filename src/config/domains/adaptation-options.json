@@ -1,0 +1,946 @@
+[
+  {
+    "sector": "power",
+    "subsector": "demand",
+    "hazard": "TC",
+    "rcp": "4.5",
+    "adaptation_name": "Upgrade wooden poles to steel",
+    "adaptation_protection_level": 0.76
+  },
+  {
+    "sector": "power",
+    "subsector": "demand",
+    "hazard": "TC",
+    "rcp": "8.5",
+    "adaptation_name": "Upgrade wooden poles to steel",
+    "adaptation_protection_level": 0.76
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "power",
+    "subsector": "generation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Building protective wall",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "TC",
+    "rcp": "4.5",
+    "adaptation_name": "Upgrade wooden poles to steel",
+    "adaptation_protection_level": 0.76
+  },
+  {
+    "sector": "power",
+    "subsector": "transmission",
+    "hazard": "TC",
+    "rcp": "8.5",
+    "adaptation_name": "Upgrade wooden poles to steel",
+    "adaptation_protection_level": 0.76
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "air",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Sea dike around airport",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "port",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate main terminal areas",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the tracks",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Upgrade concrete mix, upgrade mortar mix, upgrade rubble masonry wall, increase number of drainage structure",
+    "adaptation_protection_level": 999
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Upgrade the bridge",
+    "adaptation_protection_level": 999
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Upgrade concrete mix, upgrade mortar mix, upgrade rubble masonry wall, increase number of drainage structure",
+    "adaptation_protection_level": 999
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Upgrade the bridge",
+    "adaptation_protection_level": 999
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Elevate the roads",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Upgrade concrete mix, upgrade mortar mix, upgrade rubble masonry wall, increase number of drainage structure",
+    "adaptation_protection_level": 999
+  },
+  {
+    "sector": "transport",
+    "subsector": "road",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Upgrade the bridge",
+    "adaptation_protection_level": 999
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "irrigation",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "potable",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "2.6",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "4.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 1.5
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2
+  },
+  {
+    "sector": "water",
+    "subsector": "wastewater",
+    "hazard": "flooding",
+    "rcp": "8.5",
+    "adaptation_name": "Flood defence around asset",
+    "adaptation_protection_level": 2.5
+  }
+]
