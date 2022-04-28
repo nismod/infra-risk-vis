@@ -38,7 +38,7 @@ export function assetViewLayer(
             polygonOffset: selectionPolygonOffset,
           },
           dataLoaderOptions: {
-            dataLoader: customDataAccessFn?.(styleParams?.colorMap?.colorField)?.dataLoader,
+            dataLoader: customDataAccessFn?.(styleParams?.colorMap?.fieldSpec)?.dataLoader,
           },
         },
         deckProps,

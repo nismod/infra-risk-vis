@@ -1,7 +1,8 @@
 import { damageSourceState, damageTypeState } from './damage-map';
 import { dataParamsByGroupState } from '../data-params';
 import { selector } from 'recoil';
-import { FieldSpec } from 'lib/data-map/view-layers';
+import { FieldSpec, StyleParams } from 'lib/data-map/view-layers';
+import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 
 export const damagesFieldState = selector<FieldSpec>({
   key: 'eadAccessorState',
@@ -24,7 +25,7 @@ export const damagesFieldState = selector<FieldSpec>({
   },
 });
 
-export const damageMapStyleParamsState = selector({
+export const damageMapStyleParamsState = selector<StyleParams>({
   key: 'damageMapStyleParamsState',
   get: ({ get }) => {
     const eadFieldSpec = get(damagesFieldState);
@@ -32,8 +33,8 @@ export const damageMapStyleParamsState = selector({
 
     return {
       colorMap: {
-        colorScheme: 'damages',
-        colorField: eadFieldSpec,
+        colorSpec: VECTOR_COLOR_MAPS.damages,
+        fieldSpec: eadFieldSpec,
       },
     };
   },

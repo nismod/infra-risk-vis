@@ -1,5 +1,6 @@
+import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
-import { ViewLayer, StyleParams } from 'lib/data-map/view-layers';
+import { ViewLayer, StyleParams, ColorSpec } from 'lib/data-map/view-layers';
 import { atom, selector } from 'recoil';
 import { damageMapStyleParamsState } from 'state/damage-mapping/damage-style-params';
 import { networkSelectionState } from 'state/networks/network-selection';
@@ -23,9 +24,17 @@ export const adaptationStyleParamsState = selector<StyleParams>({
   key: 'adaptationStyleParamsState',
   get: ({ get }) => {
     const field = get(adaptationFieldState);
+
+    let colorSpec: ColorSpec;
+    if (field === 'adaptation_cost') {
+      colorSpec = VECTOR_COLOR_MAPS.adaptationCost;
+    } else if (field === 'avoided_ead_mean' || field === 'avoided_eael_mean') {
+      colorSpec = VECTOR_COLOR_MAPS.adaptationAvoided;
+    }
+
     return {
       colorMap: {
-        colorField: {
+        fieldSpec: {
           fieldGroup: 'adaptation',
           fieldDimensions: {
             hazard: 'flooding',
@@ -35,7 +44,7 @@ export const adaptationStyleParamsState = selector<StyleParams>({
           },
           field,
         },
-        colorScheme: field === 'adaptation_cost' ? 'adaptationCost' : 'adaptationAvoided',
+        colorSpec,
       },
     };
   },

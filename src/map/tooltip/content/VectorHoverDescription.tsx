@@ -56,13 +56,12 @@ export const DataDescription: FC<{
   viewLayer: ViewLayer;
   feature: any;
   colorMap: ColorMap;
-}> = ({ viewLayer, feature, colorMap: { colorField, colorScheme } }) => {
+}> = ({ viewLayer, feature, colorMap: { fieldSpec: colorField, colorSpec } }) => {
   const accessor = useMemo(() => viewLayer.dataAccessFn?.(colorField), [viewLayer, colorField]);
 
   const value = accessor?.(feature);
 
-  const colorSpec = VECTOR_COLOR_MAPS[colorScheme];
-  const colorFn = useMemo(() => colorMap(colorSpec.scale, colorSpec.range, colorSpec.empty), [colorSpec]);
+  const colorFn = useMemo(() => colorMap(colorSpec), [colorSpec]);
 
   const color = colorFn(value);
 

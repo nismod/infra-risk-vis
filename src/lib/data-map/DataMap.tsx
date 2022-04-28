@@ -42,7 +42,7 @@ export const DataMap: FC<DataMapProps> = ({
   const dataLoaders = useMemo(
     () =>
       viewLayers
-        .map((vl) => vl.dataAccessFn?.(viewLayersParams[vl.id].styleParams?.colorMap?.colorField)?.dataLoader)
+        .map((vl) => vl.dataAccessFn?.(viewLayersParams[vl.id].styleParams?.colorMap?.fieldSpec)?.dataLoader)
         .filter(Boolean),
     [viewLayers, viewLayersParams],
   );

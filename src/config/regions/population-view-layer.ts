@@ -1,4 +1,5 @@
-import { colorMapFromScheme } from 'config/color-maps';
+import { VECTOR_COLOR_MAPS } from 'config/color-maps';
+import { colorMap } from 'lib/color-map';
 import { ViewLayer } from 'lib/data-map/view-layers';
 import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 import { dataColorMap } from 'lib/deck/props/color-map';
@@ -26,12 +27,7 @@ export function populationViewLayer(regionLevel: RegionLevel): ViewLayer {
           data: source.getDataUrl({ regionLevel }),
         },
         (regionLevel === 'parish' || zoom > 12) && border([40, 40, 40, 255]),
-        fillColor(
-          dataColorMap(
-            featureProperty('population_density_per_km2'),
-            colorMapFromScheme('population'),
-          ),
-        ),
+        fillColor(dataColorMap(featureProperty('population_density_per_km2'), colorMap(VECTOR_COLOR_MAPS.population))),
         {
           highlightColor: [0, 255, 255, 100],
         },

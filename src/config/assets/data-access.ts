@@ -17,6 +17,8 @@ function totalExpectedDamagesProperty(direct: boolean, { rcp, epoch }) {
 }
 
 export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
+  if (fieldSpec == null) return null;
+
   const { fieldGroup, fieldDimensions, field } = fieldSpec;
 
   if (fieldGroup === 'damages_expected') {
@@ -40,5 +42,5 @@ export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
 }
 
 export function assetDataAccessFunction(layer: string) {
-  return (fieldSpec: FieldSpec) => fieldSpec && getAssetDataAccessor(layer, fieldSpec);
+  return (fieldSpec: FieldSpec) => getAssetDataAccessor(layer, fieldSpec);
 }

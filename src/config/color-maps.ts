@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import * as d3 from 'd3-scale-chromatic';
-import { colorMap } from 'lib/color-map';
-import { Accessor, withTriggers } from 'lib/deck/props/getters';
+import * as d3ScaleChromatic from 'd3-scale-chromatic';
+import * as d3Scale from 'd3-scale';
+import { ColorSpec } from 'lib/data-map/view-layers';
+import { valueType } from 'lib/helpers';
 
 export const RASTER_COLOR_MAPS = {
   fluvial: {
@@ -26,31 +26,29 @@ function invertColorScale<T>(colorScale: (t: number, n: number) => T) {
   return (i: number, n: number) => colorScale(1 - i, n);
 }
 
-export const VECTOR_COLOR_MAPS = {
+export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   damages: {
-    scale: invertColorScale(d3.interpolateInferno),
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
     range: [0, 1000000],
     empty: '#ccc',
   },
   population: {
-    scale: d3.interpolateInferno,
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateInferno,
     range: [0, 10000],
     empty: '#ccc',
   },
   adaptationAvoided: {
-    scale: d3.interpolateRdBu,
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateRdBu,
     range: [0, 1000000],
     empty: '#ccc',
   },
   adaptationCost: {
-    scale: d3.interpolateGreens,
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateGreens,
     range: [0, 1000000000],
     empty: '#ccc',
   },
-};
-
-export const colorMapFromScheme = _.memoize(function (colorScheme: string): Accessor<string, any> {
-  const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
-
-  return withTriggers(colorMap(scale, range, empty), [colorScheme]);
 });

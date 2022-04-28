@@ -1,3 +1,4 @@
+import { ScaleSequential } from 'd3-scale';
 import { DataLoader } from 'lib/data-loader/data-loader';
 import { Accessor } from 'lib/deck/props/getters';
 import { InteractionTarget } from './interactions/use-interactions';
@@ -8,9 +9,15 @@ export interface FieldSpec {
   field: string;
 }
 
+export interface ColorSpec {
+  scheme: (t: number, n: number) => string;
+  scale: (domain: [number, number], interpolator: (t: number, n: number) => string) => ScaleSequential<any, any>;
+  range: [number, number];
+  empty: string;
+}
 export interface ColorMap {
-  colorField: FieldSpec;
-  colorScheme: string;
+  fieldSpec: FieldSpec;
+  colorSpec: ColorSpec;
 }
 export interface StyleParams {
   colorMap?: ColorMap;

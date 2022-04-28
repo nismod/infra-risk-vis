@@ -1,7 +1,18 @@
-import * as d3 from 'd3-scale';
+import * as d3Array from 'd3-array';
+import { ColorSpec } from './data-map/view-layers';
 
-export function colorMap(scale: (t: number, n?: number) => string, range: number[], empty: string) {
-  const scaleFn = d3.scaleSequential<string>(range, scale);
+export function colorScaleFn({ scale, range, scheme }: ColorSpec) {
+  return scale(range, scheme);
+}
 
-  return (value) => (value == null ? empty : scaleFn(value));
+export function colorScaleValues(colorSpec: ColorSpec, n: number) {
+  const scaleFn = colorScaleFn(colorSpec);
+  const [rangeMin, rangeMax] = colorSpec.range;
+  return d3Array.ticks(rangeMin, rangeMax, n).map((x) => ({ value: x, color: scaleFn(x) }));
+}
+
+export function colorMap(colorSpec: ColorSpec) {
+  const scaleFn = colorScaleFn(colorSpec);
+
+  return (value) => (value == null ? colorSpec.empty : scaleFn(value));
 }

@@ -3,16 +3,16 @@ import { border, lineStyle, pointRadius } from 'lib/deck/props/style';
 
 import { COLORS } from '../colors';
 import { infrastructureViewLayer } from './infrastructure-view-layer';
-import { ViewLayer } from 'lib/data-map/view-layers';
+import { StyleParams, ViewLayer } from 'lib/data-map/view-layers';
 import { fillColor, strokeColor } from 'lib/deck/props/style';
 import { dataColorMap } from 'lib/deck/props/color-map';
-import { colorMapFromScheme } from 'config/color-maps';
 import { getAssetDataAccessor } from 'config/assets/data-access';
+import { colorMap } from 'lib/color-map';
 
-function infraStyle(layer: string, defaultStyle, styleParams) {
+function infraStyle(layer: string, defaultStyle, styleParams: StyleParams) {
   if (styleParams?.colorMap) {
-    const { colorField, colorScheme } = styleParams.colorMap;
-    return dataColorMap(getAssetDataAccessor(layer, colorField), colorMapFromScheme(colorScheme));
+    const { fieldSpec, colorSpec } = styleParams.colorMap;
+    return dataColorMap(getAssetDataAccessor(layer, fieldSpec), colorMap(colorSpec));
   }
   return defaultStyle;
 }
