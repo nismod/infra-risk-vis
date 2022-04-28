@@ -1,5 +1,5 @@
 import { HAZARD_DOMAINS } from 'config/hazards/domains';
-import { totalDamagesConfig } from 'config/data/total-damages';
+import { totalDamagesConfig } from 'config/domains/total-damages';
 import { DataParamGroupConfig, Param, ParamDomain, resolveParamDependencies } from 'lib/controls/data-params';
 import { toDictionary } from 'lib/helpers';
 import { groupedFamily } from 'lib/recoil/grouped-family';
