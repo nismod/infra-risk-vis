@@ -27,22 +27,33 @@ export const IntroPage = () => (
       }
     >
 
-    The tool is under active development. Please tell us if anything is not
+    The tool has recently been released. Please tell us if anything is not
     working as it should and suggest potential improvements.
 
     </Alert>
 
     <p>The modelling and analysis presented here aim to support climate
     adaptation decision-making by identifying spatial criticalities and risks
-    under current and future hazard scenarios. It comprises a direct damage
-    estimation and an indirect economic loss estimation of GDP disruptions due
-    to asset failures and service disruption.</p>
+    under current and future hazard scenarios.</p>
+
+    <p>The analysis consists of several steps:</p>
+    <ul>
+      <li>collect data on infrastructure networks, buildings, agriculture and land use</li>
+      <li>estimate spatial distribution of economic activity</li>
+      <li>estimate economic dependence on infrastructure services</li>
+      <li>collect data on hazards</li>
+      <li>estimate direct damages to infrastructure assets</li>
+      <li>estimate GDP disruptions due to asset failures and service disruption</li>
+      <li>estimate the value of improving asset robustness or resilience to hazards, in terms of avoided risk</li>
+      <li>identify areas of opportunity for nature-based solutions</li>
+    </ul>
+
 
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Infrastructure</TableCell>
+            <TableCell>Infrastructure Sector</TableCell>
             <TableCell>Assets</TableCell>
             <TableCell>Expected Annual Damages (EAD)</TableCell>
             <TableCell>Expected Annual Economic Losses (EAEL)</TableCell>
@@ -71,7 +82,19 @@ export const IntroPage = () => (
       </Table>
     </TableContainer>
 
-    <p>This tool to visualize the model outputs is developed and documented here:</p>
+    <p>The primary output metrics from the analysis are:</p>
+
+    <ul>
+      <li>Expected Annual Damages (EAD) (direct physical risks) estimated as the
+      area under the direct damage vs exceedance probability curve </li>
+      <li>Expected Annual Economic Losses (EAEL) (indirect economic risks)
+      estimated as the area under the economic loss vs exceedance probability
+      curve </li>
+    </ul>
+
+
+    <p>This tool to visualize the model outputs is developed and documented
+    here:</p>
 
     <ul>
       <li>
