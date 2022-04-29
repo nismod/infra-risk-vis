@@ -125,6 +125,7 @@ export const AdaptationControl: FC<{}> = () => {
           { value: 'avoided_ead_mean', label: 'Avoided Expected Annual Damages' },
           { value: 'avoided_eael_mean', label: 'Avoided Expected Annual Economic Losses' },
           { value: 'adaptation_cost', label: 'Adaptation Cost' },
+          { value: 'cost_benefit_ratio', label: 'Cost-Benefit Ratio' },
         ]}
       />
     </LayerStylePanel>

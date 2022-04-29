@@ -1,12 +1,11 @@
 import { Box, Typography } from '@mui/material';
-import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { DataItem } from 'details/features/detail-components';
 import { colorMap } from 'lib/color-map';
 import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
 import { ColorMap, FieldSpec, ViewLayer } from 'lib/data-map/view-layers';
-import { paren } from 'lib/helpers';
+import { numFormat, paren } from 'lib/helpers';
 import _ from 'lodash';
 import { FC, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -46,8 +45,12 @@ const DATA_FORMATS: Record<string, FormatConfig> = {
     getDataLabel: (viewLayer, colorField) => {
       return `${_.startCase(colorField.field)} ${paren(colorField.fieldDimensions.adaptation_name)}`;
     },
-    getValueFormatted: (value, viewLayer, fieldSpec) => {
-      return value == null ? value : `${numFormatMoney(value)} $`;
+    getValueFormatted: (value, viewLayer, { field }) => {
+      return value == null
+        ? value
+        : field === 'cost_benefit_ratio'
+        ? `${numFormat(value)}x`
+        : `${numFormatMoney(value)} $`;
     },
   },
 };

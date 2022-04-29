@@ -3,6 +3,7 @@ from typing import Callable
 from sqlalchemy import Column
 from sqlalchemy.orm import Query
 from sqlalchemy.sql import functions
+from sqlalchemy.sql.operators import ColumnOperators
 from pydantic import Json, ValidationError
 
 
@@ -48,7 +49,16 @@ def add_adaptation_value_query(
         adaptation_protection_level=dimensions.adaptation_protection_level,
     )
 
-    value: Column = getattr(models.AdaptationCostBenefit, field)
+    value: Column | ColumnOperators = None
+
+    if field == "cost_benefit_ratio":
+        # currently, the value 15 is hardcoded for the number of days of economic loss
+        value = (
+            models.AdaptationCostBenefit.avoided_ead_mean
+            + models.AdaptationCostBenefit.avoided_eael_mean * 15
+        ) / models.AdaptationCostBenefit.adaptation_cost
+    else:
+        value = getattr(models.AdaptationCostBenefit, field)
 
     return q.add_column(value.label("value"))
 

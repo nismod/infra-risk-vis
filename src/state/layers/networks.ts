@@ -27,7 +27,9 @@ export const showAdaptationsState = selector<boolean>({
   get: ({ get }) => get(networksStyleState) === 'adaptation',
 });
 
-export const adaptationFieldState = atom<'avoided_ead_mean' | 'avoided_eael_mean' | 'adaptation_cost'>({
+export const adaptationFieldState = atom<
+  'avoided_ead_mean' | 'avoided_eael_mean' | 'adaptation_cost' | 'cost_benefit_ratio'
+>({
   key: 'adaptationFieldState',
   default: 'avoided_ead_mean',
 });
@@ -71,6 +73,8 @@ export const adaptationStyleParamsState = selector<StyleParams>({
       colorSpec = VECTOR_COLOR_MAPS.adaptationCost;
     } else if (field === 'avoided_ead_mean' || field === 'avoided_eael_mean') {
       colorSpec = VECTOR_COLOR_MAPS.adaptationAvoided;
+    } else if (field === 'cost_benefit_ratio') {
+      colorSpec = VECTOR_COLOR_MAPS.costBenefitRatio;
     }
 
     return {

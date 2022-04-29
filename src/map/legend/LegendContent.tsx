@@ -64,11 +64,13 @@ const ADAPTATION_LEGEND_PARAMS: LegendFormatParams = {
       ? 'Avoided Damages'
       : field === 'avoided_eael_mean'
       ? 'Avoided Economic Losses'
+      : field === 'cost_benefit_ratio'
+      ? 'Cost Benefit Ratio'
       : 'Unknown',
-  getValueLabelFn:
-    ({ field }) =>
-    (value: number) =>
-      `$${value.toLocaleString()}`,
+  getValueLabelFn: ({ field }) =>
+    field === 'cost_benefit_ratio'
+      ? (value: number) => `${value.toLocaleString()}x`
+      : (value: number) => `$${value.toLocaleString()}`,
 };
 
 function getLegendFormatParams(viewLayer: ViewLayer, colorMap: ColorMap): LegendFormatParams {
