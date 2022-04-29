@@ -92,7 +92,7 @@ If you need to restart the raster tileserver:
 
 ```bash
 # restart the service
-sudo service terracotta restart
+sudo systemctl restart terracotta
 # check nginx can access the socket
 sudo chown :www-data /var/www/tileserver/raster/terracotta.sock
 ```
@@ -151,7 +151,7 @@ To restart:
 
 ```bash
 # restart the service
-sudo service restart backend
+sudo systemctl restart backend
 # check nginx can access the socket
 sudo chown :www-data /var/www/backend/backend.sock
 ```
