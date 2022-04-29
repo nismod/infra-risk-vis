@@ -34,6 +34,11 @@ export const adaptationFieldState = atom<
   default: 'avoided_ead_mean',
 });
 
+export const adaptationCostBenefitRatioEaelDaysState = atom<number>({
+  key: 'adaptationCostBenefitRatioEaelDaysState',
+  default: 15,
+});
+
 export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams> = (
   { get, set },
   adaptationParams,
@@ -69,12 +74,16 @@ export const adaptationStyleParamsState = selector<StyleParams>({
     const { hazard, rcp, adaptation_name, adaptation_protection_level } = get(dataParamsByGroupState('adaptation'));
 
     let colorSpec: ColorSpec;
+    let fieldParams: any = {};
     if (field === 'adaptation_cost') {
       colorSpec = VECTOR_COLOR_MAPS.adaptationCost;
     } else if (field === 'avoided_ead_mean' || field === 'avoided_eael_mean') {
       colorSpec = VECTOR_COLOR_MAPS.adaptationAvoided;
     } else if (field === 'cost_benefit_ratio') {
       colorSpec = VECTOR_COLOR_MAPS.costBenefitRatio;
+      fieldParams = {
+        eael_days: get(adaptationCostBenefitRatioEaelDaysState),
+      };
     }
 
     return {
@@ -88,6 +97,7 @@ export const adaptationStyleParamsState = selector<StyleParams>({
             adaptation_protection_level,
           },
           field,
+          fieldParams,
         },
         colorSpec,
       },

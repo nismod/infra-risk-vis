@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { FormLabel } from '@mui/material';
+import { FormLabel, Slider, Typography } from '@mui/material';
 import { CustomNumberSlider } from 'lib/controls/CustomSlider';
 import { ParamDropdown } from 'lib/controls/ParamDropdown';
 import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
@@ -10,7 +10,12 @@ import { InputSection } from 'sidebar/ui/InputSection';
 import { LayerStylePanel } from 'sidebar/ui/LayerStylePanel';
 import { DataParam } from 'sidebar/ui/params/DataParam';
 import { dataParamsByGroupState } from 'state/data-params';
-import { adaptationDataParamsStateEffect, adaptationFieldState } from 'state/layers/networks';
+import {
+  adaptationCostBenefitRatioEaelDaysState,
+  adaptationDataParamsStateEffect,
+  adaptationFieldState,
+} from 'state/layers/networks';
+import { Box } from '@mui/system';
 
 function hazardLabel(val) {
   switch (val) {
@@ -33,6 +38,29 @@ function makeOptions(values, labelFn = (x) => x) {
     label: labelFn(val),
   }));
 }
+
+const EAEL_DAYS_MARKS = [1, 5, 10, 15, 20, 25, 30].map((x) => ({ value: x, label: x }));
+const CostBenefitRatioInputs: FC = () => {
+  const [eaelDays, setEaelDays] = useRecoilState(adaptationCostBenefitRatioEaelDaysState);
+
+  return (
+    <Box mt={1}>
+      <Typography>The cost-benefit ratio is calculated using the following formula:</Typography>
+      <Typography>(Avoided Direct Damages + Avoided Economic Losses * No. of Days) / Adaptation Cost</Typography>
+      <FormLabel htmlFor="adaptation-cost-benefit-eael-days">No. of Days</FormLabel>
+      <Slider
+        id="adaptation-cost-benefit-eael-days"
+        value={eaelDays}
+        onChange={(e, value: number) => setEaelDays(value)}
+        min={1}
+        max={30}
+        step={1}
+        marks={EAEL_DAYS_MARKS}
+        valueLabelDisplay="auto"
+      />
+    </Box>
+  );
+};
 
 export const AdaptationControl: FC<{}> = () => {
   const [adaptationField, setAdaptationField] = useRecoilState(adaptationFieldState);
@@ -117,17 +145,20 @@ export const AdaptationControl: FC<{}> = () => {
         </DataParam>
       </InputSection>
 
-      <ParamDropdown
-        title="Displayed variable"
-        value={adaptationField}
-        onChange={setAdaptationField}
-        options={[
-          { value: 'avoided_ead_mean', label: 'Avoided Expected Annual Damages' },
-          { value: 'avoided_eael_mean', label: 'Avoided Expected Annual Economic Losses' },
-          { value: 'adaptation_cost', label: 'Adaptation Cost' },
-          { value: 'cost_benefit_ratio', label: 'Cost-Benefit Ratio' },
-        ]}
-      />
+      <InputSection>
+        <ParamDropdown
+          title="Displayed variable"
+          value={adaptationField}
+          onChange={setAdaptationField}
+          options={[
+            { value: 'avoided_ead_mean', label: 'Avoided Expected Annual Damages' },
+            { value: 'avoided_eael_mean', label: 'Avoided Expected Annual Economic Losses' },
+            { value: 'adaptation_cost', label: 'Adaptation Cost' },
+            { value: 'cost_benefit_ratio', label: 'Cost-Benefit Ratio' },
+          ]}
+        />
+        {adaptationField === 'cost_benefit_ratio' ? <CostBenefitRatioInputs /> : null}
+      </InputSection>
     </LayerStylePanel>
   );
 };

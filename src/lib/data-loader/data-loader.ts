@@ -72,7 +72,7 @@ export class DataLoader<T = any> {
   }
 
   private async requestMissingData(requestedIds: number[]): Promise<Record<string, T>> {
-    const { fieldGroup, field, fieldDimensions } = this.fieldSpec;
+    const { fieldGroup, field, fieldDimensions, fieldParams } = this.fieldSpec;
     const missingIds = requestedIds.filter((id) => !this.loadingIds.has(id));
 
     if (missingIds.length === 0) return {};
@@ -84,6 +84,7 @@ export class DataLoader<T = any> {
       fieldGroup,
       field,
       dimensions: JSON.stringify(fieldDimensions),
+      parameters: JSON.stringify(fieldParams),
       requestBody: missingIds,
     });
   }

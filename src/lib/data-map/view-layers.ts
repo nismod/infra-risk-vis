@@ -7,6 +7,7 @@ export interface FieldSpec {
   fieldGroup: string;
   fieldDimensions?: any;
   field: string;
+  fieldParams?: any;
 }
 
 export interface ColorSpec {

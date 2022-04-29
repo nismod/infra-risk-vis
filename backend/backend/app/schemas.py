@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Any, Generic, Literal, TypeVar
-from pydantic import BaseModel
+from pydantic import BaseModel, conint
 from pydantic.generics import GenericModel
 
 
@@ -23,6 +23,10 @@ class DataDimensions(BaseModel):
 
 
 class DataVariables(BaseModel):
+    pass
+
+
+class DataParameters(BaseModel):
     pass
 
 
@@ -110,6 +114,10 @@ class AdaptationVariables(DataVariables):
     avoided_eael_amin: float
     avoided_eael_mean: float
     avoided_eael_amax: float
+
+
+class AdaptationCostBenefitRatioParameters(DataParameters):
+    eael_days: conint(ge=1, le=30)
 
 
 class Adaptation(AdaptationDimensions, AdaptationVariables):

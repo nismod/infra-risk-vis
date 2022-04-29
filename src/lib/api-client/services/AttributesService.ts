@@ -18,12 +18,14 @@ export class AttributesService {
         layer,
         field,
         dimensions,
+        parameters,
         requestBody,
     }: {
         fieldGroup: string,
         layer: string,
         field: string,
         dimensions: string,
+        parameters: string,
         requestBody: Array<number>,
     }): CancelablePromise<any> {
         return this.httpRequest.request({
@@ -36,6 +38,7 @@ export class AttributesService {
                 'layer': layer,
                 'field': field,
                 'dimensions': dimensions,
+                'parameters': parameters,
             },
             body: requestBody,
             mediaType: 'application/json',
