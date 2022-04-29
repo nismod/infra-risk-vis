@@ -578,3 +578,5 @@ surface,hazards/jba-flood-events/FLSW_SimEventRP_rcp85_2080s_rp0100.tif,100,8.5,
 surface,hazards/jba-flood-events/FLSW_SimEventRP_rcp85_2080s_rp0200.tif,200,8.5,2080,,surface__rp_200__rcp_8x5__epoch_2080__conf_None
 surface,hazards/jba-flood-events/FLSW_SimEventRP_rcp85_2080s_rp0500.tif,500,8.5,2080,,surface__rp_500__rcp_8x5__epoch_2080__conf_None
 surface,hazards/jba-flood-events/FLSW_SimEventRP_rcp85_2080s_rp1500.tif,1500,8.5,2080,,surface__rp_1500__rcp_8x5__epoch_2080__conf_None
+elevation,nbs/land_use_slope/elevation_clipped.tif,,,,,elevation__rp_None__rcp__None__epoch_None__conf_None
+slope,nbs/land_use_slope/slope_clipped.tif,,,,,slope__rp_None__rcp__None__epoch_None__conf_None
