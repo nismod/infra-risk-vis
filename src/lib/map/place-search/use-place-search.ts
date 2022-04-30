@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useFetch } from 'use-http';
 import { useDebounceCallback } from '@react-hook/debounce';
-
-import { BoundingBox } from '../MapBoundsFitter';
+import { BoundingBox, NominatimBoundingBox, nominatimToAppBoundingBox } from 'lib/bounding-box';
 
 export interface PlaceSearchResult {
   label: string;
@@ -23,12 +22,7 @@ function processNominatimData(data: NominatimSearchResult[]): PlaceSearchResult[
     label: x.display_name,
     latitude: parseFloat(x.lat),
     longitude: parseFloat(x.lon),
-    boundingBox: {
-      minX: parseFloat(x.boundingbox[2]),
-      minY: parseFloat(x.boundingbox[0]),
-      maxX: parseFloat(x.boundingbox[3]),
-      maxY: parseFloat(x.boundingbox[1]),
-    },
+    boundingBox: nominatimToAppBoundingBox(x.boundingbox.map(parseFloat) as NominatimBoundingBox),
   }));
 }
 

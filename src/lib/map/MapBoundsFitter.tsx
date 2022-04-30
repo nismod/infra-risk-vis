@@ -5,15 +5,7 @@ import { easeCubic } from 'd3-ease';
 
 import { useChangeEffect } from 'lib/hooks/use-change-effect';
 import { ViewStateContext } from 'lib/data-map/DeckMap';
-
-type DeckBoundingBox = [[number, number], [number, number]];
-
-export interface BoundingBox {
-  minX: number;
-  minY: number;
-  maxX: number;
-  maxY: number;
-}
+import { appToDeckBoundingBox, BoundingBox } from 'lib/bounding-box';
 
 interface MapBoundsFitterProps {
   boundingBox: BoundingBox;
@@ -26,10 +18,7 @@ export const MapBoundsFitter: FC<MapBoundsFitterProps> = ({ boundingBox }) => {
   useChangeEffect(
     () => {
       if (boundingBox != null) {
-        const deckBbox: DeckBoundingBox = [
-          [boundingBox.minX, boundingBox.minY],
-          [boundingBox.maxX, boundingBox.maxY],
-        ];
+        const deckBbox = appToDeckBoundingBox(boundingBox);
         const { latitude, longitude, zoom } = viewport.fitBounds(deckBbox, { padding: 20 });
 
         setViewState({
