@@ -1,18 +1,17 @@
 import { Box, Stack, TablePagination, Typography } from '@mui/material';
 import { AssetTable } from 'asset-list/AssetTable';
 import { FieldSpecControl } from 'asset-list/FieldSpecControl';
-import { FeatureListItemOut_float_ } from 'lib/api-client';
 import { FieldSpec } from 'lib/data-map/view-layers';
-import { useCallback, useMemo, useState } from 'react';
-import { useSortedFeatures } from '../asset-list/use-sorted-features';
-
-export type ListFeature = FeatureListItemOut_float_;
+import { useCallback, useState } from 'react';
+import { ListFeature, useSortedFeatures } from '../asset-list/use-sorted-features';
 
 export const AssetListPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(15);
 
-  const sectorSpec = 'elec_edges_high'; // TODO: enable filtering by sector/subsector/asset type
+  const layerSpec = {
+    layer: 'elec_edges_high', // TODO: enable filtering by sector/subsector/asset type
+  };
 
   const [fieldSpec, setFieldSpec] = useState<FieldSpec>({
     fieldGroup: 'damages_expected',
@@ -25,9 +24,8 @@ export const AssetListPage = () => {
     field: 'ead_mean',
   });
 
-  const { features, pageInfo, loading, error } = useSortedFeatures(sectorSpec, fieldSpec, page, pageSize);
+  const { features, pageInfo, loading, error } = useSortedFeatures(layerSpec, fieldSpec, page, pageSize);
 
-  const count = useMemo(() => (pageInfo ? Math.ceil(pageInfo.total / pageSize) : null), [pageInfo, pageSize]);
   const handleTablePaginationChange = useCallback((event, value) => setPage(value + 1), [setPage]);
 
   const [selectedFeature, setSelectedFeature] = useState<ListFeature>(null);

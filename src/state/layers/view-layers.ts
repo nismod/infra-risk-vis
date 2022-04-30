@@ -15,6 +15,10 @@ import { buildingsViewLayer } from 'config/buildings/buildings-view-layer';
 import { buildingSelectionState } from 'state/buildings';
 import { networkLayersState } from './networks';
 import { hazardLayerState } from './hazards';
+import { hoveredAdaptationFeatureState } from 'details/adaptations/FeatureAdaptationsTable';
+import bboxPolygon from '@turf/bbox-polygon';
+import { extendBbox } from 'lib/bounding-box';
+import { boundingBoxLayer } from 'lib/deck/layers/bounding-box-layer';
 
 const buildingLayersState = selector<ViewLayer[]>({
   key: 'buildingLayersState',
@@ -22,6 +26,21 @@ const buildingLayersState = selector<ViewLayer[]>({
     get(sectionVisibilityState('buildings'))
       ? truthyKeys(get(buildingSelectionState)).map((buildingType) => buildingsViewLayer(buildingType))
       : [],
+});
+
+export const featureBoundingBoxLayerState = selector<ViewLayer>({
+  key: 'featureBoundingBoxLayerState',
+  get: ({ get }) => {
+    const hoveredAdaptationFeature = get(hoveredAdaptationFeatureState);
+
+    if (!hoveredAdaptationFeature) return null;
+
+    const geom = bboxPolygon(extendBbox(hoveredAdaptationFeature.bbox, 5));
+
+    return viewOnlyLayer(`feature-bounding-box-${hoveredAdaptationFeature.id}`, ({ deckProps }) =>
+      boundingBoxLayer({ bboxGeom: geom }, deckProps),
+    );
+  },
 });
 
 export const viewLayersState = selector<ConfigTree<ViewLayer>>({
@@ -45,6 +64,8 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       // network data layers
       get(networkLayersState),
 
+      get(featureBoundingBoxLayerState),
+
       showLabels && [
         // basemap labels
         viewOnlyLayer('labels', () => labelsLayer(isRetina)),
@@ -53,6 +74,10 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
         showRegions &&
           viewOnlyLayer(`boundaries_${regionLevel}-text`, () => regionLabelsDeckLayer(regionLevel, background)),
       ],
+
+      /**
+       * CAUTION: for some reason, vector layers put here are obscured by the 'labels' semi-transparent raster layer
+       */
     ];
   },
 });

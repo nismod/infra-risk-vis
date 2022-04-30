@@ -1,7 +1,7 @@
 import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { AdaptationOptionParams } from 'config/domains/adaptation';
 import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
-import { ViewLayer, StyleParams, ColorSpec } from 'lib/data-map/view-layers';
+import { ViewLayer, StyleParams, ColorSpec, FieldSpec } from 'lib/data-map/view-layers';
 import { StateEffect } from 'lib/recoil/state-effects/types';
 import { atom, selector } from 'recoil';
 import { damageMapStyleParamsState } from 'state/damage-mapping/damage-style-params';
@@ -13,6 +13,7 @@ import { sectionVisibilityState } from 'state/sections';
 import adaptationSectorLayers from 'config/domains/adaptation-sector-layers.json';
 import _ from 'lodash';
 import { recalculateCheckboxStates } from 'lib/controls/checkbox-tree/CheckboxTree';
+import { LayerSpec } from 'asset-list/use-sorted-features';
 
 export const networkLayersState = selector<ViewLayer[]>({
   key: 'networkLayersState',
@@ -67,38 +68,66 @@ export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams
   // set(networkTreeExpandedState, truthyKeys(resolvedTreeState.indeterminate));
 };
 
-export const adaptationStyleParamsState = selector<StyleParams>({
-  key: 'adaptationStyleParamsState',
+export const adaptationLayerSpecState = selector<LayerSpec>({
+  key: 'adaptationLayerSpecState',
+  get: ({ get }) => {
+    const { sector, subsector, asset_type } = get(dataParamsByGroupState('adaptation'));
+
+    return {
+      sector,
+      subsector,
+      assetType: asset_type,
+    };
+  },
+});
+
+export const adaptationFieldSpecState = selector<FieldSpec>({
+  key: 'adaptationFieldSpecState',
   get: ({ get }) => {
     const field = get(adaptationFieldState);
     const { hazard, rcp, adaptation_name, adaptation_protection_level } = get(dataParamsByGroupState('adaptation'));
 
-    let colorSpec: ColorSpec;
     let fieldParams: any = {};
-    if (field === 'adaptation_cost') {
-      colorSpec = VECTOR_COLOR_MAPS.adaptationCost;
-    } else if (field === 'avoided_ead_mean' || field === 'avoided_eael_mean') {
-      colorSpec = VECTOR_COLOR_MAPS.adaptationAvoided;
-    } else if (field === 'cost_benefit_ratio') {
-      colorSpec = VECTOR_COLOR_MAPS.costBenefitRatio;
+    if (field === 'cost_benefit_ratio') {
       fieldParams = {
         eael_days: get(adaptationCostBenefitRatioEaelDaysState),
       };
     }
 
     return {
+      fieldGroup: 'adaptation',
+      fieldDimensions: {
+        hazard,
+        rcp,
+        adaptation_name,
+        adaptation_protection_level,
+      },
+      field,
+      fieldParams,
+    };
+  },
+});
+
+export const adaptationStyleParamsState = selector<StyleParams>({
+  key: 'adaptationStyleParamsState',
+  get: ({ get }) => {
+    const field = get(adaptationFieldState);
+
+    const fieldSpec = get(adaptationFieldSpecState);
+
+    let colorSpec: ColorSpec;
+
+    if (field === 'adaptation_cost') {
+      colorSpec = VECTOR_COLOR_MAPS.adaptationCost;
+    } else if (field === 'avoided_ead_mean' || field === 'avoided_eael_mean') {
+      colorSpec = VECTOR_COLOR_MAPS.adaptationAvoided;
+    } else if (field === 'cost_benefit_ratio') {
+      colorSpec = VECTOR_COLOR_MAPS.costBenefitRatio;
+    }
+
+    return {
       colorMap: {
-        fieldSpec: {
-          fieldGroup: 'adaptation',
-          fieldDimensions: {
-            hazard,
-            rcp,
-            adaptation_name,
-            adaptation_protection_level,
-          },
-          field,
-          fieldParams,
-        },
+        fieldSpec,
         colorSpec,
       },
     };
