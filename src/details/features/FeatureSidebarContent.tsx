@@ -16,7 +16,6 @@ import {
   RailEdgeDetails,
   RailNodeDetails,
   RoadEdgeDetails,
-  RoadJunctionDetails,
   WastewaterNodeDetails,
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
@@ -42,7 +41,6 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
   rail_stations: RailNodeDetails,
   rail_junctions: RailNodeDetails,
 
-  road_junctions: RoadJunctionDetails,
   road_bridges: BridgeDetails,
   road_edges_class_a: RoadEdgeDetails,
   road_edges_class_b: RoadEdgeDetails,

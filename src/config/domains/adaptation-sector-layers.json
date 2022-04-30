@@ -188,12 +188,6 @@
   {
     "sector": "transport",
     "subsector": "road",
-    "asset_type": "junction",
-    "layer_name": "road_junctions"
-  },
-  {
-    "sector": "transport",
-    "subsector": "road",
     "asset_type": "METRO",
     "layer_name": "road_edges_metro"
   },

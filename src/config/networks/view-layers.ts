@@ -132,11 +132,6 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
   roadsViewLayer('road_edges_metro'),
   roadsViewLayer('road_edges_track'),
   roadsViewLayer('road_edges_other'),
-  infrastructureViewLayer('road_junctions', ({ zoom, styleParams }) => [
-    border(),
-    fillColor(infraStyle('road_junctions', COLORS.roads_unknown.deck, styleParams)),
-    pointRadius(zoom),
-  ]),
   infrastructureViewLayer('road_bridges', ({ zoom, styleParams }) => [
     border(),
     fillColor(infraStyle('road_bridges', COLORS.bridges.deck, styleParams)),
