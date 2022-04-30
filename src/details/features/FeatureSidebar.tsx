@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { Box, Paper } from '@mui/material';
 
 import { FeatureSidebarContent } from './FeatureSidebarContent';
 import { useRecoilValue } from 'recoil';
 import { selectionState } from 'lib/data-map/interactions/interaction-state';
+import { SidePanel } from 'details/SidePanel';
 
 export const FeatureSidebar: FC<{}> = () => {
   const featureSelection = useRecoilValue(selectionState('assets'));
@@ -16,10 +16,8 @@ export const FeatureSidebar: FC<{}> = () => {
   } = featureSelection;
 
   return (
-    <Paper>
-      <Box p={3}>
-        <FeatureSidebarContent feature={feature} viewLayer={viewLayer} />
-      </Box>
-    </Paper>
+    <SidePanel>
+      <FeatureSidebarContent feature={feature} viewLayer={viewLayer} />
+    </SidePanel>
   );
 };

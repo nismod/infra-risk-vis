@@ -11,7 +11,7 @@ import { viewState, viewStateEffect } from 'state/view';
 import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
 import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
 import { selector, useRecoilValue } from 'recoil';
-import { FeatureAdaptationsTable } from 'details/adaptations/FeatureAdaptationsTable';
+import { AdaptationsSidebar } from 'details/adaptations/AdaptationsSidebar';
 
 interface MapViewProps {
   view: string;
@@ -65,7 +65,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
         <MapView />
       </Box>
       <SidebarLayout top={0} left={undefined} bottom={70} right={70}>
-        <Box mb={2}>{showAdaptationsTable ? <FeatureAdaptationsTable /> : <FeatureSidebar />}</Box>
+        <Box mb={2}>{showAdaptationsTable ? <AdaptationsSidebar /> : <FeatureSidebar />}</Box>
         <Box mb={2}>
           <RegionDetails />
         </Box>
