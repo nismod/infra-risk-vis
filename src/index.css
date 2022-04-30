@@ -22,14 +22,14 @@
 .nav-link:hover,
 .nav-link:active,
 .nav-link:focus {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #ffd700;
 }
 /**
  * Page layout
  */
 article {
-  max-width: 50rem;
-  padding: 1rem;
+  max-width: 60rem;
+  padding: 1rem 1rem 10rem 1rem;
   margin: 0 auto;
   font-size: 1.2rem;
 }
