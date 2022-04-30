@@ -53,8 +53,8 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   },
   costBenefitRatio: {
     scale: d3Scale.scaleSequential,
-    scheme: d3ScaleChromatic.interpolateRdYlBu,
-    range: [0, 2],
+    scheme: invertColorScale(d3ScaleChromatic.interpolateViridis),
+    range: [1, 10],
     empty: '#ccc',
   },
 });
