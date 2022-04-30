@@ -27,9 +27,9 @@ wildcard_constraints:
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
-        # expand(
-        #     "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
-        # ),
+        expand(
+            "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
+        ),
         expand("../tileserver/raster/data/{layer}.tif", layer=hazard_layers.key),
 
 
