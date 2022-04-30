@@ -12,16 +12,18 @@ class FeatureLayer(Base):
     subsector = Column(String, nullable=False)
     asset_type = Column(String, nullable=False)
 
-    features = relationship("Feature")
-
 
 class Feature(Base):
     __tablename__ = "features"
     id = Column(Integer, primary_key=True)
     string_id = Column(String, nullable=False)
-    layer = Column(String, ForeignKey(FeatureLayer.layer_name), index=True, nullable=False)
+    layer = Column(
+        String, ForeignKey(FeatureLayer.layer_name), index=True, nullable=False
+    )
     properties = Column(JSON, nullable=False)
     geom = Column(Geometry("GEOMETRY", srid=4326), nullable=False)
+
+    layer_info = relationship("FeatureLayer")
 
     damages_return_period = relationship("ReturnPeriodDamage")
     damages_expected = relationship("ExpectedDamage")

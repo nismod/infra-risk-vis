@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Any, Generic, Literal, TypeVar
-from pydantic import BaseModel, conint
+from pydantic import BaseModel, conint, root_validator
 from pydantic.generics import GenericModel
 
 
@@ -139,6 +139,14 @@ class FeatureOut(FeatureOutBase):
 
 
 # Features Sorted Lists
+
+
+class LayerSpec(BaseModel):
+    layer_name: str | None
+    sector: str | None
+    subsector: str | None
+    asset_type: str | None
+
 
 SortFieldT = TypeVar("SortFieldT")
 
