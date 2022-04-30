@@ -14,9 +14,9 @@ from backend.db.database import SessionLocal
 from backend.db.models import Feature
 
 
-def yield_features(layer, network_tilelayers):
+def yield_features(layer, network_tilelayer, analysis_data_dir):
     """Read from file layer to modelled Features"""
-    with fiona.open(get_network_layer_path(layer), layer=layer.gpkg_layer) as src:
+    with fiona.open(get_network_layer_path(layer, analysis_data_dir), layer=layer.gpkg_layer) as src:
         from_crs = src.crs
         to_crs = CRS.from_epsg(4326)
         t = Transformer.from_crs(from_crs, to_crs, always_xy=True).transform
@@ -93,7 +93,7 @@ def get_tilelayer_by_asset_type(layer_ref, props, network_tilelayers):
 
 def get_tilelayers_by_network_source(network_source, network_tilelayers):
     try:
-        return network_tilelayers[network_tilelayers.ref == network_source].layer
+        return network_tilelayers[network_tilelayers.ref == network_source.ref].layer
     except IndexError as e:
         print(f"Could not find {network_source} in tilelayers.")
         raise e
@@ -120,7 +120,7 @@ if __name__ == "__main__":
         db.execute(delete(Feature).where(Feature.layer.in_(tilelayers)))
         db.commit()
 
-        for i, feature in tqdm(enumerate(yield_features(layer, network_tilelayers)), total=layer["count"]):
+        for i, feature in tqdm(enumerate(yield_features(layer, network_tilelayers, analysis_data_dir)), total=layer["count"]):
             db.add(feature)
             if i % 1000 == 0:
                 db.commit()
