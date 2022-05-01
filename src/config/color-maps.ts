@@ -64,4 +64,16 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
     range: [1, 10],
     empty: '#ccc',
   },
+  terrestrialElevation: {
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateRdYlGn),
+    range: [0, 2250],
+    empty: '#ccc',
+  },
+  terrestrialSlope: {
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateReds,
+    range: [0, 90],
+    empty: '#ccc',
+  },
 });

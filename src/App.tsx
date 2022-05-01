@@ -28,7 +28,7 @@ export const App = () => {
                 <IntroPage />
               </Route>
               <Route
-                path="/:view(exposure|risk|adaptation|prioritization)"
+                path="/:view(exposure|risk|adaptation|nature-based-solutions)"
                 render={({ match: { params } }) => <MapPage view={params.view} />}
               />
               <Route path="/data" exact>
