@@ -35,13 +35,20 @@ export interface DataManager {
   getDataLoader: (layer: string, fieldSpec: any) => DataLoader;
 }
 
+export interface FormatConfig {
+  getDataLabel: (fieldSpec: FieldSpec) => string;
+  getValueFormatted: (value: any, fieldSpec: FieldSpec) => string;
+}
+
 export type ViewLayerDataAccessFunction = (fieldSpec: FieldSpec) => Accessor<any>;
+export type ViewLayerDataFormatFunction = (fieldSpec: FieldSpec) => FormatConfig;
 export interface ViewLayer {
   id: string;
   params?: any;
   group: string;
   fn: (options: ViewLayerFunctionOptions) => any;
   dataAccessFn?: ViewLayerDataAccessFunction;
+  dataFormatsFn?: ViewLayerDataFormatFunction;
   spatialType?: string;
   interactionGroup?: string;
 }

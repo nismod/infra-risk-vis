@@ -23,6 +23,13 @@ export function numFormat(n: number, maximumSignificantDigits: number = 3) {
   return n == null ? `-` : n.toLocaleString(undefined, { maximumSignificantDigits });
 }
 
+export function numFormatMoney(value: number) {
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 export function numRangeFormat(n1: number, n2: number) {
   if (n1 == null || n2 == null) return null;
 
