@@ -22,8 +22,15 @@ export const RASTER_COLOR_MAPS = {
   },
 };
 
-function invertColorScale<T>(colorScale: (t: number, n: number) => T) {
-  return (i: number, n: number) => colorScale(1 - i, n);
+function invertColorScale<T>(colorScale: (t: number) => T) {
+  return (i: number) => colorScale(1 - i);
+}
+
+function discardSides<T>(interpolator: (t: number) => T, cutStart: number, cutEnd: number = 0) {
+  return (i: number) => {
+    const t = i * (1 - cutStart - cutEnd) + cutStart;
+    return interpolator(t);
+  };
 }
 
 export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
@@ -41,13 +48,13 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   },
   adaptationAvoided: {
     scale: d3Scale.scaleSequential,
-    scheme: d3ScaleChromatic.interpolateBlues,
+    scheme: discardSides(d3ScaleChromatic.interpolateBlues, 0.2, 0.2),
     range: [0, 1000000],
     empty: '#ccc',
   },
   adaptationCost: {
     scale: d3Scale.scaleSequential,
-    scheme: d3ScaleChromatic.interpolateGreens,
+    scheme: discardSides(d3ScaleChromatic.interpolateGreens, 0.2, 0.2),
     range: [0, 1000000000],
     empty: '#ccc',
   },
