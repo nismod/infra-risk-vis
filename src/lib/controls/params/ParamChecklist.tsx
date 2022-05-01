@@ -1,14 +1,16 @@
 import { Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Stack } from '@mui/material';
 import { Box } from '@mui/system';
 import { fromKeys } from 'lib/helpers';
-import { PropsWithChildren, ReactElement } from 'react';
+import { PropsWithChildren, ReactElement, useMemo } from 'react';
+import { getValueLabel, ValueLabel } from './value-label';
 
 interface ParamChecklistProps<K extends string> {
   title: string;
-  options: K[];
+  options: K[] | ValueLabel<K>[];
   checklistState: { [key in K]: boolean };
   onChecklistState: (state: { [key in K]: boolean }) => void;
-  renderLabel: (key: K) => ReactElement;
+  renderLabel: (key: K, label?: string) => ReactElement;
+  showAllNone?: boolean;
 }
 
 export const ParamChecklist = <K extends string = string>({
@@ -17,36 +19,41 @@ export const ParamChecklist = <K extends string = string>({
   onChecklistState,
   renderLabel,
   options,
+  showAllNone = true,
 }: PropsWithChildren<ParamChecklistProps<K>>) => {
   const isAll = Object.values(checklistState).every((value) => value);
   const isNone = Object.values(checklistState).every((value) => !value);
+
+  const valueLabels = useMemo(() => options.map(getValueLabel) as ValueLabel<K>[], [options]);
+  const keys = valueLabels.map((valueLabel) => valueLabel.value) as K[];
+
   return (
     <FormGroup>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <FormLabel>{title}</FormLabel>
-        <Box>
-          <Button disabled={isAll} onClick={() => onChecklistState(fromKeys(options, true))}>
-            All
-          </Button>
-          <Button disabled={isNone} onClick={() => onChecklistState(fromKeys(options, false))}>
-            None
-          </Button>
-        </Box>
+        {showAllNone && (
+          <Box>
+            <Button disabled={isAll} onClick={() => onChecklistState(fromKeys(keys, true))}>
+              All
+            </Button>
+            <Button disabled={isNone} onClick={() => onChecklistState(fromKeys(keys, false))}>
+              None
+            </Button>
+          </Box>
+        )}
       </Stack>
-      {options
-        .map((o) => [o, checklistState[o]] as [K, boolean])
-        .map(([key, value]) => (
-          <FormControlLabel
-            key={key}
-            control={
-              <Checkbox
-                checked={value}
-                onChange={(e, checked) => onChecklistState({ ...checklistState, [key]: checked })}
-              />
-            }
-            label={renderLabel(key)}
-          />
-        ))}
+      {valueLabels.map(({ value: key, label }) => (
+        <FormControlLabel
+          key={key}
+          control={
+            <Checkbox
+              checked={checklistState[key]}
+              onChange={(e, checked) => onChecklistState({ ...checklistState, [key]: checked })}
+            />
+          }
+          label={renderLabel(key, label)}
+        />
+      ))}
     </FormGroup>
   );
 };
