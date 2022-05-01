@@ -1,4 +1,11 @@
 import { FormControl, FormLabel, Slider } from '@mui/material';
+import {
+  LandUseOption,
+  LAND_USE_VALUES,
+  TerrestrialLocationFilterType,
+  TERRESTRIAL_LOCATION_FILTERS,
+} from 'config/solutions/domains';
+import { ParamChecklist } from 'lib/controls/params/ParamChecklist';
 import { useRecoilState } from 'recoil';
 import { InputSection } from 'sidebar/ui/InputSection';
 import { terrestrialFiltersState } from 'state/solutions/terrestrial-filters';
@@ -8,7 +15,7 @@ export const TerrestrialControl = () => {
 
   return (
     <>
-      {/* <ParamChecklist<LandUseOption>
+      <ParamChecklist<LandUseOption>
         title="Land Use Types"
         options={LAND_USE_VALUES}
         checklistState={terrestrialFilters.landuse_desc}
@@ -19,7 +26,7 @@ export const TerrestrialControl = () => {
           })
         }
         renderLabel={(key) => <>{key}</>}
-      /> */}
+      />
       <InputSection>
         <FormControl fullWidth>
           <FormLabel>Slope (degrees)</FormLabel>
@@ -52,7 +59,7 @@ export const TerrestrialControl = () => {
           />
         </FormControl>
       </InputSection>
-      {/* <InputSection>
+      <InputSection>
         <ParamChecklist<TerrestrialLocationFilterType>
           title="Location Attributes"
           options={[...TERRESTRIAL_LOCATION_FILTERS]}
@@ -63,7 +70,7 @@ export const TerrestrialControl = () => {
           showAllNone={false}
           renderLabel={(key, label) => <>{label}</>}
         />
-      </InputSection> */}
+      </InputSection>
     </>
   );
 };

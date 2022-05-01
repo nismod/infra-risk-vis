@@ -11,13 +11,15 @@ import { featureProperty } from 'lib/deck/props/data-source';
 import { dataColorMap } from 'lib/deck/props/color-map';
 import { fillColor } from 'lib/deck/props/style';
 import { Accessor } from 'lib/deck/props/getters';
+import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
+import { truthyKeys } from 'lib/helpers';
 
 function landuseColorMap(x: string) {
   return TERRESTRIAL_LANDUSE_COLORS[x].css;
 }
 
-export const terrestrialColorFn = selector<Accessor<string>>({
-  key: 'terrestrialColorSpec',
+export const terrestrialColorFnState = selector<Accessor<string>>({
+  key: 'terrestrialColorFnState',
   get: ({ get }) => {
     const style = get(sectionStyleValueState('terrestrial'));
 
@@ -53,6 +55,14 @@ export const terrestrialFieldSpecState = selector<FieldSpec>({
   },
 });
 
+function landuseFilterValue(p, landuseFilters: LandUseOption[]) {
+  return landuseFilters.some((key) => p.landuse_desc === key) ? 1 : 0;
+}
+
+function locationFilterValue(p, locationFiltersKeys: TerrestrialLocationFilterType[]) {
+  return locationFiltersKeys.every((key) => p[key] == true) ? 1 : 0;
+}
+
 export const terrestrialLayerState = selector<ViewLayer>({
   key: 'terrestrialLayerState',
   get: ({ get }) => {
@@ -66,11 +76,14 @@ export const terrestrialLayerState = selector<ViewLayer>({
     const fieldSpec = get(terrestrialFieldSpecState);
 
     const dataFn = featureProperty(fieldSpec.field);
-    const colorFn = get(terrestrialColorFn);
+    const colorFn = get(terrestrialColorFnState);
 
     if (!colorFn || !dataFn) {
       return null;
     }
+
+    const landuseFilterKeys = truthyKeys(filters.landuse_desc);
+    const locationFilterKeys = truthyKeys(filters.location_filters);
 
     return {
       id: 'terrestrial',
@@ -89,10 +102,19 @@ export const terrestrialLayerState = selector<ViewLayer>({
             getLineColor: [250, 250, 250],
             getLineWidth: 2,
             lineWidthUnit: 'meters',
-            getFilterValue: ({ properties }) => [properties.slope_degrees, properties.elevation_m],
-            filterRange: [[...filters.slope_degrees], [...filters.elevation_m]],
+            getFilterValue: ({ properties }) => [
+              landuseFilterValue(properties, landuseFilterKeys),
+              properties.slope_degrees,
+              properties.elevation_m,
+              locationFilterValue(properties, locationFilterKeys),
+            ],
+            filterRange: [[1, 1], [...filters.slope_degrees], [...filters.elevation_m], [1, 1]],
 
-            extensions: [new DataFilterExtension({ filterSize: 2 })],
+            updateTriggers: {
+              getFilterValue: [filters],
+            },
+
+            extensions: [new DataFilterExtension({ filterSize: 4 })],
           },
           fillColor(dataColorMap(dataFn, colorFn)),
         );

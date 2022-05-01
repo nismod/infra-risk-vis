@@ -79,8 +79,8 @@ export function isNumeric(val: any): boolean {
   return !(val instanceof Array) && val - parseFloat(val) + 1 >= 0;
 }
 
-export function truthyKeys(obj: Record<string, any>) {
-  return Object.keys(obj).filter((k) => obj[k]);
+export function truthyKeys<K extends string = string>(obj: Record<K, any>) {
+  return Object.keys(obj).filter((k) => obj[k]) as K[];
 }
 
 export function fromKeys<K extends string, T>(keys: K[], values: T): Record<K, T> {
