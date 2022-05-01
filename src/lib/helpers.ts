@@ -83,6 +83,10 @@ export function truthyKeys(obj: Record<string, any>) {
   return Object.keys(obj).filter((k) => obj[k]);
 }
 
+export function fromKeys<K extends string, T>(keys: K[], values: T): Record<K, T> {
+  return _.fromPairs(keys.map((key) => [key, values])) as Record<K, T>;
+}
+
 /**
  * Returns sum of array elements, or null if all elements are null
  */
