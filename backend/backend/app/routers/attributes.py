@@ -6,6 +6,7 @@ from backend.app.dependencies import get_db
 from backend.app.internal.attribute_access import (
     add_value_query,
     parse_dimensions,
+    parse_parameters,
 )
 
 from backend.db import models
@@ -21,6 +22,7 @@ def read_attributes(
     field_group: str,
     field: str,
     field_dimensions: schemas.DataDimensions = Depends(parse_dimensions),
+    field_params: schemas.DataParameters = Depends(parse_parameters),
     ids: list[int] = Body(...),
     db: Session = Depends(get_db),
 ):
@@ -29,7 +31,9 @@ def read_attributes(
         .select_from(models.Feature)
         .filter(models.Feature.layer == layer, models.Feature.id.in_(ids))
     )
-    query = add_value_query(base_query, field_group, field_dimensions, field)
+    query = add_value_query(
+        base_query, field_group, field_dimensions, field, field_params
+    )
 
     lookup = dict(query.all())
 

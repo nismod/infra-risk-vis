@@ -1,61 +1,17 @@
-import { Box, Typography } from '@mui/material';
 import { FC, useCallback, useMemo } from 'react';
-import * as d3Scale from 'd3-scale';
-import * as d3Array from 'd3-array';
 
 import { RASTER_COLOR_MAPS, VECTOR_COLOR_MAPS } from '../../config/color-maps';
 
 import { useRasterColorMapValues } from '../legend/use-color-map-values';
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
-import { ViewLayer } from 'lib/data-map/view-layers';
+import { ColorMap, FieldSpec, ViewLayer } from 'lib/data-map/view-layers';
 import { useRecoilValue } from 'recoil';
 import { viewLayersFlatState } from 'state/layers/view-layers-flat';
 import { viewLayersParamsState } from 'state/layers/view-layers-params';
 import { showPopulationState } from 'state/regions';
 import { sectionVisibilityState } from 'state/sections';
-
-const legendHeight = 10;
-
-const LegendGradient: FC<{
-  colorMapValues: any[];
-  getValueLabel: (value: number) => string;
-}> = ({ colorMapValues, getValueLabel }) => {
-  return (
-    <>
-      {colorMapValues.map(({ color, value }, i) => (
-        <Box key={i} height={legendHeight} width={1} bgcolor={color} title={getValueLabel(value)} />
-      ))}
-    </>
-  );
-};
-
-const GradientLegend = ({ label, range, colorMapValues, getValueLabel }) => (
-  <Box mb={2}>
-    <Typography>{label}</Typography>
-    <Box
-      height={legendHeight + 2}
-      width={255}
-      bgcolor="#ccc"
-      display="flex"
-      flexDirection="row"
-      border="1px solid gray"
-    >
-      {colorMapValues && <LegendGradient colorMapValues={colorMapValues} getValueLabel={getValueLabel} />}
-    </Box>
-    <Box height={10} position="relative">
-      {colorMapValues && (
-        <>
-          <Box position="absolute" left={0}>
-            <Typography>{getValueLabel(range[0])}</Typography>
-          </Box>
-          <Box position="absolute" right={0}>
-            <Typography>{getValueLabel(range[1])}</Typography>
-          </Box>
-        </>
-      )}
-    </Box>
-  </Box>
-);
+import { colorScaleValues } from 'lib/color-map';
+import { GradientLegend } from './GradientLegend';
 
 const RasterLegend: FC<{ viewLayer: ViewLayer }> = ({ viewLayer }) => {
   const {
@@ -78,54 +34,78 @@ const RasterLegend: FC<{ viewLayer: ViewLayer }> = ({ viewLayer }) => {
   );
 };
 
-const DamagesLegend = ({ styleParams }) => {
-  const {
-    colorMap: { colorScheme, colorField },
-  } = styleParams;
+interface LegendFormatParams {
+  getLabel: (fieldSpec: FieldSpec) => string;
+  getValueLabelFn: (fieldSpec: FieldSpec) => (value: number) => string;
+}
 
-  const { scale, range } = VECTOR_COLOR_MAPS[colorScheme];
-  const [rangeMin, rangeMax] = range;
-
-  const { field } = colorField;
-
-  const isDirect = field.startsWith('ead') || field.startsWith('damages');
-
-  const colorMapValues = useMemo(() => {
-    const scaleFn = d3Scale.scaleSequential([rangeMin, rangeMax], scale);
-
-    return d3Array.ticks(rangeMin, rangeMax, 255).map((x) => ({ value: x, color: scaleFn(x) }));
-  }, [scale, rangeMin, rangeMax]);
-
-  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()}$`, []);
-
-  // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
-  const label = isDirect ? 'Direct Damages' : 'Economic Losses';
-
-  return <GradientLegend label={label} range={range} colorMapValues={colorMapValues} getValueLabel={getValueLabel} />;
+const DAMAGES_LEGEND_PARAMS: LegendFormatParams = {
+  getLabel: ({ field }) =>
+    field.startsWith('ead') || field.startsWith('damages') ? 'Direct Damages' : 'Economic Losses',
+  getValueLabelFn:
+    ({ field }) =>
+    (value: number) =>
+      `$${value.toLocaleString()}`,
 };
 
-const PopulationLegend = () => {
-  const { scale, range } = VECTOR_COLOR_MAPS['population'];
-  const [rangeMin, rangeMax] = range;
+const POPULATION_LEGEND_PARAMS: LegendFormatParams = {
+  getLabel: () => 'Population density',
+  getValueLabelFn:
+    ({ field }) =>
+    (value: number) =>
+      `${value.toLocaleString()}/km²`,
+};
 
-  const colorMapValues = useMemo(() => {
-    const scaleFn = d3Scale.scaleSequential([rangeMin, rangeMax], scale);
+const ADAPTATION_LEGEND_PARAMS: LegendFormatParams = {
+  getLabel: ({ field }) =>
+    field === 'adaptation_cost'
+      ? 'Adaptation Cost'
+      : field === 'avoided_ead_mean'
+      ? 'Avoided Damages'
+      : field === 'avoided_eael_mean'
+      ? 'Avoided Economic Losses'
+      : field === 'cost_benefit_ratio'
+      ? 'Cost Benefit Ratio'
+      : 'Unknown',
+  getValueLabelFn: ({ field }) =>
+    field === 'cost_benefit_ratio'
+      ? (value: number) => `${value.toLocaleString()}x`
+      : (value: number) => `$${value.toLocaleString()}`,
+};
 
-    return d3Array.ticks(rangeMin, rangeMax, 255).map((x) => ({ value: x, color: scaleFn(x) }));
-  }, [scale, rangeMin, rangeMax]);
+function getLegendFormatParams(viewLayer: ViewLayer, colorMap: ColorMap): LegendFormatParams {
+  if (colorMap.fieldSpec.fieldGroup === 'damages_expected') {
+    return DAMAGES_LEGEND_PARAMS;
+  } else if (colorMap.fieldSpec.fieldGroup === 'adaptation') {
+    return ADAPTATION_LEGEND_PARAMS;
+  }
+}
 
-  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()}/km²`, []);
+const VectorLegend: FC<{ colorMap: ColorMap; legendFormatParams: LegendFormatParams }> = ({
+  colorMap,
+  legendFormatParams,
+}) => {
+  const { colorSpec, fieldSpec } = colorMap;
+  const colorMapValues = useMemo(() => colorScaleValues(colorSpec, 255), [colorSpec]);
 
-  // const { error, loading, colorMapValues } = useVectorColorMapValues(scheme, range);
+  const { getLabel, getValueLabelFn } = legendFormatParams;
+
+  const label = getLabel(fieldSpec);
+  const getValueLabel = getValueLabelFn(fieldSpec);
 
   return (
     <GradientLegend
-      label="Population density"
-      range={range}
+      label={label}
+      range={colorSpec.range}
       colorMapValues={colorMapValues}
       getValueLabel={getValueLabel}
     />
   );
+};
+
+const populationColorMap: ColorMap = {
+  colorSpec: VECTOR_COLOR_MAPS.population,
+  fieldSpec: {} as FieldSpec,
 };
 
 export const LegendContent: FC<{}> = () => {
@@ -135,7 +115,8 @@ export const LegendContent: FC<{}> = () => {
   const showPopulation = useRecoilValue(showPopulationState);
 
   const hazardViewLayers = [];
-  let damageStyleParams = null;
+
+  let dataColorMaps: Record<string, [ColorMap, ViewLayer]> = {};
 
   viewLayers.forEach((viewLayer) => {
     if (viewLayer.spatialType === 'raster') {
@@ -143,20 +124,30 @@ export const LegendContent: FC<{}> = () => {
     } else {
       const { styleParams } = viewLayersParams[viewLayer.id];
 
-      // save the first styleParams for damages
-      if (styleParams?.colorMap?.colorScheme === 'damages' && !damageStyleParams) {
-        damageStyleParams = styleParams;
+      if (styleParams?.colorMap) {
+        const { colorMap } = styleParams;
+        const colorMapKey = `${colorMap.fieldSpec.fieldGroup}`;
+        dataColorMaps[colorMapKey] ??= [colorMap, viewLayer];
       }
+      // // save the first styleParams for damages
+      // if (styleParams?.colorMap?.fieldSpec.fieldGroup === 'damages_expected' && !damagesColorMap) {
+      //   damagesColorMap = styleParams.colorMap;
+      // }
     }
   });
 
   return (
     <>
-      {hazardViewLayers.map((viewLayer) =>
-        viewLayer.spatialType === 'raster' ? <RasterLegend key={viewLayer.id} viewLayer={viewLayer} /> : null,
+      {hazardViewLayers.map((viewLayer) => (
+        <RasterLegend key={viewLayer.id} viewLayer={viewLayer} />
+      ))}
+      {Object.values(dataColorMaps).map(([colorMap, viewLayer]) => (
+        <VectorLegend colorMap={colorMap} legendFormatParams={getLegendFormatParams(viewLayer, colorMap)} />
+      ))}
+      {/* {damagesColorMap && <VectorLegend colorMap={damagesColorMap} legendFormatParams={DAMAGES_LEGEND_PARAMS} />} */}
+      {showRegions && showPopulation && (
+        <VectorLegend colorMap={populationColorMap} legendFormatParams={POPULATION_LEGEND_PARAMS} />
       )}
-      {damageStyleParams && <DamagesLegend styleParams={damageStyleParams} />}
-      {showRegions && showPopulation && <PopulationLegend />}
     </>
   );
 };

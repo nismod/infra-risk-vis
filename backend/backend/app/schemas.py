@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Any, Generic, Literal, TypeVar
-from pydantic import BaseModel
+from pydantic import BaseModel, conint, root_validator
 from pydantic.generics import GenericModel
 
 
@@ -23,6 +23,10 @@ class DataDimensions(BaseModel):
 
 
 class DataVariables(BaseModel):
+    pass
+
+
+class DataParameters(BaseModel):
     pass
 
 
@@ -97,11 +101,11 @@ class NPVDamage(NPVDamagesDimensions, NPVDamagesVariables):
 class AdaptationDimensions(DataDimensions):
     hazard: str
     rcp: str
+    adaptation_name: str
+    adaptation_protection_level: float
 
 
 class AdaptationVariables(DataVariables):
-    adaptation_name: str
-    adaptation_protection_level: float
     adaptation_cost: float
 
     avoided_ead_amin: float
@@ -110,6 +114,10 @@ class AdaptationVariables(DataVariables):
     avoided_eael_amin: float
     avoided_eael_mean: float
     avoided_eael_amax: float
+
+
+class AdaptationCostBenefitRatioParameters(DataParameters):
+    eael_days: conint(ge=1, le=30)
 
 
 class Adaptation(AdaptationDimensions, AdaptationVariables):
@@ -132,12 +140,21 @@ class FeatureOut(FeatureOutBase):
 
 # Features Sorted Lists
 
+
+class LayerSpec(BaseModel):
+    layer_name: str | None
+    sector: str | None
+    subsector: str | None
+    asset_type: str | None
+
+
 SortFieldT = TypeVar("SortFieldT")
 
 
 class FeatureListItemOut(GenericModel, Generic[SortFieldT]):
     id: int
     string_id: str
+    layer: str
     bbox_wkt: str
     value: SortFieldT
 

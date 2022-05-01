@@ -39,16 +39,20 @@ export const DataMap: FC<DataMapProps> = ({
     interactionGroups,
   );
 
+  const dataLoaders = useMemo(
+    () =>
+      viewLayers
+        .map((vl) => vl.dataAccessFn?.(viewLayersParams[vl.id].styleParams?.colorMap?.fieldSpec)?.dataLoader)
+        .filter(Boolean),
+    [viewLayers, viewLayersParams],
+  );
+
   const [dataLoadTrigger, triggerDataUpdate] = useTrigger();
 
   const doTrigger = useCallback(() => {
     triggerDataUpdate();
   }, [triggerDataUpdate]);
 
-  const dataLoaders = useMemo(
-    () => viewLayers.map((vl) => vl.dataAccessFn?.(viewLayersParams[vl.id])?.dataLoader).filter(Boolean),
-    [viewLayers, viewLayersParams],
-  );
   const previousLoaders = usePrevious(dataLoaders);
 
   useEffect(() => {

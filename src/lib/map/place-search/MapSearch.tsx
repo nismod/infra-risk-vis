@@ -7,7 +7,7 @@ import { placeSearchActiveState } from './search-state';
 
 const blankSpaceWidth = 8;
 
-export const MapSearch = () => {
+export const MapSearch = ({ onSelectedResult }) => {
   const [expanded, setExpanded] = useRecoilState(placeSearchActiveState);
 
   return (
@@ -38,7 +38,7 @@ export const MapSearch = () => {
             </IconButton>
             {expanded && (
               <Box style={{ marginRight: blankSpaceWidth }}>
-                <MapSearchField />
+                <MapSearchField onSelectedResult={onSelectedResult} />
               </Box>
             )}
           </Box>

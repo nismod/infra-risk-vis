@@ -23,6 +23,13 @@ export function numFormat(n: number, maximumSignificantDigits: number = 3) {
   return n == null ? `-` : n.toLocaleString(undefined, { maximumSignificantDigits });
 }
 
+export function numFormatMoney(value: number) {
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
 export function numRangeFormat(n1: number, n2: number) {
   if (n1 == null || n2 == null) return null;
 
@@ -99,4 +106,20 @@ export function downloadFile(content: string, mimeType: string, fileName: string
   element.download = fileName;
   document.body.appendChild(element); // Required for this to work in FireFox
   element.click();
+}
+
+/**
+ * Generic type for a function validating that the argument is a object with
+ * Used to enforce value types in a config object, but not obscuring the key names
+ * by using a TS lookup type
+ */
+type ValueTypeCheck<C> = <K extends string>(x: Record<K, C>) => Record<K, C>;
+
+/**
+ * Creates a function that enforces all fields of its argument to be of type C
+ * Useful to create configs where each field must be of a set type,
+ * but the list of keys should be accessible to users of the config variable.
+ */
+export function valueType<C>(): ValueTypeCheck<C> {
+  return (x) => x;
 }

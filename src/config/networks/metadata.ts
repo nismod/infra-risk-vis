@@ -161,12 +161,6 @@ export const NETWORKS_METADATA = makeConfig([
     color: COLORS.roads_unknown.css,
   },
   {
-    id: 'road_junctions',
-    type: 'circle',
-    label: 'Road Junctions',
-    color: COLORS.roads_unknown.css,
-  },
-  {
     id: 'road_bridges',
     type: 'circle',
     label: 'Bridges',

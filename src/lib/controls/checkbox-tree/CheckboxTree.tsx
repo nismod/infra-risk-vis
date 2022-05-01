@@ -37,7 +37,10 @@ export interface CheckboxTreeState {
   indeterminate: { [nodeId: string]: boolean };
 }
 
-function recalculateCheckboxStates<T>(state: CheckboxTreeState, config: CheckboxTreeConfig<T>): CheckboxTreeState {
+export function recalculateCheckboxStates<T>(
+  state: CheckboxTreeState,
+  config: CheckboxTreeConfig<T>,
+): CheckboxTreeState {
   for (const root of config.roots) {
     // traverse each root tree in post-order to recalculate state starting from leaf nodes
     dfs(
@@ -68,6 +71,7 @@ export function CheckboxTree<T>({
   onCheckboxState,
   expanded,
   onExpanded,
+  disableCheck = false,
 }: {
   config: CheckboxTreeConfig<T>;
   nodes: TreeNode<T>[];
@@ -76,6 +80,7 @@ export function CheckboxTree<T>({
   onCheckboxState: (state: CheckboxTreeState) => void;
   expanded: string[];
   onExpanded: (expanded: string[]) => void;
+  disableCheck?: boolean;
 }) {
   const handleChange = useCallback(
     (checked: boolean, node: TreeNode<T>) => {
@@ -107,6 +112,7 @@ export function CheckboxTree<T>({
             checkboxState={checkboxState}
             handleChange={handleChange}
             getLabel={getLabel}
+            disableCheck={disableCheck}
           />
         ))}
       </TreeView>

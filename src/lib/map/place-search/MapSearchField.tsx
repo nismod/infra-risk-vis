@@ -1,17 +1,15 @@
 import { Autocomplete, TextField } from '@mui/material';
 import { useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import { usePlaceSearch } from './use-place-search';
-import { placeSearchQueryState, placeSearchSelectedResultState } from './search-state';
+import { placeSearchQueryState } from './search-state';
 
-export const MapSearchField = () => {
+export const MapSearchField = ({ onSelectedResult }) => {
   const [searchValue, setSearchValue] = useRecoilState(placeSearchQueryState);
   const [searchResultsOpen, setSearchResultsOpen] = useState(true);
 
   const { loading, searchResults } = usePlaceSearch(searchValue);
-
-  const setSelectedSearchResult = useSetRecoilState(placeSearchSelectedResultState);
 
   return (
     <Autocomplete
@@ -27,7 +25,7 @@ export const MapSearchField = () => {
       onChange={(e, value, reason) => {
         // ignore the change if it's because user pressed enter
         if (reason !== 'createOption') {
-          setSelectedSearchResult(value);
+          onSelectedResult(value);
         }
       }}
       filterOptions={(x) => x}

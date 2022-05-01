@@ -9,6 +9,9 @@ import { globalStyleVariables } from 'theme';
 import { useSyncRecoilState } from 'lib/recoil/sync-state';
 import { viewState, viewStateEffect } from 'state/view';
 import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
+import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
+import { selector, useRecoilValue } from 'recoil';
+import { AdaptationsSidebar } from 'details/adaptations/AdaptationsSidebar';
 
 interface MapViewProps {
   view: string;
@@ -43,9 +46,15 @@ const SidebarLayout = ({ top, bottom, left, right, children }) => (
   </Box>
 );
 
+const showAdaptationsTableState = selector<boolean>({
+  key: 'showAdaptationsTable',
+  get: ({ get }) => get(sectionVisibilityState('assets')) && get(sectionStyleValueState('assets')) === 'adaptation',
+});
+
 export const MapPage: FC<MapViewProps> = ({ view }) => {
   useSyncRecoilState(viewState, view);
 
+  const showAdaptationsTable = useRecoilValue(showAdaptationsTableState);
   return (
     <>
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
@@ -56,9 +65,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
         <MapView />
       </Box>
       <SidebarLayout top={0} left={undefined} bottom={70} right={70}>
-        <Box mb={2}>
-          <FeatureSidebar />
-        </Box>
+        <Box mb={2}>{showAdaptationsTable ? <AdaptationsSidebar /> : <FeatureSidebar />}</Box>
         <Box mb={2}>
           <RegionDetails />
         </Box>

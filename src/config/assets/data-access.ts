@@ -17,6 +17,8 @@ function totalExpectedDamagesProperty(direct: boolean, { rcp, epoch }) {
 }
 
 export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
+  if (fieldSpec == null) return null;
+
   const { fieldGroup, fieldDimensions, field } = fieldSpec;
 
   if (fieldGroup === 'damages_expected') {
@@ -31,6 +33,8 @@ export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
   } else if (fieldGroup === 'damages_return_period') {
     // return return period damages dynamically loaded from API
     return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
+  } else if (fieldGroup === 'adaptation') {
+    return extraProperty(dataLoaderManager.getDataLoader(layer, fieldSpec));
   } else {
     // field other than damages - use field name as key
     return featureProperty(field);
@@ -38,15 +42,5 @@ export function getAssetDataAccessor(layer: string, fieldSpec: FieldSpec) {
 }
 
 export function assetDataAccessFunction(layer: string) {
-  return ({ styleParams }) => {
-    if (styleParams?.colorMap) {
-      const { colorField } = styleParams.colorMap;
-
-      const accessor = getAssetDataAccessor(layer, colorField);
-      return {
-        dataAccessor: accessor,
-        dataLoader: accessor.dataLoader,
-      };
-    }
-  };
+  return (fieldSpec: FieldSpec) => getAssetDataAccessor(layer, fieldSpec);
 }

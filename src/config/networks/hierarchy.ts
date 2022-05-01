@@ -120,10 +120,6 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
             ],
           },
           {
-            id: 'road_junctions',
-            label: 'Road Junctions',
-          },
-          {
             id: 'road_bridges',
             label: 'Bridges',
           },

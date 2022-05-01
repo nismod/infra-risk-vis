@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import * as d3 from 'd3-scale-chromatic';
-import { colorMap } from 'lib/color-map';
-import { Accessor, withTriggers } from 'lib/deck/props/getters';
+import * as d3ScaleChromatic from 'd3-scale-chromatic';
+import * as d3Scale from 'd3-scale';
+import { ColorSpec } from 'lib/data-map/view-layers';
+import { valueType } from 'lib/helpers';
 
 export const RASTER_COLOR_MAPS = {
   fluvial: {
@@ -22,27 +22,46 @@ export const RASTER_COLOR_MAPS = {
   },
 };
 
-function invertColorScale<T>(colorScale: (t: number, n: number) => T) {
-  return (i: number, n: number) => colorScale(1 - i, n);
+function invertColorScale<T>(colorScale: (t: number) => T) {
+  return (i: number) => colorScale(1 - i);
 }
 
-export const VECTOR_COLOR_MAPS = {
+function discardSides<T>(interpolator: (t: number) => T, cutStart: number, cutEnd: number = 0) {
+  return (i: number) => {
+    const t = i * (1 - cutStart - cutEnd) + cutStart;
+    return interpolator(t);
+  };
+}
+
+export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   damages: {
-    scale: invertColorScale(d3.interpolateInferno),
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
     range: [0, 1000000],
     empty: '#ccc',
   },
   population: {
-    scale: d3.interpolateInferno,
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateInferno,
     range: [0, 10000],
     empty: '#ccc',
   },
-};
-
-export const colorMapFromScheme = _.memoize(function (
-  colorScheme: string,
-): Accessor<string, any> {
-  const { scale, range, empty } = VECTOR_COLOR_MAPS[colorScheme];
-
-  return withTriggers(colorMap(scale, range, empty), [colorScheme]);
+  adaptationAvoided: {
+    scale: d3Scale.scaleSequential,
+    scheme: discardSides(d3ScaleChromatic.interpolateBlues, 0.2, 0.2),
+    range: [0, 1000000],
+    empty: '#ccc',
+  },
+  adaptationCost: {
+    scale: d3Scale.scaleSequential,
+    scheme: discardSides(d3ScaleChromatic.interpolateGreens, 0.2, 0.2),
+    range: [0, 1000000000],
+    empty: '#ccc',
+  },
+  costBenefitRatio: {
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateViridis),
+    range: [1, 10],
+    empty: '#ccc',
+  },
 });

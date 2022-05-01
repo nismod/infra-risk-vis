@@ -3,8 +3,6 @@
 /* eslint-disable */
 
 export type Adaptation = {
-    adaptation_name: string;
-    adaptation_protection_level: number;
     adaptation_cost: number;
     avoided_ead_amin: number;
     avoided_ead_mean: number;
@@ -14,4 +12,6 @@ export type Adaptation = {
     avoided_eael_amax: number;
     hazard: string;
     rcp: string;
+    adaptation_name: string;
+    adaptation_protection_level: number;
 };

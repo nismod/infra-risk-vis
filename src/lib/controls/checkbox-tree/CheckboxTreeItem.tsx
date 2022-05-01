@@ -9,11 +9,13 @@ export function CheckboxTreeItem<T>({
   handleChange,
   checkboxState,
   getLabel,
+  disableCheck = false,
 }: {
   root: TreeNode<T>;
   handleChange: (checked: boolean, node: TreeNode<T>) => void;
   checkboxState: CheckboxTreeState;
   getLabel: (node: TreeNode<T>) => any;
+  disableCheck?: boolean;
 }) {
   return (
     <TreeItem
@@ -31,6 +33,7 @@ export function CheckboxTreeItem<T>({
               onChange={(event) => handleChange(event.currentTarget.checked, root)}
               onClick={(e) => e.stopPropagation()}
               style={{ pointerEvents: 'auto' }}
+              disabled={disableCheck}
             />
           }
         ></FormControlLabel>
@@ -43,6 +46,7 @@ export function CheckboxTreeItem<T>({
           handleChange={handleChange}
           checkboxState={checkboxState}
           getLabel={getLabel}
+          disableCheck={disableCheck}
         ></CheckboxTreeItem>
       ))}
     </TreeItem>

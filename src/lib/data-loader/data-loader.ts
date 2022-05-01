@@ -16,7 +16,12 @@ export class DataLoader<T = any> {
   }
 
   private data: Map<number, T> = new Map();
+
+  // feature IDs that have not been loaded yet
   private missingIds: Set<number> = new Set();
+
+  // feature IDs that are currently being loaded
+  private loadingIds: Set<number> = new Set();
 
   private subscribers: DataLoaderSubscriber[];
 
@@ -43,33 +48,43 @@ export class DataLoader<T = any> {
     this.subscribers = [];
     this.data.clear();
     this.missingIds.clear();
+    this.loadingIds.clear();
   }
 
   async loadMissingData() {
     if (this.missingIds.size === 0) return;
 
-    const tempMissingIds = Array.from(this.missingIds);
+    const tempMissingIds = Array.from(this.missingIds).filter((id) => !this.loadingIds.has(id));
+
+    if (tempMissingIds.length === 0) return;
+
     const loadedData = await this.requestMissingData(tempMissingIds);
 
     this.updateData(loadedData);
   }
 
   async loadDataForIds(ids: number[]) {
-    const tempMissingIds = ids.filter((id) => this.data.get(id) === undefined);
+    const tempMissingIds = ids.filter((id) => this.data.get(id) === undefined && !this.loadingIds.has(id));
     if (tempMissingIds.length === 0) return;
 
     const loadedData = await this.requestMissingData(tempMissingIds);
     this.updateData(loadedData);
   }
 
-  private async requestMissingData(missingIds: number[]): Promise<Record<string, T>> {
-    const { fieldGroup, field, fieldDimensions } = this.fieldSpec;
-    console.log(`Requesting missing data`, JSON.stringify(fieldDimensions), missingIds);
+  private async requestMissingData(requestedIds: number[]): Promise<Record<string, T>> {
+    const { fieldGroup, field, fieldDimensions, fieldParams } = this.fieldSpec;
+    const missingIds = requestedIds.filter((id) => !this.loadingIds.has(id));
+
+    if (missingIds.length === 0) return {};
+
+    missingIds.forEach((id) => this.loadingIds.add(id));
+
     return await apiClient.attributes.attributesReadAttributes({
       layer: this.layer,
       fieldGroup,
       field,
       dimensions: JSON.stringify(fieldDimensions),
+      parameters: JSON.stringify(fieldParams),
       requestBody: missingIds,
     });
   }
@@ -84,6 +99,7 @@ export class DataLoader<T = any> {
       }
 
       this.missingIds.delete(numKey);
+      this.loadingIds.delete(numKey);
     }
 
     if (newData) {
