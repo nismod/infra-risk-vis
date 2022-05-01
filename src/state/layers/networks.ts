@@ -108,15 +108,12 @@ export const adaptationFieldSpecState = selector<FieldSpec>({
   },
 });
 
-export const adaptationStyleParamsState = selector<StyleParams>({
-  key: 'adaptationStyleParamsState',
+export const adaptationColorSpecState = selector<ColorSpec>({
+  key: 'adaptationColorSpecState',
   get: ({ get }) => {
     const field = get(adaptationFieldState);
 
-    const fieldSpec = get(adaptationFieldSpecState);
-
     let colorSpec: ColorSpec;
-
     if (field === 'adaptation_cost') {
       colorSpec = VECTOR_COLOR_MAPS.adaptationCost;
     } else if (field === 'avoided_ead_mean' || field === 'avoided_eael_mean') {
@@ -124,6 +121,16 @@ export const adaptationStyleParamsState = selector<StyleParams>({
     } else if (field === 'cost_benefit_ratio') {
       colorSpec = VECTOR_COLOR_MAPS.costBenefitRatio;
     }
+
+    return colorSpec;
+  },
+});
+
+export const adaptationStyleParamsState = selector<StyleParams>({
+  key: 'adaptationStyleParamsState',
+  get: ({ get }) => {
+    const fieldSpec = get(adaptationFieldSpecState);
+    const colorSpec = get(adaptationColorSpecState);
 
     return {
       colorMap: {

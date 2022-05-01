@@ -20,7 +20,6 @@ import {
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
 } from './detail-components';
-import { ViewLayer } from 'lib/data-map/view-layers';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { ColorBox } from 'map/tooltip/content/ColorBox';
 import { ApiClient } from 'lib/api-client';
@@ -100,12 +99,17 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
 
 interface FeatureSidebarContentProps {
   feature: any;
-  viewLayer: ViewLayer;
+  assetType: string;
+  showRiskSection?: boolean;
 }
 
-export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ feature, viewLayer }) => {
-  const DetailsComponent = componentMapping[viewLayer.id] ?? DefaultDetails;
-  const { color, label } = NETWORKS_METADATA[viewLayer.id];
+export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
+  feature,
+  assetType,
+  showRiskSection = true,
+}) => {
+  const DetailsComponent = componentMapping[assetType] ?? DefaultDetails;
+  const { color, label } = NETWORKS_METADATA[assetType];
 
   const f = feature.properties;
 
@@ -126,18 +130,22 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({ feature,
       {featureDetails && (
         <>
           <DetailsComponent f={featureDetails.properties} />
-          <IconButton
-            sx={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-            }}
-            title="Download CSV with feature metadata"
-            onClick={() => downloadFile(makeDetailsCsv(featureDetails), 'text/csv', `feature_${feature.id}.csv`)}
-          >
-            <Download />{' '}
-          </IconButton>
-          <DamagesSection fd={featureDetails} />
+          {showRiskSection && (
+            <>
+              <IconButton
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                }}
+                title="Download CSV with feature metadata"
+                onClick={() => downloadFile(makeDetailsCsv(featureDetails), 'text/csv', `feature_${feature.id}.csv`)}
+              >
+                <Download />{' '}
+              </IconButton>
+              <DamagesSection fd={featureDetails} />
+            </>
+          )}
         </>
       )}
     </Box>

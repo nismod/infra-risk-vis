@@ -17,7 +17,7 @@ export const FeatureSidebar: FC<{}> = () => {
 
   return (
     <SidePanel>
-      <FeatureSidebarContent feature={feature} viewLayer={viewLayer} />
+      <FeatureSidebarContent feature={feature} assetType={viewLayer.id} />
     </SidePanel>
   );
 };
