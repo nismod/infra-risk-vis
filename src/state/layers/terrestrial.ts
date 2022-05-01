@@ -134,11 +134,12 @@ export const terrestrialLayerState = selector<ViewLayer>({
     return {
       id: 'terrestrial',
       group: null,
+      interactionGroup: 'solutions',
       fn: ({ deckProps, zoom }) => [
         mvtLayer(
           deckProps,
           {
-            id: `${deckProps.id}-points`,
+            id: `${deckProps.id}@points`,
             data: '/vector/data/natural_terrestrial_combined_points.json',
             maxZoom: 14,
             visible: zoom < 13.5,

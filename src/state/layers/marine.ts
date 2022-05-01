@@ -69,6 +69,7 @@ export const marineLayerState = selector<ViewLayer>({
     return {
       id: 'marine',
       group: null,
+      interactionGroup: 'solutions',
       fn: ({ deckProps }) => {
         return mvtLayer(
           deckProps,

@@ -19,19 +19,22 @@ export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
   const hoveredRasters = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
   const hoveredRegion = useRecoilValue(hoverState('regions')) as InteractionTarget<any>;
+  const hoveredSolution = useRecoilValue(hoverState('solutions')) as InteractionTarget<any>;
 
   const regionDataShown = useRecoilValue(showPopulationState);
 
   const assetsHovered = hasHover(hoveredVector);
   const hazardsHovered = hasHover(hoveredRasters);
   const regionsHovered = hasHover(hoveredRegion);
-  const doShow = assetsHovered || hazardsHovered || (regionDataShown && regionsHovered);
+  const solutionsHovered = hasHover(hoveredSolution);
+  const doShow = assetsHovered || hazardsHovered || (regionDataShown && regionsHovered) || solutionsHovered;
 
   if (!doShow) return null;
 
   return (
     <Paper>
       <Box minWidth={200}>
+        {solutionsHovered && <TooltipSection>Solution</TooltipSection>}
         {assetsHovered ? (
           <TooltipSection>
             <VectorHoverDescription hoveredObject={hoveredVector} />

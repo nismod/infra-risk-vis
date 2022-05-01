@@ -20,4 +20,11 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     pickingRadius: 8,
     pickMultiple: false,
   },
+  {
+    id: 'solutions',
+    type: 'vector',
+    pickingRadius: 8,
+    usesAutoHighlight: true,
+    pickMultiple: false,
+  },
 ]);
