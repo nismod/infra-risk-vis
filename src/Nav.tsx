@@ -7,7 +7,7 @@ export const Nav = () => {
     <AppBar position="fixed">
       <Toolbar>
         <NavLink exact className="nav-link" to="/">
-          <Typography variant="h6">SRAT</Typography>
+          <Typography variant="h6">J-SRAT</Typography>
         </NavLink>
         <NavLink className="nav-link" to="/exposure">
           <Typography variant="h6">Exposure</Typography>
