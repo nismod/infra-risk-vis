@@ -52,6 +52,7 @@ def read_sorted_features(
         db.query(
             models.Feature.id.label("id"),
             models.Feature.string_id.label("string_id"),
+            models.Feature.layer.label("layer"),
             functions.ST_AsText(functions.Box2D(models.Feature.geom)).label("bbox_wkt"),
         )
         .select_from(models.Feature)

@@ -154,6 +154,7 @@ SortFieldT = TypeVar("SortFieldT")
 class FeatureListItemOut(GenericModel, Generic[SortFieldT]):
     id: int
     string_id: str
+    layer: str
     bbox_wkt: str
     value: SortFieldT
 
