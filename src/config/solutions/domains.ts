@@ -1,3 +1,5 @@
+import { toDictionary } from 'lib/helpers';
+
 const landUseValuesConst = [
   'Bamboo',
   'Bamboo and Fields',
@@ -93,15 +95,14 @@ const marineHabitatsConst = [
 ] as const;
 
 export const MARINE_HABITATS = [...marineHabitatsConst];
+export const MARINE_HABITATS_LOOKUP = toDictionary(
+  MARINE_HABITATS,
+  (x) => x.value,
+  (x) => x.label,
+);
 
 export type MarineHabitatType = typeof MARINE_HABITATS[number]['value'];
 
-/*
-  - filter by:
-    - checkbox: within_coral_500m
-    - checkbox: within_seagrass_500m
-    - checkbox: within_mangrove_500m
-    */
 export const MARINE_LOCATION_FILTERS = [
   {
     value: 'within_coral_500m',

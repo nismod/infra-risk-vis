@@ -17,8 +17,9 @@ import { border, fillColor, pointRadius } from 'lib/deck/props/style';
 import { Accessor } from 'lib/deck/props/getters';
 import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
 import { truthyKeys } from 'lib/helpers';
+import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 
-function landuseColorMap(x: string) {
+export function landuseColorMap(x: string) {
   return TERRESTRIAL_LANDUSE_COLORS[x].css;
 }
 
@@ -135,8 +136,14 @@ export const terrestrialLayerState = selector<ViewLayer>({
       id: 'terrestrial',
       group: null,
       interactionGroup: 'solutions',
-      fn: ({ deckProps, zoom }) => [
-        mvtLayer(
+      fn: ({ deckProps, zoom, selection }) => [
+        selectableMvtLayer(
+          {
+            selectionOptions: {
+              selectedFeatureId: selection?.target?.feature.id,
+              polygonOffset: -1000,
+            },
+          },
           deckProps,
           {
             id: `${deckProps.id}@points`,
@@ -145,12 +152,19 @@ export const terrestrialLayerState = selector<ViewLayer>({
             visible: zoom < 13.5,
             binary: false,
             filled: true,
+            pointAntialiasing: false,
           },
           pointRadius(zoom),
           fillColor(dataColorMap(dataFn, colorFn)),
           terrestrialFilters(filters, landuseFilterKeys, locationFilterKeys),
         ),
-        mvtLayer(
+        selectableMvtLayer(
+          {
+            selectionOptions: {
+              selectedFeatureId: selection?.target?.feature.id,
+              polygonOffset: -1000,
+            },
+          },
           deckProps,
           {
             data: '/vector/data/natural_terrestrial_combined.json',

@@ -8,6 +8,7 @@ import { RegionHoverDescription } from './content/RegionHoverDescription';
 import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-state';
 import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
 import { showPopulationState } from 'state/regions';
+import { SolutionHoverDescription } from './content/SolutionHoverDescription';
 
 const TooltipSection = ({ children }) => (
   <Box p={1} borderBottom="1px solid #ccc">
@@ -34,7 +35,11 @@ export const TooltipContent: FC = () => {
   return (
     <Paper>
       <Box minWidth={200}>
-        {solutionsHovered && <TooltipSection>Solution</TooltipSection>}
+        {solutionsHovered && (
+          <TooltipSection>
+            <SolutionHoverDescription hoveredObject={hoveredSolution} />
+          </TooltipSection>
+        )}
         {assetsHovered ? (
           <TooltipSection>
             <VectorHoverDescription hoveredObject={hoveredVector} />

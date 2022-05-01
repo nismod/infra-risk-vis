@@ -1,7 +1,6 @@
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { MARINE_HABITAT_COLORS } from 'config/solutions/colors';
 import { ViewLayer, FieldSpec } from 'lib/data-map/view-layers';
-import { mvtLayer } from 'lib/deck/layers/base';
 import { selector } from 'recoil';
 import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
 import { featureProperty } from 'lib/deck/props/data-source';
@@ -9,8 +8,9 @@ import { dataColorMap } from 'lib/deck/props/color-map';
 import { fillColor } from 'lib/deck/props/style';
 import { Accessor } from 'lib/deck/props/getters';
 import { marineFiltersState } from 'state/solutions/marine-filters';
+import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 
-function habitatColorMap(x: string) {
+export function habitatColorMap(x: string) {
   return MARINE_HABITAT_COLORS[x]?.css ?? '#aaa';
 }
 
@@ -70,8 +70,14 @@ export const marineLayerState = selector<ViewLayer>({
       id: 'marine',
       group: null,
       interactionGroup: 'solutions',
-      fn: ({ deckProps }) => {
-        return mvtLayer(
+      fn: ({ deckProps, selection }) => {
+        return selectableMvtLayer(
+          {
+            selectionOptions: {
+              selectedFeatureId: selection?.target?.feature.id,
+              polygonOffset: -3000,
+            },
+          },
           deckProps,
           {
             data: '/vector/data/natural_marine_combined.json',
