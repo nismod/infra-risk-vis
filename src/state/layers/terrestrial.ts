@@ -4,12 +4,16 @@ import { ViewLayer, FieldSpec } from 'lib/data-map/view-layers';
 import { mvtLayer } from 'lib/deck/layers/base';
 import { selector } from 'recoil';
 import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
-import { terrestrialFiltersState, TerrestrialLocationFilters } from 'state/solutions/terrestrial-filters';
+import {
+  TerrestrialFilters,
+  terrestrialFiltersState,
+  TerrestrialLocationFilters,
+} from 'state/solutions/terrestrial-filters';
 import { colorMap } from 'lib/color-map';
 import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { featureProperty } from 'lib/deck/props/data-source';
 import { dataColorMap } from 'lib/deck/props/color-map';
-import { fillColor } from 'lib/deck/props/style';
+import { border, fillColor, pointRadius } from 'lib/deck/props/style';
 import { Accessor } from 'lib/deck/props/getters';
 import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
 import { truthyKeys } from 'lib/helpers';
@@ -83,6 +87,28 @@ const locationFilterKeysState = selector<TerrestrialLocationFilterType[]>({
   get: ({ get }) => truthyKeys(get(locationFilterState)),
 });
 
+function terrestrialFilters(
+  filters: TerrestrialFilters,
+  landuseFilterKeys: LandUseOption[],
+  locationFilterKeys: TerrestrialLocationFilterType[],
+) {
+  return {
+    getFilterValue: ({ properties }) => [
+      landuseFilterValue(properties, landuseFilterKeys),
+      properties.slope_degrees,
+      properties.elevation_m,
+      locationFilterValue(properties, locationFilterKeys),
+    ],
+    filterRange: [[1, 1], [...filters.slope_degrees], [...filters.elevation_m], [1, 1]],
+
+    updateTriggers: {
+      getFilterValue: [landuseFilterKeys, locationFilterKeys],
+    },
+
+    extensions: [new DataFilterExtension({ filterSize: 4 })],
+  };
+}
+
 export const terrestrialLayerState = selector<ViewLayer>({
   key: 'terrestrialLayerState',
   get: ({ get }) => {
@@ -108,37 +134,37 @@ export const terrestrialLayerState = selector<ViewLayer>({
     return {
       id: 'terrestrial',
       group: null,
-      // interactionGroup: 'assets',
-      fn: ({ deckProps }) => {
-        return mvtLayer(
+      fn: ({ deckProps, zoom }) => [
+        mvtLayer(
+          deckProps,
+          {
+            id: `${deckProps.id}-points`,
+            data: '/vector/data/natural_terrestrial_combined_points.json',
+            maxZoom: 14,
+            visible: zoom < 13.5,
+            binary: false,
+            filled: true,
+          },
+          pointRadius(zoom),
+          fillColor(dataColorMap(dataFn, colorFn)),
+          terrestrialFilters(filters, landuseFilterKeys, locationFilterKeys),
+        ),
+        mvtLayer(
           deckProps,
           {
             data: '/vector/data/natural_terrestrial_combined.json',
             minZoom: 14,
             binary: false,
             filled: true,
-            stroked: true,
 
-            getLineColor: [250, 250, 250],
             getLineWidth: 2,
             lineWidthUnit: 'meters',
-            getFilterValue: ({ properties }) => [
-              landuseFilterValue(properties, landuseFilterKeys),
-              properties.slope_degrees,
-              properties.elevation_m,
-              locationFilterValue(properties, locationFilterKeys),
-            ],
-            filterRange: [[1, 1], [...filters.slope_degrees], [...filters.elevation_m], [1, 1]],
-
-            updateTriggers: {
-              getFilterValue: [landuseFilterKeys, locationFilterKeys],
-            },
-
-            extensions: [new DataFilterExtension({ filterSize: 4 })],
           },
+          border(),
           fillColor(dataColorMap(dataFn, colorFn)),
-        );
-      },
+          terrestrialFilters(filters, landuseFilterKeys, locationFilterKeys),
+        ),
+      ],
     };
   },
 });
