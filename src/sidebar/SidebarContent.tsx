@@ -8,6 +8,7 @@ import { BuildingsSection } from './buildings/BuildingsSection';
 import { HazardsSection } from './hazards/HazardsSection';
 import { NetworksSection } from './networks/NetworksSection';
 import { RegionsSection } from './regions/RegionsSection';
+import { MarineSection } from './solutions/MarineSection';
 import { TerrestrialSection } from './solutions/TerrestrialSection';
 
 const viewLabels = {
@@ -35,6 +36,7 @@ export const SidebarContent: FC<{}> = () => {
       return (
         <>
           <TerrestrialSection />
+          <MarineSection />
           <NetworksSection />
           <HazardsSection />
           <BuildingsSection />

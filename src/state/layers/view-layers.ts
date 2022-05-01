@@ -20,6 +20,7 @@ import bboxPolygon from '@turf/bbox-polygon';
 import { extendBbox } from 'lib/bounding-box';
 import { boundingBoxLayer } from 'lib/deck/layers/bounding-box-layer';
 import { terrestrialLayerState } from './terrestrial';
+import { marineLayerState } from './marine';
 
 const buildingLayersState = selector<ViewLayer[]>({
   key: 'buildingLayersState',
@@ -61,6 +62,7 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       get(hazardLayerState),
 
       get(terrestrialLayerState),
+      get(marineLayerState),
 
       get(buildingLayersState),
 

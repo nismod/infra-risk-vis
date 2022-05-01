@@ -93,6 +93,12 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       styles: ['landuse', 'slope', 'elevation'],
       defaultStyle: 'landuse',
     },
+    marine: {
+      expanded: true,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
+    },
     assets: {
       expanded: false,
       visible: false,
