@@ -4,7 +4,7 @@ import { ViewLayer, FieldSpec } from 'lib/data-map/view-layers';
 import { mvtLayer } from 'lib/deck/layers/base';
 import { selector } from 'recoil';
 import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
-import { terrestrialFiltersState } from 'state/solutions/terrestrial-filters';
+import { terrestrialFiltersState, TerrestrialLocationFilters } from 'state/solutions/terrestrial-filters';
 import { colorMap } from 'lib/color-map';
 import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { featureProperty } from 'lib/deck/props/data-source';
@@ -63,6 +63,26 @@ function locationFilterValue(p, locationFiltersKeys: TerrestrialLocationFilterTy
   return locationFiltersKeys.every((key) => p[key] == true) ? 1 : 0;
 }
 
+const landuseFilterState = selector<Record<LandUseOption, boolean>>({
+  key: 'landuseFilterState',
+  get: ({ get }) => get(terrestrialFiltersState).landuse_desc,
+});
+
+const landuseFilterKeysState = selector<LandUseOption[]>({
+  key: 'landuseFilterKeysState',
+  get: ({ get }) => truthyKeys(get(landuseFilterState)),
+});
+
+const locationFilterState = selector<TerrestrialLocationFilters>({
+  key: 'locationFilterState',
+  get: ({ get }) => get(terrestrialFiltersState).location_filters,
+});
+
+const locationFilterKeysState = selector<TerrestrialLocationFilterType[]>({
+  key: 'locationFilterKeysState',
+  get: ({ get }) => truthyKeys(get(locationFilterState)),
+});
+
 export const terrestrialLayerState = selector<ViewLayer>({
   key: 'terrestrialLayerState',
   get: ({ get }) => {
@@ -82,8 +102,8 @@ export const terrestrialLayerState = selector<ViewLayer>({
       return null;
     }
 
-    const landuseFilterKeys = truthyKeys(filters.landuse_desc);
-    const locationFilterKeys = truthyKeys(filters.location_filters);
+    const landuseFilterKeys = get(landuseFilterKeysState);
+    const locationFilterKeys = get(locationFilterKeysState);
 
     return {
       id: 'terrestrial',
@@ -111,7 +131,7 @@ export const terrestrialLayerState = selector<ViewLayer>({
             filterRange: [[1, 1], [...filters.slope_degrees], [...filters.elevation_m], [1, 1]],
 
             updateTriggers: {
-              getFilterValue: [filters],
+              getFilterValue: [landuseFilterKeys, locationFilterKeys],
             },
 
             extensions: [new DataFilterExtension({ filterSize: 4 })],
