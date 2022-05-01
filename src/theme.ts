@@ -12,15 +12,6 @@ export const theme = createTheme({
       main: '#3f51b5',
     },
   },
-  components: {
-    MuiToolbar: {
-      styleOverrides: {
-        root: {
-          background:"linear-gradient(180deg, rgba(0,128,0,1) 0%, rgba(0,128,0,1) 5%, rgba(9,9,9,1) 5%, rgba(9,9,9,1) 100%);"
-        }
-      }
-    }
-  }
 });
 
 export const globalStyleVariables = {
