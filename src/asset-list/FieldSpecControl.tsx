@@ -1,67 +1,81 @@
 import { Box, Typography } from '@mui/material';
+import produce from 'immer';
 import { ParamDropdown } from 'lib/controls/ParamDropdown';
-import { useCallback } from 'react';
+import { FieldSpec } from 'lib/data-map/view-layers';
+import { FC } from 'react';
 
-export const FieldSpecControl = ({ fieldSpec, onFieldSpec }) => {
-  const { field, fieldParams } = fieldSpec;
-
-  const handleField = useCallback((value) => onFieldSpec({ field: value, fieldParams }), [onFieldSpec, fieldParams]);
-  const handleFieldParams = useCallback((value) => onFieldSpec({ field, fieldParams: value }), [onFieldSpec, field]);
+export const FieldSpecControl: FC<{
+  fieldSpec: FieldSpec;
+  onFieldSpec: (fieldSpec: FieldSpec) => void;
+}> = ({ fieldSpec, onFieldSpec }) => {
+  const { fieldGroup, fieldDimensions } = fieldSpec;
 
   return (
     <>
       <Box mt={1}>
         <ParamDropdown
-          title="Variable"
-          value={field}
-          onChange={handleField}
-          options={[{ value: 'damages', label: 'Damages' }]}
+          title="Variable Group"
+          value={fieldGroup}
+          onChange={(value) =>
+            onFieldSpec(
+              produce(fieldSpec, (draft) => {
+                draft.fieldGroup = value;
+              }),
+            )
+          }
+          options={[
+            { value: 'damages_expected', label: 'Expected Damages' },
+            { value: 'adaptation', label: 'Adaptation Options' },
+          ]}
         />
       </Box>
       <Box mt={1}>
-        <Typography variant="subtitle1">Parameters</Typography>
-        <FieldParamsControl field={field} fieldParams={fieldParams} onFieldParams={handleFieldParams} />
+        <Typography variant="h6">Dimensions</Typography>
+        <Box>
+          <ParamDropdown
+            title="Hazard"
+            value={fieldDimensions.hazard}
+            onChange={(value) =>
+              onFieldSpec(
+                produce(fieldSpec, (draft) => {
+                  draft.fieldDimensions.hazard = value;
+                }),
+              )
+            }
+            options={[
+              { value: 'all', label: 'All Hazards' },
+              { value: 'fluvial', label: 'River Flooding' },
+              { value: 'surface', label: 'Surface Flooding' },
+              { value: 'coastal', label: 'Coastal Flooding' },
+              { value: 'cyclone', label: 'Cyclones' },
+            ]}
+          />
+          <ParamDropdown
+            title="RCP"
+            value={fieldDimensions.rcp}
+            onChange={(value) =>
+              onFieldSpec(
+                produce(fieldSpec, (draft) => {
+                  draft.fieldDimensions.rcp = value;
+                }),
+              )
+            }
+            options={[{ value: 'baseline', label: 'Baseline' }, '2.6', '4.5', '8.5']}
+          />
+          <ParamDropdown
+            title="Epoch"
+            value={fieldDimensions.epoch}
+            onChange={(value) =>
+              onFieldSpec(
+                produce(fieldSpec, (draft) => {
+                  draft.fieldDimensions.epoch = value;
+                }),
+              )
+            }
+            options={[2010, 2050, 2100]}
+          />
+        </Box>
       </Box>
     </>
   );
 };
-
-function FieldParamsControl({ field, fieldParams, onFieldParams }) {
-  const handleParamChange = useCallback(
-    (param, value) => {
-      onFieldParams({ ...fieldParams, [param]: value });
-    },
-    [onFieldParams, fieldParams],
-  );
-
-  return (
-    <>
-      <Box>
-        <ParamDropdown
-          title="Hazard"
-          value={fieldParams.hazard}
-          onChange={(value) => handleParamChange('hazard', value)}
-          options={[
-            { value: 'all', label: 'All Hazards' },
-            { value: 'fluvial', label: 'River Flooding' },
-            { value: 'surface', label: 'Surface Flooding' },
-            { value: 'coastal', label: 'Coastal Flooding' },
-            { value: 'cyclone', label: 'Cyclones' },
-          ]}
-        />
-        <ParamDropdown
-          title="RCP"
-          value={fieldParams.rcp}
-          onChange={(value) => handleParamChange('rcp', value)}
-          options={[{ value: 'baseline', label: 'Baseline' }, '2.6', '4.5', '8.5']}
-        />
-        <ParamDropdown
-          title="Epoch"
-          value={fieldParams.epoch}
-          onChange={(value) => handleParamChange('epoch', value)}
-          options={[2010, 2050, 2100]}
-        />
-      </Box>
-    </>
-  );
-}

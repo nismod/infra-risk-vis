@@ -12,7 +12,10 @@ from backend.db import models
 
 
 def add_damages_expected_value_query(
-    fq: Query, dimensions: schemas.ExpectedDamagesDimensions, field: str
+    fq: Query,
+    dimensions: schemas.ExpectedDamagesDimensions,
+    field: str,
+    field_params: schemas.DataParameters,
 ):
     q = fq.join(models.Feature.damages_expected)
     q = q.filter_by(rcp=dimensions.rcp, epoch=dimensions.epoch)
