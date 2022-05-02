@@ -59,8 +59,8 @@ export const terrestrialFieldSpecState = selector<FieldSpec>({
   },
 });
 
-function landuseFilterValue(p, landuseFilters: LandUseOption[]) {
-  return landuseFilters.some((key) => p.landuse_desc === key) ? 1 : 0;
+function landuseFilterValue(p, landuseFilters: Set<LandUseOption>) {
+  return landuseFilters.has(p.landuse_desc) ? 1 : 0;
 }
 
 function locationFilterValue(p, locationFiltersKeys: TerrestrialLocationFilterType[]) {
@@ -73,9 +73,9 @@ const landuseFilterState = selector<Record<LandUseOption, boolean>>({
   get: ({ get }) => get(terrestrialFiltersState).landuse_desc,
 });
 
-const landuseFilterKeysState = selector<LandUseOption[]>({
-  key: 'landuseFilterKeysState',
-  get: ({ get }) => truthyKeys(get(landuseFilterState)),
+const landuseFilterSetState = selector<Set<LandUseOption>>({
+  key: 'landuseFilterSetState',
+  get: ({ get }) => new Set(truthyKeys(get(landuseFilterState))),
 });
 
 const locationFilterState = selector<TerrestrialLocationFilters>({
@@ -90,12 +90,12 @@ const locationFilterKeysState = selector<TerrestrialLocationFilterType[]>({
 
 function terrestrialFilters(
   filters: TerrestrialFilters,
-  landuseFilterKeys: LandUseOption[],
+  landuseFilterSet: Set<LandUseOption>,
   locationFilterKeys: TerrestrialLocationFilterType[],
 ) {
   return {
     getFilterValue: ({ properties }) => [
-      landuseFilterValue(properties, landuseFilterKeys),
+      landuseFilterValue(properties, landuseFilterSet),
       properties.slope_degrees,
       properties.elevation_m,
       locationFilterValue(properties, locationFilterKeys),
@@ -103,7 +103,7 @@ function terrestrialFilters(
     filterRange: [[1, 1], [...filters.slope_degrees], [...filters.elevation_m], [1, 1]],
 
     updateTriggers: {
-      getFilterValue: [landuseFilterKeys, locationFilterKeys],
+      getFilterValue: [landuseFilterSet, locationFilterKeys],
     },
 
     extensions: [new DataFilterExtension({ filterSize: 4 })],
@@ -129,7 +129,7 @@ export const terrestrialLayerState = selector<ViewLayer>({
       return null;
     }
 
-    const landuseFilterKeys = get(landuseFilterKeysState);
+    const landuseFilterSet = get(landuseFilterSetState);
     const locationFilterKeys = get(locationFilterKeysState);
 
     return {
@@ -156,7 +156,7 @@ export const terrestrialLayerState = selector<ViewLayer>({
           },
           pointRadius(zoom),
           fillColor(dataColorMap(dataFn, colorFn)),
-          terrestrialFilters(filters, landuseFilterKeys, locationFilterKeys),
+          terrestrialFilters(filters, landuseFilterSet, locationFilterKeys),
         ),
         selectableMvtLayer(
           {
@@ -177,7 +177,7 @@ export const terrestrialLayerState = selector<ViewLayer>({
           },
           border(),
           fillColor(dataColorMap(dataFn, colorFn)),
-          terrestrialFilters(filters, landuseFilterKeys, locationFilterKeys),
+          terrestrialFilters(filters, landuseFilterSet, locationFilterKeys),
         ),
       ],
     };
