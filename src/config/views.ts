@@ -99,7 +99,7 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     hazards: {
       expanded: false,
-      visible: true,
+      visible: false,
     },
     buildings: {
       expanded: false,
