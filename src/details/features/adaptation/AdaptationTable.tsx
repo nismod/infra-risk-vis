@@ -5,13 +5,13 @@ import { numFormat, numRangeFormat } from 'lib/helpers';
 const padding =  {px:0.25,py:0.25}
 
 export const AdaptationTable = ({ options }) => {
+
   const numDays = 15;
   return (
     <TableContainer sx={{maxHeight:260}}>
       <Table size="small" padding="none" stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell sx={{pl:0,pr:padding.px,py:padding.py}}>Description</TableCell>
             <TableCell sx={padding}>Hazard</TableCell>
             <TableCell sx={padding}>
               <abbr title="Representative Concentration Pathway (Climate Scenario)">RCP</abbr>
@@ -29,8 +29,7 @@ export const AdaptationTable = ({ options }) => {
         <TableBody>
           {options.map((d, i) => (
             <TableRow>
-              <TableCell sx={{pl:0,pr:padding.px,py:padding.py}}>{d.adaptation_name}</TableCell>
-              <TableCell sx={padding}>{d.hazard}</TableCell>
+              <TableCell sx={{pl:0,pr:padding.px,py:padding.py}}>{d.hazard}</TableCell>
               <TableCell sx={padding}>{d.rcp}</TableCell>
               <TableCell sx={padding}>{d.adaptation_protection_level}</TableCell>
               <TableCell sx={padding} align="right">
