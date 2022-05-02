@@ -16,5 +16,5 @@ export type FeatureOut = {
     damages_expected?: Array<ExpectedDamage>;
     damages_return_period?: Array<ReturnPeriodDamage>;
     damages_npv?: Array<NPVDamage>;
-    adaptations?: Array<Adaptation>;
+    adaptation?: Array<Adaptation>;
 };

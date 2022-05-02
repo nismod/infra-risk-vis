@@ -148,7 +148,6 @@ function makeRPDamagesCsv(damages: RPDamageCell[]) {
 }
 
 export const DamagesSection = ({ fd }) => {
-  console.log(fd)
   const damagesData = orderDamages(prepareExpectedDamages(fd?.damages_expected ?? []));
   const returnPeriodDamagesData = orderRPDamages(prepareRPDamages(fd?.damages_return_period ?? []));
 
