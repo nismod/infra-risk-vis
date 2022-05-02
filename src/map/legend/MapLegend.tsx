@@ -6,7 +6,7 @@ import { viewLayersFlatState } from 'state/layers/view-layers-flat';
 import { viewLayersParamsState } from 'state/layers/view-layers-params';
 import { RasterLegend } from './RasterLegend';
 import { VectorLegend } from './VectorLegend';
-import { Box, Paper } from '@mui/material';
+import { Stack, Box, Paper, Divider } from '@mui/material';
 
 export const MapLegend: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
@@ -59,12 +59,14 @@ export const MapLegend: FC<{}> = () => {
   return hazardViewLayers.length || Object.keys(dataColorMaps).length ? (
     <Paper>
       <Box p={1} maxWidth={270}>
-        {hazardViewLayers.map((viewLayer) => (
-          <RasterLegend key={viewLayer.id} viewLayer={viewLayer} />
-        ))}
-        {Object.entries(dataColorMaps).map(([legendKey, { colorMap, formatConfig }]) => (
-          <VectorLegend key={legendKey} colorMap={colorMap} legendFormatConfig={formatConfig} />
-        ))}
+        <Stack gap={0.3} divider={<Divider />}>
+          {hazardViewLayers.map((viewLayer) => (
+            <RasterLegend key={viewLayer.id} viewLayer={viewLayer} />
+          ))}
+          {Object.entries(dataColorMaps).map(([legendKey, { colorMap, formatConfig }]) => (
+            <VectorLegend key={legendKey} colorMap={colorMap} legendFormatConfig={formatConfig} />
+          ))}
+        </Stack>
       </Box>
     </Paper>
   ) : null;
