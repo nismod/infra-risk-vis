@@ -123,3 +123,17 @@ type ValueTypeCheck<C> = <K extends string>(x: Record<K, C>) => Record<K, C>;
 export function valueType<C>(): ValueTypeCheck<C> {
   return (x) => x;
 }
+
+/**
+ * Checks for nullish values, with TS type guard
+ * Mostly useful in a formatting function when you want to return the unchanged value
+ * if it's nullish, but you want the returned value to not modify the automatically inferred
+ * return type of the function. E.g. when formatting numbers to strings, just returning
+ * the value if it's nullish would result in a number | string return type.
+ * This is needed because a normal x == null check doesn't narrow the type of x to null.
+ * @param v value to check
+ * @returns is the value null or undefined
+ */
+export function isNullish(v: any): v is null | undefined {
+  return v == null;
+}
