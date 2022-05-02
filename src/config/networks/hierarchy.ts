@@ -169,7 +169,7 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
     children: [
       {
         id: 'water-supply',
-        label: 'Water Supply Network',
+        label: 'Potable Water Supply',
         children: [
           {
             id: 'water_potable_edges',
@@ -241,7 +241,7 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
       },
       {
         id: 'water-irrigation',
-        label: 'Irrigation Network',
+        label: 'Irrigation',
         children: [
           {
             id: 'water_irrigation_edges',
@@ -249,13 +249,13 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
           },
           {
             id: 'water_irrigation_nodes',
-            label: 'Irrigation Facilities',
+            label: 'Irrigation Wells',
           },
         ],
       },
       {
         id: 'water-waste',
-        label: 'Wastewater Network',
+        label: 'Wastewater',
         children: [
           {
             id: 'water_waste_edges',
