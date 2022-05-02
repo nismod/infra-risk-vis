@@ -58,7 +58,7 @@ export const AdaptationSection = ({ fd }) => {
               top: 0,
               right: 0,
             }}
-            title="Download CSV with return period data"
+            title="Download CSV with adaptation options data"
             onClick={() => downloadFile(makeAdaptationCsv(options), 'text/csv', `feature_${fd.id}_adaptation.csv`)}
           >
             <Download />
