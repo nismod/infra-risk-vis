@@ -15,7 +15,6 @@ import { Box } from '@mui/material';
 import { MapSearch } from 'lib/map/place-search/MapSearch';
 import { MapLayerSelection } from './layers/MapLayerSelection';
 import { MapLegend } from './legend/MapLegend';
-import { LegendContent } from './legend/LegendContent';
 import { globalStyleVariables } from 'theme';
 import { interactionGroupsState } from '../state/layers/interaction-groups';
 import { PlaceSearchResult } from 'lib/map/place-search/use-place-search';
@@ -77,9 +76,7 @@ export const MapView = () => {
             </Box>
           </Box>
           <Box position="absolute" bottom={0} left={globalStyleVariables.controlSidebarWidth} m={1} ml={1} zIndex={1000}>
-            <MapLegend>
-              <LegendContent />
-            </MapLegend>
+            <MapLegend />
           </Box>
         </>
       }

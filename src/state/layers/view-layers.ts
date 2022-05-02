@@ -21,6 +21,7 @@ import { extendBbox } from 'lib/bounding-box';
 import { boundingBoxLayer } from 'lib/deck/layers/bounding-box-layer';
 import { terrestrialLayerState } from './terrestrial';
 import { marineLayerState } from './marine';
+import { droughtOptionsLayerState, droughtRegionsLayerState } from './drought';
 
 const buildingLayersState = selector<ViewLayer[]>({
   key: 'buildingLayersState',
@@ -59,6 +60,8 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       showRegions &&
         (get(showPopulationState) ? populationViewLayer(regionLevel) : regionBoundariesViewLayer(regionLevel)),
 
+      get(droughtRegionsLayerState),
+
       get(terrestrialLayerState),
       get(marineLayerState),
 
@@ -69,6 +72,8 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
 
       // network data layers
       get(networkLayersState),
+
+      get(droughtOptionsLayerState),
 
       get(featureBoundingBoxLayerState),
 

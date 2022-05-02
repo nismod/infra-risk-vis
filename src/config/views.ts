@@ -91,6 +91,12 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       styles: ['type', 'damages', 'adaptation'],
       defaultStyle: 'adaptation',
     },
+    drought: {
+      expanded: true,
+      visible: false,
+      styles: ['adaptation'],
+      defaultStyle: 'adaptation',
+    },
     hazards: {
       expanded: false,
       visible: true,

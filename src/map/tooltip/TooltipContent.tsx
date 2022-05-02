@@ -9,6 +9,7 @@ import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-stat
 import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
 import { showPopulationState } from 'state/regions';
 import { SolutionHoverDescription } from './content/SolutionHoverDescription';
+import { DroughtHoverDescription } from './content/DroughtHoverDescription';
 
 const TooltipSection = ({ children }) => (
   <Box p={1} borderBottom="1px solid #ccc">
@@ -21,6 +22,7 @@ export const TooltipContent: FC = () => {
   const hoveredRasters = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
   const hoveredRegion = useRecoilValue(hoverState('regions')) as InteractionTarget<any>;
   const hoveredSolution = useRecoilValue(hoverState('solutions')) as InteractionTarget<any>;
+  const hoveredDrought = useRecoilValue(hoverState('drought')) as InteractionTarget<any>;
 
   const regionDataShown = useRecoilValue(showPopulationState);
 
@@ -28,7 +30,9 @@ export const TooltipContent: FC = () => {
   const hazardsHovered = hasHover(hoveredRasters);
   const regionsHovered = hasHover(hoveredRegion);
   const solutionsHovered = hasHover(hoveredSolution);
-  const doShow = assetsHovered || hazardsHovered || (regionDataShown && regionsHovered) || solutionsHovered;
+  const droughtHovered = hasHover(hoveredDrought);
+  const doShow =
+    assetsHovered || hazardsHovered || (regionDataShown && regionsHovered) || solutionsHovered || droughtHovered;
 
   if (!doShow) return null;
 
@@ -43,6 +47,11 @@ export const TooltipContent: FC = () => {
         {assetsHovered ? (
           <TooltipSection>
             <VectorHoverDescription hoveredObject={hoveredVector} />
+          </TooltipSection>
+        ) : null}
+        {droughtHovered ? (
+          <TooltipSection>
+            <DroughtHoverDescription hoveredObject={hoveredDrought} />
           </TooltipSection>
         ) : null}
         {hazardsHovered ? (

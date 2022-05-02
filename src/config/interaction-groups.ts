@@ -27,4 +27,11 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     usesAutoHighlight: true,
     pickMultiple: false,
   },
+  {
+    id: 'drought',
+    type: 'vector',
+    pickingRadius: 8,
+    usesAutoHighlight: true,
+    pickMultiple: false,
+  },
 ]);

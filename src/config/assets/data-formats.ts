@@ -1,6 +1,6 @@
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
 import { FieldSpec, FormatConfig } from 'lib/data-map/view-layers';
-import { numFormat, numFormatMoney, paren } from 'lib/helpers';
+import { isNullish, numFormatMoney, paren } from 'lib/helpers';
 import _ from 'lodash';
 
 function getSourceLabel(eadSource: string) {
@@ -8,6 +8,32 @@ function getSourceLabel(eadSource: string) {
 
   return HAZARDS_METADATA[eadSource].label;
 }
+
+function getDamageTypeLabel(field) {
+  if (field === 'ead_mean') return 'Direct Damages';
+  else if (field === 'eael_mean') return 'Economic Losses';
+}
+
+function formatDamageValue(value) {
+  if (isNullish(value)) return value;
+
+  return `$${numFormatMoney(value)}`;
+}
+const DAMAGES_EXPECTED_DEFAULT_FORMAT: FormatConfig = {
+  getDataLabel: (colorField) => {
+    const variableLabel = getDamageTypeLabel(colorField.field);
+    const sourceLabel = getSourceLabel(colorField.fieldDimensions.hazard);
+    return `${variableLabel} (${sourceLabel})`;
+  },
+  getValueFormatted: formatDamageValue,
+};
+
+const DAMAGES_EXPECTED_LEGEND_FORMAT: FormatConfig = {
+  getDataLabel: ({ field }) => getDamageTypeLabel(field),
+  getValueFormatted: formatDamageValue,
+};
+
+// ===== ADAPTATIONS FORMAT =====
 
 const adaptationFieldLabels = {
   avoided_ead_mean: 'Avoided Direct Damages',
@@ -20,31 +46,47 @@ function getAdaptationFieldLabel(field: string) {
   return adaptationFieldLabels[field] || _.startCase(field);
 }
 
-const DATA_FORMATS: Record<string, FormatConfig> = {
+function formatAdaptationValue(value: number, { field }: FieldSpec) {
+  if (isNullish(value)) return value;
+
+  if (field === 'cost_benefit_ratio') {
+    return `${value.toLocaleString()}x`;
+  }
+
+  return `$${value.toLocaleString()}`;
+}
+
+const ADAPTATION_DEFAULT_FORMAT: FormatConfig<number> = {
+  getDataLabel: (colorField) => {
+    return `${getAdaptationFieldLabel(colorField.field)} ${paren(colorField.fieldDimensions.adaptation_name)}`;
+  },
+  getValueFormatted: formatAdaptationValue,
+};
+
+const ADAPTATION_LEGEND_FORMAT: FormatConfig = {
+  getDataLabel: ({ field }) => getAdaptationFieldLabel(field),
+  getValueFormatted: formatAdaptationValue,
+};
+
+// ==== ALL FORMATS ====
+
+type FormatTarget = 'legend' | 'default';
+
+const DATA_FORMATS: Record<string, Record<FormatTarget, FormatConfig>> = {
   damages_expected: {
-    getDataLabel: (colorField) => {
-      const variableLabel = colorField.field === 'ead_mean' ? 'Direct Damages' : 'Economic Losses';
-      const sourceLabel = getSourceLabel(colorField.fieldDimensions.hazard);
-      return `${variableLabel} (${sourceLabel})`;
-    },
-    getValueFormatted: (value, fieldSpec) => {
-      return value == null ? value : `${numFormatMoney(value)} $`;
-    },
+    default: DAMAGES_EXPECTED_DEFAULT_FORMAT,
+    legend: DAMAGES_EXPECTED_LEGEND_FORMAT,
   },
   adaptation: {
-    getDataLabel: (colorField) => {
-      return `${getAdaptationFieldLabel(colorField.field)} ${paren(colorField.fieldDimensions.adaptation_name)}`;
-    },
-    getValueFormatted: (value, { field }) => {
-      return value == null
-        ? value
-        : field === 'cost_benefit_ratio'
-        ? `${numFormat(value)}x`
-        : `${numFormatMoney(value)} $`;
-    },
+    default: ADAPTATION_DEFAULT_FORMAT,
+    legend: ADAPTATION_LEGEND_FORMAT,
   },
 };
 
-export function getAssetDataFormats(fieldSpec: FieldSpec) {
-  return DATA_FORMATS[fieldSpec.fieldGroup];
+export function getAssetDataFormats(fieldSpec: FieldSpec): FormatConfig {
+  return DATA_FORMATS[fieldSpec.fieldGroup].default;
+}
+
+export function getAssetLegendDataFormats(fieldSpec: FieldSpec): FormatConfig {
+  return DATA_FORMATS[fieldSpec.fieldGroup].legend;
 }

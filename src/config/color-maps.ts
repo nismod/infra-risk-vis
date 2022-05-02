@@ -76,4 +76,46 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
     range: [0, 90],
     empty: '#ccc',
   },
+  droughtRiskWaterStress: {
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateReds,
+    range: [0, 15],
+    empty: '#ccc',
+  },
+  droughtRiskEpd: {
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateReds,
+    range: [0, 2_500_000],
+    empty: '#ccc',
+  },
+  droughtRiskEael: {
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
+    range: [0, 1_000_000],
+    empty: '#ccc',
+  },
+  droughtOptionsCost: {
+    scale: d3Scale.scaleSequential,
+    scheme: discardSides(d3ScaleChromatic.interpolateGreens, 0.2, 0.2),
+    range: [0, 1_000_000_000],
+    empty: '#ccc',
+  },
+  droughtOptionsPopulationProtected: {
+    scale: d3Scale.scaleSequential,
+    scheme: discardSides(d3ScaleChromatic.interpolateBlues, 0.2, 0.2),
+    range: [0, 100_000],
+    empty: '#ccc',
+  },
+  droughtOptionsNPVBenefit: {
+    scale: d3Scale.scaleSequential,
+    scheme: discardSides(d3ScaleChromatic.interpolateBlues, 0.2, 0.2),
+    range: [0, 1_000_000_000],
+    empty: '#ccc',
+  },
+  droughtOptionsBenefitCost: {
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateViridis),
+    range: [1, 1.5],
+    empty: '#ccc',
+  },
 });
