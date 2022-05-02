@@ -1,18 +1,17 @@
+import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 import { FC } from 'react';
 import { SidebarPanel } from 'sidebar/SidebarPanel';
-import { StyleSelection } from 'sidebar/StyleSelection';
 import { SidebarPanelSection } from 'sidebar/ui/SidebarPanelSection';
 import { MarineControl } from './MarineControl';
 
 export const MarineSection: FC<{}> = () => {
   return (
     <SidebarPanel id="marine" title="Marine">
-      <SidebarPanelSection>
-        <MarineControl />
-      </SidebarPanelSection>
-      {/* <SidebarPanelSection variant="style">
-        <StyleSelection id="marine" />
-      </SidebarPanelSection> */}
+      <ErrorBoundary message="There was a problem displaying this section.">
+        <SidebarPanelSection>
+          <MarineControl />
+        </SidebarPanelSection>
+      </ErrorBoundary>
     </SidebarPanel>
   );
 };
