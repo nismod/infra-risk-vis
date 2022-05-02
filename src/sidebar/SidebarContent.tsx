@@ -30,6 +30,8 @@ export const SidebarContent: FC<{}> = () => {
           <HazardsSection />
           <BuildingsSection />
           <RegionsSection />
+          <TerrestrialSection />
+          <MarineSection />
         </>
       );
     case 'nature-based-solutions':
