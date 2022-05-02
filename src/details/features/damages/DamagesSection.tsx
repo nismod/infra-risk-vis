@@ -188,36 +188,20 @@ export const DamagesSection = ({ fd }) => {
           </IconButton>
         </Box>
         {hazards.length ? (
-          hazards.length === 1?
-            (
-              <FormControl fullWidth sx={{my:2}} disabled>
-                <InputLabel>Hazard</InputLabel>
-                <Select
-                  value={selectedHazard ?? ''}
-                  onChange={(e) => setSelectedHazard(e.target.value as string)}
-                  >
-                  {hazards.map((h) => (
-                    <MenuItem key={h} value={h}>
-                      {titleCase(h)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : (
-              <FormControl fullWidth sx={{my:2}}>
-                <InputLabel>Hazard</InputLabel>
-                <Select
-                  value={selectedHazard ?? ''}
-                  onChange={(e) => setSelectedHazard(e.target.value as string)}
-                  >
-                  {hazards.map((h) => (
-                    <MenuItem key={h} value={h}>
-                      {titleCase(h)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )
+          <FormControl fullWidth sx={{my:2}} disabled={hazards.length === 1}>
+            <InputLabel>Hazard</InputLabel>
+            <Select
+              label="Hazard"
+              value={selectedHazard ?? ''}
+              onChange={(e) => setSelectedHazard(e.target.value as string)}
+              >
+              {hazards.map((h) => (
+                <MenuItem key={h} value={h}>
+                  {titleCase(h)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           ) : null
         }
         {selectedData ? (
@@ -285,36 +269,20 @@ export const DamagesSection = ({ fd }) => {
           </IconButton>
         </Box>
         {epochs.length ? (
-          epochs.length === 1?
-            (
-              <FormControl fullWidth sx={{my:2}} disabled>
-                <InputLabel>Epoch</InputLabel>
-                <Select
-                  value={selectedEpoch ?? ''}
-                  onChange={(e) => setSelectedEpoch(e.target.value as string)}
-                  >
-                  {epochs.map((h) => (
-                    <MenuItem key={h} value={h}>
-                      {titleCase(h)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ) : (
-              <FormControl fullWidth sx={{my:2}}>
-                <InputLabel>Epoch</InputLabel>
-                <Select
-                  value={selectedEpoch ?? ''}
-                  onChange={(e) => setSelectedEpoch(e.target.value as string)}
-                  >
-                  {epochs.map((h) => (
-                    <MenuItem key={h} value={h}>
-                      {titleCase(h)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )
+          <FormControl fullWidth sx={{my:2}} disabled={epochs.length === 1}>
+            <InputLabel>Epoch</InputLabel>
+            <Select
+              label="Epoch"
+              value={selectedEpoch ?? ''}
+              onChange={(e) => setSelectedEpoch(e.target.value as string)}
+              >
+              {epochs.map((h) => (
+                <MenuItem key={h} value={h}>
+                  {titleCase(h)}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           ) : null
         }
         {selectedRPData ? (
