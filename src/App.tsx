@@ -35,10 +35,6 @@ export const App = () => {
                 <Toolbar /> {/* Prevents app bar from concealing content*/}
                 <DataPage />
               </Route>
-              <Route path="/assets" exact>
-                <Toolbar /> {/* Prevents app bar from concealing content*/}
-                <AssetListPage />
-              </Route>
             </Switch>
           </Router>
         </ThemeProvider>
