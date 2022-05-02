@@ -17,7 +17,7 @@ export const TerrestrialLandUseTree = () => {
         node.children ? (
           node.label
         ) : (
-          <LayerLabel label={node.label} type="polygon" color={TERRESTRIAL_LANDUSE_COLORS[node.label].css} />
+          <LayerLabel label={node.label} type="polygon" color={TERRESTRIAL_LANDUSE_COLORS[node.id].css} />
         )
       }
       checkboxState={checkboxState}
