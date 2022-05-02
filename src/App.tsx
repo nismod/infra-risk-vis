@@ -8,7 +8,6 @@ import { Nav } from './Nav';
 import { IntroPage } from './pages/IntroPage';
 import { MapPage } from './pages/MapPage';
 import { DataPage } from './pages/DataPage';
-import { AssetListPage } from 'pages/AssetListPage';
 import { theme } from './theme';
 
 import './index.css';
