@@ -38,8 +38,8 @@ function makeOptions(values, labelFn = (x) => x) {
     label: labelFn(val),
   }));
 }
-
-const EAEL_DAYS_MARKS = [1, 5, 10, 15, 20, 25, 30].map((x) => ({ value: x, label: x }));
+const HORRIBLE_HACK_FACTOR = 1/15;
+const EAEL_DAYS_MARKS = [1, 5, 10, 15, 20, 25, 30].map((x) => ({ value: x * HORRIBLE_HACK_FACTOR, label: x }));
 const CostBenefitRatioInputs: FC = () => {
   const [eaelDays, setEaelDays] = useRecoilState(adaptationCostBenefitRatioEaelDaysState);
 

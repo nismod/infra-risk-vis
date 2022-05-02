@@ -40,9 +40,25 @@ function makeAdaptationCsv(options: Adaptation[]) {
   ).join('\n');
 }
 
-
+const HORRIBLE_HACK_FACTOR = 1/15;
 export const AdaptationSection = ({ fd }) => {
-  const options : Adaptation[] = fd?.adaptation ?? [];
+  const options : Adaptation[] = fd?.adaptation.map(
+    (d: Adaptation) => {
+      return {
+        adaptation_name: d.adaptation_name,
+        hazard: d.hazard,
+        rcp: d.rcp,
+        adaptation_protection_level: d.adaptation_protection_level,
+        adaptation_cost: d.adaptation_cost,
+        avoided_ead_amin: d.avoided_ead_amin,
+        avoided_ead_mean: d.avoided_ead_mean,
+        avoided_ead_amax: d.avoided_ead_amax,
+        avoided_eael_amin: d.avoided_eael_amin * HORRIBLE_HACK_FACTOR,
+        avoided_eael_mean: d.avoided_eael_mean * HORRIBLE_HACK_FACTOR,
+        avoided_eael_amax: d.avoided_eael_amax * HORRIBLE_HACK_FACTOR,
+      }
+    }
+  ) ?? [];
   const option_names = useMemo(() => unique(
     options.map((d) => d.adaptation_name)), [options]
   ).sort();

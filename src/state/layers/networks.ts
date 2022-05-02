@@ -35,9 +35,10 @@ export const adaptationFieldState = atom<
   default: 'avoided_ead_mean',
 });
 
+const HORRIBLE_HACK_FACTOR = 1/15;
 export const adaptationCostBenefitRatioEaelDaysState = atom<number>({
   key: 'adaptationCostBenefitRatioEaelDaysState',
-  default: 15,
+  default: 15 * HORRIBLE_HACK_FACTOR,
 });
 
 export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams> = (
