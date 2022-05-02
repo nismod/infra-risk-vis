@@ -1,20 +1,22 @@
-import { LandUseOption, LAND_USE_VALUES, TerrestrialLocationFilterType } from 'config/solutions/domains';
-import _ from 'lodash';
-import { atom } from 'recoil';
+import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
+import { atom, selector } from 'recoil';
+import { landuseFilterState } from './landuse-tree';
 
 export type TerrestrialLocationFilters = Record<TerrestrialLocationFilterType, boolean>;
 
-export interface TerrestrialFilters {
-  landuse_desc: Record<LandUseOption, boolean>;
+interface TerrestrialNonLandUseFilters {
   slope_degrees: [number, number];
   elevation_m: [number, number];
   location_filters: TerrestrialLocationFilters;
 }
 
-export const terrestrialFiltersState = atom<TerrestrialFilters>({
-  key: 'terrestrialFiltersState',
+export type TerrestrialFilters = TerrestrialNonLandUseFilters & {
+  landuse_desc: Record<LandUseOption, boolean>;
+};
+
+export const terrestrialNonLandUseFiltersState = atom<TerrestrialNonLandUseFilters>({
+  key: 'terrestrialNonLandUseFiltersState',
   default: {
-    landuse_desc: _.fromPairs<boolean>(LAND_USE_VALUES.map((v) => [v, true])) as Record<LandUseOption, boolean>,
     slope_degrees: [0, 90],
     elevation_m: [0, 2250],
     location_filters: {
@@ -25,5 +27,15 @@ export const terrestrialFiltersState = atom<TerrestrialFilters>({
       within_large_stream_50m: false,
       within_headwater_stream_50m: false,
     },
+  },
+});
+
+export const terrestrialFiltersState = selector<TerrestrialFilters>({
+  key: 'terrestrialFiltersState',
+  get: ({ get }) => {
+    return {
+      landuse_desc: get(landuseFilterState),
+      ...get(terrestrialNonLandUseFiltersState),
+    };
   },
 });
