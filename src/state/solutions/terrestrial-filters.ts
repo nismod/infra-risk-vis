@@ -14,7 +14,7 @@ export interface TerrestrialFilters {
 export const terrestrialFiltersState = atom<TerrestrialFilters>({
   key: 'terrestrialFiltersState',
   default: {
-    landuse_desc: _.fromPairs<boolean>(LAND_USE_VALUES.map((v) => [v, false])) as Record<LandUseOption, boolean>,
+    landuse_desc: _.fromPairs<boolean>(LAND_USE_VALUES.map((v) => [v, true])) as Record<LandUseOption, boolean>,
     slope_degrees: [0, 90],
     elevation_m: [0, 2250],
     location_filters: {
