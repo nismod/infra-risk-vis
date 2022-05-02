@@ -77,6 +77,12 @@ export const droughtRegionsLayerState = selector<ViewLayer>({
       interactionGroup: 'drought',
       dataAccessFn: getDroughtDataAccessor,
       dataFormatsFn: getDroughtRiskDataFormats,
+      styleParams: {
+        colorMap: {
+          fieldSpec,
+          colorSpec,
+        },
+      },
 
       fn: ({ deckProps, selection }) =>
         selectableMvtLayer(
@@ -91,7 +97,7 @@ export const droughtRegionsLayerState = selector<ViewLayer>({
 
             filled: true,
           },
-          border([200, 200, 200]),
+          border([255, 255, 255]),
           fillColor(dataColorMap(dataFn, colorFn)),
         ),
     };
@@ -153,6 +159,12 @@ export const droughtOptionsLayerState = selector<ViewLayer>({
       interactionGroup: 'drought',
       dataAccessFn: getDroughtDataAccessor,
       dataFormatsFn: getDroughtOptionsDataFormats,
+      styleParams: {
+        colorMap: {
+          fieldSpec,
+          colorSpec,
+        },
+      },
       fn: ({ deckProps, selection, zoom }) =>
         selectableMvtLayer(
           {
@@ -167,7 +179,7 @@ export const droughtOptionsLayerState = selector<ViewLayer>({
             filled: true,
           },
           pointRadius(zoom),
-          border([200, 200, 200]),
+          border([255, 255, 255]),
           fillColor(dataColorMap(dataFn, colorFn)),
         ),
     };

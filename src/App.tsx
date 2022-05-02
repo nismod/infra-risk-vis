@@ -8,7 +8,6 @@ import { Nav } from './Nav';
 import { IntroPage } from './pages/IntroPage';
 import { MapPage } from './pages/MapPage';
 import { DataPage } from './pages/DataPage';
-import { AssetListPage } from 'pages/AssetListPage';
 import { theme } from './theme';
 
 import './index.css';
@@ -34,10 +33,6 @@ export const App = () => {
               <Route path="/data" exact>
                 <Toolbar /> {/* Prevents app bar from concealing content*/}
                 <DataPage />
-              </Route>
-              <Route path="/assets" exact>
-                <Toolbar /> {/* Prevents app bar from concealing content*/}
-                <AssetListPage />
               </Route>
             </Switch>
           </Router>

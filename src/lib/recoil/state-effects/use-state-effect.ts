@@ -1,3 +1,4 @@
+import { usePrevious } from 'lib/hooks/use-previous';
 import { useEffect } from 'react';
 import { RecoilState, useRecoilCallback, useRecoilValue } from 'recoil';
 import { StateEffect } from './types';
@@ -11,13 +12,15 @@ import { StateEffect } from './types';
 export function useStateEffect<T>(state: RecoilState<T>, effect: StateEffect<T>) {
   const stateValue = useRecoilValue(state);
 
+  const previousStateValue = usePrevious(stateValue);
+
   const cb = useRecoilCallback(
     ({ transact_UNSTABLE }) =>
-      (newValue: T) => {
-        transact_UNSTABLE((ops) => effect(ops, newValue));
+      (newValue: T, previousValue: T) => {
+        transact_UNSTABLE((ops) => effect(ops, newValue, previousValue));
       },
     [effect],
   );
 
-  useEffect(() => cb(stateValue), [cb, stateValue]);
+  useEffect(() => cb(stateValue, previousStateValue), [cb, stateValue, previousStateValue]);
 }

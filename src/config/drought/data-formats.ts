@@ -33,9 +33,9 @@ const optionsLabelLookup = toDictionary(
 );
 
 const optionsValueFormatLookup: Record<DroughtOptionsVariableType, (x: any) => string> = {
-  cost_jmd: (x) => numFormatMoney(x),
+  cost_jmd: (x) => `$${numFormat(x)}`,
   population_protected: (x) => numFormat(x, 21),
-  net_present_value_benefit: (x) => numFormatMoney(x),
+  net_present_value_benefit: (x) => `$${numFormat(x)}`,
   benefit_cost_ratio: (x) => `${numFormat(x)}x`,
 };
 

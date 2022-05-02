@@ -64,6 +64,7 @@ const DroughtOptionDescription: FC<{
       <Typography variant="body2">Drought Adaptation Option</Typography>
 
       <DataItem label="Name" value={feature.properties.project_name} />
+      <DataItem label="Type" value={feature.properties.project_type} />
       <DataDescription viewLayer={viewLayer} feature={feature} colorMap={colorMap} />
     </>
   );

@@ -24,6 +24,14 @@ export const SidebarContent: FC<{}> = () => {
   switch (view) {
     case 'exposure':
     case 'risk':
+      return (
+        <>
+          <NetworksSection />
+          <HazardsSection />
+          <BuildingsSection />
+          <RegionsSection />
+        </>
+      );
     case 'adaptation':
       return (
         <>
