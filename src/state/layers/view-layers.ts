@@ -58,11 +58,12 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       // administrative region boundaries or population density
       showRegions &&
         (get(showPopulationState) ? populationViewLayer(regionLevel) : regionBoundariesViewLayer(regionLevel)),
-      // hazard data layers
-      get(hazardLayerState),
 
       get(terrestrialLayerState),
       get(marineLayerState),
+
+      // hazard data layers
+      get(hazardLayerState),
 
       get(buildingLayersState),
 
