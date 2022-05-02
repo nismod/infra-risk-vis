@@ -26,7 +26,7 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     regions: {
       expanded: false,
-      visible: true,
+      visible: false,
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
@@ -65,7 +65,7 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     regions: {
       expanded: false,
-      visible: true,
+      visible: false,
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
@@ -104,7 +104,7 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     regions: {
       expanded: false,
-      visible: true,
+      visible: false,
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
@@ -144,6 +144,13 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     hazards: {
       expanded: false,
       visible: false,
+    },
+    regions: {
+      expanded: false,
+      visible: false,
+
+      styles: ['boundaries', 'population'],
+      defaultStyle: 'boundaries',
     },
   },
 };
