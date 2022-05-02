@@ -1,5 +1,5 @@
 import { Download } from '@mui/icons-material';
-import { IconButton, MenuItem, Select, Typography } from '@mui/material';
+import { FormControl, InputLabel, IconButton, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { HAZARD_DOMAINS } from 'config/hazards/domains';
 import { ExpectedDamage } from 'lib/api-client';
@@ -117,19 +117,39 @@ export const DamagesSection = ({ fd }) => {
             <Download />
           </IconButton>
         </Box>
-        {hazards.length !== 0 && (
-          <Select
-            variant="standard"
-            value={selectedHazard ?? ''}
-            onChange={(e) => setSelectedHazard(e.target.value as string)}
-          >
-            {hazards.map((h) => (
-              <MenuItem key={h} value={h}>
-                {titleCase(h)}
-              </MenuItem>
-            ))}
-          </Select>
-        )}
+        {hazards.length ? (
+          hazards.length === 1?
+            (
+              <FormControl fullWidth sx={{my:2}} disabled>
+                <InputLabel>Hazard</InputLabel>
+                <Select
+                  value={selectedHazard ?? ''}
+                  onChange={(e) => setSelectedHazard(e.target.value as string)}
+                  >
+                  {hazards.map((h) => (
+                    <MenuItem key={h} value={h}>
+                      {titleCase(h)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : (
+              <FormControl fullWidth sx={{my:2}}>
+                <InputLabel>Hazard</InputLabel>
+                <Select
+                  value={selectedHazard ?? ''}
+                  onChange={(e) => setSelectedHazard(e.target.value as string)}
+                  >
+                  {hazards.map((h) => (
+                    <MenuItem key={h} value={h}>
+                      {titleCase(h)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )
+          ) : null
+        }
         {selectedData ? (
           <>
             <Box mt={1}>
