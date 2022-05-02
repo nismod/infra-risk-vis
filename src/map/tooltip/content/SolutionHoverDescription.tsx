@@ -2,16 +2,23 @@ import { Typography } from '@mui/material';
 import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { MARINE_HABITATS_LOOKUP } from 'config/solutions/domains';
 import { DataItem } from 'details/features/detail-components';
-import { colorMap } from 'lib/color-map';
 import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
 import _ from 'lodash';
 import { FC } from 'react';
 import { habitatColorMap } from 'state/layers/marine';
 import { landuseColorMap } from 'state/layers/terrestrial';
+import { DataDescription } from '../DataDescription';
 import { ColorBox } from './ColorBox';
 
-const slopeColorFunction = colorMap(VECTOR_COLOR_MAPS.terrestrialSlope);
-const elevationColorFunction = colorMap(VECTOR_COLOR_MAPS.terrestrialElevation);
+const slopeFieldSpec = {
+  fieldGroup: 'properties',
+  field: 'slope_degrees',
+};
+
+const elevationFieldSpec = {
+  fieldGroup: 'properties',
+  field: 'elevation_m',
+};
 
 export const SolutionHoverDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;
@@ -28,6 +35,7 @@ export const SolutionHoverDescription: FC<{
       {viewLayer.id === 'terrestrial' && (
         <>
           <DataItem label="Cell ID" value={feature.properties.cell_id} maximumSignificantDigits={21} />
+          {/* not using DataDescription for Land Use because currently it only works for colorSpec-based color maps (not categorical) */}
           <DataItem
             label="Land Use"
             value={
@@ -37,28 +45,27 @@ export const SolutionHoverDescription: FC<{
               </>
             }
           />
-          <DataItem
-            label="Slope (deg)"
-            value={
-              <>
-                <ColorBox color={slopeColorFunction(feature.properties.slope_degrees)} />
-                {feature.properties.slope_degrees.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </>
-            }
+          <DataDescription
+            colorMap={{
+              fieldSpec: slopeFieldSpec,
+              colorSpec: VECTOR_COLOR_MAPS.terrestrialSlope,
+            }}
+            feature={feature}
+            viewLayer={viewLayer}
           />
-          <DataItem
-            label="Elevation (m)"
-            value={
-              <>
-                <ColorBox color={elevationColorFunction(feature.properties.elevation_m)} />
-                {feature.properties.elevation_m}
-              </>
-            }
+          <DataDescription
+            colorMap={{
+              fieldSpec: elevationFieldSpec,
+              colorSpec: VECTOR_COLOR_MAPS.terrestrialElevation,
+            }}
+            feature={feature}
+            viewLayer={viewLayer}
           />
         </>
       )}
       {viewLayer.id === 'marine' && (
         <>
+          {/* not using DataDescription for Habitat because currently it only works for colorSpec-based color maps (not categorical) */}
           <DataItem
             label="Habitat"
             value={

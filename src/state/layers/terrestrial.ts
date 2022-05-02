@@ -1,6 +1,6 @@
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { TERRESTRIAL_LANDUSE_COLORS } from 'config/solutions/colors';
-import { ViewLayer, FieldSpec } from 'lib/data-map/view-layers';
+import { ViewLayer, FieldSpec, ColorSpec } from 'lib/data-map/view-layers';
 import { selector } from 'recoil';
 import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
 import {
@@ -17,10 +17,28 @@ import { Accessor } from 'lib/deck/props/getters';
 import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
 import { truthyKeys } from 'lib/helpers';
 import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
+import { getTerrestrialDataFormats } from 'config/solutions/data-formats';
+import { getSolutionsDataAccessor } from 'config/solutions/data-access';
 
 export function landuseColorMap(x: string) {
   return TERRESTRIAL_LANDUSE_COLORS[x].css;
 }
+
+export const terrestrialColorSpecState = selector<ColorSpec>({
+  key: 'terrestrialColorSpecState',
+  get: ({ get }) => {
+    const style = get(sectionStyleValueState('terrestrial'));
+
+    if (style === 'elevation') {
+      return VECTOR_COLOR_MAPS.terrestrialElevation;
+    } else if (style === 'slope') {
+      return VECTOR_COLOR_MAPS.terrestrialSlope;
+    } else {
+      // land use will not have a colorSpec, because it's categorical
+      return null;
+    }
+  },
+});
 
 export const terrestrialColorFnState = selector<Accessor<string>>({
   key: 'terrestrialColorFnState',
@@ -29,10 +47,12 @@ export const terrestrialColorFnState = selector<Accessor<string>>({
 
     if (style === 'landuse') {
       return landuseColorMap;
-    } else if (style === 'elevation') {
-      return colorMap(VECTOR_COLOR_MAPS.terrestrialElevation);
-    } else if (style === 'slope') {
-      return colorMap(VECTOR_COLOR_MAPS.terrestrialSlope);
+    } else {
+      const colorSpec = get(terrestrialColorSpecState);
+
+      if (colorSpec) {
+        return colorMap(colorSpec);
+      }
     }
   },
 });
@@ -135,6 +155,8 @@ export const terrestrialLayerState = selector<ViewLayer>({
       return null;
     }
 
+    const colorSpec = get(terrestrialColorSpecState);
+
     const landuseFilterSet = get(landuseFilterSetState);
     const locationFilterKeys = get(locationFilterKeysState);
 
@@ -142,6 +164,14 @@ export const terrestrialLayerState = selector<ViewLayer>({
       id: 'terrestrial',
       group: null,
       interactionGroup: 'solutions',
+      styleParams: colorSpec && {
+        colorMap: {
+          fieldSpec,
+          colorSpec,
+        },
+      },
+      dataAccessFn: getSolutionsDataAccessor,
+      dataFormatsFn: getTerrestrialDataFormats,
       fn: ({ deckProps, zoom, selection }) => {
         const switchoverZoom = 14.5;
 
