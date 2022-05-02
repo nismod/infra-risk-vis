@@ -31,37 +31,6 @@ export const TERRESTRIAL_LANDUSE_COLORS = makeColorConfig({
   'Water Body': '#009',
 });
 
-const marineHabitatsConst = [
-  {
-    value: 'coral',
-    label: 'Coral',
-  },
-  {
-    value: 'coral_seagrass',
-    label: 'Coral and Seagrass',
-  },
-  {
-    value: 'seagrass',
-    label: 'Seagrass',
-  },
-  {
-    value: 'mangrove',
-    label: 'Mangrove',
-  },
-  {
-    value: 'coral_mangrove_seagrass',
-    label: 'Coral, Mangrove and Seagrass',
-  },
-  {
-    value: 'mangrove_seagrass',
-    label: 'Mangrove and Seagrass',
-  },
-  {
-    value: 'coral_mangrove',
-    label: 'Coral and Mangrove',
-  },
-] as const;
-
 export const MARINE_HABITAT_COLORS = makeColorConfig<MarineHabitatType>({
   coral: '#f0f',
   coral_mangrove: '#f00',

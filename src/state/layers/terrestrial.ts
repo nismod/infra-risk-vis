@@ -1,7 +1,6 @@
 import { DataFilterExtension } from '@deck.gl/extensions';
 import { TERRESTRIAL_LANDUSE_COLORS } from 'config/solutions/colors';
 import { ViewLayer, FieldSpec } from 'lib/data-map/view-layers';
-import { mvtLayer } from 'lib/deck/layers/base';
 import { selector } from 'recoil';
 import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
 import {
@@ -65,6 +64,7 @@ function landuseFilterValue(p, landuseFilters: LandUseOption[]) {
 }
 
 function locationFilterValue(p, locationFiltersKeys: TerrestrialLocationFilterType[]) {
+  //eslint-disable-next-line eqeqeq -- values are currently sometimes 1 and sometimes true
   return locationFiltersKeys.every((key) => p[key] == true) ? 1 : 0;
 }
 
