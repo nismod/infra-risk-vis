@@ -1,4 +1,4 @@
-import { ZoomIn } from '@mui/icons-material';
+import { ZoomIn, ZoomOut } from '@mui/icons-material';
 import { IconButton, TableCell } from '@mui/material';
 import { Box } from '@mui/system';
 import { ExpandableRow } from 'asset-list/ExpandableRow';
@@ -6,7 +6,7 @@ import { SortedAssetTable } from 'asset-list/SortedAssetTable';
 import { ListFeature } from 'asset-list/use-sorted-features';
 import { getAssetDataFormats } from 'config/assets/data-formats';
 import { FeatureSidebarContent } from 'details/features/FeatureSidebarContent';
-import { extendBbox } from 'lib/bounding-box';
+import { BoundingBox, extendBbox } from 'lib/bounding-box';
 import { colorMap } from 'lib/color-map';
 import { mapFitBoundsState } from 'map/MapView';
 import { ColorBox } from 'map/tooltip/content/ColorBox';
@@ -26,6 +26,8 @@ export const selectedAdaptationFeatureState = atom<ListFeature>({
   default: null,
 });
 
+const JAMAICA_BBOX: BoundingBox = [-79.61792, 16.788765, -74.575195, 19.487308];
+
 export const FeatureAdaptationsTable = () => {
   const layerSpec = useRecoilValue(adaptationLayerSpecState);
   const fieldSpec = useRecoilValue(adaptationFieldSpecState);
@@ -40,56 +42,65 @@ export const FeatureAdaptationsTable = () => {
     [setMapFitBounds],
   );
 
+  const handleZoomOutJamaica = useCallback(() => setMapFitBounds([...JAMAICA_BBOX]), [setMapFitBounds]);
+
   const colorFn = useMemo(() => colorMap(colorSpec), [colorSpec]);
   const { getDataLabel, getValueFormatted } = getAssetDataFormats(fieldSpec);
 
   return (
-    <SortedAssetTable
-      layerSpec={layerSpec}
-      fieldSpec={fieldSpec}
-      header={
-        <>
-          <TableCell width={10}>#</TableCell>
-          <TableCell>{getDataLabel(fieldSpec)}</TableCell>
-          <TableCell width={10}> </TableCell>
-        </>
-      }
-      renderRow={(feature, localIndex, globalIndex) => (
-        <ExpandableRow
-          key={feature.string_id}
-          expanded={feature === selectedFeature}
-          onExpandedChange={(expanded) => setSelectedFeature(expanded ? feature : null)}
-          onMouseEnter={() => setHoveredFeature(feature)}
-          onMouseLeave={() => setHoveredFeature(null)}
-          expandableContent={
-            <Box py={1}>
-              <FeatureSidebarContent feature={feature} assetType={feature.layer} showRiskSection={false} />
-            </Box>
-          }
-        >
-          <TableCell>{globalIndex + 1}</TableCell>
-          <TableCell>
-            <ColorBox color={colorFn(feature.value)} />
-            {getValueFormatted(feature.value, fieldSpec)}
-          </TableCell>
-          <TableCell>
-            <IconButton
-              title="Zoom in to asset"
-              className="row-hovered-visible"
-              size="small"
-              sx={{
-                padding: 0,
-              }}
-              onClick={(e) => {
-                handleZoomInFeature(feature);
-                e.stopPropagation();
-              }}
-            >
-              <ZoomIn />
-            </IconButton>
-          </TableCell>
-        </ExpandableRow>
-      )}
-    />
+    <>
+      <Box position="absolute" top={0} right={25} zIndex={1000}>
+        <IconButton onClick={handleZoomOutJamaica} title="Zoom out to whole island">
+          <ZoomOut />
+        </IconButton>
+      </Box>
+      <SortedAssetTable
+        layerSpec={layerSpec}
+        fieldSpec={fieldSpec}
+        header={
+          <>
+            <TableCell width={10}>#</TableCell>
+            <TableCell>{getDataLabel(fieldSpec)}</TableCell>
+            <TableCell width={10}> </TableCell>
+          </>
+        }
+        renderRow={(feature, localIndex, globalIndex) => (
+          <ExpandableRow
+            key={feature.string_id}
+            expanded={feature === selectedFeature}
+            onExpandedChange={(expanded) => setSelectedFeature(expanded ? feature : null)}
+            onMouseEnter={() => setHoveredFeature(feature)}
+            onMouseLeave={() => setHoveredFeature(null)}
+            expandableContent={
+              <Box py={1}>
+                <FeatureSidebarContent feature={feature} assetType={feature.layer} showRiskSection={false} />
+              </Box>
+            }
+          >
+            <TableCell>{globalIndex + 1}</TableCell>
+            <TableCell>
+              <ColorBox color={colorFn(feature.value)} />
+              {getValueFormatted(feature.value, fieldSpec)}
+            </TableCell>
+            <TableCell>
+              <IconButton
+                title="Zoom in to asset"
+                className="row-hovered-visible"
+                size="small"
+                sx={{
+                  padding: 0,
+                }}
+                onClick={(e) => {
+                  handleZoomInFeature(feature);
+                  e.stopPropagation();
+                }}
+              >
+                <ZoomIn />
+              </IconButton>
+            </TableCell>
+          </ExpandableRow>
+        )}
+      />
+    </>
   );
 };
