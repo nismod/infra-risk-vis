@@ -38,6 +38,12 @@
     "buildings_resort": {
       "mbtiles": "buildings_resort.mbtiles"
     },
+    "drought_combined": {
+      "mbtiles": "drought_combined.mbtiles"
+    },
+    "drought_options": {
+      "mbtiles": "drought_options.mbtiles"
+    },
     "elec_edges_high": {
       "mbtiles": "elec_edges_high.mbtiles"
     },
@@ -67,6 +73,15 @@
     },
     "elec_nodes_wind": {
       "mbtiles": "elec_nodes_wind.mbtiles"
+    },
+    "natural_marine_combined": {
+      "mbtiles": "natural_marine_combined.mbtiles"
+    },
+    "natural_terrestrial_combined_points": {
+      "mbtiles": "natural_terrestrial_combined_points.mbtiles"
+    },
+    "natural_terrestrial_combined": {
+      "mbtiles": "natural_terrestrial_combined.mbtiles"
     },
     "port_areas_break": {
       "mbtiles": "port_areas_break.mbtiles"

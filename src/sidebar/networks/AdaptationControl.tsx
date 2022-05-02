@@ -146,7 +146,7 @@ export const AdaptationControl: FC<{}> = () => {
       </InputSection>
 
       <InputSection>
-        <ParamDropdown
+        <ParamDropdown<typeof adaptationField>
           title="Displayed variable"
           value={adaptationField}
           onChange={setAdaptationField}

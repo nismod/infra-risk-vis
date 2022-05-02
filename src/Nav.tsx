@@ -28,8 +28,8 @@ export const Nav = () => {
         <NavLink className="nav-link" to="/adaptation">
           <Typography variant="h6">Adaptation</Typography>
         </NavLink>
-        <NavLink className="nav-link" to="/prioritization">
-          <Typography variant="h6">Prioritization</Typography>
+        <NavLink className="nav-link" to="/nature-based-solutions">
+          <Typography variant="h6">Nature-based Solutions</Typography>
         </NavLink>
         <NavLink className="nav-link" to="/data">
           <Typography variant="h6">Data</Typography>

@@ -8,6 +8,8 @@ import { BuildingsSection } from './buildings/BuildingsSection';
 import { HazardsSection } from './hazards/HazardsSection';
 import { NetworksSection } from './networks/NetworksSection';
 import { RegionsSection } from './regions/RegionsSection';
+import { MarineSection } from './solutions/MarineSection';
+import { TerrestrialSection } from './solutions/TerrestrialSection';
 
 const viewLabels = {
   exposure: 'Exposure',
@@ -24,6 +26,17 @@ export const SidebarContent: FC<{}> = () => {
     case 'adaptation':
       return (
         <>
+          <NetworksSection />
+          <HazardsSection />
+          <BuildingsSection />
+          <RegionsSection />
+        </>
+      );
+    case 'nature-based-solutions':
+      return (
+        <>
+          <TerrestrialSection />
+          <MarineSection />
           <NetworksSection />
           <HazardsSection />
           <BuildingsSection />

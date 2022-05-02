@@ -86,4 +86,28 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       defaultStyle: 'boundaries',
     },
   },
+  'nature-based-solutions': {
+    terrestrial: {
+      expanded: true,
+      visible: true,
+      styles: ['landuse', 'slope', 'elevation'],
+      defaultStyle: 'landuse',
+    },
+    marine: {
+      expanded: true,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
+    },
+    assets: {
+      expanded: false,
+      visible: false,
+      styles: ['type', 'damages'],
+      defaultStyle: 'type',
+    },
+    hazards: {
+      expanded: false,
+      visible: false,
+    },
+  },
 };

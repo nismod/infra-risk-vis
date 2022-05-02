@@ -7,11 +7,12 @@ import { titleCase, isNumeric, numFormat, paren, numRangeFormat } from 'lib/help
 interface DataItemProps {
   label: string;
   value: any;
+  maximumSignificantDigits?: number;
 }
 
-export const DataItem: FC<DataItemProps> = ({ label, value }) => {
+export const DataItem: FC<DataItemProps> = ({ label, value, maximumSignificantDigits }) => {
   if (isNumeric(value)) {
-    value = numFormat(value);
+    value = numFormat(value, maximumSignificantDigits);
   }
   return (
     <ListItem disableGutters disablePadding>

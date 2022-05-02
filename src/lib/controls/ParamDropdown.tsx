@@ -1,7 +1,22 @@
-import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
-import { useCallback } from 'react';
+import { FormControl, FormLabel, MenuItem, Select, SelectProps } from '@mui/material';
+import { PropsWithChildren, useCallback } from 'react';
+import { isValueLabel, ValueLabel } from './params/value-label';
 
-export const ParamDropdown = ({ title, value, onChange, options, variant = undefined }) => {
+interface ParamDropdownProps<V extends string | number> {
+  title: string;
+  value: V;
+  options: (V | ValueLabel<V>)[];
+  onChange: (value: V) => void;
+  variant?: SelectProps['variant'];
+}
+
+export const ParamDropdown = <V extends string | number>({
+  title,
+  value,
+  onChange,
+  options,
+  variant = undefined,
+}: PropsWithChildren<ParamDropdownProps<V>>) => {
   const handleChange = useCallback((e) => onChange(e.target.value), [onChange]);
   return (
     <FormControl fullWidth>
@@ -9,11 +24,10 @@ export const ParamDropdown = ({ title, value, onChange, options, variant = undef
       <Select value={value} onChange={handleChange} size="small" variant={variant} disabled={options.length < 2}>
         {options.map((option) => {
           let value, label;
-          if (typeof option === 'string' || typeof option === 'number') {
-            value = label = option;
+          if (isValueLabel(option)) {
+            ({ value, label } = option);
           } else {
-            value = option.value;
-            label = option.label;
+            value = label = option;
           }
 
           return (
