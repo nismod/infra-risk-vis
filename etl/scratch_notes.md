@@ -24,7 +24,7 @@ snakemake -c20 --configfile=config_otherdata.yml "../tileserver/vector/data/drou
 Custom values for NbS tile layer generation
 ```bash
 tippecanoe \
-    --use-attribute-for-id=uid \
+    --generate-ids \
     --read-parallel \
     --output=../tileserver/vector/data/drought_combined.mbtiles \
     --layer=drought_combined \
@@ -34,7 +34,7 @@ tippecanoe \
     vector/drought_combined.geojsonl
 
 tippecanoe \
-    --use-attribute-for-id=uid \
+    --generate-ids \
     --read-parallel \
     --output=../tileserver/vector/data/natural_marine_combined.mbtiles \
     --layer=natural_marine_combined \
