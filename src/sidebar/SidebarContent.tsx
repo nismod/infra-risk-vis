@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { viewState } from 'state/view';
 
 import { BuildingsSection } from './buildings/BuildingsSection';
+import { DroughtsSection } from './drought/DroughtsSection';
 import { HazardsSection } from './hazards/HazardsSection';
 import { NetworksSection } from './networks/NetworksSection';
 import { RegionsSection } from './regions/RegionsSection';
@@ -15,7 +16,7 @@ const viewLabels = {
   exposure: 'Exposure',
   risk: 'Risk',
   adaptation: 'Adaptation',
-  prioritization: 'Prioritization',
+  'nature-based-solutions': 'Nature-based Solutions',
 };
 
 export const SidebarContent: FC<{}> = () => {
@@ -27,6 +28,7 @@ export const SidebarContent: FC<{}> = () => {
       return (
         <>
           <NetworksSection />
+          <DroughtsSection />
           <HazardsSection />
           <BuildingsSection />
           <RegionsSection />

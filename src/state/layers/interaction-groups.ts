@@ -15,6 +15,7 @@ export const interactionGroupsState = selector({
         usesAutoHighlight: regionDataShown,
       },
       INTERACTION_GROUPS.solutions,
+      INTERACTION_GROUPS.drought,
     ];
   },
 });

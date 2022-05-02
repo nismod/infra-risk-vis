@@ -1,47 +1,12 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { DataItem } from 'details/features/detail-components';
-import { colorMap } from 'lib/color-map';
 import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
-import { ColorMap, FieldSpec, ViewLayer } from 'lib/data-map/view-layers';
-import _ from 'lodash';
-import { FC, useMemo } from 'react';
+import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 import { singleViewLayerParamsState } from 'state/layers/view-layers-params';
+import { DataDescription } from '../DataDescription';
 import { ColorBox } from './ColorBox';
-
-export const DataDescription: FC<{
-  viewLayer: ViewLayer;
-  feature: any;
-  colorMap: ColorMap;
-}> = ({ viewLayer, feature, colorMap: { fieldSpec: colorField, colorSpec } }) => {
-  const accessor = useMemo(() => viewLayer.dataAccessFn?.(colorField), [viewLayer, colorField]);
-
-  const value = accessor?.(feature);
-
-  const colorFn = useMemo(() => colorMap(colorSpec), [colorSpec]);
-
-  const color = colorFn(value);
-
-  const { getDataLabel, getValueFormatted } = viewLayer.dataFormatsFn(colorField);
-
-  const dataLabel = getDataLabel(colorField);
-  const formattedValue = getValueFormatted(value, colorField);
-
-  return (
-    <Box>
-      <DataItem
-        label={dataLabel}
-        value={
-          <>
-            <ColorBox color={color} />
-            {formattedValue ?? '-'}
-          </>
-        }
-      />
-    </Box>
-  );
-};
 
 export const VectorHoverDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;
