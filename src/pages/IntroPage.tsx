@@ -1,10 +1,11 @@
 import React from 'react';
 import { Alert, Button, Divider, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import ScrollToTop from 'lib/hooks/scroll-to-top';
 
 export const IntroPage = () => (
   <article>
+    <ScrollToTop />
     <h1>Jamaica Systemic Risk Assessment Tool</h1>
 
     <p>The Jamaica Systemic Risk Assessment Tool (J-SRAT) presents
