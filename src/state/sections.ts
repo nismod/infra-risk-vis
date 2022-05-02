@@ -9,7 +9,7 @@ import { getHazardSelectionAggregate } from './hazards/hazard-selection';
 
 export const sectionVisibilityState = atomFamily<boolean, string>({
   key: 'sectionVisibilityState',
-  default: true,
+  default: false,
 });
 
 export const sidebarSectionExpandedState = atomFamily({

@@ -17,8 +17,15 @@ export const viewState = atom({
   default: 'exposure',
 });
 
-export const viewStateEffect: StateEffect<string> = ({ get, set }, view) => {
+export const viewStateEffect: StateEffect<string> = ({ get, set }, view, previousView) => {
   const viewSectionsConfig = VIEW_SECTIONS[view];
+
+  const previousViewSectionsConfig = VIEW_SECTIONS[previousView];
+  const removedSections = _.difference(_.keys(previousViewSectionsConfig), _.keys(viewSectionsConfig));
+
+  removedSections.forEach((section) => {
+    set(sectionVisibilityState(section), false);
+  });
 
   _.forEach(viewSectionsConfig, (sectionConfig, section) => {
     set(sectionVisibilityState(section), sectionConfig.visible);
