@@ -6,13 +6,13 @@ import { MarineControl } from './MarineControl';
 
 export const MarineSection: FC<{}> = () => {
   return (
-    <SidebarPanel id="marine" title="Marine Solutions">
+    <SidebarPanel id="marine" title="Marine">
       <SidebarPanelSection>
         <MarineControl />
       </SidebarPanelSection>
-      <SidebarPanelSection variant="style">
+      {/* <SidebarPanelSection variant="style">
         <StyleSelection id="marine" />
-      </SidebarPanelSection>
+      </SidebarPanelSection> */}
     </SidebarPanel>
   );
 };
