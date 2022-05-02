@@ -31,6 +31,18 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
     },
+    terrestrial: {
+      expanded: false,
+      visible: false,
+      styles: ['landuse', 'slope', 'elevation'],
+      defaultStyle: 'landuse',
+    },
+    marine: {
+      expanded: false,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
+    },
   },
   risk: {
     assets: {
@@ -58,6 +70,18 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
     },
+    terrestrial: {
+      expanded: false,
+      visible: false,
+      styles: ['landuse', 'slope', 'elevation'],
+      defaultStyle: 'landuse',
+    },
+    marine: {
+      expanded: false,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
+    },
   },
   adaptation: {
     assets: {
@@ -84,6 +108,18 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
+    },
+    terrestrial: {
+      expanded: false,
+      visible: false,
+      styles: ['landuse', 'slope', 'elevation'],
+      defaultStyle: 'landuse',
+    },
+    marine: {
+      expanded: false,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
     },
   },
   'nature-based-solutions': {
