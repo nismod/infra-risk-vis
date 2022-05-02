@@ -8,7 +8,7 @@ import { useSelect } from 'lib/hooks/use-select';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { DamageTable } from './DamageTable';
-import { EADChart } from './EADChart';
+import { ExpectedDamageChart } from './ExpectedDamageChart';
 
 const DAMAGES_ORDERING = (() => {
   const ordering = [];
@@ -35,15 +35,35 @@ interface ExpectedDamageCell {
   hazard: string;
   rcp: string;
   epoch: string;
-  ead: number;
+  ead_mean: number,
+  ead_amin: number,
+  ead_amax: number,
+  eael_mean: number,
+  eael_amin: number,
+  eael_amax: number,
 }
-function getExpectedDamageObject({ hazard, rcp, epoch, ead_mean }: ExpectedDamage): ExpectedDamageCell {
+function getExpectedDamageObject({
+  hazard,
+  rcp,
+  epoch,
+  ead_mean,
+  ead_amin,
+  ead_amax,
+  eael_mean,
+  eael_amin,
+  eael_amax
+}: ExpectedDamage): ExpectedDamageCell {
   return {
     key: getDamageKey({ hazard, rcp, epoch }),
     hazard,
     rcp,
     epoch: epoch.toString(),
-    ead: ead_mean,
+    ead_mean,
+    ead_amin,
+    ead_amax,
+    eael_mean,
+    eael_amin,
+    eael_amax,
   };
 }
 
@@ -60,7 +80,8 @@ function orderDamages(damages: ExpectedDamageCell[]) {
 }
 
 function makeDamagesCsv(damages: ExpectedDamageCell[]) {
-  return 'hazard,rcp,epoch,ead\n' + damages.map((d) => `${d.hazard},${d.rcp},${d.epoch},${d.ead}`).join('\n');
+  return 'hazard,rcp,epoch,ead_mean,ead_amin,ead_amax,eael_mean,eael_amin,eael_amax\n' + damages.map(
+    (d) => `${d.hazard},${d.rcp},${d.epoch},${d.ead_mean},${d.ead_amin},${d.ead_amax},${d.eael_mean},${d.eael_amin},${d.eael_amax}`).join('\n');
 }
 
 export const DamagesSection = ({ fd }) => {
@@ -107,10 +128,26 @@ export const DamagesSection = ({ fd }) => {
         {selectedData ? (
           <>
             <Box mt={1}>
-              <EADChart
+              <ExpectedDamageChart
                 data={{
                   table: selectedData,
                 }}
+                field_key='ead_mean'
+                field_title='EAD'
+                actions={false}
+                padding={0}
+                width={260} // this is currently picked to fit the chart to the sidebar width
+                height={150}
+                renderer="svg"
+              />
+            </Box>
+            <Box mt={1}>
+              <ExpectedDamageChart
+                data={{
+                  table: selectedData,
+                }}
+                field_key='eael_mean'
+                field_title='EAEL'
                 actions={false}
                 padding={0}
                 width={260} // this is currently picked to fit the chart to the sidebar width
@@ -120,7 +157,7 @@ export const DamagesSection = ({ fd }) => {
             </Box>
             <Box mt={1}>
               <Typography variant="subtitle2">Details</Typography>
-              <DamageTable damages={damagesData} />
+              <DamageTable damages={selectedData} />
             </Box>
           </>
         ) : (

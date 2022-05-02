@@ -1,28 +1,34 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { numFormat } from 'lib/helpers';
-
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { numFormat, numRangeFormat } from 'lib/helpers';
+const padding =  {px:0.25,py:0.25}
 export const DamageTable = ({ damages }) => (
-  <TableContainer component={Paper}>
-    <Table>
+  <TableContainer sx={{maxHeight:250}}>
+    <Table size="small" padding="none" stickyHeader>
       <TableHead>
         <TableRow>
-          <TableCell>Hazard</TableCell>
-          <TableCell>
+          <TableCell sx={padding}>
             <abbr title="Representative Concentration Pathway (Climate Scenario)">RCP</abbr>
           </TableCell>
-          <TableCell>Epoch</TableCell>
-          <TableCell align="right">
-            <abbr title="Expected Annual Damages">EAD</abbr>
+          <TableCell sx={padding}>Epoch</TableCell>
+          <TableCell sx={padding} align="right">
+            <abbr title="Expected Annual Damages">EAD (J$)</abbr>
+          </TableCell>
+          <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
+            <abbr title="Expected Annual Economic Losses">EAEL</abbr> (J$/day)
           </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {damages.map(({ key, hazard, rcp, epoch, ead }) => (
+        {damages.map(({ key, rcp, epoch, ead_mean, ead_amin, ead_amax, eael_mean, eael_amin, eael_amax }) => (
           <TableRow key={key}>
-            <TableCell>{hazard}</TableCell>
-            <TableCell>{rcp}</TableCell>
-            <TableCell>{epoch}</TableCell>
-            <TableCell align="right">{numFormat(ead)}</TableCell>
+            <TableCell sx={{pl:0,pr:padding.px,py:padding.py}}>{rcp}</TableCell>
+            <TableCell sx={padding}>{epoch}</TableCell>
+            <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
+              {numFormat(ead_mean)}<br/>({numRangeFormat(ead_amin, ead_amax)})
+            </TableCell>
+            <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
+              {numFormat(eael_mean)}<br/>({numRangeFormat(eael_amin, eael_amax)})
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
