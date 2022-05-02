@@ -70,4 +70,5 @@ export const MARINE_HABITAT_COLORS = makeColorConfig<MarineHabitatType>({
   mangrove: '#80f2e6',
   mangrove_seagrass: '#95e78b',
   seagrass: '#f2e680',
+  other: 'rgba(128,128,128,0.2)',
 });

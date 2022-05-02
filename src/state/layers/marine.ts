@@ -11,7 +11,7 @@ import { marineFiltersState } from 'state/solutions/marine-filters';
 import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 
 export function habitatColorMap(x: string) {
-  return MARINE_HABITAT_COLORS[x]?.css ?? '#aaa';
+  return MARINE_HABITAT_COLORS[x]?.css ?? MARINE_HABITAT_COLORS['other'].css;
 }
 
 export const marineColorFn = selector<Accessor<string>>({
