@@ -17,7 +17,7 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       confidence: ['None'],
     },
     paramDefaults: {
-      returnPeriod: 20,
+      returnPeriod: 100,
 
       rcp: 'baseline',
       epoch: 2010,
@@ -39,7 +39,7 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       confidence: ['None'],
     },
     paramDefaults: {
-      returnPeriod: 20,
+      returnPeriod: 100,
 
       rcp: 'baseline',
       epoch: 2010,
@@ -61,7 +61,7 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       confidence: ['None'],
     },
     paramDefaults: {
-      returnPeriod: 1,
+      returnPeriod: 100,
       epoch: 2010,
       rcp: 'baseline',
 
@@ -86,7 +86,7 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       confidence: [5, 50, 95],
     },
     paramDefaults: {
-      returnPeriod: 10,
+      returnPeriod: 100,
       epoch: 2010,
       rcp: 'baseline',
       confidence: 50,
