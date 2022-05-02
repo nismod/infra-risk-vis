@@ -1,6 +1,6 @@
 import { HAZARDS_METADATA } from 'config/hazards/metadata';
 import { FieldSpec, FormatConfig } from 'lib/data-map/view-layers';
-import { isNullish, numFormatMoney, paren } from 'lib/helpers';
+import { isNullish, numFormat, numFormatMoney, paren } from 'lib/helpers';
 import _ from 'lodash';
 
 function getSourceLabel(eadSource: string) {
@@ -50,10 +50,10 @@ function formatAdaptationValue(value: number, { field }: FieldSpec) {
   if (isNullish(value)) return value;
 
   if (field === 'cost_benefit_ratio') {
-    return `${value.toLocaleString()}x`;
+    return `${numFormat(value)}x`;
   }
 
-  return `$${value.toLocaleString()}`;
+  return `$${numFormat(value)}`;
 }
 
 const ADAPTATION_DEFAULT_FORMAT: FormatConfig<number> = {
