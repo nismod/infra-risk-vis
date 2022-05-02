@@ -12,7 +12,7 @@ import { colorMap } from 'lib/color-map';
 import { VECTOR_COLOR_MAPS } from 'config/color-maps';
 import { featureProperty } from 'lib/deck/props/data-source';
 import { dataColorMap } from 'lib/deck/props/color-map';
-import { border, fillColor, pointRadius } from 'lib/deck/props/style';
+import { border, fillColor } from 'lib/deck/props/style';
 import { Accessor } from 'lib/deck/props/getters';
 import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
 import { truthyKeys } from 'lib/helpers';
@@ -92,18 +92,24 @@ function terrestrialFilters(
   filters: TerrestrialFilters,
   landuseFilterSet: Set<LandUseOption>,
   locationFilterKeys: TerrestrialLocationFilterType[],
+  doFilter: boolean = true,
 ) {
   return {
     getFilterValue: ({ properties }) => [
-      landuseFilterValue(properties, landuseFilterSet),
-      properties.slope_degrees,
-      properties.elevation_m,
-      locationFilterValue(properties, locationFilterKeys),
+      doFilter ? landuseFilterValue(properties, landuseFilterSet) : 1,
+      doFilter ? properties.slope_degrees : 1,
+      doFilter ? properties.elevation_m : 1,
+      doFilter ? locationFilterValue(properties, locationFilterKeys) : 1,
     ],
-    filterRange: [[1, 1], [...filters.slope_degrees], [...filters.elevation_m], [1, 1]],
+    filterRange: [
+      [1, 1],
+      doFilter ? [...filters.slope_degrees] : [1, 1],
+      doFilter ? [...filters.elevation_m] : [1, 1],
+      [1, 1],
+    ],
 
     updateTriggers: {
-      getFilterValue: [landuseFilterSet, locationFilterKeys],
+      getFilterValue: [doFilter, landuseFilterSet, locationFilterKeys],
     },
 
     extensions: [new DataFilterExtension({ filterSize: 4 })],
@@ -136,50 +142,61 @@ export const terrestrialLayerState = selector<ViewLayer>({
       id: 'terrestrial',
       group: null,
       interactionGroup: 'solutions',
-      fn: ({ deckProps, zoom, selection }) => [
-        selectableMvtLayer(
-          {
-            selectionOptions: {
-              selectedFeatureId: selection?.target?.feature.id,
-              polygonOffset: -1000,
-            },
-          },
-          deckProps,
-          {
-            id: `${deckProps.id}@points`,
-            data: '/vector/data/natural_terrestrial_combined_points.json',
-            maxZoom: 14,
-            visible: zoom < 13.5,
-            binary: false,
-            filled: true,
-            pointAntialiasing: false,
-          },
-          pointRadius(zoom),
-          fillColor(dataColorMap(dataFn, colorFn)),
-          terrestrialFilters(filters, landuseFilterSet, locationFilterKeys),
-        ),
-        selectableMvtLayer(
-          {
-            selectionOptions: {
-              selectedFeatureId: selection?.target?.feature.id,
-              polygonOffset: -1000,
-            },
-          },
-          deckProps,
-          {
-            data: '/vector/data/natural_terrestrial_combined.json',
-            minZoom: 14,
-            binary: false,
-            filled: true,
+      fn: ({ deckProps, zoom, selection }) => {
+        const switchoverZoom = 14.5;
 
-            getLineWidth: 2,
-            lineWidthUnit: 'meters',
-          },
-          border(),
-          fillColor(dataColorMap(dataFn, colorFn)),
-          terrestrialFilters(filters, landuseFilterSet, locationFilterKeys),
-        ),
-      ],
+        return [
+          selectableMvtLayer(
+            {
+              selectionOptions: {
+                selectedFeatureId: selection?.target?.feature.id,
+                polygonOffset: -1000,
+              },
+            },
+            deckProps,
+            {
+              id: `${deckProps.id}@points`,
+              data: '/vector/data/natural_terrestrial_combined_points.json',
+              visible: zoom < switchoverZoom,
+              binary: false,
+              filled: true,
+              pointAntialiasing: false,
+              stroked: false,
+            },
+            {
+              getPointRadius: 35,
+              pointRadiusUnit: 'meters',
+              pointRadiusMinPixels: 4,
+              pointRadiusMaxPixels: 7,
+            },
+            fillColor(dataColorMap(dataFn, colorFn)),
+            terrestrialFilters(filters, landuseFilterSet, locationFilterKeys, zoom < switchoverZoom),
+          ),
+          selectableMvtLayer(
+            {
+              selectionOptions: {
+                selectedFeatureId: selection?.target?.feature.id,
+                polygonOffset: -1000,
+              },
+            },
+            deckProps,
+            {
+              data: '/vector/data/natural_terrestrial_combined.json',
+              minZoom: 14,
+              visible: zoom >= switchoverZoom,
+              binary: false,
+              filled: true,
+
+              getLineWidth: 1,
+              lineWidthUnit: 'pixels',
+              lineWidthMinPixels: 1,
+            },
+            border(),
+            fillColor(dataColorMap(dataFn, colorFn)),
+            terrestrialFilters(filters, landuseFilterSet, locationFilterKeys, zoom >= switchoverZoom),
+          ),
+        ];
+      },
     };
   },
 });
