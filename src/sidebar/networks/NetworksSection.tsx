@@ -12,30 +12,33 @@ import { DamageSourceControl } from './DamageSourceControl';
 import { SidebarPanelSection } from 'sidebar/ui/SidebarPanelSection';
 import { networksStyleStateEffect, sectionStyleValueState } from 'state/sections';
 import { AdaptationControl } from './AdaptationControl';
+import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 
 export const NetworksSection: FC<{}> = () => {
   const style = useRecoilValue(sectionStyleValueState('assets'));
   return (
     <SidebarPanel id="assets" title="Infrastructure">
-      <StateEffectRoot state={sectionStyleValueState('assets')} effect={networksStyleStateEffect} />
-      <SidebarPanelSection>
-        <NetworkControl />
-      </SidebarPanelSection>
-      <SidebarPanelSection variant="style">
-        <StyleSelection id="assets" />
-        <TransitionGroup>
-          {style === 'damages' ? (
-            <Collapse>
-              <DamageSourceControl />
-            </Collapse>
-          ) : null}
-          {style === 'adaptation' ? (
-            <Collapse>
-              <AdaptationControl />
-            </Collapse>
-          ) : null}
-        </TransitionGroup>
-      </SidebarPanelSection>
+      <ErrorBoundary message="There was a problem displaying this section.">
+        <StateEffectRoot state={sectionStyleValueState('assets')} effect={networksStyleStateEffect} />
+        <SidebarPanelSection>
+          <NetworkControl />
+        </SidebarPanelSection>
+        <SidebarPanelSection variant="style">
+          <StyleSelection id="assets" />
+          <TransitionGroup>
+            {style === 'damages' ? (
+              <Collapse>
+                <DamageSourceControl />
+              </Collapse>
+            ) : null}
+            {style === 'adaptation' ? (
+              <Collapse>
+                <AdaptationControl />
+              </Collapse>
+            ) : null}
+          </TransitionGroup>
+        </SidebarPanelSection>
+      </ErrorBoundary>
     </SidebarPanel>
   );
 };

@@ -10,6 +10,7 @@ import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
 import { showPopulationState } from 'state/regions';
 import { SolutionHoverDescription } from './content/SolutionHoverDescription';
 import { DroughtHoverDescription } from './content/DroughtHoverDescription';
+import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 
 const TooltipSection = ({ children }) => (
   <Box p={1} borderBottom="1px solid #ccc">
@@ -39,33 +40,35 @@ export const TooltipContent: FC = () => {
   return (
     <Paper>
       <Box minWidth={200}>
-        {solutionsHovered && (
-          <TooltipSection>
-            <SolutionHoverDescription hoveredObject={hoveredSolution} />
-          </TooltipSection>
-        )}
-        {assetsHovered ? (
-          <TooltipSection>
-            <VectorHoverDescription hoveredObject={hoveredVector} />
-          </TooltipSection>
-        ) : null}
-        {droughtHovered ? (
-          <TooltipSection>
-            <DroughtHoverDescription hoveredObject={hoveredDrought} />
-          </TooltipSection>
-        ) : null}
-        {hazardsHovered ? (
-          <TooltipSection>
-            {hoveredRasters.map((hr) => (
-              <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
-            ))}
-          </TooltipSection>
-        ) : null}
-        {regionsHovered ? (
-          <TooltipSection>
-            <RegionHoverDescription hoveredObject={hoveredRegion} />
-          </TooltipSection>
-        ) : null}
+        <ErrorBoundary message="There was a problem displaying the tooltip.">
+          {solutionsHovered && (
+            <TooltipSection>
+              <SolutionHoverDescription hoveredObject={hoveredSolution} />
+            </TooltipSection>
+          )}
+          {assetsHovered ? (
+            <TooltipSection>
+              <VectorHoverDescription hoveredObject={hoveredVector} />
+            </TooltipSection>
+          ) : null}
+          {droughtHovered ? (
+            <TooltipSection>
+              <DroughtHoverDescription hoveredObject={hoveredDrought} />
+            </TooltipSection>
+          ) : null}
+          {hazardsHovered ? (
+            <TooltipSection>
+              {hoveredRasters.map((hr) => (
+                <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
+              ))}
+            </TooltipSection>
+          ) : null}
+          {regionsHovered ? (
+            <TooltipSection>
+              <RegionHoverDescription hoveredObject={hoveredRegion} />
+            </TooltipSection>
+          ) : null}
+        </ErrorBoundary>
       </Box>
     </Paper>
   );
