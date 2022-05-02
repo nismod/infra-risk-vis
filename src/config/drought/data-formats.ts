@@ -16,7 +16,7 @@ const riskLabelLookup = toDictionary(
 const riskValueFormatLookup: Record<DroughtRiskVariableType, (x: any) => string> = {
   mean_monthly_water_stress_: (x) => numFormat(x),
   epd: (x) => numFormat(x),
-  eael: (x) => `${numFormatMoney(x)}$`,
+  eael: (x) => `$${numFormat(x)}`,
 };
 
 export function getDroughtRiskDataFormats(): FormatConfig {

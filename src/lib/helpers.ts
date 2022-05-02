@@ -25,7 +25,7 @@ export function numFormat(n: number, maximumSignificantDigits: number = 3) {
 
 export function numFormatMoney(value: number) {
   return value.toLocaleString(undefined, {
-    minimumFractionDigits: 2,
+    maximumSignificantDigits: 3,
     maximumFractionDigits: 2,
   });
 }

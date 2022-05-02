@@ -37,25 +37,25 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   damages: {
     scale: d3Scale.scaleSequential,
     scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
-    range: [0, 1000000],
+    range: [0, 1e6],
     empty: '#ccc',
   },
   population: {
     scale: d3Scale.scaleSequential,
     scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
-    range: [0, 10000],
+    range: [0, 1e4],
     empty: '#ccc',
   },
   adaptationAvoided: {
     scale: d3Scale.scaleSequential,
     scheme: discardSides(d3ScaleChromatic.interpolateBlues, 0.2, 0.2),
-    range: [0, 1000000],
+    range: [0, 1e7],
     empty: '#ccc',
   },
   adaptationCost: {
     scale: d3Scale.scaleSequential,
     scheme: discardSides(d3ScaleChromatic.interpolateGreens, 0.2, 0.2),
-    range: [0, 1000000000],
+    range: [0, 1e9],
     empty: '#ccc',
   },
   costBenefitRatio: {
@@ -91,7 +91,7 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   droughtRiskEael: {
     scale: d3Scale.scaleSequential,
     scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
-    range: [0, 1_000_000],
+    range: [0, 1e9],
     empty: '#ccc',
   },
   droughtOptionsCost: {
