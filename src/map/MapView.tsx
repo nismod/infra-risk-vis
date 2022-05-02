@@ -68,7 +68,7 @@ export const MapView = () => {
           <DataMapTooltip>
             <TooltipContent />
           </DataMapTooltip>
-          <Box position="absolute" top={0} left={globalStyleVariables.sidebarWidth} ml={3} m={1} zIndex={1000}>
+          <Box position="absolute" top={0} left={globalStyleVariables.controlSidebarWidth} ml={3} m={1} zIndex={1000}>
             <Box mb={1}>
               <MapSearch onSelectedResult={handleSelectedSearchResult} />
             </Box>
@@ -76,7 +76,7 @@ export const MapView = () => {
               <MapLayerSelection />
             </Box>
           </Box>
-          <Box position="absolute" bottom={0} left={globalStyleVariables.sidebarWidth} m={1} ml={1} zIndex={1000}>
+          <Box position="absolute" bottom={0} left={globalStyleVariables.controlSidebarWidth} m={1} ml={1} zIndex={1000}>
             <MapLegend>
               <LegendContent />
             </MapLegend>
