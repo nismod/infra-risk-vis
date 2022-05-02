@@ -95,6 +95,11 @@ export const DamagesSection = ({ fd }) => {
     [selectedHazard, damagesData],
   );
 
+  const has_eael = useMemo(
+    () => (selectedData ? selectedData.some((d)=> d.eael_amax > 0) : null),
+    [selectedData],
+  );
+
   return (
     <>
       <Box py={2}>
@@ -128,12 +133,15 @@ export const DamagesSection = ({ fd }) => {
         {selectedData ? (
           <>
             <Box mt={1}>
+              <Typography variant="subtitle2">Expected Annual Damages</Typography>
               <ExpectedDamageChart
                 data={{
                   table: selectedData,
                 }}
-                field_key='ead_mean'
-                field_title='EAD'
+                field='ead_mean'
+                field_min='ead_amin'
+                field_max='ead_amax'
+                field_title='EAD (J$)'
                 actions={false}
                 padding={0}
                 width={260} // this is currently picked to fit the chart to the sidebar width
@@ -141,28 +149,33 @@ export const DamagesSection = ({ fd }) => {
                 renderer="svg"
               />
             </Box>
+            {has_eael? (
+              <Box mt={1}>
+                <Typography variant="subtitle2">Expected Annual Economic Losses</Typography>
+                <ExpectedDamageChart
+                  data={{
+                    table: selectedData,
+                  }}
+                  field='eael_mean'
+                  field_min='eael_amin'
+                  field_max='eael_amax'
+                  field_title='EAEL (J$/day)'
+                  actions={false}
+                  padding={0}
+                  width={260} // this is currently picked to fit the chart to the sidebar width
+                  height={150}
+                  renderer="svg"
+                  />
+              </Box>
+              ) : null
+            }
             <Box mt={1}>
-              <ExpectedDamageChart
-                data={{
-                  table: selectedData,
-                }}
-                field_key='eael_mean'
-                field_title='EAEL'
-                actions={false}
-                padding={0}
-                width={260} // this is currently picked to fit the chart to the sidebar width
-                height={150}
-                renderer="svg"
-              />
-            </Box>
-            <Box mt={1}>
-              <Typography variant="subtitle2">Details</Typography>
               <DamageTable damages={selectedData} />
             </Box>
           </>
         ) : (
           <Typography variant="body2" color="textSecondary">
-            No exposure direct damages estimated.
+            No direct damages or indirect losses estimated.
           </Typography>
         )}
       </Box>

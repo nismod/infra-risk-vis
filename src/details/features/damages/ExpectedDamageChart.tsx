@@ -3,72 +3,109 @@ import { VegaLite } from 'react-vega';
 
 import { unique } from 'lib/helpers';
 
-const makeSpec = (yearValues: number[], field_key: string, field_title: string) => ({
+const makeSpec = (yearValues: number[], field_min: string, field: string, field_max: string, field_title: string) => ({
   $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
   data: {
     name: 'table',
   },
-  mark: {
-    type: 'line',
-    point: {
-      filled: true,
+  layer: [
+    {
+      mark: "errorbar",
+      encoding: {
+        y: {
+          field: field_min,
+          type: "quantitative",
+          scale: {"zero": false}
+        },
+        y2: {
+          field: field_max
+        },
+        x: {
+          field: 'epoch',
+          timeUnit: 'year',
+          title: 'Year',
+        },
+        opacity: 0.1,
+        color: {
+          field: 'rcp',
+          type: 'ordinal',
+          scale: {
+            domain: ['baseline', '2.6', '4.5', '8.5'],
+          },
+          title: 'RCP'
+        },
+        // the tooltip encoding needs to replicate the field definitions in order to customise their ordering
+        tooltip: [
+          { field: field_min, type: 'quantitative', format: ',.3r', title: `${field_title} (min)` },
+          { field: field_max, type: 'quantitative', format: ',.3r', title: `${field_title} (max)` },
+          { field: 'rcp', title: 'RCP' },
+        ],
+      }
     },
-    tooltip: true,
-  },
-  encoding: {
-    x: {
-      field: 'epoch',
-      timeUnit: 'year',
-      title: 'Year',
-      axis: {
-        gridDash: [2, 2],
-        domainColor: '#ccc',
-        tickColor: '#ccc',
-        values: yearValues,
+    {
+      mark: {
+        type: 'line',
+        point: {
+          filled: true,
+        },
+        tooltip: true,
       },
-    },
-    y: {
-      field: field_key,
-      type: 'quantitative',
-      title: field_title,
-      axis: {
-        gridDash: [2, 2],
-        domainColor: '#ccc',
-        tickColor: '#ccc',
-      },
-    },
+      encoding: {
+        x: {
+          field: 'epoch',
+          timeUnit: 'year',
+          title: 'Year',
+          axis: {
+            gridDash: [2, 2],
+            domainColor: '#ccc',
+            tickColor: '#ccc',
+            values: yearValues,
+          },
+        },
+        y: {
+          field: field,
+          type: 'quantitative',
+          title: field_title,
+          axis: {
+            gridDash: [2, 2],
+            domainColor: '#ccc',
+            tickColor: '#ccc',
+          },
+        },
 
-    color: {
-      field: 'rcp',
-      type: 'ordinal',
-      scale: {
-        domain: ['baseline', '2.6', '4.5', '8.5'],
-        // Could do custom colours
-        // range: ["#e7ba52", "#c7c7c7", "#aec7e8", "#1f77b4"]
+        color: {
+          field: 'rcp',
+          type: 'ordinal',
+          scale: {
+            domain: ['baseline', '2.6', '4.5', '8.5'],
+          },
+          title: 'RCP',
+          legend: {
+            orient: 'bottom',
+            direction: 'horizontal',
+          },
+        },
+        // the tooltip encoding needs to replicate the field definitions in order to customise their ordering
+        tooltip: [
+          { field: field, type: 'quantitative', format: ',.3r', title: field_title },
+          { field: 'rcp', title: 'RCP' },
+          { field: 'epoch', timeUnit: 'year', title: 'Year' },
+        ],
       },
-      title: 'RCP',
-      legend: {
-        orient: 'bottom',
-        direction: 'horizontal',
-      },
-    },
-    // the tooltip encoding needs to replicate the field definitions in order to customise their ordering
-    tooltip: [
-      { field: field_key, type: 'quantitative', format: ',.3r', title: field_title },
-      { field: 'rcp', title: 'RCP' },
-      { field: 'epoch', timeUnit: 'year', title: 'Year' },
-    ],
-  },
+    }
+  ]
 });
 
-export const ExpectedDamageChart = ({ data, field_key, field_title, ...props }) => {
+export const ExpectedDamageChart = ({ data, field, field_min, field_max, field_title, ...props }) => {
   const spec = useMemo(
     () => makeSpec(
       unique<number>(data.table.map((d) => d.epoch)).sort(),
-      field_key,
+      field_min,
+      field,
+      field_max,
       field_title
     ),
-    [data]
+    [data, field_min, field, field_max, field_title]
   );
 
   return <VegaLite data={data} spec={spec as any} {...props} />;

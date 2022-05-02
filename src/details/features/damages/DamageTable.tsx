@@ -27,7 +27,11 @@ export const DamageTable = ({ damages }) => (
               {numFormat(ead_mean)}<br/>({numRangeFormat(ead_amin, ead_amax)})
             </TableCell>
             <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
-              {numFormat(eael_mean)}<br/>({numRangeFormat(eael_amin, eael_amax)})
+              {
+                eael_amax? numFormat(eael_mean) : '-'
+              }<br/>{
+                eael_amax? `(${numRangeFormat(eael_amin, eael_amax)})` : null
+              }
             </TableCell>
           </TableRow>
         ))}
