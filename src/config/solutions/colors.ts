@@ -63,11 +63,11 @@ const marineHabitatsConst = [
 ] as const;
 
 export const MARINE_HABITAT_COLORS = makeColorConfig<MarineHabitatType>({
-  coral: '#f0f',
-  coral_mangrove: '#f00',
-  coral_mangrove_seagrass: '#a74',
-  coral_seagrass: '#ff0',
-  mangrove: '#050',
-  mangrove_seagrass: '#080',
-  seagrass: '#0f0',
+  coral: '#f9b2ea',
+  coral_mangrove: '#808cf2',
+  coral_mangrove_seagrass: '#152513',
+  coral_seagrass: '#f2808c',
+  mangrove: '#80f2e6',
+  mangrove_seagrass: '#95e78b',
+  seagrass: '#f2e680',
 });
