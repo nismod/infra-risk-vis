@@ -152,7 +152,7 @@ export const DamagesSection = ({ fd }) => {
   const returnPeriodDamagesData = orderRPDamages(prepareRPDamages(fd?.damages_return_period ?? []));
 
   const hazards = useMemo(() => unique(damagesData.map((d) => d.hazard)), [damagesData]);
-  const epochs = useMemo(() => unique(damagesData.map((d) => d.epoch)), [damagesData]);
+  const epochs = useMemo(() => unique(damagesData.map((d) => d.epoch)).sort(), [damagesData]);
   const [selectedHazard, setSelectedHazard] = useSelect(hazards);
   const [selectedEpoch, setSelectedEpoch] = useSelect(epochs);
 
