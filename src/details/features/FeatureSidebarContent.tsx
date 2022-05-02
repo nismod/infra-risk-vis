@@ -137,12 +137,12 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
                 sx={{
                   position: 'absolute',
                   top: 0,
-                  right: 0,
+                  right: 30, // hack: larger right margin to allow space for close button
                 }}
                 title="Download CSV with feature metadata"
                 onClick={() => downloadFile(makeDetailsCsv(featureDetails), 'text/csv', `feature_${feature.id}.csv`)}
               >
-                <Download />{' '}
+                <Download />
               </IconButton>
               <DamagesSection fd={featureDetails} />
               <AdaptationSection fd={featureDetails} />

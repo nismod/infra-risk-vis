@@ -19,6 +19,7 @@ import { truthyKeys } from 'lib/helpers';
 import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
 import { getTerrestrialDataFormats } from 'config/solutions/data-formats';
 import { getSolutionsDataAccessor } from 'config/solutions/data-access';
+import { landuseFilterState } from 'state/solutions/landuse-tree';
 
 export function landuseColorMap(x: string) {
   return TERRESTRIAL_LANDUSE_COLORS[x].css;
@@ -87,11 +88,6 @@ function locationFilterValue(p, locationFiltersKeys: TerrestrialLocationFilterTy
   //eslint-disable-next-line eqeqeq -- values are currently sometimes 1 and sometimes true
   return locationFiltersKeys.every((key) => p[key] == true) ? 1 : 0;
 }
-
-const landuseFilterState = selector<Record<LandUseOption, boolean>>({
-  key: 'landuseFilterState',
-  get: ({ get }) => get(terrestrialFiltersState).landuse_desc,
-});
 
 const landuseFilterSetState = selector<Set<LandUseOption>>({
   key: 'landuseFilterSetState',

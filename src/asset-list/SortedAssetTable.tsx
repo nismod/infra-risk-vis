@@ -1,4 +1,14 @@
-import { Box, Table, TableBody, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material';
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import { FieldSpec } from 'lib/data-map/view-layers';
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { LayerSpec, ListFeature, useSortedFeatures } from './use-sorted-features';
@@ -24,33 +34,49 @@ export const SortedAssetTable: FC<{
 
   return (
     <>
-      {loading && <Typography>Loading...</Typography>}
-      {error && <Typography>Error: {error.message}</Typography>}
-      {!loading && !error && (
-        <>
-          <TableContainer component={Box}>
-            <Table stickyHeader size="small">
-              <TableHead>
-                <TableRow>{header}</TableRow>
-              </TableHead>
-              <TableBody sx={{ maxWidth: '100%', maxHeight: '50vh', overflow: 'scroll' }}>
-                {features.map((feature, index) => renderRow(feature, index, currentPageFirstItemIndex + index))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          {pageInfo && (
-            <TablePagination
-              sx={{
-                overflow: 'hidden',
-              }}
-              count={pageInfo.total}
-              page={page - 1}
-              onPageChange={handleTablePaginationChange}
-              rowsPerPage={pageSize}
-              rowsPerPageOptions={[pageSize]}
-            />
-          )}
-        </>
+      <TableContainer component={Box} height="calc(100% - 48px)" overflow="scroll">
+        <Table stickyHeader size="small">
+          <TableHead>
+            <TableRow>{header}</TableRow>
+          </TableHead>
+
+          <TableBody>
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={10} align="center">
+                  <Typography variant="body2">Loading...</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+            {error && (
+              <TableRow>
+                <TableCell colSpan={10} align="center">
+                  <Typography variant="body2">Error: {error.message}</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+            {!loading &&
+              !error &&
+              features.map((feature, index) => renderRow(feature, index, currentPageFirstItemIndex + index))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {pageInfo && (
+        <TablePagination
+          component={Box}
+          sx={{
+            overflow: 'hidden',
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            height: '48px',
+          }}
+          count={pageInfo.total}
+          page={page - 1}
+          onPageChange={handleTablePaginationChange}
+          rowsPerPage={pageSize}
+          rowsPerPageOptions={[pageSize]}
+        />
       )}
     </>
   );

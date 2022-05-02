@@ -1,32 +1,20 @@
 import { FormControl, FormLabel, Slider } from '@mui/material';
-import {
-  LandUseOption,
-  LAND_USE_VALUES,
-  TerrestrialLocationFilterType,
-  TERRESTRIAL_LOCATION_FILTERS,
-} from 'config/solutions/domains';
+import { TerrestrialLocationFilterType, TERRESTRIAL_LOCATION_FILTERS } from 'config/solutions/domains';
 import { ParamChecklist } from 'lib/controls/params/ParamChecklist';
 import { useRecoilState } from 'recoil';
 import { InputSection } from 'sidebar/ui/InputSection';
-import { terrestrialFiltersState } from 'state/solutions/terrestrial-filters';
+import { terrestrialNonLandUseFiltersState } from 'state/solutions/terrestrial-filters';
+import { TerrestrialLandUseTree } from './TerrestrialLandUseTree';
 
 export const TerrestrialControl = () => {
-  const [terrestrialFilters, setTerrestrialFilters] = useRecoilState(terrestrialFiltersState);
+  const [terrestrialFilters, setTerrestrialFilters] = useRecoilState(terrestrialNonLandUseFiltersState);
 
   return (
     <>
-      <ParamChecklist<LandUseOption>
-        title="Land Use / Land Cover"
-        options={LAND_USE_VALUES}
-        checklistState={terrestrialFilters.landuse_desc}
-        onChecklistState={(checklistState) =>
-          setTerrestrialFilters({
-            ...terrestrialFilters,
-            landuse_desc: checklistState as Record<LandUseOption, boolean>,
-          })
-        }
-        renderLabel={(key) => <>{key}</>}
-      />
+      <InputSection>
+        <FormLabel>Land Use / Land Cover</FormLabel>
+        <TerrestrialLandUseTree />
+      </InputSection>
       <InputSection>
         <FormControl fullWidth>
           <FormLabel>Slope (degrees)</FormLabel>
