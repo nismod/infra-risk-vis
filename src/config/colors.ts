@@ -15,22 +15,22 @@ export const COLORS = makeColorConfig({
 
   bridges: '#941339',
 
-  airports: '#ccc',
-  ports: '#000',
+  airports: '#d393d3',
+  ports: '#b46666',
 
   water_supply: '#83B4FF',
   water_irrigation: '#0091C1',
   water_wastewater: '#4d49bc',
 
-  buildings_commercial: '#7fc97f',
-  buildings_industrial: '#beaed4',
-  buildings_institutional: '#999',
-  buildings_mixed: '#EF5F5F',
-  buildings_other: '#999',
-  buildings_recreation: '#999',
-  buildings_residential: '#fdc086',
-  buildings_resort: '#999',
-  buildings_unknown: '#999',
+  buildings_commercial: '#f2808c',
+  buildings_industrial: '#cb97f4',
+  buildings_institutional: '#808cf2',
+  buildings_mixed: '#f09e69',
+  buildings_other: '#bfb4c2',
+  buildings_recreation: '#95e78b',
+  buildings_residential: '#f2e680',
+  buildings_resort: '#f9b2ea',
+  buildings_unknown: '#dfe4de',
 
   regions_no_data: '#ccc',
 });

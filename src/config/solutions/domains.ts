@@ -92,6 +92,10 @@ const marineHabitatsConst = [
     value: 'coral_mangrove',
     label: 'Coral and Mangrove',
   },
+  {
+    value: 'other',
+    label: 'Buffer Zone'
+  }
 ] as const;
 
 export const MARINE_HABITATS = [...marineHabitatsConst];

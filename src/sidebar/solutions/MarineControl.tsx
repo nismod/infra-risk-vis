@@ -23,7 +23,7 @@ export const MarineControl = () => {
       /> */}
       <InputSection>
         <ParamChecklist<MarineLocationFilterType>
-          title="Location Attributes"
+          title="Find areas in proximity"
           options={[...MARINE_LOCATION_FILTERS]}
           checklistState={marineFilters.location_filters}
           onChecklistState={(checklistState) =>

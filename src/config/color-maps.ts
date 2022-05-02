@@ -42,7 +42,7 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   },
   population: {
     scale: d3Scale.scaleSequential,
-    scheme: d3ScaleChromatic.interpolateInferno,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
     range: [0, 10000],
     empty: '#ccc',
   },
@@ -66,7 +66,7 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   },
   terrestrialElevation: {
     scale: d3Scale.scaleSequential,
-    scheme: invertColorScale(d3ScaleChromatic.interpolateRdYlGn),
+    scheme: invertColorScale(d3ScaleChromatic.interpolateGreys),
     range: [0, 2250],
     empty: '#ccc',
   },

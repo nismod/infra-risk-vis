@@ -62,11 +62,11 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
 
       get(droughtRegionsLayerState),
 
-      // hazard data layers
-      get(hazardLayerState),
-
       get(terrestrialLayerState),
       get(marineLayerState),
+
+      // hazard data layers
+      get(hazardLayerState),
 
       get(buildingLayersState),
 

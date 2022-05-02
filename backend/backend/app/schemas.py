@@ -135,7 +135,7 @@ class FeatureOut(FeatureOutBase):
     damages_expected: list[ExpectedDamage] = []
     damages_return_period: list[ReturnPeriodDamage] = []
     damages_npv: list[NPVDamage] = []
-    adaptations: list[Adaptation] = []
+    adaptation: list[Adaptation] = []
 
 
 # Features Sorted Lists

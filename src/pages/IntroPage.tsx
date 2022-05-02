@@ -1,12 +1,16 @@
 import React from 'react';
-import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Alert, Button, Divider, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Link } from 'react-router-dom';
+import ScrollToTop from 'lib/hooks/scroll-to-top';
 
 export const IntroPage = () => (
   <article>
+    <ScrollToTop />
     <h1>Jamaica Systemic Risk Assessment Tool</h1>
 
-    <p>This prototype tool presents infrastructure risk analytics for
-    Jamaica.</p>
+    <p>The Jamaica Systemic Risk Assessment Tool (J-SRAT) presents
+    climate-related risk analytics for transport, energy and water
+    infrastructure in Jamaica.</p>
 
     <Alert severity="info">The systemic risk analysis results shown in this
     tool contain licensed data that must not be shared outside the Government of
@@ -34,19 +38,9 @@ export const IntroPage = () => (
 
     <p>The modelling and analysis presented here aim to support climate
     adaptation decision-making by identifying spatial criticalities and risks
-    under current and future hazard scenarios.</p>
+    under current and future climate scenarios.</p>
 
-    <p>The analysis consists of several steps:</p>
-    <ul>
-      <li>collect data on infrastructure networks, buildings, agriculture and land use</li>
-      <li>estimate spatial distribution of economic activity</li>
-      <li>estimate economic dependence on infrastructure services</li>
-      <li>collect data on hazards</li>
-      <li>estimate direct damages to infrastructure assets</li>
-      <li>estimate GDP disruptions due to asset failures and service disruption</li>
-      <li>estimate the value of improving asset robustness or resilience to hazards, in terms of avoided risk</li>
-      <li>identify areas of opportunity for nature-based solutions</li>
-    </ul>
+    <p>The following table summarises the data and model results presented.</p>
 
 
     <TableContainer component={Paper}>
@@ -62,25 +56,28 @@ export const IntroPage = () => (
         <TableBody>
           <TableRow>
             <TableCell>Transport</TableCell>
-            <TableCell>Road links and railway tracks</TableCell>
+            <TableCell>Road links and railway lines, ports and airports</TableCell>
             <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
             <TableCell>Rerouting costs + wider effects of service disruption</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Energy</TableCell>
-            <TableCell>Electricity transmission and distribution grid: generation, lines and substations</TableCell>
+            <TableCell>Electricity transmission and distribution: generation, lines, poles and substations</TableCell>
             <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
             <TableCell>Wider effects of service disruption</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Water</TableCell>
-            <TableCell>Water supply and wastewater networks, abstraction points, irrigation schemes</TableCell>
+            <TableCell>Water supply and wastewater networks, wells and irrigation canals</TableCell>
             <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
             <TableCell>Wider effects of service disruption</TableCell>
           </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
+
+    <p>For more details on the infrastructure and hazard data used, see
+    the <Link to="/data">Data page</Link></p>
 
     <p>The primary output metrics from the analysis are:</p>
 
@@ -92,6 +89,8 @@ export const IntroPage = () => (
       curve </li>
     </ul>
 
+
+    <h2>Open-source code</h2>
 
     <p>This tool to visualize the model outputs is developed and documented
     here:</p>
@@ -114,14 +113,60 @@ export const IntroPage = () => (
       </li>
     </ul>
 
-    <h2>Funding support</h2>
+    <h2>Collaboration and Engagement</h2>
 
-    <p>
-      This research is led by researchers in the Oxford Programme for Sustainable Infrastructure Systems in the
-      Environmental Change Institute, University of Oxford, for the Government of Jamaica (GoJ) as part of a project
-      funded by UK Aid (FCDO). The initiative forms part of the Coalition for Climate Resilient Investment’s (CCRI)
-      collaboration with the GoJ, which includes analysis of nature-based approaches to build resilience in Jamaica to
-      be procured and funded by the Green Climate Fund (GCF).
-    </p>
+    <p>The research, analysis and tool development has been done by researchers
+    in the University of Oxford's Oxford Programme for Sustainable
+    Infrastructure Systems in collaboration with the Planning Institute of
+    Jamaica and engagement from stakeholders across the infrastructure sectors
+    and related government bodies.</p>
+
+    <Stack
+      direction="row"
+      divider={<Divider orientation="vertical" flexItem />}
+
+      justifyContent="center"
+      alignItems="center"
+      spacing={2}
+    >
+      <a href="https://www.gov.jm" target="_blank" rel="noopener noreferrer">
+        <img height="150" src="/jamaica-coatofarms.jpg" alt="Government of Jamaica" />
+      </a>
+      <a href="https://www.pioj.gov.jm/" target="_blank" rel="noopener noreferrer">
+        <img height="150" src="/jamaica-pioj.jpg" alt="Planning Institute of Jamaica" />
+      </a>
+      <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
+        <img height="100" src="/logo-opsis.png" alt="Oxford Programme for Sustainable Infrastructure Systems" />
+      </a>
+    </Stack>
+
+
+    <h2>Funding and support</h2>
+
+    <p>This research is led by researchers in the Oxford Programme for
+    Sustainable Infrastructure Systems in the Environmental Change Institute,
+    University of Oxford, for the Government of Jamaica (GoJ) as part of a
+    project funded by UK Aid (FCDO).</p>
+
+    <p>The initiative forms part of the Coalition for Climate Resilient
+    Investment&rsquo;s (CCRI) and collaboration with the Green Climate Fund.</p>
+
+    <Stack
+      direction="row"
+      divider={<Divider orientation="vertical" flexItem />}
+      spacing={2}
+      justifyContent="right"
+      alignItems="center"
+    >
+      <a href="https://www.gov.uk/guidance/uk-aid" target="_blank" rel="noopener noreferrer">
+        <img height="100" src="/logo-ukaid.png" alt="UK AID" />
+      </a>
+      <a href="https://www.greenclimate.fund/" target="_blank" rel="noopener noreferrer">
+        <img height="100" src="/logo-gcf.png" alt="Green Climate Fund" />
+      </a>
+      <a href="https://resilientinvestment.org/" target="_blank" rel="noopener noreferrer">
+        <img height="100" src="/logo-ccri.png" alt="Coalition for Climate Resilient Investment" />
+      </a>
+    </Stack>
   </article>
 );

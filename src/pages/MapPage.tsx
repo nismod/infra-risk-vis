@@ -18,14 +18,14 @@ interface MapViewProps {
   view: string;
 }
 
-const SidebarLayout = ({ top, bottom, left, right, children }) => (
+const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   <Box
     position="absolute"
     top={globalStyleVariables.navbarHeight + top}
     bottom={bottom}
     left={left}
     right={right}
-    width={globalStyleVariables.sidebarWidth - 20}
+    width={width - 20}
     zIndex={1000}
     sx={{ pointerEvents: 'none' }}
   >
@@ -38,7 +38,7 @@ const SidebarLayout = ({ top, bottom, left, right, children }) => (
       right={-20}
       top={0}
     >
-      <Box width={globalStyleVariables.sidebarWidth - 20}>
+      <Box width={width - 20}>
         <Box pl={1} pt={1} sx={{ pointerEvents: 'auto' }}>
           {children}
         </Box>
@@ -59,13 +59,15 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
   return (
     <>
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
-      <SidebarLayout top={0} left={0} bottom={0} right={undefined}>
+      <SidebarLayout top={0} left={0} bottom={0} right={undefined}
+        width={globalStyleVariables.controlSidebarWidth}>
         <SidebarContent />
       </SidebarLayout>
       <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
         <MapView />
       </Box>
-      <SidebarLayout top={0} left={undefined} bottom={70} right={70}>
+      <SidebarLayout top={0} left={undefined} bottom={70} right={70}
+        width={globalStyleVariables.detailSidebarWidth}>
         <Box mb={2}>
           <SolutionsSidebar />
         </Box>

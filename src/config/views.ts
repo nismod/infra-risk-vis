@@ -26,10 +26,22 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     regions: {
       expanded: false,
-      visible: true,
+      visible: false,
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
+    },
+    terrestrial: {
+      expanded: false,
+      visible: false,
+      styles: ['landuse', 'slope', 'elevation'],
+      defaultStyle: 'landuse',
+    },
+    marine: {
+      expanded: false,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
     },
   },
   risk: {
@@ -53,10 +65,22 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     regions: {
       expanded: false,
-      visible: true,
+      visible: false,
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
+    },
+    terrestrial: {
+      expanded: false,
+      visible: false,
+      styles: ['landuse', 'slope', 'elevation'],
+      defaultStyle: 'landuse',
+    },
+    marine: {
+      expanded: false,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
     },
   },
   adaptation: {
@@ -86,10 +110,22 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     regions: {
       expanded: false,
-      visible: true,
+      visible: false,
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
+    },
+    terrestrial: {
+      expanded: false,
+      visible: false,
+      styles: ['landuse', 'slope', 'elevation'],
+      defaultStyle: 'landuse',
+    },
+    marine: {
+      expanded: false,
+      visible: false,
+      styles: ['habitat'],
+      defaultStyle: 'habitat',
     },
   },
   'nature-based-solutions': {
@@ -114,6 +150,13 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     hazards: {
       expanded: false,
       visible: false,
+    },
+    regions: {
+      expanded: false,
+      visible: false,
+
+      styles: ['boundaries', 'population'],
+      defaultStyle: 'boundaries',
     },
   },
 };

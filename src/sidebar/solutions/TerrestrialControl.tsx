@@ -16,7 +16,7 @@ export const TerrestrialControl = () => {
   return (
     <>
       <ParamChecklist<LandUseOption>
-        title="Land Use Types"
+        title="Land Use / Land Cover"
         options={LAND_USE_VALUES}
         checklistState={terrestrialFilters.landuse_desc}
         onChecklistState={(checklistState) =>
@@ -61,7 +61,7 @@ export const TerrestrialControl = () => {
       </InputSection>
       <InputSection>
         <ParamChecklist<TerrestrialLocationFilterType>
-          title="Location Attributes"
+          title="Apply constraints"
           options={[...TERRESTRIAL_LOCATION_FILTERS]}
           checklistState={terrestrialFilters.location_filters}
           onChecklistState={(checklistState) =>

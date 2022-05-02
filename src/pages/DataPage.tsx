@@ -1,8 +1,10 @@
 import React from 'react';
 import { Alert, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import ScrollToTop from 'lib/hooks/scroll-to-top';
 
 export const DataPage = () => (
   <article>
+    <ScrollToTop />
     <h1>Data Sources and Access</h1>
 
     <p>Data comes from multiple sources, including Government of Jamaica bodies,

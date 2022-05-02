@@ -24,6 +24,7 @@ import { NETWORKS_METADATA } from 'config/networks/metadata';
 import { ColorBox } from 'map/tooltip/content/ColorBox';
 import { ApiClient } from 'lib/api-client';
 import { DamagesSection } from './damages/DamagesSection';
+import { AdaptationSection } from './adaptation/AdaptationSection';
 import { Download } from '@mui/icons-material';
 import { downloadFile } from 'lib/helpers';
 
@@ -144,6 +145,7 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
                 <Download />{' '}
               </IconButton>
               <DamagesSection fd={featureDetails} />
+              <AdaptationSection fd={featureDetails} />
             </>
           )}
         </>

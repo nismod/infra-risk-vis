@@ -6,7 +6,7 @@ import { TerrestrialControl } from './TerrestrialControl';
 
 export const TerrestrialSection: FC<{}> = () => {
   return (
-    <SidebarPanel id="terrestrial" title="Terrestrial Solutions">
+    <SidebarPanel id="terrestrial" title="Terrestrial">
       <SidebarPanelSection>
         <TerrestrialControl />
       </SidebarPanelSection>

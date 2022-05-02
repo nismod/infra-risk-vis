@@ -8,6 +8,9 @@ User=ubuntu
 Group=ubuntu
 WorkingDirectory=/var/www/tileserver/raster
 Environment="TC_DRIVER_PATH=/var/www/tileserver/raster/terracotta.sqlite"
+Environment="TC_RESAMPLING_METHOD=nearest"
+Environment="TC_REPROJECTION_METHOD=nearest"
+Environment="TC_PNG_COMPRESS_LEVEL=1"
 ExecStart=gunicorn \
             --workers 3 \
             --bind unix:terracotta.sock \
