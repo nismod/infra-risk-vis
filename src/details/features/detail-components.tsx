@@ -75,7 +75,6 @@ export const AirportDetails: FC<DetailsComponentProps> = ({ f }) => (
         label={`Rehabilitation cost (${f.cost_unit})`}
         value={`${numFormat(f.cost_mean)} ${paren(numRangeFormat(f.cost_min, f.cost_max))}`}
       />
-      <DataItem label="Source" value={f.source} />
     </List>
   </>
 );
@@ -96,7 +95,6 @@ export const PowerLineDetails: FC<DetailsComponentProps> = ({ f }) => (
         label={`Rehabilitation cost (${f.cost_unit})`}
         value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
       />
-      <DataItem label="Source" value={f.source} />
     </List>
   </>
 );
@@ -114,7 +112,6 @@ export const PowerGenerationNodeDetails: FC<DetailsComponentProps> = ({ f }) => 
         label={`Rehabilitation cost (${f.cost_unit})`}
         value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
       />
-      <DataItem label="Source" value={f.source} />
     </List>
   </>
 );
@@ -125,7 +122,6 @@ export const PowerDemandNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
     <List>
       <DataItem label="Population served" value={f.population} />
       <DataItem label={`Energy intensity (${f.ei_uom})`} value={f.ei} />
-      <DataItem label="Source" value={f.source} />
     </List>
   </>
 );
@@ -139,7 +135,6 @@ export const PowerJunctionNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
         label={`Rehabilitation cost (${f.cost_unit})`}
         value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
       />
-      <DataItem label="Source" value={f.source} />
     </List>
   </>
 );
@@ -149,7 +144,6 @@ export const IrrigationDetails: FC<DetailsComponentProps> = ({ f }) => (
     <DetailSubheader id={f.asset_id} />
     <List>
       <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
-      <DataItem label="Source" value={f.source} />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
@@ -163,7 +157,6 @@ export const WaterPipelineDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem label="Diameter (m)" value={f.Diameter} />
       <DataItem label="Length (m)" value={f.Length} />
       <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
-      <DataItem label="Source" value={f.source} />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
@@ -187,7 +180,6 @@ export const PortDetails: FC<DetailsComponentProps> = ({ f }) => (
         label={`Rehabilitation cost (${f.cost_unit})`}
         value={`${numFormat(f.cost_mean)} ${paren(numRangeFormat(f.cost_min, f.cost_max))}`}
       />
-      <DataItem label="Source" value={f.source} />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
@@ -200,12 +192,10 @@ export const WaterSupplyNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
     </Typography>
     <DetailSubheader id={f.asset_id} />
     <List>
-      <DataItem label="Vessels (vessels/year)" value={f.vessels_number} />
       <DataItem label="Tank" value={f.Tank_Type} />
       <DataItem label="Population served" value={f.asset_pop_new_2010} />
       <DataItem label="Capacity (mgd, millions of gallons/day)" value={f['capacity (mgd)']} />
       <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
-      <DataItem label="Source" value={f.source} />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
@@ -313,7 +303,6 @@ export const WastewaterNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem label="Status" value={f.Status} />
       <DataItem label="Capacity (mgd, millions of gallons/day)" value={f['capacity (mgd)']} />
       <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
-      <DataItem label="Source" value={f.source} />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
