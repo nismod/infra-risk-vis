@@ -56,15 +56,30 @@ export const SolutionsSidebarContent: FC<SolutionsSidebarContentProps> = ({ feat
         </>
       )}
       {solutionType === 'marine' && (
-        <DataItem
-          label="Habitat"
-          value={
-            <>
-              <ColorBox color={habitatColorMap(feature.properties.habitat)} />
-              {feature.properties.habitat ? MARINE_HABITATS_LOOKUP[feature.properties.habitat] : 'Buffer Zone'}
-            </>
+        <>
+          <DataItem
+            label="Habitat"
+            value={
+              <>
+                <ColorBox color={habitatColorMap(feature.properties.habitat)} />
+                {feature.properties.habitat ? MARINE_HABITATS_LOOKUP[feature.properties.habitat] : 'Buffer Zone'}
+              </>
+            }
+          />
+          {feature.properties.is_coral?
+            <DataItem label="Coral Type" value={feature.properties.coral_type} />: null
           }
-        />
+          {feature.properties.is_mangrove?
+            <DataItem label="Mangrove Type" value={feature.properties.mangrove_type} />: null
+          }
+          <Typography variant="caption" component="h6">Proximity</Typography>
+          {feature.properties.within_coral_500m?
+            <Typography variant="body2" component="p">within 500m of coral</Typography> : null}
+          {feature.properties.within_mangrove_500m?
+            <Typography variant="body2" component="p">within 500m of mangrove</Typography> : null}
+          {feature.properties.within_seagrass_500m?
+            <Typography variant="body2" component="p">within 500m of seagrass</Typography> : null}
+        </>
       )}
     </>
   );
