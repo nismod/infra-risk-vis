@@ -52,9 +52,9 @@ const CostBenefitRatioInputs: FC = () => {
         id="adaptation-cost-benefit-eael-days"
         value={eaelDays}
         onChange={(e, value: number) => setEaelDays(value)}
-        min={1}
-        max={30}
-        step={1}
+        min={1*HORRIBLE_HACK_FACTOR}
+        max={30*HORRIBLE_HACK_FACTOR}
+        step={1*HORRIBLE_HACK_FACTOR}
         marks={EAEL_DAYS_MARKS}
         valueLabelDisplay="auto"
       />
