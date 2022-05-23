@@ -32,7 +32,9 @@ export const DataPage = () => (
         <TableBody>
           <TableRow>
             <TableCell>Fluvial (river) and pluvial (surface) flooding</TableCell>
-            <TableCell><a href="https://www.jbarisk.com/flood-services/maps-and-analytics/global-flood-maps/">JBA UK global flood map product</a></TableCell>
+            <TableCell>
+              <img src="/logo-jba.png" alt="JBA Risk Management. The Flood People (R)." width="180" /><br />
+              <a href="https://www.jbarisk.com/flood-services/maps-and-analytics/global-flood-maps/">JBA global flood map product</a></TableCell>
             <TableCell>1/20, 1/50, 1/100, 1/200, 1/500, and 1/1500</TableCell>
             <TableCell>Flood depths in meters over 30m grid squares</TableCell>
             <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission&nbsp;scenarios.<br/>Current + future maps in 2050 and 2080</TableCell>
