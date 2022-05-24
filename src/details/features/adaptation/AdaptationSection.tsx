@@ -40,6 +40,7 @@ function makeAdaptationCsv(options: Adaptation[]) {
   ).join('\n');
 }
 
+// TODO: remove factor when data is updated
 const HORRIBLE_HACK_FACTOR = 1/15;
 export const AdaptationSection = ({ fd }) => {
   const options : Adaptation[] = fd?.adaptation.map(
