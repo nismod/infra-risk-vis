@@ -3,3 +3,4 @@ Authors
 - Tom Russell
 - Roald Schoenmakers
 - Raghav Pant
+- Fred Thomas

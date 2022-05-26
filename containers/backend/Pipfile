@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+backend = {editable = true, path = "."}
 fastapi = "*"
 geoalchemy2 = "*"
 uvicorn = "*"
 psycopg2 = "*"
 fastapi-pagination = "*"
 setuptools = "*"
-backend = {editable = true, path = "."}
 
 [dev-packages]
 black = "*"
