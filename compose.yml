@@ -2,12 +2,16 @@ volumes:
   dbbackups:
   postgis-data:
   raster-db:
+  auth:
 
 services:
   web-server:
     build: ./containers/web-server
+    volumes:
+      - auth:/etc/nginx/auth
     ports:
       - 80:80
+      - 443:443
     restart: on-failure
 
   db:
@@ -20,8 +24,8 @@ services:
       - POSTGRES_PASS=docker
       - ALLOW_IP_RANGE=0.0.0.0/0
       - POSTGRES_MULTIPLE_EXTENSIONS=postgis
-    ports:
-      - 25432:5432
+    expose:
+      - 5432
     restart: on-failure
     healthcheck:
       test: "exit 0"
@@ -33,8 +37,8 @@ services:
       - PGDATABASE=jamaica
       - PGUSER=docker
       - PGPASSWORD=docker
-    ports:
-      - 8888:8080
+    expose:
+      - 8888
     restart: on-failure
 
   raster-tileserver:
@@ -42,14 +46,14 @@ services:
     volumes:
       - raster-db:/opt/terracotta/db
       - ./mounts/raster:/opt/terracotta/data  # bind mount
-    ports:
-      - 5000:5000
+    expose:
+      - 5000
     restart: on-failure
 
   vector-tileserver:
     build: ./containers/vector
     volumes:
       - ./mounts/vector:/data  # bind mount
-    ports:
-      - 8080:8080
+    expose:
+      - 8080
     restart: on-failure

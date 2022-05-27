@@ -4,24 +4,36 @@
 
 # name the node stage "builder"
 FROM node:16 AS builder
-# set working directory
 WORKDIR /app
-# copy all files from current directory to working dir in image
-COPY . .
-# install node modules and build assets
+# copy package.json and install -- do this before copying everything else
+# to enable more efficient caching by docker (we don't reinstall packages when
+# we've only changed application code)
+COPY package.json .
+# install node modules
 RUN npm install
+# copy folders and files required for build into image N.B. when docker copy is given a
+# directory, it copies the contents but not the dir itself, so you must name the destination dir
+COPY images images
+COPY public public
+COPY src src
+COPY .eslintrc.js tsconfig.json tsconfig-typings.json .
+# build to static site
 RUN npm run build
 
 # stage 2 of 2
 
 FROM nginx:alpine
-# Set working directory to nginx asset directory
+# add package containing htpasswd utility
+RUN apk update && apk add apache2-utils
 WORKDIR /usr/share/nginx/html
 # remove default nginx static assets
 RUN rm -rf ./*
-# copy static assets from builder stage
+# copy in static assets from builder stage
 COPY --from=builder /app/build .
-COPY jamaica.infrastructureresilience.org /etc/nginx/sites-available/
+# and copy in the nginx config...
+# delete conf.d as it will contain default.conf which will conflict
+RUN rm -rf /etc/nginx/conf.d
+COPY nginx /etc/nginx
 
-# Containers run nginx with global directives and daemon off
+# containers run nginx with global directives and daemon off
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

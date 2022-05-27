@@ -1,0 +1,16 @@
+services:
+  db:
+    ports:
+      - 25432:5432
+
+  backend:
+    ports:
+      - 8888:8888
+
+  raster-tileserver:
+    ports:
+      - 5000:5000
+
+  vector-tileserver:
+    ports:
+      - 8080:8080

@@ -1,5 +1,5 @@
 # data folders
-node_modules/
+containers/web-server/node_modules/
 mounts/raster/
 mounts/vector/
 incoming_data/
