@@ -8,15 +8,17 @@ WORKDIR /app
 # copy package.json and install -- do this before copying everything else
 # to enable more efficient caching by docker (we don't reinstall packages when
 # we've only changed application code)
-COPY package.json .
+#COPY package.json .
+COPY frontend/package.json .
 # install node modules
 RUN npm install
 # copy folders and files required for build into image N.B. when docker copy is given a
 # directory, it copies the contents but not the dir itself, so you must name the destination dir
-COPY images images
-COPY public public
-COPY src src
-COPY .eslintrc.js tsconfig.json tsconfig-typings.json .
+#   COPY images images
+#   COPY public public
+#   COPY src src
+#   COPY .eslintrc.js tsconfig.json tsconfig-typings.json .
+COPY frontend .
 # build to static site
 RUN npm run build
 
