@@ -28,13 +28,12 @@ Other functionality planned (and incorporated in some way in previous versions):
 This README covers requirements and steps through how to prepare data for
 visualisation and how to run the tool.
 
-1. Data preparation
-3. Build and run
-4. Deployment
+# Usage
 
 ## Data preparation
 
-The visualisation tool runs using prepared versions of analysis data and results
+The visualisation tool runs using prepared versions of analysis data and
+results
 - Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
   a terracotta SQLite database
 - Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
@@ -42,80 +41,62 @@ The visualisation tool runs using prepared versions of analysis data and results
 
 See `./etl` directory for details.
 
-## Build and run
+## Build
 
-Running the application requires several (local) server processes: the
-vector and raster tileservers, the app backend, and the app frontend.
+The application is built with several 'services', each facilitated by a running
+docker container.
 
-### Node and npm
+Services:
+- Web server (nginx)
+- Raster tileserver (terracotta)
+- Vector tileserver (tileserver-gl)
+- Backend / API (bespoke Python app)
+- Database (PostgreSQL with PostGIS)
 
-The build and run steps use [node.js](https://nodejs.org/) - this provides the
-`npm` command.
+The services are orchestrated using `docker compose`. N.B. The app was built
+with docker engine version 20.10.16 and compose version 2.5.0. It may not work
+with other versions.
 
-Install required packages. Run from the project root:
+The `compose.yml` file contains service names and definitions, and paths to
+build contexts (all located within `containers/`).
 
-    npm install
+To build images for all the services, use `docker compose build`, and to build
+for a single service, use `docker compose build <service>`, e.g.
+`docker compose build raster-tileserver`. These commands are automatically
+referring to the `compose.yml` file, meaning `docker compose build` is
+equivalent to `docker compose -f compose.yml build`.
 
-### Terracotta
+## Deploy
 
-Install the raster tileserver - Terracotta
+To deploy the stack, use `docker compose up`. Again, this will default to using
+the `compose.yml` file. The current process will show the interleaved log
+output of the various services. To bring up the stack in the background (e.g.
+for production), use `docker compose up -d` to daemonise the process.
 
-For example, installing using conda:
+The default service configuration can be modified by means of 'overlaying'
+compose files. For development purposes it can be useful to 'bind mount' source
+code files into running containers. Similarly, direct access to the containers'
+various open ports can help debugging. To deploy the stack locally with such
+changes, use the following invocation:
+`docker compose -f compose.yml -f compose-local.yml up`
 
-    conda create --name infrariskvis python=3.8 numpy rasterio shapely crick
-    conda activate infrariskvis
-    pip install terracotta[recommended]
+To stop a foregrounded compose stack, issue SIGTERM with Ctrl-C. If services
+haven't stopped in 10 seconds they will be brutally terminated. To bring a
+daemonised stack down, use `docker compose down`.
 
-### Run the vector tileserver
+The application has access control. Authentication is handled by nginx. To add
+a user, first exec into the web-server container. The following command will
+start a `/bin/sh` shell in that container:
+`docker exec -it $(docker ps | grep web-server | awk '{printf $1}') /bin/sh`
 
-Run the tileserver directly (from the root of the project):
+Then create a new user and password pair with `htpasswd`:
+htpasswd -Bb /etc/nginx/auth/.htpasswd <username> <password>
 
-    npm run vector
+The passwords are persisted as a docker volume. If this volume is deleted, the
+accounts will be lost.
 
-### Run the raster tileserver
-
-Prepare the raster tileserver database:
-
-    npm run raster-init
-
-Run the raster tileserver:
-
-    npm run raster
-
-### Run the backend API server and database
-
-Two options here.
-
-Without docker, follow the notes in `./backend/README.md` to setup a development
-environment for python.
-
-Set up a postgres database and add connection details in `./backend/.env`.
-
-Run the api server:
-
-    cd ./backend
-    pipenv run uvicorn backend.app.main:app --host localhost --port 8888
-
-Alternatively, run `docker-compose` to run the API server in one container and
-postgres in another.
-
-### Run the frontend app in development mode
-
-Start the app server:
-
-    npm start
-
-This should automatically open a browser tab. If not, open:
-
-    firefox http://localhost:3000/
-
-## Deployment
-
-The site can run on a single Linux machine or virtual machine, with a suggested
-configuration that deploys the server processes behind an Nginx reverse proxy
-in production modes.
-
-See `./deploy` directory for details.
+The site can run on a single Linux machine or virtual machine. See `./deploy`
+directory for further details.
 
 ## Acknowledgements
 
