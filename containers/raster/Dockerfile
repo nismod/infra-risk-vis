@@ -13,10 +13,8 @@ RUN conda config --set channel_priority strict
 COPY environment.yml .
 RUN conda env create -f environment.yml
 
-# make RUN commands use the new environment:
-#SHELL ["conda", "run", "-n", "raster-tileserver", "/bin/bash", "-c"]
-
 # copy across config and scripts to working directory
 COPY config.toml entrypoint.sh .
 
+# run entrypoint within 'raster-tileserver' conda environment
 ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "raster-tileserver", "/bin/bash", "entrypoint.sh"]

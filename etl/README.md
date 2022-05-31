@@ -9,14 +9,12 @@
 - [`geojson-polygon-labels`](https://github.com/andrewharvey/geojson-polygon-labels)
 - [`tippecanoe`](https://github.com/mapbox/tippecanoe)
 
-
 ### GDAL tools
 
 [ogr2ogr](https://www.gdal.org/ogr2ogr.html) and other GDAL programs are used
 for spatial data processing. On Ubuntu, run:
 
     sudo apt-get install gdal-bin
-
 
 ### Tippecanoe
 

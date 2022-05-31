@@ -10,8 +10,8 @@ services:
     volumes:
       - auth:/etc/nginx/auth
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     restart: on-failure
 
   db:

@@ -12,7 +12,6 @@
     - Move DB service into compose-local.yml
 - Host provisioning requirements
     - docker, docker compose
-- Terracotta production server (currently using development one)
 - Slow to die containers
     - database
     - raster-tileserver

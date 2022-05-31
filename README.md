@@ -41,6 +41,22 @@ results
 
 See `./etl` directory for details.
 
+Data to be served from the vector and raster tileservers should be placed on
+the host within mounts/<data_type>. These folders are made available to the
+running tileservers as docker bind mounts.
+
+For example, in mounts/raster/ there might live TIF files like these:
+coastal_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
+coastal_mangrove__rp_25__rcp_baseline__epoch_2010__conf_None.tif
+coastal_mangrove__rp_500__rcp_baseline__epoch_2010__conf_None.tif
+coastal_nomangrove_minus_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
+
+And in mounts/vector/, mbtiles files like these:
+airport_runways.mbtiles
+airport_terminals.mbtiles
+buildings_commercial.mbtiles
+buildings_industrial.mbtiles
+
 ## Build
 
 The application is built with several 'services', each facilitated by a running

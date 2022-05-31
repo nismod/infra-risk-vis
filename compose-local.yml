@@ -1,16 +1,27 @@
 services:
+  # mostly exposing ports so the underlying services are accessible from
+  # outside of the docker network
+
+  # also bind mount source code into containers where possible
+
+  #web-server:
+    #volumes:
+      # bind mount frontend src with hot reload somehow
+
   db:
     ports:
-      - 25432:5432
+      - "25432:5432"
 
   backend:
     ports:
-      - 8888:8888
+      - "8888:8888"
+    #volumes:
+      #
 
   raster-tileserver:
     ports:
-      - 5000:5000
+      - "5000:5000"
 
   vector-tileserver:
     ports:
-      - 8080:8080
+      - "8080:8080"
