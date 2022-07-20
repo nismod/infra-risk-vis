@@ -3,7 +3,7 @@
 //
 
 variable "SITE_URL" {
-  default = "jamaica.infrastructureresilience.org"
+  default = "caribbean.infrastructureresilience.org"
 }
 
 variable "instance_type" {
@@ -21,19 +21,19 @@ provider "aws" {
 //
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "opsis-aws-deployer-jamaica"
-  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAjX5yhc7GWROTVOM8r92rO6MEUyKt/JfTCQzCY/lNi9 opsis-aws-jamaica"
+  key_name   = "opsis-aws-deployer-caribbean"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBhi88MtbHeh0FwIQA4bb6DOS5SQZ61buTooGPOUfXv7 opsis-aws-caribbean"
 }
 
-resource "aws_default_vpc" "jamaica" {
+resource "aws_default_vpc" "caribbean" {
   tags = {
-    Name = "Jamaica VPC"
+    Name = "Caribbean VPC"
   }
 }
 
 resource "aws_security_group" "access_http_ssh" {
-  name = "access_jamaica"
-  vpc_id = aws_default_vpc.jamaica.id
+  name = "access_caribbean"
+  vpc_id = aws_default_vpc.caribbean.id
   ingress {
     from_port   = 22
     to_port     = 22
@@ -50,7 +50,6 @@ resource "aws_security_group" "access_http_ssh" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
@@ -81,7 +80,7 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
-resource "aws_instance" "jamaica" {
+resource "aws_instance" "caribbean" {
   instance_type = var.instance_type
   ami = data.aws_ami.ubuntu.id
 
@@ -101,14 +100,14 @@ data "aws_route53_zone" "selected" {
   name = "infrastructureresilience.org."
 }
 
-resource "aws_route53_record" "jamaica" {
+resource "aws_route53_record" "caribbean" {
   zone_id = data.aws_route53_zone.selected.zone_id
   name    = var.SITE_URL
   type    = "A"
   ttl     = "300"
-  records = [aws_instance.jamaica.public_ip]
+  records = [aws_instance.caribbean.public_ip]
 }
 
-output "jamaica-public_ip" {
-  value = aws_instance.jamaica.public_ip
+output "caribbean-public_ip" {
+  value = aws_instance.caribbean.public_ip
 }
