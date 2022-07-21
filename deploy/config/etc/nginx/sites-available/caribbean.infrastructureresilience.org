@@ -40,13 +40,9 @@ server {
 	# Add index.php to the list if you are using PHP
 	index index.html
 
-	server_name jamaica.infrastructureresilience.org;
+	server_name caribbean.infrastructureresilience.org;
 
 	location / {
-		# basic authentication - use htpasswd to add users
-		auth_basic "Access restricted";
-		auth_basic_user_file /etc/nginx/.htpasswd;
-
 		# First attempt to serve request as file, then
 		# as directory, then fall back to index.
 		try_files $uri $uri/ /index.html;
@@ -54,10 +50,6 @@ server {
 
 
 	location /static {
-		# basic authentication - use htpasswd to add users
-		auth_basic "Access restricted";
-		auth_basic_user_file /etc/nginx/.htpasswd;
-
 		# First attempt to serve request as file, then
 		# as directory, then fall back to index.
 		try_files $uri =404;
@@ -67,10 +59,6 @@ server {
 	}
 
 	location /vector {
-		# basic authentication - use htpasswd to add users
-		auth_basic "Access restricted";
-		auth_basic_user_file /etc/nginx/.htpasswd;
-
 		proxy_pass http://vector_tileserver;
 		rewrite ^/vector/(.+) /$1 break;
 		proxy_set_header Host $host/vector;
@@ -80,10 +68,6 @@ server {
 	}
 
 	location /raster {
-		# basic authentication - use htpasswd to add users
-		auth_basic "Access restricted";
-		auth_basic_user_file /etc/nginx/.htpasswd;
-
 		proxy_pass http://raster_tileserver;
 		rewrite ^/raster/(.+) /$1 break;
 		proxy_set_header Host $host;
@@ -93,10 +77,6 @@ server {
 	}
 
 	location /api {
-		# basic authentication - use htpasswd to add users
-		auth_basic "Access restricted";
-		auth_basic_user_file /etc/nginx/.htpasswd;
-
 		proxy_pass http://backend;
 		rewrite ^/api/(.+) /$1 break;
 
@@ -117,21 +97,21 @@ server {
 
 	listen [::]:443 ssl ipv6only=on; # managed by Certbot
 	listen 443 ssl; # managed by Certbot
-	ssl_certificate /etc/letsencrypt/live/jamaica.infrastructureresilience.org/fullchain.pem; # managed by Certbot
-	ssl_certificate_key /etc/letsencrypt/live/jamaica.infrastructureresilience.org/privkey.pem; # managed by Certbot
+	ssl_certificate /etc/letsencrypt/live/caribbean.infrastructureresilience.org/fullchain.pem; # managed by Certbot
+	ssl_certificate_key /etc/letsencrypt/live/caribbean.infrastructureresilience.org/privkey.pem; # managed by Certbot
 	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
 	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
 
 # Redirect from HTTP to HTTPS
 server {
-	if ($host = jamaica.infrastructureresilience.org) {
+	if ($host = caribbean.infrastructureresilience.org) {
 		return 301 https://$host$request_uri;
 	} # managed by Certbot
 
 
 	listen 80 ;
 	listen [::]:80 ;
-	server_name jamaica.infrastructureresilience.org;
+	server_name caribbean.infrastructureresilience.org;
 	return 404; # managed by Certbot
 }
