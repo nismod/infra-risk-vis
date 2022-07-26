@@ -69,7 +69,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "vector": "./tileserver/vector/serve.sh ./tileserver/vector",
-    "raster-init": "./tileserver/raster/ingest.sh ./tileserver/raster",
+    "raster-init": "python ./tileserver/raster/ingest.py ./tileserver/raster ./etl/hazard_layers.csv",
     "raster": "./tileserver/raster/serve.sh ./tileserver/raster",
     "lint": "eslint src/**/*.{js,jsx}",
     "generate-client": "openapi --input http://localhost:8888/openapi.json --output ./src/lib/api-client --client fetch --name ApiClient --useOptions"
