@@ -1,10 +1,8 @@
 import {
-  Box,
   FormControl,
   FormControlLabel,
   FormLabel,
   MenuItem,
-  Paper,
   Radio,
   RadioGroup,
   Select,

@@ -4,17 +4,17 @@ import { ColorSpec } from 'lib/data-map/view-layers';
 import { valueType } from 'lib/helpers';
 
 export const RASTER_COLOR_MAPS = {
-  fluvial: {
+  river: {
     scheme: 'blues',
-    range: [0, 10],
+    range: [0, 5],
   },
   coastal: {
     scheme: 'greens',
-    range: [0, 10],
+    range: [0, 5],
   },
   surface: {
     scheme: 'purples',
-    range: [0, 10],
+    range: [0, 5],
   },
   cyclone: {
     scheme: 'reds',

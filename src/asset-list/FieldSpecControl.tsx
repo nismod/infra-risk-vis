@@ -44,7 +44,7 @@ export const FieldSpecControl: FC<{
             }
             options={[
               { value: 'all', label: 'All Hazards' },
-              { value: 'fluvial', label: 'River Flooding' },
+              { value: 'river', label: 'River Flooding' },
               { value: 'surface', label: 'Surface Flooding' },
               { value: 'coastal', label: 'Coastal Flooding' },
               { value: 'cyclone', label: 'Cyclones' },
