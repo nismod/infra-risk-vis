@@ -42,7 +42,7 @@ export function populationViewLayer(regionLevel: RegionLevel): ViewLayer {
         {
           data: source.getDataUrl({ regionLevel }),
         },
-        (regionLevel === 'parish' || zoom > 12) && border([40, 40, 40, 255]),
+        (regionLevel === 'level0' || zoom > 12) && border([40, 40, 40, 255]),
         fillColor(dataColorMap(featureProperty('population_density_per_km2'), colorMap(colorSpec))),
         {
           highlightColor: [0, 255, 255, 100],

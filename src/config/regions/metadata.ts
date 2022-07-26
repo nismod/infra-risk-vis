@@ -6,21 +6,21 @@ export interface BoundaryConfig {
   labelPlural: string;
 }
 
-export type RegionLevel = 'parish' | 'enumeration';
+export type RegionLevel = 'level0' | 'level1';
 
 export const REGIONS_METADATA: Record<RegionLevel, BoundaryConfig> = {
-  parish: {
-    fieldName: 'PARISH',
-    minZoom: 9,
+  level0: {
+    fieldName: 'NAME_0',
+    minZoom: 3,
     showLabels: true,
-    labelSingular: 'Parish',
-    labelPlural: 'Parishes',
+    labelSingular: 'Country',
+    labelPlural: 'Countries',
   },
-  enumeration: {
-    fieldName: 'ED',
-    minZoom: 13,
-    showLabels: false,
-    labelSingular: 'Enumeration District',
-    labelPlural: 'Enumeration Districts',
+  level1: {
+    fieldName: 'NAME_1',
+    minZoom: 3,
+    showLabels: true,
+    labelSingular: 'Admin-1 Region',
+    labelPlural: 'Admin-1 Regions',
   },
 };

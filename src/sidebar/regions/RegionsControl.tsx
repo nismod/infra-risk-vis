@@ -18,11 +18,11 @@ export const RegionLevelSelection = () => {
 
   return (
     <ToggleButtonGroup exclusive value={regionLevel} onChange={handleChange} fullWidth>
-      <ToggleButton value="parish" sx={{ textTransform: 'none' }}>
-        Parishes
+      <ToggleButton value="level0" sx={{ textTransform: 'none' }}>
+        Countries
       </ToggleButton>
-      <ToggleButton value="enumeration" sx={{ textTransform: 'none' }}>
-        Enumeration Districts
+      <ToggleButton value="level1" sx={{ textTransform: 'none' }}>
+        Regions
       </ToggleButton>
     </ToggleButtonGroup>
   );

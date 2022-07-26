@@ -4,7 +4,7 @@ import { sectionStyleValueState } from './sections';
 
 export const regionLevelState = atom<RegionLevel>({
   key: 'regionLevelState',
-  default: 'parish',
+  default: 'level0',
 });
 
 export const regionsStyleState = selector({
