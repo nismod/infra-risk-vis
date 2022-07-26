@@ -312,7 +312,7 @@ rule raster_temp_file:
         "raster/link/{layer}.tif",
     run:
         layer = get_hazard_layer(wildcards.layer, hazard_layers)
-        os.symlink(os.path.join(config["analysis_data_dir"], "processed_data", layer.path), str(output))
+        os.symlink(os.path.join(config["analysis_data_dir"], layer.path), str(output))
 
 
 def get_hazard_layer(layer_name, hazard_layers):
@@ -352,7 +352,7 @@ rule raster_zero_nodata:
           --overwrite \
           --calc="numpy.where(A<=0,$NODATA,A)" \
           --NoDataValue=$NODATA \
-          --hideNoData
+          --hideNoData || echo "Fail ok"
         """
 
 
