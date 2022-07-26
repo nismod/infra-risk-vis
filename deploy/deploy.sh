@@ -14,36 +14,36 @@ echo "Running in ${pwd}"
 npm run build
 
 # built files for frontend
-rsync -rvz build/ ubuntu@jamaica.infrastructureresilience.org:/var/www/html
+rsync -rvz build/ ubuntu@caribbean.infrastructureresilience.org:/var/www/html
 
 # vector
-rsync -rvz tileserver/vector/data/ ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/vector/data
-rsync -rvz tileserver/vector/fonts/ ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/vector/fonts
-rsync -rvz tileserver/vector/config.json ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/vector
+rsync -rvz tileserver/vector/data/ ubuntu@caribbean.infrastructureresilience.org:/var/www/tileserver/vector/data
+rsync -rvz tileserver/vector/fonts/ ubuntu@caribbean.infrastructureresilience.org:/var/www/tileserver/vector/fonts
+rsync -rvz tileserver/vector/config.json ubuntu@caribbean.infrastructureresilience.org:/var/www/tileserver/vector
 
 # raster
-rsync -rvz tileserver/raster/data/ ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster/data
-rsync -rvz tileserver/raster/config.toml ubuntu@jamaica.infrastructureresilience.org:/var/www/tileserver/raster
+rsync -rvz tileserver/raster/data/ ubuntu@caribbean.infrastructureresilience.org:/var/www/tileserver/raster/data
+rsync -rvz tileserver/raster/config.toml ubuntu@caribbean.infrastructureresilience.org:/var/www/tileserver/raster
 
 # backend
-rsync -rvz backend/backend/ ubuntu@jamaica.infrastructureresilience.org:/var/www/backend/backend
-rsync -rvz backend/setup.py ubuntu@jamaica.infrastructureresilience.org:/var/www/backend/
+rsync -rvz backend/backend/ ubuntu@caribbean.infrastructureresilience.org:/var/www/backend/backend
+rsync -rvz backend/setup.py ubuntu@caribbean.infrastructureresilience.org:/var/www/backend/
 pushd backend
   pipenv lock -r > requirements.txt
 popd
-rsync -rvz backend/requirements.txt ubuntu@jamaica.infrastructureresilience.org:/var/www/backend/
+rsync -rvz backend/requirements.txt ubuntu@caribbean.infrastructureresilience.org:/var/www/backend/
 
 # update requirements
-ssh ubuntu@jamaica.infrastructureresilience.org 'cd /var/www/backend && sudo python3.10 -m pip install -r requirements.txt'
+ssh ubuntu@caribbean.infrastructureresilience.org 'cd /var/www/backend && sudo python3.10 -m pip install -r requirements.txt'
 # restart backend
-ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service backend restart'
-ssh ubuntu@jamaica.infrastructureresilience.org 'sudo chown :www-data /var/www/backend/backend.sock'
+ssh ubuntu@caribbean.infrastructureresilience.org 'sudo service backend restart'
+ssh ubuntu@caribbean.infrastructureresilience.org 'sudo chown :www-data /var/www/backend/backend.sock'
 
-# restart backend
-ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service terracotta restart'
-ssh ubuntu@jamaica.infrastructureresilience.org 'sudo chown :www-data /var/www/tileserver/raster/terracotta.sock'
+# restart raster tileserver
+ssh ubuntu@caribbean.infrastructureresilience.org 'sudo service terracotta restart'
+ssh ubuntu@caribbean.infrastructureresilience.org 'sudo chown :www-data /var/www/tileserver/raster/terracotta.sock'
 
-# restart tileserver
-ssh ubuntu@jamaica.infrastructureresilience.org 'sudo service tileservergl restart'
+# restart vector tileserver
+ssh ubuntu@caribbean.infrastructureresilience.org 'sudo service tileservergl restart'
 
 popd
