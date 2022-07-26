@@ -47,6 +47,24 @@ stops: [
 
 export const NETWORKS_METADATA = makeConfig([
   {
+    id: 'elec_edges',
+    type: 'line',
+    label: 'Power Lines',
+    color: COLORS.electricity_high.css,
+  },
+  {
+    id: 'elec_areas_demand',
+    type: 'circle',
+    label: 'Power Demand',
+    color: COLORS.electricity_low.css,
+  },
+  {
+    id: 'elec_nodes_source',
+    type: 'circle',
+    label: 'Power Generation',
+    color: COLORS.electricity_high.css,
+  },
+  {
     id: 'elec_edges_high',
     type: 'line',
     label: 'Power Lines (High Voltage)',

@@ -29,6 +29,10 @@ import { Download } from '@mui/icons-material';
 import { downloadFile } from 'lib/helpers';
 
 var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> = {
+  elec_edges: DefaultDetails,
+  elec_nodes_source: DefaultDetails,
+  elec_areas_demand: DefaultDetails,
+
   airport_terminals: AirportDetails,
   airport_runways: AirportDetails,
 

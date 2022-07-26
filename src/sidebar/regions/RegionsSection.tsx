@@ -12,9 +12,9 @@ export const RegionsSection: FC<{}> = () => {
         <SidebarPanelSection>
           <RegionsControl />
         </SidebarPanelSection>
-        <SidebarPanelSection variant="style">
+        {/* <SidebarPanelSection variant="style">
           <StyleSelection id="regions" />
-        </SidebarPanelSection>
+        </SidebarPanelSection> */}
       </ErrorBoundary>
     </SidebarPanel>
   );

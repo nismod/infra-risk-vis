@@ -28,7 +28,7 @@ export const SidebarContent: FC<{}> = () => {
         <>
           <NetworksSection />
           <HazardsSection />
-          <BuildingsSection />
+          {/* <BuildingsSection /> */}
           <RegionsSection />
         </>
       );

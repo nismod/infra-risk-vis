@@ -23,7 +23,7 @@ export const NetworksSection: FC<{}> = () => {
         <SidebarPanelSection>
           <NetworkControl />
         </SidebarPanelSection>
-        <SidebarPanelSection variant="style">
+        {/* <SidebarPanelSection variant="style">
           <StyleSelection id="assets" />
           <TransitionGroup>
             {style === 'damages' ? (
@@ -37,7 +37,7 @@ export const NetworksSection: FC<{}> = () => {
               </Collapse>
             ) : null}
           </TransitionGroup>
-        </SidebarPanelSection>
+        </SidebarPanelSection> */}
       </ErrorBoundary>
     </SidebarPanel>
   );
