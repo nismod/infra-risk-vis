@@ -1,10 +1,90 @@
 import React from 'react';
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import ScrollToTop from 'lib/hooks/scroll-to-top';
 
 export const DataPage = () => (
   <article>
     <ScrollToTop />
+    <p>
+      <Alert
+        severity="success"
+        action={
+          <Button color="inherit" size="small">
+            <a href="https://github.com/nismod/infra-risk-vis/issues">
+              REPORT
+            </a>
+          </Button>
+        }
+      >
+        The tool has recently been released. Please tell us if anything is not
+        working as it should and suggest potential improvements.
+      </Alert>
+    </p>
+
+    <p>The modelling and analysis presented here aim to support climate
+      adaptation decision-making by identifying spatial criticalities and risks
+      under current and future climate scenarios.</p>
+
+    <p>The following table summarises the data and model results presented.</p>
+
+    <TableContainer component={Paper}>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Infrastructure Sector</TableCell>
+            <TableCell>Assets</TableCell>
+            <TableCell>Exposure</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell>Transport</TableCell>
+            <TableCell>Road links</TableCell>
+            <TableCell>Lengths exposed to coastal or river flooding</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Energy</TableCell>
+            <TableCell>Electricity generation (power stations) and transmission lines</TableCell>
+            <TableCell>Lengths exposed to high wind speeds from tropical cyclones</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+
+    <p>For more details on the infrastructure and hazard data used, see below</p>
+
+    <p>The primary output metrics from the analysis are:</p>
+
+    <ul>
+      <li>Exposure of infrastructure assets to flooding and cyclone winds</li>
+      <li>Expected Annual Damages (EAD) (direct physical risks) estimated as the
+        area under the direct damage vs exceedance probability curve </li>
+    </ul>
+
+
+    <h2>Open-source code</h2>
+
+    <p>This tool to visualize the model outputs is developed and documented
+      here:</p>
+
+    <ul>
+      <li>
+        <a href="https://github.com/nismod/infra-risk-vis" target="blank">
+          github.com/nismod/infra-risk-vis
+        </a>
+      </li>
+    </ul>
+
+    <p>The analytics for the Caribbean are produced using the code and models here:</p>
+
+    <ul>
+      <li>
+        <a href="https://github.com/nismod/open-gira" target="blank">
+          github.com/nismod/open-gira
+        </a>
+      </li>
+    </ul>
+
     <h1>Data Sources and Access</h1>
 
     <p>Data comes from multiple open data sources.</p>
