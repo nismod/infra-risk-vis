@@ -8,6 +8,33 @@
   },
   "styles": {},
   "data": {
+    "elec_edges": {
+      "mbtiles": "elec_edges.mbtiles"
+    },
+    "elec_nodes_biomass": {
+      "mbtiles": "elec_nodes_biomass.mbtiles"
+    },
+    "elec_nodes_coal": {
+      "mbtiles": "elec_nodes_coal.mbtiles"
+    },
+    "elec_nodes_gas": {
+      "mbtiles": "elec_nodes_gas.mbtiles"
+    },
+    "elec_nodes_geothermal": {
+      "mbtiles": "elec_nodes_geothermal.mbtiles"
+    },
+    "elec_nodes_hydro": {
+      "mbtiles": "elec_nodes_hydro.mbtiles"
+    },
+    "elec_nodes_oil": {
+      "mbtiles": "elec_nodes_oil.mbtiles"
+    },
+    "elec_nodes_solar": {
+      "mbtiles": "elec_nodes_solar.mbtiles"
+    },
+    "elec_nodes_wind": {
+      "mbtiles": "elec_nodes_wind.mbtiles"
+    },
     "regions_level0": {
       "mbtiles": "regions_level0.mbtiles"
     },
@@ -19,6 +46,21 @@
     },
     "regions_level1_labels": {
       "mbtiles": "regions_level1_labels.mbtiles"
+    },
+    "road_edges_motorway": {
+      "mbtiles": "road_edges_motorway.mbtiles"
+    },
+    "road_edges_primary": {
+      "mbtiles": "road_edges_primary.mbtiles"
+    },
+    "road_edges_secondary": {
+      "mbtiles": "road_edges_secondary.mbtiles"
+    },
+    "road_edges_tertiary": {
+      "mbtiles": "road_edges_tertiary.mbtiles"
+    },
+    "road_edges_trunk": {
+      "mbtiles": "road_edges_trunk.mbtiles"
     }
   }
 }

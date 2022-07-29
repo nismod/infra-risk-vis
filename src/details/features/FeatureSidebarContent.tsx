@@ -30,7 +30,6 @@ import { downloadFile } from 'lib/helpers';
 
 var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> = {
   elec_edges: DefaultDetails,
-  elec_nodes_source: DefaultDetails,
   elec_areas_demand: DefaultDetails,
 
   airport_terminals: AirportDetails,
@@ -46,11 +45,11 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
   rail_junctions: RailNodeDetails,
 
   road_bridges: BridgeDetails,
-  road_edges_class_a: RoadEdgeDetails,
-  road_edges_class_b: RoadEdgeDetails,
-  road_edges_class_c: RoadEdgeDetails,
-  road_edges_metro: RoadEdgeDetails,
-  road_edges_track: RoadEdgeDetails,
+  road_edges_motorway: RoadEdgeDetails,
+  road_edges_trunk: RoadEdgeDetails,
+  road_edges_primary: RoadEdgeDetails,
+  road_edges_secondary: RoadEdgeDetails,
+  road_edges_tertiary: RoadEdgeDetails,
   road_edges_other: RoadEdgeDetails,
 
   water_irrigation_edges: IrrigationDetails,
@@ -86,9 +85,13 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
 
   elec_nodes_demand: PowerDemandNodeDetails,
 
+  elec_nodes_biomass: PowerGenerationNodeDetails,
+  elec_nodes_coal: PowerGenerationNodeDetails,
   elec_nodes_diesel: PowerGenerationNodeDetails,
   elec_nodes_gas: PowerGenerationNodeDetails,
+  elec_nodes_geothermal: PowerGenerationNodeDetails,
   elec_nodes_hydro: PowerGenerationNodeDetails,
+  elec_nodes_oil: PowerGenerationNodeDetails,
   elec_nodes_solar: PowerGenerationNodeDetails,
   elec_nodes_wind: PowerGenerationNodeDetails,
 

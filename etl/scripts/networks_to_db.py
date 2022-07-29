@@ -31,11 +31,11 @@ def yield_features(layer, network_tilelayer, analysis_data_dir):
             layer.asset_max_cost_column: "cost_max",
             layer.asset_mean_cost_column: "cost_mean",
             layer.asset_cost_unit_column: "cost_unit",
-            layer.asset_reopen_cost_column: "cost_reopen",
-            layer.asset_reopen_cost_unit_column: "cost_reopen_unit",
         }
 
-        for feature in src:
+        for i, feature in enumerate(src):
+            if "id" in feature and "fid" not in feature["properties"]:
+                feature["properties"]["fid"] = int(feature["id"])
             geom = transform(t, shape(feature["geometry"]))
             if geom.has_z:
                 geom = transform(to_2d, geom)
@@ -43,13 +43,19 @@ def yield_features(layer, network_tilelayer, analysis_data_dir):
             # FIXME in the data
             if layer.ref == "transport_rail_edges":
                 props["asset_type"] = "track"
+            if layer.ref == "energy_edges":
+                props["asset_type"] = "transmission"
+            if layer.ref == "energy_targets":
+                props["asset_type"] = "demand"
+            props["asset_type"] = props["asset_type"].lower()
+            props["asset_id"] = str(props["asset_id"])
             tilelayer_details = get_tilelayer_by_asset_type(layer.ref, props, network_tilelayers)
             props["sector"] = tilelayer_details.sector
             props["subsector"] = tilelayer_details.subsector
 
             yield Feature(
-                id=props["uid"],
-                string_id=props["asset_id"],
+                id=int(layer.base_id + i),
+                string_id=f"{props['asset_id']}",
                 layer=tilelayer_details.layer,
                 properties=props,
                 geom=geom.wkt,
@@ -77,7 +83,7 @@ def get_network_layer(layer_name, network_layers):
 
 
 def get_network_layer_path(layer, analysis_data_dir):
-    return f"{analysis_data_dir}/processed_data/networks_uids/{layer.path}"
+    return f"{analysis_data_dir}/{layer.path}"
 
 
 def get_tilelayer_by_asset_type(layer_ref, props, network_tilelayers):

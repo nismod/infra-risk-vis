@@ -12,6 +12,40 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
       {
         id: 'elec_nodes_source',
         label: 'Generation',
+        children: [
+          {
+            id: 'elec_nodes_biomass',
+            label: 'Biomass',
+          },
+          {
+            id: 'elec_nodes_coal',
+            label: 'Coal',
+          },
+          {
+            id: 'elec_nodes_gas',
+            label: 'Gas',
+          },
+          {
+            id: 'elec_nodes_geothermal',
+            label: 'Geothermal',
+          },
+          {
+            id: 'elec_nodes_hydro',
+            label: 'Hydro',
+          },
+          {
+            id: 'elec_nodes_oil',
+            label: 'Oil',
+          },
+          {
+            id: 'elec_nodes_solar',
+            label: 'Solar',
+          },
+          {
+            id: 'elec_nodes_wind',
+            label: 'Wind',
+          },
+        ]
       },
       {
         id: 'elec_edges',
@@ -28,28 +62,24 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
     label: 'Road Transport',
     children: [
       {
-        id: 'road_edges_class_a',
-        label: 'Class A',
+        id: 'road_edges_motorway',
+        label: 'Motorway',
       },
       {
-        id: 'road_edges_class_b',
-        label: 'Class B',
+        id: 'road_edges_trunk',
+        label: 'Trunk',
       },
       {
-        id: 'road_edges_class_c',
-        label: 'Class C',
+        id: 'road_edges_primary',
+        label: 'Primary',
       },
       {
-        id: 'road_edges_metro',
-        label: 'Metro',
+        id: 'road_edges_secondary',
+        label: 'Secondary',
       },
       {
-        id: 'road_edges_track',
-        label: 'Track',
-      },
-      {
-        id: 'road_edges_other',
-        label: 'Other',
+        id: 'road_edges_tertiary',
+        label: 'Tertiary',
       },
     ],
   },

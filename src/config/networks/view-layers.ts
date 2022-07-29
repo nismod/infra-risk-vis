@@ -18,30 +18,27 @@ function infraStyle(layer: string, defaultStyle, styleParams: StyleParams) {
 }
 
 enum RoadClass {
-  class_a = 'class_a',
-  class_b = 'class_b',
-  class_c = 'class_c',
-  metro = 'metro',
-  other = 'other',
-  track = 'track',
+  motorway = 'motorway',
+  trunk = 'trunk',
+  primary = 'primary',
+  secondary = 'secondary',
+  tertiary = 'tertiary',
 }
 
 const roadClassLookup = {
-  road_edges_class_a: RoadClass.class_a,
-  road_edges_class_b: RoadClass.class_b,
-  road_edges_class_c: RoadClass.class_c,
-  road_edges_metro: RoadClass.metro,
-  road_edges_track: RoadClass.track,
-  road_edges_other: RoadClass.other,
+  road_edges_motorway: RoadClass.motorway,
+  road_edges_trunk: RoadClass.trunk,
+  road_edges_primary: RoadClass.primary,
+  road_edges_secondary: RoadClass.secondary,
+  road_edges_tertiary: RoadClass.tertiary,
 };
 
 const roadColor = {
-  [RoadClass.class_a]: COLORS.roads_class_a.css,
-  [RoadClass.class_b]: COLORS.roads_class_b.css,
-  [RoadClass.class_c]: COLORS.roads_class_c.css,
-  [RoadClass.metro]: COLORS.roads_metro.css,
-  [RoadClass.track]: COLORS.roads_unknown.css,
-  [RoadClass.other]: COLORS.roads_unknown.css,
+  [RoadClass.motorway]: COLORS.roads_motorway.css,
+  [RoadClass.trunk]: COLORS.roads_trunk.css,
+  [RoadClass.primary]: COLORS.roads_primary.css,
+  [RoadClass.secondary]: COLORS.roads_secondary.css,
+  [RoadClass.tertiary]: COLORS.roads_tertiary.css,
 };
 function roadsViewLayer(asset_id) {
   return infrastructureViewLayer(asset_id, ({ zoom, styleParams }) => [
@@ -84,6 +81,10 @@ function electricitySourceViewLayer(asset_id) {
 }
 
 export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
+  infrastructureViewLayer('elec_edges', ({ zoom, styleParams }) => [
+    strokeColor(infraStyle('elec_edges', COLORS.electricity_high.deck, styleParams)),
+    lineStyle(zoom),
+  ]),
   infrastructureViewLayer('elec_edges_high', ({ zoom, styleParams }) => [
     strokeColor(infraStyle('elec_edges_high', COLORS.electricity_high.deck, styleParams)),
     lineStyle(zoom),
@@ -92,15 +93,18 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     strokeColor(infraStyle('elec_edges_low', COLORS.electricity_low.deck, styleParams)),
     lineStyle(zoom),
   ]),
+  electricitySourceViewLayer('elec_nodes_biomass'),
+  electricitySourceViewLayer('elec_nodes_coal'),
   electricitySourceViewLayer('elec_nodes_diesel'),
   electricitySourceViewLayer('elec_nodes_gas'),
+  electricitySourceViewLayer('elec_nodes_getertiarymal'),
   electricitySourceViewLayer('elec_nodes_hydro'),
+  electricitySourceViewLayer('elec_nodes_oil'),
   electricitySourceViewLayer('elec_nodes_solar'),
   electricitySourceViewLayer('elec_nodes_wind'),
-  infrastructureViewLayer('elec_nodes_demand', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('elec_areas_demand', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('elec_nodes_demand', COLORS.electricity_low.deck, styleParams)),
-    pointRadius(zoom),
+    fillColor(infraStyle('elec_nodes_demand', COLORS.electricity_unknown.deck, styleParams))
   ]),
   infrastructureViewLayer('elec_nodes_pole', ({ zoom, styleParams }) => [
     border(),
@@ -126,12 +130,11 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     fillColor(infraStyle('rail_junctions', COLORS.railway.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  roadsViewLayer('road_edges_class_a'),
-  roadsViewLayer('road_edges_class_b'),
-  roadsViewLayer('road_edges_class_c'),
-  roadsViewLayer('road_edges_metro'),
-  roadsViewLayer('road_edges_track'),
-  roadsViewLayer('road_edges_other'),
+  roadsViewLayer('road_edges_motorway'),
+  roadsViewLayer('road_edges_trunk'),
+  roadsViewLayer('road_edges_primary'),
+  roadsViewLayer('road_edges_secondary'),
+  roadsViewLayer('road_edges_tertiary'),
   infrastructureViewLayer('road_bridges', ({ zoom, styleParams }) => [
     border(),
     fillColor(infraStyle('road_bridges', COLORS.bridges.deck, styleParams)),
