@@ -18,6 +18,8 @@ const TextBox = styled(Paper)(() => ({
 }));
 
 export const IntroPage = () => (
+  <div className="home">
+
   <article>
     <ScrollToTop />
     <Grid container columnSpacing={8} rowSpacing={4}>
@@ -83,4 +85,5 @@ export const IntroPage = () => (
       </Grid>
     </Grid>
   </article>
+  </div>
 );
