@@ -33,3 +33,9 @@ Environment variables:
   automatically
 - use [`PG*`](https://www.postgresql.org/docs/current/libpq-envars.html) to
   define database connection details. See `.env.example` for an example
+
+To set up a new database:
+- Connect with `pipenv run psql` and then run `CREATE EXTENSION postgis;`. This
+  should create some metadata tables (view with `\d`). Quit with `\q`.
+- Create schema with `pipenv run python create_schema.py`. Reconnect with `psql`
+  to double check.
