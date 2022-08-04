@@ -237,30 +237,38 @@ export const RailNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   </>
 );
 
-export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
-  <>
-    <Typography variant="h6" component="h1">
-      {f.street_name}
-      {f.street_name ? ', ' : ''}
-      {f.section_name}
-    </Typography>
-    <DetailSubheader id={f.asset_id} />
-    <List>
-      <DataItem label="Connection" value={`${f.from_node}–${f.to_node}`} />
-      <DataItem label="Street type" value={`${f.street_type ? f.street_type : 'none'}`} />
-      <DataItem label="Construction" value={f.road_construction} />
-      <DataItem label="Length (m)" value={f.length_m} />
-      <DataItem label="Width (m)" value={f.road_width} />
-      <DataItem label="Vertical alignment" value={f.vertalignm} />
-      <DataItem label="Traffic (vehicles/day)" value={f.traffic_count} />
-      <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
-      />
-      <DataItem label={`Reopening cost (${f.cost_reopen_unit})`} value={`${numFormat(f.cost_reopen)}`} />
-    </List>
-  </>
-);
+export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => {
+  const cost_factor = f.lanes*(f.length_m/1000);
+  return (
+    <>
+      <Typography variant="h6" component="h1">
+        {f.street_name}
+        {f.street_name ? ', ' : ''}
+        {f.section_name}
+      </Typography>
+      <DetailSubheader id={f.asset_id} />
+      <List>
+        <DataItem label="Material" value={f.material} />
+        <DataItem label="Length (m)" value={f.length_m} />
+        <DataItem label="Lanes" value={f.lanes} />
+        <DataItem label="Width (m)" value={f.width_m} />
+        <DataItem label="Paved" value={f.paved? "Paved": "Unpaved"} />
+        <DataItem
+          label={`Rehabilitation cost (${f.cost_unit})`}
+          value={`${numFormat(f.cost_min)}–${numFormat(f.cost_mean)}`}
+        />
+        <DataItem
+          label="Full rehabilitation cost (USD) all lanes, full length"
+          value={`${numFormat(f.cost_min*cost_factor)}–${numFormat(f.cost_mean*cost_factor)}`}
+        />
+        <DataItem
+          label="Source"
+          value={<>OpenStreetMap, way <a href={`https://www.openstreetmap.org/way/${f.asset_id}`} target="_blank" rel="noopener noreferrer">{`${f.asset_id}`}</a></>}
+        />
+      </List>
+    </>
+  );
+}
 
 export const RoadJunctionDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
