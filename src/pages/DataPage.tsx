@@ -5,21 +5,20 @@ import ScrollToTop from 'lib/hooks/scroll-to-top';
 export const DataPage = () => (
   <article>
     <ScrollToTop />
-    <p>
-      <Alert
-        severity="success"
-        action={
-          <Button color="inherit" size="small">
-            <a href="https://github.com/nismod/infra-risk-vis/issues">
-              REPORT
-            </a>
-          </Button>
-        }
-      >
-        The tool has recently been released. Please tell us if anything is not
-        working as it should and suggest potential improvements.
-      </Alert>
-    </p>
+    <Alert
+      severity="success"
+      action={
+        <Button color="inherit" size="small">
+          <a href="https://github.com/nismod/infra-risk-vis/issues">
+            REPORT
+          </a>
+        </Button>
+      }
+      sx={{my: 2}}
+    >
+      The tool has recently been released. Please tell us if anything is not
+      working as it should and suggest potential improvements.
+    </Alert>
 
     <p>The modelling and analysis presented here aim to support climate
       adaptation decision-making by identifying spatial criticalities and risks
@@ -27,11 +26,11 @@ export const DataPage = () => (
 
     <p>The following table summarises the data and model results presented.</p>
 
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{ my: 2 }} >
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Infrastructure Sector</TableCell>
+            <TableCell>Sector</TableCell>
             <TableCell>Assets</TableCell>
             <TableCell>Exposure</TableCell>
           </TableRow>
@@ -111,8 +110,8 @@ export const DataPage = () => (
               </a>
             </TableCell>
             <TableCell>1/20, 1/50, 1/100, 1/200, 1/500, and 1/1500</TableCell>
-            <TableCell>Flood depths in meters over 100m grid squares</TableCell>
-            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission&nbsp;scenarios.<br/>Current + future maps in 2030, 2050 and 2080</TableCell>
+            <TableCell>Flood depths in meters on a ~1km grid</TableCell>
+            <TableCell>Current climate and future RCP&nbsp;4.5 and 8.5 emission scenarios in 2030, 2050 and 2080</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Tropical cyclones (winds)</TableCell>
@@ -134,8 +133,8 @@ export const DataPage = () => (
               </ul>
             </TableCell>
             <TableCell>Annual exceedance probabilities from 1/10 to 1/1000</TableCell>
-            <TableCell>10 minute sustained maximum wind speeds in m/s at 10km grid squares</TableCell>
-            <TableCell>RCP 8.5 emission scenarios.<br/>Current + future maps in 2050</TableCell>
+            <TableCell>10 minute sustained maximum wind speeds in m/s on a ~10km grid</TableCell>
+            <TableCell>Current climate and future RCP&nbsp;8.5 emission scenario in 2050</TableCell>
           </TableRow>
         </TableBody>
       </Table>
