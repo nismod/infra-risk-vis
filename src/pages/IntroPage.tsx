@@ -57,14 +57,14 @@ export const IntroPage = () => (
             the Planning Institute of Jamaica and supported by engagement with
             infrastructure and climate specialists and related government
             bodies.</p>
-          <p>
+
           <Stack
             direction="row"
             divider={<Divider orientation="vertical" flexItem />}
-
             justifyContent="center"
             alignItems="center"
             spacing={2}
+            my={2}
             >
             <a href="https://www.gov.jm" target="_blank" rel="noopener noreferrer">
               <img height="150" src="/jamaica-coatofarms.png" alt="Government of Jamaica" />
@@ -76,7 +76,7 @@ export const IntroPage = () => (
               <img height="100" src="/logo-opsis.png" alt="Oxford Programme for Sustainable Infrastructure Systems" />
             </a>
           </Stack>
-          </p>
+
 
 
           <Typography variant="h2">Funding and support</Typography>
@@ -91,11 +91,11 @@ export const IntroPage = () => (
             work on "Systemic Resilience" in collaboration with the Green
             Climate Fund.</p>
 
-          <p>
           <Stack
             direction="row"
             divider={<Divider orientation="vertical" flexItem />}
             spacing={2}
+            my={2}
             justifyContent="center"
             alignItems="center"
           >
@@ -109,7 +109,6 @@ export const IntroPage = () => (
               <img height="100" src="/logo-ccri.png" alt="Coalition for Climate Resilient Investment" />
             </a>
           </Stack>
-          </p>
 
           <p><small>
             Photo credit: Hurricane Irma, 7 September 2017.
