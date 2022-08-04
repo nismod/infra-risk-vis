@@ -13,4 +13,3 @@ energy_nodes,power,generation,hydro,point,elec_nodes_hydro
 energy_nodes,power,generation,oil,point,elec_nodes_oil
 energy_nodes,power,generation,solar,point,elec_nodes_solar
 energy_nodes,power,generation,wind,point,elec_nodes_wind
-energy_targets,power,demand,demand,polygon,elec_areas_demand

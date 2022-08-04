@@ -71,9 +71,7 @@ rule networks_to_db:
 
 rule damages_rp_to_db:
     input:
-        damage=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_damages.parquet",
-        exposure=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_exposures.parquet",
-        loss=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_losses.parquet",
+        fname=f"{config['analysis_data_dir']}/vis/{{layer}}_rp_all.parquet",
     output:
         "logs/damages_rp/{layer}.txt",
     script:
@@ -82,7 +80,7 @@ rule damages_rp_to_db:
 
 rule damages_exp_to_db:
     input:
-        expected=f"{config['analysis_data_dir']}/results/direct_damages_summary_uids/{{layer}}_EAD_EAEL.parquet",
+        expected=f"{config['analysis_data_dir']}/vis/{{layer}}_exp_all.parquet",
     output:
         "logs/damages_exp/{layer}.txt",
     script:

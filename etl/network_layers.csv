@@ -1,5 +1,5 @@
 ref,damage_ref,path,gpkg_layer,asset_id_column,asset_type_column,asset_min_cost_column,asset_max_cost_column,asset_mean_cost_column,asset_cost_unit_column,base_id,count
 transport_roads_edges,road_edges,vis/road_edges.gpkg,road_edges,way_id,highway,rehab_cost_min,rehab_cost_max,rehab_cost_max,rehab_cost_unit,1000000,107968
 energy_nodes,power_nodes,vis/caribbean-generation.gpkg,caribbean,gppd_idnr,primary_fuel,,,,,2000000,120
-energy_edges,power_edges,vis/caribbean-grid.gpkg,caribbean-grid,fid,,,,,,3000000,15067
+energy_edges,power_edges,vis/caribbean-grid.gpkg,caribbean-grid,uid,,,,,,3000000,15067
 energy_targets,power_targets,vis/caribbean-targets.gpkg,targets,fid,,,,,,4000000,1632632

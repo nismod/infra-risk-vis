@@ -25,59 +25,19 @@ def yield_expected_damages(expected_fname):
                 hazard=row.hazard,
                 rcp=row.rcp,
                 epoch=row.epoch,
-                protection_standard=row.protection_standard,
+                protection_standard=0,
                 ead_amin=row.ead_amin,
                 ead_mean=row.ead_mean,
                 ead_amax=row.ead_amax,
-                eael_amin=row.eael_amin,
-                eael_mean=row.eael_mean,
-                eael_amax=row.eael_amax,
+                eael_amin=0,
+                eael_mean=0,
+                eael_amax=0,
             )
 
 
 def parse_exp_damage_batch(batch):
     """Parse a parquet (arrow) row batch to pandas"""
     data = batch.to_pandas()
-    # parquet files come in "fat" format, with string column names representing
-    # damage type, defended status, and min/mean/max suffix
-    data_cols = [c for c in batch.schema.names if "EA" in c]
-
-    # no protection_standard in list by default, append if in scheme
-    id_vars = ["uid", "hazard", "rcp", "epoch"]
-    if "protection_standard" in batch.schema.names:
-        id_vars.append("protection_standard")
-
-    # melt to long format
-    data = (
-        data.melt(id_vars=id_vars, value_vars=data_cols)
-        .query("value > 0")
-        .reset_index(drop=True)
-    )
-
-    # parse string key column for metadata
-    meta = data.variable.str.extract(r"^([^_]+)_(\w+)_([^_]+)$")
-    meta.columns = ["damage", "defended", "var"]
-
-    # join metadata columns
-    data = data.join(meta)
-    if "protection_standard" not in batch.schema.names:
-        data["protection_standard"] = 0
-    else:
-        data.loc[data.defended == "undefended", "protection_standard"] = 0
-
-    # pivot back up so we end with a row per uid, hazard etc. (see index columns below)
-    # and columns for each damage type, each with min/mean/max
-    data = (
-        data.drop(columns="variable")
-        .pivot(
-            index=["uid", "hazard", "rcp", "epoch", "protection_standard"],
-            columns=["damage", "var"],
-            values="value",
-        )
-        .fillna(0)
-    )
-
-    data.columns = [f"{var.lower()}_{stat}" for var, stat in data.columns]
 
     # ensure all columns are present - may be missing in case the data didn't
     # have any non-zero values in this batch
