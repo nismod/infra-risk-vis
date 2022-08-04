@@ -11,7 +11,6 @@ import { StyleSelection } from 'sidebar/StyleSelection';
 import { DamageSourceControl } from './DamageSourceControl';
 import { SidebarPanelSection } from 'sidebar/ui/SidebarPanelSection';
 import { networksStyleStateEffect, sectionStyleValueState } from 'state/sections';
-import { AdaptationControl } from './AdaptationControl';
 import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 
 export const NetworksSection: FC<{}> = () => {
@@ -23,7 +22,7 @@ export const NetworksSection: FC<{}> = () => {
         <SidebarPanelSection>
           <NetworkControl />
         </SidebarPanelSection>
-        {/* <SidebarPanelSection variant="style">
+        <SidebarPanelSection variant="style">
           <StyleSelection id="assets" />
           <TransitionGroup>
             {style === 'damages' ? (
@@ -31,13 +30,8 @@ export const NetworksSection: FC<{}> = () => {
                 <DamageSourceControl />
               </Collapse>
             ) : null}
-            {style === 'adaptation' ? (
-              <Collapse>
-                <AdaptationControl />
-              </Collapse>
-            ) : null}
           </TransitionGroup>
-        </SidebarPanelSection> */}
+        </SidebarPanelSection>
       </ErrorBoundary>
     </SidebarPanel>
   );
