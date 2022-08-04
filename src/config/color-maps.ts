@@ -37,8 +37,8 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   damages: {
     scale: d3Scale.scaleSequential,
     scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
-    range: [0, 1e6],
-    empty: '#ccc',
+    range: [0, 1e5],
+    empty: 'rgba(160,160,160,0.4)',
   },
   population: {
     scale: d3Scale.scaleSequential,
