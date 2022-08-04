@@ -6,6 +6,7 @@ import ujson as json
 
 from geoalchemy2.shape import to_shape
 from shapely.geometry import mapping
+from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 from tqdm import tqdm
 
@@ -37,7 +38,7 @@ def yield_features_for_layer(layer: str):
     db: Session
     with SessionLocal() as db:
         query = (
-            db.query(Feature)
+            select(Feature)
             .options(selectinload(Feature.damages_expected))
             .filter(Feature.layer == layer)
             .execution_options(yield_per=1000)
