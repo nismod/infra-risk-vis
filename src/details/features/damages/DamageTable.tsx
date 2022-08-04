@@ -11,10 +11,7 @@ export const DamageTable = ({ damages }) => (
           </TableCell>
           <TableCell sx={padding}>Epoch</TableCell>
           <TableCell sx={padding} align="right">
-            <abbr title="Expected Annual Damages">EAD (J$)</abbr>
-          </TableCell>
-          <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
-            <abbr title="Expected Annual Economic Losses">EAEL</abbr> (J$/day)
+            <abbr title="Expected Annual Damages">EAD (USD)</abbr>
           </TableCell>
         </TableRow>
       </TableHead>
@@ -25,14 +22,6 @@ export const DamageTable = ({ damages }) => (
             <TableCell sx={padding}>{epoch}</TableCell>
             <TableCell sx={padding} align="right">
               {numFormat(ead_mean)}<br/>({numRangeFormat(ead_amin, ead_amax)})
-            </TableCell>
-            <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
-              {
-                eael_amax? numFormat(eael_mean) : '-'
-              }<br/>{
-                eael_amax? `(${numRangeFormat(eael_amin, eael_amax)})` : null
-              }
-
             </TableCell>
           </TableRow>
         ))}

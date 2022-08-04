@@ -51,10 +51,6 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
         id: 'elec_edges',
         label: 'Transmission Lines',
       },
-      {
-        id: 'elec_areas_demand',
-        label: 'Demand',
-      },
     ],
   },
   {

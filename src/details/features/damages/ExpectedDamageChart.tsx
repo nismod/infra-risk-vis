@@ -8,55 +8,93 @@ const makeSpec = (yearValues: number[], field_min: string, field: string, field_
   data: {
     name: 'table',
   },
-  mark: {
-    type: 'line',
-    point: {
-      filled: true,
+  layer: [
+    {
+      "mark": "errorbar",
+      "encoding": {
+        x: {
+          field: 'epoch',
+        },
+        y: {
+          field: field_max,
+          type: 'quantitative',
+        },
+        y2: {
+          field: field_min
+        },
+        color: {
+          field: 'rcp',
+          type: 'ordinal',
+          scale: {
+            domain: ['baseline', '4.5', '8.5'],
+          },
+          title: 'RCP',
+          legend: {
+            orient: 'bottom',
+            direction: 'horizontal',
+          },
+        },
+        tooltip: [
+          { field: field, type: 'quantitative', format: ',.3r', title: field_title },
+          { field: field_min, type: 'quantitative', format: ',.3r', title: "Lower bound" },
+          { field: field_max, type: 'quantitative', format: ',.3r', title: "Upper bound" },
+          { field: 'rcp', title: 'RCP' },
+          { field: 'epoch', type: 'ordinal', title: 'Year' },
+        ]
+      }
     },
-    tooltip: true,
-  },
-  encoding: {
-    x: {
-      field: 'epoch',
-      type: 'ordinal',
-      title: 'Year',
-      axis: {
-        gridDash: [2, 2],
-        domainColor: '#ccc',
-        tickColor: '#ccc',
-        values: yearValues,
+    {
+      mark: {
+        type: 'line',
+        point: {
+          filled: true,
+        },
+        tooltip: true,
       },
-    },
-    y: {
-      field: field,
-      type: 'quantitative',
-      title: field_title,
-      axis: {
-        gridDash: [2, 2],
-        domainColor: '#ccc',
-        tickColor: '#ccc',
-      },
-    },
+      encoding: {
+        x: {
+          field: 'epoch',
+          type: 'ordinal',
+          title: 'Year',
+          axis: {
+            gridDash: [2, 2],
+            domainColor: '#ccc',
+            tickColor: '#ccc',
+            values: yearValues,
+          },
+        },
+        y: {
+          field: field,
+          type: 'quantitative',
+          title: field_title,
+          axis: {
+            gridDash: [2, 2],
+            domainColor: '#ccc',
+            tickColor: '#ccc',
+          },
+        },
 
-    color: {
-      field: 'rcp',
-      type: 'ordinal',
-      scale: {
-        domain: ['baseline', '2.6', '4.5', '8.5'],
-      },
-      title: 'RCP',
-      legend: {
-        orient: 'bottom',
-        direction: 'horizontal',
+        color: {
+          field: 'rcp',
+          type: 'ordinal',
+          scale: {
+            domain: ['baseline', '4.5', '8.5'],
+          },
+          title: 'RCP',
+          legend: {
+            orient: 'bottom',
+            direction: 'horizontal',
+          },
+        },
+        // the tooltip encoding needs to replicate the field definitions in order to customise their ordering
+        tooltip: [
+          { field: field, type: 'quantitative', format: ',.3r', title: field_title },
+          { field: 'rcp', title: 'RCP' },
+          { field: 'epoch', type: 'ordinal', title: 'Year' },
+        ],
       },
     },
-    // the tooltip encoding needs to replicate the field definitions in order to customise their ordering
-    tooltip: [
-      { field: field, type: 'quantitative', format: ',.3r', title: field_title },
-      { field: 'rcp', title: 'RCP' },
-      { field: 'epoch', type: 'ordinal', title: 'Year' },
-    ],
-  },
+  ]
 });
 
 export const ExpectedDamageChart = ({ data, field, field_min, field_max, field_title, ...props }) => {

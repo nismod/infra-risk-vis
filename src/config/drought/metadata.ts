@@ -15,7 +15,7 @@ export const DROUGHT_RISK_VARIABLE_LABELS: ValueLabel<DroughtRiskVariableType>[]
   },
   {
     value: 'eael',
-    label: 'Expected Annual Economic Losses (J$/Day)',
+    label: 'Expected Annual Economic Losses (USD/Day)',
   },
 ];
 
@@ -33,7 +33,7 @@ export type DroughtOptionsVariableType = typeof DROUGHT_OPTIONS_VARIABLES[number
 export const DROUGHT_OPTIONS_VARIABLE_LABELS: ValueLabel<DroughtOptionsVariableType>[] = [
   {
     value: 'cost_jmd',
-    label: 'Cost (J$)',
+    label: 'Cost (USD)',
   },
   {
     value: 'population_protected',

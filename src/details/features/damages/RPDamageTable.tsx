@@ -10,10 +10,7 @@ export const RPDamageTable = ({ damages }) => (
           <TableCell sx={padding}>
             <abbr title="Representative Concentration Pathway (Climate Scenario)">RCP</abbr>
           </TableCell>
-          <TableCell sx={padding} align="right">Damages (J$)</TableCell>
-          <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
-            Loss (J$/day)
-          </TableCell>
+          <TableCell sx={padding} align="right">Damages (USD)</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -23,14 +20,6 @@ export const RPDamageTable = ({ damages }) => (
             <TableCell sx={{pl:0,pr:padding.px,py:padding.py}}>{d.rcp}</TableCell>
             <TableCell sx={padding} align="right">
               {numFormat(d.damage_mean)}<br/>({numRangeFormat(d.damage_amin, d.damage_amax)})
-            </TableCell>
-            <TableCell sx={{pr:0,pl:padding.px,py:padding.py}} align="right">
-              {
-                d.loss_amax? numFormat(d.loss_mean) : '-'
-              }<br/>{
-                d.loss_amax? `(${numRangeFormat(d.loss_amin, d.loss_amax)})` : null
-              }
-
             </TableCell>
           </TableRow>
         ))}

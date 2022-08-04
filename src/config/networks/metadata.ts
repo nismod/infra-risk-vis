@@ -53,12 +53,6 @@ export const NETWORKS_METADATA = makeConfig([
     color: COLORS.electricity_high.css,
   },
   {
-    id: 'elec_areas_demand',
-    type: 'polygon',
-    label: 'Power Demand',
-    color: COLORS.electricity_low.css,
-  },
-  {
     id: 'elec_nodes_biomass',
     type: 'circle',
     label: 'Power Generation (Biomass)',
