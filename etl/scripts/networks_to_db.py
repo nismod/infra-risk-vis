@@ -34,8 +34,6 @@ def yield_features(layer, network_tilelayer, analysis_data_dir):
         }
 
         for i, feature in enumerate(src):
-            if "id" in feature and "fid" not in feature["properties"]:
-                feature["properties"]["fid"] = int(feature["id"])
             geom = transform(t, shape(feature["geometry"]))
             if geom.has_z:
                 geom = transform(to_2d, geom)
