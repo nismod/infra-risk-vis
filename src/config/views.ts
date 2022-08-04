@@ -10,7 +10,7 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     assets: {
       expanded: true,
       visible: true,
-      styles: ['type'],
+      styles: ['type', 'damages'],
       defaultStyle: 'type',
     },
     hazards: {
@@ -25,8 +25,8 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       defaultStyle: 'type',
     },
     regions: {
-      expanded: false,
-      visible: false,
+      expanded: true,
+      visible: true,
 
       styles: ['boundaries', 'population'],
       defaultStyle: 'boundaries',
