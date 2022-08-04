@@ -15,19 +15,15 @@ export function regionLabelsDeckLayer(level: RegionLevel, background: Background
     mvtLayer({
       id: `boundaries_${level}-text`,
       data: `/vector/data/regions_${level}_labels.json`,
-      loadOptions: {
-        mvt: {
-          layers: ['labels'],
-        },
-      },
       binary: false,
       minZoom: config.minZoom,
       pointType: 'text',
       getText: (f) => f.properties[config.fieldName],
-      getTextSize: 24,
+      getTextSize: config.textSize,
       getTextColor: color,
-      textFontFamily: 'Arial',
+      textFontFamily: 'Arial, sans-serif',
       textFontWeight: 'bold',
+      textCharacterSet: 'auto',
       getPolygonOffset: ({ layerIndex }) => [0, -layerIndex * 100 - 2000],
 
       // won't work before deck.gl v8.7.0 is released (textFontSettings isn't mapped correctly)

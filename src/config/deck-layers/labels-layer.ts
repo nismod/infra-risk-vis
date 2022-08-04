@@ -21,6 +21,7 @@ export function labelsLayer(isRetina: boolean) {
       ],
       refinementStrategy: 'no-overlap',
       getPolygonOffset: ({ layerIndex }) => [0, -layerIndex * 100 - 2000],
+      minZoom: 12,
     },
   );
 }

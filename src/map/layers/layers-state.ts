@@ -4,7 +4,7 @@ import { BackgroundName } from '../../config/backgrounds';
 
 export const backgroundState = atom<BackgroundName>({
   key: 'background',
-  default: 'light',
+  default: 'satellite',
 });
 
 export const showLabelsState = atom<boolean>({
