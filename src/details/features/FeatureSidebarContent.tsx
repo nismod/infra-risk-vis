@@ -151,7 +151,7 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
                 <Download />
               </IconButton>
               <DamagesSection fd={featureDetails} />
-              <AdaptationSection fd={featureDetails} />
+              {/* <AdaptationSection fd={featureDetails} /> */}
             </>
           )}
         </>
