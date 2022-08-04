@@ -105,14 +105,34 @@ export const DataPage = () => (
         <TableBody>
           <TableRow>
             <TableCell>River and coastal flooding</TableCell>
-            <TableCell>WRI Aqueduct</TableCell>
+            <TableCell>
+              <a href="https://www.wri.org/data/aqueduct-floods-hazard-maps">
+                WRI Aqueduct Floods Hazard Maps
+              </a>
+            </TableCell>
             <TableCell>1/20, 1/50, 1/100, 1/200, 1/500, and 1/1500</TableCell>
             <TableCell>Flood depths in meters over 100m grid squares</TableCell>
-            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission&nbsp;scenarios.<br/>Current + future maps in 2050 and 2080</TableCell>
+            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission&nbsp;scenarios.<br/>Current + future maps in 2030, 2050 and 2080</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Tropical cyclones (winds)</TableCell>
-            <TableCell><a href="https://data.4tu.nl/articles/dataset/STORM_IBTrACS_present_climate_synthetic_tropical_cyclone_tracks/12706085/2">STORM IBTrACS model</a></TableCell>
+            <TableCell>
+              STORM tropical cyclone wind speed return periods
+              <ul>
+                <li>
+                  <a href="https://data.4tu.nl/articles/dataset/STORM_tropical_cyclone_wind_speed_return_periods/12705164">
+                  Current climate
+                  </a>
+                  &nbsp;DOI: 10.4121/12705164.v3
+                </li>
+                <li>
+                  <a href="https://data.4tu.nl/articles/dataset/STORM_climate_change_tropical_cyclone_wind_speed_return_periods/14510817">
+                  &nbsp;Future climates
+                  </a>
+                  DOI: 10.4121/14510817.v3
+                </li>
+              </ul>
+            </TableCell>
             <TableCell>Annual exceedance probabilities from 1/10 to 1/1000</TableCell>
             <TableCell>10 minute sustained maximum wind speeds in m/s at 10km grid squares</TableCell>
             <TableCell>RCP 8.5 emission scenarios.<br/>Current + future maps in 2050</TableCell>
@@ -139,26 +159,35 @@ export const DataPage = () => (
             <TableCell rowSpan={2}>Energy</TableCell>
             <TableCell>Generation</TableCell>
             <TableCell>power plants</TableCell>
-            <TableCell>Global Powerplants Database</TableCell>
+            <TableCell>
+              <a href="https://datasets.wri.org/dataset/globalpowerplantdatabase" target="_blank" rel="noopener noreferrer">
+                Global Powerplants Database
+              </a>
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Transmission lines</TableCell>
             <TableCell>km lines</TableCell>
-            <TableCell>Gridfinder</TableCell>
+            <TableCell>
+              <a href="https://doi.org/10.5281/zenodo.3628142" target="_blank" rel="noopener noreferrer">
+                Gridfinder
+              </a>
+            </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell rowSpan={2}>Transport</TableCell>
-            <TableCell>Railways</TableCell>
-            <TableCell>stations, km tracks</TableCell>
-          </TableRow>
-          <TableRow>
+            <TableCell>Transport</TableCell>
             <TableCell>Roads</TableCell>
             <TableCell>km roads</TableCell>
+            <TableCell rowSpan={2}>
+              <a href="https://www.openstreetmap.org/#map=6/18.370/-72.894" target="_blank" rel="noopener noreferrer">
+                OpenStreetMap
+              </a>
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Buildings</TableCell>
+            <TableCell>Buildings</TableCell>
             <TableCell>buildings</TableCell>
-            <TableCell>OpenStreetMap</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -166,8 +195,8 @@ export const DataPage = () => (
 
     <h2>Contextual Map Data</h2>
 
-    <p>Background map data is &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>.</p>
+    <p>Background map data is &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer">CARTO</a>.</p>
 
-    <p>Satellite imagery background is derived from <a href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020).</p>
+    <p>Satellite imagery background is derived from <a href="https://s2maps.eu" target="_blank" rel="noopener noreferrer">Sentinel-2 cloudless - https://s2maps.eu</a> by <a href="https://eox.at" target="_blank" rel="noopener noreferrer">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020).</p>
   </article>
 );
