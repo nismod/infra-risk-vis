@@ -17,6 +17,7 @@ const makeSpec = (yearValues: number[], field_min: string, field: string, field_
         },
         y: {
           field: field_max,
+          title: field_title,
           type: 'quantitative',
         },
         y2: {

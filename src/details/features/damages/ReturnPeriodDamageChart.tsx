@@ -22,7 +22,7 @@ const makeSpec = (rpValues: number[], field_min: string, field: string, field_ma
           type: 'quantitative',
         },
         y2: {
-          field: field_min
+          field: field_min,
         },
 
         color: {
@@ -113,7 +113,11 @@ export const ReturnPeriodDamageChart = ({ data, field, field_min, field_max, fie
       field_max,
       field_title,
     ),
-    [data]
+    [data,
+      field_min,
+      field,
+      field_max,
+      field_title,]
   );
 
   return <VegaLite data={data} spec={spec as any} {...props} />;
