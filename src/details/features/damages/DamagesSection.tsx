@@ -224,7 +224,7 @@ export const DamagesSection = ({ fd }) => {
           </>
         ) : (
           <Typography variant="body2" color="textSecondary">
-            No direct damages or indirect losses estimated.
+            No direct damages estimated.
           </Typography>
         )}
       </Box>
@@ -284,7 +284,7 @@ export const DamagesSection = ({ fd }) => {
           </>
         ) : (
           <Typography variant="body2" color="textSecondary">
-            No direct damages or indirect losses estimated.
+            No direct damages estimated.
           </Typography>
         )}
       </Box>
