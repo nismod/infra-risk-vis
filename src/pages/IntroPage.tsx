@@ -28,7 +28,7 @@ export const IntroPage = () => (
           <Typography variant="h1">
 
             Climate-related risk analytics for transport, energy &amp; water
-            infrastructure in Jamaica
+            infrastructure in East Africa
 
           </Typography>
         </HeadingBox>
@@ -36,28 +36,30 @@ export const IntroPage = () => (
       <Grid item xs={6}>
         <TextBox sx={{mt:-2, pt:8}}>
           <p>
-            The Jamaica Systemic Risk Assessment Tool (J&#8209;SRAT) supports
+            The Systemic Risk Assessment Tool (SRAT) supports
             climate adaptation decision-making by identifying spatial
             criticalities and risks under current and future climate scenarios.
           </p>
-          <Typography variant="h2">Transport</Typography>
-          <p>Roads, rail, ports and airports.</p>
-          <Typography variant="h2">Energy</Typography>
-          <p>Electricity generation, transmission and distribution.</p>
-          <Typography variant="h2">Water</Typography>
-          <p>Water supply, wastewater and irrigation.</p>
+          <Typography variant="h2">Road</Typography>
+          <p>Major and minor roads.</p>
+          <Typography variant="h2">Rail</Typography>
+          <p>Rail lines and stations.</p>
 
         </TextBox>
       </Grid>
       <Grid item xs={12}>
         <TextBox sx={{backgroundColor: 'rgba(255, 255, 255, 0.9)'}}>
 
-          <p>The research, analysis and development has been led by
-            researchers in the&nbsp;<a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">Oxford Programme for
-            Sustainable Infrastructure Systems</a>, University of Oxford, in collaboration with
-            the Planning Institute of Jamaica and supported by engagement with
-            infrastructure and climate specialists and related government
-            bodies.</p>
+          <p>The research, analysis and development has been led by researchers
+          in the University of Southampton's <a
+          href="https://www.southampton.ac.uk/research/groups/transportation-group"
+          target="_blank" rel="noopener noreferrer">Transportation Research
+          Group</a> and the <a href="https://opsis.eci.ox.ac.uk/"
+          target="_blank" rel="noopener noreferrer">Oxford Programme for
+          Sustainable Infrastructure Systems</a>, University of Oxford, and
+          supported by engagement with infrastructure and climate specialists
+          and related government bodies.</p>
+
           <p>
           <Stack
             direction="row"
@@ -67,11 +69,9 @@ export const IntroPage = () => (
             alignItems="center"
             spacing={2}
             >
-            <a href="https://www.gov.jm" target="_blank" rel="noopener noreferrer">
-              <img height="150" src="/jamaica-coatofarms.png" alt="Government of Jamaica" />
-            </a>
-            <a href="https://www.pioj.gov.jm/" target="_blank" rel="noopener noreferrer">
-              <img height="150" src="/jamaica-pioj.png" alt="Planning Institute of Jamaica" />
+            <a href="https://www.southampton.ac.uk/research/groups/transportation-group"
+              target="_blank" rel="noopener noreferrer">
+              Transportation Research Group
             </a>
             <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
               <img height="100" src="/logo-opsis.png" alt="Oxford Programme for Sustainable Infrastructure Systems" />
@@ -82,15 +82,9 @@ export const IntroPage = () => (
 
           <Typography variant="h2">Funding and support</Typography>
 
-          <p>This project is led by researchers in the&nbsp;
-            <a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">Oxford Programme for
-            Sustainable Infrastructure Systems</a> in the Environmental Change
-            Institute, University of Oxford, with the Government of
-            Jamaica (GoJ), funded by UK Aid through the UK Foreign and
-            Commonwealth Development Office (FCDO). The initiative forms part
-            of the Coalition for Climate Resilient Investment&rsquo;s (CCRI)
-            work on "Systemic Resilience" in collaboration with the Green
-            Climate Fund.</p>
+          <p>This research was funded by UKAID through the UK Foreign,
+          Commonwealth &amp; Development Office under the High Volume Transport
+          Applied Research Programme, managed by IMC Worldwide. </p>
 
           <Stack
             direction="row"
@@ -102,11 +96,8 @@ export const IntroPage = () => (
             <a href="https://www.gov.uk/guidance/uk-aid" target="_blank" rel="noopener noreferrer">
               <img height="100" src="/logo-ukaid.png" alt="UK AID" />
             </a>
-            <a href="https://www.greenclimate.fund/" target="_blank" rel="noopener noreferrer">
-              <img height="100" src="/logo-gcf.png" alt="Green Climate Fund" />
-            </a>
-            <a href="https://resilientinvestment.org/" target="_blank" rel="noopener noreferrer">
-              <img height="100" src="/logo-ccri.png" alt="Coalition for Climate Resilient Investment" />
+            <a href="https://www.imcworldwide.com/project/hvt/" target="_blank" rel="noopener noreferrer">
+              IMC Worldwide
             </a>
           </Stack>
 

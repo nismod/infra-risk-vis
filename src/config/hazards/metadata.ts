@@ -17,5 +17,5 @@ export const HAZARDS_METADATA = {
   },
 };
 
-export const HAZARDS_MAP_ORDER = ['cyclone', 'fluvial', 'surface', 'coastal'];
-export const HAZARDS_UI_ORDER = ['fluvial', 'surface', 'coastal', 'cyclone'];
+export const HAZARDS_MAP_ORDER = ['fluvial', 'coastal'];
+export const HAZARDS_UI_ORDER = ['fluvial', 'coastal'];

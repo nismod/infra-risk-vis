@@ -13,9 +13,6 @@ export const SECTIONS_CONFIG: Record<string, { styles?: Record<string, StyleSele
     styles: DROUGHT_STYLES,
   },
   hazards: {},
-  buildings: {
-    styles: BUILDING_STYLES,
-  },
   regions: {
     styles: REGION_STYLES,
   },

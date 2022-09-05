@@ -34,18 +34,6 @@ export const HazardsControl = () => {
           </InputSection>
         </ToggleSection>
 
-        <ToggleSection id="surface" label="Surface Flooding" disabled={disabled}>
-          <InputSection>
-            <ReturnPeriodControl group="surface" param="returnPeriod" disabled={disabled} />
-          </InputSection>
-          <InputSection>
-            <InputRow>
-              <EpochControl group="surface" disabled={disabled} />
-              <RCPControl group="surface" disabled={disabled} />
-            </InputRow>
-          </InputSection>
-        </ToggleSection>
-
         <ToggleSection id="coastal" label="Coastal Flooding" disabled={disabled}>
           <InputSection>
             <ReturnPeriodControl group="coastal" param="returnPeriod" disabled={disabled} />
@@ -58,22 +46,6 @@ export const HazardsControl = () => {
           </InputSection>
         </ToggleSection>
 
-        <ToggleSection id="cyclone" label="Cyclones" disabled={disabled}>
-          <InputSection>
-            <ReturnPeriodControl
-              group="cyclone"
-              valueLabelDisplay="auto"
-              showMarkLabelsFor={[10, 50, 100, 500, 1000, 5000, 10000]}
-              disabled={disabled}
-            />
-          </InputSection>
-          <InputSection>
-            <InputRow>
-              <EpochControl group="cyclone" disabled={disabled} />
-              <RCPControl group="cyclone" disabled={disabled} />
-            </InputRow>
-          </InputSection>
-        </ToggleSection>
       </ToggleSectionGroup>
     </>
   );

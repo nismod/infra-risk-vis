@@ -21,8 +21,6 @@ function hazardLabel(val) {
   switch (val) {
     case 'flooding':
       return 'Flooding';
-    case 'TC':
-      return 'Cyclones';
     default:
       throw new Error('Unsupported hazard type: ' + val);
   }

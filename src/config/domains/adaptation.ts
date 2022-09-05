@@ -14,12 +14,12 @@ export interface AdaptationOptionParams {
 
 export const adaptationDomainsConfig: DataParamGroupConfig<AdaptationOptionParams> = {
   paramDefaults: {
-    sector: 'power',
-    subsector: 'transmission',
-    asset_type: 'pole',
+    sector: 'transport',
+    subsector: 'road',
+    asset_type: 'CLASS A',
     hazard: 'flooding',
-    rcp: '2.6',
-    adaptation_name: 'Building protective wall',
+    rcp: '4.5',
+    adaptation_name: 'Elevate the roads',
     adaptation_protection_level: 1,
   },
   paramDomains: inferDomainsFromData<AdaptationOptionParams>(adaptationOptions),

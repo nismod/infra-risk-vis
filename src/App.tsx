@@ -7,6 +7,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Nav } from './Nav';
 import { IntroPage } from './pages/IntroPage';
 import { MapPage } from './pages/MapPage';
+import { AssessmentPage } from 'pages/AssessmentPage';
 import { DataPage } from './pages/DataPage';
 import { theme } from './theme';
 
@@ -30,6 +31,10 @@ export const App = () => {
                 path="/:view(exposure|risk|adaptation|nature-based-solutions)"
                 render={({ match: { params } }) => <MapPage view={params.view} />}
               />
+              <Route path="/assessment" exact>
+                <Toolbar /> {/* Prevents app bar from concealing content*/}
+                <AssessmentPage />
+              </Route>
               <Route path="/data" exact>
                 <Toolbar /> {/* Prevents app bar from concealing content*/}
                 <DataPage />
