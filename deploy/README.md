@@ -70,7 +70,7 @@ Transfer tileserver raster data to the server, then ingest to terracotta:
 
 ```bash
 terracotta ingest \
-    "/var/www/tileserver/raster/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif" \
+    "/var/www/tileserver/raster/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__gcm_{gcm}.tif" \
     -o "/var/www/tileserver/raster/terracotta.sqlite"
 ```
 
@@ -88,12 +88,19 @@ that whoever runs the script has ssh/public key access to the server.
 
 Usually this involves running `deploy.sh` and that will be sufficient.
 
-If you need to restart the raster tileserver:
+If you need to run the raster tileserver without using systemd service.
+(I got into enviromnent management difficulties with rasterio and
+ended up with a micromamba environment that I don't know how to activate
+from systemd context).
 
 ```bash
-# restart the service
-sudo systemctl restart terracotta
-# check nginx can access the socket
+# find any nohup services already running - kill the top PID and check again
+lsof | grep nohup.out
+
+# activate and run
+micromamba activate raster
+nohup bash run_terracotta.sh &
+# ensure nginx can access the socket
 sudo chown :www-data /var/www/tileserver/raster/terracotta.sock
 ```
 
@@ -118,33 +125,29 @@ sudo python3.10 -m pip install testresources
 sudo mkdir /var/www/backend
 sudo chown -R :ubuntu /var/www/backend/
 sudo chmod -R 775 /var/www/backend/
-```
-
-Run `deploy.sh` locally to copy over the backend package, including Python
-package `requirements.txt`
-
-```bash
-# Install Python requirements
-cd /var/www/backend
-sudo python3.10 -m pip install -r requirements.txt
 
 # Create backend service
 sudo touch /etc/systemd/system/backend.service
 # edit or copy from ./config/etc/systemd/system/backend.service
-sudo systemctl start backend.service
-# Check status
-systemctl status backend
-journalctl -u backend
 ```
 
 Copy secret `PG*` variables for connection to database in EnvironmentFile as
-configured in backend.service, something like:
+configured in backend.service `/var/www/backend/.env.prod`, something like:
 
 ```conf
 PGDATABASE=jamaica
 PGUSER=docker
 PGPASSWORD=docker
 PGHOST=localhost
+```
+
+Run `deploy.sh` locally to copy over the backend package, including Python
+package `requirements.txt`, install packages and start/restart service.
+
+```bash
+# Check status
+systemctl status backend
+journalctl -u backend
 ```
 
 To restart:
@@ -156,11 +159,13 @@ sudo systemctl restart backend
 sudo chown :www-data /var/www/backend/backend.sock
 ```
 
-Testing database connection
+Testing database connection on server:
 
+```bash
 cd /var/www/backend/
 set -a
 source .env.prod
 set +a
-sudo apt install postgresql-client
+# if needed: sudo apt install postgresql-client
 psql
+```

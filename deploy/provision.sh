@@ -5,6 +5,12 @@
 # - assuming OS is Ubuntu 20.04 LTS
 #
 
+# Swap in case of overload
+sudo fallocate -l 1G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
 # Install apt packages (NGINX, build requirements, GDAL)
 sudo apt-get update
 sudo apt-get install -y \
