@@ -7,13 +7,6 @@ export const DataPage = () => (
   <article>
     <ScrollToTop />
     <p>
-      <Alert severity="info">The systemic risk analysis results shown in this
-        tool contain licensed data that must not be shared outside the Government of
-        Jamaica. By accessing the tool, you acknowledge that you understand this and
-        agree not to download any data or share your access credentials with anyone
-        else.</Alert>
-    </p>
-    <p>
       <Alert
         severity="success"
         action={
@@ -48,22 +41,25 @@ export const DataPage = () => (
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>Transport</TableCell>
-            <TableCell>Road links and railway lines, ports and airports</TableCell>
+            <TableCell>Road</TableCell>
+            <TableCell>Trunk, motorway, primary, secondary and tertiary roads</TableCell>
             <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
             <TableCell>Rerouting costs + wider effects of service disruption</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Energy</TableCell>
-            <TableCell>Electricity transmission and distribution: generation, lines, poles and substations</TableCell>
+            <TableCell>Rail</TableCell>
+            <TableCell>Rail lines and stations</TableCell>
             <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
             <TableCell>Wider effects of service disruption</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Water</TableCell>
-            <TableCell>Water supply and wastewater networks, wells and irrigation canals</TableCell>
-            <TableCell>Cost of rehabilitation/reinstating damaged assets</TableCell>
-            <TableCell>Wider effects of service disruption</TableCell>
+            <TableCell>Ports and airports</TableCell>
+            <TableCell>Major sea and inland ports, international airports</TableCell>
+            <TableCell>Not assessed for damages</TableCell>
+            <TableCell>
+              Included in the network as sources/sinks for transport flow mapping,
+              but not assessed for effects of service disruption due to flooding.
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -95,25 +91,20 @@ export const DataPage = () => (
       </li>
     </ul>
 
-    <p>The analytics for Jamaica are produced using the code and models here:</p>
+    <p>The analytics for Kenya, Tanzania, Uganda and Zambia are produced using
+    the code and models here:</p>
 
     <ul>
       <li>
-        <a href="https://github.com/nismod/jamaica-infrastructure" target="blank">
-          github.com/nismod/jamaica-infrastructure
+        <a href="https://github.com/nismod/east-africa-transport" target="blank">
+          github.com/nismod/east-africa-transport
         </a>
       </li>
     </ul>
+
     <h1>Data Sources and Access</h1>
 
-    <p>Data comes from multiple sources, including Government of Jamaica bodies,
-    private sector entities, and open data sources.</p>
-
-    <Alert severity="info">The systemic risk analysis results shown in this
-    tool contain licensed data that must not be shared outside the Government of
-    Jamaica. By accessing the tool, you acknowledge that you understand this and
-    agree not to download any data or share your access credentials with anyone
-    else.</Alert>
+    <p>Data comes from multiple open data sources.</p>
 
     <h2>Hazard Data</h2>
 
@@ -130,34 +121,15 @@ export const DataPage = () => (
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>Fluvial (river) and pluvial (surface) flooding</TableCell>
+            <TableCell>River and coastal flooding</TableCell>
             <TableCell>
-              <img src="/logo-jba.png" alt="JBA Risk Management. The Flood People (R)." width="180" /><br />
-              <a href="https://www.jbarisk.com/flood-services/maps-and-analytics/global-flood-maps/">JBA global flood map product</a></TableCell>
+              <a href="https://www.wri.org/data/aqueduct-floods-hazard-maps">
+                WRI Aqueduct Floods Hazard Maps
+              </a>
+            </TableCell>
             <TableCell>1/20, 1/50, 1/100, 1/200, 1/500, and 1/1500</TableCell>
-            <TableCell>Flood depths in meters over 30m grid squares</TableCell>
-            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission&nbsp;scenarios.<br/>Current + future maps in 2050 and 2080</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Coastal flooding (storm surge)</TableCell>
-            <TableCell><a href="https://www.deltares.nl/en/news/regional-study-assess-effects-sea-level-rise-resilience-caribbean/">Deltares NL Caribbean product</a></TableCell>
-            <TableCell>1/1, 1/2, 1/5, 1/10, 1/50, 1/100</TableCell>
-            <TableCell>Flood depths in meters over 90m grid squares </TableCell>
-            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission scenarios.<br/>Current + future maps in 2030, 2050, 2070 and 2100</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Tropical cyclones (winds)</TableCell>
-            <TableCell><a href="https://data.4tu.nl/articles/dataset/STORM_IBTrACS_present_climate_synthetic_tropical_cyclone_tracks/12706085/2">STORM IBTrACS model</a></TableCell>
-            <TableCell>26 different exceedance probabilities from 1/1 to 1/10000</TableCell>
-            <TableCell>10 minute sustained maximum wind speeds in m/s at 10km grid squares</TableCell>
-            <TableCell>RCP 4.5 &amp; 8.5 emission scenarios.<br/>Current + future maps in 2050 and 2100</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Droughts</TableCell>
-            <TableCell>REGCM4</TableCell>
-            <TableCell>No exceedance probabilities</TableCell>
-            <TableCell>Daily rainfall and precipitation</TableCell>
-            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission scenarios</TableCell>
+            <TableCell>Flood depths in meters on a ~1km grid</TableCell>
+            <TableCell>Current climate and future RCP&nbsp;4.5 and 8.5 emission scenarios in 2030, 2050 and 2080</TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -173,68 +145,29 @@ export const DataPage = () => (
             <TableCell>Sector</TableCell>
             <TableCell>Sub-sector</TableCell>
             <TableCell>Asset highlights</TableCell>
-            <TableCell>Important failure attributes</TableCell>
             <TableCell>Data sources</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell rowSpan={2}>Energy</TableCell>
-            <TableCell>Generation</TableCell>
-            <TableCell>9 Power plants</TableCell>
-            <TableCell>Damage costs (J$), Population served, GDP disrupted (J$/day)</TableCell>
-            <TableCell rowSpan={2}>NSDMD, JPS, MSET, OUR, OpenStreetMap, STATIN</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Transmission &amp; Distribution</TableCell>
-            <TableCell>59 Substations, 30,000 Poles, 11,440 kms of overhead lines</TableCell>
-            <TableCell>Damage costs (J$ or J$/m), Population served, GDP disrupted (J$/day)</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell rowSpan={4}>Transport</TableCell>
-            <TableCell>Airports</TableCell>
-            <TableCell>7 airports areas</TableCell>
-            <TableCell>Damage costs (J$/m2), Annual passengers, Annual freight (tonnes)</TableCell>
-            <TableCell rowSpan={4}>NSDMD, NWA, NROCC, MTM, STATIN</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Ports</TableCell>
-            <TableCell>13 Port dock areas</TableCell>
-            <TableCell>Damage costs (J$/m2), Annual passengers, Annual freight (tonnes)</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Railways</TableCell>
-            <TableCell>20 functional stations, 201 kms of functional tracks</TableCell>
-            <TableCell>Damage costs (J$ or J$/m), Trade flow disruptions (J$/day)</TableCell>
-          </TableRow>
-          <TableRow>
+            <TableCell>Transport</TableCell>
             <TableCell>Roads</TableCell>
-            <TableCell>572 bridges, 23,200 kms of roads</TableCell>
-            <TableCell>Damage costs (J$ or J$/m), Reopening costs (J$ or J$/m), Road traffic counts, Trade flow disruptions (J$/day)</TableCell>
+            <TableCell>km roads</TableCell>
+            <TableCell>
+              <a href="https://www.openstreetmap.org/#map=6/-6.599/32.278" target="_blank" rel="noopener noreferrer">
+                OpenStreetMap
+              </a>
+            </TableCell>
           </TableRow>
           <TableRow>
-            <TableCell rowSpan={3}>Water</TableCell>
-            <TableCell>Potable water</TableCell>
-            <TableCell>1,208 point assets, 10,500 kms of pipelines</TableCell>
-            <TableCell>Damage costs (J$ or J$/m), Population served, GDP disrupted (J$/day)</TableCell>
-            <TableCell rowSpan={3}>NSDMD, WRA, NWC, NIC, STATIN</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Irrigation</TableCell>
-            <TableCell>178 Wells, 248 kms of canals and 220 kms of pipelines</TableCell>
-            <TableCell>Damage costs (J$ or J$/m), Agriculture GDP disrupted (J$/day)</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Wastewater</TableCell>
-            <TableCell>151 Point assets</TableCell>
-            <TableCell>Damage costs (J$ or J$/m)</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Buildings</TableCell>
-            <TableCell>Commercial, Industrial, Institutional, Mixed Use, Other, Recreation, Residential, Resort</TableCell>
-            <TableCell>996,682 buildings</TableCell>
-            <TableCell>Damage costs (J$/m2), GDP disrupted (J$/day)</TableCell>
-            <TableCell>OpenStreetMap, NLA, STATIN</TableCell>
+            <TableCell>Transport</TableCell>
+            <TableCell>Rail</TableCell>
+            <TableCell>km rail lines, stations</TableCell>
+            <TableCell>
+              <a href="https://www.openstreetmap.org/#map=6/-6.599/32.278" target="_blank" rel="noopener noreferrer">
+                OpenStreetMap
+              </a>
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
