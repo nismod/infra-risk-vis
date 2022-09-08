@@ -56,7 +56,7 @@ export const IntroPage = () => (
           target="_blank" rel="noopener noreferrer">Transportation Research
           Group</a> and the <a href="https://opsis.eci.ox.ac.uk/"
           target="_blank" rel="noopener noreferrer">Oxford Programme for
-          Sustainable Infrastructure Systems</a>, University of Oxford, and
+          Sustainable Infrastructure Systems</a>, University of Oxford,
           supported by engagement with infrastructure and climate specialists
           and related government bodies.</p>
 
@@ -71,10 +71,10 @@ export const IntroPage = () => (
             >
             <a href="https://www.southampton.ac.uk/research/groups/transportation-group"
               target="_blank" rel="noopener noreferrer">
-              Transportation Research Group
+              <img height="80" src="/logo-southampton.png" alt="University of Southampton Transportation Research Group" />
             </a>
             <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
-              <img height="100" src="/logo-opsis.png" alt="Oxford Programme for Sustainable Infrastructure Systems" />
+              <img height="110" src="/logo-opsis.png" alt="Oxford Programme for Sustainable Infrastructure Systems" />
             </a>
           </Stack>
           </p>
@@ -97,7 +97,10 @@ export const IntroPage = () => (
               <img height="100" src="/logo-ukaid.png" alt="UK AID" />
             </a>
             <a href="https://www.imcworldwide.com/project/hvt/" target="_blank" rel="noopener noreferrer">
-              IMC Worldwide
+              <img height="100" src="/logo-hvt.png" alt="High Volume Transport Applied Research"/>
+            </a>
+            <a href="https://www.imcworldwide.com/project/hvt/" target="_blank" rel="noopener noreferrer">
+              <img height="90" src="/logo-imc.png" alt="IMC Worldwide"/>
             </a>
           </Stack>
 
