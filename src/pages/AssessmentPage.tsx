@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import _ from 'lodash';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, TextField, Button, Select, InputLabel, FormControl, MenuItem, Slider, Collapse, Box, IconButton } from '@mui/material';
 import { Delete, KeyboardArrowDown, KeyboardArrowUp, PlayCircleOutline } from '@mui/icons-material';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { atom, selector, useRecoilState } from 'recoil';
 
 import { ValueLabel } from 'lib/controls/params/value-label';
 import ScrollToTop from 'lib/hooks/scroll-to-top';
@@ -98,6 +98,47 @@ type ScenarioKey =
   | 'economic'
   | 'energy-cost';
 
+type ScenarioStrength = Record<ScenarioKey, number>;
+
+const ZERO_SCENARIO: ScenarioStrength = {
+  'population': 0,
+  'economic': 0,
+  'energy-cost': 0
+}
+
+const SCENARIO_LABELS: ValueLabel<ScenarioKey>[] = [
+  {value: 'population', label: 'Population'},
+  {value: 'economic', label: 'Economic'},
+  {value: 'energy-cost', label: 'Energy'},
+]
+
+const SCENARIO_EFFECTS: Record<ScenarioKey, Effect> = {
+  'population': {
+      ...ZERO_EFFECT,
+      'env_ghg': -1,
+      'env_energy_use': -1,
+      'econ_passenger': 1,
+      'econ_freight': 1,
+      'soc_accidents_death': -0.5,
+      'soc_accidents_injury': -0.5,
+  },
+  'economic': {
+      ...ZERO_EFFECT,
+      'env_ghg': -1,
+      'env_energy_use': -1,
+      'econ_passenger': 1,
+      'econ_freight': 1,
+      'econ_age': 0.5,
+  },
+  'energy-cost': {
+      ...ZERO_EFFECT,
+      'env_ghg': 1,
+      'env_energy_use': 1,
+      'econ_passenger': -1,
+      'econ_freight': -1,
+  },
+};
+
 type InterventionKey =
   'fleet_elec'
   | 'fleet_eff'
@@ -109,239 +150,143 @@ type InterventionKey =
   | 'logistics_planning'
   | 'road_user_charging';
 
-class Intervention {
-  key: string
-  label: string
-  effect: Effect
+type InterventionStrength = Record<InterventionKey, number>;
+
+const ZERO_INTERVENTION: InterventionStrength = {
+  'fleet_elec': 0,
+  'fleet_eff': 0,
+  'system_eff': 0,
+  'demand_goods': 0,
+  'demand_travel': 0,
+  'infra_construction': 0,
+  'infra_maintenance': 0,
+  'logistics_planning': 0,
+  'road_user_charging': 0,
 }
 
-const SCENARIOS: Record<ScenarioKey, Intervention> = {
-  'population': {
-    key: 'population',
-    label: 'Population',
-    effect: {
-      ...ZERO_EFFECT,
-      'env_ghg': -1,
-      'env_energy_use': -1,
-      'econ_passenger': 1,
-      'econ_freight': 1,
-      'soc_accidents_death': -0.5,
-      'soc_accidents_injury': -0.5,
-    }
-  },
-  'economic': {
-    key: 'economic',
-    label: 'Economic',
-    effect: {
-      ...ZERO_EFFECT,
-      'env_ghg': -1,
-      'env_energy_use': -1,
-      'econ_passenger': 1,
-      'econ_freight': 1,
-      'econ_age': 0.5,
-    }
-  },
-  'energy-cost': {
-    key: 'energy-cost',
-    label: 'Energy',
-    effect: {
-      ...ZERO_EFFECT,
-      'env_ghg': 1,
-      'env_energy_use': 1,
-      'econ_passenger': -1,
-      'econ_freight': -1,
-    }
-  },
-};
+const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
+  {value: 'fleet_elec',  label: 'Fleet electrification'},
+  {value: 'fleet_eff',  label: 'Fleet vehicle efficiencies'},
+  {value: 'system_eff',  label: 'System efficiencies'},
+  {value: 'demand_goods',  label: 'Demand for goods'},
+  {value: 'demand_travel',  label: 'Demand for travel'},
+  {value: 'infra_construction',  label: 'Infrastructure construction'},
+  {value: 'infra_maintenance',  label: 'Infrastructure maintenance'},
+  {value: 'logistics_planning',  label: 'Logistics planning'},
+  {value: 'road_user_charging',  label: 'Road user charging'},
+];
 
-const INTERVENTIONS: Record<InterventionKey, Intervention> = {
+const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
   'fleet_elec': {
-    key: 'fleet_elec',
-    label: 'Fleet electrification',
-    effect: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
       'env_ghg': 1,
       'env_air_quality': 0.5,
       'soc_disease': 0.5,
-    }
   },
   'fleet_eff': {
-    key: 'fleet_eff',
-    label: 'Fleet vehicle efficiencies',
-    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
-    }
   },
   'system_eff': {
-    key: 'system_eff',
-    label: 'System efficiencies',
-    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
       'econ_freight': 0.5,
       'soc_passenger_time': 0.5,
-    }
   },
   'demand_goods': {
-    key: 'demand_goods',
-    label: 'Demand for goods',
-    effect: {
       ...ZERO_EFFECT,
       'env_ghg': -0.5,
       'env_energy_use': -0.5,
       'econ_freight': 1,
       'econ_freight_load': 1,
-    }
   },
   'demand_travel': {
-    key: 'demand_travel',
-    label: 'Demand for travel',
-    effect: {
       ...ZERO_EFFECT,
       'env_ghg': -0.5,
       'env_energy_use': -0.5,
       'econ_passenger': 1,
       'econ_passenger_occupancy': 1,
-    }
   },
   'infra_construction': {
-    key: 'infra_construction',
-    label: 'Infrastructure construction',
-    effect: {
       ...ZERO_EFFECT,
       'env_habitat_disruption': -1,
       'env_land': -1,
       'econ_length': 0.5,
       'econ_density': 0.5,
       'soc_passenger_length': 0.5,
-    }
   },
   'infra_maintenance': {
-    key: 'infra_maintenance',
-    label: 'Infrastructure maintenance',
-    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
       'econ_road_quality': 1,
       'soc_passenger_time': 0.5,
       'soc_noise': 0.5,
-    }
   },
   'logistics_planning': {
-    key: 'logistics_planning',
-    label: 'Logistics planning',
-    effect: {
       ...ZERO_EFFECT,
       'econ_freight_load': 0.5,
       'econ_border': 0.5,
-    }
   },
   'road_user_charging': {
-    key: 'road_user_charging',
-    label: 'Road user charging',
-    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
       'econ_freight': -0.5,
-    }
   },
 };
 
-class Assessment {
-  description: string = ""
-  notes: string = ""
-  createdAt: Date = new Date()
-  scenarios: Record<ScenarioKey, Intervention> = {...SCENARIOS}
-  interventions: Record<InterventionKey, Intervention> = {...INTERVENTIONS}
-  getScenarios() {
-    let scenarios = []
-    for (let key in this.scenarios){
-      scenarios.push(this.scenarios[key])
-    }
-    return scenarios
-  }
-  getInterventions() {
-    let interventions = []
-    for (let key in this.interventions){
-      interventions.push(this.interventions[key])
-    }
-    return interventions
-  }
+interface Assessment {
+  description: string
+  notes: string
+  createdAt: Date
+
+  interventionStrength: InterventionStrength
+  defaultInterventionEffects: Record<InterventionKey, Effect>
+  revisedInterventionEffects: Record<InterventionKey, Effect>
+
+  scenarioStrength: ScenarioStrength
+  defaultScenarioEffects: Record<ScenarioKey, Effect>
+  revisedScenarioEffects: Record<ScenarioKey, Effect>
+
+  indicatorWeights: Effect
 }
 
 const currentAssessment = atom<Assessment>({
   key: 'currentAssessment',
-  default: new Assessment()
+  default: {
+    description: "",
+    notes: "",
+    createdAt: new Date(),
+
+    interventionStrength: ZERO_INTERVENTION,
+    defaultInterventionEffects: INTERVENTION_EFFECTS,
+    revisedInterventionEffects: INTERVENTION_EFFECTS,
+
+    scenarioStrength: ZERO_SCENARIO,
+    defaultScenarioEffects: SCENARIO_EFFECTS,
+    revisedScenarioEffects: SCENARIO_EFFECTS,
+
+    indicatorWeights: _.mapValues(ZERO_EFFECT, ()=>(1)),
+  }
 });
 
-type InterventionStrength = Record<InterventionKey, number>;
-const interventionStrength = atom<InterventionStrength>({
-  key: 'interventionStrength',
-  default: {
-    'fleet_elec': 0,
-    'fleet_eff': 0,
-    'system_eff': 0,
-    'demand_goods': 0,
-    'demand_travel': 0,
-    'infra_construction': 0,
-    'infra_maintenance': 0,
-    'logistics_planning': 0,
-    'road_user_charging': 0,
-  }
-});
-type ScenarioStrength = Record<ScenarioKey, number>;
-const scenarioStrength = atom<ScenarioStrength>({
-  key: 'scenarioStrength',
-  default: {
-    'population': 0,
-    'economic': 0,
-    'energy-cost': 0
-  }
-});
-type IndicatorWeight = Record<IndicatorKey, number>;
-const indicatorWeights = atom<IndicatorWeight>({
+const indicatorWeights = selector({
   key: 'indicatorWeights',
-  default: {
-    'env_ghg': 1,
-    'env_air_quality': 1,
-    'env_energy_use': 1,
-    'env_habitat_disruption': 1,
-    'env_land': 1,
-    'econ_passenger': 1,
-    'econ_freight': 1,
-    'econ_passenger_occupancy': 1,
-    'econ_freight_load': 1,
-    'econ_age': 1,
-    'econ_road_quality': 1,
-    'econ_length': 1,
-    'econ_density': 1,
-    'econ_border': 1,
-    'soc_passenger_time': 1,
-    'soc_passenger_length': 1,
-    'soc_accidents_death': 1,
-    'soc_accidents_injury': 1,
-    'soc_accidents_death_pc': 1,
-    'soc_accidents_injury_pc': 1,
-    'soc_noise': 1,
-    'soc_disease': 1,
-    'soc_diversity': 1,
-    'soc_equality': 1,
-    'soc_inclusivity': 1,
+  get: ({get}) => {
+    const assessment = get(currentAssessment);
+    return assessment.indicatorWeights
+  },
+  set: ({get, set}, newValue) => {
+    const assessment = get(currentAssessment);
+    set(currentAssessment, {
+      ...assessment,
+      indicatorWeights: newValue
+    })
   }
-})
-const revisedInterventions = atom<Record<InterventionKey, Intervention>>({
-  key: 'revisedInterventions',
-  default: INTERVENTIONS
-})
-const revisedScenarios = atom<Record<ScenarioKey, Intervention>>({
-  key: 'revisedScenarios',
-  default: SCENARIOS
-})
+});
 
 const InterventionEffects = (
   { label, defaultEffect, revisedEffect, options, strength, setStrength, setEffect }:
@@ -517,7 +462,10 @@ const IndicatorWeights = ({label, prefix, unweighted}: {
                           assessed_value={unweighted[key]}
                           weight={currentWeights[key]}
                           setWeight={(_, weight) => {
-                            setWeights({...currentWeights, [key]: weight})
+                            setWeights({
+                              ...currentWeights,
+                              [key]: weight
+                            })
                           }}
                           />
                       )
@@ -545,23 +493,19 @@ const IndicatorTableColGroup = () => (
 )
 
 export const AssessmentPage = () => {
-  let assessment = useRecoilValue(currentAssessment)
-  const [currentInterventionStrength, setInterventionStrength] = useRecoilState(interventionStrength);
-  const [currentScenarioStrength, setScenarioStrength] = useRecoilState(scenarioStrength);
-  const [currentRevisedScenarios, setRevisedScenarios] = useRecoilState(revisedScenarios);
-  const [currentRevisedInterventions, setRevisedInterventions] = useRecoilState(revisedInterventions);
+  const [assessment, setAssessment] = useRecoilState(currentAssessment)
 
   let currentIndicatorsUnweighted: Effect = {...ZERO_EFFECT}
-  for (let key in currentRevisedScenarios) {
-    const effect: Effect = currentRevisedScenarios[key].effect
-    const strength: number = currentScenarioStrength[key]
+  for (let key in assessment.revisedScenarioEffects) {
+    const effect: Effect = assessment.revisedScenarioEffects[key]
+    const strength: number = assessment.scenarioStrength[key]
     for (let indicator in effect) {
       currentIndicatorsUnweighted[indicator] += effect[indicator] * strength
     }
   }
-  for (let key in currentRevisedInterventions) {
-    const effect: Effect = currentRevisedInterventions[key].effect
-    const strength: number = currentInterventionStrength[key]
+  for (let key in assessment.revisedInterventionEffects) {
+    const effect: Effect = assessment.revisedInterventionEffects[key]
+    const strength: number = assessment.interventionStrength[key]
     for (let indicator in effect) {
       currentIndicatorsUnweighted[indicator] += effect[indicator] * strength
     }
@@ -643,36 +587,45 @@ export const AssessmentPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {assessment.getInterventions().map((intervention) => (
-                <InterventionEffects
-                  key={intervention.key}
-                  label={intervention.label}
-                  defaultEffect={intervention.effect}
-                  revisedEffect={currentRevisedInterventions[intervention.key].effect}
-                  strength={currentInterventionStrength[intervention.key]}
-                  setStrength={(e) => {
-                    setInterventionStrength({...currentInterventionStrength, [intervention.key]: e.target.value})
-                  }}
-                  setEffect={(key, value) => {
-                    const currentEffect = currentRevisedInterventions[intervention.key].effect;
-
-                    setRevisedInterventions({
-                      ...currentRevisedInterventions,
-                      [intervention.key]: {
-                        ...intervention,
-                        effect: {
-                          ...currentEffect,
-                          [key]: value
+              {_.map(INTERVENTION_LABELS, (intervention) => {
+                const i_key = intervention.value;
+                return (
+                  <InterventionEffects
+                    key={intervention.value}
+                    label={intervention.label}
+                    defaultEffect={assessment.defaultInterventionEffects[i_key]}
+                    revisedEffect={assessment.revisedInterventionEffects[i_key]}
+                    strength={assessment.interventionStrength[i_key]}
+                    setStrength={(e) => {
+                      setAssessment({
+                        ...assessment,
+                        interventionStrength: {
+                          ...assessment.interventionStrength,
+                          [i_key]: e.target.value
                         }
-                      }
-                    })
-                  }}
-                  options={[
-                    { "value": -1, "label": "Decrease/Lessen" },
-                    { "value": 0, "label": "No change" },
-                    { "value": 1, "label": "Increase/Improve" },
-                  ]} />
-              ))}
+                      });
+                    }}
+                    setEffect={(key, value) => {
+                      const currentEffect = assessment.revisedInterventionEffects[i_key];
+
+                      setAssessment({
+                        ...assessment,
+                        revisedInterventionEffects: {
+                          ...assessment.revisedInterventionEffects,
+                          [i_key]: {
+                            ...currentEffect,
+                            [key]: value
+                          }
+                        }
+                      });
+                    }}
+                    options={[
+                      { "value": -1, "label": "Decrease/Lessen" },
+                      { "value": 0, "label": "No change" },
+                      { "value": 1, "label": "Increase/Improve" },
+                    ]} />
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -693,36 +646,45 @@ export const AssessmentPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {assessment.getScenarios().map((intervention) => (
-                <InterventionEffects
-                  key={intervention.key}
-                  label={intervention.label}
-                  defaultEffect={intervention.effect}
-                  revisedEffect={currentRevisedScenarios[intervention.key].effect}
-                  strength={currentScenarioStrength[intervention.key]}
-                  setStrength={(e) => {
-                    setScenarioStrength({...currentScenarioStrength, [intervention.key]: e.target.value})
-                  }}
-                  setEffect={(key, value) => {
-                    const currentEffect = currentRevisedScenarios[intervention.key].effect;
-
-                    setRevisedScenarios({
-                      ...currentRevisedScenarios,
-                      [intervention.key]: {
-                        ...intervention,
-                        effect: {
-                          ...currentEffect,
-                          [key]: value
+              {_.map(SCENARIO_LABELS, (intervention) => {
+                const i_key = intervention.value;
+                return (
+                  <InterventionEffects
+                    key={intervention.value}
+                    label={intervention.label}
+                    defaultEffect={assessment.defaultScenarioEffects[i_key]}
+                    revisedEffect={assessment.revisedScenarioEffects[i_key]}
+                    strength={assessment.scenarioStrength[i_key]}
+                    setStrength={(e) => {
+                      setAssessment({
+                        ...assessment,
+                        scenarioStrength: {
+                          ...assessment.scenarioStrength,
+                          [i_key]: e.target.value
                         }
-                      }
-                    })
-                  }}
+                      });
+                    }}
+                    setEffect={(key, value) => {
+                      const currentEffect = assessment.revisedScenarioEffects[i_key];
+
+                      setAssessment({
+                        ...assessment,
+                        revisedScenarioEffects: {
+                          ...assessment.revisedScenarioEffects,
+                          [i_key]: {
+                            ...currentEffect,
+                            [key]: value
+                          }
+                        }
+                      });
+                    }}
                   options={[
                     { "value": -1, "label": "Low" },
                     { "value": 0, "label": "Central" },
                     { "value": 1, "label": "High" },
                   ]} />
-              ))}
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
