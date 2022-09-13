@@ -32,7 +32,7 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot certonly --nginx
 
 # Install node
-NODE_VERSION=v14.18.1
+NODE_VERSION=v16.17.0
 DISTRO=linux-x64
 
 wget -nc https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-$DISTRO.tar.xz
