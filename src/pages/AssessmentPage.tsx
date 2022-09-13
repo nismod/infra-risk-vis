@@ -417,12 +417,16 @@ const IndicatorWeights = ({label, prefix, unweighted}: {
   const [open, setOpen] = useState(false);
   const [currentWeights, setWeights] = useRecoilState(indicatorWeights);
 
+  // Force our way around type-checking - recoil returns the expected Effect
+  // @ts-ignore
+  let weights: Effect = {...currentWeights};
+
   let assessed_value = 0;
   let weighted_value = 0;
   for (let key in unweighted) {
     if (key.includes(prefix)){
       assessed_value += unweighted[key]
-      weighted_value += (unweighted[key] * currentWeights[key])
+      weighted_value += (unweighted[key] * weights[key])
     }
   }
 
@@ -460,10 +464,10 @@ const IndicatorWeights = ({label, prefix, unweighted}: {
                           key={key}
                           label={label}
                           assessed_value={unweighted[key]}
-                          weight={currentWeights[key]}
+                          weight={weights[key]}
                           setWeight={(_, weight) => {
                             setWeights({
-                              ...currentWeights,
+                              ...weights,
                               [key]: weight
                             })
                           }}
