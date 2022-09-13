@@ -110,7 +110,7 @@ const ZERO_SCENARIO: ScenarioStrength = {
 const SCENARIO_LABELS: ValueLabel<ScenarioKey>[] = [
   {value: 'population', label: 'Population'},
   {value: 'economic', label: 'Economic'},
-  {value: 'energy-cost', label: 'Energy'},
+  {value: 'energy-cost', label: 'Energy Costs'},
 ]
 
 const SCENARIO_EFFECTS: Record<ScenarioKey, Effect> = {
