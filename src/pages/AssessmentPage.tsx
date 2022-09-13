@@ -92,6 +92,7 @@ const ZERO_EFFECT = {
   'soc_equality': 0,
   'soc_inclusivity': 0,
 }
+const DEFAULT_WEIGHT = 0.5
 
 type ScenarioKey =
   'population'
@@ -269,7 +270,7 @@ const currentAssessment = atom<Assessment>({
     defaultScenarioEffects: SCENARIO_EFFECTS,
     revisedScenarioEffects: SCENARIO_EFFECTS,
 
-    indicatorWeights: _.mapValues(ZERO_EFFECT, ()=>(1)),
+    indicatorWeights: _.mapValues(ZERO_EFFECT, ()=>(DEFAULT_WEIGHT)),
   }
 });
 
@@ -287,6 +288,39 @@ const indicatorWeights = selector({
     })
   }
 });
+
+const ValueDisplay = ({value}) => {
+  return (
+    <Slider
+      disabled
+      min={-1}
+      max={1}
+      marks={[
+        {value: -1, label: '-'},
+        {value: 0, label: '0'},
+        {value: 1, label: '+'},
+      ]}
+      track={false}
+      value={value}
+      />
+  );
+};
+
+const WeightDisplay = ({value}) => {
+  return (
+    <Slider
+      disabled
+      min={0}
+      max={1}
+      marks={[
+        {value: 0, label: '0'},
+        {value: 1, label: '+'},
+      ]}
+      track={false}
+      value={value}
+      />
+  );
+};
 
 const InterventionEffects = (
   { label, defaultEffect, revisedEffect, options, strength, setStrength, setEffect }:
@@ -328,6 +362,21 @@ const InterventionEffects = (
                   <MenuItem key={value} value={value}>{label}</MenuItem>
                 ))}
               </Select>
+              <Slider
+                aria-label={label}
+                value={strength}
+                onChange={(e, value) => {
+                  setStrength({target: {value: value}});
+                }}
+                step={1}
+                track={false}
+                marks={[
+                  {value: -1, label: '-'},
+                  {value: 0, label: '0'},
+                  {value: 1, label: '+'},
+                ]}
+                min={-1}
+                max={1} />
             </FormControl>
           </TableCell>
         </TableRow>
@@ -352,7 +401,9 @@ const InterventionEffects = (
                       return revisedEffect ? (
                         <TableRow key={key}>
                           <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
-                          <TableCell>{defaultEffect[key]}</TableCell>
+                          <TableCell>
+                            <ValueDisplay value={defaultEffect[key]}/>
+                          </TableCell>
                           <TableCell>
                             <Slider
                               aria-label={`${label} Revised`}
@@ -362,11 +413,17 @@ const InterventionEffects = (
                               } }
                               step={0.5}
                               track={false}
-                              marks
+                              marks={[
+                                {value: -1, label: '-'},
+                                {value: 0, label: '0'},
+                                {value: 1, label: '+'},
+                              ]}
                               min={-1}
                               max={1} />
                           </TableCell>
-                          <TableCell>{revisedEffect[value] * strength}</TableCell>
+                          <TableCell>
+                            <ValueDisplay value={revisedEffect[value] * strength} />
+                          </TableCell>
                         </TableRow>
                       ) : null;
                     })}
@@ -389,21 +446,24 @@ const AdjustSelector = ({ label, assessed_value, weight, setWeight}) => {
         {label}
       </TableCell>
       <TableCell>
-        {assessed_value}
+        <ValueDisplay value={assessed_value} />
       </TableCell>
       <TableCell>
         <Slider
           aria-label={label}
           value={weight}
           onChange={setWeight}
-          step={0.5}
-          marks
+          step={0.25}
+          marks={[
+            {value: 0, label: '0'},
+            {value: 1, label: '+'},
+          ]}
           min={0}
-          max={2}
+          max={1}
         />
       </TableCell>
       <TableCell>
-        {assessed_value * weight}
+      <ValueDisplay value={assessed_value * weight} />
       </TableCell>
     </TableRow>
   );
@@ -421,14 +481,21 @@ const IndicatorWeights = ({label, prefix, unweighted}: {
   // @ts-ignore
   let weights: Effect = {...currentWeights};
 
-  let assessed_value = 0;
-  let weighted_value = 0;
+  let assessed_sum = 0;
+  let weighted_sum = 0;
+  let count = 0;
+  let weight = 0;
   for (let key in unweighted) {
     if (key.includes(prefix)){
-      assessed_value += unweighted[key]
-      weighted_value += (unweighted[key] * weights[key])
+      assessed_sum += unweighted[key]
+      count += 1
+      weighted_sum += (unweighted[key] * weights[key])
+      weight += weights[key]
     }
   }
+  const assessed_value = count? assessed_sum / count: assessed_sum;
+  const weighted_value = weight? weighted_sum / weight: weighted_sum;
+  const total_weight = count? weight / count: count;
 
   return (
     <Fragment>
@@ -443,42 +510,46 @@ const IndicatorWeights = ({label, prefix, unweighted}: {
         </IconButton>
       </TableCell>
       <TableCell>{label}</TableCell>
-      <TableCell>{assessed_value}</TableCell>
-      <TableCell>-</TableCell>
-      <TableCell>{weighted_value}</TableCell>
+      <TableCell>
+        <ValueDisplay value={assessed_value} />
+      </TableCell>
+      <TableCell>
+        <WeightDisplay value={total_weight} />
+      </TableCell>
+      <TableCell>
+        <ValueDisplay value={weighted_value} />
+      </TableCell>
     </TableRow>
     <TableRow>
       <TableCell colSpan={5} sx={{ p: 0 }}>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <Box sx={{ pl: 0 }}>
-            <Table>
-              <IndicatorTableColGroup/>
-              <TableBody>
-                {
-                  INDICATOR_LABELS.map((option) => {
-                    let {value, label} = option;
-                    const key = value;
-                    if (key.includes(prefix)){
-                      return (
-                        <AdjustSelector
-                          key={key}
-                          label={label}
-                          assessed_value={unweighted[key]}
-                          weight={weights[key]}
-                          setWeight={(_, weight) => {
-                            setWeights({
-                              ...weights,
-                              [key]: weight
-                            })
-                          }}
-                          />
-                      )
-                    }
-                  })
-                }
-              </TableBody>
-            </Table>
-          </Box>
+          <Table>
+            <IndicatorTableColGroup/>
+            <TableBody>
+              {
+                INDICATOR_LABELS.map((option) => {
+                  let {value, label} = option;
+                  const key = value;
+                  if (key.includes(prefix)){
+                    return (
+                      <AdjustSelector
+                        key={key}
+                        label={label}
+                        assessed_value={unweighted[key]}
+                        weight={weights[key]}
+                        setWeight={(_, weight) => {
+                          setWeights({
+                            ...weights,
+                            [key]: weight
+                          })
+                        }}
+                        />
+                    )
+                  }
+                })
+              }
+            </TableBody>
+          </Table>
         </Collapse>
       </TableCell>
     </TableRow>
