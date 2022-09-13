@@ -112,19 +112,14 @@ type InterventionKey =
 class Intervention {
   key: string
   label: string
-  defaultEffect: Effect
-  constructor(key: InterventionKey | ScenarioKey, label: string, defaultEffect: Effect) {
-    this.key = key
-    this.label = label
-    this.defaultEffect = defaultEffect
-  }
+  effect: Effect
 }
 
 const SCENARIOS: Record<ScenarioKey, Intervention> = {
-  'population': new Intervention(
-    'population',
-    'Population',
-    {
+  'population': {
+    key: 'population',
+    label: 'Population',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': -1,
       'env_energy_use': -1,
@@ -133,11 +128,11 @@ const SCENARIOS: Record<ScenarioKey, Intervention> = {
       'soc_accidents_death': -0.5,
       'soc_accidents_injury': -0.5,
     }
-  ),
-  'economic': new Intervention(
-    'economic',
-    'Economic',
-    {
+  },
+  'economic': {
+    key: 'economic',
+    label: 'Economic',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': -1,
       'env_energy_use': -1,
@@ -145,77 +140,77 @@ const SCENARIOS: Record<ScenarioKey, Intervention> = {
       'econ_freight': 1,
       'econ_age': 0.5,
     }
-  ),
-  'energy-cost': new Intervention(
-    'energy-cost',
-    'Energy',
-    {
+  },
+  'energy-cost': {
+    key: 'energy-cost',
+    label: 'Energy',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 1,
       'env_energy_use': 1,
       'econ_passenger': -1,
       'econ_freight': -1,
     }
-  )
+  },
 };
 
 const INTERVENTIONS: Record<InterventionKey, Intervention> = {
-  'fleet_elec': new Intervention(
-    'fleet_elec',
-    'Fleet electrification',
-    {
+  'fleet_elec': {
+    key: 'fleet_elec',
+    label: 'Fleet electrification',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 1,
       'env_air_quality': 0.5,
       'soc_disease': 0.5,
     }
-  ),
-  'fleet_eff': new Intervention(
-    'fleet_eff',
-    'Fleet vehicle efficiencies',
-    {
+  },
+  'fleet_eff': {
+    key: 'fleet_eff',
+    label: 'Fleet vehicle efficiencies',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
     }
-  ),
-  'system_eff': new Intervention(
-    'system_eff',
-    'System efficiencies',
-    {
+  },
+  'system_eff': {
+    key: 'system_eff',
+    label: 'System efficiencies',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
       'econ_freight': 0.5,
       'soc_passenger_time': 0.5,
     }
-  ),
-  'demand_goods': new Intervention(
-    'demand_goods',
-    'Demand for goods',
-    {
+  },
+  'demand_goods': {
+    key: 'demand_goods',
+    label: 'Demand for goods',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': -0.5,
       'env_energy_use': -0.5,
       'econ_freight': 1,
       'econ_freight_load': 1,
     }
-  ),
-  'demand_travel': new Intervention(
-    'demand_travel',
-    'Demand for travel',
-    {
+  },
+  'demand_travel': {
+    key: 'demand_travel',
+    label: 'Demand for travel',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': -0.5,
       'env_energy_use': -0.5,
       'econ_passenger': 1,
       'econ_passenger_occupancy': 1,
     }
-  ),
-  'infra_construction': new Intervention(
-    'infra_construction',
-    'Infrastructure construction',
-    {
+  },
+  'infra_construction': {
+    key: 'infra_construction',
+    label: 'Infrastructure construction',
+    effect: {
       ...ZERO_EFFECT,
       'env_habitat_disruption': -1,
       'env_land': -1,
@@ -223,11 +218,11 @@ const INTERVENTIONS: Record<InterventionKey, Intervention> = {
       'econ_density': 0.5,
       'soc_passenger_length': 0.5,
     }
-  ),
-  'infra_maintenance': new Intervention(
-    'infra_maintenance',
-    'Infrastructure maintenance',
-    {
+  },
+  'infra_maintenance': {
+    key: 'infra_maintenance',
+    label: 'Infrastructure maintenance',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
@@ -235,26 +230,26 @@ const INTERVENTIONS: Record<InterventionKey, Intervention> = {
       'soc_passenger_time': 0.5,
       'soc_noise': 0.5,
     }
-  ),
-  'logistics_planning': new Intervention(
-    'logistics_planning',
-    'Logistics planning',
-    {
+  },
+  'logistics_planning': {
+    key: 'logistics_planning',
+    label: 'Logistics planning',
+    effect: {
       ...ZERO_EFFECT,
       'econ_freight_load': 0.5,
       'econ_border': 0.5,
     }
-  ),
-  'road_user_charging': new Intervention(
-    'road_user_charging',
-    'Road user charging',
-    {
+  },
+  'road_user_charging': {
+    key: 'road_user_charging',
+    label: 'Road user charging',
+    effect: {
       ...ZERO_EFFECT,
       'env_ghg': 0.5,
       'env_energy_use': 0.5,
       'econ_freight': -0.5,
     }
-  ),
+  },
 };
 
 class Assessment {
@@ -558,15 +553,15 @@ export const AssessmentPage = () => {
 
   let currentIndicatorsUnweighted: Effect = {...ZERO_EFFECT}
   for (let key in currentRevisedScenarios) {
-    const effect = currentRevisedScenarios[key].defaultEffect
-    const strength = currentScenarioStrength[key]
+    const effect: Effect = currentRevisedScenarios[key].effect
+    const strength: number = currentScenarioStrength[key]
     for (let indicator in effect) {
       currentIndicatorsUnweighted[indicator] += effect[indicator] * strength
     }
   }
   for (let key in currentRevisedInterventions) {
-    const effect = currentRevisedInterventions[key].defaultEffect
-    const strength = currentInterventionStrength[key]
+    const effect: Effect = currentRevisedInterventions[key].effect
+    const strength: number = currentInterventionStrength[key]
     for (let indicator in effect) {
       currentIndicatorsUnweighted[indicator] += effect[indicator] * strength
     }
@@ -652,20 +647,20 @@ export const AssessmentPage = () => {
                 <InterventionEffects
                   key={intervention.key}
                   label={intervention.label}
-                  defaultEffect={intervention.defaultEffect}
-                  revisedEffect={currentRevisedInterventions[intervention.key].defaultEffect}
+                  defaultEffect={intervention.effect}
+                  revisedEffect={currentRevisedInterventions[intervention.key].effect}
                   strength={currentInterventionStrength[intervention.key]}
                   setStrength={(e) => {
                     setInterventionStrength({...currentInterventionStrength, [intervention.key]: e.target.value})
                   }}
                   setEffect={(key, value) => {
-                    const currentEffect = currentRevisedInterventions[intervention.key].defaultEffect;
+                    const currentEffect = currentRevisedInterventions[intervention.key].effect;
 
                     setRevisedInterventions({
                       ...currentRevisedInterventions,
                       [intervention.key]: {
                         ...intervention,
-                        defaultEffect: {
+                        effect: {
                           ...currentEffect,
                           [key]: value
                         }
@@ -702,20 +697,20 @@ export const AssessmentPage = () => {
                 <InterventionEffects
                   key={intervention.key}
                   label={intervention.label}
-                  defaultEffect={intervention.defaultEffect}
-                  revisedEffect={currentRevisedScenarios[intervention.key].defaultEffect}
+                  defaultEffect={intervention.effect}
+                  revisedEffect={currentRevisedScenarios[intervention.key].effect}
                   strength={currentScenarioStrength[intervention.key]}
                   setStrength={(e) => {
                     setScenarioStrength({...currentScenarioStrength, [intervention.key]: e.target.value})
                   }}
                   setEffect={(key, value) => {
-                    const currentEffect = currentRevisedScenarios[intervention.key].defaultEffect;
+                    const currentEffect = currentRevisedScenarios[intervention.key].effect;
 
                     setRevisedScenarios({
                       ...currentRevisedScenarios,
                       [intervention.key]: {
                         ...intervention,
-                        defaultEffect: {
+                        effect: {
                           ...currentEffect,
                           [key]: value
                         }
