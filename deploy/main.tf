@@ -37,7 +37,7 @@ variable "RDS_PASSWORD" {}
 
 resource "aws_key_pair" "deployer" {
   key_name   = "opsis-aws-deployer-east-africa"
-  public_key = "TODO"
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDmPkwA40wCSn5g6rcDLyASfI799773HnMswdnoqW+Ju opsis-aws-east-africa"
 }
 
 data "aws_availability_zones" "available" {}
@@ -186,7 +186,7 @@ resource "aws_db_instance" "pg-eastafrica-dev" {
 
   instance_class = "db.t3.micro"
   identifier     = "pg-eastafrica-dev"
-  name           = "eastafrica_dev"
+  db_name        = "eastafrica_dev"
   username       = "eastafrica_dev"
   port           = 5432
   password       = var.RDS_PASSWORD

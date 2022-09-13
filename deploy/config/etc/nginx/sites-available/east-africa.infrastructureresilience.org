@@ -20,6 +20,11 @@ upstream backend {
 	server unix:/var/www/backend/backend.sock;
 }
 
+map $http_upgrade $connection_upgrade {
+	default upgrade;
+	'' close;
+}
+
 server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
@@ -40,7 +45,7 @@ server {
 	# Add index.php to the list if you are using PHP
 	index index.html
 
-	server_name caribbean.infrastructureresilience.org;
+	server_name east-africa.infrastructureresilience.org;
 
 	location / {
 		# First attempt to serve request as file, then
@@ -89,29 +94,23 @@ server {
 		proxy_buffering off;
 	}
 
-	map $http_upgrade $connection_upgrade {
-		default upgrade;
-		'' close;
-	}
-
-
 	listen [::]:443 ssl ipv6only=on; # managed by Certbot
 	listen 443 ssl; # managed by Certbot
-	ssl_certificate /etc/letsencrypt/live/caribbean.infrastructureresilience.org/fullchain.pem; # managed by Certbot
-	ssl_certificate_key /etc/letsencrypt/live/caribbean.infrastructureresilience.org/privkey.pem; # managed by Certbot
+	ssl_certificate /etc/letsencrypt/live/east-africa.infrastructureresilience.org/fullchain.pem; # managed by Certbot
+	ssl_certificate_key /etc/letsencrypt/live/east-africa.infrastructureresilience.org/privkey.pem; # managed by Certbot
 	include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
 	ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 }
 
 # Redirect from HTTP to HTTPS
 server {
-	if ($host = caribbean.infrastructureresilience.org) {
+	if ($host = east-africa.infrastructureresilience.org) {
 		return 301 https://$host$request_uri;
 	} # managed by Certbot
 
 
 	listen 80 ;
 	listen [::]:80 ;
-	server_name caribbean.infrastructureresilience.org;
+	server_name east-africa.infrastructureresilience.org;
 	return 404; # managed by Certbot
 }

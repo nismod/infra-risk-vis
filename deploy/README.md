@@ -1,6 +1,7 @@
 # Deploy
 
-The site can run on a single Linux virtual machine.
+The site can run on a single Linux virtual machine, with access to a PostgresSQL
+database.
 
 The virtual machine runs several processes:
 - Nginx reverse proxy and static file server, receives requests from the web,
@@ -17,7 +18,7 @@ It would be possible to build directly on the server in a working directory.
 
 To build and deploy the site:
 
-- provision a server
+- provision a server and database
 - configure the server
 - build and upload frontend, data and config
 
