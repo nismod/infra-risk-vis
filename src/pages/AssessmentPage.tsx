@@ -594,6 +594,9 @@ export const AssessmentPage = () => {
     }
   }
 
+  const [assessed_value, weighted_value, total_weight] = weightedSum(
+    currentIndicatorsUnweighted, assessment.indicatorWeights)
+
   return (
     <article>
       <ScrollToTop />
@@ -801,6 +804,17 @@ export const AssessmentPage = () => {
                 prefix="soc_"
                 unweighted={currentIndicatorsUnweighted}
                 />
+              <TableRow>
+                <TableCell />
+                <TableCell component='th'><strong style={{fontWeight: 500}}>Overall</strong></TableCell>
+                <TableCell>
+                  <ValueDisplay value={assessed_value} />
+                </TableCell>
+                <TableCell></TableCell>
+                <TableCell>
+                  <ValueDisplay value={weighted_value} />
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
