@@ -707,7 +707,7 @@ export const AssessmentPage = () => {
                     }}
                     options={[
                       { "value": -1, "label": "Decrease/Lessen" },
-                      { "value": 0, "label": "No change" },
+                      { "value": 0, "label": "As expected" },
                       { "value": 1, "label": "Increase/Improve" },
                     ]} />
                 );
