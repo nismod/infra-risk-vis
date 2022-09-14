@@ -469,6 +469,28 @@ const AdjustSelector = ({ label, assessed_value, weight, setWeight}) => {
   );
 }
 
+function weightedSum(unweighted: Effect, weights: Effect, prefix: string = "") {
+  let assessed_sum = 0;
+  let weighted_sum = 0;
+  let count = 0;
+  let weight = 0;
+
+  for (let key in unweighted) {
+    if (!prefix || key.includes(prefix)) {
+      assessed_sum += unweighted[key]
+      count += 1
+      weighted_sum += (unweighted[key] * weights[key])
+      weight += weights[key]
+    }
+  }
+
+  const assessed_value = count? assessed_sum / count: assessed_sum;
+  const weighted_value = weight? weighted_sum / weight: weighted_sum;
+  const total_weight = count? weight / count: count;
+
+  return [assessed_value, weighted_value, total_weight]
+}
+
 const IndicatorWeights = ({label, prefix, unweighted}: {
   label: string,
   prefix: string,
@@ -481,21 +503,7 @@ const IndicatorWeights = ({label, prefix, unweighted}: {
   // @ts-ignore
   let weights: Effect = {...currentWeights};
 
-  let assessed_sum = 0;
-  let weighted_sum = 0;
-  let count = 0;
-  let weight = 0;
-  for (let key in unweighted) {
-    if (key.includes(prefix)){
-      assessed_sum += unweighted[key]
-      count += 1
-      weighted_sum += (unweighted[key] * weights[key])
-      weight += weights[key]
-    }
-  }
-  const assessed_value = count? assessed_sum / count: assessed_sum;
-  const weighted_value = weight? weighted_sum / weight: weighted_sum;
-  const total_weight = count? weight / count: count;
+  const [assessed_value, weighted_value, total_weight] = weightedSum(unweighted, weights, prefix)
 
   return (
     <Fragment>
