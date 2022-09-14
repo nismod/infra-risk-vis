@@ -141,75 +141,43 @@ const SCENARIO_EFFECTS: Record<ScenarioKey, Effect> = {
 };
 
 type InterventionKey =
-  'fleet_elec'
-  | 'fleet_eff'
-  | 'system_eff'
+    'infra_construction'
+  | 'infra_maintenance'
   | 'demand_goods'
   | 'demand_travel'
-  | 'infra_construction'
-  | 'infra_maintenance'
   | 'logistics_planning'
+  | 'system_eff'
+  | 'fleet_eff'
+  | 'fleet_elec'
   | 'road_user_charging';
 
 type InterventionStrength = Record<InterventionKey, number>;
 
 const ZERO_INTERVENTION: InterventionStrength = {
-  'fleet_elec': 0,
-  'fleet_eff': 0,
-  'system_eff': 0,
-  'demand_goods': 0,
-  'demand_travel': 0,
   'infra_construction': 0,
   'infra_maintenance': 0,
+  'demand_goods': 0,
+  'demand_travel': 0,
   'logistics_planning': 0,
+  'system_eff': 0,
+  'fleet_eff': 0,
+  'fleet_elec': 0,
   'road_user_charging': 0,
 }
 
 const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
-  {value: 'fleet_elec',  label: 'Fleet electrification'},
-  {value: 'fleet_eff',  label: 'Fleet vehicle efficiencies'},
-  {value: 'system_eff',  label: 'System efficiencies'},
-  {value: 'demand_goods',  label: 'Demand for goods'},
-  {value: 'demand_travel',  label: 'Demand for travel'},
   {value: 'infra_construction',  label: 'Infrastructure construction'},
   {value: 'infra_maintenance',  label: 'Infrastructure maintenance'},
+  {value: 'demand_goods',  label: 'Demand for goods'},
+  {value: 'demand_travel',  label: 'Demand for travel'},
   {value: 'logistics_planning',  label: 'Logistics planning'},
+  {value: 'system_eff',  label: 'System efficiencies'},
+  {value: 'fleet_eff',  label: 'Fleet vehicle efficiencies'},
+  {value: 'fleet_elec',  label: 'Fleet electrification'},
   {value: 'road_user_charging',  label: 'Road user charging'},
 ];
 
 const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
-  'fleet_elec': {
-    ...ZERO_EFFECT,
-      'env_ghg': 1,
-      'env_air_quality': 0.5,
-      'soc_disease': 0.5,
-  },
-  'fleet_eff': {
-      ...ZERO_EFFECT,
-      'env_ghg': 0.5,
-      'env_energy_use': 0.5,
-  },
-  'system_eff': {
-      ...ZERO_EFFECT,
-      'env_ghg': 0.5,
-      'env_energy_use': 0.5,
-      'econ_freight': 0.5,
-      'soc_passenger_time': 0.5,
-  },
-  'demand_goods': {
-      ...ZERO_EFFECT,
-      'env_ghg': -0.5,
-      'env_energy_use': -0.5,
-      'econ_freight': 1,
-      'econ_freight_load': 1,
-  },
-  'demand_travel': {
-      ...ZERO_EFFECT,
-      'env_ghg': -0.5,
-      'env_energy_use': -0.5,
-      'econ_passenger': 1,
-      'econ_passenger_occupancy': 1,
-  },
   'infra_construction': {
       ...ZERO_EFFECT,
       'env_habitat_disruption': -1,
@@ -226,10 +194,42 @@ const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
       'soc_passenger_time': 0.5,
       'soc_noise': 0.5,
   },
+  'demand_goods': {
+      ...ZERO_EFFECT,
+      'env_ghg': -0.5,
+      'env_energy_use': -0.5,
+      'econ_freight': 1,
+      'econ_freight_load': 1,
+  },
+  'demand_travel': {
+      ...ZERO_EFFECT,
+      'env_ghg': -0.5,
+      'env_energy_use': -0.5,
+      'econ_passenger': 1,
+      'econ_passenger_occupancy': 1,
+  },
   'logistics_planning': {
       ...ZERO_EFFECT,
       'econ_freight_load': 0.5,
       'econ_border': 0.5,
+  },
+  'system_eff': {
+      ...ZERO_EFFECT,
+      'env_ghg': 0.5,
+      'env_energy_use': 0.5,
+      'econ_freight': 0.5,
+      'soc_passenger_time': 0.5,
+  },
+  'fleet_eff': {
+      ...ZERO_EFFECT,
+      'env_ghg': 0.5,
+      'env_energy_use': 0.5,
+  },
+  'fleet_elec': {
+    ...ZERO_EFFECT,
+      'env_ghg': 1,
+      'env_air_quality': 0.5,
+      'soc_disease': 0.5,
   },
   'road_user_charging': {
       ...ZERO_EFFECT,
