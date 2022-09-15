@@ -8,206 +8,62 @@
   },
   "styles": {},
   "data": {
-    "airport_runways": {
-      "mbtiles": "airport_runways.mbtiles"
+    "air_nodes": {
+      "mbtiles": "air_nodes.mbtiles"
     },
-    "airport_terminals": {
-      "mbtiles": "airport_terminals.mbtiles"
+    "port_edges": {
+      "mbtiles": "port_edges.mbtiles"
     },
-    "buildings_commercial": {
-      "mbtiles": "buildings_commercial.mbtiles"
+    "port_nodes_lake": {
+      "mbtiles": "port_nodes_lake.mbtiles"
     },
-    "buildings_industrial": {
-      "mbtiles": "buildings_industrial.mbtiles"
+    "port_nodes_maritime": {
+      "mbtiles": "port_nodes_maritime.mbtiles"
     },
-    "buildings_institutional": {
-      "mbtiles": "buildings_institutional.mbtiles"
+    "rail_edges_abandoned": {
+      "mbtiles": "rail_edges_abandoned.mbtiles"
     },
-    "buildings_mixed": {
-      "mbtiles": "buildings_mixed.mbtiles"
+    "rail_edges_construction": {
+      "mbtiles": "rail_edges_construction.mbtiles"
     },
-    "buildings_other": {
-      "mbtiles": "buildings_other.mbtiles"
+    "rail_edges_disused": {
+      "mbtiles": "rail_edges_disused.mbtiles"
     },
-    "buildings_recreation": {
-      "mbtiles": "buildings_recreation.mbtiles"
+    "rail_edges_open": {
+      "mbtiles": "rail_edges_open.mbtiles"
     },
-    "buildings_residential": {
-      "mbtiles": "buildings_residential.mbtiles"
+    "rail_edges_proposed": {
+      "mbtiles": "rail_edges_proposed.mbtiles"
     },
-    "buildings_resort": {
-      "mbtiles": "buildings_resort.mbtiles"
+    "rail_edges_rehabilitation": {
+      "mbtiles": "rail_edges_rehabilitation.mbtiles"
     },
-    "drought_combined": {
-      "mbtiles": "drought_combined.mbtiles"
+    "rail_nodes_halt": {
+      "mbtiles": "rail_nodes_halt.mbtiles"
     },
-    "drought_options": {
-      "mbtiles": "drought_options.mbtiles"
+    "rail_nodes_junction": {
+      "mbtiles": "rail_nodes_junction.mbtiles"
     },
-    "elec_edges_high": {
-      "mbtiles": "elec_edges_high.mbtiles"
+    "rail_nodes_station": {
+      "mbtiles": "rail_nodes_station.mbtiles"
     },
-    "elec_edges_low": {
-      "mbtiles": "elec_edges_low.mbtiles"
+    "rail_nodes_stop": {
+      "mbtiles": "rail_nodes_stop.mbtiles"
     },
-    "elec_nodes_demand": {
-      "mbtiles": "elec_nodes_demand.mbtiles"
+    "road_edges_motorway": {
+      "mbtiles": "road_edges_motorway.mbtiles"
     },
-    "elec_nodes_diesel": {
-      "mbtiles": "elec_nodes_diesel.mbtiles"
+    "road_edges_primary": {
+      "mbtiles": "road_edges_primary.mbtiles"
     },
-    "elec_nodes_gas": {
-      "mbtiles": "elec_nodes_gas.mbtiles"
+    "road_edges_secondary": {
+      "mbtiles": "road_edges_secondary.mbtiles"
     },
-    "elec_nodes_hydro": {
-      "mbtiles": "elec_nodes_hydro.mbtiles"
+    "road_edges_tertiary": {
+      "mbtiles": "road_edges_tertiary.mbtiles"
     },
-    "elec_nodes_pole": {
-      "mbtiles": "elec_nodes_pole.mbtiles"
-    },
-    "elec_nodes_solar": {
-      "mbtiles": "elec_nodes_solar.mbtiles"
-    },
-    "elec_nodes_substation": {
-      "mbtiles": "elec_nodes_substation.mbtiles"
-    },
-    "elec_nodes_wind": {
-      "mbtiles": "elec_nodes_wind.mbtiles"
-    },
-    "natural_marine_combined": {
-      "mbtiles": "natural_marine_combined.mbtiles"
-    },
-    "natural_terrestrial_combined_points": {
-      "mbtiles": "natural_terrestrial_combined_points.mbtiles"
-    },
-    "natural_terrestrial_combined": {
-      "mbtiles": "natural_terrestrial_combined.mbtiles"
-    },
-    "port_areas_break": {
-      "mbtiles": "port_areas_break.mbtiles"
-    },
-    "port_areas_container": {
-      "mbtiles": "port_areas_container.mbtiles"
-    },
-    "port_areas_industry": {
-      "mbtiles": "port_areas_industry.mbtiles"
-    },
-    "port_areas_silo": {
-      "mbtiles": "port_areas_silo.mbtiles"
-    },
-    "rail_edges": {
-      "mbtiles": "rail_edges.mbtiles"
-    },
-    "rail_junctions": {
-      "mbtiles": "rail_junctions.mbtiles"
-    },
-    "rail_stations": {
-      "mbtiles": "rail_stations.mbtiles"
-    },
-    "regions_enumeration": {
-      "mbtiles": "regions_enumeration.mbtiles"
-    },
-    "regions_enumeration_labels": {
-      "mbtiles": "regions_enumeration_labels.mbtiles"
-    },
-    "regions_parish": {
-      "mbtiles": "regions_parish.mbtiles"
-    },
-    "regions_parish_labels": {
-      "mbtiles": "regions_parish_labels.mbtiles"
-    },
-    "road_bridges": {
-      "mbtiles": "road_bridges.mbtiles"
-    },
-    "road_edges_class_a": {
-      "mbtiles": "road_edges_class_a.mbtiles"
-    },
-    "road_edges_class_b": {
-      "mbtiles": "road_edges_class_b.mbtiles"
-    },
-    "road_edges_class_c": {
-      "mbtiles": "road_edges_class_c.mbtiles"
-    },
-    "road_edges_metro": {
-      "mbtiles": "road_edges_metro.mbtiles"
-    },
-    "road_edges_other": {
-      "mbtiles": "road_edges_other.mbtiles"
-    },
-    "road_edges_track": {
-      "mbtiles": "road_edges_track.mbtiles"
-    },
-    "road_junctions": {
-      "mbtiles": "road_junctions.mbtiles"
-    },
-    "water_irrigation_edges": {
-      "mbtiles": "water_irrigation_edges.mbtiles"
-    },
-    "water_irrigation_nodes": {
-      "mbtiles": "water_irrigation_nodes.mbtiles"
-    },
-    "water_potable_edges": {
-      "mbtiles": "water_potable_edges.mbtiles"
-    },
-    "water_potable_nodes_booster": {
-      "mbtiles": "water_potable_nodes_booster.mbtiles"
-    },
-    "water_potable_nodes_catchment": {
-      "mbtiles": "water_potable_nodes_catchment.mbtiles"
-    },
-    "water_potable_nodes_entombment": {
-      "mbtiles": "water_potable_nodes_entombment.mbtiles"
-    },
-    "water_potable_nodes_filter": {
-      "mbtiles": "water_potable_nodes_filter.mbtiles"
-    },
-    "water_potable_nodes_intake": {
-      "mbtiles": "water_potable_nodes_intake.mbtiles"
-    },
-    "water_potable_nodes_pump": {
-      "mbtiles": "water_potable_nodes_pump.mbtiles"
-    },
-    "water_potable_nodes_relift": {
-      "mbtiles": "water_potable_nodes_relift.mbtiles"
-    },
-    "water_potable_nodes_reservoir": {
-      "mbtiles": "water_potable_nodes_reservoir.mbtiles"
-    },
-    "water_potable_nodes_river_source": {
-      "mbtiles": "water_potable_nodes_river_source.mbtiles"
-    },
-    "water_potable_nodes_spring": {
-      "mbtiles": "water_potable_nodes_spring.mbtiles"
-    },
-    "water_potable_nodes_sump": {
-      "mbtiles": "water_potable_nodes_sump.mbtiles"
-    },
-    "water_potable_nodes_tank": {
-      "mbtiles": "water_potable_nodes_tank.mbtiles"
-    },
-    "water_potable_nodes_tp": {
-      "mbtiles": "water_potable_nodes_tp.mbtiles"
-    },
-    "water_potable_nodes_well": {
-      "mbtiles": "water_potable_nodes_well.mbtiles"
-    },
-    "water_waste_nodes_pump": {
-      "mbtiles": "water_waste_nodes_pump.mbtiles"
-    },
-    "water_waste_nodes_relift": {
-      "mbtiles": "water_waste_nodes_relift.mbtiles"
-    },
-    "water_waste_nodes_sump": {
-      "mbtiles": "water_waste_nodes_sump.mbtiles"
-    },
-    "water_waste_nodes_wwtp": {
-      "mbtiles": "water_waste_nodes_wwtp.mbtiles"
-    },
-    "water_waste_sewer_gravity": {
-      "mbtiles": "water_waste_sewer_gravity.mbtiles"
-    },
-    "water_waste_sewer_pressure": {
-      "mbtiles": "water_waste_sewer_pressure.mbtiles"
+    "road_edges_trunk": {
+      "mbtiles": "road_edges_trunk.mbtiles"
     }
   }
 }
