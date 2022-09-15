@@ -29,25 +29,27 @@ import { Download } from '@mui/icons-material';
 import { downloadFile } from 'lib/helpers';
 
 var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> = {
-  airport_terminals: AirportDetails,
-  airport_runways: AirportDetails,
+  air_nodes: AirportDetails,
 
-  port_areas_break: PortDetails,
-  port_areas_container: PortDetails,
-  port_areas_industry: PortDetails,
-  port_areas_silo: PortDetails,
+  port_nodes_maritime: PortDetails,
+  port_nodes_lake: PortDetails,
 
-  rail_edges: RailEdgeDetails,
-  rail_stations: RailNodeDetails,
-  rail_junctions: RailNodeDetails,
+  rail_edges_open: RailEdgeDetails,
+  rail_edges_disused: RailEdgeDetails,
+  rail_edges_rehabilitation: RailEdgeDetails,
+  rail_edges_construction: RailEdgeDetails,
+  rail_edges_abandoned: RailEdgeDetails,
+  rail_edges_proposed: RailEdgeDetails,
+  rail_nodes_station: RailNodeDetails,
+  rail_nodes_stop: RailNodeDetails,
+  rail_nodes_halt: RailNodeDetails,
 
   road_bridges: BridgeDetails,
-  road_edges_class_a: RoadEdgeDetails,
-  road_edges_class_b: RoadEdgeDetails,
-  road_edges_class_c: RoadEdgeDetails,
-  road_edges_metro: RoadEdgeDetails,
-  road_edges_track: RoadEdgeDetails,
-  road_edges_other: RoadEdgeDetails,
+  road_edges_motorway: RoadEdgeDetails,
+  road_edges_trunk: RoadEdgeDetails,
+  road_edges_primary: RoadEdgeDetails,
+  road_edges_secondary: RoadEdgeDetails,
+  road_edges_tertiary: RoadEdgeDetails,
 
   water_irrigation_edges: IrrigationDetails,
   water_irrigation_nodes: IrrigationDetails,

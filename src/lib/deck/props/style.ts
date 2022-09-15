@@ -17,7 +17,7 @@ export function pointRadius(zoom) {
   return {
     getPointRadius: 20,
     pointRadiusUnit: 'meters',
-    pointRadiusMinPixels: 3,
+    pointRadiusMinPixels: 4,
     pointRadiusMaxPixels: 10,
     // radiusScale: 2 ** (15 - zoom),
   };

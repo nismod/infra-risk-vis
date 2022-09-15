@@ -18,30 +18,27 @@ function infraStyle(layer: string, defaultStyle, styleParams: StyleParams) {
 }
 
 enum RoadClass {
-  class_a = 'class_a',
-  class_b = 'class_b',
-  class_c = 'class_c',
-  metro = 'metro',
-  other = 'other',
-  track = 'track',
+  motorway = 'motorway',
+  trunk = 'trunk',
+  primary = 'primary',
+  secondary = 'secondary',
+  tertiary = 'tertiary',
 }
 
 const roadClassLookup = {
-  road_edges_class_a: RoadClass.class_a,
-  road_edges_class_b: RoadClass.class_b,
-  road_edges_class_c: RoadClass.class_c,
-  road_edges_metro: RoadClass.metro,
-  road_edges_track: RoadClass.track,
-  road_edges_other: RoadClass.other,
+  road_edges_motorway: RoadClass.motorway,
+  road_edges_trunk: RoadClass.trunk,
+  road_edges_primary: RoadClass.primary,
+  road_edges_secondary: RoadClass.secondary,
+  road_edges_tertiary: RoadClass.tertiary,
 };
 
 const roadColor = {
-  [RoadClass.class_a]: COLORS.roads_class_a.css,
-  [RoadClass.class_b]: COLORS.roads_class_b.css,
-  [RoadClass.class_c]: COLORS.roads_class_c.css,
-  [RoadClass.metro]: COLORS.roads_metro.css,
-  [RoadClass.track]: COLORS.roads_unknown.css,
-  [RoadClass.other]: COLORS.roads_unknown.css,
+  [RoadClass.motorway]: COLORS.roads_motorway.css,
+  [RoadClass.trunk]: COLORS.roads_trunk.css,
+  [RoadClass.primary]: COLORS.roads_primary.css,
+  [RoadClass.secondary]: COLORS.roads_secondary.css,
+  [RoadClass.tertiary]: COLORS.roads_tertiary.css,
 };
 function roadsViewLayer(asset_id) {
   return infrastructureViewLayer(asset_id, ({ zoom, styleParams }) => [
@@ -112,54 +109,69 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     fillColor(infraStyle('elec_nodes_substation', COLORS.electricity_unknown.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('rail_edges', ({ zoom, styleParams }) => [
-    strokeColor(infraStyle('rail_edges', COLORS.railway.deck, styleParams)),
+  infrastructureViewLayer('rail_edges_open', ({zoom, styleParams}) => [
+    strokeColor(infraStyle('rail_edges_open', COLORS.railway.deck, styleParams)),
     lineStyle(zoom),
   ]),
-  infrastructureViewLayer('rail_stations', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('rail_edges_disused', ({zoom, styleParams}) => [
+    strokeColor(infraStyle('rail_edges_disused', COLORS.rail_past.deck, styleParams)),
+    lineStyle(zoom),
+  ]),
+  infrastructureViewLayer('rail_edges_rehabilitation', ({zoom, styleParams}) => [
+    strokeColor(infraStyle('rail_edges_rehabilitation', COLORS.rail_past.deck, styleParams)),
+    lineStyle(zoom),
+  ]),
+  infrastructureViewLayer('rail_edges_construction', ({zoom, styleParams}) => [
+    strokeColor(infraStyle('rail_edges_construction', COLORS.rail_future.deck, styleParams)),
+    lineStyle(zoom),
+  ]),
+  infrastructureViewLayer('rail_edges_abandoned', ({zoom, styleParams}) => [
+    strokeColor(infraStyle('rail_edges_abandoned', COLORS.rail_past.deck, styleParams)),
+    lineStyle(zoom),
+  ]),
+  infrastructureViewLayer('rail_edges_proposed', ({zoom, styleParams}) => [
+    strokeColor(infraStyle('rail_edges_proposed', COLORS.rail_future.deck, styleParams)),
+    lineStyle(zoom),
+  ]),
+  infrastructureViewLayer('rail_nodes_station', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('rail_stations', COLORS.railway.deck, styleParams)),
+    fillColor(infraStyle('rail_nodes_station', COLORS.railway.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('rail_junctions', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('rail_nodes_stop', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('rail_junctions', COLORS.railway.deck, styleParams)),
+    fillColor(infraStyle('rail_nodes_stop', COLORS.railway.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  roadsViewLayer('road_edges_class_a'),
-  roadsViewLayer('road_edges_class_b'),
-  roadsViewLayer('road_edges_class_c'),
-  roadsViewLayer('road_edges_metro'),
-  roadsViewLayer('road_edges_track'),
-  roadsViewLayer('road_edges_other'),
+  infrastructureViewLayer('rail_nodes_halt', ({ zoom, styleParams }) => [
+    border(),
+    fillColor(infraStyle('rail_nodes_halt', COLORS.railway.deck, styleParams)),
+    pointRadius(zoom),
+  ]),
+  roadsViewLayer('road_edges_motorway'),
+  roadsViewLayer('road_edges_trunk'),
+  roadsViewLayer('road_edges_primary'),
+  roadsViewLayer('road_edges_secondary'),
+  roadsViewLayer('road_edges_tertiary'),
   infrastructureViewLayer('road_bridges', ({ zoom, styleParams }) => [
     border(),
     fillColor(infraStyle('road_bridges', COLORS.bridges.deck, styleParams)),
     pointRadius(zoom),
   ]),
-  infrastructureViewLayer('airport_runways', ({ zoom, styleParams }) => [
-    border([0, 0, 0]),
-    fillColor(infraStyle('airport_runways', COLORS.airports.deck, styleParams)),
-  ]),
-  infrastructureViewLayer('airport_terminals', ({ zoom, styleParams }) => [
-    border([0, 0, 0]),
-    fillColor(infraStyle('airport_terminals', COLORS.airports.deck, styleParams)),
-  ]),
-  infrastructureViewLayer('port_areas_break', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('air_nodes', ({ zoom, styleParams }) => [
     border(),
-    fillColor(infraStyle('port_areas_break', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('air_nodes', COLORS.airports.deck, styleParams)),
+    pointRadius(zoom),
   ]),
-  infrastructureViewLayer('port_areas_container', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('port_nodes_maritime', ({zoom, styleParams}) => [
     border(),
-    fillColor(infraStyle('port_areas_container', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('port_nodes_maritime', COLORS.ports.deck, styleParams)),
+    pointRadius(zoom),
   ]),
-  infrastructureViewLayer('port_areas_industry', ({ zoom, styleParams }) => [
+  infrastructureViewLayer('port_nodes_lake', ({zoom, styleParams}) => [
     border(),
-    fillColor(infraStyle('port_areas_industry', COLORS.ports.deck, styleParams)),
-  ]),
-  infrastructureViewLayer('port_areas_silo', ({ zoom, styleParams }) => [
-    border(),
-    fillColor(infraStyle('port_areas_silo', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('port_nodes_lake', COLORS.ports.deck, styleParams)),
+    pointRadius(zoom),
   ]),
   potableNodesViewLayer('water_potable_nodes_booster'),
   potableNodesViewLayer('water_potable_nodes_catchment'),

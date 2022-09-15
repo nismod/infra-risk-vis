@@ -10,12 +10,40 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
     label: 'Rail',
     children: [
       {
-        id: 'rail_edges',
-        label: 'Railways',
+        id: 'rail_edges_open',
+        label: 'Rail (open)',
       },
       {
-        id: 'rail_stations',
-        label: 'Stations',
+        id: 'rail_edges_disused',
+        label: 'Rail (disused)',
+      },
+      {
+        id: 'rail_edges_rehabilitation',
+        label: 'Rail (rehabilitation)',
+      },
+      {
+        id: 'rail_edges_construction',
+        label: 'Rail (construction)',
+      },
+      {
+        id: 'rail_edges_abandoned',
+        label: 'Rail (abandoned)',
+      },
+      {
+        id: 'rail_edges_proposed',
+        label: 'Rail (proposed)',
+      },
+      {
+        id: 'rail_nodes_station',
+        label: 'Station',
+      },
+      {
+        id: 'rail_nodes_stop',
+        label: 'Stop',
+      },
+      {
+        id: 'rail_nodes_halt',
+        label: 'Halt',
       },
     ],
   },
@@ -24,37 +52,43 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
     label: 'Roads',
     children: [
       {
-        id: 'road_edges_class_a',
-        label: 'Class A',
+        id: 'road_edges_motorway',
+        label: 'Motorway',
       },
       {
-        id: 'road_edges_class_b',
-        label: 'Class B',
+        id: 'road_edges_trunk',
+        label: 'Trunk',
       },
       {
-        id: 'road_edges_class_c',
-        label: 'Class C',
+        id: 'road_edges_primary',
+        label: 'Primary',
       },
       {
-        id: 'road_edges_metro',
-        label: 'Metro',
+        id: 'road_edges_secondary',
+        label: 'Secondary',
       },
       {
-        id: 'road_edges_track',
-        label: 'Track',
-      },
-      {
-        id: 'road_edges_other',
-        label: 'Other',
+        id: 'road_edges_tertiary',
+        label: 'Tertiary',
       },
     ],
   },
   {
     id: 'port_areas',
     label: 'Ports',
+    children: [
+      {
+        id: 'port_nodes_maritime',
+        label: 'Maritime',
+      },
+      {
+        id: 'port_nodes_lake',
+        label: 'Lake',
+      },
+    ]
   },
   {
-    id: 'air',
+    id: 'air_nodes',
     label: 'Airports',
   },
 ];
