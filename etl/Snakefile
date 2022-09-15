@@ -126,7 +126,7 @@ rule geojsonseq_to_vector_tiles:
     run:
         layer = get_tilelayer(wildcards.layer, network_tilelayers)
 
-        max_zoom = 20
+        max_zoom = 18
         point_polygon_zoom_switch = 13
 
         if layer.spatial_type == "line":
