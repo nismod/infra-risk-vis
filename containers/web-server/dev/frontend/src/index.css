@@ -1,0 +1,36 @@
+/**
+ * Top menu
+ */
+.MuiAppBar-root {
+  z-index: 1201 !important;
+}
+.MuiDrawer-paper {
+  overflow-x: hidden;
+}
+
+.nav-brand {
+  margin-right: 12px;
+}
+.nav-link {
+  padding: 0 3px;
+  margin: 0 9px;
+  color: inherit;
+  border-bottom: 1px solid transparent;
+  text-decoration: none;
+}
+
+/**
+ * Page layout
+ */
+article {
+  max-width: 60rem;
+  padding: 1rem 1rem 10rem 1rem;
+  margin: 0 auto;
+  font-size: 1.2rem;
+}
+/**
+ * Map and controls
+ */
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
