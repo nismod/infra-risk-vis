@@ -6,7 +6,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    restart: on-failure
 
   db:
     image: kartoza/postgis:14-3.1
@@ -20,7 +19,6 @@ services:
       - POSTGRES_MULTIPLE_EXTENSIONS=postgis
     expose:
       - 5432
-    restart: on-failure
     healthcheck:
       test: "exit 0"
 
@@ -33,7 +31,6 @@ services:
       - PGPASSWORD=docker
     expose:
       - 8888
-    restart: on-failure
 
   raster-tileserver:
     build: ./containers/raster
@@ -42,7 +39,6 @@ services:
       - ./mounts/raster:/opt/terracotta/data # bind mount
     expose:
       - 5000
-    restart: on-failure
 
   vector-tileserver:
     build: ./containers/vector
@@ -50,7 +46,6 @@ services:
       - ./mounts/vector:/data # bind mount
     expose:
       - 8080
-    restart: on-failure
 
 volumes:
   dbbackups:

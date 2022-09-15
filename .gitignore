@@ -42,4 +42,4 @@ __pycache__
 *.pyc
 
 # Docker and deployment
-*.env
+envs
