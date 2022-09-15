@@ -60,7 +60,6 @@ export const IntroPage = () => (
           supported by engagement with infrastructure and climate specialists
           and related government bodies.</p>
 
-          <p>
           <Stack
             direction="row"
             divider={<Divider orientation="vertical" flexItem />}
@@ -68,6 +67,7 @@ export const IntroPage = () => (
             justifyContent="center"
             alignItems="center"
             spacing={2}
+            my={2}
             >
             <a href="https://www.southampton.ac.uk/research/groups/transportation-group"
               target="_blank" rel="noopener noreferrer">
@@ -77,7 +77,6 @@ export const IntroPage = () => (
               <img height="110" src="/logo-opsis.png" alt="Oxford Programme for Sustainable Infrastructure Systems" />
             </a>
           </Stack>
-          </p>
 
 
           <Typography variant="h2">Funding and support</Typography>
