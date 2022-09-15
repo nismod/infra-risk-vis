@@ -26,8 +26,11 @@ if __name__ == "__main__":
                 subsector=row.subsector,
                 asset_type=row.asset_type,
             )
-            db.add(feature_layer)
-        db.commit()
+            try:
+                db.add(feature_layer)
+                db.commit()
+            except:
+                pass
 
     with open(str(output), "w") as fh:
         fh.write(f"Loaded to database.\n\n")

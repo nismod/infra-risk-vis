@@ -1,51 +1,20 @@
 ref,sector,subsector,asset_type,spatial_type,layer
-transport_air,transport,air,terminal,polygon,airport_terminals
-transport_air,transport,air,runway,polygon,airport_runways
-transport_port,transport,port,break,polygon,port_areas_break
-transport_port,transport,port,container,polygon,port_areas_container
-transport_port,transport,port,industry,polygon,port_areas_industry
-transport_port,transport,port,silo,polygon,port_areas_silo
-transport_rail_nodes,transport,rail,station,point,rail_stations
-transport_rail_nodes,transport,rail,junction,point,rail_junctions
-transport_rail_edges,transport,rail,track,line,rail_edges
-transport_roads_nodes,transport,road,bridge,point,road_bridges
-transport_roads_nodes,transport,road,junction,point,road_junctions
-transport_roads_edges,transport,road,CLASS A,line,road_edges_class_a
-transport_roads_edges,transport,road,CLASS B,line,road_edges_class_b
-transport_roads_edges,transport,road,CLASS C,line,road_edges_class_c
-transport_roads_edges,transport,road,METRO,line,road_edges_metro
-transport_roads_edges,transport,road,TRACK,line,road_edges_track
-transport_roads_edges,transport,road,OTHER,line,road_edges_other
-water_irrigation_nodes,water,irrigation,well,point,water_irrigation_nodes
-water_irrigation_edges,water,irrigation,canal,line,water_irrigation_edges
-water_potable_nodes,water,potable,Booster Station,point,water_potable_nodes_booster
-water_potable_nodes,water,potable,Catchment,point,water_potable_nodes_catchment
-water_potable_nodes,water,potable,Entombment,point,water_potable_nodes_entombment
-water_potable_nodes,water,potable,Filter Plant,point,water_potable_nodes_filter
-water_potable_nodes,water,potable,Intake,point,water_potable_nodes_intake
-water_potable_nodes,water,potable,Production Well,point,water_potable_nodes_well
-water_potable_nodes,water,potable,Pump Station,point,water_potable_nodes_pump
-water_potable_nodes,water,potable,Relift Station,point,water_potable_nodes_relift
-water_potable_nodes,water,potable,Reservoir,point,water_potable_nodes_reservoir
-water_potable_nodes,water,potable,River Source,point,water_potable_nodes_river_source
-water_potable_nodes,water,potable,Spring,point,water_potable_nodes_spring
-water_potable_nodes,water,potable,Storage Tank,point,water_potable_nodes_tank
-water_potable_nodes,water,potable,Sump,point,water_potable_nodes_sump
-water_potable_nodes,water,potable,Treatment Plant,point,water_potable_nodes_tp
-water_pipelines,water,potable,potable,line,water_potable_edges
-water_wastewater_nodes,water,wastewater,WW Sump,point,water_waste_nodes_sump
-water_wastewater_nodes,water,wastewater,WW Pump Station,point,water_waste_nodes_pump
-water_wastewater_nodes,water,wastewater,WW Relift Station,point,water_waste_nodes_relift
-water_wastewater_nodes,water,wastewater,WW Treatment Plant,point,water_waste_nodes_wwtp
-water_pipelines,water,wastewater,sewer_gravity,line,water_waste_edges
-water_pipelines,water,wastewater,sewer_pressure,line,water_waste_edges
-energy_edges,power,transmission,High Voltage,line,elec_edges_high
-energy_edges,power,transmission,Low Voltage,line,elec_edges_low
-energy_nodes,power,transmission,pole,point,elec_nodes_pole
-energy_nodes,power,transmission,substation,point,elec_nodes_substation
-energy_nodes,power,demand,demand,point,elec_nodes_demand
-energy_nodes,power,generation,diesel,point,elec_nodes_diesel
-energy_nodes,power,generation,gas,point,elec_nodes_gas
-energy_nodes,power,generation,hydro,point,elec_nodes_hydro
-energy_nodes,power,generation,solar,point,elec_nodes_solar
-energy_nodes,power,generation,wind,point,elec_nodes_wind
+road_edges,transport,road,trunk,line,road_edges_trunk
+road_edges,transport,road,secondary,line,road_edges_secondary
+road_edges,transport,road,tertiary,line,road_edges_tertiary
+road_edges,transport,road,primary,line,road_edges_primary
+road_edges,transport,road,motorway,line,road_edges_motorway
+rail_edges,transport,rail,open,line,rail_edges_open
+rail_edges,transport,rail,disused,line,rail_edges_disused
+rail_edges,transport,rail,rehabilitation,line,rail_edges_rehabilitation
+rail_edges,transport,rail,construction,line,rail_edges_construction
+rail_edges,transport,rail,abandoned,line,rail_edges_abandoned
+rail_edges,transport,rail,proposed,line,rail_edges_proposed
+rail_nodes,transport,rail,station,point,rail_nodes_station
+rail_nodes,transport,rail,stop,point,rail_nodes_stop
+rail_nodes,transport,rail,halt,point,rail_nodes_halt
+rail_nodes,transport,rail,junction,point,rail_nodes_junction
+port_nodes,transport,port,Maritime,point,port_nodes_maritime
+port_nodes,transport,port,Lake,point,port_nodes_lake
+port_edges,transport,port,route,line,port_edges
+air_nodes,transport,air,airport,point,air_nodes

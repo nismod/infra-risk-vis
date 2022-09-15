@@ -29,10 +29,7 @@ def yield_features(layer, network_tilelayer, analysis_data_dir):
             layer.asset_type_column: "asset_type",
             layer.asset_min_cost_column: "cost_min",
             layer.asset_max_cost_column: "cost_max",
-            layer.asset_mean_cost_column: "cost_mean",
             layer.asset_cost_unit_column: "cost_unit",
-            layer.asset_reopen_cost_column: "cost_reopen",
-            layer.asset_reopen_cost_unit_column: "cost_reopen_unit",
         }
 
         for feature in src:

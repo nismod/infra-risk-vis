@@ -1,5 +1,1 @@
 ref,sector,subsector,asset_type,spatial_type,layer
-nbs,nbs,terrestrial,terrestrial_combined,polygon,natural_terrestrial_combined
-nbs,nbs,marine,marine_combined,polygon,natural_marine_combined
-drought_combined,water,combined,catchment,polygon,drought_combined
-drought_options,water,combined,option,point,drought_options
