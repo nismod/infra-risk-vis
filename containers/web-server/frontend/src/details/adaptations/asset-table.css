@@ -1,7 +1,0 @@
-.row-hovered-visible {
-  visibility: hidden;
-}
-
-.row-hovered .row-hovered-visible {
-  visibility: visible;
-}

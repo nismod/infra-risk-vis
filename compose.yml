@@ -4,6 +4,7 @@ volumes:
   raster-db:
   auth:
 
+
 services:
   web-server:
     build: ./containers/web-server
@@ -45,7 +46,7 @@ services:
     build: ./containers/raster
     volumes:
       - raster-db:/opt/terracotta/db
-      - ./mounts/raster:/opt/terracotta/data  # bind mount
+      - ./mounts/raster:/opt/terracotta/data # bind mount
     expose:
       - 5000
     restart: on-failure
@@ -53,7 +54,7 @@ services:
   vector-tileserver:
     build: ./containers/vector
     volumes:
-      - ./mounts/vector:/data  # bind mount
+      - ./mounts/vector:/data # bind mount
     expose:
       - 8080
     restart: on-failure

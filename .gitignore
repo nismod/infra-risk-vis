@@ -40,3 +40,6 @@ terracotta.sqlite
 __pycache__
 *.egg-info
 *.pyc
+
+# Docker and deployment
+*.env
