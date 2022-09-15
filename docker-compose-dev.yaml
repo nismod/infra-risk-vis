@@ -12,17 +12,22 @@ services:
     image: kartoza/postgis:14-3.1
     volumes:
       - postgis-data:/var/lib/postgresql
-    environment:
-      - POSTGRES_DB=jamaica
-      - POSTGRES_USER=docker
-      - POSTGRES_PASS=docker
-      - ALLOW_IP_RANGE=0.0.0.0/0
-      - POSTGRES_MULTIPLE_EXTENSIONS=postgis
+    env_file:
+      - ./envs/dev/.db.env
     expose:
       - 5432
     restart: on-failure
     healthcheck:
       test: "exit 0"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    env_file:
+      - ./envs/dev/.pgadmin.env
+    ports:
+      - 5000:80
 
   backend:
     build: ./containers/backend
@@ -56,4 +61,4 @@ volumes:
   dbbackups:
   postgis-data:
   raster-db:
-  auth:
+  pgadmin:
