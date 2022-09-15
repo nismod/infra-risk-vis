@@ -86,6 +86,7 @@ def parse_rp_df(data):
         .drop(columns=["variable", "conf", "subs", "model", "var"])
         .groupby(["uid", "hazard", "rp", "rcp", "epoch"])
         .agg(['min', 'mean', 'max'])
+        .fillna(0)
     )
     long.columns = ['amin', 'mean', 'amax']
     return long

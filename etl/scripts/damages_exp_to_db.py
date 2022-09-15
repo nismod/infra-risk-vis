@@ -75,6 +75,7 @@ def parse_exp_df(data):
         .reset_index()
         .groupby(["uid", "hazard", "rcp", "epoch", "protection_standard"])
         .agg(['min', 'mean', 'max'])
+        .fillna(0)
     )
 
     data.columns = [f"{var.lower()}_{stat}" for var, stat in data.columns]
