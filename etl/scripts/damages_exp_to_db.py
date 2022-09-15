@@ -1,6 +1,6 @@
 """Load expected damages from a single file to database
 """
-import pyarrow.parquet as pq
+import pandas
 
 from sqlalchemy.orm import Session
 from tqdm import tqdm
@@ -13,38 +13,34 @@ def yield_expected_damages(expected_fname):
     """Generate ExpectedDamage database model objects, reading through
     potentially very large parquet files in row batches.
     """
-    pf = pq.ParquetFile(expected_fname)
-    batch_size = 100
-    batches = pf.iter_batches(batch_size)
+    df = pandas.read_parquet(expected_fname)
 
-    for batch in batches:
-        batch_df = parse_exp_damage_batch(batch)
-        for row in batch_df.itertuples():
-            yield ExpectedDamage(
-                feature_id=row.uid,
-                hazard=row.hazard,
-                rcp=row.rcp,
-                epoch=row.epoch,
-                protection_standard=row.protection_standard,
-                ead_amin=row.ead_amin,
-                ead_mean=row.ead_mean,
-                ead_amax=row.ead_amax,
-                eael_amin=row.eael_amin,
-                eael_mean=row.eael_mean,
-                eael_amax=row.eael_amax,
-            )
+    batch_df = parse_exp_df(df)
+    for row in batch_df.itertuples():
+        yield ExpectedDamage(
+            feature_id=row.uid,
+            hazard=row.hazard,
+            rcp=row.rcp,
+            epoch=row.epoch,
+            protection_standard=row.protection_standard,
+            ead_amin=row.ead_amin,
+            ead_mean=row.ead_mean,
+            ead_amax=row.ead_amax,
+            eael_amin=row.eael_amin,
+            eael_mean=row.eael_mean,
+            eael_amax=row.eael_amax,
+        )
 
 
-def parse_exp_damage_batch(batch):
-    """Parse a parquet (arrow) row batch to pandas"""
-    data = batch.to_pandas()
+def parse_exp_df(data):
+    """Parse a fat df to long format"""
     # parquet files come in "fat" format, with string column names representing
     # damage type, defended status, and min/mean/max suffix
-    data_cols = [c for c in batch.schema.names if "EA" in c]
+    data_cols = [c for c in data.columns if "EA" in c]
 
     # no protection_standard in list by default, append if in scheme
     id_vars = ["uid", "hazard", "rcp", "epoch"]
-    if "protection_standard" in batch.schema.names:
+    if "protection_standard" in data_cols:
         id_vars.append("protection_standard")
 
     # melt to long format
@@ -54,13 +50,15 @@ def parse_exp_damage_batch(batch):
         .reset_index(drop=True)
     )
 
+    data.epoch = data.epoch.str.replace('hist', '1980').astype(int)
+
     # parse string key column for metadata
     meta = data.variable.str.extract(r"^([^_]+)_(\w+)_([^_]+)$")
     meta.columns = ["damage", "defended", "var"]
 
     # join metadata columns
     data = data.join(meta)
-    if "protection_standard" not in batch.schema.names:
+    if "protection_standard" not in data_cols:
         data["protection_standard"] = 0
     else:
         data.loc[data.defended == "undefended", "protection_standard"] = 0
@@ -68,13 +66,15 @@ def parse_exp_damage_batch(batch):
     # pivot back up so we end with a row per uid, hazard etc. (see index columns below)
     # and columns for each damage type, each with min/mean/max
     data = (
-        data.drop(columns="variable")
-        .pivot(
+        data.drop(columns=["variable", "var"])
+        .pivot_table(
             index=["uid", "hazard", "rcp", "epoch", "protection_standard"],
-            columns=["damage", "var"],
+            columns=["damage"],
             values="value",
         )
-        .fillna(0)
+        .reset_index()
+        .groupby(["uid", "hazard", "rcp", "epoch", "protection_standard"])
+        .agg(['min', 'mean', 'max'])
     )
 
     data.columns = [f"{var.lower()}_{stat}" for var, stat in data.columns]
