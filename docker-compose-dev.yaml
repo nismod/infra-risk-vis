@@ -29,6 +29,14 @@ services:
     ports:
       - 5000:80
 
+  snakemake:
+    image: gri-snakemake:latest
+    build: ./etl
+    volumes:
+      - ./etl:/opt/etl
+      - ./tileserver:/opt/tileserver
+    command: [ "snakemake", "-s", "/opt/etl/Snakefile" ]
+
   backend:
     build: ./containers/backend
     image: gri-backend-dev:latest
