@@ -4,8 +4,8 @@ set -e
 
 # working directory for container
 # this should still be set from the Dockerfile, but we'll cd here to be sure
-cd $RASTER_BASE_PATH
 RASTER_BASE_PATH=/opt/terracotta
+cd $RASTER_BASE_PATH
 
 # path to database
 TC_DRIVER_PATH=$RASTER_BASE_PATH/db/terracotta.sqlite
