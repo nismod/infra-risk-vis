@@ -1,3 +1,4 @@
+import { Fragment, useMemo } from 'react';
 import { Box } from '@mui/system';
 import { IconButton, Typography } from '@mui/material';
 
@@ -5,7 +6,6 @@ import { Adaptation } from 'lib/api-client';
 import { AdaptationTable } from './AdaptationTable';
 import { Download } from '@mui/icons-material';
 import { downloadFile, unique } from 'lib/helpers';
-import { useMemo } from 'react';
 
 
 function makeAdaptationCsv(options: Adaptation[]) {
@@ -86,21 +86,28 @@ export const AdaptationSection = ({ fd }) => {
         <Box>
           {
             options.length?
-              option_names.map(name => {
-                const filteredOptions = options.filter(o=>o.adaptation_name === name);
-                return (
-                  <>
-                    <Typography variant="subtitle2" component="h2" sx={{mt:2,mb:1}}>{name}</Typography>
-                    <Typography variant="body2" component="p" sx={{mb:2}}>
-                      The adaptation costs and benefits, subject to different
-                      climate scenarios and (for some options) protection
-                      standards, assuming a 15-day disruption.
-                    </Typography>
-
-                    <AdaptationTable options={filteredOptions} />
-                  </>
-                )
-              })
+              (
+                <>
+                <Typography variant="body2" component="p" sx={{mb:2}}>
+                  The adaptation costs and benefits, subject to different
+                  climate scenarios and (for some options) protection
+                  standards, assuming a 15-day disruption.
+                </Typography>
+                {
+                  option_names.map(name => {
+                    const filteredOptions = options.filter(o=>o.adaptation_name === name);
+                    return (
+                      <Fragment key={name}>
+                        <Typography variant="subtitle2" component="h2" sx={{mt:2,mb:1}}>
+                          {name}
+                        </Typography>
+                        <AdaptationTable options={filteredOptions} />
+                      </Fragment>
+                    )
+                  })
+                }
+                </>
+              )
               :
               (
                 <Typography variant="body2" color="textSecondary">

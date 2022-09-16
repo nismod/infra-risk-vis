@@ -2,14 +2,38 @@
   {
     "sector": "transport",
     "subsector": "rail",
-    "asset_type": "station",
-    "layer_name": "rail_stations"
+    "asset_type": "open",
+    "layer_name": "rail_edges_open"
   },
   {
     "sector": "transport",
     "subsector": "rail",
-    "asset_type": "track",
-    "layer_name": "rail_edges"
+    "asset_type": "disused",
+    "layer_name": "rail_edges_disused"
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "asset_type": "rehabilitation",
+    "layer_name": "rail_edges_rehabilitation"
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "asset_type": "construction",
+    "layer_name": "rail_edges_construction"
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "asset_type": "abandoned",
+    "layer_name": "rail_edges_abandoned"
+  },
+  {
+    "sector": "transport",
+    "subsector": "rail",
+    "asset_type": "proposed",
+    "layer_name": "rail_edges_proposed"
   },
   {
     "sector": "transport",
@@ -20,37 +44,25 @@
   {
     "sector": "transport",
     "subsector": "road",
-    "asset_type": "CLASS A",
-    "layer_name": "road_edges_class_a"
+    "asset_type": "trunk",
+    "layer_name": "road_edges_trunk"
   },
   {
     "sector": "transport",
     "subsector": "road",
-    "asset_type": "CLASS B",
-    "layer_name": "road_edges_class_b"
+    "asset_type": "primary",
+    "layer_name": "road_edges_primary"
   },
   {
     "sector": "transport",
     "subsector": "road",
-    "asset_type": "CLASS C",
-    "layer_name": "road_edges_class_c"
+    "asset_type": "secondary",
+    "layer_name": "road_edges_secondary"
   },
   {
     "sector": "transport",
     "subsector": "road",
-    "asset_type": "METRO",
-    "layer_name": "road_edges_metro"
-  },
-  {
-    "sector": "transport",
-    "subsector": "road",
-    "asset_type": "OTHER",
-    "layer_name": "road_edges_other"
-  },
-  {
-    "sector": "transport",
-    "subsector": "road",
-    "asset_type": "TRACK",
-    "layer_name": "road_edges_track"
+    "asset_type": "tertiary",
+    "layer_name": "road_edges_tertiary"
   }
 ]

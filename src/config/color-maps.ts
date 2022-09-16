@@ -47,7 +47,7 @@ export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   adaptationCost: {
     scale: d3Scale.scaleSequential,
     scheme: discardSides(d3ScaleChromatic.interpolateGreens, 0.2, 0.2),
-    range: [0, 1e9],
+    range: [0, 1e6],
     empty: '#ccc',
   },
   costBenefitRatio: {

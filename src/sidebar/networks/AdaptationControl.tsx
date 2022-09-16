@@ -19,8 +19,10 @@ import { Box } from '@mui/system';
 
 function hazardLabel(val) {
   switch (val) {
-    case 'flooding':
-      return 'Flooding';
+    case 'river':
+      return 'River Flooding';
+      case 'coastal':
+        return 'Coastal Flooding';
     default:
       throw new Error('Unsupported hazard type: ' + val);
   }
@@ -127,20 +129,6 @@ export const AdaptationControl: FC<{}> = () => {
           )}
         </DataParam>
       </InputSection>
-      <InputSection>
-        <DataParam group="adaptation" id="adaptation_protection_level">
-          {({ value, onChange, options }) =>
-            options.length > 2 ? (
-              <>
-                <FormLabel>Protection level</FormLabel>
-                <CustomNumberSlider title="Protection level" value={value} onChange={onChange} marks={options} />
-              </>
-            ) : (
-              <ParamDropdown title="Protection level" value={value} onChange={onChange} options={options} />
-            )
-          }
-        </DataParam>
-      </InputSection>
 
       <InputSection>
         <ParamDropdown<typeof adaptationField>
@@ -148,13 +136,11 @@ export const AdaptationControl: FC<{}> = () => {
           value={adaptationField}
           onChange={setAdaptationField}
           options={[
-            { value: 'avoided_ead_mean', label: 'Avoided Expected Annual Damages' },
-            { value: 'avoided_eael_mean', label: 'Avoided Expected Annual Economic Losses' },
+            { value: 'avoided_ead_mean', label: 'Avoided Risk' }, // TODO using ead field for total risk
             { value: 'adaptation_cost', label: 'Adaptation Cost' },
             { value: 'cost_benefit_ratio', label: 'Cost-Benefit Ratio' },
           ]}
         />
-        {adaptationField === 'cost_benefit_ratio' ? <CostBenefitRatioInputs /> : null}
       </InputSection>
     </LayerStylePanel>
   );

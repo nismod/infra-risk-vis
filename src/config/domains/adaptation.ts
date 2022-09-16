@@ -16,11 +16,11 @@ export const adaptationDomainsConfig: DataParamGroupConfig<AdaptationOptionParam
   paramDefaults: {
     sector: 'transport',
     subsector: 'road',
-    asset_type: 'CLASS A',
+    asset_type: 'primary',
     hazard: 'flooding',
     rcp: '4.5',
-    adaptation_name: 'Elevate the roads',
-    adaptation_protection_level: 1,
+    adaptation_name: 'Drainage (rehabilitation)',
+    adaptation_protection_level: 0,
   },
   paramDomains: inferDomainsFromData<AdaptationOptionParams>(adaptationOptions),
   paramDependencies: inferDependenciesFromData(adaptationOptions, {

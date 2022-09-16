@@ -12,11 +12,9 @@ export const AdaptationTable = ({ options }) => {
       <Table size="small" padding="none" stickyHeader>
         <TableHead>
           <TableRow>
-            <TableCell sx={padding}>Hazard</TableCell>
             <TableCell sx={padding}>
               <abbr title="Representative Concentration Pathway (Climate Scenario)">RCP</abbr>
             </TableCell>
-            <TableCell sx={padding}>Protection Standard</TableCell>
             <TableCell sx={padding} align="right">
               <abbr title="Benefit Cost Ratio">BCR</abbr>
             </TableCell>
@@ -28,10 +26,8 @@ export const AdaptationTable = ({ options }) => {
         </TableHead>
         <TableBody>
           {options.map((d, i) => (
-            <TableRow>
-              <TableCell sx={{pl:0,pr:padding.px,py:padding.py}}>{d.hazard}</TableCell>
+            <TableRow key={i}>
               <TableCell sx={padding}>{d.rcp}</TableCell>
-              <TableCell sx={padding}>{d.adaptation_protection_level}</TableCell>
               <TableCell sx={padding} align="right">
                 {
                   numFormat(
