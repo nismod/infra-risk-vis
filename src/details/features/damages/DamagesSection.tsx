@@ -215,7 +215,7 @@ export const DamagesSection = ({ fd }) => {
                 field='ead_mean'
                 field_min='ead_amin'
                 field_max='ead_amax'
-                field_title='EAD (J$)'
+                field_title='EAD (US$)'
                 actions={false}
                 padding={0}
                 width={260} // this is currently picked to fit the chart to the sidebar width
@@ -233,7 +233,7 @@ export const DamagesSection = ({ fd }) => {
                   field='eael_mean'
                   field_min='eael_amin'
                   field_max='eael_amax'
-                  field_title='EAEL (J$/day)'
+                  field_title='EAEL (US$/day)'
                   actions={false}
                   padding={0}
                   width={260} // this is currently picked to fit the chart to the sidebar width
@@ -293,7 +293,7 @@ export const DamagesSection = ({ fd }) => {
                   table: selectedRPData,
                 }}
                 field_key='damage_mean'
-                field_title='Damage (J$)'
+                field_title='Damage (US$)'
                 actions={false}
                 padding={0}
                 width={260} // this is currently picked to fit the chart to the sidebar width
