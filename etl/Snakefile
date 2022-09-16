@@ -1,5 +1,6 @@
 import os
 import subprocess
+import shutil
 
 import geopandas
 import pandas
@@ -18,7 +19,6 @@ hazard_layers = pandas.read_csv(config["hazard_layers"])
 wildcard_constraints:
     layer="[^/]+",
 
-
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
@@ -29,16 +29,22 @@ rule raster_temp_file:
         "raster/link/{layer}.tif",
     run:
         layer = get_hazard_layer(wildcards.layer, hazard_layers)
-        os.symlink(os.path.join(config["analysis_data_dir"], "processed_data", layer.path), str(output))
-
+        # This symlink just does not want to work
+        # os.symlink(os.path.join(config["analysis_data_dir"], "processed_data", layer.path), str(output))
+        shutil.copyfile(
+            os.path.join(config["analysis_data_dir"], "processed_data", layer.path),
+            str(output)
+        )
 
 def get_hazard_layer(layer_name, hazard_layers):
     try:
+        print ("getting hazard layer")
         return hazard_layers[hazard_layers.key == layer_name].iloc[0]
     except IndexError as e:
         print(f"Could not find {layer_name} in hazard layers.")
         raise e
-
+    finally:
+        print ("got hazard layer")
 
 rule raster_zero_nodata:
     input:
