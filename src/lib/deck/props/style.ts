@@ -4,8 +4,8 @@ export function lineStyle(zoom) {
   return {
     getLineWidth: 15,
     lineWidthUnit: 'meters',
-    lineWidthMinPixels: 1,
-    lineWidthMaxPixels: 5,
+    lineWidthMinPixels: 2,
+    lineWidthMaxPixels: 7,
     lineJointRounded: true,
     lineCapRounded: true,
 

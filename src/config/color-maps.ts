@@ -4,21 +4,13 @@ import { ColorSpec } from 'lib/data-map/view-layers';
 import { valueType } from 'lib/helpers';
 
 export const RASTER_COLOR_MAPS = {
-  fluvial: {
+  river: {
     scheme: 'blues',
-    range: [0, 10],
+    range: [0, 5],
   },
   coastal: {
     scheme: 'greens',
-    range: [0, 10],
-  },
-  surface: {
-    scheme: 'purples',
-    range: [0, 10],
-  },
-  cyclone: {
-    scheme: 'reds',
-    range: [0, 75],
+    range: [0, 5],
   },
 };
 
@@ -36,7 +28,7 @@ function discardSides<T>(interpolator: (t: number) => T, cutStart: number, cutEn
 export const VECTOR_COLOR_MAPS = valueType<ColorSpec>()({
   damages: {
     scale: d3Scale.scaleSequential,
-    scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
+    scheme:  discardSides(invertColorScale(d3ScaleChromatic.interpolateInferno), 0.1, 0),
     range: [0, 1e6],
     empty: '#ccc',
   },

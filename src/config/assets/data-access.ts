@@ -5,10 +5,10 @@ import { withTriggers } from 'lib/deck/props/getters';
 import { sumOrNone } from 'lib/helpers';
 
 function getExpectedDamageKey(direct: boolean, hazard: string, rcp: string, epoch: number) {
-  return `${direct ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+  return `${direct ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}`;
 }
 
-const hazardTypes = ['fluvial', 'surface', 'coastal', 'cyclone'];
+const hazardTypes = ['river', 'coastal'];
 
 function totalExpectedDamagesProperty(direct: boolean, { rcp, epoch }) {
   const hazardProperties = hazardTypes.map((ht) => featureProperty(getExpectedDamageKey(direct, ht, rcp, epoch)));

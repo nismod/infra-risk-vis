@@ -44,10 +44,8 @@ export const FieldSpecControl: FC<{
             }
             options={[
               { value: 'all', label: 'All Hazards' },
-              { value: 'fluvial', label: 'River Flooding' },
-              { value: 'surface', label: 'Surface Flooding' },
+              { value: 'river', label: 'River Flooding' },
               { value: 'coastal', label: 'Coastal Flooding' },
-              { value: 'cyclone', label: 'Cyclones' },
             ]}
           />
           <ParamDropdown
@@ -60,7 +58,7 @@ export const FieldSpecControl: FC<{
                 }),
               )
             }
-            options={[{ value: 'baseline', label: 'Baseline' }, '2.6', '4.5', '8.5']}
+            options={[{ value: 'baseline', label: 'Baseline' }, '4.5', '8.5']}
           />
           <ParamDropdown
             title="Epoch"
@@ -72,7 +70,7 @@ export const FieldSpecControl: FC<{
                 }),
               )
             }
-            options={[2010, 2050, 2100]}
+            options={[2010, 2030, 2050, 2080]}
           />
         </Box>
       </Box>

@@ -48,10 +48,10 @@ const RP_ORDERING = (() => {
 })();
 
 function getDamageKey({ hazard, rcp, epoch }) {
-  return `${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+  return `${hazard}__rcp_${rcp}__epoch_${epoch}`;
 }
 function getRPDamageKey({ hazard, rcp, epoch, rp }) {
-  return `${hazard}__rcp_${rcp}__epoch_${epoch}__rp_${rp}__conf_None`;
+  return `${hazard}__rcp_${rcp}__epoch_${epoch}__rp_${rp}`;
 }
 
 interface ExpectedDamageCell {

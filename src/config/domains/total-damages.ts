@@ -12,12 +12,12 @@ export const totalDamagesConfig: DataParamGroupConfig<TotalDamagesParams> = {
   },
   paramDomains: {
     rcp: ['baseline', '4.5', '8.5'],
-    epoch: [2010, 2050],
+    epoch: [2010, 2030, 2050, 2080],
   },
   paramDependencies: {
     rcp: ({ epoch }) => {
       if (epoch === 2010) return ['baseline'];
-      if (epoch === 2050) return ['4.5', '8.5'];
+      else return ['4.5', '8.5'];
     },
   },
 };
