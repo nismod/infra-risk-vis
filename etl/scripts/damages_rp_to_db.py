@@ -19,20 +19,20 @@ def yield_return_period_damages(exposure_fname, damage_fname, loss_fname):
     loss_df = pandas.read_parquet(loss_fname)
 
     exp_df = parse_rp_df(exp_df).rename(
-        columns={"none": "exposure"}
+        columns={"exposure_amax": "exposure"}
     )
     dmg_df = parse_rp_df(dmg_df).rename(
         columns={
-            "amin": "damage_amin",
+            "min": "damage_amin",
             "mean": "damage_mean",
-            "amax": "damage_amax",
+            "max": "damage_amax",
         }
     )
     loss_df = parse_rp_df(loss_df).rename(
         columns={
-            "amin": "loss_amin",
+            "min": "loss_amin",
             "mean": "loss_mean",
-            "amax": "loss_amax",
+            "max": "loss_amax",
         }
     )
     batch_df = exp_df.join(dmg_df).join(loss_df).fillna(0).reset_index()
@@ -50,11 +50,15 @@ def yield_return_period_damages(exposure_fname, damage_fname, loss_fname):
     ensure_columns(batch_df, expected_columns)
 
     for row in batch_df.itertuples():
+        if row.epoch == 1980:
+            epoch = 2010
+        else:
+            epoch = row.epoch
         yield ReturnPeriodDamage(
             feature_id=row.uid,
             hazard=row.hazard,
             rcp=row.rcp,
-            epoch=row.epoch,
+            epoch=epoch,
             rp=row.rp,
             exposure=row.exposure,
             damage_amin=row.damage_amin,
@@ -88,7 +92,7 @@ def parse_rp_df(data):
         .agg(['min', 'mean', 'max'])
         .fillna(0)
     )
-    long.columns = ['amin', 'mean', 'amax']
+    long.columns = [agg for (_, agg) in long.columns]
     return long
 
 

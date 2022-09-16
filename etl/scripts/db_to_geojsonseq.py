@@ -22,7 +22,7 @@ def feature_as_geojson(feature: Feature):
     # sort so any higher protection standard will overwrite
     damages = sorted(feature.damages_expected, key=attrgetter("protection_standard"))
     for damage in damages:
-        key = f"{damage.hazard}__rcp_{damage.rcp}__epoch_{damage.epoch}__conf_None"
+        key = f"{damage.hazard}__rcp_{damage.rcp}__epoch_{damage.epoch}"
         properties[f"ead__{key}"] = damage.ead_mean
         properties[f"eael__{key}"] = damage.eael_mean
 

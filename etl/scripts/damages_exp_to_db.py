@@ -17,11 +17,15 @@ def yield_expected_damages(expected_fname):
 
     batch_df = parse_exp_df(df)
     for row in batch_df.itertuples():
+        if row.epoch == 1980:
+            epoch = 2010
+        else:
+            epoch = row.epoch
         yield ExpectedDamage(
             feature_id=row.uid,
             hazard=row.hazard,
             rcp=row.rcp,
-            epoch=row.epoch,
+            epoch=epoch,
             protection_standard=row.protection_standard,
             ead_amin=row.ead_amin,
             ead_mean=row.ead_mean,
@@ -79,6 +83,16 @@ def parse_exp_df(data):
     )
 
     data.columns = [f"{var.lower()}_{stat}" for var, stat in data.columns]
+    data = data.rename(
+        columns={
+            "ead_min": "ead_amin",
+            "ead_mean": "ead_mean",
+            "ead_max": "ead_amax",
+            "eael_min": "eael_amin",
+            "eael_mean": "eael_mean",
+            "eael_max": "eael_amax",
+        }
+    )
 
     # ensure all columns are present - may be missing in case the data didn't
     # have any non-zero values in this batch
