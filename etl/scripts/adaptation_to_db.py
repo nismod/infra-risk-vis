@@ -19,7 +19,7 @@ def yield_adaptation(data):
             hazard=row.hazard,
             rcp=row.rcp,
             adaptation_name=row.adaptation_option,
-            adaptation_protection_level=row.protection_level,
+            adaptation_protection_level=0,
             adaptation_cost=row.adapt_cost_npv,
             avoided_ead_amin=row.avoided_ead_amin,
             avoided_ead_mean=row.avoided_ead_mean,
@@ -33,22 +33,10 @@ def yield_adaptation(data):
 def parse_adaptation(data):
     """Parse to tidy (long) dataframe"""
     # files come in "fat" format, with string column names representing
-    # hazard, RCP, variable (avoided_EAD/EAEL), and min/mean/max suffix
-    data_cols = [c for c in data.columns if "EA" in c]
+    # hazard, RCP, variable (avoided_risk, BCR), and amin/mean/amax suffix
+    data_cols = [c for c in data.columns if "rcp" in c]
 
-    data = data.rename(
-        columns={
-            "flood_depth_protection_level": "protection_level",
-            "cyclone_damage_curve_reduction": "protection_level",
-        }
-    )
-    # corner case for handling protection against "all" floods - set depth to 999
-    if "flood_protection_level" in data.columns:
-        data.loc[
-            data.flood_protection_level == "All", "protection_level"
-        ] = 999
-
-    id_vars = ["uid", "adaptation_option", "protection_level", "adapt_cost_npv"]
+    id_vars = ["uid", "adaptation_option", "adapt_cost_npv"]
 
     if data.duplicated(subset=id_vars).sum() > 0:
         logging.warning("Dropping duplicated adaptation options")
@@ -78,7 +66,6 @@ def parse_adaptation(data):
                 "hazard",
                 "rcp",
                 "adaptation_option",
-                "protection_level",
                 "adapt_cost_npv",
             ],
             columns=["var"],
@@ -88,6 +75,15 @@ def parse_adaptation(data):
     )
 
     data.columns = [var.lower() for var in data.columns]
+
+    # TODO revisit if the data is provided in EAD/daily EAEL format
+    # for now, use total avoided risk as avoided EAD, because it doesn't scale
+    # with duration of disruption (EAEL does, which we leave as zero).
+    data = data.rename(columns={
+        "avoided_risk_amin": "avoided_ead_amin",
+        "avoided_risk_mean": "avoided_ead_mean",
+        "avoided_risk_amax": "avoided_ead_amax",
+    })
 
     # ensure all columns are present - may be missing in case the data didn't
     # have any non-zero values in this batch

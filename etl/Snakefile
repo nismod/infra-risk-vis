@@ -41,9 +41,9 @@ rule load_to_database:
         expand("logs/network/{layer}.txt", layer=network_layers.ref),
         expand("logs/damages_rp/{layer}.txt", layer=damage_rp_files.ref),
         expand("logs/damages_exp/{layer}.txt", layer=damage_exp_files.ref),
-        expand("logs/damages_npv/{layer}.txt", layer=network_layers.damage_ref),
+        # expand("logs/damages_npv/{layer}.txt", layer=network_layers.damage_ref),
         expand(
-            "logs/adaptation/{hazard}/{layer}.txt",
+            "logs/adaptation/{layer}.txt",
             zip,
             hazard=adaptation_files.hazard,
             layer=adaptation_files.damage_ref,
@@ -102,10 +102,10 @@ rule damages_npv_to_db:
 
 rule adaptation_to_db:
     input:
-        avoided_risk=f"{config['analysis_data_dir']}/results/adaptation_benefits_costs_bcr/{{hazard}}_{{layer}}_adaptation_costs_avoided_EAD_EAEL.csv",
-        uid=f"{config['analysis_data_dir']}/processed_data/networks_uids/id_lookups/{{layer}}_ids.parquet",
+        avoided_risk=f"{config['analysis_data_dir']}/results/adaptation_benefits_costs_bcr/{{layer}}_adaptation_benefits_costs_bcr_90_days_disruption.csv",
+        uid=f"{config['analysis_data_dir']}/processed_data/networks_uids/id_lookups/{{layer}}.parquet",
     output:
-        "logs/adaptation/{hazard}/{layer}.txt",
+        "logs/adaptation/{layer}.txt",
     script:
         "./scripts/adaptation_to_db.py"
 
