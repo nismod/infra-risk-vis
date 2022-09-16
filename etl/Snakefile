@@ -30,6 +30,7 @@ rule all:
         expand(
             "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
         ),
+        "../tileserver/vector/config.json",
         expand("../tileserver/raster/data/{layer}.tif", layer=hazard_layers.key),
 
 
