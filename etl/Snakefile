@@ -288,10 +288,10 @@ rule tileserver_vector_config:
         expand(
             "../tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
         ),
-        "../tileserver/vector/data/regions_parish.mbtiles",
-        "../tileserver/vector/data/regions_parish_labels.mbtiles",
-        "../tileserver/vector/data/regions_enumeration.mbtiles",
-        "../tileserver/vector/data/regions_enumeration_labels.mbtiles",
+        # "../tileserver/vector/data/regions_parish.mbtiles",
+        # "../tileserver/vector/data/regions_parish_labels.mbtiles",
+        # "../tileserver/vector/data/regions_enumeration.mbtiles",
+        # "../tileserver/vector/data/regions_enumeration_labels.mbtiles",
     output:
         "../tileserver/vector/config.json",
     run:
