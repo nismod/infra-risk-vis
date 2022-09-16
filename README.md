@@ -61,6 +61,22 @@ buildings_commercial.mbtiles
 buildings_industrial.mbtiles
 ```
 
+### Data preperation within Docker
+
+Data Preperation can be run within Docker:
+
+bash
+```
+docker run -it -v ${PWD}/etl:/opt/etl gri-snakemake:latest --cores 1 -s /opt/etl/Snakefile
+```
+
+or using Docker Compose `snakemake` service:
+
+bash
+```
+docker-compose -f docker-compose-dev.yaml run snakemake
+```
+
 ## Build
 
 The application is built with several 'services', each facilitated by a running
