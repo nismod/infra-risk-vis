@@ -71,7 +71,7 @@ Transfer tileserver raster data to the server, then ingest to terracotta:
 
 ```bash
 terracotta ingest \
-    "/var/www/tileserver/raster/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__gcm_{gcm}.tif" \
+    "/var/www/tileserver/raster/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}.tif" \
     -o "/var/www/tileserver/raster/terracotta.sqlite"
 ```
 
@@ -113,17 +113,22 @@ Initial setup
 ```bash
 # Python 3.10 on Ubuntu 20.04 needs to use PPA
 sudo add-apt-repository ppa:deadsnakes/ppa
+sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+sudo apt update
 sudo apt install python3.10  python3.10-distutils
+sudo apt install python3.10-dev
+sudo apt install gdal-bin libgdal-dev
 curl https://bootstrap.pypa.io/get-pip.py | sudo python3.10
 # Install/upgrade Terracotta app requirements
 sudo python3.10 -m pip install --upgrade cython
 sudo python3.10 -m pip install --upgrade numpy
-sudo python3.10 -m pip install --upgrade --no-binary rasterio rasterio==1.3a4
+sudo python3.10 -m pip install --upgrade --no-binary rasterio rasterio==1.3.2
+
 sudo python3.10 -m pip install --upgrade gunicorn terracotta[recommended]
 sudo python3.10 -m pip install testresources
 
 # Create backend working directory
-sudo mkdir /var/www/backend
+sudo mkdir -p /var/www/backend
 sudo chown -R :ubuntu /var/www/backend/
 sudo chmod -R 775 /var/www/backend/
 
