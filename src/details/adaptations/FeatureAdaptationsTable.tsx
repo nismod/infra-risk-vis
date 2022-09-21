@@ -26,7 +26,7 @@ export const selectedAdaptationFeatureState = atom<ListFeature>({
   default: null,
 });
 
-const JAMAICA_BBOX: BoundingBox = [-79.61792, 16.788765, -74.575195, 19.487308];
+const MAP_BBOX: BoundingBox = [22.5439, -17.7696, 41.6601, 3.3818];
 
 export const FeatureAdaptationsTable = () => {
   const layerSpec = useRecoilValue(adaptationLayerSpecState);
@@ -42,7 +42,7 @@ export const FeatureAdaptationsTable = () => {
     [setMapFitBounds],
   );
 
-  const handleZoomOutJamaica = useCallback(() => setMapFitBounds([...JAMAICA_BBOX]), [setMapFitBounds]);
+  const handleZoomOutJamaica = useCallback(() => setMapFitBounds([...MAP_BBOX]), [setMapFitBounds]);
 
   const colorFn = useMemo(() => colorMap(colorSpec), [colorSpec]);
   const { getDataLabel, getValueFormatted } = getAssetDataFormats(fieldSpec);
