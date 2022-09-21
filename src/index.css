@@ -23,9 +23,9 @@
  * Page layout
  */
 .home {
-  background-image: url('../public/irma-2017_data-from-nasa-modis_processed-by-antti-lipponen_1280.jpg');
+  background-image: url('../public//an-aerial-photograph-of-the-flooded-tana-river-which-is-in-the-rift-valley-c5cc1b-1024.jpg');
   background-size: cover;
-  background-position: 0 0;
+  background-position: center;
   background-attachment: fixed;
 }
 article {

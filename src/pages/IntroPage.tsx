@@ -104,10 +104,8 @@ export const IntroPage = () => (
           </Stack>
 
           <p><small>
-            Photo credit: Hurricane Irma, 7 September 2017.
-            Data: MODIS/Terra (NASA WorldView). Processed by Antti Lipponen&nbsp;(
-            <a href="https://twitter.com/anttilip" target="_blank" rel="noopener noreferrer">@anttilip</a>)&nbsp;
-            <a href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener noreferrer">CC-BY</a>
+            Photo credit: Flooding in the Tana River, Kenya, 1988.
+            US National Archives, Public domain.
           </small></p>
 
         </TextBox>
