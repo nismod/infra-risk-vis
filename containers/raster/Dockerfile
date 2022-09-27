@@ -1,20 +1,12 @@
-FROM continuumio/miniconda3
-LABEL maintainer="frederick.thomas@ouce.ox.ac.uk"
+FROM python:3.10
 
-RUN mkdir -p /opt/terracotta/db
-WORKDIR /opt/terracotta
+RUN apt-get update && \
+  apt-get install -y build-essential gdal-bin libgdal-dev && \
+  pip install cython && \
+  git clone --depth 1 --branch v0.7.5 https://github.com/DHI-GRAS/terracotta && \
+  cd terracotta && \
+  pip install -e . && \
+  pip install gunicorn crick
 
-# install dependencies
-#RUN apt-get update && apt-get install -y build-essential gdal-bin libgdal-dev
-
-# it was easiest to get rasterio working (linked with gdal) when using conda
-RUN conda config --add channels conda-forge
-RUN conda config --set channel_priority strict
-COPY environment.yml .
-RUN conda env create -f environment.yml
-
-# copy across config and scripts to working directory
-COPY config.toml entrypoint.sh .
-
-# run entrypoint within 'raster-tileserver' conda environment
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "raster-tileserver", "/bin/bash", "entrypoint.sh"]
+COPY ./docker-entrypoint.sh /
+ENTRYPOINT [ "/docker-entrypoint.sh" ]

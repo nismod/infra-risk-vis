@@ -54,8 +54,54 @@ services:
     volumes:
       - raster-db:/opt/terracotta/db
       - ./mounts/raster:/opt/terracotta/data # bind mount
-    expose:
-      - 5000
+      - ./containers/raster/config.toml:/opt/config.toml
+      - ./containers/raster/entrypoint.sh:/opt/entrypoint.sh
+    ports:
+      - 5050:5000
+    command: [ "serve" ]
+    # command:
+    #   [
+    #     "-c",
+    #     "/opt/config.toml",
+    #     "serve",
+    #     "-d",
+    #     "/opt/terracotta/db/terracotta.sqllite",
+    #     "--allow-all-ips",
+    #     "--port",
+    #     "5000"
+    #   ]
+
+  raster-tileserver-generator:
+    build: ./containers/raster
+    image: gri-raster-tilesverer-dev:latest
+    volumes:
+      - raster-db:/opt/terracotta/db
+      - ./mounts/raster:/opt/terracotta/data # bind mount
+      - ./containers/raster/config.toml:/opt/config.toml
+    ports:
+      - 5050:5000
+    command:
+      [
+        "ingest",
+        "/opt/terracotta/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif",
+        "-o",
+        "/opt/terracotta/db/terracotta.sqllite"
+      ]
+
+  raster-tileserver-optimizer:
+    build: ./containers/raster
+    image: gri-raster-tilesverer-dev:latest
+    volumes:
+      - raster-db:/opt/terracotta/db
+      - ./mounts/raster:/opt/terracotta/data # bind mount
+      - ./containers/raster/config.toml:/opt/config.toml
+    command:
+      [
+        "optimize-rasters",
+        "/opt/terracotta/data/*.tif",
+        "-o",
+        "/opt/terracotta/data/optimized/"
+      ]
 
   vector-tileserver:
     build: ./containers/vector

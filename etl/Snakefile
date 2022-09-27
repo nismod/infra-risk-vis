@@ -78,10 +78,20 @@ rule raster_zero_nodata:
           --hideNoData
         """
 
+rule raster_clip_ns:
+    input:
+        rules.raster_zero_nodata.output,
+    output:
+        "raster/clip/{layer}.tif",
+    shell:
+        """
+        gdal_translate -projwin -173.881360209 84.039535351 177.393420678 -84.78788384 -of GTiff {input} {output}
+        """
+
 
 rule raster_to_cog:
     input:
-        rules.raster_zero_nodata.output,
+        rules.raster_clip_ns.output,
     output:
         "../tileserver/raster/data/{layer}.tif",
     shell:
