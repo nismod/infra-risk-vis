@@ -1,23 +1,16 @@
 #!/bin/bash
-set -e
 
 if [ "$1" = 'serve' ]; then
 
-  TC_DRIVER_PATH="/opt/terracotta/db/terracotta.sqllite"
   if [ ! -f "$TC_DRIVER_PATH" ]; then
-    echo "Cannot find DB, aborting"
+    echo "Cannot find DB at, aborting: " $TC_DRIVER_PATH
     exit -1
   fi
-  TC_ALLOWED_ORIGINS_METADATA='["*"]'
-  TC_ALLOWED_ORIGINS_TILES='["*"]'
-  TC_PNG_COMPRESS_LEVEL=0
-  TC_RESAMPLING_METHOD="nearest"
-  TC_REPROJECTION_METHOD="nearest"
-  gunicorn --workers 2 \
-      --bind 0.0.0.0:5000 \
-      --umask 007 \
-      --access-logfile '-' \
-      terracotta.server.app:app
+  if [ $DEPLOYMENT_ENV = "prod" ]; then
+    gunicorn --workers 2 --bind 0.0.0.0:$TC_PORT --umask 007 --access-logfile '-' terracotta.server.app:app
+  else
+    terracotta -c /opt/config.toml serve -d $TC_DRIVER_PATH --allow-all-ips --port $TC_PORT
+  fi
   exit 0
 fi
 

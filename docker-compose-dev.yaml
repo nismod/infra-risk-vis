@@ -55,21 +55,11 @@ services:
       - raster-db:/opt/terracotta/db
       - ./mounts/raster:/opt/terracotta/data # bind mount
       - ./containers/raster/config.toml:/opt/config.toml
-      - ./containers/raster/entrypoint.sh:/opt/entrypoint.sh
+    env_file:
+      - ./envs/dev/.raster-tileserver.env
     ports:
       - 5050:5000
     command: [ "serve" ]
-    # command:
-    #   [
-    #     "-c",
-    #     "/opt/config.toml",
-    #     "serve",
-    #     "-d",
-    #     "/opt/terracotta/db/terracotta.sqllite",
-    #     "--allow-all-ips",
-    #     "--port",
-    #     "5000"
-    #   ]
 
   raster-tileserver-generator:
     build: ./containers/raster
@@ -82,6 +72,7 @@ services:
       - 5050:5000
     command:
       [
+        "terracotta",
         "ingest",
         "/opt/terracotta/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif",
         "-o",
@@ -97,6 +88,7 @@ services:
       - ./containers/raster/config.toml:/opt/config.toml
     command:
       [
+        "terracotta",
         "optimize-rasters",
         "/opt/terracotta/data/*.tif",
         "-o",
