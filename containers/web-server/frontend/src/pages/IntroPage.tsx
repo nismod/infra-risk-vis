@@ -9,14 +9,14 @@ export const IntroPage = () => (
     <h1>Jamaica Systemic Risk Assessment Tool</h1>
 
     <p>The Jamaica Systemic Risk Assessment Tool (J-SRAT) presents
-    climate-related risk analytics for transport, energy and water
-    infrastructure in Jamaica.</p>
+      climate-related risk analytics for transport, energy and water
+      infrastructure in Jamaica.</p>
 
     <Alert severity="info">The systemic risk analysis results shown in this
-    tool contain licensed data that must not be shared outside the Government of
-    Jamaica. By accessing the tool, you acknowledge that you understand this and
-    agree not to download any data or share your access credentials with anyone
-    else.</Alert>
+      tool contain licensed data that must not be shared outside the Government of
+      Jamaica. By accessing the tool, you acknowledge that you understand this and
+      agree not to download any data or share your access credentials with anyone
+      else.</Alert>
 
     <br></br>
 
@@ -31,14 +31,14 @@ export const IntroPage = () => (
       }
     >
 
-    The tool has recently been released. Please tell us if anything is not
-    working as it should and suggest potential improvements.
+      The tool has recently been released. Please tell us if anything is not
+      working as it should and suggest potential improvements.
 
     </Alert>
 
     <p>The modelling and analysis presented here aim to support climate
-    adaptation decision-making by identifying spatial criticalities and risks
-    under current and future climate scenarios.</p>
+      adaptation decision-making by identifying spatial criticalities and risks
+      under current and future climate scenarios.</p>
 
     <p>The following table summarises the data and model results presented.</p>
 
@@ -77,23 +77,23 @@ export const IntroPage = () => (
     </TableContainer>
 
     <p>For more details on the infrastructure and hazard data used, see
-    the <Link to="/data">Data page</Link></p>
+      the <Link to="/data">Data page</Link></p>
 
     <p>The primary output metrics from the analysis are:</p>
 
     <ul>
       <li>Expected Annual Damages (EAD) (direct physical risks) estimated as the
-      area under the direct damage vs exceedance probability curve </li>
+        area under the direct damage vs exceedance probability curve </li>
       <li>Expected Annual Economic Losses (EAEL) (indirect economic risks)
-      estimated as the area under the economic loss vs exceedance probability
-      curve </li>
+        estimated as the area under the economic loss vs exceedance probability
+        curve </li>
     </ul>
 
 
     <h2>Open-source code</h2>
 
     <p>This tool to visualize the model outputs is developed and documented
-    here:</p>
+      here:</p>
 
     <ul>
       <li>
@@ -116,10 +116,10 @@ export const IntroPage = () => (
     <h2>Collaboration and Engagement</h2>
 
     <p>The research, analysis and tool development has been done by researchers
-    in the University of Oxford's Oxford Programme for Sustainable
-    Infrastructure Systems in collaboration with the Planning Institute of
-    Jamaica and engagement from stakeholders across the infrastructure sectors
-    and related government bodies.</p>
+      in the University of Oxford's Oxford Programme for Sustainable
+      Infrastructure Systems in collaboration with the Planning Institute of
+      Jamaica and engagement from stakeholders across the infrastructure sectors
+      and related government bodies.</p>
 
     <Stack
       direction="row"
@@ -144,12 +144,12 @@ export const IntroPage = () => (
     <h2>Funding and support</h2>
 
     <p>This research is led by researchers in the Oxford Programme for
-    Sustainable Infrastructure Systems in the Environmental Change Institute,
-    University of Oxford, for the Government of Jamaica (GoJ) as part of a
-    project funded by UK Aid (FCDO).</p>
+      Sustainable Infrastructure Systems in the Environmental Change Institute,
+      University of Oxford, for the Government of Jamaica (GoJ) as part of a
+      project funded by UK Aid (FCDO).</p>
 
     <p>The initiative forms part of the Coalition for Climate Resilient
-    Investment&rsquo;s (CCRI) and collaboration with the Green Climate Fund.</p>
+      Investment&rsquo;s (CCRI) and collaboration with the Green Climate Fund.</p>
 
     <Stack
       direction="row"

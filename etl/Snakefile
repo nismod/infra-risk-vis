@@ -1,9 +1,12 @@
 import os
 import subprocess
 import shutil
+from typing import List
 
 import geopandas
 import pandas
+
+from scripts.helpers import hazard_layer_name_formatted, generate_final_hazard_layer_names
 
 
 # Example config
@@ -14,10 +17,12 @@ configfile: "config.yml"
 
 # Read further configuration data from CSV
 hazard_layers = pandas.read_csv(config["hazard_layers"])
+# output_layers = generate_final_hazard_layer_names(hazard_layers)
 
 
 wildcard_constraints:
     layer="[^/]+",
+    # layer_fmt="\w+__rp_[\d]__rcp_[\d]__epoch_[\d]__conf_[\d]",
 
 # Run all file-base jobs, after load_to_database
 rule all:
@@ -38,7 +43,7 @@ rule raster_temp_file:
 
 def get_hazard_layer(layer_name, hazard_layers):
     try:
-        print ("getting hazard layer")
+        print ("getting hazard layer: ", layer_name)
         return hazard_layers[hazard_layers.key == layer_name].iloc[0]
     except IndexError as e:
         print(f"Could not find {layer_name} in hazard layers.")
@@ -88,7 +93,6 @@ rule raster_clip_ns:
         gdal_translate -projwin -173.881360209 84.039535351 177.393420678 -84.78788384 -of GTiff {input} {output}
         """
 
-
 rule raster_to_cog:
     input:
         rules.raster_clip_ns.output,
@@ -116,3 +120,27 @@ rule raster_to_cog:
             --resampling-method nearest \
             {input}
         """
+
+# rule raster_rename:
+#     input:
+#         rules.raster_to_cog.output,
+#     output:
+#         "../tileserver/raster/data/{layer}.tif",
+#     run:
+#         layer_name_formatted = hazard_layer_name_formatted(wildcards.layer, hazard_layers)
+#         print ("HELLO", config["raster_processing_data_dir"], wildcards.layer)
+#         in_file = os.path.join(
+#             config["raster_processing_data_dir"],
+#             "cog",
+#             "{layer}.tif".format(layer=wildcards.layer)
+#         )
+#         out_file = os.path.join(
+#             config["raster_output_dir"],
+#             layer_name_formatted
+#         )
+#         print ("Input: ", in_file)
+#         print ("Output: ", out_file)
+#         shutil.move(
+#             in_file,
+#             out_file
+#         )

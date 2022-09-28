@@ -30,7 +30,7 @@ services:
     env_file:
       - ./envs/dev/.pgadmin.env
     ports:
-      - 5000:80
+      - 5050:80
 
   snakemake:
     image: gri-snakemake:latest
@@ -38,7 +38,15 @@ services:
     volumes:
       - ./etl:/opt/etl
       - ./tileserver:/opt/tileserver
-    command: [ "--cores", "1", "-s", "/opt/etl/Snakefile" ]
+    command:
+      [
+        "--cores",
+        "1",
+        "--latency-wait",
+        "20",
+        "-s",
+        "/opt/etl/Snakefile"
+      ]
 
   backend:
     build: ./containers/backend
@@ -52,54 +60,55 @@ services:
     build: ./containers/raster
     image: gri-raster-tilesverer-dev:latest
     volumes:
-      - raster-db:/opt/terracotta/db
-      - ./mounts/raster:/opt/terracotta/data # bind mount
+      - ./tileserver/raster/db:/opt/terracotta/db
+      - ./tileserver/raster/data:/opt/terracotta/data # bind mount
       - ./containers/raster/config.toml:/opt/config.toml
     env_file:
       - ./envs/dev/.raster-tileserver.env
     ports:
-      - 5050:5000
+      - 5000:5000
     command: [ "serve" ]
 
   raster-tileserver-generator:
     build: ./containers/raster
     image: gri-raster-tilesverer-dev:latest
     volumes:
-      - raster-db:/opt/terracotta/db
-      - ./mounts/raster:/opt/terracotta/data # bind mount
+      - ./tileserver/raster/db:/opt/terracotta/db
+      - ./tileserver/raster/data:/opt/terracotta/data
       - ./containers/raster/config.toml:/opt/config.toml
+      - ./etl/hazard_layers.csv:/opt/hazard_layers.csv
     ports:
       - 5050:5000
     command:
       [
-        "terracotta",
-        "ingest",
-        "/opt/terracotta/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif",
-        "-o",
-        "/opt/terracotta/db/terracotta.sqllite"
+        "python",
+        "ingest.py",
+        "/opt/terracotta/data",
+        "/opt/hazard_layers.csv",
+        "/opt/terracotta/db"
       ]
 
-  raster-tileserver-optimizer:
-    build: ./containers/raster
-    image: gri-raster-tilesverer-dev:latest
-    volumes:
-      - raster-db:/opt/terracotta/db
-      - ./mounts/raster:/opt/terracotta/data # bind mount
-      - ./containers/raster/config.toml:/opt/config.toml
-    command:
-      [
-        "terracotta",
-        "optimize-rasters",
-        "/opt/terracotta/data/*.tif",
-        "-o",
-        "/opt/terracotta/data/optimized/"
-      ]
+  # raster-tileserver-optimizer:
+  #   build: ./containers/raster
+  #   image: gri-raster-tilesverer-dev:latest
+  #   volumes:
+  #     - ./tileserver/raster/db:/opt/terracotta/db
+  #     - ./tileserver/raster/data:/opt/terracotta/data # bind mount
+  #     - ./containers/raster/config.toml:/opt/config.toml
+  #   command:
+  #     [
+  #       "terracotta",
+  #       "optimize-rasters",
+  #       "/opt/terracotta/data/*.tif",
+  #       "-o",
+  #       "/opt/terracotta/data/optimized/"
+  #     ]
 
   vector-tileserver:
     build: ./containers/vector
     image: gri-vector-tilesverer-dev:latest
     volumes:
-      - ./mounts/vector:/data # bind mount
+      - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config.json:/config.json
     expose:
       - 8080
@@ -107,5 +116,4 @@ services:
 volumes:
   dbbackups:
   postgis-data:
-  raster-db:
   pgadmin:

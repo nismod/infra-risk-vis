@@ -9,4 +9,5 @@ RUN apt-get update && \
   pip install gunicorn crick
 
 COPY ./docker-entrypoint.sh /
+COPY ./ingest.py ./
 ENTRYPOINT [ "/docker-entrypoint.sh" ]

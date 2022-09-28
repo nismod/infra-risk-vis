@@ -77,6 +77,14 @@ bash
 docker-compose -f docker-compose-dev.yaml run snakemake
 ```
 
+### Terracotta Test Frontend
+
+Boot the `raster-tileserver` service then run:
+
+```bash
+terracotta connect localhost:5000
+```
+
 ## Build
 
 The application is built with several 'services', each facilitated by a running

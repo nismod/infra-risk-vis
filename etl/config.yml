@@ -1,4 +1,6 @@
 analysis_data_dir: ./raw_data/
+raster_processing_data_dir: ./raster
+raster_output_dir: ../tileserver/raster/data
 network_layers: "network_layers.csv"
 network_tilelayers: "network_tilelayers.csv"
 hazard_layers: "hazard_layers.csv"

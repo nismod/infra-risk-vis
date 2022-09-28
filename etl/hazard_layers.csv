@@ -1,2 +1,2 @@
-hazard,path,rp,rcp,epoch,confidence,key
-coastal,input/hazard-aqueduct/global/inuncoast_historical_nosub_hist_rp0002_0.tif,2,baseline,2010,,inuncoast_historical_nosub_hist_rp0002_0
+hazard,path,rp,rcp,epoch,gcm,key
+coastal,input/hazard-aqueduct/global/inuncoast_historical_nosub_hist_rp0002_0.tif,2,baseline,2010,None,inuncoast_historical_nosub_hist_rp0002_0
