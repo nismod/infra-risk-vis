@@ -6,17 +6,13 @@ import ScrollToTop from 'lib/hooks/scroll-to-top';
 export const IntroPage = () => (
   <article>
     <ScrollToTop />
-    <h1>Jamaica Systemic Risk Assessment Tool</h1>
+    <h1>Global Systemic Risk Assessment Tool</h1>
 
-    <p>The Jamaica Systemic Risk Assessment Tool (J-SRAT) presents
+    <p>The Global Systemic Risk Assessment Tool (G-SRAT) presents
       climate-related risk analytics for transport, energy and water
-      infrastructure in Jamaica.</p>
+      infrastructure globally.</p>
 
-    <Alert severity="info">The systemic risk analysis results shown in this
-      tool contain licensed data that must not be shared outside the Government of
-      Jamaica. By accessing the tool, you acknowledge that you understand this and
-      agree not to download any data or share your access credentials with anyone
-      else.</Alert>
+    <Alert severity="info">TODO: Licensing</Alert>
 
     <br></br>
 
@@ -103,23 +99,19 @@ export const IntroPage = () => (
       </li>
     </ul>
 
-    <p>The analytics for Jamaica are produced using the code and models here:</p>
+    <p>The global analytics are produced using the code and models here:</p>
 
     <ul>
       <li>
-        <a href="https://github.com/nismod/jamaica-infrastructure" target="blank">
-          github.com/nismod/jamaica-infrastructure
+        <a href="TODO" target="blank">
+          TODO
         </a>
       </li>
     </ul>
 
     <h2>Collaboration and Engagement</h2>
 
-    <p>The research, analysis and tool development has been done by researchers
-      in the University of Oxford's Oxford Programme for Sustainable
-      Infrastructure Systems in collaboration with the Planning Institute of
-      Jamaica and engagement from stakeholders across the infrastructure sectors
-      and related government bodies.</p>
+    <p>TODO</p>
 
     <Stack
       direction="row"
@@ -129,12 +121,6 @@ export const IntroPage = () => (
       alignItems="center"
       spacing={2}
     >
-      <a href="https://www.gov.jm" target="_blank" rel="noopener noreferrer">
-        <img height="150" src="/jamaica-coatofarms.jpg" alt="Government of Jamaica" />
-      </a>
-      <a href="https://www.pioj.gov.jm/" target="_blank" rel="noopener noreferrer">
-        <img height="150" src="/jamaica-pioj.jpg" alt="Planning Institute of Jamaica" />
-      </a>
       <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
         <img height="100" src="/logo-opsis.png" alt="Oxford Programme for Sustainable Infrastructure Systems" />
       </a>
@@ -143,10 +129,7 @@ export const IntroPage = () => (
 
     <h2>Funding and support</h2>
 
-    <p>This research is led by researchers in the Oxford Programme for
-      Sustainable Infrastructure Systems in the Environmental Change Institute,
-      University of Oxford, for the Government of Jamaica (GoJ) as part of a
-      project funded by UK Aid (FCDO).</p>
+    <p>TODO</p>
 
     <p>The initiative forms part of the Coalition for Climate Resilient
       Investment&rsquo;s (CCRI) and collaboration with the Green Climate Fund.</p>

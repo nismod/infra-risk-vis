@@ -11,7 +11,7 @@ export function getHazardId<
   F extends string, //'fluvial' | 'surface' | 'coastal' | 'cyclone',
   RP extends number,
   RCP extends string,
-  E extends number,
+  E extends number | string,
   C extends number | string,
 >({
   hazardType,

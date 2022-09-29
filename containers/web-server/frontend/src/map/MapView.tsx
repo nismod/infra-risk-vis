@@ -51,11 +51,11 @@ export const MapView = () => {
   return (
     <DataMap
       initialViewState={{
-        latitude: 18.14,
-        longitude: -77.28,
-        zoom: 8,
-        minZoom: 3,
-        maxZoom: 16,
+        latitude: 20.0,
+        longitude: -40.0,
+        zoom: 3,
+        minZoom: 2,
+        maxZoom: 8,
         maxPitch: 0,
       }}
       viewLayers={viewLayers}

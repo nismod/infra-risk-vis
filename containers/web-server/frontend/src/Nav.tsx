@@ -17,12 +17,12 @@ export const Nav = () => {
         }}
       >
         <NavLink exact className="nav-link" to="/">
-          <Typography variant="h6">J-SRAT</Typography>
+          <Typography variant="h6">G-SRAT</Typography>
         </NavLink>
         <NavLink className="nav-link" to="/exposure">
           <Typography variant="h6">Exposure</Typography>
         </NavLink>
-        <NavLink className="nav-link" to="/risk">
+        {/* <NavLink className="nav-link" to="/risk">
           <Typography variant="h6">Risk</Typography>
         </NavLink>
         <NavLink className="nav-link" to="/adaptation">
@@ -30,7 +30,7 @@ export const Nav = () => {
         </NavLink>
         <NavLink className="nav-link" to="/nature-based-solutions">
           <Typography variant="h6">Nature-based Solutions</Typography>
-        </NavLink>
+        </NavLink> */}
         <NavLink className="nav-link" to="/data">
           <Typography variant="h6">Data</Typography>
         </NavLink>
