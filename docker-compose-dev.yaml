@@ -48,6 +48,20 @@ services:
         "/opt/etl/Snakefile"
       ]
 
+  aqueduct-downloader:
+    image: gri-snakemake:latest
+    build: ./etl
+    volumes:
+      - ./etl:/opt/etl
+    entrypoint: [ "python" ]
+    command:
+      [
+        "/opt/etl/scripts/downloaders.py",
+        "aqueduct",
+        "/opt/etl/hazard_layers.csv",
+        "/opt/etl/raw_data/processed_data/input/hazard-aqueduct"
+      ]
+
   backend:
     build: ./containers/backend
     image: gri-backend-dev:latest
@@ -58,7 +72,7 @@ services:
 
   raster-tileserver:
     build: ./containers/raster
-    image: gri-raster-tilesverer-dev:latest
+    image: gri-raster-tileserver-dev:latest
     volumes:
       - ./tileserver/raster/db:/opt/terracotta/db
       - ./tileserver/raster/data:/opt/terracotta/data # bind mount
@@ -71,7 +85,7 @@ services:
 
   raster-tileserver-generator:
     build: ./containers/raster
-    image: gri-raster-tilesverer-dev:latest
+    image: gri-raster-tileserver-dev:latest
     volumes:
       - ./tileserver/raster/db:/opt/terracotta/db
       - ./tileserver/raster/data:/opt/terracotta/data
@@ -90,7 +104,7 @@ services:
 
   # raster-tileserver-optimizer:
   #   build: ./containers/raster
-  #   image: gri-raster-tilesverer-dev:latest
+  #   image: gri-raster-tileserver-dev:latest
   #   volumes:
   #     - ./tileserver/raster/db:/opt/terracotta/db
   #     - ./tileserver/raster/data:/opt/terracotta/data # bind mount
@@ -106,7 +120,7 @@ services:
 
   vector-tileserver:
     build: ./containers/vector
-    image: gri-vector-tilesverer-dev:latest
+    image: gri-vector-tileserver-dev:latest
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config.json:/config.json

@@ -1,2 +1,4 @@
 hazard,path,rp,rcp,epoch,gcm,key
-coastal,input/hazard-aqueduct/global/inuncoast_historical_nosub_hist_rp0002_0.tif,2,baseline,2010,None,inuncoast_historical_nosub_hist_rp0002_0
+coastal,./raw_data/processed_data/input/hazard-aqueduct/inuncoast_historical_nosub_hist_rp0001_5.tif,1,baseline,present,None,inuncoast_historical_nosub_hist_rp0001_5
+coastal,./raw_data/processed_data/input/hazard-aqueduct/inuncoast_historical_nosub_hist_rp0002_0.tif,2,baseline,present,None,inuncoast_historical_nosub_hist_rp0002_0
+coastal,./raw_data/processed_data/input/hazard-aqueduct/inuncoast_historical_nosub_hist_rp0005_0.tif,5,baseline,present,None,inuncoast_historical_nosub_hist_rp0005_0
