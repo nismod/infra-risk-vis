@@ -32,6 +32,8 @@ rule all:
 rule raster_temp_file:
     output:
         "raster/link/{layer}.tif",
+    resources:
+        mem_disk_gb=1
     run:
         layer = get_hazard_layer(wildcards.layer, hazard_layers)
         # This symlink just does not want to work
@@ -57,6 +59,8 @@ rule raster_zero_nodata:
         rules.raster_temp_file.output,
     output:
         "raster/nodata/{layer}.tif",
+    resources:
+        mem_disk_gb=4
     shell:
         """
         NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
@@ -90,6 +94,8 @@ rule raster_clip_ns:
         rules.raster_zero_nodata.output,
     output:
         "raster/clip/{layer}.tif",
+    resources:
+        mem_disk_gb=4
     shell:
         """
         gdal_translate -projwin -173.881360209 84.039535351 177.393420678 -84.78788384 -of GTiff {input} {output}  && \
@@ -101,6 +107,8 @@ rule raster_to_cog:
         rules.raster_clip_ns.output,
     output:
         "raster/cog/{layer}.tif",
+    resources:
+        mem_disk_gb=4
     shell:
         """
         # translate to Cloud-Optimised GeoTIFF

@@ -41,9 +41,12 @@ services:
     command:
       [
         "--cores",
-        "1",
+        "3",
         "--latency-wait",
         "20",
+        "--resources",
+        "mem_disk_gb=60",
+        "--rerun-incomplete",
         "-s",
         "/opt/etl/Snakefile"
       ]
