@@ -5,7 +5,7 @@ services:
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-dev
-    image: gri-web-server-dev:latest
+    image: ghcr.io/nismod/gri-web-server-dev:0.1
     volumes:
       - ./containers/web-server/certs:/etc/ssl/certs
     ports:
@@ -33,7 +33,7 @@ services:
       - 5050:80
 
   snakemake:
-    image: gri-snakemake:latest
+    image: ghcr.io/nismod/gri-snakemake:0.1
     build: ./etl
     volumes:
       - ./etl:/opt/etl
@@ -67,7 +67,7 @@ services:
 
   backend:
     build: ./containers/backend
-    image: gri-backend-dev:latest
+    image: ghcr.io/nismod/gri-backend:0.1
     env_file:
       - ./envs/dev/.backend.env
     expose:
@@ -75,7 +75,7 @@ services:
 
   raster-tileserver:
     build: ./containers/raster
-    image: gri-raster-tileserver-dev:latest
+    image: ghcr.io/nismod/gri-raster-tileserver:0.1
     volumes:
       - ./tileserver/raster/db:/opt/terracotta/db
       - ./tileserver/raster/data:/opt/terracotta/data # bind mount
@@ -88,8 +88,9 @@ services:
 
   raster-tileserver-generator:
     build: ./containers/raster
-    image: gri-raster-tileserver-dev:latest
+    image: ghcr.io/nismod/gri-raster-tileserver:0.1
     volumes:
+      - ./containers/raster/ingest.py:/ingest.py
       - ./tileserver/raster/db:/opt/terracotta/db
       - ./tileserver/raster/data:/opt/terracotta/data
       - ./containers/raster/config.toml:/opt/config.toml
@@ -123,7 +124,7 @@ services:
 
   vector-tileserver:
     build: ./containers/vector
-    image: gri-vector-tileserver-dev:latest
+    image: ghcr.io/nismod/gri-vector-tileserver:0.1
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config.json:/config.json
