@@ -35,6 +35,7 @@ build/
 
 # tileserver database
 terracotta.sqlite
+terracotta.sqlite-journal
 
 # python files
 __pycache__

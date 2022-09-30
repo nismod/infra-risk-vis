@@ -63,7 +63,24 @@ buildings_industrial.mbtiles
 
 ### Data preperation within Docker
 
-Data Preperation can be run within Docker:
+Data Preperation can be run within Docker, end to end.
+
+#### Downloaders
+
+##### Aqueduct (Coastal and Riverine Hazard)
+
+Source at: `etl/scripts/downloaders.py`
+
+* Generates metadata from Tiff links
+* Populates etl hazard.csv (append) from meta data
+* Downloads tiffs
+
+bash
+```
+docker-compose -f docker-compose-dev.yaml run aqueduct-downloader
+```
+
+#### Snakemake
 
 bash
 ```
@@ -75,6 +92,12 @@ or using Docker Compose `snakemake` service:
 bash
 ```
 docker-compose -f docker-compose-dev.yaml run snakemake
+```
+
+#### Raster Tileserver Database Generation
+
+```bash
+docker-compose -f docker-compose-dev.yaml run raster-tileserver-generator
 ```
 
 ### Terracotta Test Frontend

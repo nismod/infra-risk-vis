@@ -2,12 +2,16 @@ import os
 import subprocess
 import shutil
 from typing import List
+import shutil
 
 import geopandas
 import pandas
 
 from scripts.helpers import hazard_layer_name_formatted, generate_final_hazard_layer_names
 
+def disk_free_mb(wildcards, attempt):
+    _, _, free = shutil.disk_usage("/") 
+    return int(free / 1000000)
 
 # Example config
 # - override by running:
@@ -33,7 +37,9 @@ rule raster_temp_file:
     output:
         "raster/link/{layer}.tif",
     resources:
-        mem_disk_gb=1
+        disk_mb=100
+    priority:
+        60,
     run:
         layer = get_hazard_layer(wildcards.layer, hazard_layers)
         # This symlink just does not want to work
@@ -60,7 +66,9 @@ rule raster_zero_nodata:
     output:
         "raster/nodata/{layer}.tif",
     resources:
-        mem_disk_gb=4
+        disk_mb=3000
+    priority:
+        70,
     shell:
         """
         NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
@@ -95,7 +103,9 @@ rule raster_clip_ns:
     output:
         "raster/clip/{layer}.tif",
     resources:
-        mem_disk_gb=4
+        disk_mb=3000
+    priority:
+        80,
     shell:
         """
         gdal_translate -projwin -173.881360209 84.039535351 177.393420678 -84.78788384 -of GTiff {input} {output}  && \
@@ -108,7 +118,9 @@ rule raster_to_cog:
     output:
         "raster/cog/{layer}.tif",
     resources:
-        mem_disk_gb=4
+        disk_mb=100
+    priority:
+        90,
     shell:
         """
         # translate to Cloud-Optimised GeoTIFF
@@ -138,6 +150,10 @@ rule raster_cleanup:
         rules.raster_to_cog.output,
     output:
         "../tileserver/raster/data/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        100,
     shell:
         """
         mv {input} {output}
