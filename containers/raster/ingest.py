@@ -43,7 +43,7 @@ with open(HAZARD_CSV) as fh:
         )
 
 
-def load(db_name: str, keys: List[str], raster_files: List[Dict]):
+def load(db_name: str, keys: List[str], raster_files: List[Dict], append=True):
     driver = terracotta.get_driver(db_name)
 
     # create an empty database if it doesn't exist
@@ -53,13 +53,27 @@ def load(db_name: str, keys: List[str], raster_files: List[Dict]):
     # sanity check that the database has the same keys that we want to load
     assert list(driver.key_names) == keys, (driver.key_names, keys)
 
+    if append is True:
+        # Remove existing rasters from the ingest list
+        existing_rasters = driver.get_datasets().values()
+        raster_files = [
+            raster for raster in raster_files if raster["path"] not in existing_rasters
+        ]
+
     progress_bar = tqdm.tqdm(raster_files)
 
     for raster in progress_bar:
         progress_bar.set_postfix(file=raster["path"])
 
         with driver.connect():
-            driver.insert(raster["key_values"], raster["path"])
+            try:
+                driver.insert(raster["key_values"], raster["path"])
+            except Exception as err:
+                print(
+                    "raster {} failed ingest (skipping) due to {}".format(
+                        raster["path"], err
+                    )
+                )
 
 
 if __name__ == "__main__":

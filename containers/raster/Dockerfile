@@ -10,4 +10,5 @@ RUN apt-get update && \
 
 COPY ./docker-entrypoint.sh /
 COPY ./ingest.py ./
+COPY ./config.toml /opt/config.toml
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
