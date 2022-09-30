@@ -44,3 +44,6 @@ __pycache__
 
 # Docker and deployment
 envs
+
+# Terraform
+*.tfstate*

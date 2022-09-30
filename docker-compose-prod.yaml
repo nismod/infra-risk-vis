@@ -2,21 +2,22 @@ version: "3.9"
 
 services:
   web-server:
-    build: ./containers/web-server/prod
+    build:
+      context: ./containers/web-server
+      dockerfile: Dockerfile-prod
+    image: ghcr.io/nismod/gri-web-server:0.1
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
-      - "80:80"
-      - "443:443"
+      - 443:443
+      - 80:80
 
   db:
     image: kartoza/postgis:14-3.1
     volumes:
       - postgis-data:/var/lib/postgresql
-    environment:
-      - POSTGRES_DB=jamaica
-      - POSTGRES_USER=docker
-      - POSTGRES_PASS=docker
-      - ALLOW_IP_RANGE=0.0.0.0/0
-      - POSTGRES_MULTIPLE_EXTENSIONS=postgis
+    env_file:
+      - ./envs/prod/.db.env
     expose:
       - 5432
     healthcheck:
@@ -24,31 +25,31 @@ services:
 
   backend:
     build: ./containers/backend
-    environment:
-      - PGHOST=db
-      - PGDATABASE=jamaica
-      - PGUSER=docker
-      - PGPASSWORD=docker
+    image: ghcr.io/nismod/gri-backend:0.1
+    env_file:
+      - ./envs/prod/.backend.env
     expose:
       - 8888
 
   raster-tileserver:
     build: ./containers/raster
+    image: ghcr.io/nismod/gri-raster-tileserver:0.1
     volumes:
-      - raster-db:/opt/terracotta/db
-      - ./mounts/raster:/opt/terracotta/data # bind mount
-    expose:
-      - 5000
+      - ./tileserver/raster/db:/opt/terracotta/db
+      - ./tileserver/raster/data:/opt/terracotta/data
+    env_file:
+      - ./envs/prod/.raster-tileserver.env
+    ports:
+      - 5000:5000
+    command: [ "serve" ]
 
   vector-tileserver:
     build: ./containers/vector
+    image: ghcr.io/nismod/gri-vector-tileserver:0.1
     volumes:
-      - ./mounts/vector:/data # bind mount
+      - ./tileserver/vector/data:/data
     expose:
       - 8080
 
 volumes:
-  dbbackups:
   postgis-data:
-  raster-db:
-  auth:
