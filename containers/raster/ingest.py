@@ -62,12 +62,16 @@ def load(db_name: str, keys: List[str], raster_files: List[Dict], append=True):
 
     progress_bar = tqdm.tqdm(raster_files)
 
-    for raster in progress_bar:
+    for idx, raster in enumerate(progress_bar):
         progress_bar.set_postfix(file=raster["path"])
 
         with driver.connect():
             try:
-                driver.insert(raster["key_values"], raster["path"])
+                category_map = {"meta_idx": str(idx)}
+                metadata = driver.compute_metadata(
+                    raster["path"], extra_metadata={"categories": category_map}
+                )
+                driver.insert(raster["key_values"], raster["path"], metadata=metadata)
             except Exception as err:
                 print(
                     "raster {} failed ingest (skipping) due to {}".format(

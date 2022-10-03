@@ -47,3 +47,8 @@ envs
 
 # Terraform
 *.tfstate*
+
+# Other data
+*.zip
+*.nc
+*.nc4

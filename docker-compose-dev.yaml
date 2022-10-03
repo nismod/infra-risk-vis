@@ -78,8 +78,9 @@ services:
     build: ./containers/raster
     image: ghcr.io/nismod/gri-raster-tileserver:0.1
     volumes:
-      - ./tileserver/raster/db:/opt/terracotta/db
-      - ./tileserver/raster/data:/opt/terracotta/data # bind mount
+      - ./containers/raster/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./tileserver/raster/test/db:/opt/terracotta/db
+      - ./tileserver/raster/test/data:/opt/terracotta/data # bind mount
       - ./containers/raster/config.toml:/opt/config.toml
     env_file:
       - ./envs/dev/.raster-tileserver.env
@@ -90,12 +91,14 @@ services:
   raster-tileserver-generator:
     build: ./containers/raster
     image: ghcr.io/nismod/gri-raster-tileserver:0.1
+    env_file:
+      - ./envs/dev/.raster-tileserver.env
     volumes:
       - ./containers/raster/ingest.py:/ingest.py
-      - ./tileserver/raster/db:/opt/terracotta/db
-      - ./tileserver/raster/data:/opt/terracotta/data
+      - ./tileserver/raster/test/db:/opt/terracotta/db
+      - ./tileserver/raster/test/data:/opt/terracotta/data
       - ./containers/raster/config.toml:/opt/config.toml
-      - ./etl/hazard_layers.csv:/opt/hazard_layers.csv
+      - ./etl/hazard_layers_test.csv:/opt/hazard_layers.csv
     ports:
       - 5050:5000
     command:
