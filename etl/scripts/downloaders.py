@@ -60,7 +60,7 @@ class HazardAqueduct:
                 1: {
                     "input": "climatescenario",
                     "output": "rcp",
-                    "map": {"historical": "baseline", "rcp4p5": "4.5", "rcp8p5": "8.5"},
+                    "map": {"historical": "baseline", "rcp4p5": "4x5", "rcp8p5": "8x5"},
                 },
                 3: {
                     "input": "year",
@@ -102,19 +102,19 @@ class HazardAqueduct:
             },
         }
 
-    def riverine_fname_map(self):
+    def fluvial_fname_map(self):
         """
-        Filename map for riverine data to CSV variables
+        Filename map for fluvial data to CSV variables
         See: http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2/_Aqueduct_Floods_Data_Dictionary.xlsx
         """
         # idx: {input : output}
         return {
-            "hazard": "riverine",
+            "hazard": "fluvial",
             "fname_map": {
                 1: {
                     "input": "climatescenario",
                     "output": "rcp",
-                    "map": {"historical": "baseline", "rcp4p5": "4.5", "rcp8p5": "8.5"},
+                    "map": {"historical": "baseline", "rcp4p5": "4x5", "rcp8p5": "8x5"},
                 },
                 2: {
                     "input": "model",
@@ -195,7 +195,7 @@ class HazardAqueduct:
         try:
             return {
                 "inuncoast": self.coastal_fname_map(),
-                "inunriver": self.riverine_fname_map(),
+                "inunriver": self.fluvial_fname_map(),
             }[_type]
         except KeyError:
             raise Exception("unknown map type: {}".format(_type))
@@ -208,7 +208,7 @@ class HazardAqueduct:
             {   'filename': 'inunriver_rcp8p5_MIROC-ESM-CHEM_2080_rp01000.tif',
                 'meta': {   'epoch': '2080',
                             'gcm': 'MIROC-ESM-CHEM',
-                            'hazard': 'riverine',
+                            'hazard': 'fluvial',
                             'key': 'inunriver_rcp8p5_MIROC-ESM-CHEM_2080_rp01000',
                             'path': 'input/hazard-aqueduct/global/inunriver_rcp8p5_MIROC-ESM-CHEM_2080_rp01000.tif',
                             'rcp': '8.5'},
@@ -218,7 +218,7 @@ class HazardAqueduct:
         data_mapper = self.map_selector(fname)
         output = {"filename": fname, "url": self.build_tiff_link(fname), "meta": {}}
         try:
-            for idx, item in enumerate(os.path.splitext(fname)[0].split("_")[:-1]):
+            for idx, item in enumerate(os.path.splitext(fname)[0].split("_")):
                 if idx == 2 and data_mapper["hazard"] == "coastal":
                     # No GCM for Coastal
                     output["meta"]["gcm"] = "None"
@@ -343,7 +343,9 @@ class HazardAqueduct:
             len(files_meta),
         )
 
-    def run(self, limit_files: int = None, log_meta: bool = False) -> None:
+    def run(
+        self, download: bool = True, limit_files: int = None, log_meta: bool = False
+    ) -> None:
         """
         Main runner - download files and process meta into CSV
         """
@@ -358,8 +360,9 @@ class HazardAqueduct:
         if log_meta:
             pp = pprint.PrettyPrinter(indent=4)
             pp.pprint(files_meta)
-        print("downloading files...")
-        files_meta = self.download_files(files_meta)
+        if download is True:
+            print("downloading files...")
+            files_meta = self.download_files(files_meta)
         print("generating hazard csv")
         h.append_hazard_csv(files_meta)
         print("Complete")
@@ -367,13 +370,13 @@ class HazardAqueduct:
 
 if __name__ == "__main__":
     if sys.argv[1] == "aqueduct":
-        h = HazardAqueduct(sys.argv[2], sys.argv[3])
+        h = HazardAqueduct(sys.argv[3], sys.argv[4])
         # fnames = h.fetch_tiff_fnames()
         # files_meta = h.parse_fnames(fnames)
         # pp = pprint.PrettyPrinter(indent=4)
         # pp.pprint(files_meta)
         # # h.append_hazard_csv(files_meta)
-        h.run(limit_files=None, log_meta=False)
+        h.run(download=sys.argv[2] == "True", limit_files=None, log_meta=True)
     else:
         print("Unknown Downloader:", sys.argv[1])
 

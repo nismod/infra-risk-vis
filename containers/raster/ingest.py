@@ -24,7 +24,7 @@ KEYS = ["type", "rp", "rcp", "epoch", "gcm"]
 # each key - make sure the order matches the order of KEYS defined above)
 #
 # Read from hazard.csv
-# hazard,path,rp,rcp,epoch,confidence,key
+# hazard,path,rp,rcp,epoch,gcm,key
 RASTER_FILES = []
 with open(HAZARD_CSV) as fh:
     reader = csv.DictReader(fh)

@@ -18,23 +18,23 @@ export function getHazardId<
   returnPeriod,
   rcp,
   epoch,
-  confidence,
+  gcm,
 }: {
   hazardType: F;
   returnPeriod: RP;
   rcp: RCP;
   epoch: E;
-  confidence: C;
+  gcm: C;
 }) {
-  return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${confidence}` as const;
+  return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${gcm}` as const;
 }
 
 export function hazardViewLayer(hazardType: string, hazardParams: HazardParams): ViewLayer {
   const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;
 
-  const { returnPeriod, rcp, epoch, confidence } = hazardParams;
+  const { returnPeriod, rcp, epoch, gcm } = hazardParams;
 
-  const deckId = getHazardId({ hazardType, returnPeriod, rcp, epoch, confidence });
+  const deckId = getHazardId({ hazardType, returnPeriod, rcp, epoch, gcm });
 
   return {
     id: hazardType,
