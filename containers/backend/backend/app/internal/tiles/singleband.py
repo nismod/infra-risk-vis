@@ -38,6 +38,7 @@ RGBA = Tuple[Number, Number, Number, Number]
 
 
 def singleband(
+    tc_driver_path: str,
     keys: Union[Sequence[str], Mapping[str, str]],
     tile_xyz: Tuple[int, int, int] = None,
     *,
@@ -60,7 +61,7 @@ def singleband(
     if tile_size is None:
         tile_size = settings.DEFAULT_TILE_SIZE
 
-    driver = get_driver(settings.DRIVER_PATH, provider=settings.DRIVER_PROVIDER)
+    driver = get_driver(tc_driver_path, provider=settings.DRIVER_PROVIDER)
 
     with driver.connect():
         metadata = driver.get_metadata(keys)

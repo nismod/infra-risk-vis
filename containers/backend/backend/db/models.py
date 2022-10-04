@@ -1,4 +1,9 @@
+"""
+SQL Alchemy Models for Backend
+"""
+
 from sqlalchemy import ForeignKey, Integer, Column, String, JSON, Float
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
 
@@ -109,3 +114,17 @@ class AdaptationCostBenefit(Base):
     avoided_eael_amin = Column(Float)
     avoided_eael_mean = Column(Float)
     avoided_eael_amax = Column(Float)
+
+
+class RasterTileSource(Base):
+    __tablename__ = "raster_tile_sources"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    source_db = Column(String, nullable=False)
+    global_type = Column(String, nullable=False)  # Hazard, Risk, Exposure, Adaptation
+    effect_type = Column(
+        String, nullable=False
+    )  # River Flooding, Coastal Flooding, Extreme Heat, Drought
+    full_name = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    license = Column(String, nullable=True)
+    variables = Column(JSONB)  # JSON of variables, their dimensions and defaults

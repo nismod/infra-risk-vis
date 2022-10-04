@@ -167,3 +167,17 @@ class FeatureListItemOut(GenericModel, Generic[SortFieldT]):
 AttributeT = TypeVar("AttributeT")
 
 AttributeLookup = dict[int, AttributeT]
+
+# Tile Server metadata
+class TileSourceMeta(BaseModel):
+    id: int = None
+    source_db: str
+    global_type: str
+    effect_type: str
+    full_name: str
+    description: str
+    license: str
+    variables: dict
+
+    class Config:
+        orm_mode = True
