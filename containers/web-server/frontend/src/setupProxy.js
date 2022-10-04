@@ -22,7 +22,7 @@ module.exports = function (app) {
   app.use(
     '/raster',
     createProxyMiddleware({
-      target: 'http://localhost:5000',
+      target: 'http://localhost:8888',
       changeOrigin: true,
       pathRewrite: {
         '^/raster': '/', // remove base path
