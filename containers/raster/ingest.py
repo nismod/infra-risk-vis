@@ -13,7 +13,7 @@ DB_PATH = sys.argv[3]
 
 # Define the location of the SQLite database
 # (this will be created if it doesn't already exist)
-DB_NAME = f"{DB_PATH}/terracotta.sqlite"
+# DB_NAME = f"{DB_PATH}/terracotta.sqlite"
 
 # Define the list of keys that will be used to identify datasets.
 # (these need to match the key_values dicts defined in RASTER_FILES below)
@@ -45,10 +45,11 @@ with open(HAZARD_CSV) as fh:
 
 def load(db_name: str, keys: List[str], raster_files: List[Dict], append=True):
     driver = terracotta.get_driver(db_name)
+    driver.create(keys)
 
-    # create an empty database if it doesn't exist
-    if not os.path.isfile(db_name):
-        driver.create(keys)
+    # # create an empty database if it doesn't exist
+    # if not os.path.isfile(db_name):
+    #     driver.create(keys)
 
     # sanity check that the database has the same keys that we want to load
     assert list(driver.key_names) == keys, (driver.key_names, keys)
@@ -81,4 +82,4 @@ def load(db_name: str, keys: List[str], raster_files: List[Dict], append=True):
 
 
 if __name__ == "__main__":
-    load(DB_NAME, KEYS, RASTER_FILES)
+    load(DB_PATH, KEYS, RASTER_FILES)

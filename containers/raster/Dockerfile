@@ -6,7 +6,7 @@ RUN apt-get update && \
   git clone --depth 1 --branch v0.7.5 https://github.com/DHI-GRAS/terracotta && \
   cd terracotta && \
   pip install -e . && \
-  pip install gunicorn crick
+  pip install gunicorn crick pymysql
 
 COPY ./docker-entrypoint.sh /
 COPY ./ingest.py ./
