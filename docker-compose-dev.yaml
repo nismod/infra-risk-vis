@@ -18,10 +18,19 @@ services:
       - postgis-data:/var/lib/postgresql
     env_file:
       - ./envs/dev/.db.env
-    expose:
-      - 5432
+    ports:
+      - 5432:5432
     healthcheck:
       test: "exit 0"
+
+  tiles-db:
+    image: mysql:5.7.39
+    env_file:
+      - ./envs/dev/.mysql.env
+    ports:
+      - 3306:3306
+    volumes:
+      - tiles-db-data:/var/lib/mysql
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -69,24 +78,27 @@ services:
   backend:
     build: ./containers/backend
     image: ghcr.io/nismod/gri-backend:0.1
+    volumes:
+      - ./tileserver/raster/test/db:/opt/terracotta/db
+      - ./tileserver/raster/test/data:/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/test/data
     env_file:
       - ./envs/dev/.backend.env
-    expose:
-      - 8888
-
-  raster-tileserver:
-    build: ./containers/raster
-    image: ghcr.io/nismod/gri-raster-tileserver:0.1
-    volumes:
-      - ./containers/raster/docker-entrypoint.sh:/docker-entrypoint.sh
-      - ./tileserver/raster/test/db:/opt/terracotta/db
-      - ./tileserver/raster/test/data:/opt/terracotta/data # bind mount
-      - ./containers/raster/config.toml:/opt/config.toml
-    env_file:
-      - ./envs/dev/.raster-tileserver.env
     ports:
-      - 5000:5000
-    command: [ "serve" ]
+      - 8888:8888
+
+  # raster-tileserver:
+  #   build: ./containers/raster
+  #   image: ghcr.io/nismod/gri-raster-tileserver:0.1
+  #   volumes:
+  #     - ./containers/raster/docker-entrypoint.sh:/docker-entrypoint.sh
+  #     - ./tileserver/raster/db:/opt/terracotta/db
+  #     - ./tileserver/raster/data:/opt/terracotta/data # bind mount
+  #     - ./containers/raster/config.toml:/opt/config.toml
+  #   env_file:
+  #     - ./envs/dev/.raster-tileserver.env
+  #   ports:
+  #     - 5000:5000
+  #   command: [ "serve" ]
 
   raster-tileserver-generator:
     build: ./containers/raster
@@ -96,7 +108,7 @@ services:
     volumes:
       - ./containers/raster/ingest.py:/ingest.py
       - ./tileserver/raster/test/db:/opt/terracotta/db
-      - ./tileserver/raster/test/data:/opt/terracotta/data
+      - ./tileserver/raster/test/data:/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/test/data
       - ./containers/raster/config.toml:/opt/config.toml
       - ./etl/hazard_layers_test.csv:/opt/hazard_layers.csv
     ports:
@@ -105,26 +117,10 @@ services:
       [
         "python",
         "ingest.py",
-        "/opt/terracotta/data",
+        "/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/test/data",
         "/opt/hazard_layers.csv",
-        "/opt/terracotta/db"
+        "mysql://root:B4Fq1kRvU28tTZh5g@tiles-db/tilestwo"
       ]
-
-  # raster-tileserver-optimizer:
-  #   build: ./containers/raster
-  #   image: gri-raster-tileserver-dev:latest
-  #   volumes:
-  #     - ./tileserver/raster/db:/opt/terracotta/db
-  #     - ./tileserver/raster/data:/opt/terracotta/data # bind mount
-  #     - ./containers/raster/config.toml:/opt/config.toml
-  #   command:
-  #     [
-  #       "terracotta",
-  #       "optimize-rasters",
-  #       "/opt/terracotta/data/*.tif",
-  #       "-o",
-  #       "/opt/terracotta/data/optimized/"
-  #     ]
 
   vector-tileserver:
     build: ./containers/vector
@@ -136,6 +132,6 @@ services:
       - 8080
 
 volumes:
-  dbbackups:
+  tiles-db-data:
   postgis-data:
   pgadmin:

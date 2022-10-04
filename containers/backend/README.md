@@ -59,3 +59,5 @@ Tileserver endpoints `/singleband/*` require Cloud-Optimised Tiffs to be mounted
 The base-path for rasters must be set using the environment variable `RASTER_BASE_PATH`
 
 __NOTE__: TC_DRIVER_PATH is not used internally - for Terracotta the path is built programatically based on the URL
+
+Tileserver also provides a meta store for information about each tile database, with associated CRUD operations for metadata management.

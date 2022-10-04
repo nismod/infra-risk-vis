@@ -21,7 +21,7 @@ from app import schemas
 from app.dependencies import get_db
 from db import models
 from app.internal.helpers import build_driver_path, handle_exception
-from app.exceptions import SourceDBAlreadyExistsException
+from app.exceptions import SourceDBAlreadyExistsException, SourceDBDoesNotExistException
 
 router = APIRouter(tags=["tiles"])
 
@@ -54,6 +54,20 @@ def _get_singleband_image(
     )
 
     return singleband(driver_path, parsed_keys, tile_xyz=tile_xyz, **options)
+
+
+def _source_db_exists(db: Session, source_db: str) -> bool:
+    """
+    Check whether the given source_db exists in the meta store
+    """
+    res = (
+        db.query(models.RasterTileSource)
+        .filter(models.RasterTileSource.source_db == source_db)
+        .all()
+    )
+    if res:
+        return True
+    return False
 
 
 @router.get("/sources", response_model=List[schemas.TileSourceMeta])
@@ -110,12 +124,7 @@ def insert_source_meta(
     """
     logger.debug("performing %s, with %s", inspect.stack()[0][3], source_meta)
     try:
-        res = (
-            db.query(models.RasterTileSource)
-            .filter(models.RasterTileSource.source_db == source_meta.source_db)
-            .all()
-        )
-        if res:
+        if _source_db_exists(db, source_meta.source_db):
             raise SourceDBAlreadyExistsException()
         values = source_meta.dict()
         values.pop("id")
@@ -178,17 +187,34 @@ async def get_tile(
         colormap,
         ast.literal_eval(stretch_range),
     )
+    try:
+        # Check the keys are appropriate for the given type
+        options = {}
+        if colormap:
+            options["colormap"] = colormap
+        if stretch_range:
+            options["stretch_range"] = ast.literal_eval(stretch_range)
 
-    # Check the keys are appropriate for the given type
-    options = {}
-    if colormap:
-        options["colormap"] = colormap
-    if stretch_range:
-        options["stretch_range"] = ast.literal_eval(stretch_range)
+        # Check the database exists
+        if not _source_db_exists(db, source_db):
+            raise SourceDBDoesNotExistException()
 
-    # Generate the tile
-    image = _get_singleband_image(source_db, keys, [tile_x, tile_y, tile_z], options)
-    logger.debug("tile image of size returned: %s, %s", getsizeof(image), type(image))
+        # Generate the tile
+        image = _get_singleband_image(
+            source_db, keys, [tile_x, tile_y, tile_z], options
+        )
+        logger.debug(
+            "tile image of size returned: %s, %s", getsizeof(image), type(image)
+        )
 
-    # Return the tile as stream
-    return StreamingResponse(image, media_type="image/png")
+        # Return the tile as stream
+        return StreamingResponse(image, media_type="image/png")
+    except SourceDBDoesNotExistException as err:
+        handle_exception(logger, err)
+        raise HTTPException(
+            status_code=400,
+            detail=f"source database {source_db} does not exist in tiles metastore",
+        )
+    except Exception as err:
+        handle_exception(logger, err)
+        raise HTTPException(status_code=500)

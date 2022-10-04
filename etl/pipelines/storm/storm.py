@@ -17,6 +17,9 @@ LOG = get_logger()
 
 class HazardStorm:
     """
+    Pre-requisites:
+        - Tiffs downloaded from STORM repository
+        - Tiffs loaded into file structure as below:
     Structure assumed:
         /top_storm_dir
             /present/.tiffs
@@ -107,7 +110,6 @@ class HazardStorm:
         LOG.debug("final meta: %s", meta)
         return meta
 
-    # parse fname -> Dict / List
     # Ingest to API - Metadata
     # Ingest to terracotta sqlite DB (Python API)
 
