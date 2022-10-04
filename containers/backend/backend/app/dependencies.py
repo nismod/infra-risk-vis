@@ -1,6 +1,6 @@
 from fastapi import Query
-from backend.app import schemas
-from backend.db.database import SessionLocal
+from app import schemas
+from db.database import SessionLocal
 
 
 def get_db():

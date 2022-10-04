@@ -3,13 +3,12 @@ LABEL maintainer="frederick.thomas@ouce.ox.ac.uk"
 
 WORKDIR /code
 
-COPY Pipfile* .
+COPY pyproject.toml .
 
 COPY . /code
-RUN pip install pipenv
-RUN pipenv install
+RUN python -m pip install .
 
-CMD ["pipenv", "run", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8888"]
+CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8888"]
 
 # If running behind a proxy like Nginx or Traefik add --proxy-headers
 # CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--proxy-headers"]

@@ -5,14 +5,14 @@ from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from geoalchemy2 import functions
 
-from backend.app import schemas
-from backend.app.dependencies import get_db
-from backend.app.internal.attribute_access import (
+from app import schemas
+from app.dependencies import get_db
+from app.internal.attribute_access import (
     add_value_query,
     parse_dimensions,
     parse_parameters,
 )
-from backend.db import models
+from db import models
 
 
 router = APIRouter(tags=["features"])

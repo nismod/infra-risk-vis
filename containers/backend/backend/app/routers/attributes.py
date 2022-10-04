@@ -2,14 +2,14 @@ from typing import Any
 from fastapi import APIRouter, Body, Depends
 from sqlalchemy.orm import Session
 
-from backend.app.dependencies import get_db
-from backend.app.internal.attribute_access import (
+from app.dependencies import get_db
+from app.internal.attribute_access import (
     add_value_query,
     parse_dimensions,
     parse_parameters,
 )
 
-from backend.db import models
+from db import models
 
 from .. import schemas
 

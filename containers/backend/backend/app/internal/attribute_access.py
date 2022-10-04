@@ -7,8 +7,8 @@ from sqlalchemy.sql.operators import ColumnOperators
 from pydantic import Json, ValidationError
 
 
-from backend.app import schemas
-from backend.db import models
+from app import schemas
+from db import models
 
 
 def add_damages_expected_value_query(
