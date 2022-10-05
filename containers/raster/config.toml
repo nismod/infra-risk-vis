@@ -1,9 +1,0 @@
-# terracotta config used in development
-# for production, see the entrypoint
-
-ALLOWED_ORIGINS_METADATA=["*"]
-ALLOWED_ORIGINS_TILES=["*"]
-
-PNG_COMPRESS_LEVEL=0
-RESAMPLING_METHOD="nearest"
-REPROJECTION_METHOD="nearest"
