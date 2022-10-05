@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+
+"""
+Script used for ingesting one or more rasters into a terracotta MySQL Database.
+
+The run environment must contain:
+    TC_DRIVER_PATH=mysql://USER:PASSWORD@HOST
+"""
 import csv
 import json
 import os
@@ -38,16 +45,7 @@ parser.add_argument(
 )
 
 
-# Define the location of the SQLite database
-# (this will be created if it doesn't already exist)
-# DB_NAME = f"{DB_PATH}/terracotta.sqlite"
-
-# Define the list of keys that will be used to identify datasets.
-# (these need to match the key_values dicts defined in RASTER_FILES below)
-# KEYS = ["type", "rp", "rcp", "epoch", "gcm"]
-
-
-def build_driver_path(database: str, mysql_uri: str) -> str:
+def _build_driver_path(database: str, mysql_uri: str) -> str:
     """
     Build the full MySQL driver path for Terracotta using URI and database
     """
@@ -110,7 +108,7 @@ def _setup_driver(db_name: str) -> Any:
     """
     tc_settings = terracotta.get_settings()
     print(f"Using TC Settings: {tc_settings}")
-    tc_driver_path = build_driver_path(db_name, tc_settings.DRIVER_PATH)
+    tc_driver_path = _build_driver_path(db_name, tc_settings.DRIVER_PATH)
     print(f"TC Driver Path: {tc_driver_path}")
     driver = terracotta.get_driver(tc_driver_path, provider=tc_settings.DRIVER_PROVIDER)
     return driver
@@ -156,30 +154,31 @@ def ingest_from_csv(
                 )
 
 
-def _parse_csv_key_column_map(csv_key_colun_map: str) -> dict:
+def _parse_csv_key_column_map(csv_key_column_map: str) -> dict:
     """
     Parse the key column map from args into a dict
+    ::returns dict column_name_map e.g.:
+        {
+            "file_basename": "key",
+            "type": "hazard",
+            "rp": "rp",
+            "rcp": "rcp",
+            "epoch": "epoch",
+            "gcm": "gcm",
+        }
     """
-    return json.loads(csv_key_colun_map)
+    return json.loads(csv_key_column_map)
 
 
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.operation == "load_csv":
-        # csv_key_column_map = {
-        #     "file_basename": "key",
-        #     "type": "hazard",
-        #     "rp": "rp",
-        #     "rcp": "rcp",
-        #     "epoch": "epoch",
-        #     "gcm": "gcm",
-        # }
         try:
             csv_key_column_map = _parse_csv_key_column_map(args.csv_key_column_map)
             print(f"parsed csv_key_column_map successfully as {csv_key_column_map}")
         except:
             print(
-                f"failed to parse csv_key_column_map, check if it is valid JSON: {args.csv_key_column_map}"
+                f"failed to parse csv_key_column_map, check JSON: {args.csv_key_column_map}"
             )
         raster_files = load_csv(
             args.input_csv_filepath, args.internal_raster_base_path, csv_key_column_map
