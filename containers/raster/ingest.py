@@ -73,18 +73,18 @@ def load_csv(
         for row in reader:
             raster_files.append(
                 {
-                    # "key_values": {
-                    #     "type": row["hazard"],
-                    #     "rp": row["rp"],
-                    #     "rcp": row["rcp"],
-                    #     "epoch": row["epoch"],
-                    #     "gcm": row["gcm"],
-                    # },
                     "key_values": {
-                        _k: row[_v]
-                        for _k, _v in csv_key_column_map.items()
-                        if _k != "file_basename"
+                        "type": row["hazard"],
+                        "rp": row["rp"],
+                        "rcp": row["rcp"],
+                        "epoch": row["epoch"],
+                        "gcm": row["gcm"],
                     },
+                    # "key_values": {
+                    #     _k: row[_v]
+                    #     for _k, _v in csv_key_column_map.items()
+                    #     if _k != "file_basename"
+                    # },
                     "path": f"{internal_raster_base_path}/{row[csv_key_column_map['file_basename']]}.tif",
                 }
             )
@@ -109,7 +109,9 @@ def _setup_driver(db_name: str) -> Any:
     Set the terracotta driver
     """
     tc_settings = terracotta.get_settings()
+    print(f"Using TC Settings: {tc_settings}")
     tc_driver_path = build_driver_path(db_name, tc_settings.DRIVER_PATH)
+    print(f"TC Driver Path: {tc_driver_path}")
     driver = terracotta.get_driver(tc_driver_path, provider=tc_settings.DRIVER_PROVIDER)
     return driver
 
@@ -139,7 +141,7 @@ def ingest_from_csv(
             f"found {len(existing_rasters)} existing rasters in the DB - will append {len(raster_files)}"
         )
 
-    progress_bar = tqdm.tqdm(raster_files[0:3])
+    progress_bar = tqdm.tqdm(raster_files)
     for idx, raster in enumerate(progress_bar):
         progress_bar.set_postfix(file=raster["path"])
 
@@ -154,7 +156,7 @@ def ingest_from_csv(
                 )
 
 
-def _parse_csv_key_colun_map(csv_key_colun_map: str) -> dict:
+def _parse_csv_key_column_map(csv_key_colun_map: str) -> dict:
     """
     Parse the key column map from args into a dict
     """
@@ -173,7 +175,7 @@ if __name__ == "__main__":
         #     "gcm": "gcm",
         # }
         try:
-            csv_key_column_map = _parse_csv_key_colun_map(args.csv_key_column_map)
+            csv_key_column_map = _parse_csv_key_column_map(args.csv_key_column_map)
             print(f"parsed csv_key_column_map successfully as {csv_key_column_map}")
         except:
             print(
