@@ -23,6 +23,13 @@ services:
     healthcheck:
       test: "exit 0"
 
+  tiles-db:
+    image: mysql:5.7.39
+    env_file:
+      - ./envs/prod/.mysql.env
+    volumes:
+      - tiles-db-data:/var/lib/mysql
+
   backend:
     build: ./containers/backend
     image: ghcr.io/nismod/gri-backend:0.1
