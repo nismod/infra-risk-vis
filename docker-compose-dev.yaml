@@ -85,36 +85,17 @@ services:
     ports:
       - 8888:8888
 
-  # raster-tileserver:
-  #   build: ./containers/raster
-  #   image: ghcr.io/nismod/gri-raster-tileserver:0.1
-  #   volumes:
-  #     - ./containers/raster/docker-entrypoint.sh:/docker-entrypoint.sh
-  #     - ./tileserver/raster/db:/opt/terracotta/db
-  #     - ./tileserver/raster/data:/opt/terracotta/data # bind mount
-  #     - ./containers/raster/config.toml:/opt/config.toml
-  #   env_file:
-  #     - ./envs/dev/.raster-tileserver.env
-  #   ports:
-  #     - 5000:5000
-  #   command: [ "serve" ]
-
-  raster-tileserver-generator:
-    build: ./containers/raster
-    image: ghcr.io/nismod/gri-raster-tileserver:0.1
+  raster-tile-ingester:
+    build: ./containers/raster-tile-ingester
+    image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
     env_file:
-      - ./envs/dev/.raster-tileserver.env
+      - ./envs/dev/.raster-tile-ingester.env
     volumes:
-      - ./containers/raster/ingest.py:/ingest.py
-      - ./tileserver/raster/data/aqueduct:/data/aqueduct
-      - ./containers/raster/config.toml:/opt/config.toml
-      - ./etl/hazard_layers.csv:/opt/hazard_layers.csv
-    ports:
-      - 5050:5000
+      - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
+      - ./tileserver/raster/data/aqueduct:/data/aqueduct # Must match path in Backend
+      - ./etl/hazard_layers.csv:/opt/hazard_layers.csv # If loading a CSV
     command:
       [
-        "python",
-        "ingest.py",
         "load_csv",
         "--internal_raster_base_path",
         "/data/aqueduct",
