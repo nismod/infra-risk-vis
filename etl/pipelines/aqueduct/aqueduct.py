@@ -77,9 +77,18 @@ class HazardAqueduct:
         self,
         source_url: str = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2",
         list_url: str = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2/index.html",
+        hazard_csv_fpath: str = None,
+        skip_fname_patterns: List = [
+            "perc_05",
+            "0_perc_05",
+            "perc_50",
+            "0_perc_50",
+            "nosub",
+        ],
     ):
         self.source_url = source_url
         self.list_url = list_url
+        self.hazard_csv_fpath = hazard_csv_fpath
         self.hazard_csv_fieldnames = [
             "hazard",
             "path",
@@ -89,6 +98,8 @@ class HazardAqueduct:
             "gcm",
             "key",
         ]
+        # If these patterns are in the filenames they will be removed from processing
+        self.skip_fname_patterns = skip_fname_patterns
         # Top level ETL direcctory
         self.etl_dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -287,6 +298,10 @@ class HazardAqueduct:
         output = []
         for fname in fnames:
             try:
+                # Skip if pattern matches skip cases
+                if any(checkstr in fname for checkstr in self.skip_fname_patterns):
+                    print(f"Skipping {fname} due to substring in skip-list")
+                    continue
                 # Generate the meta from filename
                 file_meta = self.parse_fname(fname)
                 file_meta["meta"]["key"] = os.path.splitext(fname)[0]
@@ -326,10 +341,14 @@ class HazardAqueduct:
         """
         target_fpath = os.path.join(download_dir, filename)
         LOG.info("target fpath: %s", target_fpath)
-        filesize = _download_file(
-            url,
-            target_fpath,
-        )
+        if os.path.exists(target_fpath):
+            print(f"skip download {filename} - already exists")
+            filesize = os.path.getsize(target_fpath)
+        else:
+            filesize = _download_file(
+                url,
+                target_fpath,
+            )
         return filesize, target_fpath
 
     def download_files(self, files_meta: List[dict], download_dir: str) -> List[dict]:
@@ -399,7 +418,10 @@ class HazardAqueduct:
             # Setup the writer
             writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
             # Dump meta
-            writer.writerows([file_meta["meta"] for file_meta in files_meta])
+            for file in files_meta:
+                row = file["meta"]
+                row['path'] = file['path']
+                writer.writerow(row)
         count_after = self.count_hazard_csv_rows()
         print(
             "Count before:",
@@ -452,9 +474,21 @@ if __name__ == "__main__":
     # )
     # logging.info("Complete")
 
-    # Example Usage for Metadata:
+    # # Example Usage for Metadata:
+    # args = parser.parse_args()
+    # processor = HazardAqueduct()
+    # metadata = processor.file_metadata()
+    # LOG.debug(metadata)
+    # LOG.info("Complete")
+
+    # # Example Usage for CSV Only:
     args = parser.parse_args()
-    processor = HazardAqueduct()
+    processor = HazardAqueduct(hazard_csv_fpath="./hazard_layers.csv")
     metadata = processor.file_metadata()
-    LOG.debug(metadata)
+    # Generate path info by downloading (will skip if files exist)
+    metadata = processor.download_files(
+        metadata,
+        "/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/data/aqueduct",
+    )
+    processor.append_hazard_csv(metadata)
     LOG.info("Complete")
