@@ -50,14 +50,14 @@ services:
     command:
       [
         "--cores",
-        "4",
+        "1",
         "--latency-wait",
         "20",
         "--resources",
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/Snakefile"
+        "/opt/etl/pipelines/aqueduct/Snakefile"
       ]
 
   aqueduct-downloader:
@@ -79,8 +79,7 @@ services:
     build: ./containers/backend
     image: ghcr.io/nismod/gri-backend:0.1
     volumes:
-      - ./tileserver/raster/test/db:/opt/terracotta/db
-      - ./tileserver/raster/test/data:/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/test/data
+      - ./tileserver/raster/data:/data
     env_file:
       - ./envs/dev/.backend.env
     ports:
@@ -107,19 +106,24 @@ services:
       - ./envs/dev/.raster-tileserver.env
     volumes:
       - ./containers/raster/ingest.py:/ingest.py
-      - ./tileserver/raster/test/db:/opt/terracotta/db
-      - ./tileserver/raster/test/data:/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/test/data
+      - ./tileserver/raster/data/aqueduct:/data/aqueduct
       - ./containers/raster/config.toml:/opt/config.toml
-      - ./etl/hazard_layers_test.csv:/opt/hazard_layers.csv
+      - ./etl/hazard_layers.csv:/opt/hazard_layers.csv
     ports:
       - 5050:5000
     command:
       [
         "python",
         "ingest.py",
-        "/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/test/data",
+        "load_csv",
+        "--internal_raster_base_path",
+        "/data/aqueduct",
+        "--input_csv_filepath",
         "/opt/hazard_layers.csv",
-        "mysql://root:B4Fq1kRvU28tTZh5g@tiles-db/tilestwo"
+        "--csv_key_column_map",
+        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"rp\": \"rp\", \"rcp\": \"rcp\", \"epoch\": \"epoch\", \"gcm\": \"gcm\"}",
+        "--database_name",
+        "aqueduct"
       ]
 
   vector-tileserver:
