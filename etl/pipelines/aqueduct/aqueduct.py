@@ -8,21 +8,23 @@ import os
 import pprint
 import csv
 from html.parser import HTMLParser
-from typing import List
+from typing import List, Tuple
 from urllib.request import urlopen, urlretrieve
-import logging
 import argparse
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 
-from pipelines.helpers import download_file
+from pipelines.helpers import _download_file, get_logger
 
-logging.basicConfig(format="%(asctime)s %(levelname)s:%(message)s", level=logging.DEBUG)
+LOG = get_logger(__name__)
 
 
 parser = argparse.ArgumentParser(description="Downloaders")
-parser.add_argument("hazard_csv_fpath", type=str, help="path to cumulative hazard file")
-parser.add_argument("download_dir", type=str, help="Download directory for image files")
+parser.add_argument(
+    "--download_path", type=str, help="Download directory for image files"
+)
 parser.add_argument(
     "--source_url", type=str, help="Base URL to use for Image file source"
 )
@@ -45,6 +47,12 @@ parser.add_argument(
     default="False",
     help="Logout metadata associated with files",
 )
+parser.add_argument(
+    "--csv_path",
+    type=str,
+    default=None,
+    help="File-path at-which to dump file meta to CSV",
+)
 
 
 class ListHTMLParser(HTMLParser):
@@ -59,16 +67,6 @@ class ListHTMLParser(HTMLParser):
             pass
 
 
-def download_file(file_url: str, output_filepath: str) -> int:
-    """
-    Download the given file to given path
-
-    ::return filesize int
-    """
-    urlretrieve(file_url, output_filepath)
-    return os.path.getsize(output_filepath)
-
-
 class HazardAqueduct:
     """
     Pre-requisites:
@@ -77,15 +75,11 @@ class HazardAqueduct:
 
     def __init__(
         self,
-        hazard_csv_fpath: str,
-        download_dir: str,
         source_url: str = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2",
         list_url: str = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2/index.html",
     ):
         self.source_url = source_url
         self.list_url = list_url
-        self.hazard_csv_fpath = hazard_csv_fpath
-        self.download_dir = download_dir
         self.hazard_csv_fieldnames = [
             "hazard",
             "path",
@@ -295,18 +289,50 @@ class HazardAqueduct:
             try:
                 # Generate the meta from filename
                 file_meta = self.parse_fname(fname)
-                # Add local file to them meta
-                # file_meta["meta"]["fullpath"] = os.path.join(self.download_dir, fname)
-                file_meta["meta"]["path"] = os.path.join(
-                    self.download_dir.replace(self.etl_dir_path, "."), fname
-                )
                 file_meta["meta"]["key"] = os.path.splitext(fname)[0]
             except Exception as err:
                 print("failed to parse file:", fname, err)
             output.append(file_meta)
         return output
 
-    def download_files(self, files_meta: List[dict]) -> List[dict]:
+    def file_metadata(self) -> List[dict]:
+        """
+        Generate metadata for source files
+
+        ::returns List[dict] metadata for files:
+            {
+                'filename': 'inunriver_rcp8p5_MIROC-ESM-CHEM_2080_rp01000.tif',
+                'url': 'http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2/inunriver_rcp8p5_MIROC-ESM-CHEM_2080_rp01000.tif',
+                'meta': {
+                    'rcp': '8x5',
+                    'hazard': 'fluvial',
+                    'gcm': 'MIROC-ESM-CHEM',
+                    'epoch': '2080',
+                    'rp': '1000',
+                    'key': 'inunriver_rcp8p5_MIROC-ESM-CHEM_2080_rp01000'
+                }
+            }
+        """
+        fnames = self.fetch_tiff_fnames()
+        LOG.info("parsing file meta")
+        files_meta = self.parse_fnames(fnames)
+        return files_meta
+
+    def download_file(
+        self, url: str, filename: str, download_dir: str
+    ) -> Tuple[str, str]:
+        """
+        Download single file and update meta to reflect resulting path
+        """
+        target_fpath = os.path.join(download_dir, filename)
+        LOG.info("target fpath: %s", target_fpath)
+        filesize = _download_file(
+            url,
+            target_fpath,
+        )
+        return filesize, target_fpath
+
+    def download_files(self, files_meta: List[dict], download_dir: str) -> List[dict]:
         """
         Download the files in the given files_meta
 
@@ -314,14 +340,14 @@ class HazardAqueduct:
         """
         for idx, file_meta in enumerate(files_meta):
             try:
-                filesize = download_file(
-                    file_meta["url"],
-                    os.path.join(self.download_dir, file_meta["filename"]),
+                filesize, target_fpath = self.download_file(
+                    file_meta["url"], file_meta["filename"], download_dir
                 )
                 file_meta["filesize"] = filesize
+                file_meta["path"] = target_fpath
                 print(
                     "Downloaded {} of {}, filesize (mb): {}".format(
-                        idx + 1, len(files_meta), filesize / 1000000
+                        idx + 1, len(files_meta), file_meta["filesize"] / 1000000
                     )
                 )
             except Exception as err:
@@ -385,7 +411,11 @@ class HazardAqueduct:
         )
 
     def run(
-        self, download: bool = True, limit_files: int = None, log_meta: bool = False
+        self,
+        download_path: str = None,
+        limit_files: int = None,
+        log_meta: bool = False,
+        csv_path: str = None,
     ) -> None:
         """
         Main runner - download files and process meta into CSV
@@ -401,20 +431,30 @@ class HazardAqueduct:
         if log_meta:
             pp = pprint.PrettyPrinter(indent=4)
             pp.pprint(files_meta)
-        if download is True:
+        if download_path:
             print("downloading files...")
             files_meta = self.download_files(files_meta)
-        print("generating hazard csv")
-        h.append_hazard_csv(files_meta)
+        if csv_path:
+            print("generating hazard csv")
+            self.append_hazard_csv(files_meta)
         print("Complete")
 
 
 if __name__ == "__main__":
+    # Example Usage for Main:
+    # args = parser.parse_args()
+    # processor = HazardAqueduct()
+    # processor.run(
+    #     download_path=None,
+    #     limit_files=3,
+    #     log_meta=args.log_meta == "True",
+    #     csv_path=None,
+    # )
+    # logging.info("Complete")
+
+    # Example Usage for Metadata:
     args = parser.parse_args()
-    processor = HazardAqueduct(args.hazard_csv_fpath, args.download_dir)
-    processor.run(
-        download=args.download == "True",
-        limit_files=args.limit_files,
-        log_meta=args.log_meta == "True",
-    )
-    logging.info("Complete")
+    processor = HazardAqueduct()
+    metadata = processor.file_metadata()
+    LOG.debug(metadata)
+    LOG.info("Complete")

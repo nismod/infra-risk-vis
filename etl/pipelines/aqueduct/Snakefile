@@ -1,0 +1,157 @@
+import os
+import subprocess
+import shutil
+from typing import List
+import shutil
+
+import geopandas
+import pandas
+
+from scripts.helpers import hazard_layer_name_formatted, generate_final_hazard_layer_names
+
+# Example config
+# - override by running:
+#    snakemake --cores=1 --configfile=config_local.yml all
+configfile: "config.yml"
+
+
+# Read further configuration data from CSV
+hazard_layers = pandas.read_csv(config["hazard_layers"])
+# output_layers = generate_final_hazard_layer_names(hazard_layers)
+
+
+wildcard_constraints:
+    layer="[^/]+",
+    # layer_fmt="\w+__rp_[\d]__rcp_[\d]__epoch_[\d]__conf_[\d]",
+
+# Run all file-base jobs, after load_to_database
+rule all:
+    input:
+        expand("../tileserver/raster/data/{layer}.tif", layer=hazard_layers.key),
+
+rule raster_temp_file:
+    output:
+        "raster/link/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        60,
+    run:
+        layer = get_hazard_layer(wildcards.layer, hazard_layers)
+        # This symlink just does not want to work
+        # os.symlink(os.path.join(config["analysis_data_dir"], "processed_data", layer.path), str(output))
+        print (layer.path, output)
+        shutil.copyfile(
+            layer.path,
+            str(output)
+        )
+
+def get_hazard_layer(layer_name, hazard_layers):
+    try:
+        print ("getting hazard layer: ", layer_name)
+        return hazard_layers[hazard_layers.key == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in hazard layers.")
+        raise e
+    finally:
+        print ("got hazard layer")
+
+rule raster_zero_nodata:
+    input:
+        rules.raster_temp_file.output,
+    output:
+        "raster/nodata/{layer}.tif",
+    resources:
+        disk_mb=3000
+    priority:
+        70,
+    shell:
+        """
+        NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
+
+        # handle case of NODATA == nan - the JSON output of gdalinfo will change
+        # nan to "NaN" so we need to reverse that for gdal_calc.py
+        if [ "$NODATA" == '"NaN"' ]
+        then
+          NODATA=nan
+        fi
+
+        if [ "$NODATA" == 'null' ]
+        then
+          NODATA=nan
+        fi
+
+        # replace zeros with NoData value
+        gdal_calc.py \
+          --quiet \
+          -A "{input}" \
+          --outfile="{output}" \
+          --overwrite \
+          --calc="numpy.where(A<=0,$NODATA,A)" \
+          --NoDataValue=$NODATA \
+          --hideNoData && \
+        rm {input}
+        """
+
+rule raster_clip_ns:
+    input:
+        rules.raster_zero_nodata.output,
+    output:
+        "raster/clip/{layer}.tif",
+    resources:
+        disk_mb=3000
+    priority:
+        80,
+    shell:
+        """
+        gdal_translate -projwin -173.881360209 84.039535351 177.393420678 -84.78788384 -of GTiff {input} {output}  && \
+        rm {input}
+        """
+
+rule raster_to_cog:
+    input:
+        rules.raster_clip_ns.output,
+    output:
+        "raster/cog/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        90,
+    shell:
+        """
+        # translate to Cloud-Optimised GeoTIFF
+        #
+        # could use gdalwarp directly - options chosen to match (reasonably
+        # closely) the output of `terracotta optimize-rasters`:
+        #
+        # gdalwarp "{input}" "{output}" \
+        #     -t_srs "EPSG:3857" \
+        #     -r near \
+        #     -of COG \
+        #     -co COMPRESS=DEFLATE \
+        #     -co BLOCKSIZE=256
+        #
+        terracotta optimize-rasters \
+            -o ./raster/cog \
+            --overwrite \
+            --reproject \
+            --nproc -1 \
+            --resampling-method nearest \
+            {input}  && \
+        rm {input}
+        """
+
+rule raster_cleanup:
+    input:
+        rules.raster_to_cog.output,
+    output:
+        "../tileserver/raster/data/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        100,
+    shell:
+        """
+        mv {input} {output}
+        """
+        

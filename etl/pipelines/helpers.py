@@ -6,13 +6,13 @@ import logging
 from urllib.request import urlopen, urlretrieve
 
 
-def get_logger(level=logging.DEBUG):
+def get_logger(name: str = __name__, level=logging.INFO):
     # Create a custom logger
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=level,
         format="%(asctime)s - %(filename)s - %(funcName)s - %(levelname)s - %(message)s",
     )
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(name)
     return logger
 
 
@@ -24,7 +24,8 @@ def tiff_appears_valid(filepath: str) -> bool:
         return False
     return os.path.getsize(filepath) > 0
 
-def download_file(file_url: str, output_filepath: str) -> int:
+
+def _download_file(file_url: str, output_filepath: str) -> int:
     """
     Download the given file to given path
 
