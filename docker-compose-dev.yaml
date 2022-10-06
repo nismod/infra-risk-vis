@@ -85,6 +85,37 @@ services:
     ports:
       - 8888:8888
 
+  vector-tileserver:
+    build: ./containers/vector
+    image: ghcr.io/nismod/gri-vector-tileserver:0.1
+    volumes:
+      - ./tileserver/vector/data:/data # bind mount
+      - ./containers/vector/config.json:/config.json
+    expose:
+      - 8080
+
+  raster-tileserver:
+    build: ./containers/raster
+    image: ghcr.io/nismod/gri-raster-tileserver:0.1
+    volumes:
+      - ./tileserver/raster/data:/data
+    env_file:
+      - ./envs/dev/.raster-tileserver.env
+    ports:
+      - 5000:5000
+    entrypoint: [ "gunicorn" ]
+    command:
+      [
+        "--workers",
+        "2",
+        "--bind",
+        "0.0.0.0:5000",
+        "--umask",
+        "007",
+        "terracotta.server.app:app"
+      ]
+
+  #### Utility Containers
   raster-tile-ingester:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
@@ -106,17 +137,6 @@ services:
         "--database_name",
         "aqueduct"
       ]
-
-  vector-tileserver:
-    build: ./containers/vector
-    image: ghcr.io/nismod/gri-vector-tileserver:0.1
-    volumes:
-      - ./tileserver/vector/data:/data # bind mount
-      - ./containers/vector/config.json:/config.json
-    expose:
-      - 8080
-
-  #### Utility Containers
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   backend-schema-regen:
