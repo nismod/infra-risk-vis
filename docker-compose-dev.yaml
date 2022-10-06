@@ -77,7 +77,7 @@ services:
 
   backend:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.1
+    image: ghcr.io/nismod/gri-backend:0.2
     volumes:
       - ./tileserver/raster/data:/data
     env_file:
@@ -115,6 +115,19 @@ services:
       - ./containers/vector/config.json:/config.json
     expose:
       - 8080
+
+  #### Utility Containers
+
+  ## WARNING - this will wipe the existing tables. TODO: Alembic
+  backend-schema-regen:
+    build: ./containers/backend
+    image: ghcr.io/nismod/gri-backend:0.2
+    volumes:
+      - ./containers/backend/backend/db/models.py:/code/backend/db/models.py
+    env_file:
+      - ./envs/dev/.backend.env
+    entrypoint: [ "python" ]
+    command: [ "/code/backend/create_schema.py" ]
 
 volumes:
   postgis-data:
