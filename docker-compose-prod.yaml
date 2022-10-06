@@ -12,43 +12,14 @@ services:
       - 443:443
       - 80:80
 
-  db:
-    image: kartoza/postgis:14-3.1
-    volumes:
-      - postgis-data:/var/lib/postgresql
-    env_file:
-      - ./envs/prod/.db.env
-    expose:
-      - 5432
-    healthcheck:
-      test: "exit 0"
-
-  tiles-db:
-    image: mysql:5.7.39
-    env_file:
-      - ./envs/prod/.mysql.env
-    volumes:
-      - tiles-db-data:/var/lib/mysql
-
   backend:
-    build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.1
+    image: ghcr.io/nismod/gri-backend:0.2
+    volumes:
+      - ./tileserver/raster/data:/data
     env_file:
       - ./envs/prod/.backend.env
     expose:
       - 8888
-
-  raster-tileserver:
-    build: ./containers/raster
-    image: ghcr.io/nismod/gri-raster-tileserver:0.1
-    volumes:
-      - ./tileserver/raster/db:/opt/terracotta/db
-      - ./tileserver/raster/data:/opt/terracotta/data
-    env_file:
-      - ./envs/prod/.raster-tileserver.env
-    ports:
-      - 5000:5000
-    command: [ "serve" ]
 
   vector-tileserver:
     build: ./containers/vector
