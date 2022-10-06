@@ -6,7 +6,7 @@ from typing import Any, BinaryIO, List, Tuple, Union
 import ast
 import inspect
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, Header
 from fastapi.logger import logger
 from fastapi.responses import FileResponse
 import sqlalchemy
@@ -21,7 +21,9 @@ from app import schemas
 from app.dependencies import get_db
 from db import models
 from app.internal.helpers import build_driver_path, handle_exception
-from app.exceptions import SourceDBAlreadyExistsException, SourceDBDoesNotExistException
+from app.exceptions import SourceDBDoesNotExistException, DomainAlreadyExistsException
+from config import API_TOKEN
+
 
 router = APIRouter(tags=["tiles"])
 
@@ -84,6 +86,20 @@ def _source_db_exists(db: Session, source_db: str) -> bool:
     return False
 
 
+def _domain_exists(db: Session, domain: str) -> bool:
+    """
+    Check whether the given domain exists in the meta store
+    """
+    res = (
+        db.query(models.RasterTileSource)
+        .filter(models.RasterTileSource.domain == domain)
+        .all()
+    )
+    if res:
+        return True
+    return False
+
+
 def _tile_db_from_keys(db: Session, keys: List) -> str:
     """
     Query the name of the mysql database within-which the tiles reside
@@ -98,6 +114,12 @@ def _tile_db_from_keys(db: Session, keys: List) -> str:
         .one()
     )
     return res.source_db
+
+
+async def verify_token(x_token: str = Header()):
+    print(x_token, API_TOKEN)
+    if x_token != API_TOKEN:
+        raise HTTPException(status_code=401, detail="")
 
 
 @router.get("/sources", response_model=List[schemas.TileSourceMeta])
@@ -145,7 +167,7 @@ def get_tile_source_meta(
         raise HTTPException(status_code=500)
 
 
-@router.post("/sources")
+@router.post("/sources", dependencies=[Depends(verify_token)])
 def insert_source_meta(
     source_meta: schemas.TileSourceMeta, db: Session = Depends(get_db)
 ) -> Any:
@@ -154,6 +176,9 @@ def insert_source_meta(
     """
     logger.debug("performing %s, with %s", inspect.stack()[0][3], source_meta)
     try:
+        # Check if the domain already exists
+        if _domain_exists(db, source_meta.domain):
+            raise DomainAlreadyExistsException()
         values = source_meta.dict()
         values.pop("id")
         stmt = sqlalchemy.insert(models.RasterTileSource).values(values)
@@ -161,12 +186,17 @@ def insert_source_meta(
         db.commit()
         logger.debug("Insert Meta result: %s", res)
         return Response(status_code=200)
+    except DomainAlreadyExistsException as err:
+        handle_exception(logger, err)
+        raise HTTPException(
+            status_code=400, detail="domain already exists in another database"
+        )
     except Exception as err:
         handle_exception(logger, err)
         raise HTTPException(status_code=500)
 
 
-@router.delete("/sources/{source_id:int}")
+@router.delete("/sources/{source_id:int}", dependencies=[Depends(verify_token)])
 def delete_source_meta(source_id: int, db: Session = Depends(get_db)) -> Any:
     """
     Delete Tile Source Meta

@@ -126,7 +126,8 @@ class RasterTileSource(Base):
     source_db = Column(String, nullable=False)
     global_type = Column(String, nullable=False)  # Hazard, Risk, Exposure, Adaptation
     # Domain of the TileSource (this is used to check which database a front-end call goes to)
-    domain = Column(String, nullable=False)
+    # Domains can only reside in a single database - we dont allow duplicates even between databases
+    domain = Column(String, nullable=False, unique=True)
     full_name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     license = Column(String, nullable=True)

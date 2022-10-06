@@ -12,5 +12,8 @@ class GriException(Exception):
 class SourceDBAlreadyExistsException(GriException):
     pass
 
+class DomainAlreadyExistsException(GriException):
+    pass
+
 class SourceDBDoesNotExistException(GriException):
     pass
