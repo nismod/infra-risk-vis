@@ -23,16 +23,16 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plu
 
 # Set up SSL
 # TODO - Need Oxford Uni email for reg 
-sudo certbot certonly --standalone --preferred-challenges http --register-unsafely-without-email -d global.infrastructureresilience.org
+sudo certbot certonly --standalone --preferred-challenges http -d global.infrastructureresilience.org
 # Certs arrive here: /etc/letsencrypt/live/global.infrastructureresilience.org
 
 ## The following are first-setup only - they are managed by git actions following provision
 # git action user and docker group
-sudo groupadd docker
-sudo useradd -G docker gitaction
+# sudo groupadd docker
+sudo useradd -m -G docker gitaction
 sudo usermod -s /bin/bash gitaction
 # Generate SSH key for use with appleboy-gitaction
-sudo su gitaction -c "ssh-keygen -t rsa -N '' -f ~/.ssh"
+sudo su gitaction -c "ssh-keygen -t rsa -N ''"
 # Hosting Area
 sudo mkdir /opt/infra-risk
 sudo chown gitaction:gitaction /opt/infra-risk
