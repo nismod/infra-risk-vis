@@ -30,7 +30,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - tiles-db-data:/var/lib/mysql
+      - ./tileserver/raster/db:/var/lib/mysql
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -117,6 +117,5 @@ services:
       - 8080
 
 volumes:
-  tiles-db-data:
   postgis-data:
   pgadmin:
