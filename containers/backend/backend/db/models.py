@@ -2,7 +2,7 @@
 SQL Alchemy Models for Backend
 """
 
-from sqlalchemy import ForeignKey, Integer, Column, String, JSON, Float
+from sqlalchemy import ARRAY, ForeignKey, Integer, Column, String, JSON, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
@@ -117,13 +117,16 @@ class AdaptationCostBenefit(Base):
 
 
 class RasterTileSource(Base):
+    """
+    Can be multiple RasterTileSources to a single source mysql databae
+    """
+
     __tablename__ = "raster_tile_sources"
     id = Column(Integer, primary_key=True, autoincrement=True)
     source_db = Column(String, nullable=False)
     global_type = Column(String, nullable=False)  # Hazard, Risk, Exposure, Adaptation
-    effect_type = Column(
-        String, nullable=False
-    )  # River Flooding, Coastal Flooding, Extreme Heat, Drought
+    # Domain of the TileSource (this is used to check which database a front-end call goes to)
+    domain = Column(String, nullable=False)
     full_name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     license = Column(String, nullable=True)

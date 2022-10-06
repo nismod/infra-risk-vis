@@ -26,4 +26,4 @@ app = FastAPI(generate_unique_id_function=custom_generate_unique_id)
 
 app.include_router(features.router, prefix="/features")
 app.include_router(attributes.router, prefix="/attributes")
-app.include_router(tiles.router, prefix="/singleband")
+app.include_router(tiles.router, prefix="/tiles")

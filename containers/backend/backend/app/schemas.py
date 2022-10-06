@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Generic, Literal, TypeVar
+from typing import Any, Generic, List, Literal, TypeVar
 from pydantic import BaseModel, conint, root_validator
 from pydantic.generics import GenericModel
 
@@ -173,7 +173,7 @@ class TileSourceMeta(BaseModel):
     id: int = None
     source_db: str
     global_type: str
-    effect_type: str
+    domain: str
     full_name: str
     description: str
     license: str

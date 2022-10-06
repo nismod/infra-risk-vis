@@ -26,6 +26,20 @@ from app.exceptions import SourceDBAlreadyExistsException, SourceDBDoesNotExistE
 router = APIRouter(tags=["tiles"])
 
 
+def _parse_keys(keys: str) -> List:
+    """
+    Parse tiles URL key str
+    """
+    return [key for key in keys.split("/") if key]
+
+
+def _domain_from_keys(keys: str) -> str:
+    """
+    Retrieve domain from keys path
+    """
+    return _parse_keys(keys)[0]
+
+
 def _get_singleband_image(
     database: str, keys: str, tile_xyz: Tuple[int, int, int] = None, options: dict = {}
 ) -> BinaryIO:
@@ -37,7 +51,7 @@ def _get_singleband_image(
     """
     from app.internal.tiles.singleband import singleband
 
-    parsed_keys = [key for key in keys.split("/") if key]
+    parsed_keys = _parse_keys(keys)
 
     if options.get("colormap", "") == "explicit":
         options["colormap"] = options.pop("explicit_color_map")
@@ -68,6 +82,22 @@ def _source_db_exists(db: Session, source_db: str) -> bool:
     if res:
         return True
     return False
+
+
+def _tile_db_from_keys(db: Session, keys: List) -> str:
+    """
+    Query the name of the mysql database within-which the tiles reside
+        using the first value of the path keys (which links to hazard-type in the UI)
+        See: frontend/src/config/hazards/domains.ts
+    """
+    domain = _domain_from_keys(keys)
+    # Should only return one entry
+    res = (
+        db.query(models.RasterTileSource)
+        .filter(models.RasterTileSource.domain == domain)
+        .one()
+    )
+    return res.source_db
 
 
 @router.get("/sources", response_model=List[schemas.TileSourceMeta])
@@ -124,8 +154,6 @@ def insert_source_meta(
     """
     logger.debug("performing %s, with %s", inspect.stack()[0][3], source_meta)
     try:
-        if _source_db_exists(db, source_meta.source_db):
-            raise SourceDBAlreadyExistsException()
         values = source_meta.dict()
         values.pop("id")
         stmt = sqlalchemy.insert(models.RasterTileSource).values(values)
@@ -133,12 +161,6 @@ def insert_source_meta(
         db.commit()
         logger.debug("Insert Meta result: %s", res)
         return Response(status_code=200)
-    except SourceDBAlreadyExistsException as err:
-        handle_exception(logger, err)
-        raise HTTPException(
-            status_code=400,
-            detail=f"the source tiles database {source_meta.source_db} already exists",
-        )
     except Exception as err:
         handle_exception(logger, err)
         raise HTTPException(status_code=500)
@@ -164,11 +186,10 @@ def delete_source_meta(source_id: int, db: Session = Depends(get_db)) -> Any:
 
 
 @router.get(
-    "/{source_db:str}/{keys:path}/{tile_z:int}/{tile_x:int}/{tile_y:int}.png",
+    "/{keys:path}/{tile_z:int}/{tile_x:int}/{tile_y:int}.png",
     response_class=StreamingResponse,
 )
 async def get_tile(
-    source_db: str,
     keys: str,
     tile_z: int,
     tile_x: int,
@@ -181,12 +202,21 @@ async def get_tile(
     This route does not work in a FastAPI thread pool environment (i.e. when not async)
     """
     logger.debug(
-        "tile db_source: %s, tile path %s, colormap: %s, stretch_range: %s",
-        source_db,
+        "tile path %s, colormap: %s, stretch_range: %s",
         keys,
         colormap,
         ast.literal_eval(stretch_range),
     )
+    try:
+        # Collect the source tiles DB based on the first value of the path (the domain or type)
+        source_db = _tile_db_from_keys(db, keys)
+        logger.debug("source DB for tile path: %s", source_db)
+    except NoResultFound:
+        domain = _domain_from_keys(keys)
+        raise HTTPException(
+            status_code=404,
+            detail=f"no source database for the given domain {domain} could be found - was the source metadata loaded to PG?",
+        )
     try:
         # Check the keys are appropriate for the given type
         options = {}
