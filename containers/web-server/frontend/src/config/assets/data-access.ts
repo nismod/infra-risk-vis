@@ -8,7 +8,7 @@ function getExpectedDamageKey(direct: boolean, hazard: string, rcp: string, epoc
   return `${direct ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
 }
 
-const hazardTypes = ['fluvial', 'surface', 'coastal', 'cyclone'];
+const hazardTypes = ['fluvial', 'surface', 'coastal', 'cyclone', 'extreme_heat'];
 
 function totalExpectedDamagesProperty(direct: boolean, { rcp, epoch }) {
   const hazardProperties = hazardTypes.map((ht) => featureProperty(getExpectedDamageKey(direct, ht, rcp, epoch)));

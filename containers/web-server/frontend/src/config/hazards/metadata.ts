@@ -15,7 +15,11 @@ export const HAZARDS_METADATA = {
     label: 'Coastal Flooding',
     dataUnit: 'm',
   },
+  extreme_heat: {
+    label: 'Extreme Heat',
+    dataUnit: 'deg',
+  },
 };
 
-export const HAZARDS_MAP_ORDER = ['cyclone', 'fluvial', 'surface', 'coastal'];
-export const HAZARDS_UI_ORDER = ['fluvial', 'surface', 'coastal', 'cyclone'];
+export const HAZARDS_MAP_ORDER = ['cyclone', 'fluvial', 'surface', 'coastal', 'extreme_heat'];
+export const HAZARDS_UI_ORDER = ['fluvial', 'surface', 'coastal', 'cyclone', 'extreme_heat'];

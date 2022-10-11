@@ -20,6 +20,10 @@ export const RASTER_COLOR_MAPS = {
     scheme: 'reds',
     range: [0, 75],
   },
+  extreme_heat: {
+    scheme: 'reds',
+    range: [0, 2],
+  },
 };
 
 function invertColorScale<T>(colorScale: (t: number) => T) {

@@ -74,7 +74,17 @@ export const HazardsControl = () => {
             </InputRow>
           </InputSection>
         </ToggleSection>
+
+        <ToggleSection id="extreme_heat" label="Extreme Heat" disabled={disabled}>
+          <InputSection>
+            <InputRow>
+              <EpochControl group="extreme_heat" disabled={disabled} />
+              <RCPControl group="extreme_heat" disabled={disabled} />
+            </InputRow>
+          </InputSection>
+        </ToggleSection>
       </ToggleSectionGroup>
+
     </>
   );
 };

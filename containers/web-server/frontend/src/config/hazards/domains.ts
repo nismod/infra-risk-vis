@@ -95,4 +95,26 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
     },
     paramDependencies: {},
   },
+  extreme_heat: {
+    paramDomains: {
+      returnPeriod: [],
+      epoch: ['baseline', '2030', '2050', '2080'],
+      rcp: ['baseline', '2.6', '6.0'],
+      gcm: ['gfdl-esm2m', 'hadgem2-es', 'ipsl-cm5a-lr', 'miroc5'],
+    },
+    paramDefaults: {
+      returnPeriod: 1,
+      epoch: 'baseline',
+      rcp: 'baseline',
+      gcm: 'gfdl-esm2m',
+    },
+    paramDependencies: {
+      rcp: ({ epoch }) => {
+        if (epoch === 'baseline') return ['baseline'];
+      },
+      epoch: ({ rcp }) => {
+        if (rcp === '2030' || rcp === '2050' || rcp === '2080') return ['2.6', '6.0'];
+      },
+    },
+  }
 };

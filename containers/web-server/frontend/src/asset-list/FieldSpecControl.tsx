@@ -48,6 +48,7 @@ export const FieldSpecControl: FC<{
               { value: 'surface', label: 'Surface Flooding' },
               { value: 'coastal', label: 'Coastal Flooding' },
               { value: 'cyclone', label: 'Cyclones' },
+              { value: 'extreme_heat', label: 'Extreme Heat' },
             ]}
           />
           <ParamDropdown
