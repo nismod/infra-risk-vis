@@ -6,6 +6,7 @@ Script used for ingesting one or more rasters into a terracotta MySQL Database.
 The run environment must contain:
     TC_DRIVER_PATH=mysql://USER:PASSWORD@HOST
 """
+from copy import copy
 import csv
 import json
 import os
@@ -217,7 +218,7 @@ def _parse_tile_keys(tile_keys: str) -> List[str]:
 def _validate_keys_and_map(tile_keys: List[str], csv_key_column_map: dict):
     if not "file_basename" in csv_key_column_map.keys():
         raise Exception("csv_key_column_map must contain mapping for: 'file_basename'")
-    _map = csv_key_column_map
+    _map = copy(csv_key_column_map)
     _map.pop("file_basename")
     if not sorted(tuple(tile_keys)) == sorted(_map.keys()):
         raise Exception("tile_keys do not match csv_key_column_map keys")
