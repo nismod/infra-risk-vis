@@ -12,7 +12,7 @@ from dataclasses import dataclass, asdict
 
 import numpy as np
 from netCDF4 import Dataset
-from osgeo import gdal
+from osgeo import gdal, osr
 
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -335,7 +335,10 @@ class HazardISIMPExtremeHeat:
         Dump np array to GeoTiff
         """
         drv = gdal.GetDriverByName("GTiff")
+        srs = osr.SpatialReference()
+        srs.ImportFromEPSG(4326)
         ds = drv.Create(output_fpath, width, height, 1, gdal.GDT_Float32)
+        ds.SetProjection(srs.ExportToWkt())
         ds.SetGeoTransform((ul_x, pixel_size, 0, ul_y, 0, -pixel_size))
         ds.GetRasterBand(1).WriteArray(data)
 

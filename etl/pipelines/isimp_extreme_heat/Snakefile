@@ -101,7 +101,7 @@ rule raster_clip_ns:
         80,
     shell:
         """
-        gdal_translate -projwin -179 84 179 -84 -of GTiff {input} {output}  && \
+        gdal_translate -projwin -175 84 175 -84 -of GTiff {input} {output} && \
         rm {input}
         """
 
@@ -134,7 +134,7 @@ rule raster_to_cog:
             --reproject \
             --nproc -1 \
             --resampling-method nearest \
-            {input}  && \
+            {input} && \
         rm {input}
         """
 
