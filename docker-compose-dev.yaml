@@ -57,7 +57,7 @@ services:
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/isimp_extreme_heat/Snakefile"
+        "/opt/etl/pipelines/storm/Snakefile"
       ]
 
   backend:
@@ -87,21 +87,21 @@ services:
       - ./envs/dev/.raster-tile-ingester.env
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-      - ./tileserver/raster/data/extreme_heat:/data/extreme_heat # Must match path in Backend
-      - ./etl/pipelines/isimp_extreme_heat/hazard_isimp_extreme_heat.csv:/opt/hazard_layers.csv # If loading a CSV
+      - ./tileserver/raster/data/storm:/data/storm # Must match path in Backend
+      - ./etl/pipelines/storm/hazard_storm.csv:/opt/hazard_layers.csv # If loading a CSV
     command:
       [
         "load_csv",
         "--internal_raster_base_path",
-        "/data/extreme_heat",
+        "/data/storm",
         "--input_csv_filepath",
         "/opt/hazard_layers.csv",
         "--tile_keys",
-        "type,metric,rcp,epoch,gcm",
+        "type,rp,gcm",
         "--csv_key_column_map",
-        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"metric\": \"metric\", \"rcp\": \"rcp\", \"epoch\": \"epoch\", \"gcm\": \"gcm\"}",
+        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"rp\": \"rp\", \"gcm\": \"gcm\"}",
         "--database_name",
-        "extreme_heat"
+        "cyclone"
       ]
 
   ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
@@ -112,14 +112,7 @@ services:
       - ./envs/dev/.raster-tile-ingester.env
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-      - ./tileserver/raster/data/extreme_heat:/data/extreme_heat # Must match path in Backend
-      - ./etl/pipelines/isimp_extreme_heat/hazard_isimp_extreme_heat.csv:/opt/hazard_layers.csv # If loading a CSV
-    command:
-      [
-        "delete_database_entries",
-        "--database_name",
-        "extreme_heat"
-      ]
+    command: [ "delete_database_entries", "--database_name", "storm" ]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   backend-schema-regen:
