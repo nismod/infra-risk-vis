@@ -3,121 +3,158 @@ Helpers and Handlers for STORM (Tropical Cyclones)
 
 For use within the Snakemake workflow
 """
+import argparse
+import csv
 import os
 import sys
 from typing import List
+from dataclasses import dataclass, asdict
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from helpers import get_logger, tiff_appears_valid
+from helpers import (
+    count_hazard_csv_rows,
+    file_key_from_fname,
+    fname_from_fpath,
+    get_logger,
+    hazard_csv_exists,
+    hazard_csv_valid,
+    tiff_appears_valid,
+)
 
 
 LOG = get_logger()
 
+parser = argparse.ArgumentParser(description="STORM Processor")
+parser.add_argument(
+    "source_dir",
+    type=str,
+    help="Source Directory for files",
+    default=os.path.dirname(os.path.abspath(__file__)),
+)
+parser.add_argument(
+    "--hazard_csv_fpath", type=str, help="path to hazard file", default=None
+)
+
+
+@dataclass
+class StormMeta:
+    """Metadata associated with an input file"""
+
+    hazard: str
+    key: str
+    fname: str
+    gcm: str
+    rp: int
+
+
+class StormFile:
+    def __init__(self, fpath: str):
+        self.source = "STORM"
+        self.fpath = fpath
+        self.fsize = None
+        self.fname = fname_from_fpath(self.fpath)
+        self.meta = self._parse_fname(self.fname)
+
+    def _parse_fname(self, fname: str) -> StormMeta:
+        """
+        Parse the filepath for hazard.csv keys
+
+        ::param fname st e.g. lange2020_hwmid-humidex_gfdl-esm2m_ewembi_historical_nosoc_co2_leh_global_annual_1861_2005.nc4
+            {MAINTAINER}_{MODEL}_{CLIMATE_FORCING}_{BIAS_ADJ}_{CLIMATE_SCENARIO(RCP)}_{SCO_ECO_SCENARIO}_{SENS_SCENARIO}_{VARIABLE}_{REGION}_{TIME_STEP}_{YEAR_START}_{YEAR_END}.nc4
+
+        ::returns meta ISIMPExtremeHeatMeta
+        """
+        _key = file_key_from_fname(fname)
+        parts = _key.split("_")
+        return StormMeta(
+            hazard="storm", fname=fname, key=_key, gcm=parts[4], rp=int(parts[5])
+        )
+
 
 class HazardStorm:
-    """
-    Pre-requisites:
-        - Tiffs downloaded from STORM repository
-        - Tiffs loaded into file structure as below:
-    Structure assumed:
-        /top_storm_dir
-            /present/.tiffs
-            /future/.tiffs
-    """
-
     def __init__(self):
-        pass
+        self.hazard_csv_fieldnames = [
+            "hazard",
+            "path",
+            "rp",
+            "gcm",
+            "key",
+        ]
 
-    def get_filepaths(self, top_dir: str, limit=None) -> List[str]:
+    def get_metadata(self, top_dir: str) -> List[StormFile]:
         """
         Collect and return a list of tiff filepaths to be processed
 
-        ::arg top_dir str Top-level directory containing 'present' amd 'future' folders
-        ::kwarg int limit Arbitrarily limit the number of collected files
+        ::arg top_dir str Top-level directory
         """
-        file_paths = []
-        if not os.path.exists(os.path.join(top_dir, "present")):
-            LOG.error("missing directory `present` under %s", top_dir)
-        if not os.path.exists(os.path.join(top_dir, "future")):
-            LOG.error("missing directory `future` under %s", top_dir)
-        for dirpath, _, filenames in os.walk(os.path.join(top_dir, "present")):
+        input_files = []
+        for dirpath, _, filenames in os.walk(top_dir):
             for _file in filenames:
-                fpath = os.path.join(dirpath, _file)
-                if tiff_appears_valid(fpath) is True:
-                    file_paths.append(fpath)
-                else:
-                    LOG.warning("tiff %s appears to be invalid", _file)
+                if "STORM_FIXED_RETURN_PERIODS" in _file:
+                    fpath = os.path.join(dirpath, _file)
+                    if tiff_appears_valid(fpath) is True:
+                        input_files.append(self.file_metadata(fpath))
+                    else:
+                        LOG.warning("tiff %s appears to be invalid", _file)
+        LOG.debug("generated file data for %s input_files", len(input_files))
+        return input_files
 
-        for dirpath, _, filenames in os.walk(os.path.join(top_dir, "future")):
-            for _file in filenames:
-                fpath = os.path.join(dirpath, _file)
-                if tiff_appears_valid(fpath) is True:
-                    file_paths.append(fpath)
-                else:
-                    LOG.warning("tiff %s appears to be invalid", _file)
-        LOG.debug("generated file_paths: %s", file_paths)
-        return file_paths
-
-    def file_metadata(self, filepath: str) -> dict:
+    def file_metadata(self, fpath: str) -> StormFile:
         """
-        Generate metadata for the given filepath, using the filename dictionary
-            .../future/STORM_FIXED_RETURN_PERIODS_CMCC-CM2-VHR4_EP_4000_YR_RP.tif
-
-        URL: https://data.4tu.nl/articles/dataset/STORM_climate_change_tropical_cyclone_wind_speed_return_periods/14510817/3
-
-        The STORM_FIXED_RETURN_PERIOD datasets contain maximum wind speeds for a
-            fixed set of return periods at 10 km resolution in every basin
-            and for every climate model used here (see below).
-
-        The STORM_FIXED_WIND_SPEED dataset contains return periods
-            for a fixed set of maximum wind speeds at 10 km resolution in every ocean basin
+        Generate metadata for the given fpath, using the filename
+            STORM_FIXED_RETURN_PERIODS_CMCC-CM2-VHR4_EP_4000_YR_RP.tif
+        NOTE: Assumes we are working with post-processed STORM data (mosaiced to Global)
         """
-        meta = {
-            "filename": "",
-            "filepath": "",
-            "epoch": "",
-            "gcm": "",
-            "rp": "",
-            "wind_speed": "",
-        }
+        storm_file = StormFile(fpath)
+        LOG.debug("final storm meta: %s", asdict(storm_file.meta))
+        return storm_file
 
-        # File sub-dir process for epoch
-        if "present" in filepath:
-            meta["epoch"] = "2015"
-        elif "future in filepath":
-            meta["epoch"] = "2050"
-        else:
-            raise Exception("file does not conform (epoch): %s", filepath)
-        # Parse fname
-        filename = os.path.basename(filepath.lower())
-        meta["filename"] = filename
-        meta["filepath"] = filepath
-        parsed = filename.split(".")[0].split("_")
-        LOG.debug("parsed filename: %s", parsed)
-        if parsed[1:4] == ["fixed", "wind", "speeds"]:
-            meta["wind_speed"] = parsed[6]
-            meta["rp"] = "none"
-        elif parsed[1:4] == ["fixed", "return", "periods"]:
-            meta["wind_speed"] = "none"
-            meta["rp"] = parsed[6]
-        else:
-            raise Exception(
-                "file does not conform (windspeed/rp was %s): %s", parsed[1:4], filepath
-            )
-            pass
-        meta["gcm"] = parsed[4]
-        LOG.debug("final meta: %s", meta)
-        return meta
-
-    # Ingest to API - Metadata
-    # Ingest to terracotta sqlite DB (Python API)
+    def append_hazard_csv(
+        self, input_files: List[StormFile], hazard_csv_fpath: str
+    ) -> None:
+        """
+        Append the meta from parsed files to the hazard csv
+        """
+        # Generate file if req
+        if not hazard_csv_exists(hazard_csv_fpath):
+            with open(hazard_csv_fpath, "w") as csvfile:
+                LOG.warning(" No hazard csv found writing new at: %s", hazard_csv_fpath)
+                # Generate a new file
+                writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
+                writer.writeheader()
+        # Check CSV is valid (headers etc)
+        _ = hazard_csv_valid(hazard_csv_fpath, self.hazard_csv_fieldnames)
+        # Dump meta
+        count_before = count_hazard_csv_rows(hazard_csv_fpath)
+        with open(hazard_csv_fpath, "a") as csvfile:
+            # Setup the writer
+            writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
+            # Dump meta
+            count_outputs = 0
+            for input_file in input_files:
+                row = {}
+                row["hazard"] = input_file.meta.hazard
+                row["rp"] = input_file.meta.rp
+                row["gcm"] = input_file.meta.gcm
+                row["key"] = input_file.meta.key
+                row["path"] = input_file.fpath
+                writer.writerow(row)
+                count_outputs += 1
+        count_after = count_hazard_csv_rows(hazard_csv_fpath)
+        LOG.info(
+            "Count before: %s, Count after: %s, number input files processed: %s",
+            count_before - 1,
+            count_after,
+            len(input_files),
+        )
 
 
 if __name__ == "__main__":
-    h = HazardStorm()
-    file_paths = h.get_filepaths(
-        "/home/dusted/code/oxford/infra-risk-vis/etl/raw_data/processed_data/input/storm"
-    )
-    for f in file_paths:
-        h.file_metadata(f)
+    args = parser.parse_args()
+    print(args)
+    processor = HazardStorm()
+    input_files = processor.get_metadata(args.source_dir)
+    # Generate the CSV
+    processor.append_hazard_csv(input_files, args.hazard_csv_fpath)
+    LOG.info("Done.")
