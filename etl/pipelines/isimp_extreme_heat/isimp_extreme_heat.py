@@ -8,17 +8,25 @@ import csv
 from typing import List
 import logging
 import argparse
+from dataclasses import dataclass, asdict
 
 import numpy as np
 from netCDF4 import Dataset
 from osgeo import gdal
-from py import process
 
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from pipelines.helpers import _download_file, file_key_from_fname
+from pipelines.helpers import (
+    count_hazard_csv_rows,
+    download_file,
+    nc_fname_from_url,
+    fname_from_fpath,
+    file_key_from_fname,
+    hazard_csv_exists,
+    hazard_csv_valid,
+)
 
 logging.basicConfig(format="%(asctime)s %(levelname)s:%(message)s", level=logging.DEBUG)
 
@@ -46,17 +54,98 @@ parser.add_argument(
     "--hazard_csv_fpath", type=str, help="path to cumulative hazard file", default=None
 )
 parser.add_argument(
-    "--limit_files",
-    type=int,
-    default=None,
-    help="Limit the number of files processed arbitrarily (for testing) - True / False",
-)
-parser.add_argument(
     "--log_meta",
     type=str,
     default="False",
     help="Logout metadata associated with files",
 )
+
+
+@dataclass
+class ISIMPExtremeHeatMeta:
+    """Metadata associated with an input file"""
+
+    hazard: str
+    key: str
+    fname: str
+    maintainer: str
+    model: str
+    climate_forcing: str
+    bias_adj: str
+    climate_scenario: str
+    socio_econ_scenario: str
+    sensitivity_scenario: str
+    variable: str
+    region: str
+    time_step: str
+    year_start: int
+    year_end: int
+
+
+@dataclass
+class ISIMPExtremeHeatOccurrence:
+    """Metadata associated with a processed occurrence file"""
+
+    source_fname: str
+    fname: str
+    fpath: str
+    key: str
+    epoch: int
+    gcm: str
+
+
+@dataclass
+class ISIMPExtremeHeatExposure:
+    """Metadata associated with a processed exposure file"""
+
+    source_fname: str
+    fname: str
+    fpath: str
+    key: str
+    epoch: int
+    gcm: str
+
+
+class ISIMPExtremeHeatFile:
+    def __init__(self, url: str):
+        self.source = "ISIMP"
+        self.url = url
+        self.fpath = None
+        self.fsize = None
+        self.fname = nc_fname_from_url(self.url)
+        self.meta = self._parse_fname(self.fname)
+        # Outputs from the occurrence and exposure processing related to this file
+        self.occurrence_outputs = []
+        self.exposure_outputs = []
+
+    def _parse_fname(self, fname: str) -> ISIMPExtremeHeatMeta:
+        """
+        Parse the filepath for hazard.csv keys
+
+        ::param fpath st e.g. lange2020_hwmid-humidex_gfdl-esm2m_ewembi_historical_nosoc_co2_leh_global_annual_1861_2005.nc4
+            {MAINTAINER}_{MODEL}_{CLIMATE_FORCING}_{BIAS_ADJ}_{CLIMATE_SCENARIO(RCP)}_{SCO_ECO_SCENARIO}_{SENS_SCENARIO}_{VARIABLE}_{REGION}_{TIME_STEP}_{YEAR_START}_{YEAR_END}.nc4
+
+        ::returns meta ISIMPExtremeHeatMeta
+        """
+        _key = file_key_from_fname(fname)
+        parts = _key.split("_")
+        return ISIMPExtremeHeatMeta(
+            hazard="extreme_heat",
+            fname=fname,
+            key=_key,
+            maintainer=parts[0],
+            model=parts[1],
+            climate_forcing=parts[2],
+            bias_adj=parts[3],
+            climate_scenario=parts[4],
+            socio_econ_scenario=parts[5],
+            sensitivity_scenario=parts[6],
+            variable=parts[7],
+            region=parts[8],
+            time_step=parts[9],
+            year_start=int(parts[10]),
+            year_end=int(parts[11]),
+        )
 
 
 class HazardISIMPExtremeHeat:
@@ -66,27 +155,23 @@ class HazardISIMPExtremeHeat:
 
     def __init__(
         self,
-        list_file: str = "https://github.com/nismod/open-gira/files/9488963/GRII_open_hazard_links.csv",
         download_dir: str = None,
         hazard_csv_fpath: str = None,
         world_pop_2020_05deg_fpath: str = "worldpop_2020_resamp_0x5deg.tif",
     ):
-        self.list_file = list_file
         self.hazard_csv_fpath = hazard_csv_fpath
         self.download_dir = download_dir
         self.world_pop_2020_05deg_fpath = world_pop_2020_05deg_fpath
         self.hazard_name = "extreme_heat"
         self.tmp_dir = "/tmp"  # For list file processing
-        self.hazard_csv_fieldnames = (
-            [
-                "hazard",
-                "path",
-                "rcp",
-                "epoch",
-                "gcm",
-                "key",
-            ],
-        )
+        self.hazard_csv_fieldnames = [
+            "hazard",
+            "path",
+            "rcp",
+            "epoch",
+            "gcm",
+            "key",
+        ]
         self.epoch_bins = {
             "baseline": {
                 "bin_start": 1966,
@@ -114,6 +199,11 @@ class HazardISIMPExtremeHeat:
             },
         }
         self.climate_scenarios_to_process = ["historical", "rcp26", "rcp60"]
+        self.rcp_to_scenario_map = [
+            "baseline",
+            "2x6",
+            "6x0",
+        ]  # these map to indices of climate_scenarios_to_process
         self.time_spans_to_process = [[1861, 2005], [2006, 2099]]
         if not os.path.exists(self.world_pop_2020_05deg_fpath):
             logging.warning(
@@ -121,116 +211,99 @@ class HazardISIMPExtremeHeat:
                 self.world_pop_2020_05deg_fpath,
             )
 
-    @staticmethod
-    def nc_fname_from_url(url: str) -> str:
+    def fetch_nc_paths(self, remote_list_file: str) -> List[ISIMPExtremeHeatFile]:
         """
-        Parse filename for nc file from url
-        """
-        return url.split("/")[-1]
+        Fetch the NC CSV and parse out the ISIMP Extreme Heat paths and file meta
 
-    def parse_fname(self, fname: str) -> dict:
-        """
-        Parse the filename for hazard.csv keys
+        ::param remote_list_file str The remote list file to fetch
 
-        ::param fname st e.g. lange2020_hwmid-humidex_gfdl-esm2m_ewembi_historical_nosoc_co2_leh_global_annual_1861_2005.nc4
-            {MAINTAINER}_{MODEL}_{CLIMATE_FORCING}_{BIAS_ADJ}_{CLIMATE_SCENARIO(RCP)}_{SCO_ECO_SCENARIO}_{SENS_SCENARIO}_{VARIABLE}_{REGION}_{TIME_STEP}_{YEAR_START}_{YEAR_END}.nc4
-
-        ::returns meta dict
-            {   'filename': 'lange2020_hwmid-humidex_gfdl-esm2m_ewembi_historical_nosoc_co2_leh_global_annual_1861_2005.nc4',
-                'meta': { ...parsed variables in name  }
-            }
+        ::returns file meta List[dict] e.g.
+            [
+                {'\ufeffhazard': 'extreme_heat',
+                'source': 'ISIMIP',
+                'url': 'https://files.isimip.org/ISIMIP2b/DerivedOutputData/Lange2020/HWMId-humidex/gfdl-esm2m/future/lange2020_hwmid-humidex_gfdl-esm2m_ewembi_rcp26_nosoc_co2_leh_global_annual_2006_2099.nc4',
+                'fname': 'lange2020_hwmid-humidex_gfdl-esm2m_ewembi_rcp26_nosoc_co2_leh_global_annual_2006_2099.nc4',
+                'path': '',
+                'meta': {
+                    'hazard': 'extreme_heat',
+                    'key': 'lange2020_hwmid-humidex_gfdl-esm2m_ewembi_rcp26_nosoc_co2_leh_global_annual_2006_2099',
+                    'maintainer': 'lange2020',
+                    'model': 'hwmid-humidex',
+                    'climate_forcing': 'gfdl-esm2m',
+                    'bias_adj': 'ewembi',
+                    'climate_scenario': 'rcp26',
+                    'socio_econ_scenario': 'nosoc',
+                    'sensitivity_scenario': 'co2',
+                    'variable': 'leh',
+                    'region': 'global',
+                    'time_step': 'annual',
+                    'year_start': 2006,
+                    'year_end': 2099}
+                }
+            ]
         """
-        basename = fname.split(".")[0]
-        parts = basename.split("_")
-        return {
-            "hazard": self.hazard_name,
-            "key": basename,
-            "maintainer": parts[0],
-            "model": parts[1],
-            "climate_forcing": parts[2],
-            "bias_adj": parts[3],
-            "climate_scenario": parts[4],
-            "socio_econ_scenario": parts[5],
-            "sensitivity_scenario": parts[6],
-            "variable": parts[7],
-            "region": parts[8],
-            "time_step": parts[9],
-            "year_start": int(parts[10]),
-            "year_end": int(parts[11]),
-        }
-
-    def fetch_nc_paths(self) -> List[dict]:
-        """
-        Fetch the NC CSV and parse out the ISIMP Extreme Heat paths
-        """
+        input_files = []
         # fetch list to download dir then remove
         local_list_file = os.path.join(self.tmp_dir, "extreme_heat_list.csv")
         try:
-            fsize = _download_file(self.list_file, local_list_file)
+            fsize = download_file(remote_list_file, local_list_file)
             if not fsize:
                 raise FileNotFoundError("failed to download list file")
             with open(local_list_file, "r") as csvfile:
                 reader = csv.DictReader(csvfile)
-                files_meta = list(reader)
-                # # Remove extraneous types
-                files_meta = [
-                    item
-                    for item in files_meta
-                    if item["\ufeffhazard"] == self.hazard_name
-                ]
-                # Append the filenames and parse filename to meta
-                for item in files_meta:
-                    item["fname"] = self.nc_fname_from_url(item["url"])
-                    item["path"] = ""
-                    item["meta"] = self.parse_fname(item["fname"])
-                # Remove climate scenarios and years we do not require
-                files_meta = [
-                    item
-                    for item in files_meta
-                    if item["meta"]["climate_scenario"]
-                    in self.climate_scenarios_to_process
-                    and [item["meta"]["year_start"], item["meta"]["year_end"]]
-                    in self.time_spans_to_process
-                ]
-                return files_meta
+                files = list(reader)
+                # Remove extraneous types, Append the filenames and parse filename to meta
+                for item in files:
+                    if item["\ufeffhazard"] == self.hazard_name:
+                        input_file = ISIMPExtremeHeatFile(item["url"])
+                        # Remove climate scenarios and years we do not require
+                        if (
+                            input_file.meta.climate_scenario
+                            in self.climate_scenarios_to_process
+                        ):
+                            if [
+                                input_file.meta.year_start,
+                                input_file.meta.year_end,
+                            ] in self.time_spans_to_process:
+                                input_files.append(input_file)
+                return input_files
         except:
             raise
         finally:
             os.remove(local_list_file)
 
-    def download_files(self, files_meta: List[dict], limit_files=None) -> List[dict]:
+    def download_files(
+        self, input_files: List[ISIMPExtremeHeatFile]
+    ) -> List[ISIMPExtremeHeatFile]:
         """
         Download the files in the given meta
 
-        ::returns files_meta - updated with local file paths
+        ::returns input_files - updated with local file paths
         """
-        for idx, file_meta in enumerate(files_meta):
-            logging.debug("Downloading %s", file_meta["url"])
+        for idx, input_file in enumerate(input_files):
+            logging.debug("Downloading %s", input_file.url)
             try:
-                fpath = os.path.join(self.download_dir, file_meta["fname"])
+                fpath = os.path.join(self.download_dir, input_file.fname)
                 # Skip if file already exists
                 if os.path.exists(fpath):
                     logging.info(
                         "file already exists locally - skipping download: %s",
-                        file_meta["fname"],
+                        input_file.fname,
                     )
                     fsize = os.path.getsize(fpath)
                 else:
-                    fsize = _download_file(file_meta["url"], fpath)
+                    fsize = download_file(input_file.url, fpath)
                     if not fsize:
                         raise Exception(
                             "download resulted in invalid file: {}".format(
-                                file_meta["url"]
+                                input_file.url
                             )
                         )
-                file_meta["fsize"] = fsize
-                file_meta["path"] = fpath
-                if limit_files and idx >= limit_files:
-                    logging.info("download aborting due to limit_files=%s", limit_files)
-                    break
-            except Exception as err:
+                input_file.fsize = fsize
+                input_file.fpath = fpath
+            except Exception:
                 logging.exception("")
-        return files_meta
+        return input_files
 
     def np_to_geotiff(
         self,
@@ -250,11 +323,13 @@ class HazardISIMPExtremeHeat:
         ds.SetGeoTransform((ul_x, pixel_size, 0, ul_y, 0, -pixel_size))
         ds.GetRasterBand(1).WriteArray(data)
 
-    def occurrence_tiff_fname_from_meta(self, file_meta: dict, epoch: str) -> str:
+    def occurrence_tiff_fname_from_meta(
+        self, input_file: ISIMPExtremeHeatFile, epoch: str
+    ) -> str:
         """
         Generate a name for a processed tiff using the files metadata
         """
-        basename = file_key_from_fname(file_meta["fname"])
+        basename = file_key_from_fname(input_file.fname)
         return f"{basename}_{epoch}_occurence.tif"
 
     def exposure_tiff_fname_from_occurrence(self, occurrence_tif_fname: str) -> str:
@@ -300,36 +375,36 @@ class HazardISIMPExtremeHeat:
 
     def generate_temporally_averaged_tiff(
         self,
-        file_meta: dict,
+        input_file: ISIMPExtremeHeatFile,
         output_epoch: str,
         output_dir: str,
         averaging_year_start: int,
         averaging_year_end: int,
-    ) -> str:
+    ) -> ISIMPExtremeHeatOccurrence:
         """
         Generate a TIFF file using temporal averaging for the given time window
         """
         logging.info(
             "generating temporally averaged tiff - input file: %s epoch: %s: averaging_year_start: %s, averaging_year_end: %s",
-            file_meta["fname"],
+            input_file.fname,
             output_epoch,
             averaging_year_start,
             averaging_year_end,
         )
         # Load nc4
-        dataset = Dataset(file_meta["path"], "r", format="NETCDF4")
+        dataset = Dataset(input_file.fpath, "r", format="NETCDF4")
         # Load data
         leh_np = dataset.variables["leh"][:]
         # Calculate temporal slice idx
-        start_idx = averaging_year_start - file_meta["meta"]["year_start"]
-        end_idx = averaging_year_end - file_meta["meta"]["year_start"]
+        start_idx = averaging_year_start - input_file.meta.year_start
+        end_idx = averaging_year_end - input_file.meta.year_start
         logging.debug(
             "slicing file %s at idx %s (yr %s) to %s (yr %s)",
-            file_meta["fname"],
+            input_file.fname,
             start_idx,
-            file_meta["meta"]["year_start"] + start_idx,
+            input_file.meta.year_start + start_idx,
             end_idx,
-            file_meta["meta"]["year_start"] + end_idx,
+            input_file.meta.year_start + end_idx,
         )
         # Generate mean
         leh_np_mean = np.mean(leh_np[start_idx:end_idx, :, :], axis=(0))
@@ -340,7 +415,7 @@ class HazardISIMPExtremeHeat:
             leh_np_mean.max(),
         )
         # Write Occurrence GeoTiff
-        output_fname = self.occurrence_tiff_fname_from_meta(file_meta, output_epoch)
+        output_fname = self.occurrence_tiff_fname_from_meta(input_file, output_epoch)
         output_fpath = os.path.join(output_dir, output_fname)
         logging.debug("writing occurrence geotiff to: %s", output_fpath)
         self.np_to_geotiff(leh_np_mean, output_fpath)
@@ -349,86 +424,92 @@ class HazardISIMPExtremeHeat:
             os.path.getsize(output_fpath),
             output_fpath,
         )
-        return output_fpath
+        return ISIMPExtremeHeatOccurrence(
+            input_file.fname,
+            output_fname,
+            output_fpath,
+            file_key_from_fname(input_file.fname),
+            output_epoch,
+            input_file.meta.climate_forcing,
+        )
 
-    def nc4_to_average_tiffs(self, files_meta: dict, output_dir: str) -> List[dict]:
+    def nc4_to_average_tiffs(
+        self, input_files: List[ISIMPExtremeHeatFile], output_dir: str
+    ) -> List[ISIMPExtremeHeatFile]:
         """
         Temporal averaging for netCDF4 files contained in files meta
             Ref: Dr Mark bernhofen
 
         Note we only process the given climate senario files
 
-        ::param files_meta List[dict] - metadata generated from list_url files
+        ::param input_files List[ISIMPExtremeHeatFile] - metadata generated from list_url files
         ::param output_dir str - Processing output directory
 
-        ::return result_filenames List[dict]
+        ::return input_files List[ISIMPExtremeHeatFile] with occurrence datasets populated
         """
-        output_fpaths = []
-        for file_meta in files_meta:
-            # In case some eextraneous files are present:
+        for input_file in input_files:
+            # In case some extraneous files are present:
             if (
-                file_meta["meta"]["climate_scenario"]
+                input_file.meta.climate_scenario
                 not in self.climate_scenarios_to_process
             ):
                 continue
-            if file_meta["meta"]["climate_scenario"] == "historical":
+            if input_file.meta.climate_scenario == "historical":
                 # Sanity check file meta start_ends
                 assert (
-                    file_meta["meta"]["year_start"]
+                    input_file.meta.year_start
                     == self.epoch_bins["baseline"]["file_year_start"]
                 )
                 assert (
-                    file_meta["meta"]["year_end"]
+                    input_file.meta.year_end
                     == self.epoch_bins["baseline"]["file_year_end"]
                 )
                 try:
                     # Special case for historical
-                    tiff_fpath = self.generate_temporally_averaged_tiff(
-                        file_meta,
+                    occurrence_meta = self.generate_temporally_averaged_tiff(
+                        input_file,
                         "baseline",
                         output_dir,
                         self.epoch_bins["baseline"]["bin_start"],
                         self.epoch_bins["baseline"]["bin_end"],
                     )
+                    input_file.occurrence_outputs.append(occurrence_meta)
                 except Exception:
                     logging.exception("")
-                output_fpaths.append(tiff_fpath)
             else:
                 for epoch, bin_range in self.epoch_bins.items():
                     if epoch == "baseline":
                         continue
                     # Sanity check file meta start_ends
-                    assert (
-                        file_meta["meta"]["year_start"] == bin_range["file_year_start"]
-                    )
-                    assert file_meta["meta"]["year_end"] == bin_range["file_year_end"]
+                    assert input_file.meta.year_start == bin_range["file_year_start"]
+                    assert input_file.meta.year_end == bin_range["file_year_end"]
                     try:
-                        tiff_fpath = self.generate_temporally_averaged_tiff(
-                            file_meta,
+                        occurrence_meta = self.generate_temporally_averaged_tiff(
+                            input_file,
                             epoch,
                             output_dir,
                             bin_range["bin_start"],
                             bin_range["bin_end"],
                         )
+                        input_file.occurrence_outputs.append(occurrence_meta)
                     except Exception:
                         logging.exception("")
-                    output_fpaths.append(tiff_fpath)
-        return output_fpaths
+        return input_files
 
     def occurrence_tiffs_to_exposure(
-        self, occurrence_fpaths: List[str], output_dir: str
-    ) -> List[str]:
+        self, files_meta: List[dict], output_dir: str
+    ) -> List[dict]:
         """
         Generate exposure tiffs from temporally averaged tiffs
 
         ::param occurrence_fpaths List[str] filepaths to occurrence tiffs
         """
-        output_fpaths = []
-        for occurrence_fpath in occurrence_fpaths:
+        for file_meta in files_meta:
             try:
                 exposure_fpath = self.generate_popn_exposure_tiff(
-                    occurrence_fpath, output_dir
+                    file_meta["occurrence_tiff_fpath"], output_dir
                 )
+                file_meta["exposure_tiff_fpath"] = exposure_fpath
             except Exception:
                 logging.exception("")
             logging.debug(
@@ -436,25 +517,60 @@ class HazardISIMPExtremeHeat:
                 os.path.getsize(exposure_fpath),
                 exposure_fpath,
             )
-            output_fpaths.append(exposure_fpath)
-        return output_fpaths
+        return files_meta
 
-    def run(
-        self, download: bool = True, limit_files: int = None, log_meta: bool = False
-    ) -> None:
+    def count_hazard_csv_rows(self) -> int:
         """
-        Main runner - download files and process meta into CSV
+        Count number of rows in the Hazard CSV
         """
-        logging.info("Running %s Downloader...", self.__class__.__name__)
-        files_meta = self.fetch_nc_paths()
-        if log_meta is True:
-            logging.info(files_meta)
-        if download is True:
-            logging.info("downloading files...")
-            files_meta = self.download_files(files_meta, limit_files=limit_files)
-        # logging.info(("generating hazard csv")
-        # h.append_hazard_csv(files_meta)
-        print("Complete")
+        return sum(1 for _ in open(self.hazard_csv_fpath))
+
+    def append_hazard_csv(self, files_meta: List[dict]) -> None:
+        """
+        Append the meta from parsed files to the hazard csv
+        """
+        # Generate file if req
+        if not hazard_csv_exists(self.hazard_csv_fpath):
+            with open(self.hazard_csv_fpath, "w") as csvfile:
+                print(" No hazard csv found writing new at: ", self.hazard_csv_fpath)
+                # Generate a new file
+                writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
+                writer.writeheader()
+        # Check CSV is valid (headers etc)
+        _ = hazard_csv_valid(self.hazard_csv_fpath, self.hazard_csv_fieldnames)
+        # Dump meta
+        count_before = count_hazard_csv_rows(self.hazard_csv_fpath)
+        with open(self.hazard_csv_fpath, "a") as csvfile:
+            # Setup the writer
+            writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
+            # Dump meta
+            # Need to write two lines for each file_meta object - occurrence and exposure output paths
+            # NEXT: Work out this horrorshow - there are multiple rows per input file (but not consistent multiples)
+            # NEXT: We need to generate file metadata for the output files during processing - not just input ones
+            # NEXT: So populate an output data object for each input, that well process out here
+            for file in files_meta:
+                row = []
+                row["hazard"] = file["meta"]["hazard"]
+                row["rcp"] = ""
+                row["epoch"] = ""
+                row["gcm"] = file["meta"]["climate_forcing"]
+                row["key"] = file["meta"]["key"]
+                # Occurrence
+                row["path"] = file["occurrence_tiff_fpath"]
+                writer.writerow(row)
+                # Exposure
+                row["path"] = file["exposure_tiff_fpath"]
+                writer.writerow(row)
+        count_after = count_hazard_csv_rows(self.hazard_csv_fpath)
+        print(
+            "Count before:",
+            count_before - 1,
+            "Count after:",
+            count_after - 1,
+            "number files processed:",
+            len(files_meta)
+            * 2,  # wrote two lines for each input file - occurrence and exposure
+        )
 
 
 if __name__ == "__main__":
@@ -469,20 +585,23 @@ if __name__ == "__main__":
         ),
     )
     # Generate the files metadata
-    files_meta = processor.fetch_nc_paths()
+    input_files = processor.fetch_nc_paths(
+        "https://github.com/nismod/open-gira/files/9488963/GRII_open_hazard_links.csv"
+    )
     if args.log_meta == "True":
-        logging.info(files_meta)
+        for input_file in input_files:
+            logging.info(asdict(input_file.meta))
     # Download Files - checks local existance
     logging.info("downloading files...")
-    result = processor.download_files(files_meta, limit_files=args.limit_files)
-    if result is False:
-        logging.warning("some files failed to download - see earlier messages")
+    input_files = processor.download_files(input_files)
     # generate averaged tiffs
-    occurrence_tif_fpaths = processor.nc4_to_average_tiffs(
-        files_meta, args.output_occurrence_data_directory
+    input_files = processor.nc4_to_average_tiffs(
+        input_files, args.output_occurrence_data_directory
     )
-    # Generate exposure tiffs
-    exposure_tif_fpaths = processor.occurrence_tiffs_to_exposure(
-        occurrence_tif_fpaths, args.output_exposure_data_directory
-    )
+    # # Generate exposure tiffs
+    # files_meta = processor.occurrence_tiffs_to_exposure(
+    #     files_meta, args.output_exposure_data_directory
+    # )
+    # # Generate the CSV
+    # processor.append_hazard_csv(files_meta)
     logging.info("Done.")
