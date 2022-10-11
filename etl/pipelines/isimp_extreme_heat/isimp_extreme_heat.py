@@ -81,29 +81,44 @@ class ISIMPExtremeHeatMeta:
     year_start: int
     year_end: int
 
+    def external_rcp(self):
+        """
+        'rcp60' -> 6x0
+        """
+        if self.climate_scenario == "historical":
+            return "baseline"
+        if "rcp" not in self.climate_scenario:
+            raise Exception(f"rcp field appears to be wrong for {self.fname}")
+        base = self.climate_scenario.replace("rcp", "")
+        return f"{base[0]}x{base[1]}"
+
 
 @dataclass
 class ISIMPExtremeHeatOccurrence:
     """Metadata associated with a processed occurrence file"""
 
+    metric = "occurrence"
     source_fname: str
     fname: str
     fpath: str
     key: str
     epoch: int
     gcm: str
+    rcp: str
 
 
 @dataclass
 class ISIMPExtremeHeatExposure:
     """Metadata associated with a processed exposure file"""
 
+    metric = "exposure"
     source_fname: str
     fname: str
     fpath: str
     key: str
     epoch: int
     gcm: str
+    rcp: str
 
 
 class ISIMPExtremeHeatFile:
@@ -115,8 +130,8 @@ class ISIMPExtremeHeatFile:
         self.fname = nc_fname_from_url(self.url)
         self.meta = self._parse_fname(self.fname)
         # Outputs from the occurrence and exposure processing related to this file
-        self.occurrence_outputs = []
-        self.exposure_outputs = []
+        self.occurrence_outputs: List[ISIMPExtremeHeatOccurrence] = []
+        self.exposure_outputs: List[ISIMPExtremeHeatExposure] = []
 
     def _parse_fname(self, fname: str) -> ISIMPExtremeHeatMeta:
         """
@@ -157,15 +172,16 @@ class HazardISIMPExtremeHeat:
         self,
         download_dir: str = None,
         hazard_csv_fpath: str = None,
-        world_pop_2020_05deg_fpath: str = "worldpop_2020_resamp_0x5deg.tif",
+        world_pop_fpath: str = "jrc_popn_05deg.tiff",
     ):
         self.hazard_csv_fpath = hazard_csv_fpath
         self.download_dir = download_dir
-        self.world_pop_2020_05deg_fpath = world_pop_2020_05deg_fpath
+        self.world_pop_fpath = world_pop_fpath
         self.hazard_name = "extreme_heat"
         self.tmp_dir = "/tmp"  # For list file processing
         self.hazard_csv_fieldnames = [
             "hazard",
+            "metric",  # occurrence or exposure
             "path",
             "rcp",
             "epoch",
@@ -205,10 +221,10 @@ class HazardISIMPExtremeHeat:
             "6x0",
         ]  # these map to indices of climate_scenarios_to_process
         self.time_spans_to_process = [[1861, 2005], [2006, 2099]]
-        if not os.path.exists(self.world_pop_2020_05deg_fpath):
+        if not os.path.exists(self.world_pop_fpath):
             logging.warning(
                 "world pop data does not exist at given path - exposure calcs will fail: %s",
-                self.world_pop_2020_05deg_fpath,
+                self.world_pop_fpath,
             )
 
     def fetch_nc_paths(self, remote_list_file: str) -> List[ISIMPExtremeHeatFile]:
@@ -341,21 +357,21 @@ class HazardISIMPExtremeHeat:
         return f"{fname}.tif"
 
     def generate_popn_exposure_tiff(
-        self, temporally_averaged_tiff_fpath: str, output_dir: str
-    ) -> str:
+        self, input_occurrence_file: ISIMPExtremeHeatOccurrence, output_dir: str
+    ) -> ISIMPExtremeHeatExposure:
         """
         Generate a TIFF file of world population x heatwave occurrence
         """
         logging.info(
             "generating popn exposure tiff - input file: %s",
-            temporally_averaged_tiff_fpath,
+            input_occurrence_file.fpath,
         )
         # Load world pop
-        raster = gdal.Open(self.world_pop_2020_05deg_fpath)
+        raster = gdal.Open(self.world_pop_fpath)
         worldpop_data = raster.ReadAsArray()
 
         # Load Temporally averaged TIFF
-        raster = gdal.Open(temporally_averaged_tiff_fpath)
+        raster = gdal.Open(input_occurrence_file.fpath)
         heat_data = raster.ReadAsArray()
 
         # Sanity check the shape - should both be single band and of same shape
@@ -366,12 +382,20 @@ class HazardISIMPExtremeHeat:
         # Do exposure calc
         exposure = heat_data * worldpop_data
         output_fname = self.exposure_tiff_fname_from_occurrence(
-            os.path.basename(temporally_averaged_tiff_fpath)
+            os.path.basename(input_occurrence_file.fpath)
         )
         output_fpath = os.path.join(output_dir, output_fname)
         # Save
         self.np_to_geotiff(exposure, output_fpath)
-        return output_fpath
+        return ISIMPExtremeHeatExposure(
+            input_file.fname,
+            output_fname,
+            output_fpath,
+            file_key_from_fname(input_file.fname),
+            input_occurrence_file.epoch,
+            input_occurrence_file.gcm,
+            input_occurrence_file.rcp,
+        )
 
     def generate_temporally_averaged_tiff(
         self,
@@ -391,6 +415,8 @@ class HazardISIMPExtremeHeat:
             averaging_year_start,
             averaging_year_end,
         )
+        output_fname = self.occurrence_tiff_fname_from_meta(input_file, output_epoch)
+        output_fpath = os.path.join(output_dir, output_fname)
         # Load nc4
         dataset = Dataset(input_file.fpath, "r", format="NETCDF4")
         # Load data
@@ -415,8 +441,6 @@ class HazardISIMPExtremeHeat:
             leh_np_mean.max(),
         )
         # Write Occurrence GeoTiff
-        output_fname = self.occurrence_tiff_fname_from_meta(input_file, output_epoch)
-        output_fpath = os.path.join(output_dir, output_fname)
         logging.debug("writing occurrence geotiff to: %s", output_fpath)
         self.np_to_geotiff(leh_np_mean, output_fpath)
         logging.debug(
@@ -431,6 +455,7 @@ class HazardISIMPExtremeHeat:
             file_key_from_fname(input_file.fname),
             output_epoch,
             input_file.meta.climate_forcing,
+            input_file.meta.external_rcp(),
         )
 
     def nc4_to_average_tiffs(
@@ -497,27 +522,28 @@ class HazardISIMPExtremeHeat:
         return input_files
 
     def occurrence_tiffs_to_exposure(
-        self, files_meta: List[dict], output_dir: str
-    ) -> List[dict]:
+        self, input_files: List[ISIMPExtremeHeatFile], output_dir: str
+    ) -> List[ISIMPExtremeHeatFile]:
         """
         Generate exposure tiffs from temporally averaged tiffs
 
-        ::param occurrence_fpaths List[str] filepaths to occurrence tiffs
+        ::param input_files List[ISIMPExtremeHeatFile] ISIMPExtremeHeatFile objects containing meta for occurrence datasets
         """
-        for file_meta in files_meta:
-            try:
-                exposure_fpath = self.generate_popn_exposure_tiff(
-                    file_meta["occurrence_tiff_fpath"], output_dir
-                )
-                file_meta["exposure_tiff_fpath"] = exposure_fpath
-            except Exception:
-                logging.exception("")
-            logging.debug(
-                "wrote exposure geotiff of size %s to: %s",
-                os.path.getsize(exposure_fpath),
-                exposure_fpath,
-            )
-        return files_meta
+        for input_file in input_files:
+            for occurrence_file in input_file.occurrence_outputs:
+                try:
+                    exposure = self.generate_popn_exposure_tiff(
+                        occurrence_file, output_dir
+                    )
+                    input_file.exposure_outputs.append(exposure)
+                    logging.debug(
+                        "wrote exposure geotiff of size %s to: %s",
+                        os.path.getsize(exposure.fpath),
+                        exposure.fpath,
+                    )
+                except Exception:
+                    logging.exception("")
+        return input_files
 
     def count_hazard_csv_rows(self) -> int:
         """
@@ -525,7 +551,7 @@ class HazardISIMPExtremeHeat:
         """
         return sum(1 for _ in open(self.hazard_csv_fpath))
 
-    def append_hazard_csv(self, files_meta: List[dict]) -> None:
+    def append_hazard_csv(self, input_files: List[ISIMPExtremeHeatFile]) -> None:
         """
         Append the meta from parsed files to the hazard csv
         """
@@ -544,32 +570,38 @@ class HazardISIMPExtremeHeat:
             # Setup the writer
             writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
             # Dump meta
-            # Need to write two lines for each file_meta object - occurrence and exposure output paths
-            # NEXT: Work out this horrorshow - there are multiple rows per input file (but not consistent multiples)
-            # NEXT: We need to generate file metadata for the output files during processing - not just input ones
-            # NEXT: So populate an output data object for each input, that well process out here
-            for file in files_meta:
-                row = []
-                row["hazard"] = file["meta"]["hazard"]
-                row["rcp"] = ""
-                row["epoch"] = ""
-                row["gcm"] = file["meta"]["climate_forcing"]
-                row["key"] = file["meta"]["key"]
-                # Occurrence
-                row["path"] = file["occurrence_tiff_fpath"]
-                writer.writerow(row)
+            count_outputs = 0
+            for input_file in input_files:
+                row = {}
+                row["hazard"] = input_file.meta.hazard
+                for occurrence_file in input_file.occurrence_outputs:
+                    # Occurrence
+                    row["rcp"] = occurrence_file.rcp
+                    row["gcm"] = occurrence_file.gcm
+                    row["epoch"] = occurrence_file.epoch
+                    row["key"] = occurrence_file.key
+                    row["metric"] = occurrence_file.metric
+                    row["path"] = occurrence_file.fpath
+                    writer.writerow(row)
+                    count_outputs += 1
                 # Exposure
-                row["path"] = file["exposure_tiff_fpath"]
-                writer.writerow(row)
+                for exposure_file in input_file.exposure_outputs:
+                    row["rcp"] = exposure_file.rcp
+                    row["gcm"] = exposure_file.gcm
+                    row["epoch"] = exposure_file.epoch
+                    row["key"] = exposure_file.key
+                    row["metric"] = exposure_file.metric
+                    row["path"] = exposure_file.fpath
+                    writer.writerow(row)
+                    count_outputs += 1
         count_after = count_hazard_csv_rows(self.hazard_csv_fpath)
         print(
             "Count before:",
             count_before - 1,
             "Count after:",
-            count_after - 1,
-            "number files processed:",
-            len(files_meta)
-            * 2,  # wrote two lines for each input file - occurrence and exposure
+            count_after,
+            "number input files processed:",
+            len(input_files),
         )
 
 
@@ -579,9 +611,9 @@ if __name__ == "__main__":
     processor = HazardISIMPExtremeHeat(
         download_dir=args.download_dir,
         hazard_csv_fpath=args.hazard_csv_fpath,
-        world_pop_2020_05deg_fpath=os.path.join(
+        world_pop_fpath=os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            "worldpop_2020_1km_aggregated_resamp_0x5deg.tif",
+            "jrc_popn_05deg.tiff",
         ),
     )
     # Generate the files metadata
@@ -598,10 +630,16 @@ if __name__ == "__main__":
     input_files = processor.nc4_to_average_tiffs(
         input_files, args.output_occurrence_data_directory
     )
-    # # Generate exposure tiffs
-    # files_meta = processor.occurrence_tiffs_to_exposure(
-    #     files_meta, args.output_exposure_data_directory
-    # )
-    # # Generate the CSV
-    # processor.append_hazard_csv(files_meta)
+    for input_file in input_files:
+        print(
+            input_file.fname,
+            len(input_file.occurrence_outputs),
+            len(input_file.exposure_outputs),
+        )
+    # Generate exposure tiffs
+    input_files = processor.occurrence_tiffs_to_exposure(
+        input_files, args.output_exposure_data_directory
+    )
+    # Generate the CSV
+    processor.append_hazard_csv(input_files)
     logging.info("Done.")

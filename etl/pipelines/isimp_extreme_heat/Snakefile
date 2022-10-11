@@ -31,7 +31,7 @@ wildcard_constraints:
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
-        expand("../tileserver/raster/data/{layer}.tif", layer=hazard_layers.key),
+        expand("../tileserver/raster/data/extreme_heat/{layer}.tif", layer=hazard_layers.key),
 
 rule raster_temp_file:
     output:

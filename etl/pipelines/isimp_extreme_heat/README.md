@@ -8,4 +8,6 @@ Trello Link:  https://trello.com/c/hqKMGs55
 
 World Pop 2020 Sourced from: https://data.humdata.org/dataset/worldpop-population-counts-for-world/resource/677d30ab-896e-44e5-9a31-05452bc3124b
 
-Resampled to 0.5deg using:  gdalwarp -t_srs EPSG:4326 -tr 0.5 0.5 -r near -te_srs EPSG:4326 -of GTiff pipelines/isimp_extreme_heat/ppp_2020_1km_Aggregated.tif pipelines/isimp_extreme_heat/05deg.tiff
+JRC Populaton sourced from: https://ghsl.jrc.ec.europa.eu/download.php?ds=pop
+
+Resampled to 0.5deg using:  gdalwarp -t_srs EPSG:4326 -te -180 -90 180 90 -tr 0.5 0.5 -r average -te_srs EPSG:4326 -of GTiff pipelines/isimp_extreme_heat/GHS_POP_P2030_GLOBE_R2022A_54009_1000_V1_0.tif pipelines/isimp_extreme_heat/jrc_popn_05deg.tiff
