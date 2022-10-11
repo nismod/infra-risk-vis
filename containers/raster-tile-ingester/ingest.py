@@ -22,13 +22,18 @@ parser = argparse.ArgumentParser(description="Terracotta Ingester")
 parser.add_argument(
     "operation",
     type=str,
-    choices=["load_csv", "load_json", "load_single"],
+    choices=["load_csv", "load_json", "load_single", "delete_database_entries"],
     help="Type of load operation - load_csv requires input_csv_filepath",
 )
 parser.add_argument(
     "--input_csv_filepath",
     type=str,
     help="Absolute path to the CSV file containing information for each raster",
+)
+parser.add_argument(
+    "--tile_keys",
+    type=str,
+    help="A comma-seperated list of tile keys and ordering, e.g. hazard,rp,rcp,gcm",
 )
 parser.add_argument(
     "--csv_key_column_map",
@@ -48,7 +53,7 @@ parser.add_argument(
 def load_csv(
     csv_filepath: str,
     internal_raster_base_path: str,
-    csv_key_column_map: dict = None,
+    csv_key_column_map: dict,
 ) -> List[dict]:
     """
     Define a list of raster files to import
@@ -176,6 +181,19 @@ def ingest_from_csv(
                 )
 
 
+def _delete_database_entries(db_name: str) -> bool:
+    """
+    Remove all datasets from the given database
+    """
+    print(f"Deleting all entries for {db_name}")
+    driver = _setup_driver(db_name)
+    count_before = len(driver.get_datasets())
+    for ds_keys, ds_path in driver.get_datasets().items():
+        driver.delete(ds_keys)
+    count_after = len(driver.get_datasets())
+    print(f"Deleted {count_before - count_after} entries from db {db_name}")
+
+
 def _parse_csv_key_column_map(csv_key_column_map: str) -> dict:
     """
     Parse the key column map from args into a dict
@@ -192,21 +210,32 @@ def _parse_csv_key_column_map(csv_key_column_map: str) -> dict:
     return json.loads(csv_key_column_map)
 
 
+def _parse_tile_keys(tile_keys: str) -> List[str]:
+    return tile_keys.split(",")
+
+
+def _validate_keys_and_map(tile_keys: List[str], csv_key_column_map: dict):
+    if not "file_basename" in csv_key_column_map.keys():
+        raise Exception("csv_key_column_map must contain mapping for: 'file_basename'")
+    _map = csv_key_column_map
+    _map.pop("file_basename")
+    if not sorted(tuple(tile_keys)) == sorted(_map.keys()):
+        raise Exception("tile_keys do not match csv_key_column_map keys")
+
+
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.operation == "load_csv":
-        try:
-            csv_key_column_map = _parse_csv_key_column_map(args.csv_key_column_map)
-            print(f"parsed csv_key_column_map successfully as {csv_key_column_map}")
-        except:
-            print(
-                f"failed to parse csv_key_column_map, check JSON: {args.csv_key_column_map}"
-            )
+        csv_key_column_map = _parse_csv_key_column_map(args.csv_key_column_map)
+        # Ensure keys in map match tile_keys
+        tile_keys = _parse_tile_keys(args.tile_keys)
+        _validate_keys_and_map(tile_keys, csv_key_column_map)
+        print(f"parsed csv_key_column_map successfully as {csv_key_column_map}")
         raster_files = load_csv(
             args.input_csv_filepath, args.internal_raster_base_path, csv_key_column_map
         )
-        db_keys = list(csv_key_column_map.keys())
-        db_keys.remove("file_basename")
-        ingest_from_csv(args.database_name, db_keys, raster_files)
+        ingest_from_csv(args.database_name, tile_keys, raster_files)
+    elif args.operation == "delete_database_entries":
+        _delete_database_entries(args.database_name)
     else:
         print(f"Operation {args.operation} not yet supported")
