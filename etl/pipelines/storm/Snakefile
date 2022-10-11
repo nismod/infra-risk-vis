@@ -78,6 +78,11 @@ rule raster_zero_nodata:
           NODATA=nan
         fi
 
+        if [ "$NODATA" == '3.4028235e+38' ]
+        then
+          NODATA=nan
+        fi
+
         # replace zeros with NoData value
         gdal_calc.py \
           --quiet \
