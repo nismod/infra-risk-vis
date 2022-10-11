@@ -16,12 +16,12 @@ sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from pipelines.helpers import _download_file, get_logger
+from pipelines.helpers import download_file, get_logger
 
 LOG = get_logger(__name__)
 
 
-parser = argparse.ArgumentParser(description="Downloaders")
+parser = argparse.ArgumentParser(description="Aqueduct Downloader")
 parser.add_argument(
     "--download_path", type=str, help="Download directory for image files"
 )
@@ -333,9 +333,7 @@ class HazardAqueduct:
         files_meta = self.parse_fnames(fnames)
         return files_meta
 
-    def download_file(
-        self, url: str, filename: str, download_dir: str
-    ) -> Tuple[str, str]:
+    def download(self, url: str, filename: str, download_dir: str) -> Tuple[str, str]:
         """
         Download single file and update meta to reflect resulting path
         """
@@ -345,7 +343,7 @@ class HazardAqueduct:
             print(f"skip download {filename} - already exists")
             filesize = os.path.getsize(target_fpath)
         else:
-            filesize = _download_file(
+            filesize = download_file(
                 url,
                 target_fpath,
             )
@@ -359,7 +357,7 @@ class HazardAqueduct:
         """
         for idx, file_meta in enumerate(files_meta):
             try:
-                filesize, target_fpath = self.download_file(
+                filesize, target_fpath = self.download(
                     file_meta["url"], file_meta["filename"], download_dir
                 )
                 file_meta["filesize"] = filesize
@@ -420,7 +418,7 @@ class HazardAqueduct:
             # Dump meta
             for file in files_meta:
                 row = file["meta"]
-                row['path'] = file['path']
+                row["path"] = file["path"]
                 writer.writerow(row)
         count_after = self.count_hazard_csv_rows()
         print(
