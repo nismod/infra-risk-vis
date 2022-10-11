@@ -67,8 +67,9 @@ class StormFile:
         """
         _key = file_key_from_fname(fname)
         parts = _key.split("_")
+        # NOTE: hazard name matching front-end
         return StormMeta(
-            hazard="storm", fname=fname, key=_key, gcm=parts[4], rp=int(parts[5])
+            hazard="cyclone", fname=fname, key=_key, gcm=parts[4], rp=int(parts[5])
         )
 
 
