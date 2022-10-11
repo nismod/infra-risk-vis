@@ -66,6 +66,18 @@ Tileserver also provides a meta store for information about each tile database, 
 
 POST the following JSON (adapt as required for the source) to: `http://backend-host:8080/tiles/sources`
 
+__NOTE__: Also Add the entry into `domain:DB` map in backend/config.py.  This is an interim measure until we can get the UI querying the domain from API
+
+
+```
+DOMAIN_TO_DB_MAP = {
+    "fluvial": "aqueduct",
+    "coastal": "aqueduct",
+    "extreme_heat": "extreme_heat",
+    "cyclone": "cyclone",
+}
+```
+
 ##### Aqueduct:
 
 ```json

@@ -21,7 +21,7 @@ from db import models
 from app.internal.tiles.singleband import database_keys
 from app.internal.helpers import build_driver_path, handle_exception
 from app.exceptions import SourceDBDoesNotExistException, DomainAlreadyExistsException
-from config import API_TOKEN
+from config import API_TOKEN, DOMAIN_TO_DB_MAP
 
 
 router = APIRouter(tags=["tiles"])
@@ -106,7 +106,7 @@ def _domain_exists(db: Session, domain: str) -> bool:
     return False
 
 
-def _tile_db_from_keys(db: Session, keys: List) -> str:
+def _tile_db_from_keys(keys: List) -> str:
     """
     Query the name of the mysql database within-which the tiles reside
         using the first value of the path keys (which links to hazard-type in the UI)
@@ -114,12 +114,7 @@ def _tile_db_from_keys(db: Session, keys: List) -> str:
     """
     domain = _domain_from_keys(keys)
     # Should only return one entry
-    res = (
-        db.query(models.RasterTileSource)
-        .filter(models.RasterTileSource.domain == domain)
-        .one()
-    )
-    return res.source_db
+    return DOMAIN_TO_DB_MAP[domain]
 
 
 async def verify_token(x_token: str = Header()):
@@ -253,8 +248,7 @@ async def get_tile(
         ast.literal_eval(stretch_range),
     )
     try:
-        # Collect the source tiles DB based on the first value of the path (the domain or type)
-        source_db = _tile_db_from_keys(db, keys)
+        source_db = _tile_db_from_keys(keys)
         logger.debug("source DB for tile path: %s", source_db)
     except NoResultFound:
         domain = _domain_from_keys(keys)
