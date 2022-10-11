@@ -52,7 +52,7 @@ TC_REPROJECTION_METHOD="nearest"
 
 ### Tileserver
 
-Tileserver endpoints `/singleband/*` require Cloud-Optimised Tiffs to be mounted at the same path as they have been ingested into the MySQL database.
+Tileserver endpoints `/tiles/*` require Cloud-Optimised Tiffs to be mounted at the same path as they have been ingested into the MySQL database.
 
 (Tileserver endpoints require Tiffs to have been pre-loaded into the given MySQL DB)
 
@@ -61,3 +61,50 @@ The base-path for rasters must be set using the environment variable `RASTER_BAS
 __NOTE__: TC_DRIVER_PATH is not used internally - for Terracotta the path is built programatically based on the URL
 
 Tileserver also provides a meta store for information about each tile database, with associated CRUD operations for metadata management.
+
+#### Adding a Source to the Tileserver metastore
+
+POST the following JSON (adapt as required for the source) to: `http://backend-host:8080/tiles/sources`
+
+##### Aqueduct:
+
+```bash
+[
+	{
+		"source_db": "aqueduct", # the MySQL database the source was ingested-into
+		"global_type": "Hazard", # The global hazard type listed for the source tiles
+		"domain": "fluvial", # The domain within the UI that the hazard maps-into
+		"full_name": "Hazard Aqueduct - Fluvial", # Currently for internal description only
+		"description": "description", # Currently for internal description only
+		"license": "license", # Currently for internal description only
+		"variables": {
+			"some": "vars"
+		} # Currently for internal description only
+	},
+	{
+		"source_db": "aqueduct",
+		"global_type": "Hazard",
+		"domain": "coastal",
+		"full_name": "Hazard Aqueduct - Coastal",
+		"description": "description",
+		"license": "license",
+		"variables": {
+			"some": "vars"
+		}
+	}
+]
+```
+
+##### ISIMP Extreme Heat:
+
+```bash
+{
+	"source_db": "extreme_heat",
+	"global_type": "Hazard", 
+	"domain": "extreme_heat", 
+	"full_name": "Hazard Extreme Heat", 
+	"description": "description", 
+	"license": "license", 
+	"variables": {"some": "vars"} 
+}
+```

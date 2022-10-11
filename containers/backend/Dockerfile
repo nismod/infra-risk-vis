@@ -5,8 +5,8 @@ WORKDIR /code
 
 COPY pyproject.toml .
 
-COPY . /code
 RUN python -m pip install .
+COPY ./backend /code/backend
 
 CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8888"]
 
