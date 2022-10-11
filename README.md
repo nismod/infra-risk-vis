@@ -35,17 +35,17 @@ visualisation and how to run the tool.
 The visualisation tool runs using prepared versions of analysis data and
 results
 - Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
-  a terracotta SQLite database
+  a terracotta MySQL database, hosted within the backend API.
 - Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
   Vector Tiles
 
 See `./etl` directory for details.
 
 Data to be served from the vector and raster tileservers should be placed on
-the host within `mounts/<data_type>`. These folders are made available to the
+the host within `tileserver/<data_type>`. These folders are made available to the
 running tileservers as docker bind mounts.
 
-For example, in `mounts/raster/` there might live TIF files like these:
+For example, in `tileserver/raster/` there might live TIF files like these:
 ```
 coastal_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
 coastal_mangrove__rp_25__rcp_baseline__epoch_2010__conf_None.tif
@@ -53,7 +53,7 @@ coastal_mangrove__rp_500__rcp_baseline__epoch_2010__conf_None.tif
 coastal_nomangrove_minus_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
 ```
 
-And in `mounts/vector/`, mbtiles files like these:
+And in `tileserver/vector/`, mbtiles files like these:
 ```
 airport_runways.mbtiles
 airport_terminals.mbtiles
@@ -65,20 +65,7 @@ buildings_industrial.mbtiles
 
 Data Preperation can be run within Docker, end to end.
 
-#### Downloaders
-
-##### Aqueduct (Coastal and Riverine Hazard)
-
-Source at: `etl/scripts/downloaders.py`
-
-* Generates metadata from Tiff links
-* Populates etl hazard.csv (append) from meta data
-* Downloads tiffs
-
-bash
-```
-docker-compose -f docker-compose-dev.yaml run aqueduct-downloader
-```
+pipelines/{workflow}/{workflow_preprocessor.py} (pre-processing and generation of csv for snakemake) -> pipelines/{workflow}/Snakemake (generated COG Files) -> docker raster-tile-ingester (ingests to tile server DB) -> Add meta to backend API (see: containers/backend/README.md)
 
 #### Snakemake
 
@@ -94,19 +81,14 @@ bash
 docker-compose -f docker-compose-dev.yaml run snakemake
 ```
 
-#### Raster Tileserver Database Generation
+#### Raster Tileserver Ingester
+
+Update docker-compose-dev.yaml `raster-tile-ingester` block as req. for a dataset (after running its pre-processing and Snakemake pipeline)
 
 ```bash
-docker-compose -f docker-compose-dev.yaml run raster-tileserver-generator
+docker-compose -f docker-compose-dev.yaml run raster-tile-ingester
 ```
 
-### Terracotta Test Frontend
-
-Boot the `raster-tileserver` service then run:
-
-```bash
-terracotta connect localhost:5000
-```
 
 ## Build
 
@@ -115,10 +97,10 @@ docker container.
 
 Services:
 - Web server (nginx)
-- Raster tileserver (terracotta)
 - Vector tileserver (tileserver-gl)
-- Backend / API (bespoke Python app)
-- Database (PostgreSQL with PostGIS)
+- Backend / API (bespoke Python app for vector data and raster tiles (+meta))
+- API Database (PostgreSQL with PostGIS serves backend)
+- Tiles Database (MySQL serves tile ingester and backend /tiles endpoints)
 
 The services are orchestrated using `docker compose`. N.B. The app was built
 with docker engine version 20.10.16 and compose version 2.5.0. It may not work
@@ -127,11 +109,6 @@ with other versions.
 The `compose.yml` file contains service names and definitions, and paths to
 build contexts (all located within `containers/`).
 
-To build images for all the services, use `docker compose build`, and to build
-for a single service, use `docker compose build <service>`, e.g.
-`docker compose build raster-tileserver`. These commands are automatically
-referring to the `compose.yml` file, meaning `docker compose build` is
-equivalent to `docker compose -f compose.yml build`.
 
 ## Deploy
 
@@ -150,20 +127,6 @@ changes, use the following invocation:
 To stop a foregrounded compose stack, issue SIGTERM with Ctrl-C. If services
 haven't stopped in 10 seconds they will be brutally terminated. To bring a
 daemonised stack down, use `docker compose down`.
-
-The application has access control. Authentication is handled by nginx. To add
-a user, first exec into the web-server container. The following command will
-start a `/bin/sh` shell in that container:
-`docker exec -it $(docker ps | grep web-server | awk '{printf $1}') /bin/sh`
-
-Then create a new user and password pair with `htpasswd`:
-`htpasswd -Bb /etc/nginx/auth/.htpasswd <username> <password>`
-
-The passwords are persisted as a docker volume. If this volume is deleted, the
-accounts will be lost.
-
-The site can run on a single Linux machine or virtual machine. See `./deploy`
-directory for further details.
 
 ## Acknowledgements
 
