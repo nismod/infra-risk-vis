@@ -172,7 +172,7 @@ class HazardISIMPExtremeHeat:
         self,
         download_dir: str = None,
         hazard_csv_fpath: str = None,
-        world_pop_fpath: str = "jrc_popn_05deg.tiff",
+        world_pop_fpath: str = "jrc_popn_05deg.tif",
     ):
         self.hazard_csv_fpath = hazard_csv_fpath
         self.download_dir = download_dir
@@ -346,7 +346,7 @@ class HazardISIMPExtremeHeat:
         Generate a name for a processed tiff using the files metadata
         """
         basename = file_key_from_fname(input_file.fname)
-        return f"{basename}_{epoch}_occurence.tif"
+        return f"{basename}_{epoch}_occurrence.tif"
 
     def exposure_tiff_fname_from_occurrence(self, occurrence_tif_fname: str) -> str:
         """
@@ -391,7 +391,7 @@ class HazardISIMPExtremeHeat:
             input_file.fname,
             output_fname,
             output_fpath,
-            file_key_from_fname(input_file.fname),
+            file_key_from_fname(output_fname),
             input_occurrence_file.epoch,
             input_occurrence_file.gcm,
             input_occurrence_file.rcp,
@@ -452,7 +452,7 @@ class HazardISIMPExtremeHeat:
             input_file.fname,
             output_fname,
             output_fpath,
-            file_key_from_fname(input_file.fname),
+            file_key_from_fname(output_fname),
             output_epoch,
             input_file.meta.climate_forcing,
             input_file.meta.external_rcp(),
@@ -613,7 +613,7 @@ if __name__ == "__main__":
         hazard_csv_fpath=args.hazard_csv_fpath,
         world_pop_fpath=os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            "jrc_popn_05deg.tiff",
+            "jrc_popn_05deg.tif",
         ),
     )
     # Generate the files metadata
