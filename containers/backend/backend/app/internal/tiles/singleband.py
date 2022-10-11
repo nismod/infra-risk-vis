@@ -26,7 +26,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from typing import Sequence, Mapping, Union, Tuple, Optional, TypeVar, cast, BinaryIO
+from typing import (
+    List,
+    OrderedDict,
+    Sequence,
+    Mapping,
+    Union,
+    Tuple,
+    Optional,
+    TypeVar,
+    cast,
+    BinaryIO,
+)
 
 import collections
 
@@ -35,6 +46,13 @@ from terracotta.profile import trace
 
 Number = TypeVar("Number", int, float)
 RGBA = Tuple[Number, Number, Number, Number]
+
+
+def database_keys(tc_driver_path: str) -> OrderedDict:
+    """Keys and their orderinng in the given DB"""
+    settings = get_settings()
+    driver = get_driver(tc_driver_path, provider=settings.DRIVER_PROVIDER)
+    return driver.get_keys()
 
 
 def singleband(

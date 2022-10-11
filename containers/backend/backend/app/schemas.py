@@ -171,6 +171,7 @@ AttributeLookup = dict[int, AttributeT]
 # Tile Server metadata
 class TileSourceMeta(BaseModel):
     id: int = None
+    url_keys: tuple = None
     source_db: str
     global_type: str
     domain: str

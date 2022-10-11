@@ -8,10 +8,8 @@ import inspect
 
 from fastapi import APIRouter, Depends, HTTPException, Response, Header
 from fastapi.logger import logger
-from fastapi.responses import FileResponse
 import sqlalchemy
 from starlette.responses import StreamingResponse
-from mercantile import tile
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from geoalchemy2 import functions
@@ -20,6 +18,7 @@ from geoalchemy2 import functions
 from app import schemas
 from app.dependencies import get_db
 from db import models
+from app.internal.tiles.singleband import database_keys
 from app.internal.helpers import build_driver_path, handle_exception
 from app.exceptions import SourceDBDoesNotExistException, DomainAlreadyExistsException
 from config import API_TOKEN
@@ -40,6 +39,13 @@ def _domain_from_keys(keys: str) -> str:
     Retrieve domain from keys path
     """
     return _parse_keys(keys)[0]
+
+
+def _get_tiledb_keys(database: str) -> List[str]:
+    """Retrieve keys and ordering for given DB"""
+    driver_path = build_driver_path(database)
+    db_keys = database_keys(driver_path)
+    return list(db_keys.keys())
 
 
 def _get_singleband_image(
@@ -123,7 +129,7 @@ async def verify_token(x_token: str = Header()):
 
 
 @router.get("/sources", response_model=List[schemas.TileSourceMeta])
-def get_all_tile_source_meta(
+async def get_all_tile_source_meta(
     db: Session = Depends(get_db),
 ) -> List[schemas.TileSourceMeta]:
     """
@@ -135,14 +141,20 @@ def get_all_tile_source_meta(
     )
     try:
         res = db.query(models.RasterTileSource).all()
-        return [schemas.TileSourceMeta.from_orm(row) for row in res]
+        all_meta = []
+        for row in res:
+            url_keys = _get_tiledb_keys(row.source_db)
+            meta = schemas.TileSourceMeta.from_orm(row)
+            meta.url_keys = url_keys
+            all_meta.append(meta)
+        return all_meta
     except Exception as err:
         handle_exception(logger, err)
         raise HTTPException(status_code=500)
 
 
 @router.get("/sources/{source_id}", response_model=schemas.TileSourceMeta)
-def get_tile_source_meta(
+async def get_tile_source_meta(
     source_id: int,
     db: Session = Depends(get_db),
 ) -> List[schemas.TileSourceMeta]:
@@ -159,7 +171,9 @@ def get_tile_source_meta(
             .filter(models.RasterTileSource.id == source_id)
             .one()
         )
-        return res
+        url_keys = _get_tiledb_keys(res.source_db)
+        meta = schemas.TileSourceMeta.from_orm(res)
+        meta.url_keys = url_keys
     except NoResultFound:
         raise HTTPException(status_code=404)
     except Exception as err:
@@ -168,7 +182,7 @@ def get_tile_source_meta(
 
 
 @router.post("/sources", dependencies=[Depends(verify_token)])
-def insert_source_meta(
+async def insert_source_meta(
     source_meta: schemas.TileSourceMeta, db: Session = Depends(get_db)
 ) -> Any:
     """
@@ -181,6 +195,7 @@ def insert_source_meta(
             raise DomainAlreadyExistsException()
         values = source_meta.dict()
         values.pop("id")
+        values.pop("url_keys")
         stmt = sqlalchemy.insert(models.RasterTileSource).values(values)
         res = db.execute(stmt)
         db.commit()
@@ -197,7 +212,7 @@ def insert_source_meta(
 
 
 @router.delete("/sources/{source_id:int}", dependencies=[Depends(verify_token)])
-def delete_source_meta(source_id: int, db: Session = Depends(get_db)) -> Any:
+async def delete_source_meta(source_id: int, db: Session = Depends(get_db)) -> Any:
     """
     Delete Tile Source Meta
     """
