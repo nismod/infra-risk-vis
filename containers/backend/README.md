@@ -68,7 +68,7 @@ POST the following JSON (adapt as required for the source) to: `http://backend-h
 
 ##### Aqueduct:
 
-```bash
+```json
 [
 	{
 		"source_db": "aqueduct", # the MySQL database the source was ingested-into
@@ -77,9 +77,7 @@ POST the following JSON (adapt as required for the source) to: `http://backend-h
 		"full_name": "Hazard Aqueduct - Fluvial", # Currently for internal description only
 		"description": "description", # Currently for internal description only
 		"license": "license", # Currently for internal description only
-		"variables": {
-			"some": "vars"
-		} # Currently for internal description only
+		"variables": {} # Currently for internal description only
 	},
 	{
 		"source_db": "aqueduct",
@@ -97,7 +95,7 @@ POST the following JSON (adapt as required for the source) to: `http://backend-h
 
 ##### ISIMP Extreme Heat:
 
-```bash
+```json
 {
 	"source_db": "extreme_heat",
 	"global_type": "Hazard", 
@@ -105,6 +103,30 @@ POST the following JSON (adapt as required for the source) to: `http://backend-h
 	"full_name": "Hazard Extreme Heat", 
 	"description": "description", 
 	"license": "license", 
-	"variables": {"some": "vars"} 
+	"variables": {
+		"gcm": "gcm",
+		"rcp": "rcp",
+		"type": "hazard",
+		"epoch": "epoch",
+		"metric": "metric"
+	}
+}
+```
+
+##### STORM
+
+```json
+{
+	"source_db": "storm",
+	"global_type": "Hazard", 
+	"domain": "cyclone", 
+	"full_name": "Hazard Tropical Storm", 
+	"description": "description", 
+	"license": "license", 
+	"variables": {
+		"type": "hazard",
+		"rp": "rp",
+		"gcm": "gcm"
+	}
 }
 ```
