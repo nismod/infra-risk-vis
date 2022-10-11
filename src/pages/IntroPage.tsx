@@ -27,7 +27,7 @@ export const IntroPage = () => (
         <HeadingBox sx={{mt:-2, pt:8}}>
           <Typography variant="h1">
 
-            Climate-related risk analytics for transport, energy &amp; water
+            Climate-related risk analytics for road &amp; rail transport
             infrastructure in East Africa
 
           </Typography>
