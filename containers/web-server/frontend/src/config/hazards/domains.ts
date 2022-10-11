@@ -81,23 +81,18 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
     paramDomains: {
       returnPeriod: [
         10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000,
-        6000, 7000, 8000, 9000, 10000,
+        6000, 7000, 8000, 9000, 10000, 11000
       ],
-      epoch: ['2010', '2050', '2100'],
-      rcp: ['baseline', '4.5', '8.5'],
-      gcm: ['None'],
+      epoch: ['None'],
+      rcp: ['None'],
+      gcm: ["CMCC-CM2-VHR4", "CNRM-CM6-1-HR", "EC-Earth3P-HR", "HadGEM3-GC31-HM", "constant"],
     },
     paramDefaults: {
-      returnPeriod: 100,
-      epoch: '2010',
-      rcp: 'baseline',
-      gcm: 'None',
+      returnPeriod: 10,
+      epoch: 'None',
+      rcp: 'None',
+      gcm: 'constant',
     },
-    paramDependencies: {
-      rcp: ({ epoch }) => {
-        if (epoch === '2010') return ['baseline'];
-        if (epoch === '2050' || epoch === '2100') return ['4.5', '8.5'];
-      },
-    },
+    paramDependencies: {},
   },
 };
