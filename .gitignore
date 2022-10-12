@@ -52,3 +52,5 @@ envs
 *.zip
 *.nc
 *.nc4
+*.tiff
+tileserver/raster/db
