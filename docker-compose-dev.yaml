@@ -62,7 +62,7 @@ services:
 
   backend:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.2
+    image: ghcr.io/nismod/gri-backend:0.3
     volumes:
       - ./tileserver/raster/data:/data
     env_file:
@@ -99,7 +99,7 @@ services:
         "--tile_keys",
         "type,metric,rcp,epoch,gcm",
         "--csv_key_column_map",
-        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"rcp\": \"rcp\", \"gcm\": \"gcm\", \"epoch\": \"epoch\", \"metric\": \"metric\"}",
+        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"metric\": \"metric\", \"rcp\": \"rcp\", \"epoch\": \"epoch\", \"gcm\": \"gcm\"}",
         "--database_name",
         "extreme_heat"
       ]
@@ -116,7 +116,7 @@ services:
       [
         "delete_database_entries",
         "--database_name",
-        "cyclone"
+        "extreme_heat"
       ]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
