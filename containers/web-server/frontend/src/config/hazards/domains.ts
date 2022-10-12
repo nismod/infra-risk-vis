@@ -111,10 +111,8 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
     paramDependencies: {
       rcp: ({ epoch }) => {
         if (epoch === 'baseline') return ['baseline'];
-      },
-      epoch: ({ rcp }) => {
-        if (rcp === '2030' || rcp === '2050' || rcp === '2080') return ['2.6', '6.0'];
-      },
+        else return ['2.6', '6.0'];
+      }
     },
   }
 };
