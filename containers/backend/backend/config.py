@@ -3,7 +3,9 @@ Global Configuration
 """
 
 from os import getenv
+import logging
 
+LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO"))
 RASTER_BASE_PATH = getenv("RASTER_BASE_PATH", "/data")
 MYSQL_URI = getenv("MYSQL_URI")
 API_TOKEN = getenv("API_TOKEN")

@@ -7,13 +7,14 @@ from db import models
 from db.database import engine
 
 from .routers import attributes, features, tiles
+from config import LOG_LEVEL
 
 formatter = logging.Formatter(
     "[%(asctime)s.%(msecs)03d] %(levelname)s %(filename)s - %(funcName)s - %(message)s",
     "%Y-%m-%d %H:%M:%S",
 )
 handler = logging.StreamHandler()
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(LOG_LEVEL)
 logger.addHandler(handler)
 handler.setFormatter(formatter)
 
