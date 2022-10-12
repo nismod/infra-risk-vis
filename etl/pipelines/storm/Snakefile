@@ -64,15 +64,27 @@ rule raster_zero_nodata:
         70,
     shell:
         """
-        NODATA=nan
+        NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
 
-        # replace inf with NoData value
+        # handle case of NODATA == nan - the JSON output of gdalinfo will change
+        # nan to "NaN" so we need to reverse that for gdal_calc.py
+        if [ "$NODATA" == '"NaN"' ]
+        then
+          NODATA=nan
+        fi
+
+        if [ "$NODATA" == 'null' ]
+        then
+          NODATA=nan
+        fi
+
+        # replace zeros with NoData value
         gdal_calc.py \
           --quiet \
           -A "{input}" \
           --outfile="{output}" \
           --overwrite \
-          --calc="numpy.where(A==3.4028235e+38,$NODATA,A)" \
+          --calc="numpy.where(A<=0,$NODATA,A)" \
           --NoDataValue=$NODATA \
           --hideNoData && \
         rm {input}
