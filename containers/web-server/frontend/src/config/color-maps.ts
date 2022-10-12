@@ -22,7 +22,7 @@ export const RASTER_COLOR_MAPS = {
   },
   extreme_heat: {
     scheme: 'reds',
-    range: [0, 2],
+    range: [0, 500],
   },
 };
 

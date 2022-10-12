@@ -40,6 +40,21 @@ export const DataPage = () => (
             <TableCell>Flood depths in meters over 1km grid squares </TableCell>
             <TableCell>RCP Baseline, 4.5 &amp; 8.5 emission&nbsp;scenarios.<br />Current + future maps in 2030, 2050 and 2080</TableCell>
           </TableRow>
+          <TableRow>
+            <TableCell>Extreme Heat (Exposure)</TableCell>
+            <TableCell><a href="https://data.isimip.org/datasets/4f79e7aa-7def-4665-854f-93ff033bec37/">ISIMP Extreme Heat</a></TableCell>
+            <TableCell>TODO</TableCell>
+            <TableCell>TODO</TableCell>
+            <TableCell>RCP Baseline, 2.6 &amp; 6.0 emission&nbsp;scenarios.<br />Current + future maps in 2030, 2050 and 2080</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>STORM (Cyclones)</TableCell>
+            <TableCell><a href="https://data.4tu.nl/articles/dataset/STORM_tropical_cyclone_wind_speed_return_periods/12705164/3">STORM Tropical Cyclone</a></TableCell>
+            <TableCell>10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000,
+              6000, 7000, 8000, 9000, 10000, 11000</TableCell>
+            <TableCell>Wind Speeds at Fixed Return Periods</TableCell>
+            <TableCell>RCP Baseline<br />Current + future maps in 2030, 2050 and 2080</TableCell>
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

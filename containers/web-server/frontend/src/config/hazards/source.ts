@@ -7,7 +7,7 @@ export const HAZARD_SOURCE = {
     }
     else if (hazardType === 'extreme_heat') {
       // TODO: Add support for exposure metric (as well as occurrence)
-      return `/api/tiles/${hazardType}/occurrence/${sanitisedRcp}/${epoch}/${gcm}//{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`;
+      return `/api/tiles/${hazardType}/exposure/${sanitisedRcp}/${epoch}/${gcm}//{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`;
     } else {
       return `/api/tiles/${hazardType}/${returnPeriod}/${sanitisedRcp}/${epoch}/${gcm}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`;
     }

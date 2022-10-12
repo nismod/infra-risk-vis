@@ -8,10 +8,10 @@ export const Nav = () => {
       <Toolbar
         sx={{
           background:
-            'linear-gradient(180deg, rgba(0,128,0,1) 0%, rgba(0,128,0,1) 5%, rgba(9,9,9,1) 5%, rgba(9,9,9,1) 100%);',
+            'linear-gradient(180deg, rgba(197,206,0,1) 0%, rgba(197,206,0,1) 10%, rgba(0,126,133,1) 10%, rgba(0,126,133,1) 100%);',
           '& a.nav-link': {
             '&:hover,&:focus,&:active,&.active': {
-              borderBottom: '1px solid #ffd700',
+              borderBottomColor: '#ffffff',
             },
           },
         }}
