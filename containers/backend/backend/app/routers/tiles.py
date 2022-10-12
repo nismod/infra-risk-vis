@@ -78,18 +78,11 @@ def _get_singleband_image(
     return singleband(driver_path, parsed_keys, tile_xyz=tile_xyz, **options)
 
 
-def _source_db_exists(db: Session, source_db: str) -> bool:
+def _source_db_exists(source_db: str) -> bool:
     """
     Check whether the given source_db exists in the meta store
     """
-    res = (
-        db.query(models.RasterTileSource)
-        .filter(models.RasterTileSource.source_db == source_db)
-        .all()
-    )
-    if res:
-        return True
-    return False
+    return source_db in DOMAIN_TO_DB_MAP.values()
 
 
 def _domain_exists(db: Session, domain: str) -> bool:
@@ -265,7 +258,7 @@ async def get_tile(
             options["stretch_range"] = ast.literal_eval(stretch_range)
 
         # Check the database exists
-        if not _source_db_exists(db, source_db):
+        if not _source_db_exists(source_db):
             raise SourceDBDoesNotExistException()
 
         # Generate the tile
