@@ -34,18 +34,6 @@ export const HazardsControl = () => {
           </InputSection>
         </ToggleSection>
 
-        <ToggleSection id="surface" label="Surface Flooding" disabled={disabled}>
-          <InputSection>
-            <ReturnPeriodControl group="surface" param="returnPeriod" disabled={disabled} />
-          </InputSection>
-          <InputSection>
-            <InputRow>
-              <EpochControl group="surface" disabled={disabled} />
-              <RCPControl group="surface" disabled={disabled} />
-            </InputRow>
-          </InputSection>
-        </ToggleSection>
-
         <ToggleSection id="coastal" label="Coastal Flooding" disabled={disabled}>
           <InputSection>
             <ReturnPeriodControl group="coastal" param="returnPeriod" disabled={disabled} />
@@ -75,11 +63,20 @@ export const HazardsControl = () => {
           </InputSection>
         </ToggleSection>
 
-        <ToggleSection id="extreme_heat" label="Extreme Heat" disabled={disabled}>
+        <ToggleSection id="extreme_heat_exposure" label="Extreme Heat (Exposure)" disabled={disabled}>
           <InputSection>
             <InputRow>
-              <EpochControl group="extreme_heat" disabled={disabled} />
-              <RCPControl group="extreme_heat" disabled={disabled} />
+              <EpochControl group="extreme_heat_exposure" disabled={disabled} />
+              <RCPControl group="extreme_heat_exposure" disabled={disabled} />
+            </InputRow>
+          </InputSection>
+        </ToggleSection>
+
+        <ToggleSection id="extreme_heat_occurrence" label="Extreme Heat (Occurrence)" disabled={disabled}>
+          <InputSection>
+            <InputRow>
+              <EpochControl group="extreme_heat_occurrence" disabled={disabled} />
+              <RCPControl group="extreme_heat_occurrence" disabled={disabled} />
             </InputRow>
           </InputSection>
         </ToggleSection>

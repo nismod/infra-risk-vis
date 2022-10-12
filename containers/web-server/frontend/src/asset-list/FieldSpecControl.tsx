@@ -45,10 +45,10 @@ export const FieldSpecControl: FC<{
             options={[
               { value: 'all', label: 'All Hazards' },
               { value: 'fluvial', label: 'River Flooding' },
-              { value: 'surface', label: 'Surface Flooding' },
               { value: 'coastal', label: 'Coastal Flooding' },
               { value: 'cyclone', label: 'Cyclones' },
-              { value: 'extreme_heat', label: 'Extreme Heat' },
+              { value: 'extreme_heat_occurrence', label: 'Extreme Heat (Occurrence)' },
+              { value: 'extreme_heat_exposure', label: 'Extreme Heat (Exposure)' },
             ]}
           />
           <ParamDropdown

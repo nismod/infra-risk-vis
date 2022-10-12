@@ -20,9 +20,13 @@ export const RASTER_COLOR_MAPS = {
     scheme: 'reds',
     range: [0, 75],
   },
-  extreme_heat: {
+  extreme_heat_exposure: {
     scheme: 'reds',
     range: [0, 250],
+  },
+  extreme_heat_occurrence: {
+    scheme: 'reds',
+    range: [0, 1],
   },
 };
 
