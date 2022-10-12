@@ -157,7 +157,7 @@ def ingest_from_csv(
     _create_db(db_name, driver, keys)
 
     # sanity check that the database has the same keys that we want to load
-    assert list(driver.key_names) == keys, (driver.key_names, keys)
+    assert sorted(list(driver.key_names)) == sorted(keys), (driver.key_names, keys)
 
     progress_bar = tqdm.tqdm(raster_files)
     print("Starting ingest...")
