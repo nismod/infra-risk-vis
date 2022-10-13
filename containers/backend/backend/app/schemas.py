@@ -119,6 +119,17 @@ class AdaptationVariables(DataVariables):
 class AdaptationCostBenefitRatioParameters(DataParameters):
     eael_days: conint(ge=1, le=30)
 
+    @validator("eael_days")
+    def fix_eael_days(cls, eael_days) -> float:
+        """
+        The data for `AdaptationCostBenefit.avoided_eael_mean` is erroneous and
+        should be modified in the meantime. This validator adds a fudge factor
+        to account for the multiplicative error in the data.
+
+        TODO: fix the data so we don't need this function.
+        """
+        return eael_days / 15
+
 
 class Adaptation(AdaptationDimensions, AdaptationVariables):
     class Config:
