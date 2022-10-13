@@ -4,10 +4,10 @@ The site runs on a single Linux virtual machine using docker compose.
 
 The stack consists of five services:
 - Web server (nginx)
-- Raster tileserver (terracotta)
 - Vector tileserver (tileserver-gl)
-- Backend / API (bespoke Python app)
+- Backend / API (bespoke Python app inc. raster tileserver via Terracotta Python API)
 - Database (PostgreSQL with PostGIS)
+- Tiles Database (MySQL)
 
 To build and deploy the site:
 - provision a server
@@ -43,13 +43,33 @@ install docker and docker compose.
 `deploy.sh` uploads data to the server. It assumes that whoever runs the script
 has ssh/public key access to the server.
 
-Update the .env file with the relevant database connection parameters:
+
+#### Environment
+
+The following env files are required:
+
+##### .backend.env
+
 ```
-PGDATABASE=jamaica
-PGUSER=docker
-PGPASSWORD=docker
-PGHOST=localhost
+PGHOST=
+PGDATABASE=
+PGUSER=
+PGPASSWORD=
+
+# Tiles API
+LOG_LEVEL=INFO
+RASTER_BASE_PATH=/data  # The mount underwich GeoTiffs for the tileserver can be found
+MYSQL_URI=  # MySQL URI for tiles-db
+API_TOKEN=  # Only required for mutating tiles metadata in the API
+
+# Terracotta internal
+TC_ALLOWED_ORIGINS_METADATA='["*"]'
+TC_ALLOWED_ORIGINS_TILES='["*"]'
+TC_PNG_COMPRESS_LEVEL=0
+TC_RESAMPLING_METHOD="nearest"
+TC_REPROJECTION_METHOD="nearest"
 ```
+
 
 `docker compose up --build` will build the necessary images and bring up
 containers with environment data provided from the .env file.

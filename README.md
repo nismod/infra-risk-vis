@@ -61,6 +61,80 @@ buildings_commercial.mbtiles
 buildings_industrial.mbtiles
 ```
 
+### Docker Development Environment
+
+`docker-compse-dev.yaml` includes a set of services for use in the dataprocessing and development process.
+
+The following environment files are required:
+
+#### Environment
+
+The following env files are required (in `envs/dev/.*`):
+
+##### .backend.env
+
+```
+PGHOST=
+PGDATABASE=
+PGUSER=
+PGPASSWORD=
+
+# Tiles API
+LOG_LEVEL=INFO
+RASTER_BASE_PATH=/data  # The mount underwich GeoTiffs for the tileserver can be found
+MYSQL_URI=  # MySQL URI for tiles-db
+API_TOKEN=  # Only required for mutating tiles metadata in the API
+
+# Terracotta internal
+TC_ALLOWED_ORIGINS_METADATA='["*"]'
+TC_ALLOWED_ORIGINS_TILES='["*"]'
+TC_PNG_COMPRESS_LEVEL=0
+TC_RESAMPLING_METHOD="nearest"
+TC_REPROJECTION_METHOD="nearest"
+```
+
+##### .db.env
+
+```
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASS=
+ALLOW_IP_RANGE=0.0.0.0/0
+POSTGRES_MULTIPLE_EXTENSIONS=postgis
+```
+
+##### .mysql.env
+
+```
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_ROOT_PASSWORD=
+```
+
+##### .pgadmin.env
+
+```
+PGADMIN_DEFAULT_EMAIL=
+PGADMIN_DEFAULT_PASSWORD=
+WORKERS=1
+```
+
+##### .raster-tile-ingester.env
+
+```
+# Terracotta Env
+TC_DRIVER_PATH=mysql://
+TC_DRIVER_PROVIDER=mysql
+TC_PNG_COMPRESS_LEVEL=0
+TC_RESAMPLING_METHOD="nearest"
+TC_REPROJECTION_METHOD="nearest"
+
+# Gri Backend Env - for managing entries in the internal API tileserver
+BACKEND_HOST=
+BACKEND_PORT=
+BACKEND_API_KEY=
+```
+
 ### Data preperation within Docker
 
 Data Preperation can be run within Docker, end to end.

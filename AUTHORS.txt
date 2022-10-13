@@ -4,3 +4,5 @@ Authors
 - Roald Schoenmakers
 - Raghav Pant
 - Fred Thomas
+- Maciej Ziarkowski
+- Chris Nicholas
