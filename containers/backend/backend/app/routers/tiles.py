@@ -280,3 +280,4 @@ async def get_tile(
     except Exception as err:
         handle_exception(logger, err)
         raise HTTPException(status_code=500)
+

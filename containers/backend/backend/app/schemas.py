@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Generic, List, Literal, TypeVar
+from typing import Any, Generic, List, Literal, Optional, TypeVar
 from pydantic import BaseModel, conint, root_validator
 from pydantic.generics import GenericModel
 
@@ -182,3 +182,18 @@ class TileSourceMeta(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ColorMapOptions(BaseModel):
+    stretch_range: List[int]
+    colormap: str
+    num_values: Optional[int] = 255
+
+
+class ColorMapEntry(BaseModel):
+    value: float
+    rgba: List[int]
+
+
+class ColorMap(BaseModel):
+    colormap: List[ColorMapEntry]
