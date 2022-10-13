@@ -8,7 +8,7 @@ export function useRasterColorMapValues(colorScheme: string, stretchRange: [numb
     loading,
     error,
     data: { colormap: colorMapValues = null } = {},
-  } = useFetch(`/raster/colormap?colormap=${colorScheme}&stretch_range=[0,1]`, { persist: false }, [colorScheme]);
+  } = useFetch(`/api/colormap?colormap=${colorScheme}&stretch_range=[0,1]`, { persist: false }, [colorScheme]);
 
   const rangeSize = rangeMax - rangeMin;
 
