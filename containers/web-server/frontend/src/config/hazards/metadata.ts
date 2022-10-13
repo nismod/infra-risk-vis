@@ -7,21 +7,17 @@ export const HAZARDS_METADATA = {
     label: 'River Flooding',
     dataUnit: 'm',
   },
-  surface: {
-    label: 'Surface Flooding',
-    dataUnit: 'm',
-  },
   coastal: {
     label: 'Coastal Flooding',
     dataUnit: 'm',
   },
   extreme_heat_occurrence: {
     label: 'Extreme Heat (Occurrence)',
-    dataUnit: 'deg',
+    dataUnit: 'leh',
   },
   extreme_heat_exposure: {
     label: 'Extreme Heat (Exposure)',
-    dataUnit: 'deg',
+    dataUnit: 'popn',
   },
 };
 
