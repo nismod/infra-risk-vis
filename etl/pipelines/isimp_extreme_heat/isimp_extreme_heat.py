@@ -12,7 +12,7 @@ from dataclasses import dataclass, asdict
 
 import numpy as np
 from netCDF4 import Dataset
-from osgeo import gdal, osr
+from osgeo import gdal, osr, gdalconst
 
 sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -172,7 +172,7 @@ class HazardISIMPExtremeHeat:
         self,
         download_dir: str = None,
         hazard_csv_fpath: str = None,
-        world_pop_fpath: str = "jrc_popn_05deg.tif",
+        world_pop_fpath: str = "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif",
     ):
         self.hazard_csv_fpath = hazard_csv_fpath
         self.download_dir = download_dir
@@ -369,13 +369,39 @@ class HazardISIMPExtremeHeat:
             "generating popn exposure tiff - input file: %s",
             input_occurrence_file.fpath,
         )
+        # Generate the output filename
+        output_fname = self.exposure_tiff_fname_from_occurrence(
+            os.path.basename(input_occurrence_file.fpath)
+        )
+        output_fpath = os.path.join(output_dir, output_fname)
+
         # Load world pop
-        raster = gdal.Open(self.world_pop_fpath)
-        worldpop_data = raster.ReadAsArray()
+        pop_raster = gdal.Open(self.world_pop_fpath)
+        pop_target_proj = pop_raster.GetProjection()
+        pop_target_geotrans = pop_raster.GetGeoTransform()
+        worldpop_data = pop_raster.ReadAsArray()
 
         # Load Temporally averaged TIFF
-        raster = gdal.Open(input_occurrence_file.fpath)
-        heat_data = raster.ReadAsArray()
+        exposure_raster = gdal.Open(input_occurrence_file.fpath)
+
+        # Warp Exposure to Worldpop proj, cellsize and extent
+        exposure_src_proj = exposure_raster.GetProjection()
+        px_x_size = pop_raster.RasterXSize
+        px_y_size = pop_raster.RasterYSize
+        exposure_raster_reproj = gdal.GetDriverByName("Gtiff").Create(
+            output_fpath, px_x_size, px_y_size, 1, gdalconst.GDT_Float32
+        )
+        exposure_raster_reproj.SetGeoTransform(pop_target_geotrans)
+        exposure_raster_reproj.SetProjection(pop_target_proj)
+        gdal.ReprojectImage(
+            exposure_raster,
+            exposure_raster_reproj,
+            exposure_src_proj,
+            pop_target_proj,
+            gdalconst.GRA_NearestNeighbour,
+        )
+        # Read the reprojected Exposure as an Array
+        heat_data = exposure_raster_reproj.ReadAsArray()
 
         # Sanity check the shape - should both be single band and of same shape
         assert (
@@ -384,10 +410,7 @@ class HazardISIMPExtremeHeat:
 
         # Do exposure calc
         exposure = heat_data * worldpop_data
-        output_fname = self.exposure_tiff_fname_from_occurrence(
-            os.path.basename(input_occurrence_file.fpath)
-        )
-        output_fpath = os.path.join(output_dir, output_fname)
+
         # Save
         self.np_to_geotiff(exposure, output_fpath)
         return ISIMPExtremeHeatExposure(
@@ -610,7 +633,7 @@ if __name__ == "__main__":
         hazard_csv_fpath=args.hazard_csv_fpath,
         world_pop_fpath=os.path.join(
             os.path.dirname(os.path.abspath(__file__)),
-            "jrc_popn_05deg.tif",
+            "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif",
         ),
     )
     # Generate the files metadata
