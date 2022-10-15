@@ -375,44 +375,69 @@ class HazardISIMPExtremeHeat:
         )
         output_fpath = os.path.join(output_dir, output_fname)
 
-        # Load world pop
-        pop_raster = gdal.Open(self.world_pop_fpath)
-        pop_target_proj = pop_raster.GetProjection()
-        pop_target_geotrans = pop_raster.GetGeoTransform()
-        worldpop_data = pop_raster.ReadAsArray()
+        logging.debug(
+            "generating popn exposure tiff - opening worldpop: %s",
+            self.world_pop_fpath,
+        )
+        # # Load world pop
+        # pop_raster = gdal.Open(self.world_pop_fpath)
+        # pop_target_proj = pop_raster.GetProjection()
+        # pop_target_geotrans = pop_raster.GetGeoTransform()
 
-        # Load Temporally averaged TIFF
-        exposure_raster = gdal.Open(input_occurrence_file.fpath)
+        # # Load Temporally averaged TIFF
+        # logging.debug(
+        #     "generating popn exposure tiff - loading occurrence: %s",
+        #     input_occurrence_file.fpath,
+        # )
+        # exposure_raster = gdal.Open(input_occurrence_file.fpath)
 
         # Warp Exposure to Worldpop proj, cellsize and extent
-        exposure_src_proj = exposure_raster.GetProjection()
-        px_x_size = pop_raster.RasterXSize
-        px_y_size = pop_raster.RasterYSize
-        exposure_raster_reproj = gdal.GetDriverByName("Gtiff").Create(
-            output_fpath, px_x_size, px_y_size, 1, gdalconst.GDT_Float32
+        logging.debug(
+            "generating popn exposure tiff - warping occurrence to world pop..."
         )
-        exposure_raster_reproj.SetGeoTransform(pop_target_geotrans)
-        exposure_raster_reproj.SetProjection(pop_target_proj)
-        gdal.ReprojectImage(
-            exposure_raster,
-            exposure_raster_reproj,
-            exposure_src_proj,
-            pop_target_proj,
-            gdalconst.GRA_NearestNeighbour,
-        )
-        # Read the reprojected Exposure as an Array
-        heat_data = exposure_raster_reproj.ReadAsArray()
+        tmp_exposure_fpath = os.path.join(output_dir, "tmp_reproj_heat.tif")
+        warp_cmd = f"gdalwarp -ts 36082 18000 -t_srs {os.path.join(os.path.dirname(os.path.abspath(__file__)), 'target_mol.wkt')} {input_occurrence_file.fpath} {tmp_exposure_fpath}"
+        os.system(warp_cmd)
 
-        # Sanity check the shape - should both be single band and of same shape
-        assert (
-            worldpop_data.shape == heat_data.shape
-        ), f"worldpop and heatwave tiffs are of differing shape - aborting ({ worldpop_data.shape} vs {heat_data.shape})"
+        # exposure_src_proj = exposure_raster.GetProjection()
+        # px_x_size = pop_raster.RasterXSize
+        # px_y_size = pop_raster.RasterYSize
+        # exposure_raster_reproj = gdal.GetDriverByName("Gtiff").Create(
+        #     tmp_exposure_fpath, px_x_size, px_y_size, 1, gdalconst.GDT_Float32
+        # )
+        # exposure_raster_reproj.SetGeoTransform(pop_target_geotrans)
+        # exposure_raster_reproj.SetProjection(pop_target_proj)
+        # gdal.ReprojectImage(
+        #     exposure_raster,
+        #     exposure_raster_reproj,
+        #     exposure_src_proj,
+        #     pop_target_proj,
+        #     gdalconst.GRA_NearestNeighbour,
+        # )
+        logging.debug("generating popn exposure tiff - running exposure calc...")
+        # Run the calculation for exposure
+        tmp_calc_fpath = os.path.join(output_dir, "tmp_calc_heat.tif")
+        calc_cmd = f'gdal_calc.py -A {tmp_exposure_fpath} -B {self.world_pop_fpath} --co="COMPRESS=LZW" --outfile={tmp_calc_fpath} --calc="A*B"'
+        os.system(calc_cmd)
+        # Reproject the result to WGS84
+        logging.debug("generating popn exposure tiff - reprojecting exposure calc...")
+        reproj_cmd = f"gdalwarp -t_srs {os.path.join(os.path.dirname(os.path.abspath(__file__)), 'target_wgs84.wkt')} -of GTiff -co COMPRESS=LZW -te -175 -84 175 84 {tmp_calc_fpath} {output_fpath}"
+        os.system(reproj_cmd)
+        logging.debug("generating popn exposure tiff - removing tmp files")
+        os.remove(tmp_exposure_fpath)
+        os.remove(tmp_calc_fpath)
+        # heat_data = exposure_raster_reproj.ReadAsArray()
 
-        # Do exposure calc
-        exposure = heat_data * worldpop_data
+        # # Sanity check the shape - should both be single band and of same shape
+        # assert (
+        #     worldpop_data.shape == heat_data.shape
+        # ), f"worldpop and heatwave tiffs are of differing shape - aborting ({ worldpop_data.shape} vs {heat_data.shape})"
 
-        # Save
-        self.np_to_geotiff(exposure, output_fpath)
+        # # Do exposure calc
+        # exposure = heat_data * worldpop_data
+
+        # # Save
+        # self.np_to_geotiff(exposure, output_fpath)
         return ISIMPExtremeHeatExposure(
             input_file.fname,
             output_fname,

@@ -101,7 +101,7 @@ rule raster_clip_ns:
         80,
     shell:
         """
-        gdal_translate -projwin -175 84 175 -84 -of GTiff {input} {output} && \
+        gdal_translate -projwin -175 84 175 -84 -of GTiff -co COMPRESS=LZW {input} {output} && \
         rm {input}
         """
 

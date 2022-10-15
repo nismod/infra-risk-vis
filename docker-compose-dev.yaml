@@ -57,7 +57,7 @@ services:
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/storm/Snakefile"
+        "/opt/etl/pipelines/isimp_extreme_heat/Snakefile"
       ]
 
   backend:
@@ -87,8 +87,8 @@ services:
       - ./envs/dev/.raster-tile-ingester.env
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-      - ./tileserver/raster/data/storm:/data/storm # Must match path in Backend
-      - ./etl/pipelines/storm/hazard_storm.csv:/opt/hazard_layers.csv # If loading a CSV
+      - ./tileserver/raster/data/extreme_heat:/data/extreme_heat # Must match path in Backend
+      - ./etl/pipelines/isimp_extreme_heat/hazard_extreme_heat.csv:/opt/hazard_layers.csv # If loading a CSV
     command:
       [
         "load_csv",
@@ -97,11 +97,11 @@ services:
         "--input_csv_filepath",
         "/opt/hazard_layers.csv",
         "--tile_keys",
-        "type,rp,gcm",
+        "type,metric,rcp,gcm",
         "--csv_key_column_map",
-        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"rp\": \"rp\", \"gcm\": \"gcm\"}",
+        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"metric\": \"metric\", \"rcp\": \"rcp\", \"gcm\": \"gcm\"}",
         "--database_name",
-        "cyclone"
+        "extreme_heat"
       ]
 
   ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
