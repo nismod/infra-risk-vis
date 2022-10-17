@@ -19,18 +19,18 @@ export const Nav = () => {
         <NavLink exact className="nav-link" to="/">
           <Typography variant="h6">Global</Typography>
         </NavLink>
+        <NavLink className="nav-link" to="/hazard">
+          <Typography variant="h6">Hazard</Typography>
+        </NavLink>
         <NavLink className="nav-link" to="/exposure">
           <Typography variant="h6">Exposure</Typography>
         </NavLink>
-        {/* <NavLink className="nav-link" to="/risk">
+        <NavLink className="nav-link" to="/vulnerability">
+          <Typography variant="h6">Vulnerability</Typography>
+        </NavLink>
+        <NavLink className="nav-link" to="/risk">
           <Typography variant="h6">Risk</Typography>
         </NavLink>
-        <NavLink className="nav-link" to="/adaptation">
-          <Typography variant="h6">Adaptation</Typography>
-        </NavLink>
-        <NavLink className="nav-link" to="/nature-based-solutions">
-          <Typography variant="h6">Nature-based Solutions</Typography>
-        </NavLink> */}
         <NavLink className="nav-link" to="/data">
           <Typography variant="h6">Data</Typography>
         </NavLink>
