@@ -1,0 +1,135 @@
+version: "3.9"
+
+services:
+  web-server:
+    build:
+      context: ./containers/web-server
+      dockerfile: Dockerfile-dev
+    image: ghcr.io/nismod/gri-web-server-dev:0.5
+    volumes:
+      - ./containers/web-server/certs:/etc/ssl/certs
+    ports:
+      - 5443:443
+      - 5080:80
+
+  db:
+    image: kartoza/postgis:14-3.1
+    volumes:
+      - postgis-data:/var/lib/postgresql
+    env_file:
+      - ./envs/dev/.db.env
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: "exit 0"
+
+  tiles-db:
+    image: mysql:5.7.39
+    env_file:
+      - ./envs/dev/.mysql.env
+    ports:
+      - 3306:3306
+    volumes:
+      - ./tileserver/raster/db:/var/lib/mysql
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    env_file:
+      - ./envs/dev/.pgadmin.env
+    ports:
+      - 5050:80
+
+  snakemake:
+    image: ghcr.io/nismod/gri-snakemake:0.1
+    build: ./etl
+    volumes:
+      - ./etl:/opt/etl
+      - ./tileserver:/opt/tileserver
+    command:
+      [
+        "--cores",
+        "1",
+        "--latency-wait",
+        "20",
+        "--resources",
+        "disk_mb=60",
+        "--rerun-incomplete",
+        "-s",
+        "/opt/etl/pipelines/isimp_extreme_heat/Snakefile"
+      ]
+
+  backend:
+    build: ./containers/backend
+    image: ghcr.io/nismod/gri-backend:0.5
+    volumes:
+      - ./tileserver/raster/data:/data
+    env_file:
+      - ./envs/dev/.backend.env
+    ports:
+      - 8888:8888
+
+  vector-tileserver:
+    build: ./containers/vector
+    image: ghcr.io/nismod/gri-vector-tileserver:0.1
+    volumes:
+      - ./tileserver/vector/data:/data # bind mount
+      - ./containers/vector/config.json:/config.json
+    expose:
+      - 8080
+
+  #### Utility Containers
+  raster-tile-ingester:
+    build: ./containers/raster-tile-ingester
+    image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
+    env_file:
+      - ./envs/dev/.raster-tile-ingester.env
+    volumes:
+      - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
+      - ./tileserver/raster/data/extreme_heat:/data/extreme_heat # Must match path in Backend
+      - ./etl/pipelines/isimp_extreme_heat/hazard_isimp_extreme_heat.csv:/opt/hazard_layers.csv # If loading a CSV
+    command:
+      [
+        "load_csv",
+        "--internal_raster_base_path",
+        "/data/extreme_heat",
+        "--input_csv_filepath",
+        "/opt/hazard_layers.csv",
+        "--tile_keys",
+        "type,metric,rcp,epoch,gcm",
+        "--csv_key_column_map",
+        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"metric\": \"metric\", \"rcp\": \"rcp\", \"epoch\": \"epoch\", \"gcm\": \"gcm\"}",
+        "--database_name",
+        "extreme_heat"
+      ]
+
+  ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
+  raster-tile-delete-entries:
+    build: ./containers/raster-tile-ingester
+    image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
+    env_file:
+      - ./envs/dev/.raster-tile-ingester.env
+    volumes:
+      - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
+    command:
+      [
+        "delete_database_entries",
+        "--database_name",
+        "extreme_heat"
+      ]
+
+  ## WARNING - this will wipe the existing tables. TODO: Alembic
+  backend-schema-regen:
+    build: ./containers/backend
+    image: ghcr.io/nismod/gri-backend:0.2
+    volumes:
+      - ./containers/backend/backend/db/models.py:/code/backend/db/models.py
+    env_file:
+      - ./envs/dev/.backend.env
+    entrypoint: [ "python" ]
+    command: [ "/code/backend/create_schema.py" ]
+
+volumes:
+  postgis-data:
+  pgadmin:

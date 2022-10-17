@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  web-server:
+    image: ghcr.io/nismod/gri-web-server:0.5
+    build:
+      context: ./containers/web-server
+      dockerfile: Dockerfile-prod
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - 443:443
+      - 80:80
+
+  backend:
+    image: ghcr.io/nismod/gri-backend:0.5
+    build: ./containers/backend
+    volumes:
+      - ./tileserver/raster/data:/data
+    env_file:
+      - ./envs/prod/.backend.env
+    expose:
+      - 8888
+
+  vector-tileserver:
+    build: ./containers/vector
+    image: ghcr.io/nismod/gri-vector-tileserver:0.1
+    volumes:
+      - ./tileserver/vector/data:/data
+    expose:
+      - 8080
+
+volumes:
+  postgis-data:

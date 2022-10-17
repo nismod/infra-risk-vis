@@ -28,94 +28,179 @@ Other functionality planned (and incorporated in some way in previous versions):
 This README covers requirements and steps through how to prepare data for
 visualisation and how to run the tool.
 
-1. Data preparation
-3. Build and run
-4. Deployment
+# Usage
 
 ## Data preparation
 
-The visualisation tool runs using prepared versions of analysis data and results
+The visualisation tool runs using prepared versions of analysis data and
+results
 - Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
-  a terracotta SQLite database
+  a terracotta MySQL database, hosted within the backend API.
 - Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
   Vector Tiles
 
 See `./etl` directory for details.
 
-## Build and run
+Data to be served from the vector and raster tileservers should be placed on
+the host within `tileserver/<data_type>`. These folders are made available to the
+running tileservers as docker bind mounts.
 
-Running the application requires several (local) server processes: the
-vector and raster tileservers, the app backend, and the app frontend.
+For example, in `tileserver/raster/` there might live TIF files like these:
+```
+coastal_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
+coastal_mangrove__rp_25__rcp_baseline__epoch_2010__conf_None.tif
+coastal_mangrove__rp_500__rcp_baseline__epoch_2010__conf_None.tif
+coastal_nomangrove_minus_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
+```
 
-### Node and npm
+And in `tileserver/vector/`, mbtiles files like these:
+```
+airport_runways.mbtiles
+airport_terminals.mbtiles
+buildings_commercial.mbtiles
+buildings_industrial.mbtiles
+```
 
-The build and run steps use [node.js](https://nodejs.org/) - this provides the
-`npm` command.
+### Docker Development Environment
 
-Install required packages. Run from the project root:
+`docker-compse-dev.yaml` includes a set of services for use in the dataprocessing and development process.
 
-    npm install
+The following environment files are required:
 
-### Terracotta
+#### Environment
 
-Install the raster tileserver - Terracotta
+The following env files are required (in `envs/dev/.*`):
 
-For example, installing using conda:
+##### .backend.env
 
-    conda create --name infrariskvis python=3.8 numpy rasterio shapely crick
-    conda activate infrariskvis
-    pip install terracotta[recommended]
+```
+PGHOST=
+PGDATABASE=
+PGUSER=
+PGPASSWORD=
 
-### Run the vector tileserver
+# Tiles API
+LOG_LEVEL=INFO
+RASTER_BASE_PATH=/data  # The mount underwich GeoTiffs for the tileserver can be found
+MYSQL_URI=  # MySQL URI for tiles-db
+API_TOKEN=  # Only required for mutating tiles metadata in the API
 
-Run the tileserver directly (from the root of the project):
+# Terracotta internal
+TC_ALLOWED_ORIGINS_METADATA='["*"]'
+TC_ALLOWED_ORIGINS_TILES='["*"]'
+TC_PNG_COMPRESS_LEVEL=0
+TC_RESAMPLING_METHOD="nearest"
+TC_REPROJECTION_METHOD="nearest"
+```
 
-    npm run vector
+##### .db.env
 
-### Run the raster tileserver
+```
+POSTGRES_DB=
+POSTGRES_USER=
+POSTGRES_PASS=
+ALLOW_IP_RANGE=0.0.0.0/0
+POSTGRES_MULTIPLE_EXTENSIONS=postgis
+```
 
-Prepare the raster tileserver database:
+##### .mysql.env
 
-    npm run raster-init
+```
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_ROOT_PASSWORD=
+```
 
-Run the raster tileserver:
+##### .pgadmin.env
 
-    npm run raster
+```
+PGADMIN_DEFAULT_EMAIL=
+PGADMIN_DEFAULT_PASSWORD=
+WORKERS=1
+```
 
-### Run the backend API server and database
+##### .raster-tile-ingester.env
 
-Two options here.
+```
+# Terracotta Env
+TC_DRIVER_PATH=mysql://
+TC_DRIVER_PROVIDER=mysql
+TC_PNG_COMPRESS_LEVEL=0
+TC_RESAMPLING_METHOD="nearest"
+TC_REPROJECTION_METHOD="nearest"
 
-Without docker, follow the notes in `./backend/README.md` to setup a development
-environment for python.
+# Gri Backend Env - for managing entries in the internal API tileserver
+BACKEND_HOST=
+BACKEND_PORT=
+BACKEND_API_KEY=
+```
 
-Set up a postgres database and add connection details in `./backend/.env`.
+### Data preperation within Docker
 
-Run the api server:
+Data Preperation can be run within Docker, end to end.
 
-    cd ./backend
-    pipenv run uvicorn backend.app.main:app --host localhost --port 8888
+pipelines/{workflow}/{workflow_preprocessor.py} (pre-processing and generation of csv for snakemake) -> pipelines/{workflow}/Snakemake (generated COG Files) -> docker raster-tile-ingester (ingests to tile server DB) -> Add meta to backend API (see: containers/backend/README.md)
 
-Alternatively, run `docker-compose` to run the API server in one container and
-postgres in another.
+#### Snakemake
 
-### Run the frontend app in development mode
+bash
+```
+docker run -it -v ${PWD}/etl:/opt/etl gri-snakemake:latest --cores 1 -s /opt/etl/Snakefile
+```
 
-Start the app server:
+or using Docker Compose `snakemake` service:
 
-    npm start
+bash
+```
+docker-compose -f docker-compose-dev.yaml run snakemake
+```
 
-This should automatically open a browser tab. If not, open:
+#### Raster Tileserver Ingester
 
-    firefox http://localhost:3000/
+Update docker-compose-dev.yaml `raster-tile-ingester` block as req. for a dataset (after running its pre-processing and Snakemake pipeline)
 
-## Deployment
+```bash
+docker-compose -f docker-compose-dev.yaml run raster-tile-ingester
+```
 
-The site can run on a single Linux machine or virtual machine, with a suggested
-configuration that deploys the server processes behind an Nginx reverse proxy
-in production modes.
 
-See `./deploy` directory for details.
+## Build
+
+The application is built with several 'services', each facilitated by a running
+docker container.
+
+Services:
+- Web server (nginx)
+- Vector tileserver (tileserver-gl)
+- Backend / API (bespoke Python app for vector data and raster tiles (+meta))
+- API Database (PostgreSQL with PostGIS serves backend)
+- Tiles Database (MySQL serves tile ingester and backend /tiles endpoints)
+
+The services are orchestrated using `docker compose`. N.B. The app was built
+with docker engine version 20.10.16 and compose version 2.5.0. It may not work
+with other versions.
+
+The `compose.yml` file contains service names and definitions, and paths to
+build contexts (all located within `containers/`).
+
+
+## Deploy
+
+To deploy the stack, use `docker compose up`. Again, this will default to using
+the `compose.yml` file. The current process will show the interleaved log
+output of the various services. To bring up the stack in the background (e.g.
+for production), use `docker compose up -d` to daemonise the process.
+
+The default service configuration can be modified by means of 'overlaying'
+compose files. For development purposes it can be useful to 'bind mount' source
+code files into running containers. Similarly, direct access to the containers'
+various open ports can help debugging. To deploy the stack locally with such
+changes, use the following invocation:
+`docker compose -f compose.yml -f compose-local.yml up`
+
+To stop a foregrounded compose stack, issue SIGTERM with Ctrl-C. If services
+haven't stopped in 10 seconds they will be brutally terminated. To bring a
+daemonised stack down, use `docker compose down`.
 
 ## Acknowledgements
 

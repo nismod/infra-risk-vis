@@ -8,5 +8,6 @@
     },
     "[typescript]": {
         "editor.tabSize": 2
-    }
+    },
+    "python.formatting.provider": "black"
 }

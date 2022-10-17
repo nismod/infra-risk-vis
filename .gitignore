@@ -1,7 +1,7 @@
 # data folders
-node_modules/
-tileserver/raster/data
-tileserver/vector/data
+containers/web-server/node_modules/
+mounts/raster/
+mounts/vector/
 incoming_data/
 intermediate_data/
 *.zip
@@ -9,6 +9,7 @@ intermediate_data/
 *.aux.xml
 *.tar.xz
 *.bak
+*.nvmrc
 etl/*_test.csv
 etl/logs
 etl/vector
@@ -32,12 +33,27 @@ build/
 *.tfstate.backup
 *.hcl
 
-
 # tileserver database
 terracotta.sqlite
-
+terracotta.sqlite-journal
 
 # python files
 __pycache__
 *.egg-info
 *.pyc
+
+# Docker and deployment
+envs
+
+# Terraform
+*.tfstate*
+
+# Other data
+*.zip
+*.nc
+*.nc4
+*.tiff
+tileserver/raster/db
+deploy.sh
+main.tf
+provision.sh
