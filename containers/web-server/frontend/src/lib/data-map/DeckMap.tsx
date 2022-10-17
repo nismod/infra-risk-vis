@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
-import DeckGL, { DeckProps } from 'deck.gl';
-import { FC, ReactNode, createContext, useMemo, useRef, useState } from 'react';
-import { MapContext, MapContextProps } from 'react-map-gl';
+import DeckGL, { DeckGLContextValue, DeckGLRef, DeckProps } from 'deck.gl/typed';
+import { FC, Provider, ReactNode, createContext, useMemo, useRef, useState } from 'react';
+import { MapContext } from 'react-map-gl';
 
 interface DeckMapProps {
   initialViewState: any;
@@ -32,7 +32,7 @@ export const DeckMap: FC<DeckMapProps> = ({
 }) => {
   const [viewState, setViewState] = useState<any>(initialViewState);
 
-  const deckRef = useRef<DeckGL<MapContextProps>>();
+  const deckRef = useRef<DeckGLRef>();
 
   const zoom = viewState.zoom;
 
@@ -40,7 +40,7 @@ export const DeckMap: FC<DeckMapProps> = ({
 
   return (
     <ViewStateContext.Provider value={{ viewState, setViewState }}>
-      <DeckGL<MapContextProps>
+      <DeckGL
         ref={deckRef}
         style={{
           overflow: 'hidden',
@@ -54,7 +54,9 @@ export const DeckMap: FC<DeckMapProps> = ({
         onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
         onClick={(info) => deckRef.current && onClick?.(info, deckRef.current)}
         pickingRadius={pickingRadius}
-        ContextProvider={MapContext.Provider}
+        ContextProvider={
+          MapContext.Provider as unknown as Provider<DeckGLContextValue> /* unknown because TS doesn't like the cast */
+        }
       >
         {children}
       </DeckGL>

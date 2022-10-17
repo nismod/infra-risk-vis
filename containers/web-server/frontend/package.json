@@ -21,7 +21,7 @@
     "d3-ease": "^3.0.1",
     "d3-scale": "^4.0.2",
     "d3-scale-chromatic": "^3.0.0",
-    "deck.gl": "^8.6.6",
+    "deck.gl": "^8.8.13",
     "http-proxy-middleware": "^2.0.1",
     "immer": "^9.0.12",
     "json-stable-stringify": "^1.0.1",
@@ -42,7 +42,6 @@
     "vega-lite": "^5.0.0"
   },
   "devDependencies": {
-    "@danmarshall/deckgl-typings": "^4.9.13",
     "@ianvs/prettier-plugin-sort-imports": "^3.4.2",
     "@types/d3-array": "^3.0.2",
     "@types/d3-color": "^3.0.2",
