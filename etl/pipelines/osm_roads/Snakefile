@@ -6,7 +6,7 @@ import pandas
 
 
 # Example config
-configfile: "/opt/etl/pipelines/osm_roads_rail/config.yml"
+configfile: "/opt/etl/pipelines/osm_roads/config.yml"
 
 
 # Read further configuration data from CSV
@@ -24,33 +24,32 @@ rule all:
         expand(
             "/opt/tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
         ),
-
-
-# Prerequisite, not fully traced by file dependency
-#   snakemake --cores=all load_to_database
-rule load_to_database:
-    input:
-        expand("/opt/etl/logs/network/{layer}.txt", layer=network_layers.ref)
+        # expand(
+        #     "/opt/etl/logs/network/{layer}.txt", layer=network_tilelayers.layer
+        # ),
+        # expand(
+        #     "vector/{layer}.geojsonl", layer=network_tilelayers.layer
+        # ),
 
 
 rule networks_to_db:
     """Read from source directory to database
     """
-    input:
-        "/opt/etl/logs/feature_layers.txt",
     output:
         "/opt/etl/logs/network/{layer}.txt",
     script:
-        "/opt/etl/pipelines/common/networks_to_db.py"
+        "/opt/etl/pipelines/osm_roads/osm_roads_to_db.py"
 
 
 rule db_to_geojsonseq:
     """Load from database to GeoJSONSeq
     """
+    input:
+        "/opt/etl/logs/network/{layer}.txt",
     output:
         "vector/{layer}.geojsonl",
     script:
-        "/opt/etl/pipelines/common/scripts/db_to_geojsonseq.py"
+        "/opt/etl/pipelines/common/db_to_geojsonseq.py"
 
 
 rule geojsonseq_to_vector_tiles:

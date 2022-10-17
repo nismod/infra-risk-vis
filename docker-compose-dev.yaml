@@ -47,6 +47,8 @@ services:
     volumes:
       - ./etl:/opt/etl
       - ./tileserver:/opt/tileserver
+    env_file:
+      - ./envs/dev/.snakemake.env
     command:
       [
         "--cores",
@@ -57,7 +59,7 @@ services:
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/isimp_extreme_heat/Snakefile"
+        "/opt/etl/pipelines/osm_roads/Snakefile"
       ]
 
   backend:

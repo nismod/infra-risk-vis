@@ -9,8 +9,8 @@ from shapely.geometry import mapping
 from sqlalchemy.orm import Session, selectinload
 from tqdm import tqdm
 
-from pipelines.common.db.database import SessionLocal
-from pipelines.common.db.models import Feature
+from db.database import SessionLocal
+from db.models import Feature
 
 
 def feature_as_geojson(feature: Feature):
@@ -38,7 +38,6 @@ def yield_features_for_layer(layer: str):
     with SessionLocal() as db:
         query = (
             db.query(Feature)
-            .options(selectinload(Feature.damages_expected))
             .filter(Feature.layer == layer)
             .execution_options(yield_per=1000)
         )

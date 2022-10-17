@@ -7,5 +7,15 @@
     }
   },
   "styles": {},
-  "data": {}
+  "data": {
+    "transport_roads_edges_africa_class_a": {
+      "mbtiles": "transport_roads_edges_africa_class_a.mbtiles"
+    },
+    "transport_roads_edges_africa_class_b": {
+      "mbtiles": "transport_roads_edges_africa_class_b.mbtiles"
+    },
+    "transport_roads_edges_africa_class_c": {
+      "mbtiles": "transport_roads_edges_africa_class_c.mbtiles"
+    }
+  }
 }

@@ -1,0 +1,4 @@
+ref,path,asset_id_column,asset_type_column,asset_type,count
+transport_roads_edges_africa_class_a,/opt/etl/raw_data/processed_data/input/osm_roads/africa.geoparquet,id,tag_highway,motorway,37173
+transport_roads_edges_africa_class_b,/opt/etl/raw_data/processed_data/input/osm_roads/africa.geoparquet,id,tag_highway,trunk,147363
+transport_roads_edges_africa_class_c,/opt/etl/raw_data/processed_data/input/osm_roads/africa.geoparquet,id,tag_highway,primary,221323
