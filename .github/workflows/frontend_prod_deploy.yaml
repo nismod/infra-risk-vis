@@ -1,0 +1,54 @@
+# Workflow to build and push Prod Wavebase webserver image (incorporating React UI)
+# Only triggers on push to master and changes to nginx/prod
+
+name: Build and Push - Prod
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'containers/web-server/frontend/**'
+      - '.github/workflows/prod.yml'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    env:
+      VERSION_PROD: 0.5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Prod
+        uses: docker/build-push-action@v2
+        with:
+          context: ./containers/web-server
+          file: Dockerfile-prod
+          push: true
+          tags: nismod/gri-web-server:${{ env.VERSION_PROD }}
+
+      - name: Update images on server and restart
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GRI_HOST }}
+          username: ${{ secrets.GRI_USERNAME }}
+          key: ${{ secrets.GRI_KEY }}
+          port: 22
+          script: |
+            cd /opt/infra-risk
+            docker compose -f docker-compose-prod.yaml pull web-server
+            docker compose -f docker-compose-prod.yaml up -d webserver
