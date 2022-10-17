@@ -1,4 +1,4 @@
-import { DataFilterExtension } from '@deck.gl/extensions';
+import { DataFilterExtension } from '@deck.gl/extensions/typed';
 
 import { geoJsonLayer } from './base';
 

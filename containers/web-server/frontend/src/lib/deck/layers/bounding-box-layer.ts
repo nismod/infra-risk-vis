@@ -1,4 +1,4 @@
-import { PathStyleExtension } from '@deck.gl/extensions';
+import { PathStyleExtension } from '@deck.gl/extensions/typed';
 
 import { geoJsonLayer } from './base';
 

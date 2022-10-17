@@ -1,4 +1,4 @@
-import { BitmapLayer, GeoJsonLayer, MVTLayer, TileLayer } from 'deck.gl';
+import { BitmapLayer, GeoJsonLayer, MVTLayer, TileLayer } from 'deck.gl/typed';
 
 import { ConfigTree } from '@/lib/nested-config/config-tree';
 import { flattenConfig } from '@/lib/nested-config/flatten-config';

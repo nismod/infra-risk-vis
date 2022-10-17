@@ -1,5 +1,5 @@
 import { readPixelsToArray } from '@luma.gl/core';
-import DeckGL, { Deck, PickInfo } from 'deck.gl';
+import { Deck, DeckGLRef, PickingInfo } from 'deck.gl/typed';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilCallback, useSetRecoilState } from 'recoil';
@@ -54,7 +54,7 @@ export interface VectorTarget {
   feature: any;
 }
 
-function processVectorTarget(info: PickInfo<any>): VectorTarget {
+function processVectorTarget(info: PickingInfo): VectorTarget {
   const { object } = info;
 
   return object
@@ -64,12 +64,12 @@ function processVectorTarget(info: PickInfo<any>): VectorTarget {
     : null;
 }
 
-function processTargetByType(type: InteractionStyle, info: PickInfo<any>) {
+function processTargetByType(type: InteractionStyle, info: PickingInfo) {
   return type === 'raster' ? processRasterTarget(info) : processVectorTarget(info);
 }
 
 function processPickedObject(
-  info: PickInfo<any>,
+  info: PickingInfo,
   type: InteractionStyle,
   groupName: string,
   viewLayerLookup: Record<string, ViewLayer>,
@@ -139,14 +139,14 @@ export function useInteractions(
         const pickingParams = { x, y, layerIds, radius };
 
         if (pickMultiple) {
-          const pickedObjects: PickInfo<any>[] = deck.pickMultipleObjects(pickingParams);
+          const pickedObjects: PickingInfo[] = deck.pickMultipleObjects(pickingParams);
           const interactionTargets: InteractionTarget<any>[] = pickedObjects
             .map((info) => processPickedObject(info, type, groupName, viewLayerLookup, lookupViewForDeck))
             .filter(Boolean);
 
           setInteractionGroupHover(groupName, interactionTargets);
         } else {
-          const info: PickInfo<any> = deck.pickObject(pickingParams);
+          const info: PickingInfo = deck.pickObject(pickingParams);
           let interactionTarget: InteractionTarget<any> =
             info && processPickedObject(info, type, groupName, viewLayerLookup, lookupViewForDeck);
 
@@ -160,7 +160,7 @@ export function useInteractions(
   );
 
   const onClick = useCallback(
-    (info: any, deck: DeckGL) => {
+    (info: any, deck: DeckGLRef) => {
       const { x, y } = info;
       for (const [groupName, viewLayers] of Object.entries(activeGroups)) {
         const viewLayerIds = viewLayers.map((layer) => layer.id);
