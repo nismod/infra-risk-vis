@@ -1,7 +1,8 @@
+import { useDebounceCallback } from '@react-hook/debounce';
 import { useEffect, useState } from 'react';
 import { useFetch } from 'use-http';
-import { useDebounceCallback } from '@react-hook/debounce';
-import { BoundingBox, NominatimBoundingBox, nominatimToAppBoundingBox } from 'lib/bounding-box';
+
+import { BoundingBox, NominatimBoundingBox, nominatimToAppBoundingBox } from '@/lib/bounding-box';
 
 export interface PlaceSearchResult {
   label: string;

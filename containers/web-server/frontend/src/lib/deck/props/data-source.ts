@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
 
-import { DataLoader } from 'lib/data-loader/data-loader';
+import { DataLoader } from '@/lib/data-loader/data-loader';
 
 import { Accessor, withLoaderTriggers, withTriggers } from './getters';
 

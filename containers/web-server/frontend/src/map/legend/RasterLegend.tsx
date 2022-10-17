@@ -1,7 +1,10 @@
-import { RASTER_COLOR_MAPS } from 'config/color-maps';
-import { HAZARDS_METADATA } from 'config/hazards/metadata';
-import { ViewLayer } from 'lib/data-map/view-layers';
 import { FC, useCallback } from 'react';
+
+import { ViewLayer } from '@/lib/data-map/view-layers';
+
+import { RASTER_COLOR_MAPS } from '@/config/color-maps';
+import { HAZARDS_METADATA } from '@/config/hazards/metadata';
+
 import { GradientLegend } from './GradientLegend';
 import { useRasterColorMapValues } from './use-color-map-values';
 

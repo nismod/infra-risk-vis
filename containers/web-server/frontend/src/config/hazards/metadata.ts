@@ -21,5 +21,19 @@ export const HAZARDS_METADATA = {
   },
 };
 
-export const HAZARDS_MAP_ORDER = ['cyclone', 'fluvial', 'surface', 'coastal', 'extreme_heat_occurrence', 'extreme_heat_exposure'];
-export const HAZARDS_UI_ORDER = ['fluvial', 'surface', 'coastal', 'cyclone', 'extreme_heat_occurrence', 'extreme_heat_exposure'];
+export const HAZARDS_MAP_ORDER = [
+  'cyclone',
+  'fluvial',
+  'surface',
+  'coastal',
+  'extreme_heat_occurrence',
+  'extreme_heat_exposure',
+];
+export const HAZARDS_UI_ORDER = [
+  'fluvial',
+  'surface',
+  'coastal',
+  'cyclone',
+  'extreme_heat_occurrence',
+  'extreme_heat_exposure',
+];

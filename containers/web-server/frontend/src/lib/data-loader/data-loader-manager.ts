@@ -1,5 +1,7 @@
 import stringify from 'json-stable-stringify';
-import { FieldSpec } from 'lib/data-map/view-layers';
+
+import { FieldSpec } from '@/lib/data-map/view-layers';
+
 import { DataLoader } from './data-loader';
 
 function getLoaderKey(layer: string, fieldSpec: FieldSpec) {

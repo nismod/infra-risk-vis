@@ -1,5 +1,6 @@
 import { selector } from 'recoil';
-import { sectionStyleValueState } from '../sections';
+
+import { sectionStyleValueState } from '@/state/sections';
 
 export const networksStyleState = selector({
   key: 'networksStyleState',

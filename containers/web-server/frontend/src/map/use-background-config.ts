@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { useMemo } from 'react';
 
-import { BACKGROUNDS, BackgroundName } from 'config/backgrounds';
+import { BACKGROUNDS, BackgroundName } from '@/config/backgrounds';
 
 function visible(isVisible: boolean): 'visible' | 'none' {
   return isVisible ? 'visible' : 'none';

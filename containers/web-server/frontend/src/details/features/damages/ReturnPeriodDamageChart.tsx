@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { VegaLite } from 'react-vega';
 
-import { unique } from 'lib/helpers';
+import { unique } from '@/lib/helpers';
 
 const makeSpec = (rpValues: number[], field_key: string, field_title: string) => ({
   $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
@@ -62,12 +62,15 @@ const makeSpec = (rpValues: number[], field_key: string, field_title: string) =>
 
 export const ReturnPeriodDamageChart = ({ data, field_key, field_title, ...props }) => {
   const spec = useMemo(
-    () => makeSpec(
-      unique<number>(data.table.map((d) => d.rp)).sort().reverse(),
-      field_key,
-      field_title
-    ),
-    [data]
+    () =>
+      makeSpec(
+        unique<number>(data.table.map((d) => d.rp))
+          .sort()
+          .reverse(),
+        field_key,
+        field_title,
+      ),
+    [data],
   );
 
   return <VegaLite data={data} spec={spec as any} {...props} />;

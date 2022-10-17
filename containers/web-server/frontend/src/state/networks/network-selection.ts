@@ -1,7 +1,9 @@
-import { NETWORK_LAYERS_HIERARCHY } from 'config/networks/hierarchy';
-import { buildTreeConfig, CheckboxTreeState } from 'lib/controls/checkbox-tree/CheckboxTree';
 import _ from 'lodash';
 import { atom, selector } from 'recoil';
+
+import { CheckboxTreeState, buildTreeConfig } from '@/lib/controls/checkbox-tree/CheckboxTree';
+
+import { NETWORK_LAYERS_HIERARCHY } from '@/config/networks/hierarchy';
 
 export const networkTreeExpandedState = atom<string[]>({
   key: 'networkTreeExpandedState',

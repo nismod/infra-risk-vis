@@ -1,14 +1,16 @@
 import { DataFilterExtension } from '@deck.gl/extensions';
-import { MARINE_HABITAT_COLORS } from 'config/solutions/colors';
-import { ViewLayer, FieldSpec } from 'lib/data-map/view-layers';
 import { selector } from 'recoil';
-import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
-import { featureProperty } from 'lib/deck/props/data-source';
-import { dataColorMap } from 'lib/deck/props/color-map';
-import { fillColor } from 'lib/deck/props/style';
-import { Accessor } from 'lib/deck/props/getters';
-import { marineFiltersState } from 'state/solutions/marine-filters';
-import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
+
+import { FieldSpec, ViewLayer } from '@/lib/data-map/view-layers';
+import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
+import { dataColorMap } from '@/lib/deck/props/color-map';
+import { featureProperty } from '@/lib/deck/props/data-source';
+import { Accessor } from '@/lib/deck/props/getters';
+import { fillColor } from '@/lib/deck/props/style';
+
+import { MARINE_HABITAT_COLORS } from '@/config/solutions/colors';
+import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
+import { marineFiltersState } from '@/state/solutions/marine-filters';
 
 export function habitatColorMap(x: string) {
   return MARINE_HABITAT_COLORS[x]?.css ?? MARINE_HABITAT_COLORS['other'].css;

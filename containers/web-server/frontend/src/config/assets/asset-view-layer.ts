@@ -3,8 +3,9 @@ import {
   ViewLayer,
   ViewLayerDataAccessFunction,
   ViewLayerFunctionOptions,
-} from 'lib/data-map/view-layers';
-import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
+} from '@/lib/data-map/view-layers';
+import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
+
 import { getAssetDataFormats } from './data-formats';
 import { ASSETS_SOURCE } from './source';
 

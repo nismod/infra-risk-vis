@@ -1,8 +1,7 @@
+import { List, ListItem, ListItemText, Typography } from '@mui/material';
 import { ComponentType, FC } from 'react';
 
-import { List, ListItem, ListItemText, Typography } from '@mui/material';
-
-import { titleCase, isNumeric, numFormat, paren, numRangeFormat } from 'lib/helpers';
+import { isNumeric, numFormat, numRangeFormat, paren, titleCase } from '@/lib/helpers';
 
 interface DataItemProps {
   label: string;

@@ -1,6 +1,7 @@
-import { regionBoundariesDeckLayer } from './region-boundaries-deck-layer';
+import { ViewLayer } from '@/lib/data-map/view-layers';
+
 import { RegionLevel } from './metadata';
-import { ViewLayer } from 'lib/data-map/view-layers';
+import { regionBoundariesDeckLayer } from './region-boundaries-deck-layer';
 
 export function regionBoundariesViewLayer(regionLevel: RegionLevel): ViewLayer {
   return {

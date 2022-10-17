@@ -1,10 +1,11 @@
-import { FormatConfig } from 'lib/data-map/view-layers';
-import { numFormat, numFormatMoney, toDictionary } from 'lib/helpers';
+import { FormatConfig } from '@/lib/data-map/view-layers';
+import { numFormat, numFormatMoney, toDictionary } from '@/lib/helpers';
+
 import {
-  DroughtOptionsVariableType,
-  DroughtRiskVariableType,
   DROUGHT_OPTIONS_VARIABLE_LABELS,
   DROUGHT_RISK_VARIABLE_LABELS,
+  DroughtOptionsVariableType,
+  DroughtRiskVariableType,
 } from './metadata';
 
 const riskLabelLookup = toDictionary(

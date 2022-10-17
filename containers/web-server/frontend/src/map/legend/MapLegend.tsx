@@ -1,12 +1,14 @@
+import { Box, Divider, Paper, Stack } from '@mui/material';
 import { FC } from 'react';
-
-import { ColorMap, FormatConfig } from 'lib/data-map/view-layers';
 import { useRecoilValue } from 'recoil';
-import { viewLayersFlatState } from 'state/layers/view-layers-flat';
-import { viewLayersParamsState } from 'state/layers/view-layers-params';
+
+import { ColorMap, FormatConfig } from '@/lib/data-map/view-layers';
+
+import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
+import { viewLayersParamsState } from '@/state/layers/view-layers-params';
+
 import { RasterLegend } from './RasterLegend';
 import { VectorLegend } from './VectorLegend';
-import { Stack, Box, Paper, Divider } from '@mui/material';
 
 export const MapLegend: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);

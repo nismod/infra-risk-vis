@@ -2,8 +2,8 @@ import { Autocomplete, TextField } from '@mui/material';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { usePlaceSearch } from './use-place-search';
 import { placeSearchQueryState } from './search-state';
+import { usePlaceSearch } from './use-place-search';
 
 export const MapSearchField = ({ onSelectedResult }) => {
   const [searchValue, setSearchValue] = useRecoilState(placeSearchQueryState);

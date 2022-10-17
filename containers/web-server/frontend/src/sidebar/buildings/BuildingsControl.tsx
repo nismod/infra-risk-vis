@@ -1,8 +1,10 @@
-import { NETWORKS_METADATA } from 'config/networks/metadata';
-import { ParamChecklist } from 'lib/controls/params/ParamChecklist';
 import { useRecoilState } from 'recoil';
-import { LayerLabel } from 'sidebar/ui/LayerLabel';
-import { buildingSelectionState } from 'state/buildings';
+
+import { ParamChecklist } from '@/lib/controls/params/ParamChecklist';
+
+import { NETWORKS_METADATA } from '@/config/networks/metadata';
+import { LayerLabel } from '@/sidebar/ui/LayerLabel';
+import { buildingSelectionState } from '@/state/buildings';
 
 export const BuildingsControl = () => {
   const [checkboxState, setCheckboxState] = useRecoilState(buildingSelectionState);

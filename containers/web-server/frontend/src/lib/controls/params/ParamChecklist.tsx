@@ -1,8 +1,10 @@
 import { Button, Checkbox, FormControlLabel, FormGroup, FormLabel, Stack } from '@mui/material';
 import { Box } from '@mui/system';
-import { fromKeys } from 'lib/helpers';
 import { PropsWithChildren, ReactElement, useMemo } from 'react';
-import { getValueLabel, ValueLabel } from './value-label';
+
+import { fromKeys } from '@/lib/helpers';
+
+import { ValueLabel, getValueLabel } from './value-label';
 
 interface ParamChecklistProps<K extends string> {
   title: string;

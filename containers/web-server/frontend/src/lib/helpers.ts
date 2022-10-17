@@ -53,7 +53,7 @@ export function colorCssToRgb(cssColor: string): [number, number, number, number
   const color = d3.color(cssColor);
   const { r, g, b } = color.rgb();
   const a = color.opacity;
-  return (a === 1)? [r, g, b] : [r, g, b, a * 256];
+  return a === 1 ? [r, g, b] : [r, g, b, a * 256];
 }
 
 export function toDictionary<T, K extends string, V>(

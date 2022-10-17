@@ -1,5 +1,5 @@
-import { ApiClient } from 'lib/api-client';
-import { FieldSpec } from 'lib/data-map/view-layers';
+import { ApiClient } from '@/lib/api-client';
+import { FieldSpec } from '@/lib/data-map/view-layers';
 
 export type DataLoaderSubscriber = (loader: DataLoader) => void;
 

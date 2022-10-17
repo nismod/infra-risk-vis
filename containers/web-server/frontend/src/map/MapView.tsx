@@ -1,24 +1,25 @@
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
-import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-gl';
-
-import { DataMap } from 'lib/data-map/DataMap';
-
-import { backgroundState } from './layers/layers-state';
-import { useBackgroundConfig } from './use-background-config';
-import { MapBoundsFitter } from 'lib/map/MapBoundsFitter';
-import { useSaveViewLayers, viewLayersParamsState } from 'state/layers/view-layers-params';
-import { viewLayersFlatState } from 'state/layers/view-layers-flat';
-import { useCallback, useEffect } from 'react';
-import { DataMapTooltip } from 'lib/data-map/DataMapTooltip';
-import { TooltipContent } from './tooltip/TooltipContent';
 import { Box } from '@mui/material';
-import { MapSearch } from 'lib/map/place-search/MapSearch';
-import { MapLayerSelection } from './layers/MapLayerSelection';
-import { MapLegend } from './legend/MapLegend';
+import { useCallback, useEffect } from 'react';
+import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-gl';
+import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { globalStyleVariables } from 'theme';
-import { interactionGroupsState } from '../state/layers/interaction-groups';
-import { PlaceSearchResult } from 'lib/map/place-search/use-place-search';
-import { BoundingBox } from 'lib/bounding-box';
+
+import { BoundingBox } from '@/lib/bounding-box';
+import { DataMap } from '@/lib/data-map/DataMap';
+import { DataMapTooltip } from '@/lib/data-map/DataMapTooltip';
+import { MapBoundsFitter } from '@/lib/map/MapBoundsFitter';
+import { MapSearch } from '@/lib/map/place-search/MapSearch';
+import { PlaceSearchResult } from '@/lib/map/place-search/use-place-search';
+
+import { interactionGroupsState } from '@/state/layers/interaction-groups';
+import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
+import { useSaveViewLayers, viewLayersParamsState } from '@/state/layers/view-layers-params';
+
+import { MapLayerSelection } from './layers/MapLayerSelection';
+import { backgroundState } from './layers/layers-state';
+import { MapLegend } from './legend/MapLegend';
+import { TooltipContent } from './tooltip/TooltipContent';
+import { useBackgroundConfig } from './use-background-config';
 
 export const mapFitBoundsState = atom<BoundingBox>({
   key: 'mapFitBoundsState',
@@ -75,7 +76,14 @@ export const MapView = () => {
               <MapLayerSelection />
             </Box>
           </Box>
-          <Box position="absolute" bottom={0} left={globalStyleVariables.controlSidebarWidth} m={1} ml={1} zIndex={1000}>
+          <Box
+            position="absolute"
+            bottom={0}
+            left={globalStyleVariables.controlSidebarWidth}
+            m={1}
+            ml={1}
+            zIndex={1000}
+          >
             <MapLegend />
           </Box>
         </>

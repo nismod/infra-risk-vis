@@ -1,7 +1,8 @@
-import { MVTLayer, TileLayer, BitmapLayer, GeoJsonLayer } from 'deck.gl';
-import { ConfigTree } from 'lib/nested-config/config-tree';
-import { flattenConfig } from 'lib/nested-config/flatten-config';
-import { mergeObjects, mergeValue } from 'lib/nested-config/merge-objects';
+import { BitmapLayer, GeoJsonLayer, MVTLayer, TileLayer } from 'deck.gl';
+
+import { ConfigTree } from '@/lib/nested-config/config-tree';
+import { flattenConfig } from '@/lib/nested-config/flatten-config';
+import { mergeObjects, mergeValue } from '@/lib/nested-config/merge-objects';
 
 const deckPropsMergeStrategies = {
   updateTriggers: mergeValue,

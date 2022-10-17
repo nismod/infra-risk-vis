@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { atomFamily, RecoilValue } from 'recoil';
+import { RecoilValue, atomFamily } from 'recoil';
 
 export const hazardSelectionState = atomFamily({
   key: 'hazardSelectionState',

@@ -1,7 +1,7 @@
 import { selector } from 'recoil';
 
-import { flattenConfig } from 'lib/nested-config/flatten-config';
-import { ViewLayer } from 'lib/data-map/view-layers';
+import { ViewLayer } from '@/lib/data-map/view-layers';
+import { flattenConfig } from '@/lib/nested-config/flatten-config';
 
 import { viewLayersState } from './view-layers';
 

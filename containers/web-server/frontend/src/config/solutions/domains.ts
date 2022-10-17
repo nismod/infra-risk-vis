@@ -1,4 +1,4 @@
-import { toDictionary } from 'lib/helpers';
+import { toDictionary } from '@/lib/helpers';
 
 const landUseValuesConst = [
   'Bamboo',
@@ -94,8 +94,8 @@ const marineHabitatsConst = [
   },
   {
     value: 'other',
-    label: 'Buffer Zone'
-  }
+    label: 'Buffer Zone',
+  },
 ] as const;
 
 export const MARINE_HABITATS = [...marineHabitatsConst];

@@ -1,21 +1,23 @@
 import { Checkbox, Divider, FormControlLabel } from '@mui/material';
-import {
-  DroughtOptionsVariableType,
-  DroughtRiskVariableType,
-  DROUGHT_OPTIONS_VARIABLE_LABELS,
-  DROUGHT_RISK_VARIABLE_LABELS,
-} from 'config/drought/metadata';
-import { ParamDropdown } from 'lib/controls/ParamDropdown';
 import { FC } from 'react';
 import { useRecoilState } from 'recoil';
-import { InputSection } from 'sidebar/ui/InputSection';
+
+import { ParamDropdown } from '@/lib/controls/ParamDropdown';
+
+import {
+  DROUGHT_OPTIONS_VARIABLE_LABELS,
+  DROUGHT_RISK_VARIABLE_LABELS,
+  DroughtOptionsVariableType,
+  DroughtRiskVariableType,
+} from '@/config/drought/metadata';
+import { InputSection } from '@/sidebar/ui/InputSection';
 import {
   droughtOptionsVariableState,
   droughtRcpParamState,
   droughtRiskVariableState,
   droughtShowOptionsState,
   droughtShowRiskState,
-} from 'state/drought/drought-parameters';
+} from '@/state/drought/drought-parameters';
 
 export const DroughtsControl: FC<{}> = () => {
   const [rcp, setRcp] = useRecoilState(droughtRcpParamState);

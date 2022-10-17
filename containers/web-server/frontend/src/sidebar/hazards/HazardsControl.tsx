@@ -1,14 +1,15 @@
-import { ToggleSection, ToggleSectionGroup } from 'lib/controls/accordion-toggle/ToggleSection';
-
-import { hazardSelectionState } from '../../state/hazards/hazard-selection';
-import { InputRow } from 'sidebar/ui/InputRow';
-import { InputSection } from 'sidebar/ui/InputSection';
-import { ReturnPeriodControl } from 'sidebar/ui/params/ReturnPeriodControl';
-import { EpochControl } from 'sidebar/ui/params/EpochControl';
-import { RCPControl } from 'sidebar/ui/params/RCPControl';
-import { useRecoilValue } from 'recoil';
-import { showDamagesState } from 'state/damage-mapping/damage-map';
 import { Alert, Box } from '@mui/material';
+import { useRecoilValue } from 'recoil';
+
+import { ToggleSection, ToggleSectionGroup } from '@/lib/controls/accordion-toggle/ToggleSection';
+
+import { InputRow } from '@/sidebar/ui/InputRow';
+import { InputSection } from '@/sidebar/ui/InputSection';
+import { EpochControl } from '@/sidebar/ui/params/EpochControl';
+import { RCPControl } from '@/sidebar/ui/params/RCPControl';
+import { ReturnPeriodControl } from '@/sidebar/ui/params/ReturnPeriodControl';
+import { showDamagesState } from '@/state/damage-mapping/damage-map';
+import { hazardSelectionState } from '@/state/hazards/hazard-selection';
 
 export const HazardsControl = () => {
   const showDirectDamages = useRecoilValue(showDamagesState);
@@ -81,7 +82,6 @@ export const HazardsControl = () => {
           </InputSection>
         </ToggleSection>
       </ToggleSectionGroup>
-
     </>
   );
 };

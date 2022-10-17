@@ -2,7 +2,7 @@ import { Alert } from '@mui/material';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { viewState } from 'state/view';
+import { viewState } from '@/state/view';
 
 import { BuildingsSection } from './buildings/BuildingsSection';
 import { DroughtsSection } from './drought/DroughtsSection';

@@ -1,8 +1,11 @@
-import { FC } from 'react';
-import { HazardsControl } from './HazardsControl';
-import { SidebarPanel } from 'sidebar/SidebarPanel';
 import { Box } from '@mui/system';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+import { FC } from 'react';
+
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+
+import { SidebarPanel } from '@/sidebar/SidebarPanel';
+
+import { HazardsControl } from './HazardsControl';
 
 export const HazardsSection: FC<{}> = () => {
   return (

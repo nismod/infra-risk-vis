@@ -1,9 +1,12 @@
 import { FormControl, FormLabel, Slider } from '@mui/material';
-import { TerrestrialLocationFilterType, TERRESTRIAL_LOCATION_FILTERS } from 'config/solutions/domains';
-import { ParamChecklist } from 'lib/controls/params/ParamChecklist';
 import { useRecoilState } from 'recoil';
-import { InputSection } from 'sidebar/ui/InputSection';
-import { terrestrialNonLandUseFiltersState } from 'state/solutions/terrestrial-filters';
+
+import { ParamChecklist } from '@/lib/controls/params/ParamChecklist';
+
+import { TERRESTRIAL_LOCATION_FILTERS, TerrestrialLocationFilterType } from '@/config/solutions/domains';
+import { InputSection } from '@/sidebar/ui/InputSection';
+import { terrestrialNonLandUseFiltersState } from '@/state/solutions/terrestrial-filters';
+
 import { TerrestrialLandUseTree } from './TerrestrialLandUseTree';
 
 export const TerrestrialControl = () => {

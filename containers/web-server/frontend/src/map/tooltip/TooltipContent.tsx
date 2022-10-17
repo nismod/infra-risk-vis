@@ -2,15 +2,17 @@ import { Box, Paper } from '@mui/material';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { VectorHoverDescription } from './content/VectorHoverDescription';
+import { hasHover, hoverState } from '@/lib/data-map/interactions/interaction-state';
+import { InteractionTarget } from '@/lib/data-map/interactions/use-interactions';
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+
+import { showPopulationState } from '@/state/regions';
+
+import { DroughtHoverDescription } from './content/DroughtHoverDescription';
 import { RasterHoverDescription } from './content/RasterHoverDescription';
 import { RegionHoverDescription } from './content/RegionHoverDescription';
-import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-state';
-import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
-import { showPopulationState } from 'state/regions';
 import { SolutionHoverDescription } from './content/SolutionHoverDescription';
-import { DroughtHoverDescription } from './content/DroughtHoverDescription';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+import { VectorHoverDescription } from './content/VectorHoverDescription';
 
 const TooltipSection = ({ children }) => (
   <Box p={1} borderBottom="1px solid #ccc">

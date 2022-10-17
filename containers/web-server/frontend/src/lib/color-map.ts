@@ -1,4 +1,5 @@
 import * as d3Array from 'd3-array';
+
 import { ColorSpec } from './data-map/view-layers';
 
 export function colorScaleFn({ scale, range, scheme }: ColorSpec) {

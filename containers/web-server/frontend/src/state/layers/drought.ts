@@ -1,27 +1,29 @@
-import { ASSETS_SOURCE } from 'config/assets/source';
-import { VECTOR_COLOR_MAPS } from 'config/color-maps';
-import { getDroughtDataAccessor } from 'config/drought/data-access';
-import { getDroughtOptionsDataFormats, getDroughtRiskDataFormats } from 'config/drought/data-formats';
+import { selector } from 'recoil';
+
+import { colorMap } from '@/lib/color-map';
+import { ColorSpec, FieldSpec, ViewLayer } from '@/lib/data-map/view-layers';
+import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
+import { dataColorMap } from '@/lib/deck/props/color-map';
+import { border, fillColor, pointRadius } from '@/lib/deck/props/style';
+
+import { ASSETS_SOURCE } from '@/config/assets/source';
+import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
+import { getDroughtDataAccessor } from '@/config/drought/data-access';
+import { getDroughtOptionsDataFormats, getDroughtRiskDataFormats } from '@/config/drought/data-formats';
 import {
-  DroughtOptionsVariableType,
-  DroughtRiskVariableType,
   DROUGHT_OPTIONS_VARIABLES_WITH_RCP,
   DROUGHT_RISK_VARIABLES_WITH_RCP,
-} from 'config/drought/metadata';
-import { colorMap } from 'lib/color-map';
-import { ColorSpec, FieldSpec, ViewLayer } from 'lib/data-map/view-layers';
-import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
-import { dataColorMap } from 'lib/deck/props/color-map';
-import { border, fillColor, pointRadius } from 'lib/deck/props/style';
-import { selector } from 'recoil';
+  DroughtOptionsVariableType,
+  DroughtRiskVariableType,
+} from '@/config/drought/metadata';
 import {
   droughtOptionsVariableState,
   droughtRcpParamState,
   droughtRiskVariableState,
   droughtShowOptionsState,
   droughtShowRiskState,
-} from 'state/drought/drought-parameters';
-import { sectionVisibilityState } from 'state/sections';
+} from '@/state/drought/drought-parameters';
+import { sectionVisibilityState } from '@/state/sections';
 
 export const droughtRegionsFieldSpecState = selector<FieldSpec>({
   key: 'droughtRegionsFieldSpecState',

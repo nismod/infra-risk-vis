@@ -1,11 +1,13 @@
+import { Box } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 
-import { selectionState } from 'lib/data-map/interactions/interaction-state';
-import { Box } from '@mui/material';
+import { selectionState } from '@/lib/data-map/interactions/interaction-state';
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+
+import { DeselectButton } from '@/details/DeselectButton';
+import { SidePanel } from '@/details/SidePanel';
+
 import { RegionDetailsContent } from './RegionDetailsContent';
-import { SidePanel } from 'details/SidePanel';
-import { DeselectButton } from 'details/DeselectButton';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 
 export const RegionDetails = () => {
   const selectedRegion = useRecoilValue(selectionState('regions'));

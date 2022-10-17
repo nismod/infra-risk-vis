@@ -1,13 +1,13 @@
-import DeckGL, { Deck, PickInfo } from 'deck.gl';
 import { readPixelsToArray } from '@luma.gl/core';
+import DeckGL, { Deck, PickInfo } from 'deck.gl';
 import _ from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useRecoilCallback, useSetRecoilState } from 'recoil';
 
-import { ViewLayer } from '../view-layers';
+import { ViewLayer } from '@/lib/data-map/view-layers';
+import { RecoilStateFamily } from '@/lib/recoil/types';
 
-import { hoverState, hoverPositionState, selectionState, allowedGroupLayersState } from './interaction-state';
-import { RecoilStateFamily } from 'lib/recoil/types';
+import { allowedGroupLayersState, hoverPositionState, hoverState, selectionState } from './interaction-state';
 
 export type InteractionStyle = 'vector' | 'raster';
 export interface InteractionGroupConfig {
