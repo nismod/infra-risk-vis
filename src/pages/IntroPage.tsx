@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
-import ScrollToTop from 'lib/hooks/scroll-to-top';
+import ScrollToTop from '@/lib/hooks/scroll-to-top';
 
 const HeadingBox = styled(Paper)(({ theme }) => ({
   backgroundColor: 'rgba(0, 92, 97, 0.3)',
