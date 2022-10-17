@@ -57,3 +57,4 @@ tileserver/raster/db
 deploy.sh
 main.tf
 provision.sh
+*.geoparquet

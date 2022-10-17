@@ -1,18 +1,16 @@
 """Write from database to GeoJSONSeq file for a single visualisation layer
 """
-import os
-import sys
 from operator import attrgetter
 
-import ujson as json
+import json
 
 from geoalchemy2.shape import to_shape
 from shapely.geometry import mapping
 from sqlalchemy.orm import Session, selectinload
 from tqdm import tqdm
 
-from backend.db.database import SessionLocal
-from backend.db.models import Feature
+from pipelines.common.db.database import SessionLocal
+from pipelines.common.db.models import Feature
 
 
 def feature_as_geojson(feature: Feature):

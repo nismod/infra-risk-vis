@@ -1,0 +1,138 @@
+import os
+import subprocess
+
+import geopandas
+import pandas
+
+
+# Example config
+configfile: "/opt/etl/pipelines/osm_roads_rail/config.yml"
+
+
+# Read further configuration data from CSV
+network_layers = pandas.read_csv(config["network_layers"])
+network_tilelayers = pandas.read_csv(config["network_tilelayers"])
+
+
+wildcard_constraints:
+    layer="[^/]+",
+
+
+# Run all file-base jobs, after load_to_database
+rule all:
+    input:
+        expand(
+            "/opt/tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
+        ),
+
+
+# Prerequisite, not fully traced by file dependency
+#   snakemake --cores=all load_to_database
+rule load_to_database:
+    input:
+        expand("/opt/etl/logs/network/{layer}.txt", layer=network_layers.ref)
+
+
+rule networks_to_db:
+    """Read from source directory to database
+    """
+    input:
+        "/opt/etl/logs/feature_layers.txt",
+    output:
+        "/opt/etl/logs/network/{layer}.txt",
+    script:
+        "/opt/etl/pipelines/common/networks_to_db.py"
+
+
+rule db_to_geojsonseq:
+    """Load from database to GeoJSONSeq
+    """
+    output:
+        "vector/{layer}.geojsonl",
+    script:
+        "/opt/etl/pipelines/common/scripts/db_to_geojsonseq.py"
+
+
+rule geojsonseq_to_vector_tiles:
+    input:
+        "vector/{layer}.geojsonl",
+    output:
+        "/opt/tileserver/vector/data/{layer}.mbtiles",
+    run:
+        layer = get_tilelayer(wildcards.layer, network_tilelayers)
+
+        max_zoom = 20
+        point_polygon_zoom_switch = 13
+
+        if layer.spatial_type == "line":
+            options = [
+                "--drop-densest-as-needed",
+                "--minimum-zoom=3",
+                f"--maximum-zoom={max_zoom}",
+            ]
+        elif layer.spatial_type == "polygon":
+            options = [
+                "--drop-smallest-as-needed",
+                f"--minimum-zoom={point_polygon_zoom_switch}",
+                f"--maximum-zoom={max_zoom}",
+            ]
+        else:
+            options = [
+                "--drop-densest-as-needed",
+                "-Bg",
+                f"--maximum-zoom={max_zoom}",
+                "--full-detail=12"
+            ]
+
+        subprocess.run(
+            [
+                "tippecanoe",
+                "--use-attribute-for-id=uid",
+                "--read-parallel",
+                f"--output={output}",
+                f"--layer={wildcards.layer}",
+            ]
+            + options
+            + ["--force", f"{input}"],
+            check=True
+        )
+
+        if layer.spatial_type == "polygon":
+            # create points as centroids
+            input_basename = os.path.basename(str(input))
+            input_layer = input_basename.replace(".geojsonl", "")
+            tmp_output = f"vector/points/{input_basename}"
+            subprocess.run(
+                [
+                    "ogr2ogr",
+                    "-sql",
+                    f"SELECT ST_Centroid(geometry), * FROM {input_layer}",
+                    "-dialect",
+                    "sqlite",
+                    tmp_output,
+                    str(input)
+                ],
+                check=True
+            )
+            subprocess.run(
+                [
+                    "tippecanoe",
+                    "--use-attribute-for-id=uid",
+                    "--read-parallel",
+                    f"--output={output}",
+                    f"--layer={wildcards.layer}",
+                    "--drop-densest-as-needed",
+                    "--minimum-zoom=3",
+                    f"--maximum-zoom={point_polygon_zoom_switch - 1}",
+                    "--force", f"{tmp_output}"
+                ],
+                check=True
+            )
+
+
+def get_tilelayer(layer_name, network_tilelayers):
+    try:
+        return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in tilelayers.")
+        raise e
