@@ -31,20 +31,6 @@ export const IntroPage = () => (
           </HeadingBox>
         </Grid>
         <Grid item xs={6}>
-          <TextBox sx={{ mt: -2, pt: 8 }}>
-            <p>
-              The Global Systemic Risk Assessment Tool (G&#8209;SRAT) supports
-              climate adaptation decision-making by identifying spatial
-              criticalities and risks under current and future climate scenarios.
-            </p>
-            <Typography variant="h2">Transport</Typography>
-            <p>Roads, rail, ports and airports.</p>
-            <Typography variant="h2">Energy</Typography>
-            <p>Electricity generation, transmission and distribution.</p>
-            <Typography variant="h2">Water</Typography>
-            <p>Water supply, wastewater and irrigation.</p>
-
-          </TextBox>
         </Grid>
         <Grid item xs={12}>
           <TextBox sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
@@ -82,15 +68,6 @@ export const IntroPage = () => (
               justifyContent="center"
               alignItems="center"
             >
-              <a href="https://www.gov.uk/guidance/uk-aid" target="_blank" rel="noopener noreferrer">
-                <img height="100" src="/logo-ukaid.png" alt="UK AID" />
-              </a>
-              <a href="https://www.greenclimate.fund/" target="_blank" rel="noopener noreferrer">
-                <img height="100" src="/logo-gcf.png" alt="Green Climate Fund" />
-              </a>
-              <a href="https://resilientinvestment.org/" target="_blank" rel="noopener noreferrer">
-                <img height="100" src="/logo-ccri.png" alt="Coalition for Climate Resilient Investment" />
-              </a>
             </Stack>
 
           </TextBox>
