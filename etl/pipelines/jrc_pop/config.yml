@@ -1,0 +1,2 @@
+exposure_layers: /opt/etl/pipelines/jrc_pop/exposure_population.csv
+raster_output_dir: /opt/tileserver/raster/data/jrc_pop

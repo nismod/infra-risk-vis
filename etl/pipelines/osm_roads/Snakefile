@@ -64,11 +64,24 @@ rule geojsonseq_to_vector_tiles:
         point_polygon_zoom_switch = 13
 
         if layer.spatial_type == "line":
-            options = [
-                "--drop-densest-as-needed",
-                "--minimum-zoom=3",
-                f"--maximum-zoom={max_zoom}",
-            ]
+            if layer.layer == 'road_edges_class_metro': # secondary
+                options = [
+                    "--drop-densest-as-needed",
+                    "--minimum-zoom=4",
+                    f"--maximum-zoom={max_zoom}",
+                ]
+            elif layer.layer == 'road_edges_class_track': # tertiary
+                options = [
+                    "--drop-densest-as-needed",
+                    "--minimum-zoom=5",
+                    f"--maximum-zoom={max_zoom}",
+                ]
+            else:
+                options = [
+                    "--drop-densest-as-needed",
+                    "--minimum-zoom=3",
+                    f"--maximum-zoom={max_zoom}",
+                ]
         elif layer.spatial_type == "polygon":
             options = [
                 "--drop-smallest-as-needed",
