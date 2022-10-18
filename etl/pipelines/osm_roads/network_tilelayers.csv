@@ -1,4 +1,4 @@
 ref,sector,subsector,asset_type,spatial_type,layer
-transport_roads_edges_africa_class_a,transport,road,CLASS A,line,transport_roads_edges_africa_class_a
-transport_roads_edges_africa_class_b,transport,road,CLASS B,line,transport_roads_edges_africa_class_b
-transport_roads_edges_africa_class_c,transport,road,CLASS C,line,transport_roads_edges_africa_class_c
+transport_roads_edges,transport,road,motorway,line,roads_edges_motorway
+transport_roads_edges,transport,road,trunk,line,roads_edges_trunk
+transport_roads_edges,transport,road,primary,line,roads_edges_primary

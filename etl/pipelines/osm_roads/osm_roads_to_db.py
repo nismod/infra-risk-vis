@@ -18,7 +18,7 @@ from common.db.models import Feature, FeatureLayer
 def yield_features(layer, network_tile_layer):
     """Read from geoparquet into DB"""
     # Could limit columns here if we didnt need them all in JSON
-    filters = [(layer.asset_type_column, "=", layer.asset_type)]
+    filters = [(layer.asset_type_column, "=", network_tile_layer.asset_type)]
     print(f"Loading geoparquet with filters: {filters}")
     gdf = geopandas.read_parquet(layer.path, filters=filters)
     print(f"Selected {gdf.shape} features from input")
@@ -71,14 +71,22 @@ def get_network_layer(layer_name, network_layers):
         print(f"Could not find {layer_name} in network layers.")
         raise e
 
+def get_network_layer_by_ref(network_tile_layer_ref: str, network_layers: pandas.DataFrame):
+    try:
+        return network_layers[network_layers.ref == network_tile_layer_ref].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {network_tile_layer_ref} in network layers.")
+        raise e
 
 def get_network_layer_path(layer):
     return f"{layer.path}"
 
 
-def get_tilelayer_by_layer_ref(layer_ref, network_tilelayers):
+def get_tilelayer_by_layer_ref(layer_ref: str, network_tilelayers: pandas.DataFrame):
     return network_tilelayers[network_tilelayers.ref == layer_ref].iloc[0]
 
+def get_tilelayer_by_layer_name(layer_name: str, network_tilelayers: pandas.DataFrame):
+    return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
 
 def load_tile_feature_layer(db: Session, network_tile_layer):
     """Load FeatureLayer to DB if it doesnt exist"""
@@ -109,11 +117,17 @@ if __name__ == "__main__":
         print("Expected to run from snakemake")
         exit()
 
-    print("LAYER", layer)
-    print("NETWORK TILE LAYERS", network_tilelayers)
-    layer = get_network_layer(layer, network_layers)
-    network_tile_layer = get_tilelayer_by_layer_ref(layer.ref, network_tilelayers)
-    print("TILELAYER:", network_tile_layer)
+    print("Layer", layer)
+    # network_tile_layer = get_tilelayer_by_layer_ref(
+    #     network_layer.ref, network_tilelayers
+    # )
+    network_tile_layer = get_tilelayer_by_layer_name(
+        layer,
+        network_tilelayers
+    )
+    print("Network TileLayer:", network_tile_layer)
+    network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
+    print("Network Layer", network_layer)
 
     db: Session
     with SessionLocal() as db:
@@ -124,7 +138,7 @@ if __name__ == "__main__":
         db.commit()
 
         print("BEGINNING INGEST...")
-        for i, feature in enumerate(yield_features(layer, network_tile_layer)):
+        for i, feature in enumerate(yield_features(network_layer, network_tile_layer)):
             db.add(feature)
             if i % 1000 == 0:
                 print("Dumped rows to DB, done:", i)
@@ -134,5 +148,5 @@ if __name__ == "__main__":
 
     with open(str(output), "w") as fh:
         fh.write(f"Loaded to database.\n\n")
-        fh.write(f"From:\n{layer.path}\n\n")
-        fh.write(f"Details:\n{str(layer)}\n")
+        fh.write(f"From:\n{network_layer.path}\n\n")
+        fh.write(f"Details:\n{str(network_layer)}\n")

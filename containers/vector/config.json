@@ -8,14 +8,14 @@
   },
   "styles": {},
   "data": {
-    "transport_roads_edges_africa_class_a": {
-      "mbtiles": "transport_roads_edges_africa_class_a.mbtiles"
+    "roads_edges_motorway": {
+      "mbtiles": "roads_edges_motorway.mbtiles"
     },
-    "transport_roads_edges_africa_class_b": {
-      "mbtiles": "transport_roads_edges_africa_class_b.mbtiles"
+    "roads_edges_trunk": {
+      "mbtiles": "roads_edges_trunk.mbtiles"
     },
-    "transport_roads_edges_africa_class_c": {
-      "mbtiles": "transport_roads_edges_africa_class_c.mbtiles"
+    "roads_edges_primary": {
+      "mbtiles": "roads_edges_primary.mbtiles"
     }
   }
 }

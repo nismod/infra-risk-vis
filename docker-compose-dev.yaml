@@ -78,8 +78,8 @@ services:
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config.json:/config.json
-    expose:
-      - 8080
+    ports:
+      - 8080:8080
 
   #### Utility Containers
   raster-tile-ingester:
