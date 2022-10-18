@@ -142,3 +142,17 @@ DOMAIN_TO_DB_MAP = {
 	}
 }
 ```
+
+##### JRC Population
+
+```json
+{
+  "source_db": "jrc_pop",
+  "global_type": "Exposure",
+  "domain": "population",
+  "full_name": "JRC Population",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
