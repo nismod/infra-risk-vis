@@ -7,6 +7,7 @@ import { globalStyleVariables } from 'theme';
 import { BoundingBox } from '@/lib/bounding-box';
 import { DataMap } from '@/lib/data-map/DataMap';
 import { DataMapTooltip } from '@/lib/data-map/DataMapTooltip';
+import { MapGLContextExtender } from '@/lib/data-map/MapGLContextExtender';
 import { MapBoundsFitter } from '@/lib/map/MapBoundsFitter';
 import { MapSearch } from '@/lib/map/place-search/MapSearch';
 import { PlaceSearchResult } from '@/lib/map/place-search/use-place-search';
@@ -25,6 +26,20 @@ export const mapFitBoundsState = atom<BoundingBox>({
   key: 'mapFitBoundsState',
   default: null,
 });
+
+const VIEW_LIMITS = {
+  minZoom: 2,
+  maxZoom: 8,
+  maxPitch: 0,
+  maxBearing: 0,
+};
+
+const INITIAL_VIEW_STATE = {
+  latitude: 20.0,
+  longitude: -40.0,
+  zoom: 3,
+  ...VIEW_LIMITS,
+};
 
 export const MapView = () => {
   const background = useRecoilValue(backgroundState);
@@ -51,14 +66,7 @@ export const MapView = () => {
 
   return (
     <DataMap
-      initialViewState={{
-        latitude: 20.0,
-        longitude: -40.0,
-        zoom: 3,
-        minZoom: 2,
-        maxZoom: 8,
-        maxPitch: 0,
-      }}
+      initialViewState={INITIAL_VIEW_STATE}
       viewLayers={viewLayers}
       viewLayersParams={viewLayersParams}
       interactionGroups={interactionGroups}
@@ -99,14 +107,16 @@ export const MapView = () => {
           bottom: 0,
         }}
       />
-      <NavigationControl
-        showCompass={false}
-        capturePointerMove={true}
-        style={{
-          right: 10,
-          top: 10,
-        }}
-      />
+      <MapGLContextExtender viewLimits={VIEW_LIMITS}>
+        <NavigationControl
+          showCompass={false}
+          capturePointerMove={true}
+          style={{
+            right: 10,
+            top: 10,
+          }}
+        />
+      </MapGLContextExtender>
       <ScaleControl
         maxWidth={100}
         unit="metric"

@@ -46,7 +46,11 @@ export const DeckMap: FC<DeckMapProps> = ({
           overflow: 'hidden',
         }}
         getCursor={() => 'default'}
-        controller={true}
+        controller={{
+          keyboard: false, //can't deactivate keyboard rotate only so deactivate all keyboard
+          dragRotate: false,
+          touchRotate: false,
+        }}
         viewState={viewState}
         onViewStateChange={({ viewState }) => setViewState(viewState)}
         layers={layers}
@@ -58,6 +62,9 @@ export const DeckMap: FC<DeckMapProps> = ({
           MapContext.Provider as unknown as Provider<DeckGLContextValue> /* unknown because TS doesn't like the cast */
         }
       >
+        {/* make sure components like StaticMap are immediate children of DeckGL so that they 
+            can be managed properly by Deck - see https://deck.gl/docs/api-reference/react/deckgl#jsx-layers
+        */}
         {children}
       </DeckGL>
       {uiOverlays && (
