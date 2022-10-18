@@ -2,7 +2,7 @@
 """
 from operator import attrgetter
 
-import json
+import ujson as json
 
 from geoalchemy2.shape import to_shape
 from shapely.geometry import mapping
