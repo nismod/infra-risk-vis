@@ -1,7 +1,9 @@
 import { Box } from '@mui/material';
 import DeckGL, { DeckGLContextValue, DeckGLRef, DeckProps } from 'deck.gl/typed';
-import { FC, Provider, ReactNode, createContext, useMemo, useRef, useState } from 'react';
+import { FC, Provider, ReactNode, createContext, useRef, useState } from 'react';
 import { MapContext } from 'react-map-gl';
+
+import { useTriggerMemo } from '../hooks/use-trigger-memo';
 
 interface DeckMapProps {
   initialViewState: any;
@@ -36,7 +38,7 @@ export const DeckMap: FC<DeckMapProps> = ({
 
   const zoom = viewState.zoom;
 
-  const layers = useMemo(() => layersFunction({ zoom }), [layersFunction, zoom, dataLoadTrigger]);
+  const layers = useTriggerMemo(() => layersFunction({ zoom }), [layersFunction, zoom], dataLoadTrigger);
 
   return (
     <ViewStateContext.Provider value={{ viewState, setViewState }}>

@@ -1,7 +1,7 @@
 import { Alert, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 
-import ScrollToTop from '@/lib/hooks/scroll-to-top';
+import ScrollToTop from '@/lib/react/ScrollToTop';
 
 export const DataPage = () => (
   <article>
