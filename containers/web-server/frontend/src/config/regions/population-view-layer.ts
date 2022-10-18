@@ -1,10 +1,12 @@
-import { VECTOR_COLOR_MAPS } from 'config/color-maps';
-import { colorMap } from 'lib/color-map';
-import { FieldSpec, ViewLayer } from 'lib/data-map/view-layers';
-import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
-import { dataColorMap } from 'lib/deck/props/color-map';
-import { featureProperty } from 'lib/deck/props/data-source';
-import { border, fillColor } from 'lib/deck/props/style';
+import { colorMap } from '@/lib/color-map';
+import { FieldSpec, ViewLayer } from '@/lib/data-map/view-layers';
+import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
+import { dataColorMap } from '@/lib/deck/props/color-map';
+import { featureProperty } from '@/lib/deck/props/data-source';
+import { border, fillColor } from '@/lib/deck/props/style';
+
+import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
+
 import { RegionLevel } from './metadata';
 import { REGIONS_SOURCE } from './source';
 

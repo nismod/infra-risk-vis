@@ -1,21 +1,23 @@
-import _ from 'lodash';
 import { FormLabel, Slider, Typography } from '@mui/material';
-import { CustomNumberSlider } from 'lib/controls/CustomSlider';
-import { ParamDropdown } from 'lib/controls/ParamDropdown';
-import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
+import { Box } from '@mui/system';
+import _ from 'lodash';
 import { FC } from 'react';
 import { useRecoilState } from 'recoil';
-import { InputRow } from 'sidebar/ui/InputRow';
-import { InputSection } from 'sidebar/ui/InputSection';
-import { LayerStylePanel } from 'sidebar/ui/LayerStylePanel';
-import { DataParam } from 'sidebar/ui/params/DataParam';
-import { dataParamsByGroupState } from 'state/data-params';
+
+import { CustomNumberSlider } from '@/lib/controls/CustomSlider';
+import { ParamDropdown } from '@/lib/controls/ParamDropdown';
+import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
+
+import { InputRow } from '@/sidebar/ui/InputRow';
+import { InputSection } from '@/sidebar/ui/InputSection';
+import { LayerStylePanel } from '@/sidebar/ui/LayerStylePanel';
+import { DataParam } from '@/sidebar/ui/params/DataParam';
+import { dataParamsByGroupState } from '@/state/data-params';
 import {
   adaptationCostBenefitRatioEaelDaysState,
   adaptationDataParamsStateEffect,
   adaptationFieldState,
-} from 'state/layers/networks';
-import { Box } from '@mui/system';
+} from '@/state/layers/networks';
 
 function hazardLabel(val) {
   switch (val) {

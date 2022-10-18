@@ -1,11 +1,12 @@
 import { parseSync } from '@loaders.gl/core';
 import { WKTLoader } from '@loaders.gl/wkt';
 import bbox from '@turf/bbox';
-import { ApiClient, FeatureListItemOut_float_ } from 'lib/api-client';
-import { BoundingBox } from 'lib/bounding-box';
-import { FieldSpec } from 'lib/data-map/view-layers';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
+
+import { ApiClient, FeatureListItemOut_float_ } from '@/lib/api-client';
+import { BoundingBox } from '@/lib/bounding-box';
+import { FieldSpec } from '@/lib/data-map/view-layers';
 
 const apiClient = new ApiClient({
   BASE: 'api',

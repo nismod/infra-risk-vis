@@ -1,6 +1,7 @@
-import { ViewLayer, ViewLayerFunctionOptions } from 'lib/data-map/view-layers';
-import { assetViewLayer } from 'config/assets/asset-view-layer';
-import { assetDataAccessFunction } from 'config/assets/data-access';
+import { ViewLayer, ViewLayerFunctionOptions } from '@/lib/data-map/view-layers';
+
+import { assetViewLayer } from '@/config/assets/asset-view-layer';
+import { assetDataAccessFunction } from '@/config/assets/data-access';
 
 export function infrastructureViewLayer(
   assetId: string,

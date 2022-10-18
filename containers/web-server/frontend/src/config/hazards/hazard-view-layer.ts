@@ -1,10 +1,11 @@
 import GL from '@luma.gl/constants';
-import { HazardParams } from 'config/hazards/domains';
 
-import { rasterTileLayer } from 'lib/deck/layers/raster-tile-layer';
-import { ViewLayer } from 'lib/data-map/view-layers';
+import { ViewLayer } from '@/lib/data-map/view-layers';
+import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 
-import { RASTER_COLOR_MAPS } from '../color-maps';
+import { RASTER_COLOR_MAPS } from '@/config/color-maps';
+import { HazardParams } from '@/config/hazards/domains';
+
 import { HAZARD_SOURCE } from './source';
 
 export function getHazardId<
@@ -13,19 +14,7 @@ export function getHazardId<
   RCP extends string,
   E extends number | string,
   C extends number | string,
->({
-  hazardType,
-  returnPeriod,
-  rcp,
-  epoch,
-  gcm,
-}: {
-  hazardType: F;
-  returnPeriod: RP;
-  rcp: RCP;
-  epoch: E;
-  gcm: C;
-}) {
+>({ hazardType, returnPeriod, rcp, epoch, gcm }: { hazardType: F; returnPeriod: RP; rcp: RCP; epoch: E; gcm: C }) {
   return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${gcm}` as const;
 }
 

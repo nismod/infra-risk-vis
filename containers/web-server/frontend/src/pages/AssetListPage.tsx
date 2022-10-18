@@ -1,14 +1,14 @@
-import { useState } from 'react';
 import { Box, Stack, TableCell, Typography } from '@mui/material';
+import { useState } from 'react';
 
-import { FieldSpec } from 'lib/data-map/view-layers';
+import { FieldSpec } from '@/lib/data-map/view-layers';
 
-import { FieldSpecControl } from '../asset-list/FieldSpecControl';
-import { SortedAssetTable } from '../asset-list/SortedAssetTable';
-import { ListFeature } from '../asset-list/use-sorted-features';
-import { ExpandableRow } from 'asset-list/ExpandableRow';
-import { FeatureSidebarContent } from 'details/features/FeatureSidebarContent';
-import { getAssetDataFormats } from 'config/assets/data-formats';
+import { ExpandableRow } from '@/asset-list/ExpandableRow';
+import { FieldSpecControl } from '@/asset-list/FieldSpecControl';
+import { SortedAssetTable } from '@/asset-list/SortedAssetTable';
+import { ListFeature } from '@/asset-list/use-sorted-features';
+import { getAssetDataFormats } from '@/config/assets/data-formats';
+import { FeatureSidebarContent } from '@/details/features/FeatureSidebarContent';
 
 export const AssetListPage = () => {
   const [layerSpec] = useState({

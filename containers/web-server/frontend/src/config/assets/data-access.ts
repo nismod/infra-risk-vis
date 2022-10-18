@@ -1,8 +1,8 @@
-import { dataLoaderManager } from 'lib/data-loader/data-loader-manager';
-import { FieldSpec } from 'lib/data-map/view-layers';
-import { extraProperty, featureProperty } from 'lib/deck/props/data-source';
-import { withTriggers } from 'lib/deck/props/getters';
-import { sumOrNone } from 'lib/helpers';
+import { dataLoaderManager } from '@/lib/data-loader/data-loader-manager';
+import { FieldSpec } from '@/lib/data-map/view-layers';
+import { extraProperty, featureProperty } from '@/lib/deck/props/data-source';
+import { withTriggers } from '@/lib/deck/props/getters';
+import { sumOrNone } from '@/lib/helpers';
 
 function getExpectedDamageKey(direct: boolean, hazard: string, rcp: string, epoch: number) {
   return `${direct ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;

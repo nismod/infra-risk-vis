@@ -1,6 +1,8 @@
 import { ScaleSequential } from 'd3-scale';
-import { DataLoader } from 'lib/data-loader/data-loader';
-import { Accessor } from 'lib/deck/props/getters';
+
+import { DataLoader } from '@/lib/data-loader/data-loader';
+import { Accessor } from '@/lib/deck/props/getters';
+
 import { InteractionTarget } from './interactions/use-interactions';
 
 export interface FieldSpec {

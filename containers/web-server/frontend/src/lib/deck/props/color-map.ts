@@ -1,5 +1,7 @@
-import { colorCssToRgb } from 'lib/helpers';
 import _ from 'lodash';
+
+import { colorCssToRgb } from '@/lib/helpers';
+
 import { Accessor, mergeTriggers, withTriggers } from './getters';
 
 const memoizedColorCssToRgb = _.memoize(colorCssToRgb);

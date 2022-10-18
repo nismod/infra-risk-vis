@@ -1,11 +1,13 @@
-import { HAZARD_DOMAINS } from 'config/hazards/domains';
-import { totalDamagesConfig } from 'config/domains/total-damages';
-import { DataParamGroupConfig, Param, ParamDomain, resolveParamDependencies } from 'lib/controls/data-params';
-import { toDictionary } from 'lib/helpers';
-import { groupedFamily } from 'lib/recoil/grouped-family';
 import _ from 'lodash';
 import { atomFamily, useRecoilTransaction_UNSTABLE } from 'recoil';
-import { adaptationDomainsConfig } from 'config/domains/adaptation';
+
+import { DataParamGroupConfig, Param, ParamDomain, resolveParamDependencies } from '@/lib/controls/data-params';
+import { toDictionary } from '@/lib/helpers';
+import { groupedFamily } from '@/lib/recoil/grouped-family';
+
+import { adaptationDomainsConfig } from '@/config/domains/adaptation';
+import { totalDamagesConfig } from '@/config/domains/total-damages';
+import { HAZARD_DOMAINS } from '@/config/hazards/domains';
 
 export type DataParamParam = Readonly<{
   group: string;

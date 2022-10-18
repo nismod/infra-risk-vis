@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import { atom } from 'recoil';
 
-import { StateEffect } from 'lib/recoil/state-effects/types';
+import { StateEffect } from '@/lib/recoil/state-effects/types';
 
-import { SECTIONS_CONFIG } from 'config/sections';
-import { VIEW_SECTIONS } from 'config/views';
+import { SECTIONS_CONFIG } from '@/config/sections';
+import { VIEW_SECTIONS } from '@/config/views';
 import {
   sectionStyleOptionsState,
   sectionStyleValueState,
   sectionVisibilityState,
   sidebarSectionExpandedState,
-} from 'state/sections';
+} from '@/state/sections';
 
 export const viewState = atom({
   key: 'viewState',

@@ -1,13 +1,14 @@
-import { makeConfig } from 'lib/helpers';
-import { border, lineStyle, pointRadius } from 'lib/deck/props/style';
+import { colorMap } from '@/lib/color-map';
+import { StyleParams, ViewLayer } from '@/lib/data-map/view-layers';
+import { dataColorMap } from '@/lib/deck/props/color-map';
+import { border, lineStyle, pointRadius } from '@/lib/deck/props/style';
+import { fillColor, strokeColor } from '@/lib/deck/props/style';
+import { makeConfig } from '@/lib/helpers';
 
-import { COLORS } from '../colors';
+import { getAssetDataAccessor } from '@/config/assets/data-access';
+import { COLORS } from '@/config/colors';
+
 import { infrastructureViewLayer } from './infrastructure-view-layer';
-import { StyleParams, ViewLayer } from 'lib/data-map/view-layers';
-import { fillColor, strokeColor } from 'lib/deck/props/style';
-import { dataColorMap } from 'lib/deck/props/color-map';
-import { getAssetDataAccessor } from 'config/assets/data-access';
-import { colorMap } from 'lib/color-map';
 
 function infraStyle(layer: string, defaultStyle, styleParams: StyleParams) {
   if (styleParams?.colorMap) {

@@ -1,9 +1,10 @@
 import { atomFamily } from 'recoil';
 
-import { truthyKeys } from 'lib/helpers';
-import { StateEffect } from 'lib/recoil/state-effects/types';
+import { truthyKeys } from '@/lib/helpers';
+import { StateEffect } from '@/lib/recoil/state-effects/types';
 
-import { HAZARDS_UI_ORDER } from 'config/hazards/metadata';
+import { HAZARDS_UI_ORDER } from '@/config/hazards/metadata';
+
 import { damageSourceState } from './damage-mapping/damage-map';
 import { getHazardSelectionAggregate } from './hazards/hazard-selection';
 

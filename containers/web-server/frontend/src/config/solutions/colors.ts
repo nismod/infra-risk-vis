@@ -1,4 +1,5 @@
-import { makeColorConfig } from 'lib/helpers';
+import { makeColorConfig } from '@/lib/helpers';
+
 import { MarineHabitatType } from './domains';
 
 export const TERRESTRIAL_LANDUSE_COLORS = makeColorConfig({

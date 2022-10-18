@@ -1,4 +1,4 @@
-import { makeConfig } from 'lib/helpers';
+import { makeConfig } from '@/lib/helpers';
 
 export const TERRESTRIAL_STYLES = makeConfig([
   { id: 'landuse', label: 'Land Use' },

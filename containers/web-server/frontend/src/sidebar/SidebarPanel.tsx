@@ -2,7 +2,9 @@ import { ArrowRight } from '@mui/icons-material';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import { useRecoilState } from 'recoil';
-import { sidebarSectionExpandedState } from 'state/sections';
+
+import { sidebarSectionExpandedState } from '@/state/sections';
+
 import { VisibilityToggle } from './VisibilityToggle';
 
 export const SidebarPanel: FC<{ id: string; title: string }> = ({ id, title, children }) => {

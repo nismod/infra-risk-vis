@@ -1,6 +1,6 @@
 import GL from '@luma.gl/constants';
 
-import { rasterTileLayer } from 'lib/deck/layers/raster-tile-layer';
+import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 
 export function labelsLayer(isRetina: boolean) {
   const scale = isRetina ? '@2x' : '';

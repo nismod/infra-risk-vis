@@ -1,14 +1,14 @@
+import { Box } from '@mui/material';
 import { FC, useMemo } from 'react';
 
-import { InteractionTarget, RasterTarget } from 'lib/data-map/interactions/use-interactions';
+import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use-interactions';
 
-import { RASTER_COLOR_MAPS } from 'config/color-maps';
-import { HAZARDS_METADATA } from 'config/hazards/metadata';
+import { RASTER_COLOR_MAPS } from '@/config/color-maps';
+import { HAZARDS_METADATA } from '@/config/hazards/metadata';
+import { DataItem } from '@/details/features/detail-components';
+import { useRasterColorMapValues } from '@/map/legend/use-color-map-values';
 
-import { useRasterColorMapValues } from '../../legend/use-color-map-values';
 import { ColorBox } from './ColorBox';
-import { Box } from '@mui/material';
-import { DataItem } from 'details/features/detail-components';
 
 function useRasterColorMapLookup(colorMapValues) {
   return useMemo(

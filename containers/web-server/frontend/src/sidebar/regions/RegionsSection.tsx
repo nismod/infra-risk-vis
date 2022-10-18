@@ -1,9 +1,12 @@
 import { FC } from 'react';
+
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+
+import { SidebarPanel } from '@/sidebar/SidebarPanel';
+import { StyleSelection } from '@/sidebar/StyleSelection';
+import { SidebarPanelSection } from '@/sidebar/ui/SidebarPanelSection';
+
 import { RegionsControl } from './RegionsControl';
-import { SidebarPanel } from 'sidebar/SidebarPanel';
-import { StyleSelection } from 'sidebar/StyleSelection';
-import { SidebarPanelSection } from 'sidebar/ui/SidebarPanelSection';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 
 export const RegionsSection: FC<{}> = () => {
   return (

@@ -1,27 +1,29 @@
-import { regionLabelsDeckLayer } from 'config/regions/region-labels-deck-layer';
-import { regionBoundariesViewLayer } from 'config/regions/boundaries-view-layer';
-import { ViewLayer, viewOnlyLayer } from 'lib/data-map/view-layers';
-import { backgroundState, showLabelsState } from 'map/layers/layers-state';
-import { selector } from 'recoil';
-import { truthyKeys } from 'lib/helpers';
-import { labelsLayer } from 'config/deck-layers/labels-layer';
-import { isRetinaState } from 'state/is-retina';
-import { ConfigTree } from 'lib/nested-config/config-tree';
-
-import { populationViewLayer } from 'config/regions/population-view-layer';
-import { regionLevelState, showPopulationState } from 'state/regions';
-import { sectionVisibilityState } from 'state/sections';
-import { buildingsViewLayer } from 'config/buildings/buildings-view-layer';
-import { buildingSelectionState } from 'state/buildings';
-import { networkLayersState } from './networks';
-import { hazardLayerState } from './hazards';
-import { hoveredAdaptationFeatureState } from 'details/adaptations/FeatureAdaptationsTable';
 import bboxPolygon from '@turf/bbox-polygon';
-import { extendBbox } from 'lib/bounding-box';
-import { boundingBoxLayer } from 'lib/deck/layers/bounding-box-layer';
-import { terrestrialLayerState } from './terrestrial';
-import { marineLayerState } from './marine';
+import { selector } from 'recoil';
+
+import { extendBbox } from '@/lib/bounding-box';
+import { ViewLayer, viewOnlyLayer } from '@/lib/data-map/view-layers';
+import { boundingBoxLayer } from '@/lib/deck/layers/bounding-box-layer';
+import { truthyKeys } from '@/lib/helpers';
+import { ConfigTree } from '@/lib/nested-config/config-tree';
+
+import { buildingsViewLayer } from '@/config/buildings/buildings-view-layer';
+import { labelsLayer } from '@/config/deck-layers/labels-layer';
+import { regionBoundariesViewLayer } from '@/config/regions/boundaries-view-layer';
+import { populationViewLayer } from '@/config/regions/population-view-layer';
+import { regionLabelsDeckLayer } from '@/config/regions/region-labels-deck-layer';
+import { hoveredAdaptationFeatureState } from '@/details/adaptations/FeatureAdaptationsTable';
+import { backgroundState, showLabelsState } from '@/map/layers/layers-state';
+import { buildingSelectionState } from '@/state/buildings';
+import { isRetinaState } from '@/state/is-retina';
+import { regionLevelState, showPopulationState } from '@/state/regions';
+import { sectionVisibilityState } from '@/state/sections';
+
 import { droughtOptionsLayerState, droughtRegionsLayerState } from './drought';
+import { hazardLayerState } from './hazards';
+import { marineLayerState } from './marine';
+import { networkLayersState } from './networks';
+import { terrestrialLayerState } from './terrestrial';
 
 const buildingLayersState = selector<ViewLayer[]>({
   key: 'buildingLayersState',

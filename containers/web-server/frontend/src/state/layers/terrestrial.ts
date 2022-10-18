@@ -1,25 +1,27 @@
 import { DataFilterExtension } from '@deck.gl/extensions';
-import { TERRESTRIAL_LANDUSE_COLORS } from 'config/solutions/colors';
-import { ViewLayer, FieldSpec, ColorSpec } from 'lib/data-map/view-layers';
 import { selector } from 'recoil';
-import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
+
+import { colorMap } from '@/lib/color-map';
+import { ColorSpec, FieldSpec, ViewLayer } from '@/lib/data-map/view-layers';
+import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
+import { dataColorMap } from '@/lib/deck/props/color-map';
+import { featureProperty } from '@/lib/deck/props/data-source';
+import { Accessor } from '@/lib/deck/props/getters';
+import { border, fillColor } from '@/lib/deck/props/style';
+import { truthyKeys } from '@/lib/helpers';
+
+import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
+import { TERRESTRIAL_LANDUSE_COLORS } from '@/config/solutions/colors';
+import { getSolutionsDataAccessor } from '@/config/solutions/data-access';
+import { getTerrestrialDataFormats } from '@/config/solutions/data-formats';
+import { LandUseOption, TerrestrialLocationFilterType } from '@/config/solutions/domains';
+import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
+import { landuseFilterState } from '@/state/solutions/landuse-tree';
 import {
   TerrestrialFilters,
-  terrestrialFiltersState,
   TerrestrialLocationFilters,
-} from 'state/solutions/terrestrial-filters';
-import { colorMap } from 'lib/color-map';
-import { VECTOR_COLOR_MAPS } from 'config/color-maps';
-import { featureProperty } from 'lib/deck/props/data-source';
-import { dataColorMap } from 'lib/deck/props/color-map';
-import { border, fillColor } from 'lib/deck/props/style';
-import { Accessor } from 'lib/deck/props/getters';
-import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
-import { truthyKeys } from 'lib/helpers';
-import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
-import { getTerrestrialDataFormats } from 'config/solutions/data-formats';
-import { getSolutionsDataAccessor } from 'config/solutions/data-access';
-import { landuseFilterState } from 'state/solutions/landuse-tree';
+  terrestrialFiltersState,
+} from '@/state/solutions/terrestrial-filters';
 
 export function landuseColorMap(x: string) {
   return TERRESTRIAL_LANDUSE_COLORS[x].css;

@@ -1,14 +1,17 @@
 import { Typography } from '@mui/material';
-import { DataItem } from 'details/features/detail-components';
-import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
 import { FC, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+
+import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
+
+import { DataItem } from '@/details/features/detail-components';
 import {
   droughtOptionsColorSpecState,
   droughtOptionsFieldSpecState,
   droughtRegionsColorSpecState,
   droughtRegionsFieldSpecState,
-} from 'state/layers/drought';
+} from '@/state/layers/drought';
+
 import { DataDescription } from '../DataDescription';
 
 const DroughtRiskDescription: FC<{

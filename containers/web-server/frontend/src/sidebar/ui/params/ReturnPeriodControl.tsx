@@ -1,5 +1,7 @@
 import { FormControl, FormLabel } from '@mui/material';
-import { CustomNumberSlider } from 'lib/controls/CustomSlider';
+
+import { CustomNumberSlider } from '@/lib/controls/CustomSlider';
+
 import { DataParam } from './DataParam';
 
 export const ReturnPeriodControl = ({ group, ...otherProps }) => {

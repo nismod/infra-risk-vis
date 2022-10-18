@@ -1,19 +1,20 @@
-import { FC } from 'react';
 import { Box } from '@mui/material';
-
-import { MapView } from '../map/MapView';
-import { FeatureSidebar } from '../details/features/FeatureSidebar';
-import { RegionDetails } from '../details/regions/RegionDetails';
-import { SidebarContent } from 'sidebar/SidebarContent';
-import { globalStyleVariables } from 'theme';
-import { useSyncRecoilState } from 'lib/recoil/sync-state';
-import { viewState, viewStateEffect } from 'state/view';
-import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
-import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
+import { FC } from 'react';
 import { selector, useRecoilValue } from 'recoil';
-import { AdaptationsSidebar } from 'details/adaptations/AdaptationsSidebar';
-import { SolutionsSidebar } from 'details/solutions/SolutionsSidebar';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
+import { useSyncRecoilState } from '@/lib/recoil/sync-state';
+
+import { AdaptationsSidebar } from '@/details/adaptations/AdaptationsSidebar';
+import { FeatureSidebar } from '@/details/features/FeatureSidebar';
+import { RegionDetails } from '@/details/regions/RegionDetails';
+import { SolutionsSidebar } from '@/details/solutions/SolutionsSidebar';
+import { MapView } from '@/map/MapView';
+import { SidebarContent } from '@/sidebar/SidebarContent';
+import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
+import { viewState, viewStateEffect } from '@/state/view';
+import { globalStyleVariables } from '@/theme';
 
 interface MapViewProps {
   view: string;

@@ -1,7 +1,8 @@
-import { mvtLayer } from 'lib/deck/layers/base';
+import { mvtLayer } from '@/lib/deck/layers/base';
 
-import { BackgroundName } from 'config/backgrounds';
-import { RegionLevel, REGIONS_METADATA } from './metadata';
+import { BackgroundName } from '@/config/backgrounds';
+
+import { REGIONS_METADATA, RegionLevel } from './metadata';
 
 const LIGHT_TEXT = [240, 240, 240, 255];
 const DARK_TEXT = [90, 90, 90, 255];

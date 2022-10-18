@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import DeckGL, { DeckProps } from 'deck.gl';
-import { createContext, FC, ReactNode, useMemo, useRef, useState } from 'react';
+import { FC, ReactNode, createContext, useMemo, useRef, useState } from 'react';
 import { MapContext, MapContextProps } from 'react-map-gl';
 
 interface DeckMapProps {

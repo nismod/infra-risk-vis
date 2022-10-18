@@ -11,15 +11,15 @@ import {
 } from '@mui/material';
 import { useRecoilState } from 'recoil';
 
-import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
+import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 
-import { InputSection } from 'sidebar/ui/InputSection';
-import { InputRow } from 'sidebar/ui/InputRow';
-import { EpochControl } from 'sidebar/ui/params/EpochControl';
-import { RCPControl } from 'sidebar/ui/params/RCPControl';
-import { damageSourceState, damageSourceStateEffect, damageTypeState } from 'state/damage-mapping/damage-map';
-import { HAZARDS_METADATA, HAZARDS_UI_ORDER } from 'config/hazards/metadata';
-import { LayerStylePanel } from 'sidebar/ui/LayerStylePanel';
+import { HAZARDS_METADATA, HAZARDS_UI_ORDER } from '@/config/hazards/metadata';
+import { InputRow } from '@/sidebar/ui/InputRow';
+import { InputSection } from '@/sidebar/ui/InputSection';
+import { LayerStylePanel } from '@/sidebar/ui/LayerStylePanel';
+import { EpochControl } from '@/sidebar/ui/params/EpochControl';
+import { RCPControl } from '@/sidebar/ui/params/RCPControl';
+import { damageSourceState, damageSourceStateEffect, damageTypeState } from '@/state/damage-mapping/damage-map';
 
 export const DamageSourceControl = () => {
   const [damageSource, setDamageSource] = useRecoilState(damageSourceState);

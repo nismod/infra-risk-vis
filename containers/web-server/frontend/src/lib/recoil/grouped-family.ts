@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { selectorFamily, waitForAll } from 'recoil';
+
 import { RecoilReadableStateFamily } from './types';
 
 export function groupedFamily<FVT, FPT>(

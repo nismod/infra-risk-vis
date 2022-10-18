@@ -1,11 +1,11 @@
+import _ from 'lodash';
 import { atomFamily, selector, selectorFamily, useRecoilTransaction_UNSTABLE } from 'recoil';
 
-import { ViewLayer, ViewLayerParams } from 'lib/data-map/view-layers';
+import { selectionState } from '@/lib/data-map/interactions/interaction-state';
+import { ViewLayer, ViewLayerParams } from '@/lib/data-map/view-layers';
 
-import { viewLayersFlatState } from './view-layers-flat';
-import _ from 'lodash';
-import { selectionState } from 'lib/data-map/interactions/interaction-state';
 import { networkStyleParamsState } from './networks';
+import { viewLayersFlatState } from './view-layers-flat';
 
 export const viewLayerState = atomFamily<ViewLayer, string>({
   key: 'viewLayerState',

@@ -1,12 +1,14 @@
+import { Box } from '@mui/system';
 import React, { FC } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import { selectionState } from '@/lib/data-map/interactions/interaction-state';
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+
+import { DeselectButton } from '@/details/DeselectButton';
+import { SidePanel } from '@/details/SidePanel';
 
 import { FeatureSidebarContent } from './FeatureSidebarContent';
-import { useRecoilValue } from 'recoil';
-import { selectionState } from 'lib/data-map/interactions/interaction-state';
-import { SidePanel } from 'details/SidePanel';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
-import { Box } from '@mui/system';
-import { DeselectButton } from 'details/DeselectButton';
 
 export const FeatureSidebar: FC<{}> = () => {
   const featureSelection = useRecoilValue(selectionState('assets'));

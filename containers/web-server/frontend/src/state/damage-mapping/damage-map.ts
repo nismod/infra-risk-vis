@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import { atom, selector } from 'recoil';
 
-import { HAZARD_DOMAINS } from 'config/hazards/domains';
-import { dataParamOptionsState, dataParamState } from 'state/data-params';
-import { hazardSelectionState } from 'state/hazards/hazard-selection';
-import { networksStyleState } from 'state/networks/networks-style';
+import { HAZARD_DOMAINS } from '@/config/hazards/domains';
+import { dataParamOptionsState, dataParamState } from '@/state/data-params';
+import { hazardSelectionState } from '@/state/hazards/hazard-selection';
+import { networksStyleState } from '@/state/networks/networks-style';
 
 export const showDamagesState = selector({
   key: 'showDamagesState',

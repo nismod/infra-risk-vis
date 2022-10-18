@@ -1,5 +1,6 @@
 import { useRecoilValue } from 'recoil';
-import { dataParamOptionsState, dataParamState, useUpdateDataParam } from 'state/data-params';
+
+import { dataParamOptionsState, dataParamState, useUpdateDataParam } from '@/state/data-params';
 
 export const DataParam = ({ group, id, children }) => {
   const value = useRecoilValue(dataParamState({ group, param: id }));

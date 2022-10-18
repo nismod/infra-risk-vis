@@ -1,4 +1,4 @@
-import { makeColorConfig } from 'lib/helpers';
+import { makeColorConfig } from '@/lib/helpers';
 
 export const COLORS = makeColorConfig({
   electricity_high: '#eca926',

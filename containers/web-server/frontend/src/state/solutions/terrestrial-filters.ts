@@ -1,5 +1,7 @@
-import { LandUseOption, TerrestrialLocationFilterType } from 'config/solutions/domains';
 import { atom, selector } from 'recoil';
+
+import { LandUseOption, TerrestrialLocationFilterType } from '@/config/solutions/domains';
+
 import { landuseFilterState } from './landuse-tree';
 
 export type TerrestrialLocationFilters = Record<TerrestrialLocationFilterType, boolean>;

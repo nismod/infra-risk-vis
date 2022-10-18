@@ -1,11 +1,10 @@
-import { FC, useContext } from 'react';
-import { MapContext, FlyToInterpolator } from 'react-map-gl';
-
 import { easeCubic } from 'd3-ease';
+import { FC, useContext } from 'react';
+import { FlyToInterpolator, MapContext } from 'react-map-gl';
 
-import { useChangeEffect } from 'lib/hooks/use-change-effect';
-import { ViewStateContext } from 'lib/data-map/DeckMap';
-import { appToDeckBoundingBox, BoundingBox } from 'lib/bounding-box';
+import { BoundingBox, appToDeckBoundingBox } from '@/lib/bounding-box';
+import { ViewStateContext } from '@/lib/data-map/DeckMap';
+import { useChangeEffect } from '@/lib/hooks/use-change-effect';
 
 interface MapBoundsFitterProps {
   boundingBox: BoundingBox;

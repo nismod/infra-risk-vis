@@ -9,8 +9,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { FieldSpec } from 'lib/data-map/view-layers';
 import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+
+import { FieldSpec } from '@/lib/data-map/view-layers';
+
 import { LayerSpec, ListFeature, useSortedFeatures } from './use-sorted-features';
 
 export const SortedAssetTable: FC<{

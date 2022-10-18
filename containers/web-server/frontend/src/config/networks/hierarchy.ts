@@ -1,4 +1,4 @@
-import { TreeNode } from 'lib/controls/checkbox-tree/tree-node';
+import { TreeNode } from '@/lib/controls/checkbox-tree/tree-node';
 
 interface NetworkLayerData {
   label: string;

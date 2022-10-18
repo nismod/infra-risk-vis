@@ -1,19 +1,20 @@
-import { VECTOR_COLOR_MAPS } from 'config/color-maps';
-import { AdaptationOptionParams } from 'config/domains/adaptation';
-import { INFRASTRUCTURE_VIEW_LAYERS } from 'config/networks/view-layers';
-import { ViewLayer, StyleParams, ColorSpec, FieldSpec } from 'lib/data-map/view-layers';
-import { StateEffect } from 'lib/recoil/state-effects/types';
-import { atom, selector } from 'recoil';
-import { damageMapStyleParamsState } from 'state/damage-mapping/damage-style-params';
-import { dataParamsByGroupState } from 'state/data-params';
-import { networkSelectionState, networkTreeCheckboxState, networkTreeConfig } from 'state/networks/network-selection';
-import { networksStyleState } from 'state/networks/networks-style';
-import { sectionVisibilityState } from 'state/sections';
-
-import adaptationSectorLayers from 'config/domains/adaptation-sector-layers.json';
 import _ from 'lodash';
-import { recalculateCheckboxStates } from 'lib/controls/checkbox-tree/CheckboxTree';
-import { LayerSpec } from 'asset-list/use-sorted-features';
+import { atom, selector } from 'recoil';
+
+import { recalculateCheckboxStates } from '@/lib/controls/checkbox-tree/CheckboxTree';
+import { ColorSpec, FieldSpec, StyleParams, ViewLayer } from '@/lib/data-map/view-layers';
+import { StateEffect } from '@/lib/recoil/state-effects/types';
+
+import { LayerSpec } from '@/asset-list/use-sorted-features';
+import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
+import { AdaptationOptionParams } from '@/config/domains/adaptation';
+import adaptationSectorLayers from '@/config/domains/adaptation-sector-layers.json';
+import { INFRASTRUCTURE_VIEW_LAYERS } from '@/config/networks/view-layers';
+import { damageMapStyleParamsState } from '@/state/damage-mapping/damage-style-params';
+import { dataParamsByGroupState } from '@/state/data-params';
+import { networkSelectionState, networkTreeCheckboxState, networkTreeConfig } from '@/state/networks/network-selection';
+import { networksStyleState } from '@/state/networks/networks-style';
+import { sectionVisibilityState } from '@/state/sections';
 
 export const networkLayersState = selector<ViewLayer[]>({
   key: 'networkLayersState',

@@ -1,4 +1,4 @@
-import { DataLoader } from 'lib/data-loader/data-loader';
+import { DataLoader } from '@/lib/data-loader/data-loader';
 
 export type Accessor<To, From = any> = ((x: From) => To) & { updateTriggers?: any[]; dataLoader?: DataLoader };
 export type Getter<T> = T | Accessor<T>;

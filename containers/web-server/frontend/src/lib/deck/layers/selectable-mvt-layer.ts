@@ -1,6 +1,6 @@
-import { tileSelectionLayer, TileSelectionLayerOptions } from './tile-selection-layer';
 import { geoJsonLayer, mvtLayer } from './base';
-import { dataLoaderLayer, DataLoaderOptions } from './data-loader-layer';
+import { DataLoaderOptions, dataLoaderLayer } from './data-loader-layer';
+import { TileSelectionLayerOptions, tileSelectionLayer } from './tile-selection-layer';
 
 interface SelectableMvtLayerOptions {
   selectionOptions: TileSelectionLayerOptions;

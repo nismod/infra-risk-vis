@@ -1,8 +1,11 @@
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import { SidePanel } from 'details/SidePanel';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 import { FC } from 'react';
+
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+
+import { SidePanel } from '@/details/SidePanel';
+
 import { FeatureAdaptationsTable } from './FeatureAdaptationsTable';
 
 export const AdaptationsSidebar: FC<{}> = () => {

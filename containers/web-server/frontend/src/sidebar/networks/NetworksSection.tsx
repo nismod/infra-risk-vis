@@ -1,18 +1,19 @@
-import { FC } from 'react';
-import { useRecoilValue } from 'recoil';
 import { Collapse } from '@mui/material';
+import { FC } from 'react';
 import { TransitionGroup } from 'react-transition-group';
+import { useRecoilValue } from 'recoil';
 
-import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 
-import { NetworkControl } from './NetworkControl';
-import { SidebarPanel } from 'sidebar/SidebarPanel';
-import { StyleSelection } from 'sidebar/StyleSelection';
-import { DamageSourceControl } from './DamageSourceControl';
-import { SidebarPanelSection } from 'sidebar/ui/SidebarPanelSection';
-import { networksStyleStateEffect, sectionStyleValueState } from 'state/sections';
+import { SidebarPanel } from '@/sidebar/SidebarPanel';
+import { StyleSelection } from '@/sidebar/StyleSelection';
+import { SidebarPanelSection } from '@/sidebar/ui/SidebarPanelSection';
+import { networksStyleStateEffect, sectionStyleValueState } from '@/state/sections';
+
 import { AdaptationControl } from './AdaptationControl';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+import { DamageSourceControl } from './DamageSourceControl';
+import { NetworkControl } from './NetworkControl';
 
 export const NetworksSection: FC<{}> = () => {
   const style = useRecoilValue(sectionStyleValueState('assets'));

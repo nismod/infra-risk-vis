@@ -1,5 +1,5 @@
-import { FieldSpec } from 'lib/data-map/view-layers';
-import { featureProperty } from 'lib/deck/props/data-source';
+import { FieldSpec } from '@/lib/data-map/view-layers';
+import { featureProperty } from '@/lib/deck/props/data-source';
 
 function getDroughtPropertyKey(field: string, rcp?: string) {
   return `${field}${rcp ? `__rcp_${rcp}` : ''}`;

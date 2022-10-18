@@ -1,6 +1,7 @@
 import { FormControl, FormLabel, MenuItem, Select, SelectProps } from '@mui/material';
 import { PropsWithChildren, useCallback } from 'react';
-import { isValueLabel, ValueLabel } from './params/value-label';
+
+import { ValueLabel, isValueLabel } from './params/value-label';
 
 interface ParamDropdownProps<V extends string | number = string> {
   title: string;

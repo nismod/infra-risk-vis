@@ -1,5 +1,5 @@
-import { ComponentProps, FC, useCallback, useMemo } from 'react';
 import { Slider } from '@mui/material';
+import { ComponentProps, FC, useCallback, useMemo } from 'react';
 
 export interface GenericMark<T> {
   value: T;

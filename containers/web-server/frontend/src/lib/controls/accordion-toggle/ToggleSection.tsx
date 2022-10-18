@@ -1,8 +1,8 @@
 import { Accordion, AccordionDetails, AccordionSummary, Checkbox, FormControlLabel, Radio } from '@mui/material';
-import { createContext, FC, useCallback, useContext } from 'react';
+import { FC, createContext, useCallback, useContext } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { RecoilStateFamily } from 'lib/recoil/types';
+import { RecoilStateFamily } from '@/lib/recoil/types';
 
 function useHandleCheckbox(onChecked: (checked: boolean) => void) {
   return useCallback((e, checked: boolean) => onChecked(checked), [onChecked]);
