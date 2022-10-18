@@ -58,4 +58,5 @@ deploy.sh
 main.tf
 provision.sh
 *.geoparquet
+*.gpkg
 *.mbtiles
