@@ -1,5 +1,4 @@
-# Workflow to build and push Prod Wavebase webserver image (incorporating React UI)
-# Only triggers on push to master and changes to nginx/prod
+# Workflow to build and push Prod Web-Server
 
 name: Build and Push - Prod
 
