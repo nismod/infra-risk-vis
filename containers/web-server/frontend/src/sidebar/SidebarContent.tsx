@@ -6,8 +6,13 @@ import { viewState } from '@/state/view';
 
 import { BuildingsSection } from './sections/buildings/BuildingsSection';
 import { HazardsSection } from './sections/hazards/HazardsSection';
+import { HealthcareSection } from './sections/healthcare/HealthcareSection';
+import { IndustrySection } from './sections/industry/IndustrySection';
+import { NaturalAssetsSection } from './sections/natural-assets/NaturalAssetsSection';
 import { NetworksSection } from './sections/networks/NetworksSection';
-import { RegionsSection } from './sections/regions/RegionsSection';
+import { PopulationSection } from './sections/population/PopulationSection';
+import { HumanVulnerabilitySection } from './sections/vulnerability/HumanVulnerabilitySection';
+import { NatureVulnerabilitySection } from './sections/vulnerability/NatureVulnerabilitySection';
 
 const viewLabels = {
   hazard: 'Hazard',
@@ -25,10 +30,20 @@ export const SidebarContent: FC<{}> = () => {
     case 'risk':
       return (
         <>
-          <NetworksSection />
+          {/* Hazard sections */}
           <HazardsSection />
+
+          {/* Exposure sections */}
+          <PopulationSection />
           <BuildingsSection />
-          <RegionsSection />
+          <NetworksSection />
+          <IndustrySection />
+          <HealthcareSection />
+          <NaturalAssetsSection />
+
+          {/* Vulnerability sections */}
+          <HumanVulnerabilitySection />
+          <NatureVulnerabilitySection />
         </>
       );
     default: {
