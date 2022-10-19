@@ -6,7 +6,7 @@ Sourced from here:  https://ghsl.jrc.ec.europa.eu/download.php?ds=pop
 
 All Snakefile:
 
-tif -> reproject -> 
+tif -> reproject -> clip north south -> COG
 
 ### API Metadata
 
