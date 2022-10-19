@@ -1,0 +1,3 @@
+hazard_layers: /opt/etl/pipelines/isimp_extreme_heat/hazard_isimp_extreme_heat.csv
+raster_output_dir: /opt/tileserver/raster/data/extreme_heat
+
