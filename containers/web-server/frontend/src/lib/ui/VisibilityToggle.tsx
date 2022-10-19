@@ -1,17 +1,18 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
-import { useRecoilState } from 'recoil';
+import { FC } from 'react';
 
-import { sectionVisibilityState } from '@/state/sections';
+export interface VisibilityToggleProps {
+  visibility: boolean;
+  onVisibility: (x: boolean) => void;
+}
 
-export const VisibilityToggle = ({ id }) => {
-  const [visibility, setVisibility] = useRecoilState(sectionVisibilityState(id));
-
+export const VisibilityToggle: FC<VisibilityToggleProps> = ({ visibility, onVisibility }) => {
   return (
     <IconButton
       title={visibility ? 'Hide layer' : 'Show layer'}
       onClick={(e) => {
-        setVisibility((visibility) => !visibility);
+        onVisibility(!visibility);
         e.stopPropagation();
       }}
     >
