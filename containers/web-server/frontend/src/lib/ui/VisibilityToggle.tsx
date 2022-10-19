@@ -16,7 +16,7 @@ export const VisibilityToggle: FC<VisibilityToggleProps> = ({ visibility, onVisi
         e.stopPropagation();
       }}
     >
-      {visibility ? <Visibility /> : <VisibilityOff />}
+      {visibility ? <Visibility color="action" /> : <VisibilityOff color="disabled" />}
     </IconButton>
   );
 };

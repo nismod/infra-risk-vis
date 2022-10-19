@@ -7,14 +7,21 @@ export const ExpandablePanel: FC<{
   onExpanded: (x: boolean) => void;
   title: string;
   actions: ReactChild;
-}> = ({ expanded, onExpanded, title, actions, children }) => {
+  disabled?: boolean;
+}> = ({ expanded, onExpanded, title, actions, disabled = false, children }) => {
   return (
     <Accordion
+      disabled={disabled}
       disableGutters
       square // clears the original border radius so that we can set our own
       expanded={expanded}
       onChange={(e, expanded) => onExpanded(expanded)}
-      sx={{ pointerEvents: 'auto', marginBottom: 1, borderRadius: 1, overflow: 'hidden' }}
+      sx={{
+        pointerEvents: 'auto',
+        marginBottom: 1,
+        borderRadius: 1,
+        overflow: 'hidden',
+      }}
     >
       <AccordionSummary
         sx={{

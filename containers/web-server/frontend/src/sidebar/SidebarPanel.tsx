@@ -1,3 +1,4 @@
+import { FC, ReactNode } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
@@ -6,7 +7,14 @@ import { VisibilityToggle } from '@/lib/ui/VisibilityToggle';
 
 import { sectionVisibilityState, sidebarSectionExpandedState } from '@/state/sections';
 
-export const SidebarPanel = ({ id, title, children }) => {
+export interface SidebarPanelProps {
+  id: string;
+  title: string;
+  disabled?: boolean;
+  children?: ReactNode;
+}
+
+export const SidebarPanel: FC<SidebarPanelProps> = ({ id, title, disabled = false, children = null }) => {
   const [expanded, setExpanded] = useRecoilState(sidebarSectionExpandedState(id));
   const [visibility, setVisibility] = useRecoilState(sectionVisibilityState(id));
 
@@ -14,8 +22,9 @@ export const SidebarPanel = ({ id, title, children }) => {
     <ExpandablePanel
       expanded={expanded}
       onExpanded={setExpanded}
+      disabled={disabled}
       title={title}
-      actions={<VisibilityToggle visibility={visibility} onVisibility={setVisibility} />}
+      actions={disabled ? null : <VisibilityToggle visibility={visibility} onVisibility={setVisibility} />}
     >
       <ErrorBoundary message="There was a problem displaying this section.">{children}</ErrorBoundary>
     </ExpandablePanel>
