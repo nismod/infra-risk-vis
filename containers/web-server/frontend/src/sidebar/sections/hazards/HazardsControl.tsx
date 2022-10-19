@@ -81,6 +81,15 @@ export const HazardsControl = () => {
             </InputRow>
           </InputSection>
         </ToggleSection>
+        <ToggleSection id="drought" label="Droughts" disabled={true}>
+          {/* Placeholder */}
+        </ToggleSection>
+        <ToggleSection id="wildfire" label="Wildfires" disabled={true}>
+          {/* Placeholder */}
+        </ToggleSection>
+        <ToggleSection id="earthquake" label="Earthquakes" disabled={true}>
+          {/* Placeholder */}
+        </ToggleSection>
       </ToggleSectionGroup>
     </>
   );

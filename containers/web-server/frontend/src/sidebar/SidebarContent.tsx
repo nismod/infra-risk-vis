@@ -4,10 +4,10 @@ import { useRecoilValue } from 'recoil';
 
 import { viewState } from '@/state/view';
 
-import { BuildingsSection } from './buildings/BuildingsSection';
-import { HazardsSection } from './hazards/HazardsSection';
-import { NetworksSection } from './networks/NetworksSection';
-import { RegionsSection } from './regions/RegionsSection';
+import { BuildingsSection } from './sections/buildings/BuildingsSection';
+import { HazardsSection } from './sections/hazards/HazardsSection';
+import { NetworksSection } from './sections/networks/NetworksSection';
+import { RegionsSection } from './sections/regions/RegionsSection';
 
 const viewLabels = {
   hazard: 'Hazard',
