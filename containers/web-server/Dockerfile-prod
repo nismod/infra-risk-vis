@@ -35,7 +35,7 @@ COPY --from=builder /app/build .
 # and copy in the nginx config...
 # delete conf.d as it will contain default.conf which will conflict
 RUN rm -rf /etc/nginx/conf.d
-COPY ./nginx/prod /etc/nginx
+COPY ./nginx/prod* /etc/nginx
 # SSL Certs mounted externally
 
 # containers run nginx with global directives and daemon off
