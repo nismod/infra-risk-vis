@@ -42,8 +42,6 @@ jobs:
           file: ./containers/web-server/Dockerfile-prod
           push: true
           tags: ghcr.io/nismod/gri-web-server:${{ env.VERSION_PROD }}
-          cache-from: type=registry,ref=ghcr.io/nismod/gri-web-server:buildcache
-          cache-to: type=registry,ref=ghcr.io/nismod/gri-web-server:buildcache,mode=max
 
       - name: Update images on server and restart
         uses: appleboy/ssh-action@master
