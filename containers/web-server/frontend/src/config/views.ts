@@ -17,29 +17,30 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: true,
       visible: true,
     },
+    population: {
+      expanded: false,
+      visible: false,
+    },
     buildings: {
       expanded: false,
       visible: false,
 
       styles: ['type'],
       defaultStyle: 'type',
-    },
-    regions: {
-      expanded: false,
-      visible: false,
-
-      styles: ['boundaries', 'population'],
-      defaultStyle: 'boundaries',
     },
   },
   exposure: {
     assets: {
-      expanded: true,
-      visible: true,
+      expanded: false,
+      visible: false,
       styles: ['type'],
       defaultStyle: 'type',
     },
     hazards: {
+      expanded: false,
+      visible: false,
+    },
+    population: {
       expanded: true,
       visible: true,
     },
@@ -49,25 +50,22 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
-    },
-    regions: {
-      expanded: false,
-      visible: false,
-
-      styles: ['boundaries', 'population'],
-      defaultStyle: 'boundaries',
     },
   },
   vulnerability: {
     assets: {
-      expanded: true,
-      visible: true,
+      expanded: false,
+      visible: false,
       styles: ['type'],
       defaultStyle: 'type',
     },
     hazards: {
-      expanded: true,
-      visible: true,
+      expanded: false,
+      visible: false,
+    },
+    population: {
+      expanded: false,
+      visible: false,
     },
     buildings: {
       expanded: false,
@@ -75,26 +73,23 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
-    },
-    regions: {
-      expanded: false,
-      visible: false,
-
-      styles: ['boundaries', 'population'],
-      defaultStyle: 'boundaries',
     },
   },
   risk: {
     assets: {
-      expanded: true,
-      visible: true,
+      expanded: false,
+      visible: false,
 
       styles: ['type', 'damages'],
-      defaultStyle: 'damages',
+      defaultStyle: 'type',
     },
     hazards: {
       expanded: false,
       visible: true,
+    },
+    population: {
+      expanded: false,
+      visible: false,
     },
     buildings: {
       expanded: false,
@@ -102,25 +97,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
-    },
-    regions: {
-      expanded: false,
-      visible: false,
-
-      styles: ['boundaries', 'population'],
-      defaultStyle: 'boundaries',
-    },
-    terrestrial: {
-      expanded: false,
-      visible: false,
-      styles: ['landuse', 'slope', 'elevation'],
-      defaultStyle: 'landuse',
-    },
-    marine: {
-      expanded: false,
-      visible: false,
-      styles: ['habitat'],
-      defaultStyle: 'habitat',
     },
   },
 };

@@ -17,7 +17,7 @@ import { NetworkControl } from './NetworkControl';
 export const NetworksSection: FC<{}> = () => {
   const style = useRecoilValue(sectionStyleValueState('assets'));
   return (
-    <SidebarPanel id="assets" title="Infrastructure">
+    <SidebarPanel id="assets" title="Infrastructure" disabled>
       <StateEffectRoot state={sectionStyleValueState('assets')} effect={networksStyleStateEffect} />
       <SidebarPanelSection>
         <NetworkControl />
