@@ -33,6 +33,19 @@ export const theme = createTheme({
         }
       `,
     },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          /**
+           * Change disabled accordion style to white background,
+           * by default text will still be grayed out
+           */
+          '&.Mui-disabled': {
+            backgroundColor: 'white',
+          },
+        },
+      },
+    },
   },
   typography: {
     h1: {

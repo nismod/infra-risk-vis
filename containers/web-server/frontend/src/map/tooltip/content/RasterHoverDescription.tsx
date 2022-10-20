@@ -1,10 +1,6 @@
 import { Box } from '@mui/material';
 import { FC, useMemo } from 'react';
 
-import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use-interactions';
-
-import { RASTER_COLOR_MAPS } from '@/config/color-maps';
-import { HAZARDS_METADATA } from '@/config/hazards/metadata';
 import { DataItem } from '@/details/features/detail-components';
 import { useRasterColorMapValues } from '@/map/legend/use-color-map-values';
 
@@ -17,29 +13,21 @@ function useRasterColorMapLookup(colorMapValues) {
   );
 }
 
-function formatHazardValue(color, value, dataUnit) {
-  return (
-    <>
-      <ColorBox color={color} />
-      {value == null ? '' : value.toFixed(1) + dataUnit}
-    </>
-  );
+export interface RasterHoverDescriptionProps {
+  scheme: string;
+  range: [number, number];
+  color: [number, number, number, number];
+  label: string;
+  formatValue: (x: any) => string;
 }
 
-export const RasterHoverDescription: FC<{ hoveredObject: InteractionTarget<RasterTarget> }> = ({ hoveredObject }) => {
-  const { color } = hoveredObject.target;
-
-  const {
-    viewLayer: {
-      id,
-      params: { hazardType },
-    },
-  } = hoveredObject;
-  const { label, dataUnit } = HAZARDS_METADATA[id];
-  const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
-
-  const title = `${label}`;
-
+export const RasterHoverDescription: FC<RasterHoverDescriptionProps> = ({
+  scheme,
+  range,
+  color,
+  label,
+  formatValue,
+}) => {
   const { colorMapValues } = useRasterColorMapValues(scheme, range);
   const rasterValueLookup = useRasterColorMapLookup(colorMapValues);
 
@@ -47,7 +35,15 @@ export const RasterHoverDescription: FC<{ hoveredObject: InteractionTarget<Raste
   const value = rasterValueLookup?.[colorString];
   return (
     <Box>
-      <DataItem label={title} value={formatHazardValue(colorString, value, dataUnit)} />
+      <DataItem
+        label={label}
+        value={
+          <>
+            <ColorBox color={colorString} />
+            {formatValue(value)}
+          </>
+        }
+      />
     </Box>
   );
 };

@@ -17,14 +17,16 @@ import { ReturnPeriodDamageChart } from './ReturnPeriodDamageChart';
 
 const DAMAGES_ORDERING = (() => {
   const ordering = [];
-  for (const [hazard, hazardDomain] of Object.entries(HAZARD_DOMAINS)) {
-    for (const rcp of hazardDomain.paramDomains.rcp) {
-      for (const epoch of hazardDomain.paramDomains.epoch) {
-        ordering.push({
-          hazard,
-          rcp,
-          epoch,
-        });
+  for (const [hazard, { paramDomains }] of Object.entries(HAZARD_DOMAINS)) {
+    if (paramDomains.rcp && paramDomains.epoch) {
+      for (const rcp of paramDomains.rcp) {
+        for (const epoch of paramDomains.epoch) {
+          ordering.push({
+            hazard,
+            rcp,
+            epoch,
+          });
+        }
       }
     }
   }
@@ -33,16 +35,18 @@ const DAMAGES_ORDERING = (() => {
 
 const RP_ORDERING = (() => {
   const ordering = [];
-  for (const [hazard, hazardDomain] of Object.entries(HAZARD_DOMAINS)) {
-    for (const rp of hazardDomain.paramDomains.returnPeriod) {
-      for (const rcp of hazardDomain.paramDomains.rcp) {
-        for (const epoch of hazardDomain.paramDomains.epoch) {
-          ordering.push({
-            hazard,
-            rcp,
-            epoch,
-            rp,
-          });
+  for (const [hazard, { paramDomains }] of Object.entries(HAZARD_DOMAINS)) {
+    if (paramDomains.returnPeriod && paramDomains.rcp && paramDomains.epoch) {
+      for (const rp of paramDomains.returnPeriod) {
+        for (const rcp of paramDomains.rcp) {
+          for (const epoch of paramDomains.epoch) {
+            ordering.push({
+              hazard,
+              rcp,
+              epoch,
+              rp,
+            });
+          }
         }
       }
     }

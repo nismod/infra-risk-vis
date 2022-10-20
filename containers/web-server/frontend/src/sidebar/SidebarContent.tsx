@@ -4,55 +4,46 @@ import { useRecoilValue } from 'recoil';
 
 import { viewState } from '@/state/view';
 
-import { BuildingsSection } from './buildings/BuildingsSection';
-import { DroughtsSection } from './drought/DroughtsSection';
-import { HazardsSection } from './hazards/HazardsSection';
-import { NetworksSection } from './networks/NetworksSection';
-import { RegionsSection } from './regions/RegionsSection';
-import { MarineSection } from './solutions/MarineSection';
-import { TerrestrialSection } from './solutions/TerrestrialSection';
+import { BuildingsSection } from './sections/buildings/BuildingsSection';
+import { HazardsSection } from './sections/hazards/HazardsSection';
+import { HealthcareSection } from './sections/healthcare/HealthcareSection';
+import { IndustrySection } from './sections/industry/IndustrySection';
+import { NaturalAssetsSection } from './sections/natural-assets/NaturalAssetsSection';
+import { NetworksSection } from './sections/networks/NetworksSection';
+import { PopulationSection } from './sections/population/PopulationSection';
+import { HumanVulnerabilitySection } from './sections/vulnerability/HumanVulnerabilitySection';
+import { NatureVulnerabilitySection } from './sections/vulnerability/NatureVulnerabilitySection';
 
 const viewLabels = {
+  hazard: 'Hazard',
   exposure: 'Exposure',
+  vulnerability: 'Vulnerability',
   risk: 'Risk',
-  adaptation: 'Adaptation',
-  'nature-based-solutions': 'Nature-based Solutions',
 };
 
 export const SidebarContent: FC<{}> = () => {
   const view = useRecoilValue(viewState);
   switch (view) {
+    case 'hazard':
     case 'exposure':
+    case 'vulnerability':
     case 'risk':
       return (
         <>
-          <NetworksSection />
+          {/* Hazard sections */}
           <HazardsSection />
+
+          {/* Exposure sections */}
+          <PopulationSection />
           <BuildingsSection />
-          <RegionsSection />
-        </>
-      );
-    case 'adaptation':
-      return (
-        <>
           <NetworksSection />
-          <DroughtsSection />
-          <HazardsSection />
-          <BuildingsSection />
-          <RegionsSection />
-          <TerrestrialSection />
-          <MarineSection />
-        </>
-      );
-    case 'nature-based-solutions':
-      return (
-        <>
-          <TerrestrialSection />
-          <MarineSection />
-          <NetworksSection />
-          <HazardsSection />
-          <BuildingsSection />
-          <RegionsSection />
+          <IndustrySection />
+          <HealthcareSection />
+          <NaturalAssetsSection />
+
+          {/* Vulnerability sections */}
+          <HumanVulnerabilitySection />
+          <NatureVulnerabilitySection />
         </>
       );
     default: {

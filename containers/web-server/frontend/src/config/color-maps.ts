@@ -29,6 +29,10 @@ export const RASTER_COLOR_MAPS = {
     scheme: 'reds',
     range: [0, 1],
   },
+  earthquake: {
+    scheme: 'reds',
+    range: [0, 1.4],
+  },
 };
 
 function invertColorScale<T>(colorScale: (t: number) => T) {

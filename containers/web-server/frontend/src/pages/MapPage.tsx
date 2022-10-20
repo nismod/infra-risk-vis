@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { FC } from 'react';
 import { selector, useRecoilValue } from 'recoil';
 
@@ -62,9 +62,11 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
     <ErrorBoundary message="There was a problem displaying this page.">
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
       <SidebarLayout top={0} left={0} bottom={0} right={undefined} width={globalStyleVariables.controlSidebarWidth}>
-        <ErrorBoundary message="There was a problem displaying the sidebar.">
-          <SidebarContent />
-        </ErrorBoundary>
+        <Paper elevation={0}>
+          <ErrorBoundary message="There was a problem displaying the sidebar.">
+            <SidebarContent />
+          </ErrorBoundary>
+        </Paper>
       </SidebarLayout>
       <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
         <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">

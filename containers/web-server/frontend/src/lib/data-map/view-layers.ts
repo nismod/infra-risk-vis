@@ -1,4 +1,5 @@
 import { ScaleSequential } from 'd3-scale';
+import { ReactNode } from 'react';
 
 import { DataLoader } from '@/lib/data-loader/data-loader';
 import { Accessor } from '@/lib/deck/props/getters';
@@ -55,6 +56,12 @@ export interface ViewLayer {
   legendDataFormatsFn?: ViewLayerDataFormatFunction;
   spatialType?: string;
   interactionGroup?: string;
+
+  /**
+   * new approach for legends: keep the rendering logic inside view layer
+   * (currently used for raster layers only)
+   */
+  renderLegend?: () => ReactNode;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {

@@ -11,6 +11,8 @@ import { ReturnPeriodControl } from '@/sidebar/ui/params/ReturnPeriodControl';
 import { showDamagesState } from '@/state/damage-mapping/damage-map';
 import { hazardSelectionState } from '@/state/hazards/hazard-selection';
 
+import { EarthquakeToggleSection } from './EarthquakeToggleSection';
+
 export const HazardsControl = () => {
   const showDirectDamages = useRecoilValue(showDamagesState);
   const disabled = showDirectDamages;
@@ -80,6 +82,15 @@ export const HazardsControl = () => {
               <RCPControl group="extreme_heat_occurrence" disabled={disabled} />
             </InputRow>
           </InputSection>
+        </ToggleSection>
+        <ToggleSection id="drought" label="Droughts" disabled={true}>
+          {/* Placeholder */}
+        </ToggleSection>
+        <ToggleSection id="wildfire" label="Wildfires" disabled={true}>
+          {/* Placeholder */}
+        </ToggleSection>
+        <ToggleSection id="earthquake" label="Earthquakes">
+          <EarthquakeToggleSection />
         </ToggleSection>
       </ToggleSectionGroup>
     </>

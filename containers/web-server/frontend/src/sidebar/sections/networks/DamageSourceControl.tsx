@@ -1,14 +1,4 @@
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  MenuItem,
-  Paper,
-  Radio,
-  RadioGroup,
-  Select,
-} from '@mui/material';
+import { FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
 import { useRecoilState } from 'recoil';
 
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';

@@ -25,10 +25,7 @@ export const App = () => {
                 <Toolbar /> {/* Prevents app bar from concealing content*/}
                 <IntroPage />
               </Route>
-              <Route
-                path="/:view(exposure|risk|adaptation|nature-based-solutions)"
-                render={({ match: { params } }) => <MapPage view={params.view} />}
-              />
+              <Route path="/view/:view" render={({ match: { params } }) => <MapPage view={params.view} />} />
               <Route path="/data" exact>
                 <Toolbar /> {/* Prevents app bar from concealing content*/}
                 <DataPage />
