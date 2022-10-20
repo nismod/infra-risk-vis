@@ -7,7 +7,6 @@ FROM node:16 AS builder
 WORKDIR /app
 # COPY package.json .
 COPY frontend* .
-WORKDIR /app/frontend
 # install node modules
 RUN npm install
 # copy folders and files required for build into image N.B. when docker copy is given a
