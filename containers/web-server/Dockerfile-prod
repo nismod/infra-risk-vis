@@ -7,7 +7,7 @@ WORKDIR /app
 COPY ./containers/web-server/frontend/package.json .
 RUN npm install
 
-COPY ./containers/web-server/frontend/* .
+COPY ./containers/web-server/frontend* .
 RUN npm run build
 
 # stage 2 of 2
