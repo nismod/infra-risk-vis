@@ -11,6 +11,8 @@ import { ReturnPeriodControl } from '@/sidebar/ui/params/ReturnPeriodControl';
 import { showDamagesState } from '@/state/damage-mapping/damage-map';
 import { hazardSelectionState } from '@/state/hazards/hazard-selection';
 
+import { EarthquakeToggleSection } from './EarthquakeToggleSection';
+
 export const HazardsControl = () => {
   const showDirectDamages = useRecoilValue(showDamagesState);
   const disabled = showDirectDamages;
@@ -87,8 +89,8 @@ export const HazardsControl = () => {
         <ToggleSection id="wildfire" label="Wildfires" disabled={true}>
           {/* Placeholder */}
         </ToggleSection>
-        <ToggleSection id="earthquake" label="Earthquakes" disabled={true}>
-          {/* Placeholder */}
+        <ToggleSection id="earthquake" label="Earthquakes">
+          <EarthquakeToggleSection />
         </ToggleSection>
       </ToggleSectionGroup>
     </>

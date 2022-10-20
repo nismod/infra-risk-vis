@@ -19,7 +19,25 @@ export const HAZARDS_METADATA = {
     label: 'Extreme Heat (Exposure)',
     dataUnit: 'popn',
   },
+  earthquake: {
+    label: 'Earthquakes',
+    dataUnit: '',
+  },
 };
 
-export const HAZARDS_MAP_ORDER = ['cyclone', 'fluvial', 'coastal', 'extreme_heat_occurrence', 'extreme_heat_exposure'];
-export const HAZARDS_UI_ORDER = ['fluvial', 'coastal', 'cyclone', 'extreme_heat_occurrence', 'extreme_heat_exposure'];
+export const HAZARDS_MAP_ORDER = [
+  'cyclone',
+  'fluvial',
+  'coastal',
+  'extreme_heat_occurrence',
+  'extreme_heat_exposure',
+  'earthquake',
+];
+export const HAZARDS_UI_ORDER = [
+  'fluvial',
+  'coastal',
+  'cyclone',
+  'extreme_heat_occurrence',
+  'extreme_heat_exposure',
+  'earthquake',
+];

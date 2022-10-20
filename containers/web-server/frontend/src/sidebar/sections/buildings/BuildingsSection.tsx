@@ -6,7 +6,7 @@ import { BuildingsControl } from './BuildingsControl';
 
 export const BuildingsSection = () => {
   return (
-    <SidebarPanel id="buildings" title="Buildings">
+    <SidebarPanel id="buildings" title="Buildings" disabled>
       <SidebarPanelSection>
         <BuildingsControl />
       </SidebarPanelSection>

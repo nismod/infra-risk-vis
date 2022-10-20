@@ -7,7 +7,7 @@ export interface HazardParams {
   gcm: string;
 }
 
-export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> = {
+export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<any>> = {
   fluvial: {
     paramDomains: {
       returnPeriod: [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000],
@@ -134,5 +134,16 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
         else return ['2.6', '6.0'];
       },
     },
+  },
+  earthquake: {
+    paramDomains: {
+      returnPeriod: [475],
+      medium: ['soil'],
+    },
+    paramDefaults: {
+      returnPeriod: 475,
+      medium: 'soil',
+    },
+    paramDependencies: {},
   },
 };
