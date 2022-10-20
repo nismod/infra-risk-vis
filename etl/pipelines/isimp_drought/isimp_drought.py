@@ -397,6 +397,21 @@ class HazardISIMPDrought:
             os.path.basename(input_occurrence_file.fpath)
         )
         output_fpath = os.path.join(output_dir, output_fname)
+        # Skip if it exists
+        if os.path.exists(output_fpath):
+            logging.warning(
+                "pop exposure output fpath appears to exist - skipping reprocessing: %s",
+                output_fpath,
+            )
+            return ISIMPDroughtExposure(
+                input_file.fname,
+                output_fname,
+                output_fpath,
+                file_key_from_fname(output_fname),
+                input_occurrence_file.epoch,
+                input_occurrence_file.gcm,
+                input_occurrence_file.rcp,
+            )
 
         logging.debug(
             "generating popn exposure tiff - opening worldpop: %s",
