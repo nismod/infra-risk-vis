@@ -20,8 +20,8 @@ export const HAZARDS_METADATA = {
     dataUnit: 'popn',
   },
   earthquake: {
-    label: 'Earthquakes',
-    dataUnit: '',
+    label: 'Earthquakes (PGA)',
+    dataUnit: 'g',
   },
 };
 
