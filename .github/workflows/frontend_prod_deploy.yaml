@@ -14,7 +14,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     env:
-      VERSION_PROD: 0.5
+      VERSION_PROD: latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,8 +35,8 @@ jobs:
       - name: Build and push Prod
         uses: docker/build-push-action@v2
         with:
-          context: ./containers/web-server
-          file: Dockerfile-prod
+          context: containers/web-server
+          file: containers/web-server/Dockerfile-prod
           push: true
           tags: nismod/gri-web-server:${{ env.VERSION_PROD }}
 
