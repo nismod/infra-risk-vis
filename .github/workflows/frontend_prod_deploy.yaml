@@ -35,8 +35,8 @@ jobs:
       - name: Build and push Prod
         uses: docker/build-push-action@v2
         with:
-          context: containers/web-server
-          file: containers/web-server/Dockerfile-prod
+          context: .
+          file: ./containers/web-server/Dockerfile-prod
           push: true
           tags: nismod/gri-web-server:${{ env.VERSION_PROD }}
 
