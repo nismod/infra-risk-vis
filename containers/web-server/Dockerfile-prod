@@ -5,11 +5,9 @@
 # name the node stage "builder"
 FROM node:16 AS builder
 WORKDIR /app
-# copy package.json and install -- do this before copying everything else
-# to enable more efficient caching by docker (we don't reinstall packages when
-# we've only changed application code)
-#COPY package.json .
+# COPY package.json .
 COPY frontend* .
+WORKDIR /app/frontend
 # install node modules
 RUN npm install
 # copy folders and files required for build into image N.B. when docker copy is given a
