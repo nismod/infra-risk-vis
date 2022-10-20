@@ -58,3 +58,5 @@ deploy.sh
 main.tf
 provision.sh
 *.geoparquet
+*.mbtiles
+etl/raw_data/*

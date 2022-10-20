@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.5
+    image: ghcr.io/nismod/gri-web-server:latest
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-prod
