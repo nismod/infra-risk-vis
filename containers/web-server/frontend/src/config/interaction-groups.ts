@@ -15,6 +15,11 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     pickMultiple: true,
   },
   {
+    id: 'population',
+    type: 'raster',
+    pickMultiple: false,
+  },
+  {
     id: 'regions',
     type: 'vector',
     pickingRadius: 8,

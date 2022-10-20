@@ -7,16 +7,15 @@ import { ColorMap, FormatConfig } from '@/lib/data-map/view-layers';
 import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
 import { viewLayersParamsState } from '@/state/layers/view-layers-params';
 
-import { RasterLegend } from './RasterLegend';
 import { VectorLegend } from './VectorLegend';
 
 export const MapLegend: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const viewLayersParams = useRecoilValue(viewLayersParamsState);
 
-  const hazardViewLayers = [];
+  const rasterLegends = [];
 
-  let dataColorMaps: Record<
+  const vectorLegendConfigs: Record<
     string,
     {
       colorMap: ColorMap;
@@ -26,7 +25,11 @@ export const MapLegend: FC<{}> = () => {
 
   viewLayers.forEach((viewLayer) => {
     if (viewLayer.spatialType === 'raster') {
-      hazardViewLayers.push(viewLayer);
+      // for raster layers, use the renderLegend() method of the view layer
+      const layerLegend = viewLayer.renderLegend?.();
+      if (layerLegend) {
+        rasterLegends.push(layerLegend);
+      }
     } else {
       /**
        * get style params from the viewLayerParams mechanism
@@ -46,26 +49,24 @@ export const MapLegend: FC<{}> = () => {
         const colorMapKey = `${colorMap.fieldSpec.fieldGroup}-${colorMap.fieldSpec.field}`;
 
         // save the colorMap and formatConfig for first layer of each group
-        if (dataColorMaps[colorMapKey] == null) {
+        if (vectorLegendConfigs[colorMapKey] == null) {
           const { legendDataFormatsFn, dataFormatsFn } = viewLayer;
 
           const formatFn = legendDataFormatsFn ?? dataFormatsFn;
           const formatConfig = formatFn(colorMap.fieldSpec);
 
-          dataColorMaps[colorMapKey] = { colorMap, formatConfig };
+          vectorLegendConfigs[colorMapKey] = { colorMap, formatConfig };
         }
       }
     }
   });
 
-  return hazardViewLayers.length || Object.keys(dataColorMaps).length ? (
+  return rasterLegends.length || Object.keys(vectorLegendConfigs).length ? (
     <Paper>
       <Box p={1} maxWidth={270}>
         <Stack gap={0.3} divider={<Divider />}>
-          {hazardViewLayers.map((viewLayer) => (
-            <RasterLegend key={viewLayer.id} viewLayer={viewLayer} />
-          ))}
-          {Object.entries(dataColorMaps).map(([legendKey, { colorMap, formatConfig }]) => (
+          {rasterLegends}
+          {Object.entries(vectorLegendConfigs).map(([legendKey, { colorMap, formatConfig }]) => (
             <VectorLegend key={legendKey} colorMap={colorMap} legendFormatConfig={formatConfig} />
           ))}
         </Stack>

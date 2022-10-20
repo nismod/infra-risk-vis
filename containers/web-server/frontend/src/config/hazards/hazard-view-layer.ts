@@ -1,10 +1,12 @@
 import GL from '@luma.gl/constants';
+import React from 'react';
 
 import { ViewLayer } from '@/lib/data-map/view-layers';
 import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 
 import { RASTER_COLOR_MAPS } from '@/config/color-maps';
 import { HazardParams } from '@/config/hazards/domains';
+import { HazardLegend } from '@/map/legend/content/HazardLegend';
 
 import { HAZARD_SOURCE } from './source';
 
@@ -49,6 +51,12 @@ export function hazardViewLayer(hazardType: string, hazardParams: HazardParams):
           refinementStrategy: 'no-overlap',
         },
       );
+    },
+    renderLegend() {
+      return React.createElement(HazardLegend, {
+        key: hazardType,
+        viewLayer: this,
+      });
     },
   };
 }

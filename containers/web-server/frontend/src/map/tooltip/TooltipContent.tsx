@@ -9,7 +9,8 @@ import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 import { showPopulationState } from '@/state/regions';
 
 import { DroughtHoverDescription } from './content/DroughtHoverDescription';
-import { RasterHoverDescription } from './content/RasterHoverDescription';
+import { HazardHoverDescription } from './content/HazardHoverDescription';
+import { PopulationHoverDescription } from './content/PopulationHoverDescription';
 import { RegionHoverDescription } from './content/RegionHoverDescription';
 import { SolutionHoverDescription } from './content/SolutionHoverDescription';
 import { VectorHoverDescription } from './content/VectorHoverDescription';
@@ -22,7 +23,8 @@ const TooltipSection = ({ children }) => (
 
 export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
-  const hoveredRasters = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
+  const hoveredHazards = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
+  const hoveredPopulation = useRecoilValue(hoverState('population')) as InteractionTarget<any>;
   const hoveredRegion = useRecoilValue(hoverState('regions')) as InteractionTarget<any>;
   const hoveredSolution = useRecoilValue(hoverState('solutions')) as InteractionTarget<any>;
   const hoveredDrought = useRecoilValue(hoverState('drought')) as InteractionTarget<any>;
@@ -30,12 +32,18 @@ export const TooltipContent: FC = () => {
   const regionDataShown = useRecoilValue(showPopulationState);
 
   const assetsHovered = hasHover(hoveredVector);
-  const hazardsHovered = hasHover(hoveredRasters);
+  const hazardsHovered = hasHover(hoveredHazards);
+  const populationHovered = hasHover(hoveredPopulation);
   const regionsHovered = hasHover(hoveredRegion);
   const solutionsHovered = hasHover(hoveredSolution);
   const droughtHovered = hasHover(hoveredDrought);
   const doShow =
-    assetsHovered || hazardsHovered || (regionDataShown && regionsHovered) || solutionsHovered || droughtHovered;
+    assetsHovered ||
+    hazardsHovered ||
+    populationHovered ||
+    (regionDataShown && regionsHovered) ||
+    solutionsHovered ||
+    droughtHovered;
 
   if (!doShow) return null;
 
@@ -60,9 +68,14 @@ export const TooltipContent: FC = () => {
           ) : null}
           {hazardsHovered ? (
             <TooltipSection>
-              {hoveredRasters.map((hr) => (
-                <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
+              {hoveredHazards.map((hr) => (
+                <HazardHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
               ))}
+            </TooltipSection>
+          ) : null}
+          {populationHovered ? (
+            <TooltipSection>
+              <PopulationHoverDescription hoveredObject={hoveredPopulation} />
             </TooltipSection>
           ) : null}
           {regionsHovered ? (
