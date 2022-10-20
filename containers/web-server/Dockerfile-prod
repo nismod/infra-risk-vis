@@ -9,7 +9,7 @@ WORKDIR /app
 # to enable more efficient caching by docker (we don't reinstall packages when
 # we've only changed application code)
 #COPY package.json .
-COPY ./frontend/package.json .
+COPY ./frontend/package.json* .
 # install node modules
 RUN npm install
 # copy folders and files required for build into image N.B. when docker copy is given a
