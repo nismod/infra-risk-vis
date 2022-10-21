@@ -14,7 +14,11 @@ import { getAssetDataFormats } from '@/config/assets/data-formats';
 import { FeatureSidebarContent } from '@/details/features/FeatureSidebarContent';
 import { mapFitBoundsState } from '@/map/MapView';
 import { ColorBox } from '@/map/tooltip/content/ColorBox';
-import { adaptationColorSpecState, adaptationFieldSpecState, adaptationLayerSpecState } from '@/state/layers/networks';
+import {
+  adaptationColorSpecState,
+  adaptationFieldSpecState,
+  adaptationLayerSpecState,
+} from '@/state/layers/data-layers/networks';
 
 import './asset-table.css';
 

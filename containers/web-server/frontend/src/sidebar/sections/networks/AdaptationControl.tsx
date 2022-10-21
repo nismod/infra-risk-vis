@@ -17,7 +17,7 @@ import {
   adaptationCostBenefitRatioEaelDaysState,
   adaptationDataParamsStateEffect,
   adaptationFieldState,
-} from '@/state/layers/networks';
+} from '@/state/layers/data-layers/networks';
 
 function hazardLabel(val) {
   switch (val) {

@@ -15,9 +15,9 @@ import { buildingSelectionState } from '@/state/buildings';
 import { isRetinaState } from '@/state/is-retina';
 import { sectionVisibilityState } from '@/state/sections';
 
-import { hazardLayerState } from './hazards';
-import { networkLayersState } from './networks';
-import { populationLayerState } from './population';
+import { hazardLayerState } from './data-layers/hazards';
+import { networkLayersState } from './data-layers/networks';
+import { populationLayerState } from './data-layers/population';
 
 const buildingLayersState = selector<ViewLayer[]>({
   key: 'buildingLayersState',

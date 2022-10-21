@@ -7,8 +7,8 @@ import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use
 import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { MARINE_HABITATS_LOOKUP } from '@/config/solutions/domains';
 import { DataItem } from '@/details/features/detail-components';
-import { habitatColorMap } from '@/state/layers/marine';
-import { landuseColorMap } from '@/state/layers/terrestrial';
+import { habitatColorMap } from '@/state/layers/data-layers/marine';
+import { landuseColorMap } from '@/state/layers/data-layers/terrestrial';
 
 import { DataDescription } from '../DataDescription';
 import { ColorBox } from './ColorBox';

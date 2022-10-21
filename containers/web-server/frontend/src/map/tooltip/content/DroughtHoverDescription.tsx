@@ -10,7 +10,7 @@ import {
   droughtOptionsFieldSpecState,
   droughtRegionsColorSpecState,
   droughtRegionsFieldSpecState,
-} from '@/state/layers/drought';
+} from '@/state/layers/data-layers/drought';
 
 import { DataDescription } from '../DataDescription';
 

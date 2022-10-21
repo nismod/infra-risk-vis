@@ -4,7 +4,7 @@ import { atomFamily, selector, selectorFamily, useRecoilTransaction_UNSTABLE } f
 import { selectionState } from '@/lib/data-map/interactions/interaction-state';
 import { ViewLayer, ViewLayerParams } from '@/lib/data-map/view-layers';
 
-import { networkStyleParamsState } from './networks';
+import { networkStyleParamsState } from './data-layers/networks';
 import { viewLayersFlatState } from './view-layers-flat';
 
 export const viewLayerState = atomFamily<ViewLayer, string>({
