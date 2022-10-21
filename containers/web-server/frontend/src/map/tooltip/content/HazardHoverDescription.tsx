@@ -16,7 +16,7 @@ export const HazardHoverDescription: FC<{ hoveredObject: InteractionTarget<Raste
       params: { hazardType },
     },
   } = hoveredObject;
-  const { label, dataUnit } = HAZARDS_METADATA[id];
+  const { label, dataUnit, fractionDigits } = HAZARDS_METADATA[id];
   const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
 
   return (
@@ -25,7 +25,13 @@ export const HazardHoverDescription: FC<{ hoveredObject: InteractionTarget<Raste
       scheme={scheme}
       range={range}
       label={`${label}`}
-      formatValue={(x) => (x != null ? `${x.toFixed(1)}${dataUnit}` : '')}
+      formatValue={(x) =>
+        x != null
+          ? `${x.toLocaleString(undefined, {
+              maximumFractionDigits: fractionDigits,
+            })}${dataUnit}`
+          : ''
+      }
     />
   );
 };

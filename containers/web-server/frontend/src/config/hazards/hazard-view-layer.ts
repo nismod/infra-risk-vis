@@ -39,9 +39,13 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
         {
           textureParameters: {
             [GL.TEXTURE_MAG_FILTER]: magFilter,
-            // [GL.TEXTURE_MAG_FILTER]: zoom < 12 ? GL.NEAREST : GL.NEAREST_MIPMAP_LINEAR,
           },
           opacity: hazardType === 'cyclone' || hazardType === 'earthquake' ? 0.6 : 1,
+
+          // TODO: tweak transparentColor to tweak border color / transparent layer tint
+          /*
+          transparentColor: [128, 128, 128, 0],
+          */
         },
         deckProps,
         {

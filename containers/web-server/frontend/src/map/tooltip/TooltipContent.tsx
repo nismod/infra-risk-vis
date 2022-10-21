@@ -16,7 +16,7 @@ import { SolutionHoverDescription } from './content/SolutionHoverDescription';
 import { VectorHoverDescription } from './content/VectorHoverDescription';
 
 const TooltipSection = ({ children }) => (
-  <Box p={1} borderBottom="1px solid #ccc">
+  <Box px={1} py={0.5} borderBottom="1px solid #ccc">
     {children}
   </Box>
 );

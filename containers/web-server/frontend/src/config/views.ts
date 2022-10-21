@@ -8,8 +8,8 @@ export interface ViewSectionConfig {
 export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = {
   hazard: {
     assets: {
-      expanded: true,
-      visible: true,
+      expanded: false,
+      visible: false,
       styles: ['type'],
       defaultStyle: 'type',
     },
