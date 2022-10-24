@@ -31,7 +31,7 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
   },
   exposure: {
     assets: {
-      expanded: false,
+      expanded: true,
       visible: false,
       styles: ['type'],
       defaultStyle: 'type',
