@@ -101,6 +101,8 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
 
   cement: DefaultDetails,
   steel: DefaultDetails,
+
+  healthsites: DefaultDetails,
 };
 
 interface FeatureSidebarContentProps {

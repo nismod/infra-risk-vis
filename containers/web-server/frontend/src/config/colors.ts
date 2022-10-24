@@ -36,4 +36,6 @@ export const COLORS = makeColorConfig({
 
   industry_cement: '#e4cda9',
   industry_steel: '#5b8cc3',
+
+  healthsites: '#72dfda',
 });

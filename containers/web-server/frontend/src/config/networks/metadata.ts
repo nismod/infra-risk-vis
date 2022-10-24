@@ -401,4 +401,11 @@ export const NETWORKS_METADATA = makeConfig([
     label: 'Industry (Steel)',
     color: COLORS.industry_steel.css,
   },
+
+  {
+    id: 'healthsites',
+    type: 'circle',
+    label: 'Health Sites',
+    color: COLORS.healthsites.css,
+  },
 ]);
