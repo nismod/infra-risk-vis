@@ -52,6 +52,10 @@ export const DeckMap: FC<DeckMapProps> = ({
           new MapView({
             repeat: true,
             controller: {
+              scrollZoom: {
+                smooth: true,
+                speed: 0.2,
+              },
               keyboard: false, //can't deactivate keyboard rotate only so deactivate all keyboard
               dragRotate: false,
               touchRotate: false,
