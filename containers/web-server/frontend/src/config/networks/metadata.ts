@@ -389,4 +389,16 @@ export const NETWORKS_METADATA = makeConfig([
     label: 'Buildings (Resort)',
     color: COLORS.buildings_resort.css,
   },
+  {
+    id: 'cement',
+    type: 'circle',
+    label: 'Industry (Cement)',
+    color: COLORS.industry_cement.css,
+  },
+  {
+    id: 'steel',
+    type: 'circle',
+    label: 'Industry (Steel)',
+    color: COLORS.industry_steel.css,
+  },
 ]);

@@ -16,6 +16,7 @@ import { isRetinaState } from '@/state/is-retina';
 import { sectionVisibilityState } from '@/state/sections';
 
 import { hazardLayerState } from './data-layers/hazards';
+import { industryLayersState } from './data-layers/industry';
 import { networkLayersState } from './data-layers/networks';
 import { populationLayerState } from './data-layers/population';
 
@@ -58,6 +59,8 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
 
       // network data layers
       get(networkLayersState),
+
+      get(industryLayersState),
 
       get(featureBoundingBoxLayerState),
 

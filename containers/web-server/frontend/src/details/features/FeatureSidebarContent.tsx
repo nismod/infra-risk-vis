@@ -98,6 +98,9 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
   buildings_mixed: BuildingDetails,
   buildings_recreation: BuildingDetails,
   buildings_resort: BuildingDetails,
+
+  cement: DefaultDetails,
+  steel: DefaultDetails,
 };
 
 interface FeatureSidebarContentProps {

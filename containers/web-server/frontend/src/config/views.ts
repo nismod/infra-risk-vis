@@ -28,6 +28,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       styles: ['type'],
       defaultStyle: 'type',
     },
+    industry: {
+      expanded: false,
+      visible: false,
+    },
   },
   exposure: {
     assets: {
@@ -50,6 +54,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
+    },
+    industry: {
+      expanded: true,
+      visible: false,
     },
   },
   vulnerability: {
@@ -74,6 +82,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       styles: ['type'],
       defaultStyle: 'type',
     },
+    industry: {
+      expanded: false,
+      visible: false,
+    },
   },
   risk: {
     assets: {
@@ -97,6 +109,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
+    },
+    industry: {
+      expanded: false,
+      visible: false,
     },
   },
 };
