@@ -25,9 +25,12 @@ export const HAZARDS_METADATA = {
     fractionDigits: 0,
   },
   earthquake: {
-    label: 'Earthquakes (PGA)',
+    label: 'Seismic Hazard (PGA)',
     dataUnit: 'g',
     fractionDigits: 3,
+    labelAbbreviations: {
+      PGA: 'Peak Ground Acceleration',
+    },
   },
 };
 

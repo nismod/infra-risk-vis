@@ -8,12 +8,25 @@ export const DataPage = () => (
     <ScrollToTop />
     <h1>Data Sources and Access</h1>
 
-    <p>TODO - Data comes from multiple sources</p>
+    <h4>Disclaimer</h4>
+    <p>
+      This website was created for dissemination purposes. The information included here must not be used for the design
+      of hazard-resistant structures or to support any important decision involving human life, capital or property. The
+      values of risk or hazard in this map do not constitute an alternative nor do they replace building actions defined
+      in national building codes. Readers seeking this information should consult national databases. The data presented
+      here are the combination of results computed using multiple input models covering the majority of landmass. These
+      models represent the best information currently publicly accessible, as far as the authors are aware. The
+      presentation here results from an integration process that is solely the responsibility of the University of
+      Oxford.
+    </p>
+
+    <Alert severity="info">TODO - Data comes from multiple sources</Alert>
 
     <Alert severity="info">TODO - Licensing</Alert>
 
-    <h2>TODO - Update Hazard Data</h2>
+    <h2>Hazard Data</h2>
 
+    <Alert severity="info">TODO - Update Hazard Data</Alert>
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <TableHead>
@@ -23,6 +36,8 @@ export const DataPage = () => (
             <TableCell>Exceedance Probabilities (1/return periods in years)</TableCell>
             <TableCell>Intensities and spatial extents</TableCell>
             <TableCell>Climate scenario information</TableCell>
+            <TableCell>Citation</TableCell>
+            <TableCell>License</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -85,6 +100,25 @@ export const DataPage = () => (
               RCP Baseline
               <br />
               Current + future maps in 2030, 2050 and 2080
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>Seismic Risk</TableCell>
+            <TableCell>TODO</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell>
+              Pagani M, Garcia-Pelaez J, Gee R, Johnson K, Silva V, Simionato M, Styron R, Vigano D, Danciu L, Monelli
+              D, Poggi V, Weatherill G. (2019). The 2018 version of the Global Earthquake Model: Hazard component.
+              Earthquake Spectra, 36(1), https://doi.org/10.1177/87552930209318.
+            </TableCell>
+            <TableCell>
+              The visualisation of seismic hazard data is licensed under the terms of the{' '}
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+                Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA)
+              </a>
+              . The underlying data are confidential, contact GEM for more information.
             </TableCell>
           </TableRow>
         </TableBody>
