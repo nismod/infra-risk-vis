@@ -60,3 +60,4 @@ provision.sh
 *.geoparquet
 *.gpkg
 *.mbtiles
+*.tar.gz
