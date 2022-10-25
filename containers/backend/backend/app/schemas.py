@@ -192,7 +192,11 @@ class TileSourceMeta(BaseModel):
     variables: dict
 
     class Config:
-        orm_mode = True
+        orm_mode = True  #
+
+
+class TileSourceDomains(BaseModel):
+    domains: List[dict]
 
 
 class ColorMapOptions(BaseModel):

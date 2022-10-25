@@ -5,6 +5,7 @@ from sys import getsizeof
 from typing import Any, BinaryIO, List, Tuple, Union
 import ast
 import inspect
+import itertools
 
 from fastapi import APIRouter, Depends, HTTPException, Response, Header
 from fastapi.logger import logger
@@ -18,7 +19,7 @@ from geoalchemy2 import functions
 from app import schemas
 from app.dependencies import get_db
 from db import models
-from app.internal.tiles.singleband import database_keys
+from app.internal.tiles.singleband import all_datasets, database_keys
 from app.internal.helpers import build_driver_path, handle_exception
 from app.exceptions import SourceDBDoesNotExistException, DomainAlreadyExistsException
 from config import API_TOKEN, DOMAIN_TO_DB_MAP
@@ -110,6 +111,27 @@ def _tile_db_from_keys(keys: List) -> str:
     return DOMAIN_TO_DB_MAP[domain]
 
 
+def _source_options(source_db: str) -> List[dict]:
+    """
+    Gather all URL key combinations available in the given source
+
+    ('fluvial', '50', '8x5', '2080', 'NorESM1-M'):
+        '/data/aqueduct/inunriver_rcp8p5_00000NorESM1-M_2080_rp00050.tif',
+    ('fluvial', '50', 'baseline', 'present', 'WATCH'):
+        '/data/aqueduct/inunriver_historical_000000000WATCH_1980_rp00050.tif',
+    ('fluvial', '500', '4x5', '2030', 'GFDL-ESM2M'):
+        '/data/aqueduct/inunriver_rcp4p5_0000GFDL-ESM2M_2030_rp00500.tif',
+    ('fluvial', '500', '4x5', '2030', 'HadGEM2-ES'):
+        '/data/aqueduct/inunriver_rcp4p5_0000HadGEM2-ES_2030_rp00500.tif'
+    """
+    # Query terracotta for all datasets in the source
+    driver_path = build_driver_path(source_db)
+    datasets = all_datasets(driver_path)
+    keys = database_keys(driver_path)
+    # Generate the output mapping
+    return [dict(zip(keys, _values)) for _values in datasets.keys()]
+
+
 async def verify_token(x_token: str = Header()):
     print(x_token, API_TOKEN)
     if x_token != API_TOKEN:
@@ -162,6 +184,36 @@ async def get_tile_source_meta(
         url_keys = _get_tiledb_keys(res.source_db)
         meta = schemas.TileSourceMeta.from_orm(res)
         meta.url_keys = url_keys
+        return meta
+    except NoResultFound:
+        raise HTTPException(status_code=404)
+    except Exception as err:
+        handle_exception(logger, err)
+        raise HTTPException(status_code=500)
+
+
+@router.get("/sources/{source_id}/domains", response_model=schemas.TileSourceDomains)
+async def get_tile_source_domains(
+    source_id: int,
+    db: Session = Depends(get_db),
+) -> schemas.TileSourceDomains:
+    """
+    Retrieve all combinations available for the source domain
+    """
+    logger.debug(
+        "performing %s",
+        inspect.stack()[0][3],
+    )
+    try:
+        res = (
+            db.query(models.RasterTileSource)
+            .filter(models.RasterTileSource.id == source_id)
+            .one()
+        )
+        domains = _source_options(res.source_db)
+        meta = schemas.TileSourceDomains(domains=domains)
+        logger.debug("%s", meta)
+        return meta
     except NoResultFound:
         raise HTTPException(status_code=404)
     except Exception as err:
@@ -280,4 +332,3 @@ async def get_tile(
     except Exception as err:
         handle_exception(logger, err)
         raise HTTPException(status_code=500)
-
