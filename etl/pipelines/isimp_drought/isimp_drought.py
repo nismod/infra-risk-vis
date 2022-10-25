@@ -173,7 +173,7 @@ class HazardISIMPDrought:
         self,
         download_dir: str = None,
         hazard_csv_fpath: str = None,
-        world_pop_fpath: str = "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif",
+        world_pop_fpath: str = "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0_wgs84.tif",
         mol_wkt_fpath: str = "target_mol.wkt",
         wgs84_wkt_fpath: str = "target_wgs84.wkt",
     ):
@@ -382,6 +382,42 @@ class HazardISIMPDrought:
         fname = basename.replace("occurrence", "exposure")
         return f"{fname}.tif"
 
+    def match_raster_resoluton_and_extent(
+        self, master_fpath: str, slave_fpath: str, output_fpath: str, res=None
+    ) -> bool:
+        """
+        Generate a new raster that is a copy of slave, but with the resolution and size of the master
+        """
+        slave_ds = gdal.Open(slave_fpath)
+        if slave_ds is None:
+            raise IOError
+        slave_proj = slave_ds.GetProjection()
+        data_type = slave_ds.GetRasterBand(1).DataType
+        n_bands = slave_ds.RasterCount
+
+        master_ds = gdal.Open(master_fpath)
+        if master_ds is None:
+            raise IOError
+        master_proj = master_ds.GetProjection()
+        master_geotrans = master_ds.GetGeoTransform()
+        w = master_ds.RasterXSize
+        h = master_ds.RasterYSize
+        if res is not None:
+            master_geotrans[1] = float(res)
+            master_geotrans[-1] = -float(res)
+
+        dst_ds = gdal.GetDriverByName("GTiff").Create(
+            output_fpath, w, h, n_bands, data_type, ["COMPRESS=LZW"]
+        )
+        dst_ds.SetGeoTransform(master_geotrans)
+        dst_ds.SetProjection(master_proj)
+
+        gdal.ReprojectImage(
+            slave_ds, dst_ds, slave_proj, master_proj, gdal.GRA_NearestNeighbour
+        )
+        dst_ds = None  # Flush to disk
+        return os.path.exists(output_fpath)
+
     def generate_popn_exposure_tiff(
         self, input_occurrence_file: ISIMPDroughtOccurrence, output_dir: str
     ) -> ISIMPDroughtExposure:
@@ -413,31 +449,26 @@ class HazardISIMPDrought:
                 input_occurrence_file.rcp,
             )
 
+        # Warp Occurrence to Worldpop proj, cellsize and extent
         logging.debug(
-            "generating popn exposure tiff - opening worldpop: %s",
-            self.world_pop_fpath,
-        )
-
-        # Warp Exposure to Worldpop proj, cellsize and extent
-        logging.debug(
-            "generating popn exposure tiff - warping occurrence to world pop..."
+            "generating popn exposure tiff - warping occurrence to world pop size and proj"
         )
         tmp_exposure_fpath = os.path.join(output_dir, "tmp_reproj.tif")
-        warp_cmd = f"gdalwarp -ts 36082 18000 -t_srs {self.mol_wkt_fpath} {input_occurrence_file.fpath} {tmp_exposure_fpath}"
-        os.system(warp_cmd)
+        result = self.match_raster_resoluton_and_extent(
+            self.world_pop_fpath, input_occurrence_file.fpath, tmp_exposure_fpath
+        )
+        logging.debug(
+            "generating popn exposure tiff - matched res and scale of world pop raster: %s",
+            result,
+        )
 
         logging.debug("generating popn exposure tiff - running exposure calc...")
         # Run the calculation for exposure
-        tmp_calc_fpath = os.path.join(output_dir, "tmp_calc.tif")
-        calc_cmd = f'gdal_calc.py -A {tmp_exposure_fpath} -B {self.world_pop_fpath} --co="COMPRESS=LZW" --outfile={tmp_calc_fpath} --calc="A*B"'
+        calc_cmd = f'gdal_calc.py -A {self.world_pop_fpath} -B {tmp_exposure_fpath} --co="COMPRESS=LZW" --outfile={output_fpath} --calc="A*B"'
         os.system(calc_cmd)
-        # Reproject the result to WGS84
-        logging.debug("generating popn exposure tiff - reprojecting exposure calc...")
-        reproj_cmd = f"gdalwarp -t_srs {self.wgs84_wkt_fpath} -of GTiff -co COMPRESS=LZW -te -175 -84 175 84 {tmp_calc_fpath} {output_fpath}"
-        os.system(reproj_cmd)
+
         logging.debug("generating popn exposure tiff - removing tmp files")
         os.remove(tmp_exposure_fpath)
-        os.remove(tmp_calc_fpath)
 
         return ISIMPDroughtExposure(
             input_file.fname,
@@ -470,6 +501,21 @@ class HazardISIMPDrought:
         )
         output_fname = self.occurrence_tiff_fname_from_meta(input_file, output_epoch)
         output_fpath = os.path.join(output_dir, output_fname)
+        # Skip if output exists
+        if os.path.exists(output_fpath):
+            logging.warning(
+                "temporally averaged tiff output fpath appears to exist - skipping reprocessing: %s",
+                output_fpath,
+            )
+            return ISIMPDroughtOccurrence(
+                input_file.fname,
+                output_fname,
+                output_fpath,
+                file_key_from_fname(output_fname),
+                output_epoch,
+                input_file.meta.climate_forcing,
+                input_file.meta.external_rcp(),
+            )
         # Load nc4
         dataset = Dataset(input_file.fpath, "r", format="NETCDF4")
         # Load data
@@ -662,7 +708,7 @@ if __name__ == "__main__":
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             "common",
             "data",
-            "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif",
+            "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0_wgs84.tif",
         ),
         mol_wkt_fpath=os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
