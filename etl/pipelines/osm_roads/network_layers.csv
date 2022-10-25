@@ -1,2 +1,2 @@
 ref,path,asset_id_column,asset_type_column
-transport_roads_edges,/opt/etl/raw_data/processed_data/input/osm_roads/africa.geoparquet,id,tag_highway
+transport_roads_edges,/opt/etl/raw_data/processed_data/input/osm_roads/20221020_global_road_edges.geoparquet,edge_id,tag_highway
