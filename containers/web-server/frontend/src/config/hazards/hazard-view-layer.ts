@@ -28,7 +28,6 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
 
   return {
     id: hazardType,
-    group: 'hazards',
     spatialType: 'raster',
     interactionGroup: 'hazards',
     params: { hazardType, hazardParams },

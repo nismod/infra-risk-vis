@@ -24,7 +24,6 @@ function getPopulationUrl() {
 export function jrcPopulationViewLayer(): ViewLayer {
   return {
     id: 'population',
-    group: 'population',
     interactionGroup: 'population',
     spatialType: 'raster',
     fn({ deckProps, zoom }) {

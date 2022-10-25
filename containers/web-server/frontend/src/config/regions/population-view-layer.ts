@@ -23,7 +23,6 @@ export function populationViewLayer(regionLevel: RegionLevel): ViewLayer {
     id: `population_${regionLevel}`,
     interactionGroup: 'regions',
     spatialType: 'vector',
-    group: 'regions',
     params: {
       regionLevel,
     },

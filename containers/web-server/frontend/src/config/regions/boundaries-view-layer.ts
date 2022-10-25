@@ -6,7 +6,6 @@ import { regionBoundariesDeckLayer } from './region-boundaries-deck-layer';
 export function regionBoundariesViewLayer(regionLevel: RegionLevel): ViewLayer {
   return {
     id: `boundaries_${regionLevel}`,
-    group: 'regions',
     spatialType: 'vector',
     interactionGroup: 'regions',
     params: {

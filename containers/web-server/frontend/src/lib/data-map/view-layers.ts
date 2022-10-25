@@ -29,7 +29,6 @@ export interface StyleParams {
 export interface ViewLayerFunctionOptions {
   deckProps: any;
   zoom: number;
-  styleParams?: StyleParams;
   selection?: InteractionTarget<any>;
 }
 
@@ -49,7 +48,6 @@ export interface ViewLayer {
   id: string;
   params?: any;
   styleParams?: StyleParams;
-  group: string;
   fn: (options: ViewLayerFunctionOptions) => any;
   dataAccessFn?: ViewLayerDataAccessFunction;
   dataFormatsFn?: ViewLayerDataFormatFunction;
@@ -67,7 +65,6 @@ export interface ViewLayer {
 export function viewOnlyLayer(id, fn): ViewLayer {
   return {
     id,
-    group: null,
     interactionGroup: null,
     fn,
   };
@@ -75,5 +72,4 @@ export function viewOnlyLayer(id, fn): ViewLayer {
 
 export interface ViewLayerParams {
   selection?: any;
-  styleParams?: StyleParams;
 }

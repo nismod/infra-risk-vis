@@ -5,13 +5,11 @@ import { useRecoilValue } from 'recoil';
 import { ColorMap, FormatConfig } from '@/lib/data-map/view-layers';
 
 import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
-import { viewLayersParamsState } from '@/state/layers/view-layers-params';
 
 import { VectorLegend } from './VectorLegend';
 
 export const MapLegend: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
-  const viewLayersParams = useRecoilValue(viewLayersParamsState);
 
   const rasterLegends = [];
 
@@ -31,13 +29,7 @@ export const MapLegend: FC<{}> = () => {
         rasterLegends.push(layerLegend);
       }
     } else {
-      /**
-       * get style params from the viewLayerParams mechanism
-       * (old mechanism for styleParams used by asset layers),
-       * or the style params set directly in the new layer
-       * (new mechanism used for styleParams by NBS, drought, population etc)
-       */
-      const { colorMap } = viewLayersParams[viewLayer.id].styleParams ?? viewLayer.styleParams ?? {};
+      const { colorMap } = viewLayer.styleParams ?? {};
 
       if (colorMap) {
         /**

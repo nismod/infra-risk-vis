@@ -92,7 +92,7 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: false,
       visible: false,
 
-      styles: ['type', 'damages'],
+      styles: ['type'],
       defaultStyle: 'type',
     },
     hazards: {

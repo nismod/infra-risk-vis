@@ -10,15 +10,13 @@ const industryColor = {
 };
 
 export function industryViewLayer(industry_type_id) {
-  return assetViewLayer(
-    industry_type_id,
-    {
-      group: 'industry',
+  return assetViewLayer({
+    assetId: industry_type_id,
+    metadata: {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    -1000,
-    ({ zoom }) => [pointRadius(zoom), fillColor(industryColor[industry_type_id])],
-    assetDataAccessFunction(industry_type_id),
-  );
+    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(industryColor[industry_type_id])],
+    customDataAccessFn: assetDataAccessFunction(industry_type_id),
+  });
 }

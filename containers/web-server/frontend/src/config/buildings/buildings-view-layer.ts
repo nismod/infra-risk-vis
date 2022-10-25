@@ -39,19 +39,17 @@ const buildingColor = {
 };
 
 export function buildingsViewLayer(building_type_id): ViewLayer {
-  return assetViewLayer(
-    building_type_id,
-    {
-      group: 'buildings',
+  return assetViewLayer({
+    assetId: building_type_id,
+    metadata: {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    -1000,
-    ({ zoom, styleParams }) => [
+    customFn: () => [
       { minZoom: 12 },
       border(COLORS.buildings_unknown.deck),
       fillColor(buildingColor[buildingTypeLookup[building_type_id]]),
     ],
-    assetDataAccessFunction(building_type_id),
-  );
+    customDataAccessFn: assetDataAccessFunction(building_type_id),
+  });
 }

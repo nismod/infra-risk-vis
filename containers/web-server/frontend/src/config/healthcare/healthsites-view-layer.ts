@@ -5,15 +5,13 @@ import { assetDataAccessFunction } from '../assets/data-access';
 import { COLORS } from '../colors';
 
 export function healthsitesViewLayer() {
-  return assetViewLayer(
-    'healthsites',
-    {
-      group: 'healthsites',
+  return assetViewLayer({
+    assetId: 'healthsites',
+    metadata: {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    -1000,
-    ({ zoom }) => [pointRadius(zoom), fillColor(COLORS.healthsites.deck)],
-    assetDataAccessFunction('healthsites'),
-  );
+    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(COLORS.healthsites.deck)],
+    customDataAccessFn: assetDataAccessFunction('healthsites'),
+  });
 }
