@@ -13,7 +13,7 @@ def disk_free_mb(wildcards, attempt):
     return int(free / 1000000)
 
 # Load Config
-configfile: "/opt/etl/pipelines/isimp_extreme_heat/config.yml"
+configfile: "/opt/etl/pipelines/isimp_drought/config.yml"
 
 
 # Read further configuration data from CSV
@@ -26,7 +26,7 @@ wildcard_constraints:
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
-        expand("/opt/tileserver/raster/data/extreme_heat/{layer}.tif", layer=hazard_layers.key),
+        expand("/opt/tileserver/raster/data/drought/{layer}.tif", layer=hazard_layers.key),
 
 rule raster_temp_file:
     output:
@@ -84,8 +84,8 @@ rule raster_zero_nodata:
           -A "{input}" \
           --outfile="{output}" \
           --overwrite \
-          --calc="numpy.where(A<=0,$NODATA,A)" \
-          --NoDataValue=$NODATA \
+          --calc="numpy.where(A==$NODATA,0,A)" \
+          --NoDataValue=0 \
           --hideNoData && \
         rm {input}
         """
@@ -142,7 +142,7 @@ rule raster_cleanup:
     input:
         rules.raster_to_cog.output,
     output:
-        "/opt/tileserver/raster/data/extreme_heat/{layer}.tif",
+        "/opt/tileserver/raster/data/drought/{layer}.tif",
     resources:
         disk_mb=100
     priority:
