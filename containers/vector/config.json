@@ -11,11 +11,20 @@
     "road_edges_class_a": {
       "mbtiles": "road_edges_class_a.mbtiles"
     },
-    "road_edges_class_b": {
-      "mbtiles": "road_edges_class_b.mbtiles"
+    "healthsites": {
+      "mbtiles": "healthsites.mbtiles"
     },
-    "road_edges_class_c": {
-      "mbtiles": "road_edges_class_c.mbtiles"
+    "steel": {
+      "mbtiles": "steel.mbtiles"
+    },
+    "cement": {
+      "mbtiles": "cement.mbtiles"
+    },
+    "hdi_regions": {
+      "mbtiles": "hdi_regions.mbtiles"
+    },
+    "hdi_countries": {
+      "mbtiles": "hdi_countries.mbtiles"
     }
   }
 }
