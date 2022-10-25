@@ -13,7 +13,7 @@ services:
       - 80:80
 
   backend:
-    image: ghcr.io/nismod/gri-backend:0.6
+    image: ghcr.io/nismod/gri-backend:0.7
     build: ./containers/backend
     volumes:
       - ./tileserver/raster/data:/data
