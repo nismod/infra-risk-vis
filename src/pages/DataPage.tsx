@@ -1,6 +1,5 @@
 import React from 'react';
-import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import ScrollToTop from 'lib/hooks/scroll-to-top';
 
 export const DataPage = () => (

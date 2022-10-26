@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import _ from 'lodash';
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, TextField, Button, Select, InputLabel, FormControl, MenuItem, Slider, Collapse, Box, IconButton } from '@mui/material';
-import { Delete, KeyboardArrowDown, KeyboardArrowUp, PlayCircleOutline } from '@mui/icons-material';
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Select, InputLabel, FormControl, MenuItem, Slider, Collapse, Box, IconButton } from '@mui/material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // PlayCircleOutline, Delete
 import { atom, selector, useRecoilState } from 'recoil';
 
 import { ValueLabel } from 'lib/controls/params/value-label';
@@ -554,6 +554,7 @@ const IndicatorWeights = ({label, prefix, unweighted}: {
                         />
                     )
                   }
+                  return null
                 })
               }
             </TableBody>
@@ -594,6 +595,7 @@ export const AssessmentPage = () => {
     }
   }
 
+  // eslint-disable-next-line
   const [assessed_value, weighted_value, total_weight] = weightedSum(
     currentIndicatorsUnweighted, assessment.indicatorWeights)
 

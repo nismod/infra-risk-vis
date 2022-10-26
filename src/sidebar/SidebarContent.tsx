@@ -6,7 +6,6 @@ import { viewState } from 'state/view';
 
 import { HazardsSection } from './hazards/HazardsSection';
 import { NetworksSection } from './networks/NetworksSection';
-import { RegionsSection } from './regions/RegionsSection';
 
 const viewLabels = {
   exposure: 'Exposure',
