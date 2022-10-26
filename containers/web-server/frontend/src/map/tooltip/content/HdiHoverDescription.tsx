@@ -2,10 +2,9 @@ import { Typography } from '@mui/material';
 import { FC } from 'react';
 
 import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
+import { DataDescription } from '@/lib/ui/data-display/DataDescription';
 
 import { HDI_REGION_LEVEL_METADATA } from '@/config/human-development/metadata';
-
-import { DataDescription } from '../DataDescription';
 
 export const HdiHoverDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;

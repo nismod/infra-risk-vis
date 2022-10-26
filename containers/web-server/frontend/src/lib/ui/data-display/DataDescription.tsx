@@ -2,10 +2,9 @@ import { FC, useMemo } from 'react';
 
 import { colorMap } from '@/lib/color-map';
 import { ColorMap, ViewLayer } from '@/lib/data-map/view-layers';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
-import { DataItem } from '@/details/features/detail-components';
-
-import { ColorBox } from './content/ColorBox';
+import { ColorBox } from './ColorBox';
 
 export const DataDescription: FC<{
   viewLayer: ViewLayer;

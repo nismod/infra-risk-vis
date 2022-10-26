@@ -2,16 +2,14 @@ import { Typography } from '@mui/material';
 import { FC } from 'react';
 
 import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
-
-import { NETWORKS_METADATA } from '@/config/networks/metadata';
-import { DataItem } from '@/details/features/detail-components';
-
-import { DataDescription } from '../DataDescription';
-import { ColorBox } from './ColorBox';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
+import { DataDescription } from '@/lib/ui/data-display/DataDescription';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
 export const VectorHoverDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;
-}> = ({ hoveredObject }) => {
+  metadataLookup: Record<string, any>;
+}> = ({ hoveredObject, metadataLookup }) => {
   const {
     viewLayer,
     target: { feature },
@@ -22,7 +20,7 @@ export const VectorHoverDescription: FC<{
 
   const isDataMapped = colorMap != null;
 
-  const { label: title, color = '#ccc' } = NETWORKS_METADATA[viewLayer.params.assetId];
+  const { label: title, color = '#ccc' } = metadataLookup[viewLayer.params.assetId];
 
   return (
     <>

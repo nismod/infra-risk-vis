@@ -5,7 +5,7 @@ import { numFormat } from '@/lib/helpers';
 
 import { JRC_POPULATION_COLOR_MAP } from '@/config/population/population-view-layer';
 
-import { RasterHoverDescription } from './RasterHoverDescription';
+import { RasterHoverDescription } from '../RasterHoverDescription';
 
 export const PopulationHoverDescription: FC<{ hoveredObject: InteractionTarget<RasterTarget> }> = ({
   hoveredObject,

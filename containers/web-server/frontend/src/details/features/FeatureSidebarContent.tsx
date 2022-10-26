@@ -4,9 +4,9 @@ import React, { FC, useEffect, useState } from 'react';
 
 import { ApiClient } from '@/lib/api-client';
 import { downloadFile } from '@/lib/helpers';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
 import { NETWORKS_METADATA } from '@/config/networks/metadata';
-import { ColorBox } from '@/map/tooltip/content/ColorBox';
 
 import { AdaptationSection } from './adaptation/AdaptationSection';
 import { DamagesSection } from './damages/DamagesSection';
