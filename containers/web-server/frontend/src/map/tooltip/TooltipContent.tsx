@@ -23,13 +23,13 @@ export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
   const hoveredHazards = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
   const hoveredPopulation = useRecoilValue(hoverState('population')) as InteractionTarget<any>;
-  const hoveredRegion = useRecoilValue(hoverState('regions')) as InteractionTarget<any>;
+  const hoveredHdi = useRecoilValue(hoverState('hdi')) as InteractionTarget<any>;
 
   const assetsHovered = hasHover(hoveredVector);
   const hazardsHovered = hasHover(hoveredHazards);
   const populationHovered = hasHover(hoveredPopulation);
-  const regionsHovered = hasHover(hoveredRegion);
-  const doShow = assetsHovered || hazardsHovered || populationHovered || regionsHovered;
+  const hdiHovered = hasHover(hoveredHdi);
+  const doShow = assetsHovered || hazardsHovered || populationHovered || hdiHovered;
 
   if (!doShow) return null;
 
@@ -55,9 +55,9 @@ export const TooltipContent: FC = () => {
               <PopulationHoverDescription hoveredObject={hoveredPopulation} />
             </TooltipSection>
           ) : null}
-          {regionsHovered ? (
+          {hdiHovered ? (
             <TooltipSection>
-              <HdiHoverDescription hoveredObject={hoveredRegion} />
+              <HdiHoverDescription hoveredObject={hoveredHdi} />
             </TooltipSection>
           ) : null}
         </ErrorBoundary>

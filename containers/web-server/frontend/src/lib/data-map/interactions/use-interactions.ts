@@ -112,6 +112,7 @@ export function useInteractions(
   const interactionGroupLookup = useMemo(() => _.keyBy(interactionGroups, 'id'), [interactionGroups]);
 
   const primaryGroup = interactionGroups[0].id;
+  // TODO: improve the choice of pickingRadius to return, so that it's not dependent on group order
   const primaryGroupPickingRadius = interactionGroupLookup[primaryGroup].pickingRadius;
 
   const interactiveLayers = useMemo(() => viewLayers.filter((x) => x.interactionGroup), [viewLayers]);
