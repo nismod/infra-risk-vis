@@ -11,6 +11,18 @@
     "road_edges_class_a": {
       "mbtiles": "road_edges_class_a.mbtiles"
     },
+    "road_edges_class_b": {
+      "mbtiles": "road_edges_class_b.mbtiles"
+    },
+    "road_edges_class_c": {
+      "mbtiles": "road_edges_class_c.mbtiles"
+    },
+    "road_edges_metro": {
+      "mbtiles": "road_edges_metro.mbtiles"
+    },
+    "rail_edges": {
+      "mbtiles": "rail_edges.mbtiles"
+    },
     "healthsites": {
       "mbtiles": "healthsites.mbtiles"
     },
@@ -25,6 +37,21 @@
     },
     "hdi_countries": {
       "mbtiles": "hdi_countries.mbtiles"
+    },
+    "wdpa_marine_polygons": {
+      "mbtiles": "wdpa_marine_polygons.mbtiles"
+    },
+    "wdpa_marine_points": {
+      "mbtiles": "wdpa_marine_points.mbtiles"
+    },
+    "wdpa_land_points": {
+      "mbtiles": "wdpa_land_points.mbtiles"
+    },
+    "wdpa_land_polygons": {
+      "mbtiles": "wdpa_land_polygons.mbtiles"
+    },
+    "gem_seismic_exposure_per_country": {
+      "mbtiles": "gem_seismic_exposure_per_country.mbtiles"
     }
   }
 }
