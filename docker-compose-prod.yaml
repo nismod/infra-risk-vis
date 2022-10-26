@@ -24,7 +24,7 @@ services:
 
   vector-tileserver:
     build: ./containers/vector
-    image: ghcr.io/nismod/gri-vector-tileserver:0.1
+    image: ghcr.io/nismod/gri-vector-tileserver:0.4
     volumes:
       - ./tileserver/vector/data:/data
     expose:
