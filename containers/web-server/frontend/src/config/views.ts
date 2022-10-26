@@ -8,8 +8,8 @@ export interface ViewSectionConfig {
 export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = {
   hazard: {
     assets: {
-      expanded: true,
-      visible: true,
+      expanded: false,
+      visible: false,
       styles: ['type'],
       defaultStyle: 'type',
     },
@@ -27,11 +27,27 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
+    },
+    industry: {
+      expanded: false,
+      visible: false,
+    },
+    healthcare: {
+      expanded: false,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'nature-vulnerability': {
+      expanded: false,
+      visible: false,
     },
   },
   exposure: {
     assets: {
-      expanded: false,
+      expanded: true,
       visible: false,
       styles: ['type'],
       defaultStyle: 'type',
@@ -50,6 +66,22 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
+    },
+    industry: {
+      expanded: true,
+      visible: false,
+    },
+    healthcare: {
+      expanded: true,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'nature-vulnerability': {
+      expanded: false,
+      visible: false,
     },
   },
   vulnerability: {
@@ -74,13 +106,29 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       styles: ['type'],
       defaultStyle: 'type',
     },
+    industry: {
+      expanded: false,
+      visible: false,
+    },
+    healthcare: {
+      expanded: false,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: true,
+      visible: true,
+    },
+    'nature-vulnerability': {
+      expanded: true,
+      visible: false,
+    },
   },
   risk: {
     assets: {
       expanded: false,
       visible: false,
 
-      styles: ['type', 'damages'],
+      styles: ['type'],
       defaultStyle: 'type',
     },
     hazards: {
@@ -97,6 +145,22 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
 
       styles: ['type'],
       defaultStyle: 'type',
+    },
+    industry: {
+      expanded: false,
+      visible: false,
+    },
+    healthcare: {
+      expanded: false,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'nature-vulnerability': {
+      expanded: false,
+      visible: false,
     },
   },
 };

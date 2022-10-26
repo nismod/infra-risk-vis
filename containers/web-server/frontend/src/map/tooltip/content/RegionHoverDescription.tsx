@@ -1,9 +1,9 @@
 import { useRecoilValue } from 'recoil';
 
 import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
 import { REGIONS_METADATA } from '@/config/regions/metadata';
-import { DataItem } from '@/details/features/detail-components';
 import { showPopulationState } from '@/state/regions';
 
 export const RegionHoverDescription = ({ hoveredObject }: { hoveredObject: InteractionTarget<VectorTarget> }) => {

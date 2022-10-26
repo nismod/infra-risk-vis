@@ -3,15 +3,14 @@ import _ from 'lodash';
 import { FC } from 'react';
 
 import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
+import { DataDescription } from '@/lib/ui/data-display/DataDescription';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
 import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { MARINE_HABITATS_LOOKUP } from '@/config/solutions/domains';
-import { DataItem } from '@/details/features/detail-components';
-import { habitatColorMap } from '@/state/layers/marine';
-import { landuseColorMap } from '@/state/layers/terrestrial';
-
-import { DataDescription } from '../DataDescription';
-import { ColorBox } from './ColorBox';
+import { habitatColorMap } from '@/state/layers/data-layers/marine';
+import { landuseColorMap } from '@/state/layers/data-layers/terrestrial';
 
 const slopeFieldSpec = {
   fieldGroup: 'properties',

@@ -8,7 +8,7 @@ import { CheckboxTree } from '@/lib/controls/checkbox-tree/CheckboxTree';
 import { NETWORK_LAYERS_HIERARCHY } from '@/config/networks/hierarchy';
 import { NETWORKS_METADATA } from '@/config/networks/metadata';
 import { LayerLabel } from '@/sidebar/ui/LayerLabel';
-import { showAdaptationsState } from '@/state/layers/networks';
+import { showAdaptationsState } from '@/state/layers/data-layers/networks';
 import {
   networkTreeCheckboxState,
   networkTreeConfig,

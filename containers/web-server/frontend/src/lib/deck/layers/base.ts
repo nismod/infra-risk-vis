@@ -2,10 +2,18 @@ import { BitmapLayer, GeoJsonLayer, MVTLayer, TileLayer } from 'deck.gl/typed';
 
 import { ConfigTree } from '@/lib/nested-config/config-tree';
 import { flattenConfig } from '@/lib/nested-config/flatten-config';
-import { mergeObjects, mergeValue } from '@/lib/nested-config/merge-objects';
+import { appendValue, mergeObjects, mergeValue } from '@/lib/nested-config/merge-objects';
 
+/**
+ * A set of strategies for merging compound layer properties
+ * specific to Deck.GL
+ */
 const deckPropsMergeStrategies = {
+  // merge updateTriggers objects with Object.assign() semantics
   updateTriggers: mergeValue,
+
+  // concatenate extensions arrays
+  extensions: appendValue,
 };
 
 /**

@@ -40,11 +40,8 @@ export const DataMap: FC<DataMapProps> = ({
   );
 
   const dataLoaders = useMemo(
-    () =>
-      viewLayers
-        .map((vl) => vl.dataAccessFn?.(viewLayersParams[vl.id].styleParams?.colorMap?.fieldSpec)?.dataLoader)
-        .filter(Boolean),
-    [viewLayers, viewLayersParams],
+    () => viewLayers.map((vl) => vl.dataAccessFn?.(vl.styleParams?.colorMap?.fieldSpec)?.dataLoader).filter(Boolean),
+    [viewLayers],
   );
 
   const [dataLoadTrigger, triggerDataUpdate] = useTrigger();

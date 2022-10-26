@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
 import { FC, useMemo } from 'react';
 
-import { DataItem } from '@/details/features/detail-components';
-import { useRasterColorMapValues } from '@/map/legend/use-color-map-values';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
-import { ColorBox } from './ColorBox';
+import { useRasterColorMapValues } from '@/map/legend/use-color-map-values';
 
 function useRasterColorMapLookup(colorMapValues) {
   return useMemo(

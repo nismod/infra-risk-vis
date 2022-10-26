@@ -9,7 +9,7 @@ import { LayerSpec } from '@/asset-list/use-sorted-features';
 import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { AdaptationOptionParams } from '@/config/domains/adaptation';
 import adaptationSectorLayers from '@/config/domains/adaptation-sector-layers.json';
-import { INFRASTRUCTURE_VIEW_LAYERS } from '@/config/networks/view-layers';
+import { infrastructureViewLayer } from '@/config/networks/infrastructure-view-layer';
 import { damageMapStyleParamsState } from '@/state/damage-mapping/damage-style-params';
 import { dataParamsByGroupState } from '@/state/data-params';
 import { networkSelectionState, networkTreeCheckboxState, networkTreeConfig } from '@/state/networks/network-selection';
@@ -20,7 +20,7 @@ export const networkLayersState = selector<ViewLayer[]>({
   key: 'networkLayersState',
   get: ({ get }) =>
     get(sectionVisibilityState('assets'))
-      ? get(networkSelectionState).map((network) => INFRASTRUCTURE_VIEW_LAYERS[network])
+      ? get(networkSelectionState).map((network) => infrastructureViewLayer(network, get(networkStyleParamsState)))
       : [],
 });
 

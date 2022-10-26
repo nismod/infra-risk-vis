@@ -3,16 +3,15 @@ import { FC, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
+import { DataDescription } from '@/lib/ui/data-display/DataDescription';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
-import { DataItem } from '@/details/features/detail-components';
 import {
   droughtOptionsColorSpecState,
   droughtOptionsFieldSpecState,
   droughtRegionsColorSpecState,
   droughtRegionsFieldSpecState,
-} from '@/state/layers/drought';
-
-import { DataDescription } from '../DataDescription';
+} from '@/state/layers/data-layers/drought';
 
 const DroughtRiskDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;

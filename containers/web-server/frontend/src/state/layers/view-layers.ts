@@ -1,46 +1,21 @@
-import bboxPolygon from '@turf/bbox-polygon';
 import { selector } from 'recoil';
 
-import { extendBbox } from '@/lib/bounding-box';
 import { ViewLayer, viewOnlyLayer } from '@/lib/data-map/view-layers';
-import { boundingBoxLayer } from '@/lib/deck/layers/bounding-box-layer';
-import { truthyKeys } from '@/lib/helpers';
 import { ConfigTree } from '@/lib/nested-config/config-tree';
 
-import { buildingsViewLayer } from '@/config/buildings/buildings-view-layer';
 import { labelsLayer } from '@/config/deck-layers/labels-layer';
-import { hoveredAdaptationFeatureState } from '@/details/adaptations/FeatureAdaptationsTable';
 import { showLabelsState } from '@/map/layers/layers-state';
-import { buildingSelectionState } from '@/state/buildings';
 import { isRetinaState } from '@/state/is-retina';
-import { sectionVisibilityState } from '@/state/sections';
 
-import { hazardLayerState } from './hazards';
-import { networkLayersState } from './networks';
-import { populationLayerState } from './population';
-
-const buildingLayersState = selector<ViewLayer[]>({
-  key: 'buildingLayersState',
-  get: ({ get }) =>
-    get(sectionVisibilityState('buildings'))
-      ? truthyKeys(get(buildingSelectionState)).map((buildingType) => buildingsViewLayer(buildingType))
-      : [],
-});
-
-export const featureBoundingBoxLayerState = selector<ViewLayer>({
-  key: 'featureBoundingBoxLayerState',
-  get: ({ get }) => {
-    const hoveredAdaptationFeature = get(hoveredAdaptationFeatureState);
-
-    if (!hoveredAdaptationFeature) return null;
-
-    const geom = bboxPolygon(extendBbox(hoveredAdaptationFeature.bbox, 5));
-
-    return viewOnlyLayer(`feature-bounding-box-${hoveredAdaptationFeature.id}`, ({ deckProps }) =>
-      boundingBoxLayer({ bboxGeom: geom }, deckProps),
-    );
-  },
-});
+import { buildingLayersState } from './data-layers/buildings';
+import { hazardLayerState } from './data-layers/hazards';
+import { healthcareLayersState } from './data-layers/healthcare';
+import { humanDevelopmentLayerState } from './data-layers/human-development';
+import { industryLayersState } from './data-layers/industry';
+import { networkLayersState } from './data-layers/networks';
+import { populationLayerState } from './data-layers/population';
+import { protectedAreasLayerState } from './data-layers/protected-areas';
+import { featureBoundingBoxLayerState } from './ui-layers/feature-bbox';
 
 export const viewLayersState = selector<ConfigTree<ViewLayer>>({
   key: 'viewLayersState',
@@ -49,15 +24,22 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
     const isRetina = get(isRetinaState);
 
     return [
+      /**
+       * Data layers
+       */
+
+      get(humanDevelopmentLayerState),
       get(populationLayerState),
-
-      // hazard data layers
       get(hazardLayerState),
-
       get(buildingLayersState),
-
-      // network data layers
       get(networkLayersState),
+      get(industryLayersState),
+      get(healthcareLayersState),
+      get(protectedAreasLayerState),
+
+      /**
+       * UI Layers
+       */
 
       get(featureBoundingBoxLayerState),
 

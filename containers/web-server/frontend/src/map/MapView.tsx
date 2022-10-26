@@ -2,7 +2,6 @@ import { Box } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-gl';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
-import { globalStyleVariables } from 'theme';
 
 import { BoundingBox } from '@/lib/bounding-box';
 import { DataMap } from '@/lib/data-map/DataMap';
@@ -15,6 +14,7 @@ import { PlaceSearchResult } from '@/lib/map/place-search/use-place-search';
 import { interactionGroupsState } from '@/state/layers/interaction-groups';
 import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
 import { useSaveViewLayers, viewLayersParamsState } from '@/state/layers/view-layers-params';
+import { globalStyleVariables } from '@/theme';
 
 import { MapLayerSelection } from './layers/MapLayerSelection';
 import { backgroundState } from './layers/layers-state';
@@ -29,7 +29,7 @@ export const mapFitBoundsState = atom<BoundingBox>({
 
 const VIEW_LIMITS = {
   minZoom: 2,
-  maxZoom: 8,
+  maxZoom: 12,
   maxPitch: 0,
   maxBearing: 0,
 };

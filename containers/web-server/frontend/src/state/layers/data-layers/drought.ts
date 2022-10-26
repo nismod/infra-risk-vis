@@ -6,7 +6,6 @@ import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
 import { dataColorMap } from '@/lib/deck/props/color-map';
 import { border, fillColor, pointRadius } from '@/lib/deck/props/style';
 
-import { ASSETS_SOURCE } from '@/config/assets/source';
 import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { getDroughtDataAccessor } from '@/config/drought/data-access';
 import { getDroughtOptionsDataFormats, getDroughtRiskDataFormats } from '@/config/drought/data-formats';
@@ -16,6 +15,7 @@ import {
   DroughtOptionsVariableType,
   DroughtRiskVariableType,
 } from '@/config/drought/metadata';
+import { SOURCES } from '@/config/sources';
 import {
   droughtOptionsVariableState,
   droughtRcpParamState,
@@ -95,8 +95,7 @@ export const droughtRegionsLayerState = selector<ViewLayer>({
           },
           deckProps,
           {
-            data: ASSETS_SOURCE.getDataUrl({ assetId: 'drought_combined' }),
-
+            data: SOURCES.vector.getUrl('drought_combined'),
             filled: true,
           },
           border([255, 255, 255]),
@@ -176,7 +175,7 @@ export const droughtOptionsLayerState = selector<ViewLayer>({
           },
           deckProps,
           {
-            data: ASSETS_SOURCE.getDataUrl({ assetId: 'drought_options' }),
+            data: SOURCES.vector.getUrl('drought_options'),
 
             filled: true,
           },

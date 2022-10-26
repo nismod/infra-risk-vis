@@ -4,7 +4,6 @@ import { atomFamily, selector, selectorFamily, useRecoilTransaction_UNSTABLE } f
 import { selectionState } from '@/lib/data-map/interactions/interaction-state';
 import { ViewLayer, ViewLayerParams } from '@/lib/data-map/view-layers';
 
-import { networkStyleParamsState } from './networks';
 import { viewLayersFlatState } from './view-layers-flat';
 
 export const viewLayerState = atomFamily<ViewLayer, string>({
@@ -27,7 +26,7 @@ export const singleViewLayerParamsState = selectorFamily<ViewLayerParams, string
     ({ get }) => {
       const viewLayer = get(viewLayerState(viewLayerId));
 
-      const layerParams: any = {};
+      const layerParams: ViewLayerParams = {};
 
       if (viewLayer == null) return layerParams;
 
@@ -35,10 +34,6 @@ export const singleViewLayerParamsState = selectorFamily<ViewLayerParams, string
       const groupSelection = get(selectionState(interactionGroup));
 
       layerParams.selection = groupSelection?.viewLayer.id === viewLayer.id ? groupSelection : null;
-
-      if (viewLayer?.group === 'networks') {
-        layerParams.styleParams = get(networkStyleParamsState);
-      }
 
       return layerParams;
     },

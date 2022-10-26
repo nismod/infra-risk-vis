@@ -6,6 +6,7 @@ import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 
 import { BoundingBox, extendBbox } from '@/lib/bounding-box';
 import { colorMap } from '@/lib/color-map';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
 import { ExpandableRow } from '@/asset-list/ExpandableRow';
 import { SortedAssetTable } from '@/asset-list/SortedAssetTable';
@@ -13,8 +14,11 @@ import { ListFeature } from '@/asset-list/use-sorted-features';
 import { getAssetDataFormats } from '@/config/assets/data-formats';
 import { FeatureSidebarContent } from '@/details/features/FeatureSidebarContent';
 import { mapFitBoundsState } from '@/map/MapView';
-import { ColorBox } from '@/map/tooltip/content/ColorBox';
-import { adaptationColorSpecState, adaptationFieldSpecState, adaptationLayerSpecState } from '@/state/layers/networks';
+import {
+  adaptationColorSpecState,
+  adaptationFieldSpecState,
+  adaptationLayerSpecState,
+} from '@/state/layers/data-layers/networks';
 
 import './asset-table.css';
 

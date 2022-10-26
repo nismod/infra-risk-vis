@@ -1,31 +1,26 @@
 import { Typography } from '@mui/material';
 import { FC } from 'react';
-import { useRecoilValue } from 'recoil';
 
 import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
-
-import { NETWORKS_METADATA } from '@/config/networks/metadata';
-import { DataItem } from '@/details/features/detail-components';
-import { singleViewLayerParamsState } from '@/state/layers/view-layers-params';
-
-import { DataDescription } from '../DataDescription';
-import { ColorBox } from './ColorBox';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
+import { DataDescription } from '@/lib/ui/data-display/DataDescription';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
 export const VectorHoverDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;
-}> = ({ hoveredObject }) => {
+  metadataLookup: Record<string, any>;
+}> = ({ hoveredObject, metadataLookup }) => {
   const {
     viewLayer,
     target: { feature },
   } = hoveredObject;
 
-  const layerParams = useRecoilValue(singleViewLayerParamsState(viewLayer.id));
-  const { styleParams } = layerParams;
-  const { colorMap } = styleParams ?? {};
+  const { styleParams = {} } = viewLayer;
+  const { colorMap } = styleParams;
 
   const isDataMapped = colorMap != null;
 
-  const { label: title, color = '#ccc' } = NETWORKS_METADATA[viewLayer.params.assetId];
+  const { label: title, color = '#ccc' } = metadataLookup[viewLayer.params.assetId];
 
   return (
     <>

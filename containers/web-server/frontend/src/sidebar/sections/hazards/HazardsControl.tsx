@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 
 import { ToggleSection, ToggleSectionGroup } from '@/lib/controls/accordion-toggle/ToggleSection';
 
+import { DataNotice } from '@/sidebar/ui/DataNotice';
 import { InputRow } from '@/sidebar/ui/InputRow';
 import { InputSection } from '@/sidebar/ui/InputSection';
 import { EpochControl } from '@/sidebar/ui/params/EpochControl';
@@ -10,8 +11,6 @@ import { RCPControl } from '@/sidebar/ui/params/RCPControl';
 import { ReturnPeriodControl } from '@/sidebar/ui/params/ReturnPeriodControl';
 import { showDamagesState } from '@/state/damage-mapping/damage-map';
 import { hazardSelectionState } from '@/state/hazards/hazard-selection';
-
-import { EarthquakeToggleSection } from './EarthquakeToggleSection';
 
 export const HazardsControl = () => {
   const showDirectDamages = useRecoilValue(showDamagesState);
@@ -90,7 +89,13 @@ export const HazardsControl = () => {
           {/* Placeholder */}
         </ToggleSection>
         <ToggleSection id="earthquake" label="Earthquakes">
-          <EarthquakeToggleSection />
+          <DataNotice>
+            Map shows seismic hazard as the peak ground acceleration (PGA) with a 10% probability of being exceeded in
+            50 years, from the Global Earthquake Model (GEM){' '}
+            <a href="https://maps.openquake.org/map/global-seismic-hazard-map/">
+              Global Seismic Hazard Map (version 2018.1)
+            </a>
+          </DataNotice>
         </ToggleSection>
       </ToggleSectionGroup>
     </>

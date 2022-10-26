@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import DeckGL, { DeckGLContextValue, DeckGLRef, DeckProps } from 'deck.gl/typed';
+import DeckGL, { DeckGLContextValue, DeckGLRef, DeckProps, MapView } from 'deck.gl/typed';
 import { FC, Provider, ReactNode, createContext, useRef, useState } from 'react';
 import { MapContext } from 'react-map-gl';
 
@@ -48,11 +48,20 @@ export const DeckMap: FC<DeckMapProps> = ({
           overflow: 'hidden',
         }}
         getCursor={() => 'default'}
-        controller={{
-          keyboard: false, //can't deactivate keyboard rotate only so deactivate all keyboard
-          dragRotate: false,
-          touchRotate: false,
-        }}
+        views={[
+          new MapView({
+            repeat: true,
+            controller: {
+              scrollZoom: {
+                smooth: true,
+                speed: 0.2,
+              },
+              keyboard: false, //can't deactivate keyboard rotate only so deactivate all keyboard
+              dragRotate: false,
+              touchRotate: false,
+            },
+          }),
+        ]}
         viewState={viewState}
         onViewStateChange={({ viewState }) => setViewState(viewState)}
         layers={layers}
