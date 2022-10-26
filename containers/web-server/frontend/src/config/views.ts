@@ -32,6 +32,18 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: false,
       visible: false,
     },
+    healthcare: {
+      expanded: false,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'nature-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
   },
   exposure: {
     assets: {
@@ -57,6 +69,18 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     },
     industry: {
       expanded: true,
+      visible: false,
+    },
+    healthcare: {
+      expanded: true,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'nature-vulnerability': {
+      expanded: false,
       visible: false,
     },
   },
@@ -86,6 +110,18 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: false,
       visible: false,
     },
+    healthcare: {
+      expanded: false,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: true,
+      visible: true,
+    },
+    'nature-vulnerability': {
+      expanded: true,
+      visible: false,
+    },
   },
   risk: {
     assets: {
@@ -111,6 +147,18 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       defaultStyle: 'type',
     },
     industry: {
+      expanded: false,
+      visible: false,
+    },
+    healthcare: {
+      expanded: false,
+      visible: false,
+    },
+    'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'nature-vulnerability': {
       expanded: false,
       visible: false,
     },

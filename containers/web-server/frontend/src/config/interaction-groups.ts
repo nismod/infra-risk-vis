@@ -45,4 +45,11 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     usesAutoHighlight: true,
     pickMultiple: false,
   },
+  {
+    id: 'wdpa',
+    type: 'vector',
+    pickingRadius: 0,
+    usesAutoHighlight: true,
+    pickMultiple: true,
+  },
 ]);

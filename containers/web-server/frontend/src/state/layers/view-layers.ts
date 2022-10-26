@@ -14,6 +14,7 @@ import { humanDevelopmentLayerState } from './data-layers/human-development';
 import { industryLayersState } from './data-layers/industry';
 import { networkLayersState } from './data-layers/networks';
 import { populationLayerState } from './data-layers/population';
+import { protectedAreasLayerState } from './data-layers/protected-areas';
 import { featureBoundingBoxLayerState } from './ui-layers/feature-bbox';
 
 export const viewLayersState = selector<ConfigTree<ViewLayer>>({
@@ -34,6 +35,7 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       get(networkLayersState),
       get(industryLayersState),
       get(healthcareLayersState),
+      get(protectedAreasLayerState),
 
       /**
        * UI Layers

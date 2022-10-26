@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { ParamChecklist } from '@/lib/controls/params/ParamChecklist';
 
 import { NETWORKS_METADATA } from '@/config/networks/metadata';
-import { LayerLabel } from '@/sidebar/ui/LayerLabel';
+import { LayerLabel, LayerLabelShapeType } from '@/sidebar/ui/LayerLabel';
 import { IndustryType, industrySelectionState } from '@/state/industry';
 
 export const IndustryControl = () => {
@@ -15,7 +15,10 @@ export const IndustryControl = () => {
       options={Object.keys(checkboxState) as IndustryType[]}
       checklistState={checkboxState}
       onChecklistState={setCheckboxState}
-      renderLabel={(key) => <LayerLabel {...NETWORKS_METADATA[key]} />}
+      renderLabel={(key) => {
+        const { color, type, label } = NETWORKS_METADATA[key];
+        return <LayerLabel color={color} type={type as LayerLabelShapeType} label={label} />;
+      }}
     />
   );
 };
