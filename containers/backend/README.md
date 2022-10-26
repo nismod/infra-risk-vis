@@ -156,3 +156,45 @@ DOMAIN_TO_DB_MAP = {
   "variables": {}
 }
 ```
+
+##### ISIMP Drought
+
+```json
+{
+  "source_db": "drought",
+  "global_type": "Hazard",
+  "domain": "drought",
+  "full_name": "ISIMP Drought",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
+
+##### Exposure Nature
+
+```json
+{
+  "source_db": "exposure_nature",
+  "global_type": "Exposure",
+  "domain": "nature",
+  "full_name": "Nature Exposure",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
+
+##### GDSL Buildings
+
+```json
+{
+  "source_db": "buildings",
+  "global_type": "Exposure",
+  "domain": "buildings",
+  "full_name": "Building Exposure",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
