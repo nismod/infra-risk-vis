@@ -1,0 +1,3 @@
+analysis_data_dir: /opt/etl/raw_data
+network_layers: "/opt/etl/pipelines/osm_rail/network_layers.csv"
+network_tilelayers: "/opt/etl/pipelines/osm_rail/network_tilelayers.csv"
