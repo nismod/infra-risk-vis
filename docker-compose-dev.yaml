@@ -59,12 +59,33 @@ services:
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/gem_earthquake/Snakefile"
+        "/opt/etl/pipelines/osm_roads/Snakefile"
+      ]
+
+  snakemake-raster:
+    image: ghcr.io/nismod/gri-snakemake:0.1
+    build: ./etl
+    volumes:
+      - ./etl:/opt/etl
+      - ./tileserver:/opt/tileserver
+    env_file:
+      - ./envs/dev/.snakemake.env
+    command:
+      [
+        "--cores",
+        "1",
+        "--latency-wait",
+        "20",
+        "--resources",
+        "disk_mb=60",
+        "--rerun-incomplete",
+        "-s",
+        "/opt/etl/pipelines/isimp_extreme_heat/Snakefile"
       ]
 
   backend:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.6
+    image: ghcr.io/nismod/gri-backend:0.8
     volumes:
       - ./tileserver/raster/data:/data
     env_file:
@@ -74,7 +95,7 @@ services:
 
   vector-tileserver:
     build: ./containers/vector
-    image: ghcr.io/nismod/gri-vector-tileserver:0.1
+    image: ghcr.io/nismod/gri-vector-tileserver:0.2
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config.json:/config.json
@@ -90,20 +111,20 @@ services:
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
       - ./tileserver/raster/data:/data # Must match path in Backend
-      - ./etl/pipelines/gem_earthquake/hazard_earthquake.csv:/opt/hazard_layers.csv # If loading a CSV
+      - ./etl/pipelines/isimp_extreme_heat/hazard_isimp_extreme_heat.csv:/opt/hazard_layers.csv # If loading a CSV
     command:
       [
         "load_csv",
         "--internal_raster_base_path",
-        "/data/gem_earthquake",
+        "/data/extreme_heat",
         "--input_csv_filepath",
         "/opt/hazard_layers.csv",
         "--tile_keys",
-        "type,rp,medium",
+        "type,metric,rcp,epoch,gcm",
         "--csv_key_column_map",
-        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"rp\": \"rp\", \"medium\": \"medium\"}",
+        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"metric\": \"metric\", \"rcp\": \"rcp\", \"epoch\": \"epoch\", \"gcm\": \"gcm\"}",
         "--database_name",
-        "gem_earthquake"
+        "extreme_heat"
       ]
 
   ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
@@ -118,7 +139,7 @@ services:
       [
         "delete_database_entries",
         "--database_name",
-        "gem_earthquake"
+        "extreme_heat"
       ]
 
   ## WARNING - Drop the MySQL Terracotta Db with the given DB name
@@ -129,7 +150,7 @@ services:
       - ./envs/dev/.raster-tile-ingester.env
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-    command: [ "drop_database", "--database_name", "jrc_pop" ]
+    command: [ "drop_database", "--database_name", "extreme_heat" ]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   backend-schema-regen:

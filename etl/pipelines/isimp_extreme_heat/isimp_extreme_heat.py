@@ -3,6 +3,7 @@ Data Set Downloaders
 """
 
 import os
+import shutil
 import sys
 import csv
 from typing import List
@@ -395,8 +396,29 @@ class HazardISIMPExtremeHeat:
         dst_ds = None  # Flush to disk
         return os.path.exists(output_fpath)
 
+    def warp_occurrence_to_pop(self, input_occurrence_fpath: str, output_dir: str):
+        """
+        Warp the occurrence file to the same extent and res as worldpop
+        """
+        # Warp Occurrence to Worldpop proj, cellsize and extent
+        logging.debug(
+            "generating popn exposure tiff - warping occurrence to world pop size and proj"
+        )
+        tmp_occurrence_fpath = os.path.join(output_dir, "tmp_reproj.tif")
+        result = self.match_raster_resoluton_and_extent(
+            self.world_pop_fpath, input_occurrence_fpath, tmp_occurrence_fpath
+        )
+        shutil.move(tmp_occurrence_fpath, input_occurrence_fpath)
+        logging.debug(
+            "generating popn exposure tiff - matched res and scale of world pop raster: %s",
+            result,
+        )
+
     def generate_popn_exposure_tiff(
-        self, input_occurrence_file: ISIMPExtremeHeatOccurrence, output_dir: str
+        self,
+        input_occurrence_file: ISIMPExtremeHeatOccurrence,
+        output_dir: str,
+        replace_occurrence=True,
     ) -> ISIMPExtremeHeatExposure:
         """
         Generate a TIFF file of world population x heatwave occurrence
@@ -435,9 +457,9 @@ class HazardISIMPExtremeHeat:
         logging.debug(
             "generating popn exposure tiff - warping occurrence to world pop size and proj"
         )
-        tmp_exposure_fpath = os.path.join(output_dir, "tmp_reproj.tif")
+        tmp_occurrence_fpath = os.path.join(output_dir, "tmp_reproj.tif")
         result = self.match_raster_resoluton_and_extent(
-            self.world_pop_fpath, input_occurrence_file.fpath, tmp_exposure_fpath
+            self.world_pop_fpath, input_occurrence_file.fpath, tmp_occurrence_fpath
         )
         logging.debug(
             "generating popn exposure tiff - matched res and scale of world pop raster: %s",
@@ -446,11 +468,19 @@ class HazardISIMPExtremeHeat:
 
         logging.debug("generating popn exposure tiff - running exposure calc...")
         # Run the calculation for exposure
-        calc_cmd = f'gdal_calc.py -A {self.world_pop_fpath} -B {tmp_exposure_fpath} --co="COMPRESS=LZW" --outfile={output_fpath} --calc="A*B"'
+        calc_cmd = f'gdal_calc.py -A {self.world_pop_fpath} -B {tmp_occurrence_fpath} --co="COMPRESS=LZW" --outfile={output_fpath} --calc="A*B"'
         os.system(calc_cmd)
 
         logging.debug("generating popn exposure tiff - removing tmp files")
-        os.remove(tmp_exposure_fpath)
+        # Replace Occurrence tif with the warped version
+        if replace_occurrence:
+            logging.debug(
+                "generating popn exposure tiff - replacing original occurrence with warped version",
+                result,
+            )
+            shutil.move(tmp_occurrence_fpath, input_occurrence_file.fpath)
+        else:
+            os.remove(tmp_occurrence_fpath)
 
         return ISIMPExtremeHeatExposure(
             input_file.fname,
@@ -469,6 +499,7 @@ class HazardISIMPExtremeHeat:
         output_dir: str,
         averaging_year_start: int,
         averaging_year_end: int,
+        warp_occurrence_to_pop=True,
     ) -> ISIMPExtremeHeatOccurrence:
         """
         Generate a TIFF file using temporal averaging for the given time window
@@ -513,6 +544,9 @@ class HazardISIMPExtremeHeat:
             os.path.getsize(output_fpath),
             output_fpath,
         )
+        if warp_occurrence_to_pop:
+            # Overwrites existing
+            self.warp_occurrence_to_pop(output_fpath, output_dir)
         return ISIMPExtremeHeatOccurrence(
             input_file.fname,
             output_fname,
@@ -697,10 +731,10 @@ if __name__ == "__main__":
             len(input_file.occurrence_outputs),
             len(input_file.exposure_outputs),
         )
-    # Generate exposure tiffs
-    input_files = processor.occurrence_tiffs_to_exposure(
-        input_files, args.output_exposure_data_directory
-    )
-    # Generate the CSV
-    processor.append_hazard_csv(input_files)
+    # # Generate exposure tiffs
+    # input_files = processor.occurrence_tiffs_to_exposure(
+    #     input_files, args.output_exposure_data_directory
+    # )
+    # # Generate the CSV
+    # processor.append_hazard_csv(input_files)
     logging.info("Done.")

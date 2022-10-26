@@ -21,12 +21,12 @@ wildcard_constraints:
 # Run all file-base jobs, after load_to_database
 rule all:
     input:
-        expand(
-            "/opt/tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
-        ),
         # expand(
-        #     "/opt/etl/logs/network/{layer}.txt", layer=network_tilelayers.layer
+        #     "/opt/tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
         # ),
+        expand(
+            "/opt/etl/logs/network/{layer}.txt", layer=network_tilelayers.layer
+        ),
         # expand(
         #     "vector/{layer}.geojsonl", layer=network_tilelayers.layer
         # ),
@@ -41,105 +41,105 @@ rule networks_to_db:
         "/opt/etl/pipelines/osm_roads/osm_roads_to_db.py"
 
 
-rule db_to_geojsonseq:
-    """Load from database to GeoJSONSeq
-    """
-    input:
-        "/opt/etl/logs/network/{layer}.txt",
-    output:
-        "vector/{layer}.geojsonl",
-    script:
-        "/opt/etl/pipelines/common/db_to_geojsonseq.py"
+# rule db_to_geojsonseq:
+#     """Load from database to GeoJSONSeq
+#     """
+#     input:
+#         "/opt/etl/logs/network/{layer}.txt",
+#     output:
+#         "vector/{layer}.geojsonl",
+#     script:
+#         "/opt/etl/pipelines/common/db_to_geojsonseq.py"
 
 
-rule geojsonseq_to_vector_tiles:
-    input:
-        "vector/{layer}.geojsonl",
-    output:
-        "/opt/tileserver/vector/data/{layer}.mbtiles",
-    run:
-        layer = get_tilelayer(wildcards.layer, network_tilelayers)
+# rule geojsonseq_to_vector_tiles:
+#     input:
+#         "vector/{layer}.geojsonl",
+#     output:
+#         "/opt/tileserver/vector/data/{layer}.mbtiles",
+#     run:
+#         layer = get_tilelayer(wildcards.layer, network_tilelayers)
 
-        max_zoom = 20
-        point_polygon_zoom_switch = 13
+#         max_zoom = 20
+#         point_polygon_zoom_switch = 13
 
-        if layer.spatial_type == "line":
-            if layer.layer == 'road_edges_class_metro': # secondary
-                options = [
-                    "--drop-densest-as-needed",
-                    "--minimum-zoom=4",
-                    f"--maximum-zoom={max_zoom}",
-                ]
-            elif layer.layer == 'road_edges_class_track': # tertiary
-                options = [
-                    "--drop-densest-as-needed",
-                    "--minimum-zoom=5",
-                    f"--maximum-zoom={max_zoom}",
-                ]
-            else:
-                options = [
-                    "--drop-densest-as-needed",
-                    "--minimum-zoom=3",
-                    f"--maximum-zoom={max_zoom}",
-                ]
-        elif layer.spatial_type == "polygon":
-            options = [
-                "--drop-smallest-as-needed",
-                f"--minimum-zoom={point_polygon_zoom_switch}",
-                f"--maximum-zoom={max_zoom}",
-            ]
-        else:
-            options = [
-                "--drop-densest-as-needed",
-                "-Bg",
-                f"--maximum-zoom={max_zoom}",
-                "--full-detail=12"
-            ]
+#         if layer.spatial_type == "line":
+#             if layer.layer == 'road_edges_class_metro': # secondary
+#                 options = [
+#                     "--drop-densest-as-needed",
+#                     "--minimum-zoom=4",
+#                     f"--maximum-zoom={max_zoom}",
+#                 ]
+#             elif layer.layer == 'road_edges_class_track': # tertiary
+#                 options = [
+#                     "--drop-densest-as-needed",
+#                     "--minimum-zoom=5",
+#                     f"--maximum-zoom={max_zoom}",
+#                 ]
+#             else:
+#                 options = [
+#                     "--drop-densest-as-needed",
+#                     "--minimum-zoom=3",
+#                     f"--maximum-zoom={max_zoom}",
+#                 ]
+#         elif layer.spatial_type == "polygon":
+#             options = [
+#                 "--drop-smallest-as-needed",
+#                 f"--minimum-zoom={point_polygon_zoom_switch}",
+#                 f"--maximum-zoom={max_zoom}",
+#             ]
+#         else:
+#             options = [
+#                 "--drop-densest-as-needed",
+#                 "-Bg",
+#                 f"--maximum-zoom={max_zoom}",
+#                 "--full-detail=12"
+#             ]
 
-        subprocess.run(
-            [
-                "tippecanoe",
-                "--use-attribute-for-id=uid",
-                "--read-parallel",
-                f"--output={output}",
-                f"--layer={wildcards.layer}",
-            ]
-            + options
-            + ["--force", f"{input}"],
-            check=True
-        )
+#         subprocess.run(
+#             [
+#                 "tippecanoe",
+#                 "--use-attribute-for-id=uid",
+#                 "--read-parallel",
+#                 f"--output={output}",
+#                 f"--layer={wildcards.layer}",
+#             ]
+#             + options
+#             + ["--force", f"{input}"],
+#             check=True
+#         )
 
-        if layer.spatial_type == "polygon":
-            # create points as centroids
-            input_basename = os.path.basename(str(input))
-            input_layer = input_basename.replace(".geojsonl", "")
-            tmp_output = f"vector/points/{input_basename}"
-            subprocess.run(
-                [
-                    "ogr2ogr",
-                    "-sql",
-                    f"SELECT ST_Centroid(geometry), * FROM {input_layer}",
-                    "-dialect",
-                    "sqlite",
-                    tmp_output,
-                    str(input)
-                ],
-                check=True
-            )
-            subprocess.run(
-                [
-                    "tippecanoe",
-                    "--use-attribute-for-id=uid",
-                    "--read-parallel",
-                    f"--output={output}",
-                    f"--layer={wildcards.layer}",
-                    "--drop-densest-as-needed",
-                    "--minimum-zoom=3",
-                    f"--maximum-zoom={point_polygon_zoom_switch - 1}",
-                    "--force", f"{tmp_output}"
-                ],
-                check=True
-            )
+#         if layer.spatial_type == "polygon":
+#             # create points as centroids
+#             input_basename = os.path.basename(str(input))
+#             input_layer = input_basename.replace(".geojsonl", "")
+#             tmp_output = f"vector/points/{input_basename}"
+#             subprocess.run(
+#                 [
+#                     "ogr2ogr",
+#                     "-sql",
+#                     f"SELECT ST_Centroid(geometry), * FROM {input_layer}",
+#                     "-dialect",
+#                     "sqlite",
+#                     tmp_output,
+#                     str(input)
+#                 ],
+#                 check=True
+#             )
+#             subprocess.run(
+#                 [
+#                     "tippecanoe",
+#                     "--use-attribute-for-id=uid",
+#                     "--read-parallel",
+#                     f"--output={output}",
+#                     f"--layer={wildcards.layer}",
+#                     "--drop-densest-as-needed",
+#                     "--minimum-zoom=3",
+#                     f"--maximum-zoom={point_polygon_zoom_switch - 1}",
+#                     "--force", f"{tmp_output}"
+#                 ],
+#                 check=True
+#             )
 
 
 def get_tilelayer(layer_name, network_tilelayers):

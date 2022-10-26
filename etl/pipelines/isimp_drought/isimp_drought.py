@@ -418,6 +418,24 @@ class HazardISIMPDrought:
         dst_ds = None  # Flush to disk
         return os.path.exists(output_fpath)
 
+    def warp_occurrence_to_pop(self, input_occurrence_fpath: str, output_dir: str):
+        """
+        Warp the occurrence file to the same extent and res as worldpop
+        """
+        # Warp Occurrence to Worldpop proj, cellsize and extent
+        logging.debug(
+            "generating popn exposure tiff - warping occurrence to world pop size and proj"
+        )
+        tmp_occurrence_fpath = os.path.join(output_dir, "tmp_reproj.tif")
+        result = self.match_raster_resoluton_and_extent(
+            self.world_pop_fpath, input_occurrence_fpath, tmp_occurrence_fpath
+        )
+        shutil.move(tmp_occurrence_fpath, input_occurrence_fpath)
+        logging.debug(
+            "generating popn exposure tiff - matched res and scale of world pop raster: %s",
+            result,
+        )
+
     def generate_popn_exposure_tiff(
         self, input_occurrence_file: ISIMPDroughtOccurrence, output_dir: str
     ) -> ISIMPDroughtExposure:
@@ -488,6 +506,7 @@ class HazardISIMPDrought:
         averaging_year_start: int,
         averaging_year_end: int,
         variable="led",
+        warp_occurrence_to_pop=True,
     ) -> ISIMPDroughtOccurrence:
         """
         Generate a TIFF file using temporal averaging for the given time window
@@ -547,6 +566,9 @@ class HazardISIMPDrought:
             os.path.getsize(output_fpath),
             output_fpath,
         )
+        if warp_occurrence_to_pop:
+            # Overwrites existing
+            self.warp_occurrence_to_pop(output_fpath, output_dir)
         return ISIMPDroughtOccurrence(
             input_file.fname,
             output_fname,
@@ -743,10 +765,10 @@ if __name__ == "__main__":
             len(input_file.occurrence_outputs),
             len(input_file.exposure_outputs),
         )
-    # Generate exposure tiffs
-    input_files = processor.occurrence_tiffs_to_exposure(
-        input_files, args.output_exposure_data_directory
-    )
-    # Generate the CSV
-    processor.append_hazard_csv(input_files)
-    logging.info("Done.")
+    # # Generate exposure tiffs
+    # input_files = processor.occurrence_tiffs_to_exposure(
+    #     input_files, args.output_exposure_data_directory
+    # )
+    # # Generate the CSV
+    # processor.append_hazard_csv(input_files)
+    # logging.info("Done.")
