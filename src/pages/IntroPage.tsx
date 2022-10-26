@@ -83,23 +83,24 @@ export const IntroPage = () => (
 
           <p>This research was funded by UKAID through the UK Foreign,
           Commonwealth &amp; Development Office under the High Volume Transport
-          Applied Research Programme, managed by IMC Worldwide. </p>
+          Applied Research Programme, which is managed by DT Global. </p>
 
           <Stack
             direction="row"
             divider={<Divider orientation="vertical" flexItem />}
             spacing={2}
+            my={2}
             justifyContent="center"
             alignItems="center"
           >
             <a href="https://www.gov.uk/guidance/uk-aid" target="_blank" rel="noopener noreferrer">
               <img height="100" src="/logo-ukaid.png" alt="UK AID" />
             </a>
-            <a href="https://www.imcworldwide.com/project/hvt/" target="_blank" rel="noopener noreferrer">
+            <a href="https://transport-links.com/" target="_blank" rel="noopener noreferrer">
               <img height="100" src="/logo-hvt.png" alt="High Volume Transport Applied Research"/>
             </a>
-            <a href="https://www.imcworldwide.com/project/hvt/" target="_blank" rel="noopener noreferrer">
-              <img height="90" src="/logo-imc.png" alt="IMC Worldwide"/>
+            <a href="https://transport-links.com/" target="_blank" rel="noopener noreferrer">
+              <img height="60" src="/logo-dt.svg" alt="DT Global"/>
             </a>
           </Stack>
 
