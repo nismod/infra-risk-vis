@@ -1,6 +1,8 @@
 import * as d3 from 'd3-color';
 import _ from 'lodash';
 
+import { ValueLabel } from './controls/params/value-label';
+
 /**
  * Common helper functions
  *
@@ -142,4 +144,12 @@ export function valueType<C>(): ValueTypeCheck<C> {
  */
 export function isNullish(v: any): v is null | undefined {
   return v == null;
+}
+
+export function toLabelLookup<T extends string>(valueLabels: ValueLabel<T>[]) {
+  return toDictionary(
+    valueLabels,
+    (x) => x.value,
+    (x) => x.label,
+  );
 }

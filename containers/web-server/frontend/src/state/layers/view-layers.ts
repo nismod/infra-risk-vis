@@ -17,6 +17,7 @@ import { sectionVisibilityState } from '@/state/sections';
 
 import { hazardLayerState } from './data-layers/hazards';
 import { healthcareLayersState } from './data-layers/healthcare';
+import { humanDevelopmentLayerState } from './data-layers/human-development';
 import { industryLayersState } from './data-layers/industry';
 import { networkLayersState } from './data-layers/networks';
 import { populationLayerState } from './data-layers/population';
@@ -51,6 +52,7 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
     const isRetina = get(isRetinaState);
 
     return [
+      get(humanDevelopmentLayerState),
       get(populationLayerState),
 
       // hazard data layers

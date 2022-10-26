@@ -6,12 +6,10 @@ import { hasHover, hoverState } from '@/lib/data-map/interactions/interaction-st
 import { InteractionTarget } from '@/lib/data-map/interactions/use-interactions';
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 
-import { showPopulationState } from '@/state/regions';
-
 import { DroughtHoverDescription } from './content/DroughtHoverDescription';
 import { HazardHoverDescription } from './content/HazardHoverDescription';
+import { HdiHoverDescription } from './content/HdiHoverDescription';
 import { PopulationHoverDescription } from './content/PopulationHoverDescription';
-import { RegionHoverDescription } from './content/RegionHoverDescription';
 import { SolutionHoverDescription } from './content/SolutionHoverDescription';
 import { VectorHoverDescription } from './content/VectorHoverDescription';
 
@@ -29,8 +27,6 @@ export const TooltipContent: FC = () => {
   const hoveredSolution = useRecoilValue(hoverState('solutions')) as InteractionTarget<any>;
   const hoveredDrought = useRecoilValue(hoverState('drought')) as InteractionTarget<any>;
 
-  const regionDataShown = useRecoilValue(showPopulationState);
-
   const assetsHovered = hasHover(hoveredVector);
   const hazardsHovered = hasHover(hoveredHazards);
   const populationHovered = hasHover(hoveredPopulation);
@@ -38,12 +34,7 @@ export const TooltipContent: FC = () => {
   const solutionsHovered = hasHover(hoveredSolution);
   const droughtHovered = hasHover(hoveredDrought);
   const doShow =
-    assetsHovered ||
-    hazardsHovered ||
-    populationHovered ||
-    (regionDataShown && regionsHovered) ||
-    solutionsHovered ||
-    droughtHovered;
+    assetsHovered || hazardsHovered || populationHovered || regionsHovered || solutionsHovered || droughtHovered;
 
   if (!doShow) return null;
 
@@ -80,7 +71,7 @@ export const TooltipContent: FC = () => {
           ) : null}
           {regionsHovered ? (
             <TooltipSection>
-              <RegionHoverDescription hoveredObject={hoveredRegion} />
+              <HdiHoverDescription hoveredObject={hoveredRegion} />
             </TooltipSection>
           ) : null}
         </ErrorBoundary>
