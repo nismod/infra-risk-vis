@@ -14,6 +14,7 @@ import sys
 from typing import Any, Dict, List
 import argparse
 import traceback
+import pymysql
 
 import tqdm
 import terracotta
@@ -198,9 +199,9 @@ def ingest_from_csv(
 
     progress_bar = tqdm.tqdm(raster_files)
     print("Starting ingest...")
-    for raster in progress_bar:
-        progress_bar.set_postfix(file=raster["path"])
-        with driver.connect():
+    with driver.connect():
+        for raster in progress_bar:
+            progress_bar.set_postfix(file=raster["path"])
             try:
                 # This does an internal DB check after each insert
                 dup_path = _check_duplicate_entry(raster, driver)
