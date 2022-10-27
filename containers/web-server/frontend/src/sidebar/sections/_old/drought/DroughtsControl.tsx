@@ -9,7 +9,7 @@ import {
   DROUGHT_RISK_VARIABLE_LABELS,
   DroughtOptionsVariableType,
   DroughtRiskVariableType,
-} from '@/config/drought/metadata';
+} from '@/config/_old/drought/metadata';
 import { InputSection } from '@/sidebar/ui/InputSection';
 import {
   droughtOptionsVariableState,
@@ -17,7 +17,7 @@ import {
   droughtRiskVariableState,
   droughtShowOptionsState,
   droughtShowRiskState,
-} from '@/state/drought/drought-parameters';
+} from '@/state/data-selection/_old/drought/drought-parameters';
 
 export const DroughtsControl: FC<{}> = () => {
   const [rcp, setRcp] = useRecoilState(droughtRcpParamState);

@@ -1,8 +1,8 @@
 import { atom, selector } from 'recoil';
 
-import { RegionLevel } from '@/config/regions/metadata';
+import { RegionLevel } from '@/config/_old/regions/metadata';
 
-import { sectionStyleValueState } from './sections';
+import { sectionStyleValueState } from '../../sections';
 
 export const regionLevelState = atom<RegionLevel>({
   key: 'regionLevelState',

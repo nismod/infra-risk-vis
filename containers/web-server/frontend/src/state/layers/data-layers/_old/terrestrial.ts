@@ -10,18 +10,18 @@ import { Accessor } from '@/lib/deck/props/getters';
 import { border, fillColor } from '@/lib/deck/props/style';
 import { truthyKeys } from '@/lib/helpers';
 
+import { TERRESTRIAL_LANDUSE_COLORS } from '@/config/_old/solutions/colors';
+import { getSolutionsDataAccessor } from '@/config/_old/solutions/data-access';
+import { getTerrestrialDataFormats } from '@/config/_old/solutions/data-formats';
+import { LandUseOption, TerrestrialLocationFilterType } from '@/config/_old/solutions/domains';
 import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
-import { TERRESTRIAL_LANDUSE_COLORS } from '@/config/solutions/colors';
-import { getSolutionsDataAccessor } from '@/config/solutions/data-access';
-import { getTerrestrialDataFormats } from '@/config/solutions/data-formats';
-import { LandUseOption, TerrestrialLocationFilterType } from '@/config/solutions/domains';
-import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
-import { landuseFilterState } from '@/state/solutions/landuse-tree';
+import { landuseFilterState } from '@/state/data-selection/_old/solutions/landuse-tree';
 import {
   TerrestrialFilters,
   TerrestrialLocationFilters,
   terrestrialFiltersState,
-} from '@/state/solutions/terrestrial-filters';
+} from '@/state/data-selection/_old/solutions/terrestrial-filters';
+import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
 
 export function landuseColorMap(x: string) {
   return TERRESTRIAL_LANDUSE_COLORS[x].css;

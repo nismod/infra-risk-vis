@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-import { MarineLocationFilterType } from '@/config/solutions/domains';
+import { MarineLocationFilterType } from '@/config/_old/solutions/domains';
 
 export type MarineLocationFilters = Record<MarineLocationFilterType, boolean>;
 

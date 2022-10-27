@@ -3,9 +3,9 @@ import { useRecoilState } from 'recoil';
 
 import { ParamChecklist } from '@/lib/controls/params/ParamChecklist';
 
-import { TERRESTRIAL_LOCATION_FILTERS, TerrestrialLocationFilterType } from '@/config/solutions/domains';
+import { TERRESTRIAL_LOCATION_FILTERS, TerrestrialLocationFilterType } from '@/config/_old/solutions/domains';
 import { InputSection } from '@/sidebar/ui/InputSection';
-import { terrestrialNonLandUseFiltersState } from '@/state/solutions/terrestrial-filters';
+import { terrestrialNonLandUseFiltersState } from '@/state/data-selection/_old/solutions/terrestrial-filters';
 
 import { TerrestrialLandUseTree } from './TerrestrialLandUseTree';
 

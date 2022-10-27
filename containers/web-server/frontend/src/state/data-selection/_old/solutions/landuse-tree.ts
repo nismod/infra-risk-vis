@@ -3,8 +3,8 @@ import { atom, selector } from 'recoil';
 
 import { CheckboxTreeState, buildTreeConfig } from '@/lib/controls/checkbox-tree/CheckboxTree';
 
-import { LandUseOption } from '@/config/solutions/domains';
-import { LANDUSE_HIERARCHY } from '@/config/solutions/landuse-hierarchy';
+import { LandUseOption } from '@/config/_old/solutions/domains';
+import { LANDUSE_HIERARCHY } from '@/config/_old/solutions/landuse-hierarchy';
 
 export const landuseTreeExpandedState = atom<string[]>({
   key: 'landuseTreeExpandedState',

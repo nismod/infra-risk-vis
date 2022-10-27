@@ -24,9 +24,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: false,
@@ -63,9 +60,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: true,
@@ -102,9 +96,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: false,
@@ -142,9 +133,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: false,

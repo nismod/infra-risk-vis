@@ -2,10 +2,14 @@ import { useRecoilState } from 'recoil';
 
 import { CheckboxTree } from '@/lib/controls/checkbox-tree/CheckboxTree';
 
-import { TERRESTRIAL_LANDUSE_COLORS } from '@/config/solutions/colors';
-import { LANDUSE_HIERARCHY } from '@/config/solutions/landuse-hierarchy';
+import { TERRESTRIAL_LANDUSE_COLORS } from '@/config/_old/solutions/colors';
+import { LANDUSE_HIERARCHY } from '@/config/_old/solutions/landuse-hierarchy';
 import { LayerLabel } from '@/sidebar/ui/LayerLabel';
-import { landuseTreeCheckboxState, landuseTreeConfig, landuseTreeExpandedState } from '@/state/solutions/landuse-tree';
+import {
+  landuseTreeCheckboxState,
+  landuseTreeConfig,
+  landuseTreeExpandedState,
+} from '@/state/data-selection/_old/solutions/landuse-tree';
 
 export const TerrestrialLandUseTree = () => {
   const [checkboxState, setCheckboxState] = useRecoilState(landuseTreeCheckboxState);

@@ -8,9 +8,9 @@ import { featureProperty } from '@/lib/deck/props/data-source';
 import { Accessor } from '@/lib/deck/props/getters';
 import { fillColor } from '@/lib/deck/props/style';
 
-import { MARINE_HABITAT_COLORS } from '@/config/solutions/colors';
+import { MARINE_HABITAT_COLORS } from '@/config/_old/solutions/colors';
+import { marineFiltersState } from '@/state/data-selection/_old/solutions/marine-filters';
 import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
-import { marineFiltersState } from '@/state/solutions/marine-filters';
 
 export function habitatColorMap(x: string) {
   return MARINE_HABITAT_COLORS[x]?.css ?? MARINE_HABITAT_COLORS['other'].css;

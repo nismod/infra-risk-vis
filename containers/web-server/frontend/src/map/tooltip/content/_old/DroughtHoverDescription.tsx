@@ -11,7 +11,7 @@ import {
   droughtOptionsFieldSpecState,
   droughtRegionsColorSpecState,
   droughtRegionsFieldSpecState,
-} from '@/state/layers/data-layers/drought';
+} from '@/state/layers/data-layers/_old/drought';
 
 const DroughtRiskDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;

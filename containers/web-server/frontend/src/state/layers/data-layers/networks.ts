@@ -10,10 +10,14 @@ import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { AdaptationOptionParams } from '@/config/domains/adaptation';
 import adaptationSectorLayers from '@/config/domains/adaptation-sector-layers.json';
 import { infrastructureViewLayer } from '@/config/networks/infrastructure-view-layer';
-import { damageMapStyleParamsState } from '@/state/damage-mapping/damage-style-params';
 import { dataParamsByGroupState } from '@/state/data-params';
-import { networkSelectionState, networkTreeCheckboxState, networkTreeConfig } from '@/state/networks/network-selection';
-import { networksStyleState } from '@/state/networks/networks-style';
+import { damageMapStyleParamsState } from '@/state/data-selection/damage-mapping/damage-style-params';
+import {
+  networkSelectionState,
+  networkTreeCheckboxState,
+  networkTreeConfig,
+} from '@/state/data-selection/networks/network-selection';
+import { networksStyleState } from '@/state/data-selection/networks/networks-style';
 import { sectionVisibilityState } from '@/state/sections';
 
 export const networkLayersState = selector<ViewLayer[]>({

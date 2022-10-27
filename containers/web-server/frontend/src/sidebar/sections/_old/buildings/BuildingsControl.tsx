@@ -4,7 +4,7 @@ import { ParamChecklist } from '@/lib/controls/params/ParamChecklist';
 
 import { NETWORKS_METADATA } from '@/config/networks/metadata';
 import { LayerLabel } from '@/sidebar/ui/LayerLabel';
-import { buildingSelectionState } from '@/state/buildings';
+import { buildingSelectionState } from '@/state/data-selection/_old/buildings';
 
 export const BuildingsControl = () => {
   const [checkboxState, setCheckboxState] = useRecoilState(buildingSelectionState);

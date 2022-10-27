@@ -2,9 +2,9 @@ import { useRecoilState } from 'recoil';
 
 import { ParamChecklist } from '@/lib/controls/params/ParamChecklist';
 
-import { MARINE_LOCATION_FILTERS, MarineLocationFilterType } from '@/config/solutions/domains';
+import { MARINE_LOCATION_FILTERS, MarineLocationFilterType } from '@/config/_old/solutions/domains';
 import { InputSection } from '@/sidebar/ui/InputSection';
-import { marineFiltersState } from '@/state/solutions/marine-filters';
+import { marineFiltersState } from '@/state/data-selection/_old/solutions/marine-filters';
 
 export const MarineControl = () => {
   const [marineFilters, setMarineFilters] = useRecoilState(marineFiltersState);

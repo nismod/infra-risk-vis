@@ -7,10 +7,10 @@ import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 import { DataDescription } from '@/lib/ui/data-display/DataDescription';
 import { DataItem } from '@/lib/ui/data-display/DataItem';
 
+import { MARINE_HABITATS_LOOKUP } from '@/config/_old/solutions/domains';
 import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
-import { MARINE_HABITATS_LOOKUP } from '@/config/solutions/domains';
-import { habitatColorMap } from '@/state/layers/data-layers/marine';
-import { landuseColorMap } from '@/state/layers/data-layers/terrestrial';
+import { habitatColorMap } from '@/state/layers/data-layers/_old/marine';
+import { landuseColorMap } from '@/state/layers/data-layers/_old/terrestrial';
 
 const slopeFieldSpec = {
   fieldGroup: 'properties',

@@ -9,8 +9,8 @@ import { InputSection } from '@/sidebar/ui/InputSection';
 import { EpochControl } from '@/sidebar/ui/params/EpochControl';
 import { RCPControl } from '@/sidebar/ui/params/RCPControl';
 import { ReturnPeriodControl } from '@/sidebar/ui/params/ReturnPeriodControl';
-import { showDamagesState } from '@/state/damage-mapping/damage-map';
-import { hazardSelectionState } from '@/state/hazards/hazard-selection';
+import { showDamagesState } from '@/state/data-selection/damage-mapping/damage-map';
+import { hazardSelectionState } from '@/state/data-selection/hazards/hazard-selection';
 
 export const HazardsControl = () => {
   const showDirectDamages = useRecoilValue(showDamagesState);

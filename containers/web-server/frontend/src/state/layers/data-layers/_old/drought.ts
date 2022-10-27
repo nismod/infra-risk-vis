@@ -6,15 +6,15 @@ import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
 import { dataColorMap } from '@/lib/deck/props/color-map';
 import { border, fillColor, pointRadius } from '@/lib/deck/props/style';
 
-import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
-import { getDroughtDataAccessor } from '@/config/drought/data-access';
-import { getDroughtOptionsDataFormats, getDroughtRiskDataFormats } from '@/config/drought/data-formats';
+import { getDroughtDataAccessor } from '@/config/_old/drought/data-access';
+import { getDroughtOptionsDataFormats, getDroughtRiskDataFormats } from '@/config/_old/drought/data-formats';
 import {
   DROUGHT_OPTIONS_VARIABLES_WITH_RCP,
   DROUGHT_RISK_VARIABLES_WITH_RCP,
   DroughtOptionsVariableType,
   DroughtRiskVariableType,
-} from '@/config/drought/metadata';
+} from '@/config/_old/drought/metadata';
+import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { SOURCES } from '@/config/sources';
 import {
   droughtOptionsVariableState,
@@ -22,7 +22,7 @@ import {
   droughtRiskVariableState,
   droughtShowOptionsState,
   droughtShowRiskState,
-} from '@/state/drought/drought-parameters';
+} from '@/state/data-selection/_old/drought/drought-parameters';
 import { sectionVisibilityState } from '@/state/sections';
 
 export const droughtRegionsFieldSpecState = selector<FieldSpec>({
