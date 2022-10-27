@@ -17,11 +17,15 @@ export function protectedAreaViewLayer(type: ProtectedAreaType): ViewLayer {
       type,
     },
     fn: ({ deckProps, zoom, selection }) => {
+      const selectionId = selection?.target.feature.properties['WDPA_PID'];
+
       return [
         selectableMvtLayer(
           {
             selectionOptions: {
-              selectedFeatureId: undefined, // selection?.target.feature.id,
+              selectedFeatureId: selection?.deckLayerId === `${id}@polygons` ? selectionId : undefined,
+              uniqueIdProperty: 'WDPA_PID',
+              selectionFillColor: [0, 0, 0, 0],
             },
           },
           deckProps,
@@ -40,7 +44,8 @@ export function protectedAreaViewLayer(type: ProtectedAreaType): ViewLayer {
         selectableMvtLayer(
           {
             selectionOptions: {
-              selectedFeatureId: selection?.target.feature.id,
+              selectedFeatureId: selection?.deckLayerId === `${id}@points` ? selectionId : undefined,
+              uniqueIdProperty: 'WDPA_PID',
             },
           },
           deckProps,
