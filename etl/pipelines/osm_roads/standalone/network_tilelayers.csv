@@ -1,0 +1,2 @@
+ref,sector,subsector,asset_type,spatial_type,layer
+transport_roads_edges,transport,road,tertiary,line,road_edges_track

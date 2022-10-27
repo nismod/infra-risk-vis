@@ -53,9 +53,34 @@ def get_layer(layer_name, exposure_layers):
     finally:
         print ("got exposure layer")
 
-rule raster_reproject_clip_ns:
+rule raster_zero_nodata:
     input:
         rules.raster_temp_file.output,
+    output:
+        "/opt/etl/raster/nodata/{layer}.tif",
+    resources:
+        disk_mb=3000
+    priority:
+        70,
+    shell:
+        """
+        NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
+
+        # Make no data zeroes
+        gdal_calc.py \
+          --quiet \
+          -A "{input}" \
+          --outfile="{output}" \
+          --overwrite \
+          --calc="numpy.where(A==$NODATA,0,A)" \
+          --NoDataValue=0 \
+          --hideNoData && \
+        rm {input}
+        """
+
+rule raster_reproject_clip_ns:
+    input:
+        rules.raster_zero_nodata.output,
     output:
         "/opt/etl/raster/reproject/{layer}.tif",
     resources:

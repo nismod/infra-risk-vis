@@ -66,7 +66,7 @@ rule raster_zero_nodata:
         """
         NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
 
-        # replace NoData with Zeros
+        # Make no data zeroes
         gdal_calc.py \
           --quiet \
           -A "{input}" \
@@ -130,7 +130,7 @@ rule raster_cleanup:
     input:
         rules.raster_to_cog.output,
     output:
-        "/opt/tileserver/raster/data/jrc_pop/{layer}.tif",
+        "/opt/tileserver/raster/data/traveltime_to_healthcare/{layer}.tif",
     resources:
         disk_mb=100
     priority:
