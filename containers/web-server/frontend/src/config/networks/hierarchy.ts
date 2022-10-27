@@ -67,24 +67,24 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
     id: 'transport',
     label: 'Transport',
     children: [
-      // {
-      //   id: 'rail-network',
-      //   label: 'Rail Network',
-      //   children: [
-      //     {
-      //       id: 'rail_edges',
-      //       label: 'Railways',
-      //     },
-      //     {
-      //       id: 'rail_stations',
-      //       label: 'Stations',
-      //     },
-      //     {
-      //       id: 'rail_junctions',
-      //       label: 'Junctions',
-      //     },
-      //   ],
-      // },
+      {
+        id: 'rail-network',
+        label: 'Rail Network',
+        children: [
+          {
+            id: 'rail_edges',
+            label: 'Railways',
+          },
+          // {
+          //   id: 'rail_stations',
+          //   label: 'Stations',
+          // },
+          // {
+          //   id: 'rail_junctions',
+          //   label: 'Junctions',
+          // },
+        ],
+      },
       {
         id: 'road-network',
         label: 'Road Network',
@@ -109,10 +109,10 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
                 id: 'road_edges_metro',
                 label: 'Secondary',
               },
-              {
-                id: 'road_edges_track',
-                label: 'Tertiary',
-              },
+              // {
+              //   id: 'road_edges_track',
+              //   label: 'Tertiary',
+              // },
               // {
               //   id: 'road_edges_other',
               //   label: 'Other',
