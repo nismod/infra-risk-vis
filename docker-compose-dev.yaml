@@ -80,7 +80,7 @@ services:
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/ghsl_buildings/Snakefile"
+        "/opt/etl/pipelines/traveltime_to_healthcare/Snakefile"
       ]
 
   backend:
@@ -111,20 +111,20 @@ services:
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
       - ./tileserver/raster/data:/data # Must match path in Backend
-      - ./etl/pipelines/isimp_drought/hazard_isimp_drought.csv:/opt/hazard_layers.csv # If loading a CSV
+      - ./etl/pipelines/traveltime_to_healthcare/inputs.csv:/opt/hazard_layers.csv # If loading a CSV
     command:
       [
         "load_csv",
         "--internal_raster_base_path",
-        "/data/drought",
+        "/data/traveltime_to_healthcare",
         "--input_csv_filepath",
         "/opt/hazard_layers.csv",
         "--tile_keys",
-        "type,metric,rcp,epoch,gcm",
+        "type,subtype",
         "--csv_key_column_map",
-        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"metric\": \"metric\", \"rcp\": \"rcp\", \"epoch\": \"epoch\", \"gcm\": \"gcm\"}",
+        "{\"file_basename\": \"key\", \"type\": \"exposure\", \"subtype\": \"subtype\"}",
         "--database_name",
-        "drought"
+        "traveltime_to_healthcare"
       ]
 
   ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
@@ -139,7 +139,7 @@ services:
       [
         "delete_database_entries",
         "--database_name",
-        "drought"
+        "traveltime_to_healthcare"
       ]
 
   ## WARNING - Drop the MySQL Terracotta Db with the given DB name
