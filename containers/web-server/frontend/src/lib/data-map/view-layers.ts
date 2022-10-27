@@ -60,6 +60,7 @@ export interface ViewLayer {
    * (currently used for raster layers only)
    */
   renderLegend?: () => ReactNode;
+  renderTooltip?: (hover: any) => ReactNode;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {

@@ -26,14 +26,17 @@ export const TooltipContent: FC = () => {
   const hoveredPopulation = useRecoilValue(hoverState('population')) as InteractionTarget<any>;
   const hoveredHdi = useRecoilValue(hoverState('hdi')) as InteractionTarget<any>;
   const hoveredWdpas = useRecoilValue(hoverState('wdpa')) as InteractionTarget<any>[];
+  const hoveredBuildingDensity = useRecoilValue(hoverState('buildings_ghsl')) as InteractionTarget<any>;
 
   const assetsHovered = hasHover(hoveredVector);
   const hazardsHovered = hasHover(hoveredHazards);
   const populationHovered = hasHover(hoveredPopulation);
   const hdiHovered = hasHover(hoveredHdi);
   const wdpaHovered = hasHover(hoveredWdpas);
+  const buildingDensityHovered = hasHover(hoveredBuildingDensity);
 
-  const doShow = assetsHovered || hazardsHovered || populationHovered || hdiHovered || wdpaHovered;
+  const doShow =
+    assetsHovered || hazardsHovered || populationHovered || hdiHovered || wdpaHovered || buildingDensityHovered;
 
   if (!doShow) return null;
 
@@ -58,6 +61,10 @@ export const TooltipContent: FC = () => {
             <TooltipSection>
               <PopulationHoverDescription hoveredObject={hoveredPopulation} />
             </TooltipSection>
+          ) : null}
+          {buildingDensityHovered ? (
+            // new approach: shift to using the viewLayer's renderTooltip() method
+            <TooltipSection>{hoveredBuildingDensity.viewLayer.renderTooltip(hoveredBuildingDensity)}</TooltipSection>
           ) : null}
           {hdiHovered ? (
             <TooltipSection>

@@ -11,6 +11,7 @@ export const interactionGroupsState = selector({
       INTERACTION_GROUPS.hdi,
       INTERACTION_GROUPS.hazards,
       INTERACTION_GROUPS.population,
+      INTERACTION_GROUPS.buildings_ghsl,
     ];
   },
 });

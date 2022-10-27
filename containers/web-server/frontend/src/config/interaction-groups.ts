@@ -52,4 +52,9 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     usesAutoHighlight: true,
     pickMultiple: true,
   },
+  {
+    id: 'buildings_ghsl',
+    type: 'raster',
+    pickMultiple: false,
+  },
 ]);

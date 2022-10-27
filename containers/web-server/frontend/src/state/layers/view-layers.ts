@@ -7,6 +7,7 @@ import { labelsLayer } from '@/config/deck-layers/labels-layer';
 import { showLabelsState } from '@/map/layers/layers-state';
 import { isRetinaState } from '@/state/is-retina';
 
+import { buildingDensityLayerState } from './data-layers/building-density';
 import { buildingLayersState } from './data-layers/buildings';
 import { hazardLayerState } from './data-layers/hazards';
 import { healthcareLayersState } from './data-layers/healthcare';
@@ -30,6 +31,7 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
 
       get(humanDevelopmentLayerState),
       get(populationLayerState),
+      get(buildingDensityLayerState),
       get(hazardLayerState),
       get(buildingLayersState),
       get(networkLayersState),
