@@ -1,3 +1,38 @@
+export const HAZARD_COLOR_MAPS = {
+  fluvial: {
+    scheme: 'blues',
+    range: [0, 10],
+  },
+  coastal: {
+    scheme: 'greens',
+    range: [0, 10],
+  },
+  surface: {
+    scheme: 'purples',
+    range: [0, 10],
+  },
+  cyclone: {
+    scheme: 'reds',
+    range: [0, 75],
+  },
+  extreme_heat_exposure: {
+    scheme: 'reds',
+    range: [0, 250],
+  },
+  extreme_heat_occurrence: {
+    scheme: 'reds',
+    range: [0, 1],
+  },
+  earthquake: {
+    scheme: 'reds',
+    range: [0, 1.4],
+  },
+  drought: {
+    scheme: 'oranges',
+    range: [0, 100],
+  },
+};
+
 export const HAZARDS_METADATA = {
   cyclone: {
     label: 'Cyclones',
@@ -32,11 +67,17 @@ export const HAZARDS_METADATA = {
       PGA: 'Peak Ground Acceleration',
     },
   },
+  drought: {
+    label: 'Droughts',
+    dataUnit: '',
+    // fractionDigits:0
+  },
 };
 
 export const HAZARDS_MAP_ORDER = [
   'earthquake',
   'cyclone',
+  'drought',
   'fluvial',
   'coastal',
   'extreme_heat_occurrence',
@@ -46,6 +87,7 @@ export const HAZARDS_UI_ORDER = [
   'fluvial',
   'coastal',
   'cyclone',
+  'drought',
   'extreme_heat_occurrence',
   'extreme_heat_exposure',
   'earthquake',

@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import reactStringReplace from 'react-string-replace';
 
-import { RASTER_COLOR_MAPS } from '@/config/color-maps';
-import { HAZARDS_METADATA } from '@/config/hazards/metadata';
+import { HAZARDS_METADATA, HAZARD_COLOR_MAPS } from '@/config/hazards/metadata';
 
 import { RasterLegend } from '../RasterLegend';
 
@@ -23,7 +22,7 @@ export const HazardLegend = ({ viewLayer }) => {
     params: { hazardType },
   } = viewLayer;
   let { label, dataUnit, labelAbbreviations = {} } = HAZARDS_METADATA[hazardType];
-  const colorMap = RASTER_COLOR_MAPS[hazardType];
+  const colorMap = HAZARD_COLOR_MAPS[hazardType];
 
   label = formatAbbreviations(label, labelAbbreviations);
 

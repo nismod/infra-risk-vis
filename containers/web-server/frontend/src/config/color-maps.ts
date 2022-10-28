@@ -4,37 +4,6 @@ import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import { ColorSpec } from '@/lib/data-map/view-layers';
 import { valueType } from '@/lib/helpers';
 
-export const RASTER_COLOR_MAPS = {
-  fluvial: {
-    scheme: 'blues',
-    range: [0, 10],
-  },
-  coastal: {
-    scheme: 'greens',
-    range: [0, 10],
-  },
-  surface: {
-    scheme: 'purples',
-    range: [0, 10],
-  },
-  cyclone: {
-    scheme: 'reds',
-    range: [0, 75],
-  },
-  extreme_heat_exposure: {
-    scheme: 'reds',
-    range: [0, 250],
-  },
-  extreme_heat_occurrence: {
-    scheme: 'reds',
-    range: [0, 1],
-  },
-  earthquake: {
-    scheme: 'reds',
-    range: [0, 1.4],
-  },
-};
-
 function invertColorScale<T>(colorScale: (t: number) => T) {
   return (i: number) => colorScale(1 - i);
 }

@@ -4,9 +4,9 @@ import React from 'react';
 import { ViewLayer } from '@/lib/data-map/view-layers';
 import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 
-import { RASTER_COLOR_MAPS } from '@/config/color-maps';
 import { HazardLegend } from '@/map/legend/content/HazardLegend';
 
+import { HAZARD_COLOR_MAPS } from './metadata';
 import { HAZARD_SOURCE } from './source';
 
 export function getHazardId({ hazardType, hazardParams }: { hazardType: string; hazardParams: any }) {
@@ -14,10 +14,14 @@ export function getHazardId({ hazardType, hazardParams }: { hazardType: string; 
     const { returnPeriod, medium } = hazardParams;
 
     return `${hazardType}__rp_${returnPeriod}__medium_${medium}`;
+  } else if (hazardType === 'drought') {
+    const { rcp, epoch, gcm } = hazardParams;
+
+    return `${hazardType}__rcp_${rcp}__epoch_${epoch}__gcm_${gcm}`;
   } else {
     const { returnPeriod, rcp, epoch, gcm } = hazardParams;
 
-    return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${gcm}`;
+    return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__gcm_${gcm}`;
   }
 }
 
@@ -32,7 +36,7 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
     interactionGroup: 'hazards',
     params: { hazardType, hazardParams },
     fn: ({ deckProps, zoom }) => {
-      const { scheme, range } = RASTER_COLOR_MAPS[hazardType];
+      const { scheme, range } = HAZARD_COLOR_MAPS[hazardType];
 
       return rasterTileLayer(
         {

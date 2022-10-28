@@ -19,6 +19,8 @@ export const HAZARD_SOURCE = {
       } else if (hazardType === 'extreme_heat_exposure') {
         // TODO: Add support for exposure metric (as well as occurrence)
         path = `extreme_heat/exposure/${sanitisedRcp}/${epoch}/${gcm}`;
+      } else if (hazardType === 'drought') {
+        path = `drought/occurrence/${sanitisedRcp}/${epoch}/${gcm}`;
       } else {
         path = `${hazardType}/${returnPeriod}/${sanitisedRcp}/${epoch}/${gcm}`;
       }

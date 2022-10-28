@@ -1,4 +1,6 @@
-import { DataParamGroupConfig } from '@/lib/controls/data-params';
+import { DataParamGroupConfig, inferDependenciesFromData, inferDomainsFromData } from '@/lib/controls/data-params';
+
+import droughtDomain from './domain-data/drought.json';
 
 export interface HazardParams {
   returnPeriod: number;
@@ -145,5 +147,18 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<any>> = {
       medium: 'soil',
     },
     paramDependencies: {},
+  },
+  drought: {
+    paramDomains: inferDomainsFromData(droughtDomain),
+    paramDefaults: {
+      epoch: 'baseline',
+      rcp: 'baseline',
+      gcm: 'gfdl-esm2m',
+    },
+    paramDependencies: inferDependenciesFromData(droughtDomain, {
+      rcp: ['epoch'],
+      gcm: ['epoch'],
+      epoch: [],
+    }),
   },
 };
