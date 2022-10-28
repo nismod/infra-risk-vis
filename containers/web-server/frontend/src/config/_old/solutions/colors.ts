@@ -1,3 +1,5 @@
+import { d3Scale, d3ScaleChromatic, invertColorScale } from '@/lib/data-map/color-maps';
+import { ColorSpec } from '@/lib/data-map/view-layers';
 import { makeColorConfig } from '@/lib/helpers';
 
 import { MarineHabitatType } from './domains';
@@ -42,3 +44,18 @@ export const MARINE_HABITAT_COLORS = makeColorConfig<MarineHabitatType>({
   seagrass: '#f2e680',
   other: 'rgba(128,128,128,0.2)',
 });
+
+export const TERRESTRIAL_COLORMAPS: Record<'slope' | 'elevation', ColorSpec> = {
+  slope: {
+    scale: d3Scale.scaleSequential,
+    scheme: d3ScaleChromatic.interpolateReds,
+    range: [0, 90],
+    empty: '#ccc',
+  },
+  elevation: {
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateGreys),
+    range: [0, 2250],
+    empty: '#ccc',
+  },
+};

@@ -2,7 +2,7 @@ import { selector } from 'recoil';
 
 import { FieldSpec, StyleParams } from '@/lib/data-map/view-layers';
 
-import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
+import { DAMAGE_COLORMAP } from '@/config/damage-mapping/colors';
 import { dataParamsByGroupState } from '@/state/data-params';
 
 import { damageSourceState, damageTypeState } from './damage-map';
@@ -36,7 +36,7 @@ export const damageMapStyleParamsState = selector<StyleParams>({
 
     return {
       colorMap: {
-        colorSpec: VECTOR_COLOR_MAPS.damages,
+        colorSpec: DAMAGE_COLORMAP,
         fieldSpec: eadFieldSpec,
       },
     };

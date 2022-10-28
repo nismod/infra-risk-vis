@@ -6,9 +6,6 @@ import { hasHover, hoverState } from '@/lib/data-map/interactions/interaction-st
 import { InteractionTarget } from '@/lib/data-map/interactions/use-interactions';
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 
-import { NETWORKS_METADATA } from '@/config/networks/metadata';
-
-import { VectorHoverDescription } from './VectorHoverDescription';
 import { HazardHoverDescription } from './content/HazardHoverDescription';
 import { HdiHoverDescription } from './content/HdiHoverDescription';
 import { PopulationHoverDescription } from './content/PopulationHoverDescription';
@@ -46,9 +43,7 @@ export const TooltipContent: FC = () => {
         <ErrorBoundary message="There was a problem displaying the tooltip.">
           {/* TODO: generate tooltip contents straight from view layers */}
           {assetsHovered ? (
-            <TooltipSection>
-              <VectorHoverDescription hoveredObject={hoveredVector} metadataLookup={NETWORKS_METADATA} />
-            </TooltipSection>
+            <TooltipSection>{hoveredVector.viewLayer.renderTooltip?.(hoveredVector)}</TooltipSection>
           ) : null}
           {hazardsHovered ? (
             <TooltipSection>

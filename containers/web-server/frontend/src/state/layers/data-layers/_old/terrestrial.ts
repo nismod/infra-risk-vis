@@ -10,11 +10,10 @@ import { Accessor } from '@/lib/deck/props/getters';
 import { border, fillColor } from '@/lib/deck/props/style';
 import { truthyKeys } from '@/lib/helpers';
 
-import { TERRESTRIAL_LANDUSE_COLORS } from '@/config/_old/solutions/colors';
+import { TERRESTRIAL_COLORMAPS, TERRESTRIAL_LANDUSE_COLORS } from '@/config/_old/solutions/colors';
 import { getSolutionsDataAccessor } from '@/config/_old/solutions/data-access';
 import { getTerrestrialDataFormats } from '@/config/_old/solutions/data-formats';
 import { LandUseOption, TerrestrialLocationFilterType } from '@/config/_old/solutions/domains';
-import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { landuseFilterState } from '@/state/data-selection/_old/solutions/landuse-tree';
 import {
   TerrestrialFilters,
@@ -33,9 +32,9 @@ export const terrestrialColorSpecState = selector<ColorSpec>({
     const style = get(sectionStyleValueState('terrestrial'));
 
     if (style === 'elevation') {
-      return VECTOR_COLOR_MAPS.terrestrialElevation;
+      return TERRESTRIAL_COLORMAPS.elevation;
     } else if (style === 'slope') {
-      return VECTOR_COLOR_MAPS.terrestrialSlope;
+      return TERRESTRIAL_COLORMAPS.slope;
     } else {
       // land use will not have a colorSpec, because it's categorical
       return null;

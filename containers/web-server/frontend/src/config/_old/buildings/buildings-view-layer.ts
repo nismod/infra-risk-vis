@@ -3,42 +3,22 @@ import { border, fillColor } from '@/lib/deck/props/style';
 
 import { assetViewLayer } from '@/config/assets/asset-view-layer';
 import { assetDataAccessFunction } from '@/config/assets/data-access';
-import { COLORS } from '@/config/colors';
+import { BuildingType } from '@/state/data-selection/_old/buildings';
 
-enum BuildingType {
-  commercial = 'commercial',
-  industrial = 'industrial',
-  institutional = 'institutional',
-  mixed_use = 'mixed_use',
-  other = 'other',
-  recreation = 'recreation',
-  residential = 'residential',
-  resort = 'resort',
-}
-
-const buildingTypeLookup = {
-  buildings_commercial: BuildingType.commercial,
-  buildings_industrial: BuildingType.industrial,
-  buildings_institutional: BuildingType.institutional,
-  buildings_mixed: BuildingType.mixed_use,
-  buildings_other: BuildingType.other,
-  buildings_recreation: BuildingType.recreation,
-  buildings_residential: BuildingType.residential,
-  buildings_resort: BuildingType.resort,
-};
+import { BUILDING_COLORS } from './metadata';
 
 const buildingColor = {
-  [BuildingType.commercial]: COLORS.buildings_commercial.deck,
-  [BuildingType.industrial]: COLORS.buildings_industrial.deck,
-  [BuildingType.institutional]: COLORS.buildings_institutional.deck,
-  [BuildingType.mixed_use]: COLORS.buildings_mixed.deck,
-  [BuildingType.other]: COLORS.buildings_other.deck,
-  [BuildingType.recreation]: COLORS.buildings_recreation.deck,
-  [BuildingType.residential]: COLORS.buildings_residential.deck,
-  [BuildingType.resort]: COLORS.buildings_resort.deck,
+  buildings_commercial: BUILDING_COLORS.commercial,
+  buildings_industrial: BUILDING_COLORS.industrial,
+  buildings_institutional: BUILDING_COLORS.institutional,
+  buildings_mixed: BUILDING_COLORS.mixed,
+  buildings_other: BUILDING_COLORS.other,
+  buildings_recreation: BUILDING_COLORS.recreation,
+  buildings_residential: BUILDING_COLORS.residential,
+  buildings_resort: BUILDING_COLORS.resort,
 };
 
-export function buildingsViewLayer(building_type_id): ViewLayer {
+export function buildingsViewLayer(building_type_id: BuildingType): ViewLayer {
   return assetViewLayer({
     assetId: building_type_id,
     metadata: {
@@ -47,8 +27,8 @@ export function buildingsViewLayer(building_type_id): ViewLayer {
     },
     customFn: () => [
       { minZoom: 12 },
-      border(COLORS.buildings_unknown.deck),
-      fillColor(buildingColor[buildingTypeLookup[building_type_id]]),
+      border(BUILDING_COLORS.unknown.deck),
+      fillColor(buildingColor[building_type_id].deck),
     ],
     customDataAccessFn: assetDataAccessFunction(building_type_id),
   });

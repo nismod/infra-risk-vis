@@ -7,8 +7,8 @@ import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 import { DataDescription } from '@/lib/ui/data-display/DataDescription';
 import { DataItem } from '@/lib/ui/data-display/DataItem';
 
+import { TERRESTRIAL_COLORMAPS } from '@/config/_old/solutions/colors';
 import { MARINE_HABITATS_LOOKUP } from '@/config/_old/solutions/domains';
-import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { habitatColorMap } from '@/state/layers/data-layers/_old/marine';
 import { landuseColorMap } from '@/state/layers/data-layers/_old/terrestrial';
 
@@ -50,7 +50,7 @@ export const SolutionHoverDescription: FC<{
           <DataDescription
             colorMap={{
               fieldSpec: slopeFieldSpec,
-              colorSpec: VECTOR_COLOR_MAPS.terrestrialSlope,
+              colorSpec: TERRESTRIAL_COLORMAPS.slope,
             }}
             feature={feature}
             viewLayer={viewLayer}
@@ -58,7 +58,7 @@ export const SolutionHoverDescription: FC<{
           <DataDescription
             colorMap={{
               fieldSpec: elevationFieldSpec,
-              colorSpec: VECTOR_COLOR_MAPS.terrestrialElevation,
+              colorSpec: TERRESTRIAL_COLORMAPS.elevation,
             }}
             feature={feature}
             viewLayer={viewLayer}

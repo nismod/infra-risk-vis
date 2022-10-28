@@ -6,7 +6,9 @@ import { ApiClient } from '@/lib/api-client';
 import { downloadFile } from '@/lib/helpers';
 import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
-import { NETWORKS_METADATA } from '@/config/networks/metadata';
+import { BuildingLayerType } from '@/config/_old/buildings/metadata';
+import { NETWORKS_METADATA, NetworkLayerType } from '@/config/networks/metadata';
+import { IndustryType } from '@/state/data-selection/industry';
 
 import { AdaptationSection } from './adaptation/AdaptationSection';
 import { DamagesSection } from './damages/DamagesSection';
@@ -30,7 +32,12 @@ import {
   WaterSupplyNodeDetails,
 } from './detail-components';
 
-var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> = {
+/**
+ * Add keys here to allow configuring details for more asset types
+ */
+type ComponentMappingKey = NetworkLayerType | BuildingLayerType | IndustryType | 'healthsites';
+
+var componentMapping: Record<ComponentMappingKey, DetailsComponent> = {
   airport_terminals: AirportDetails,
   airport_runways: AirportDetails,
 

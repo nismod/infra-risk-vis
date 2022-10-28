@@ -44,6 +44,7 @@ export interface FormatConfig<D = any> {
 
 export type ViewLayerDataAccessFunction = (fieldSpec: FieldSpec) => Accessor<any>;
 export type ViewLayerDataFormatFunction = (fieldSpec: FieldSpec) => FormatConfig;
+export type ViewLayerRenderTooltipFunction = (hover: any) => ReactNode;
 export interface ViewLayer {
   id: string;
   params?: any;
@@ -60,7 +61,7 @@ export interface ViewLayer {
    * (currently used for raster layers only)
    */
   renderLegend?: () => ReactNode;
-  renderTooltip?: (hover: any) => ReactNode;
+  renderTooltip?: ViewLayerRenderTooltipFunction;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {

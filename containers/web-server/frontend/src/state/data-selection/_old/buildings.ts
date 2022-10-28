@@ -14,7 +14,7 @@ export const BUILDING_TYPES = [
   'buildings_recreation',
   'buildings_other',
   'buildings_resort',
-];
+] as const;
 
 export type BuildingType = typeof BUILDING_TYPES[number];
 

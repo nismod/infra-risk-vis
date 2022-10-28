@@ -2,11 +2,12 @@ import _ from 'lodash';
 import { atom, selector } from 'recoil';
 
 import { recalculateCheckboxStates } from '@/lib/controls/checkbox-tree/CheckboxTree';
+import { d3Scale, d3ScaleChromatic, discardSides, invertColorScale } from '@/lib/data-map/color-maps';
 import { ColorSpec, FieldSpec, StyleParams, ViewLayer } from '@/lib/data-map/view-layers';
+import { valueType } from '@/lib/helpers';
 import { StateEffect } from '@/lib/recoil/state-effects/types';
 
 import { LayerSpec } from '@/asset-list/use-sorted-features';
-import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
 import { AdaptationOptionParams } from '@/config/domains/adaptation';
 import adaptationSectorLayers from '@/config/domains/adaptation-sector-layers.json';
 import { infrastructureViewLayer } from '@/config/networks/infrastructure-view-layer';
@@ -113,6 +114,26 @@ export const adaptationFieldSpecState = selector<FieldSpec>({
   },
 });
 
+const ADAPTATION_COLOR_MAPS = valueType<ColorSpec>()({
+  cost: {
+    scale: d3Scale.scaleSequential,
+    scheme: discardSides(d3ScaleChromatic.interpolateGreens, 0.2, 0.2),
+    range: [0, 1e9],
+    empty: '#ccc',
+  },
+  avoided: {
+    scale: d3Scale.scaleSequential,
+    scheme: discardSides(d3ScaleChromatic.interpolateBlues, 0.2, 0.2),
+    range: [0, 1e7],
+    empty: '#ccc',
+  },
+  costBenefitRatio: {
+    scale: d3Scale.scaleSequential,
+    scheme: invertColorScale(d3ScaleChromatic.interpolateViridis),
+    range: [1, 10],
+    empty: '#ccc',
+  },
+});
 export const adaptationColorSpecState = selector<ColorSpec>({
   key: 'adaptationColorSpecState',
   get: ({ get }) => {
@@ -120,11 +141,11 @@ export const adaptationColorSpecState = selector<ColorSpec>({
 
     let colorSpec: ColorSpec;
     if (field === 'adaptation_cost') {
-      colorSpec = VECTOR_COLOR_MAPS.adaptationCost;
+      colorSpec = ADAPTATION_COLOR_MAPS.cost;
     } else if (field === 'avoided_ead_mean' || field === 'avoided_eael_mean') {
-      colorSpec = VECTOR_COLOR_MAPS.adaptationAvoided;
+      colorSpec = ADAPTATION_COLOR_MAPS.avoided;
     } else if (field === 'cost_benefit_ratio') {
-      colorSpec = VECTOR_COLOR_MAPS.costBenefitRatio;
+      colorSpec = ADAPTATION_COLOR_MAPS.costBenefitRatio;
     }
 
     return colorSpec;

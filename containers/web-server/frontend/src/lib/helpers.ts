@@ -74,8 +74,17 @@ export function makeConfig<C, K extends string>(cfg: (C & { id: K })[]) {
   );
 }
 
+/**
+ * Creates a color object with css and deck.gl format from CSS string
+ * @param c color in CSS string format
+ * @returns object with both css and deck color formats
+ */
+export function makeColor(c: string) {
+  return { css: c, deck: colorCssToRgb(c) };
+}
+
 export function makeColorConfig<K extends string>(cfg: Record<K, string>) {
-  return _.mapValues(cfg, (c) => ({ css: c, deck: colorCssToRgb(c) }));
+  return _.mapValues(cfg, makeColor);
 }
 
 // see discussion at https://stackoverflow.com/questions/23437476/in-typescript-how-to-check-if-a-string-is-numeric

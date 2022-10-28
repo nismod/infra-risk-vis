@@ -8,8 +8,9 @@ import { DataItem } from '@/lib/ui/data-display/DataItem';
 
 export const VectorHoverDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;
-  metadataLookup: Record<string, any>;
-}> = ({ hoveredObject, metadataLookup }) => {
+  label: string;
+  color: string;
+}> = ({ hoveredObject, label: title, color = '#ccc' }) => {
   const {
     viewLayer,
     target: { feature },
@@ -19,8 +20,6 @@ export const VectorHoverDescription: FC<{
   const { colorMap } = styleParams;
 
   const isDataMapped = colorMap != null;
-
-  const { label: title, color = '#ccc' } = metadataLookup[viewLayer.params.assetId];
 
   return (
     <>

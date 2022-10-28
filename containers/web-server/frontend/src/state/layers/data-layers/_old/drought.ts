@@ -6,15 +6,10 @@ import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
 import { dataColorMap } from '@/lib/deck/props/color-map';
 import { border, fillColor, pointRadius } from '@/lib/deck/props/style';
 
+import { DROUGHT_OPTIONS_COLORMAPS, DROUGHT_RISK_COLORMAPS } from '@/config/_old/drought/colors';
 import { getDroughtDataAccessor } from '@/config/_old/drought/data-access';
 import { getDroughtOptionsDataFormats, getDroughtRiskDataFormats } from '@/config/_old/drought/data-formats';
-import {
-  DROUGHT_OPTIONS_VARIABLES_WITH_RCP,
-  DROUGHT_RISK_VARIABLES_WITH_RCP,
-  DroughtOptionsVariableType,
-  DroughtRiskVariableType,
-} from '@/config/_old/drought/metadata';
-import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
+import { DROUGHT_OPTIONS_VARIABLES_WITH_RCP, DROUGHT_RISK_VARIABLES_WITH_RCP } from '@/config/_old/drought/metadata';
 import { SOURCES } from '@/config/sources';
 import {
   droughtOptionsVariableState,
@@ -44,17 +39,11 @@ export const droughtRegionsFieldSpecState = selector<FieldSpec>({
   },
 });
 
-const droughtRiskColorSpecLookup: Record<DroughtRiskVariableType, ColorSpec> = {
-  mean_monthly_water_stress_: VECTOR_COLOR_MAPS.droughtRiskWaterStress,
-  epd: VECTOR_COLOR_MAPS.droughtRiskEpd,
-  eael: VECTOR_COLOR_MAPS.droughtRiskEael,
-};
-
 export const droughtRegionsColorSpecState = selector<ColorSpec>({
   key: 'droughtRegionsColorSpecState',
   get: ({ get }) => {
     const field = get(droughtRiskVariableState);
-    return droughtRiskColorSpecLookup[field];
+    return DROUGHT_RISK_COLORMAPS[field];
   },
 });
 
@@ -124,18 +113,11 @@ export const droughtOptionsFieldSpecState = selector<FieldSpec>({
   },
 });
 
-const droughtOptionsColorSpecLookup: Record<DroughtOptionsVariableType, ColorSpec> = {
-  cost_jmd: VECTOR_COLOR_MAPS.droughtOptionsCost,
-  population_protected: VECTOR_COLOR_MAPS.droughtOptionsPopulationProtected,
-  net_present_value_benefit: VECTOR_COLOR_MAPS.droughtOptionsNPVBenefit,
-  benefit_cost_ratio: VECTOR_COLOR_MAPS.droughtOptionsBenefitCost,
-};
-
 export const droughtOptionsColorSpecState = selector<ColorSpec>({
   key: 'droughtOptionsColorSpecState',
   get: ({ get }) => {
     const field = get(droughtOptionsVariableState);
-    return droughtOptionsColorSpecLookup[field];
+    return DROUGHT_OPTIONS_COLORMAPS[field];
   },
 });
 
