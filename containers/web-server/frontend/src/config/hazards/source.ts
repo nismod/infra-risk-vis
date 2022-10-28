@@ -13,12 +13,14 @@ export const HAZARD_SOURCE = {
 
       if (hazardType === 'cyclone') {
         path = `${hazardType}/${returnPeriod}/${gcm}`;
-      } else if (hazardType === 'extreme_heat_occurrence') {
+      } else if (hazardType === 'extreme_heat') {
         // TODO: Add support for exposure metric (as well as occurrence)
         path = `extreme_heat/occurrence/${sanitisedRcp}/${epoch}/${gcm}`;
-      } else if (hazardType === 'extreme_heat_exposure') {
-        // TODO: Add support for exposure metric (as well as occurrence)
-        path = `extreme_heat/exposure/${sanitisedRcp}/${epoch}/${gcm}`;
+        /*
+        else if (hazardType === 'extreme_heat_exposure') {
+          path = `extreme_heat/exposure/${sanitisedRcp}/${epoch}/${gcm}`;
+        }
+        */
       } else if (hazardType === 'drought') {
         path = `drought/occurrence/${sanitisedRcp}/${epoch}/${gcm}`;
       } else {

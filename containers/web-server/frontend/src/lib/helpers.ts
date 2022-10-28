@@ -74,6 +74,31 @@ export function makeConfig<C, K extends string>(cfg: (C & { id: K })[]) {
   );
 }
 
+type ValueMissingError<T extends string, E extends T> = `${Exclude<T, E>} is missing`;
+
+/**
+ * Make a function that checks if a given array contains all elements of the specified union type.
+ *
+ * Useful when defining an ordering of a certain set of values.
+ * If the original set has an added value later on, the old ordering won't compile until the new value is added.
+ * **CAUTION**: this cannot prevent duplicated values in the array.
+ *
+ * Example usage:
+ * ```
+ * type AType = 'foo' | 'bar';
+ * const aTypeOrdering = makeOrderingCheck<AType>();
+ *
+ * const x = aTypeOrdering(['foo']) // <- error!
+ * const y = aTypeOrdering(['foo', 'bar', 'baz']) // <- error!
+ * const z = aTypeOrdering(['foo', 'bar']) // <- OK
+ * const w = aTypeOrdering(['foo', 'foo', 'bar']) // Caution, also OK
+ * ```
+ * @returns
+ */
+export const makeOrderingCheck = <T extends string>() => {
+  return <E extends T[]>(array: E & ([T] extends [E[number]] ? unknown : ValueMissingError<T, E[number]>)) => array;
+};
+
 /**
  * Creates a color object with css and deck.gl format from CSS string
  * @param c color in CSS string format

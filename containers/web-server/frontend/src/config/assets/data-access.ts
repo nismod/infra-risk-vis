@@ -4,14 +4,15 @@ import { extraProperty, featureProperty } from '@/lib/deck/props/data-source';
 import { withTriggers } from '@/lib/deck/props/getters';
 import { sumOrNone } from '@/lib/helpers';
 
+import { HAZARD_TYPES } from '../hazards/metadata';
+
 function getExpectedDamageKey(direct: boolean, hazard: string, rcp: string, epoch: number) {
   return `${direct ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
 }
 
-const hazardTypes = ['fluvial', 'surface', 'coastal', 'cyclone', 'extreme_heat_occurrence', 'extreme_heat_exposure'];
-
+//TODO: not all hazard will have damages calculated
 function totalExpectedDamagesProperty(direct: boolean, { rcp, epoch }) {
-  const hazardProperties = hazardTypes.map((ht) => featureProperty(getExpectedDamageKey(direct, ht, rcp, epoch)));
+  const hazardProperties = HAZARD_TYPES.map((ht) => featureProperty(getExpectedDamageKey(direct, ht, rcp, epoch)));
 
   return withTriggers((f) => sumOrNone(hazardProperties.map((p) => p(f))), [direct, rcp, epoch]);
 }

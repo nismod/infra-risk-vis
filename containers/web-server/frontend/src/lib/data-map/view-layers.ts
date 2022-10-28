@@ -45,9 +45,9 @@ export interface FormatConfig<D = any> {
 export type ViewLayerDataAccessFunction = (fieldSpec: FieldSpec) => Accessor<any>;
 export type ViewLayerDataFormatFunction = (fieldSpec: FieldSpec) => FormatConfig;
 export type ViewLayerRenderTooltipFunction = (hover: any) => ReactNode;
-export interface ViewLayer {
+export interface ViewLayer<ParamsT = any> {
   id: string;
-  params?: any;
+  params?: ParamsT;
   styleParams?: StyleParams;
   fn: (options: ViewLayerFunctionOptions) => any;
   dataAccessFn?: ViewLayerDataAccessFunction;

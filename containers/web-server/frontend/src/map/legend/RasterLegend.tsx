@@ -10,14 +10,16 @@ export interface RasterColorMap {
 
 export const RasterLegend: FC<{
   label: string;
+  description?: string;
   colorMap: RasterColorMap;
   getValueLabel: (x: any) => string;
-}> = ({ label, colorMap: { scheme, range }, getValueLabel }) => {
+}> = ({ label, description, colorMap: { scheme, range }, getValueLabel }) => {
   const { error, loading, colorMapValues } = useRasterColorMapValues(scheme, range);
 
   return (
     <GradientLegend
       label={label}
+      description={description}
       range={range}
       colorMapValues={!(error || loading) ? colorMapValues : null}
       getValueLabel={getValueLabel}
