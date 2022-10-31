@@ -1,29 +1,16 @@
 # multistage build of nginx image
 
 # stage 1 of 2
-
-# name the node stage "builder"
 FROM node:16 AS builder
 WORKDIR /app
-# copy package.json and install -- do this before copying everything else
-# to enable more efficient caching by docker (we don't reinstall packages when
-# we've only changed application code)
-#COPY package.json .
+
 COPY frontend/package.json .
-# install node modules
 RUN npm install
-# copy folders and files required for build into image N.B. when docker copy is given a
-# directory, it copies the contents but not the dir itself, so you must name the destination dir
-#   COPY images images
-#   COPY public public
-#   COPY src src
-#   COPY .eslintrc.js tsconfig.json tsconfig-typings.json .
+
 COPY frontend .
-# build to static site
 RUN npm run build
 
 # stage 2 of 2
-
 FROM nginx:alpine
 # add package containing htpasswd utility
 RUN apk update && apk add apache2-utils
@@ -31,7 +18,7 @@ WORKDIR /usr/share/nginx/html
 # remove default nginx static assets
 RUN rm -rf ./*
 # copy in static assets from builder stage
-COPY --from=builder /app/build .
+COPY --from=builder /app/build* .
 # and copy in the nginx config...
 # delete conf.d as it will contain default.conf which will conflict
 RUN rm -rf /etc/nginx/conf.d

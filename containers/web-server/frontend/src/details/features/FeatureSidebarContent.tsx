@@ -1,6 +1,15 @@
-import React, { FC, useEffect, useState } from 'react';
+import { Download } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
+import React, { FC, useEffect, useState } from 'react';
 
+import { ApiClient } from '@/lib/api-client';
+import { downloadFile } from '@/lib/helpers';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
+
+import { NETWORKS_METADATA } from '@/config/networks/metadata';
+
+import { AdaptationSection } from './adaptation/AdaptationSection';
+import { DamagesSection } from './damages/DamagesSection';
 import {
   AirportDetails,
   BridgeDetails,
@@ -20,13 +29,6 @@ import {
   WaterPipelineDetails,
   WaterSupplyNodeDetails,
 } from './detail-components';
-import { NETWORKS_METADATA } from 'config/networks/metadata';
-import { ColorBox } from 'map/tooltip/content/ColorBox';
-import { ApiClient } from 'lib/api-client';
-import { DamagesSection } from './damages/DamagesSection';
-import { AdaptationSection } from './adaptation/AdaptationSection';
-import { Download } from '@mui/icons-material';
-import { downloadFile } from 'lib/helpers';
 
 var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> = {
   airport_terminals: AirportDetails,
@@ -96,6 +98,11 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
   buildings_mixed: BuildingDetails,
   buildings_recreation: BuildingDetails,
   buildings_resort: BuildingDetails,
+
+  cement: DefaultDetails,
+  steel: DefaultDetails,
+
+  healthsites: DefaultDetails,
 };
 
 interface FeatureSidebarContentProps {

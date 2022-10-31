@@ -1,4 +1,4 @@
-import { makeColorConfig } from 'lib/helpers';
+import { makeColorConfig } from '@/lib/helpers';
 
 export const COLORS = makeColorConfig({
   electricity_high: '#eca926',
@@ -33,4 +33,9 @@ export const COLORS = makeColorConfig({
   buildings_unknown: '#dfe4de',
 
   regions_no_data: '#ccc',
+
+  industry_cement: '#e4cda9',
+  industry_steel: '#5b8cc3',
+
+  healthsites: '#72dfda',
 });

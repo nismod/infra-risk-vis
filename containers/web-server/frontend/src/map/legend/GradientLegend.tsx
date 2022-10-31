@@ -1,10 +1,15 @@
 import { Box, Typography } from '@mui/material';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 const legendHeight = 10;
 
+export interface ColorValue {
+  color: string;
+  value: any;
+}
+
 const LegendGradient: FC<{
-  colorMapValues: any[];
+  colorMapValues: ColorValue[];
   getValueLabel: (value: number) => string;
 }> = ({ colorMapValues, getValueLabel }) => {
   return (
@@ -16,7 +21,14 @@ const LegendGradient: FC<{
   );
 };
 
-export const GradientLegend = ({ label, range, colorMapValues, getValueLabel }) => (
+export interface GradientLegendProps {
+  label: string | ReactNode;
+  range: [number, number];
+  colorMapValues: ColorValue[];
+  getValueLabel: (x: any) => string;
+}
+
+export const GradientLegend: FC<GradientLegendProps> = ({ label, range, colorMapValues, getValueLabel }) => (
   <Box mb={2}>
     <Typography>{label}</Typography>
     <Box

@@ -1,7 +1,8 @@
+import { useDebounceCallback } from '@react-hook/debounce';
 import { useEffect, useState } from 'react';
 import { useFetch } from 'use-http';
-import { useDebounceCallback } from '@react-hook/debounce';
-import { BoundingBox, NominatimBoundingBox, nominatimToAppBoundingBox } from 'lib/bounding-box';
+
+import { BoundingBox, NominatimBoundingBox, nominatimToAppBoundingBox } from '@/lib/bounding-box';
 
 export interface PlaceSearchResult {
   label: string;
@@ -27,9 +28,7 @@ function processNominatimData(data: NominatimSearchResult[]): PlaceSearchResult[
 }
 
 export function usePlaceSearch(searchValue: string) {
-  const { get, error } = useFetch(
-    `https://nominatim.openstreetmap.org/search.php?countrycodes=jm&format=jsonv2&q=${searchValue}`,
-  );
+  const { get, error } = useFetch(`https://nominatim.openstreetmap.org/search.php?format=jsonv2&q=${searchValue}`);
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);

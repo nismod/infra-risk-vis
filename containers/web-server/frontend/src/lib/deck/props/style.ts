@@ -26,6 +26,17 @@ export function pointRadius(zoom) {
 export type Color = [number, number, number, number?];
 export type GetColor = Getter<Color>;
 
+/**
+ * Returns color with alpha set to new value.
+ * Doesn't mutate the input color.
+ * @param color (r,g,b,[a]) color to modify
+ * @param alpha new alpha value
+ */
+export function setAlpha(color: Color, alpha: number): Color {
+  const [r, g, b] = color;
+  return [r, g, b, alpha];
+}
+
 export function vectorColor(type: 'fill' | 'stroke', getColor: GetColor) {
   let propName: string;
   if (type === 'fill') propName = 'getFillColor';

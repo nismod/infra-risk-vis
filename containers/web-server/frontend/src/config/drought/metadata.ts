@@ -1,4 +1,4 @@
-import { ValueLabel } from 'lib/controls/params/value-label';
+import { ValueLabel } from '@/lib/controls/params/value-label';
 
 export const DROUGHT_RISK_VARIABLES = ['mean_monthly_water_stress_', 'epd', 'eael'] as const;
 

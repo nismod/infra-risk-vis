@@ -8,35 +8,38 @@
  */
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
+const proxyTable = {
+  '/vector': {
+    target: 'http://localhost:8080',
+    changeOrigin: true,
+    pathRewrite: { '^/vector': '/' },
+  },
+
+  '/api': {
+    target: 'http://localhost:8888',
+    changeOrigin: true,
+    pathRewrite: { '^/api': '/' },
+  },
+
+  // connect to production for frontend-only development
+
+  /*
+  '/vector': {
+    target: 'https://global.infrastructureresilience.org',
+    changeOrigin: true,
+    secure: false,
+  },
+
+  '/api': {
+    target: 'https://global.infrastructureresilience.org',
+    changeOrigin: true,
+    secure: false,
+  },
+  */
+};
+
 module.exports = function (app) {
-  app.use(
-    '/vector',
-    createProxyMiddleware({
-      target: 'http://localhost:8080',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/vector': '/', // remove base path
-      },
-    }),
-  );
-  app.use(
-    '/raster',
-    createProxyMiddleware({
-      target: 'http://localhost:8888',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/raster': '/', // remove base path
-      },
-    }),
-  );
-  app.use(
-    '/api',
-    createProxyMiddleware({
-      target: 'http://localhost:8888',
-      changeOrigin: true,
-      pathRewrite: {
-        '^/api': '/', // remove base path
-      },
-    }),
-  );
+  for (const [context, options] of Object.entries(proxyTable)) {
+    app.use(context, createProxyMiddleware(options));
+  }
 };

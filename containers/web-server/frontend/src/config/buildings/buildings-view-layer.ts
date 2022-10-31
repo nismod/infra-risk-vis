@@ -1,8 +1,9 @@
-import { ViewLayer } from 'lib/data-map/view-layers';
-import { COLORS } from 'config/colors';
-import { assetViewLayer } from 'config/assets/asset-view-layer';
-import { border, fillColor } from 'lib/deck/props/style';
-import { assetDataAccessFunction } from 'config/assets/data-access';
+import { ViewLayer } from '@/lib/data-map/view-layers';
+import { border, fillColor } from '@/lib/deck/props/style';
+
+import { assetViewLayer } from '@/config/assets/asset-view-layer';
+import { assetDataAccessFunction } from '@/config/assets/data-access';
+import { COLORS } from '@/config/colors';
 
 enum BuildingType {
   commercial = 'commercial',
@@ -38,19 +39,17 @@ const buildingColor = {
 };
 
 export function buildingsViewLayer(building_type_id): ViewLayer {
-  return assetViewLayer(
-    building_type_id,
-    {
-      group: 'buildings',
+  return assetViewLayer({
+    assetId: building_type_id,
+    metadata: {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    -1000,
-    ({ zoom, styleParams }) => [
+    customFn: () => [
       { minZoom: 12 },
       border(COLORS.buildings_unknown.deck),
       fillColor(buildingColor[buildingTypeLookup[building_type_id]]),
     ],
-    assetDataAccessFunction(building_type_id),
-  );
+    customDataAccessFn: assetDataAccessFunction(building_type_id),
+  });
 }

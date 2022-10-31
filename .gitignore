@@ -63,3 +63,5 @@ provision.sh
 *.gpkg
 *.mbtiles
 *.tar.gz
+.vscode
+

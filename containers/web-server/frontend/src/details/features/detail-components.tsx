@@ -1,29 +1,8 @@
+import { List, Typography } from '@mui/material';
 import { ComponentType, FC } from 'react';
 
-import { List, ListItem, ListItemText, Typography } from '@mui/material';
-
-import { titleCase, isNumeric, numFormat, paren, numRangeFormat } from 'lib/helpers';
-
-interface DataItemProps {
-  label: string;
-  value: any;
-  maximumSignificantDigits?: number;
-}
-
-export const DataItem: FC<DataItemProps> = ({ label, value, maximumSignificantDigits }) => {
-  if (isNumeric(value)) {
-    value = numFormat(value, maximumSignificantDigits);
-  }
-  return (
-    <ListItem disableGutters disablePadding>
-      <ListItemText
-        primary={label}
-        primaryTypographyProps={{ variant: 'caption' }}
-        secondary={value === ' ' ? '-' : value || '-'}
-      />
-    </ListItem>
-  );
-};
+import { numFormat, numRangeFormat, paren, titleCase } from '@/lib/helpers';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
 
 interface DetailSubheaderProps {
   id: string;

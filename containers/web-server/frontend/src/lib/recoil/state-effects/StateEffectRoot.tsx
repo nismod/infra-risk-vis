@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import { useStateEffect } from './use-state-effect';
 
 /**

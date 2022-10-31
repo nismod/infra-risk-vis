@@ -1,44 +1,33 @@
 import GL from '@luma.gl/constants';
-import { HazardParams } from 'config/hazards/domains';
+import React from 'react';
 
-import { rasterTileLayer } from 'lib/deck/layers/raster-tile-layer';
-import { ViewLayer } from 'lib/data-map/view-layers';
+import { ViewLayer } from '@/lib/data-map/view-layers';
+import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 
-import { RASTER_COLOR_MAPS } from '../color-maps';
+import { RASTER_COLOR_MAPS } from '@/config/color-maps';
+import { HazardLegend } from '@/map/legend/content/HazardLegend';
+
 import { HAZARD_SOURCE } from './source';
 
-export function getHazardId<
-  F extends string, //'fluvial' | 'surface' | 'coastal' | 'cyclone',
-  RP extends number,
-  RCP extends string,
-  E extends number | string,
-  C extends number | string,
->({
-  hazardType,
-  returnPeriod,
-  rcp,
-  epoch,
-  gcm,
-}: {
-  hazardType: F;
-  returnPeriod: RP;
-  rcp: RCP;
-  epoch: E;
-  gcm: C;
-}) {
-  return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${gcm}` as const;
+export function getHazardId({ hazardType, hazardParams }: { hazardType: string; hazardParams: any }) {
+  if (hazardType === 'earthquake') {
+    const { returnPeriod, medium } = hazardParams;
+
+    return `${hazardType}__rp_${returnPeriod}__medium_${medium}`;
+  } else {
+    const { returnPeriod, rcp, epoch, gcm } = hazardParams;
+
+    return `${hazardType}__rp_${returnPeriod}__rcp_${rcp}__epoch_${epoch}__conf_${gcm}`;
+  }
 }
 
-export function hazardViewLayer(hazardType: string, hazardParams: HazardParams): ViewLayer {
+export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLayer {
   const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;
 
-  const { returnPeriod, rcp, epoch, gcm } = hazardParams;
-
-  const deckId = getHazardId({ hazardType, returnPeriod, rcp, epoch, gcm });
+  const deckId = getHazardId({ hazardType, hazardParams });
 
   return {
     id: hazardType,
-    group: 'hazards',
     spatialType: 'raster',
     interactionGroup: 'hazards',
     params: { hazardType, hazardParams },
@@ -49,9 +38,13 @@ export function hazardViewLayer(hazardType: string, hazardParams: HazardParams):
         {
           textureParameters: {
             [GL.TEXTURE_MAG_FILTER]: magFilter,
-            // [GL.TEXTURE_MAG_FILTER]: zoom < 12 ? GL.NEAREST : GL.NEAREST_MIPMAP_LINEAR,
           },
-          opacity: hazardType === 'cyclone' ? 0.6 : 1,
+          opacity: hazardType === 'cyclone' || hazardType === 'earthquake' ? 0.6 : 1,
+
+          // TODO: tweak transparentColor to tweak border color / transparent layer tint
+          /*
+          transparentColor: [128, 128, 128, 0],
+          */
         },
         deckProps,
         {
@@ -60,6 +53,12 @@ export function hazardViewLayer(hazardType: string, hazardParams: HazardParams):
           refinementStrategy: 'no-overlap',
         },
       );
+    },
+    renderLegend() {
+      return React.createElement(HazardLegend, {
+        key: hazardType,
+        viewLayer: this,
+      });
     },
   };
 }

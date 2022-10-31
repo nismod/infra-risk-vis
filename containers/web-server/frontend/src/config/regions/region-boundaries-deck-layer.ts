@@ -1,5 +1,5 @@
-import { mvtLayer } from 'lib/deck/layers/base';
-import { border } from 'lib/deck/props/style';
+import { mvtLayer } from '@/lib/deck/layers/base';
+import { border } from '@/lib/deck/props/style';
 
 import { RegionLevel } from './metadata';
 

@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { FC } from 'react';
 
 const shapeStyles = {
   line: {
@@ -18,7 +19,9 @@ const shapeStyles = {
   },
 };
 
-export const LayerShapeLegend = ({ type, color }: { type: 'line' | 'circle' | 'square'; color: string }) => {
+export type LayerLabelShapeType = keyof typeof shapeStyles;
+
+export const LayerShapeLegend = ({ type, color }: { type: LayerLabelShapeType; color: string }) => {
   const shapeStyle = shapeStyles[type];
   return (
     <Box
@@ -33,7 +36,13 @@ export const LayerShapeLegend = ({ type, color }: { type: 'line' | 'circle' | 's
   );
 };
 
-export const LayerLabel = ({ label, type, color }) => {
+export interface LayerLabelProps {
+  label: string;
+  type: LayerLabelShapeType;
+  color: string;
+}
+
+export const LayerLabel: FC<LayerLabelProps> = ({ label, type, color }) => {
   return (
     <>
       <Typography>

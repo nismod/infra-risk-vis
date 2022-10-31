@@ -1,4 +1,4 @@
-import { FieldSpec, FormatConfig } from 'lib/data-map/view-layers';
+import { FieldSpec, FormatConfig } from '@/lib/data-map/view-layers';
 
 const variableLabelLookup = {
   landuse_desc: 'Land Use',

@@ -1,8 +1,10 @@
-import { REGIONS_METADATA } from '../../../config/regions/metadata';
-import { InteractionTarget, VectorTarget } from 'lib/data-map/interactions/use-interactions';
 import { useRecoilValue } from 'recoil';
-import { showPopulationState } from 'state/regions';
-import { DataItem } from 'details/features/detail-components';
+
+import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
+
+import { REGIONS_METADATA } from '@/config/regions/metadata';
+import { showPopulationState } from '@/state/regions';
 
 export const RegionHoverDescription = ({ hoveredObject }: { hoveredObject: InteractionTarget<VectorTarget> }) => {
   const metadata = REGIONS_METADATA[hoveredObject.viewLayer.params.regionLevel];

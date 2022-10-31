@@ -1,18 +1,24 @@
 import { ZoomIn, ZoomOut } from '@mui/icons-material';
 import { IconButton, TableCell } from '@mui/material';
 import { Box } from '@mui/system';
-import { ExpandableRow } from 'asset-list/ExpandableRow';
-import { SortedAssetTable } from 'asset-list/SortedAssetTable';
-import { ListFeature } from 'asset-list/use-sorted-features';
-import { getAssetDataFormats } from 'config/assets/data-formats';
-import { FeatureSidebarContent } from 'details/features/FeatureSidebarContent';
-import { BoundingBox, extendBbox } from 'lib/bounding-box';
-import { colorMap } from 'lib/color-map';
-import { mapFitBoundsState } from 'map/MapView';
-import { ColorBox } from 'map/tooltip/content/ColorBox';
 import { useCallback, useMemo } from 'react';
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { adaptationColorSpecState, adaptationFieldSpecState, adaptationLayerSpecState } from 'state/layers/networks';
+
+import { BoundingBox, extendBbox } from '@/lib/bounding-box';
+import { colorMap } from '@/lib/color-map';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
+
+import { ExpandableRow } from '@/asset-list/ExpandableRow';
+import { SortedAssetTable } from '@/asset-list/SortedAssetTable';
+import { ListFeature } from '@/asset-list/use-sorted-features';
+import { getAssetDataFormats } from '@/config/assets/data-formats';
+import { FeatureSidebarContent } from '@/details/features/FeatureSidebarContent';
+import { mapFitBoundsState } from '@/map/MapView';
+import {
+  adaptationColorSpecState,
+  adaptationFieldSpecState,
+  adaptationLayerSpecState,
+} from '@/state/layers/data-layers/networks';
 
 import './asset-table.css';
 

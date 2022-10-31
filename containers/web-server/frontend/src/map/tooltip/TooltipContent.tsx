@@ -2,38 +2,38 @@ import { Box, Paper } from '@mui/material';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { VectorHoverDescription } from './content/VectorHoverDescription';
-import { RasterHoverDescription } from './content/RasterHoverDescription';
-import { RegionHoverDescription } from './content/RegionHoverDescription';
-import { hasHover, hoverState } from 'lib/data-map/interactions/interaction-state';
-import { InteractionTarget } from 'lib/data-map/interactions/use-interactions';
-import { showPopulationState } from 'state/regions';
-import { SolutionHoverDescription } from './content/SolutionHoverDescription';
-import { DroughtHoverDescription } from './content/DroughtHoverDescription';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+import { hasHover, hoverState } from '@/lib/data-map/interactions/interaction-state';
+import { InteractionTarget } from '@/lib/data-map/interactions/use-interactions';
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+
+import { NETWORKS_METADATA } from '@/config/networks/metadata';
+
+import { VectorHoverDescription } from './VectorHoverDescription';
+import { HazardHoverDescription } from './content/HazardHoverDescription';
+import { HdiHoverDescription } from './content/HdiHoverDescription';
+import { PopulationHoverDescription } from './content/PopulationHoverDescription';
+import { WdpaHoverDescription } from './content/WdpaHoverDescription';
 
 const TooltipSection = ({ children }) => (
-  <Box p={1} borderBottom="1px solid #ccc">
+  <Box px={1} py={0.5} borderBottom="1px solid #ccc">
     {children}
   </Box>
 );
 
 export const TooltipContent: FC = () => {
   const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
-  const hoveredRasters = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
-  const hoveredRegion = useRecoilValue(hoverState('regions')) as InteractionTarget<any>;
-  const hoveredSolution = useRecoilValue(hoverState('solutions')) as InteractionTarget<any>;
-  const hoveredDrought = useRecoilValue(hoverState('drought')) as InteractionTarget<any>;
-
-  const regionDataShown = useRecoilValue(showPopulationState);
+  const hoveredHazards = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
+  const hoveredPopulation = useRecoilValue(hoverState('population')) as InteractionTarget<any>;
+  const hoveredHdi = useRecoilValue(hoverState('hdi')) as InteractionTarget<any>;
+  const hoveredWdpas = useRecoilValue(hoverState('wdpa')) as InteractionTarget<any>[];
 
   const assetsHovered = hasHover(hoveredVector);
-  const hazardsHovered = hasHover(hoveredRasters);
-  const regionsHovered = hasHover(hoveredRegion);
-  const solutionsHovered = hasHover(hoveredSolution);
-  const droughtHovered = hasHover(hoveredDrought);
-  const doShow =
-    assetsHovered || hazardsHovered || (regionDataShown && regionsHovered) || solutionsHovered || droughtHovered;
+  const hazardsHovered = hasHover(hoveredHazards);
+  const populationHovered = hasHover(hoveredPopulation);
+  const hdiHovered = hasHover(hoveredHdi);
+  const wdpaHovered = hasHover(hoveredWdpas);
+
+  const doShow = assetsHovered || hazardsHovered || populationHovered || hdiHovered || wdpaHovered;
 
   if (!doShow) return null;
 
@@ -41,31 +41,32 @@ export const TooltipContent: FC = () => {
     <Paper>
       <Box minWidth={200}>
         <ErrorBoundary message="There was a problem displaying the tooltip.">
-          {solutionsHovered && (
-            <TooltipSection>
-              <SolutionHoverDescription hoveredObject={hoveredSolution} />
-            </TooltipSection>
-          )}
+          {/* TODO: generate tooltip contents straight from view layers */}
           {assetsHovered ? (
             <TooltipSection>
-              <VectorHoverDescription hoveredObject={hoveredVector} />
-            </TooltipSection>
-          ) : null}
-          {droughtHovered ? (
-            <TooltipSection>
-              <DroughtHoverDescription hoveredObject={hoveredDrought} />
+              <VectorHoverDescription hoveredObject={hoveredVector} metadataLookup={NETWORKS_METADATA} />
             </TooltipSection>
           ) : null}
           {hazardsHovered ? (
             <TooltipSection>
-              {hoveredRasters.map((hr) => (
-                <RasterHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
+              {hoveredHazards.map((hr) => (
+                <HazardHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
               ))}
             </TooltipSection>
           ) : null}
-          {regionsHovered ? (
+          {populationHovered ? (
             <TooltipSection>
-              <RegionHoverDescription hoveredObject={hoveredRegion} />
+              <PopulationHoverDescription hoveredObject={hoveredPopulation} />
+            </TooltipSection>
+          ) : null}
+          {hdiHovered ? (
+            <TooltipSection>
+              <HdiHoverDescription hoveredObject={hoveredHdi} />
+            </TooltipSection>
+          ) : null}
+          {wdpaHovered ? (
+            <TooltipSection>
+              <WdpaHoverDescription hoveredObjects={hoveredWdpas} />
             </TooltipSection>
           ) : null}
         </ErrorBoundary>

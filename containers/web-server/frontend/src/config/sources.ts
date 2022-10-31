@@ -1,14 +1,11 @@
-import { makeConfig } from 'lib/helpers';
-
-export const SOURCES = makeConfig([
-  // {
-  //   id: 'tileservergl',
-  //   getUrl: ({ dataset }) => `/vector/data/${dataset}.json`,
-  // },
-  // {
-  //   id: 'terracotta',
-  //   getUrl: ({ dataset }) => `/vector/data/${dataset}.json`,
-  // },
-]);
+export const SOURCES = {
+  raster: {
+    getUrl: ({ path, scheme, range }) =>
+      `/api/tiles/${path}/{z}/{x}/{y}.png?colormap=${scheme}&stretch_range=[${range[0]},${range[1]}]`,
+  },
+  vector: {
+    getUrl: (datasetId) => `/vector/data/${datasetId}.json`,
+  },
+};
 
 export type SourceName = keyof typeof SOURCES;

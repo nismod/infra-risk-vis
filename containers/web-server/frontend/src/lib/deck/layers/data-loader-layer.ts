@@ -1,5 +1,6 @@
-import { DataLoader } from 'lib/data-loader/data-loader';
 import { MapboxGeoJSONFeature } from 'mapbox-gl';
+
+import { DataLoader } from '@/lib/data-loader/data-loader';
 
 export interface DataLoaderOptions {
   dataLoader: DataLoader;

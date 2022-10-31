@@ -1,13 +1,15 @@
 import { Typography } from '@mui/material';
-import { VECTOR_COLOR_MAPS } from 'config/color-maps';
-import { MARINE_HABITATS_LOOKUP } from 'config/solutions/domains';
-import { DataItem } from 'details/features/detail-components';
-import { colorMap } from 'lib/color-map';
 import _ from 'lodash';
-import { ColorBox } from 'map/tooltip/content/ColorBox';
 import { FC } from 'react';
-import { habitatColorMap } from 'state/layers/marine';
-import { landuseColorMap } from 'state/layers/terrestrial';
+
+import { colorMap } from '@/lib/color-map';
+import { ColorBox } from '@/lib/ui/data-display/ColorBox';
+import { DataItem } from '@/lib/ui/data-display/DataItem';
+
+import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
+import { MARINE_HABITATS_LOOKUP } from '@/config/solutions/domains';
+import { habitatColorMap } from '@/state/layers/data-layers/marine';
+import { landuseColorMap } from '@/state/layers/data-layers/terrestrial';
 
 const slopeColorFunction = colorMap(VECTOR_COLOR_MAPS.terrestrialSlope);
 const elevationColorFunction = colorMap(VECTOR_COLOR_MAPS.terrestrialElevation);
@@ -66,19 +68,28 @@ export const SolutionsSidebarContent: FC<SolutionsSidebarContentProps> = ({ feat
               </>
             }
           />
-          {feature.properties.is_coral?
-            <DataItem label="Coral Type" value={feature.properties.coral_type} />: null
-          }
-          {feature.properties.is_mangrove?
-            <DataItem label="Mangrove Type" value={feature.properties.mangrove_type} />: null
-          }
-          <Typography variant="caption" component="h6">Proximity</Typography>
-          {feature.properties.within_coral_500m?
-            <Typography variant="body2" component="p">within 500m of coral</Typography> : null}
-          {feature.properties.within_mangrove_500m?
-            <Typography variant="body2" component="p">within 500m of mangrove</Typography> : null}
-          {feature.properties.within_seagrass_500m?
-            <Typography variant="body2" component="p">within 500m of seagrass</Typography> : null}
+          {feature.properties.is_coral ? <DataItem label="Coral Type" value={feature.properties.coral_type} /> : null}
+          {feature.properties.is_mangrove ? (
+            <DataItem label="Mangrove Type" value={feature.properties.mangrove_type} />
+          ) : null}
+          <Typography variant="caption" component="h6">
+            Proximity
+          </Typography>
+          {feature.properties.within_coral_500m ? (
+            <Typography variant="body2" component="p">
+              within 500m of coral
+            </Typography>
+          ) : null}
+          {feature.properties.within_mangrove_500m ? (
+            <Typography variant="body2" component="p">
+              within 500m of mangrove
+            </Typography>
+          ) : null}
+          {feature.properties.within_seagrass_500m ? (
+            <Typography variant="body2" component="p">
+              within 500m of seagrass
+            </Typography>
+          ) : null}
         </>
       )}
     </>

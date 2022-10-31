@@ -1,4 +1,4 @@
-import { DataParamGroupConfig } from 'lib/controls/data-params';
+import { DataParamGroupConfig } from '@/lib/controls/data-params';
 
 interface TotalDamagesParams {
   rcp: string;

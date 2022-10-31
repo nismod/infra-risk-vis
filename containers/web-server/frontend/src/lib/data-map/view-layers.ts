@@ -1,6 +1,9 @@
 import { ScaleSequential } from 'd3-scale';
-import { DataLoader } from 'lib/data-loader/data-loader';
-import { Accessor } from 'lib/deck/props/getters';
+import { ReactNode } from 'react';
+
+import { DataLoader } from '@/lib/data-loader/data-loader';
+import { Accessor } from '@/lib/deck/props/getters';
+
 import { InteractionTarget } from './interactions/use-interactions';
 
 export interface FieldSpec {
@@ -26,7 +29,6 @@ export interface StyleParams {
 export interface ViewLayerFunctionOptions {
   deckProps: any;
   zoom: number;
-  styleParams?: StyleParams;
   selection?: InteractionTarget<any>;
 }
 
@@ -46,19 +48,23 @@ export interface ViewLayer {
   id: string;
   params?: any;
   styleParams?: StyleParams;
-  group: string;
   fn: (options: ViewLayerFunctionOptions) => any;
   dataAccessFn?: ViewLayerDataAccessFunction;
   dataFormatsFn?: ViewLayerDataFormatFunction;
   legendDataFormatsFn?: ViewLayerDataFormatFunction;
   spatialType?: string;
   interactionGroup?: string;
+
+  /**
+   * new approach for legends: keep the rendering logic inside view layer
+   * (currently used for raster layers only)
+   */
+  renderLegend?: () => ReactNode;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {
   return {
     id,
-    group: null,
     interactionGroup: null,
     fn,
   };
@@ -66,5 +72,4 @@ export function viewOnlyLayer(id, fn): ViewLayer {
 
 export interface ViewLayerParams {
   selection?: any;
-  styleParams?: StyleParams;
 }

@@ -1,5 +1,5 @@
-import { Box, ClickAwayListener, IconButton, Paper } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
+import { Box, ClickAwayListener, IconButton, Paper } from '@mui/material';
 import { useRecoilState } from 'recoil';
 
 import { MapSearchField } from './MapSearchField';

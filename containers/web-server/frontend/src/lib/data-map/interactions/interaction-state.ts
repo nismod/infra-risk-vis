@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { atom, atomFamily, selector } from 'recoil';
 
-import { isReset } from 'lib/recoil/is-reset';
+import { isReset } from '@/lib/recoil/is-reset';
 
 import { InteractionTarget } from './use-interactions';
 

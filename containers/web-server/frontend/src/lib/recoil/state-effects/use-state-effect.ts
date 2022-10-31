@@ -1,6 +1,8 @@
-import { usePrevious } from 'lib/hooks/use-previous';
 import { useEffect } from 'react';
 import { RecoilState, useRecoilCallback, useRecoilValue } from 'recoil';
+
+import { usePrevious } from '@/lib/hooks/use-previous';
+
 import { StateEffect } from './types';
 
 /**

@@ -1,19 +1,20 @@
+import { Box, Paper } from '@mui/material';
 import { FC } from 'react';
-import { Box } from '@mui/material';
-
-import { MapView } from '../map/MapView';
-import { FeatureSidebar } from '../details/features/FeatureSidebar';
-import { RegionDetails } from '../details/regions/RegionDetails';
-import { SidebarContent } from 'sidebar/SidebarContent';
-import { globalStyleVariables } from 'theme';
-import { useSyncRecoilState } from 'lib/recoil/sync-state';
-import { viewState, viewStateEffect } from 'state/view';
-import { StateEffectRoot } from 'lib/recoil/state-effects/StateEffectRoot';
-import { sectionStyleValueState, sectionVisibilityState } from 'state/sections';
 import { selector, useRecoilValue } from 'recoil';
-import { AdaptationsSidebar } from 'details/adaptations/AdaptationsSidebar';
-import { SolutionsSidebar } from 'details/solutions/SolutionsSidebar';
-import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
+import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
+import { useSyncRecoilState } from '@/lib/recoil/sync-state';
+
+import { AdaptationsSidebar } from '@/details/adaptations/AdaptationsSidebar';
+import { FeatureSidebar } from '@/details/features/FeatureSidebar';
+import { RegionDetails } from '@/details/regions/RegionDetails';
+import { SolutionsSidebar } from '@/details/solutions/SolutionsSidebar';
+import { MapView } from '@/map/MapView';
+import { SidebarContent } from '@/sidebar/SidebarContent';
+import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
+import { viewState, viewStateEffect } from '@/state/view';
+import { globalStyleVariables } from '@/theme';
 
 interface MapViewProps {
   view: string;
@@ -61,9 +62,11 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
     <ErrorBoundary message="There was a problem displaying this page.">
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
       <SidebarLayout top={0} left={0} bottom={0} right={undefined} width={globalStyleVariables.controlSidebarWidth}>
-        <ErrorBoundary message="There was a problem displaying the sidebar.">
-          <SidebarContent />
-        </ErrorBoundary>
+        <Paper elevation={0}>
+          <ErrorBoundary message="There was a problem displaying the sidebar.">
+            <SidebarContent />
+          </ErrorBoundary>
+        </Paper>
       </SidebarLayout>
       <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
         <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">

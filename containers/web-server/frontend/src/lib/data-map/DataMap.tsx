@@ -1,14 +1,14 @@
+import _ from 'lodash';
 import { FC, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { StaticMap } from 'react-map-gl';
 
-import { ViewLayer, ViewLayerParams } from './view-layers';
+import { usePrevious } from '@/lib/hooks/use-previous';
+import { useTrackingRef } from '@/lib/hooks/use-tracking-ref';
+import { useTrigger } from '@/lib/hooks/use-trigger';
 
 import { DeckMap } from './DeckMap';
 import { useInteractions } from './interactions/use-interactions';
-import { useTrigger } from 'lib/hooks/use-trigger';
-import { usePrevious } from '../hooks/use-previous';
-import { useTrackingRef } from 'lib/hooks/use-tracking-ref';
-import _ from 'lodash';
+import { ViewLayer, ViewLayerParams } from './view-layers';
 
 export interface DataMapProps {
   initialViewState: any;
@@ -40,11 +40,8 @@ export const DataMap: FC<DataMapProps> = ({
   );
 
   const dataLoaders = useMemo(
-    () =>
-      viewLayers
-        .map((vl) => vl.dataAccessFn?.(viewLayersParams[vl.id].styleParams?.colorMap?.fieldSpec)?.dataLoader)
-        .filter(Boolean),
-    [viewLayers, viewLayersParams],
+    () => viewLayers.map((vl) => vl.dataAccessFn?.(vl.styleParams?.colorMap?.fieldSpec)?.dataLoader).filter(Boolean),
+    [viewLayers],
   );
 
   const [dataLoadTrigger, triggerDataUpdate] = useTrigger();

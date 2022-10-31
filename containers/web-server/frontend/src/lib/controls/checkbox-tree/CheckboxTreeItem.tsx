@@ -1,5 +1,5 @@
-import { Checkbox, FormControlLabel } from '@mui/material';
 import { TreeItem } from '@mui/lab';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 import { CheckboxTreeState } from './CheckboxTree';
 import { TreeNode } from './tree-node';

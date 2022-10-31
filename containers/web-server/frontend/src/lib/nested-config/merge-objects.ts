@@ -1,4 +1,4 @@
-type MergeStrategy = <T>(oldValue: T, newValue: T) => T;
+type MergeStrategy<T = any> = (oldValue: T, newValue: T) => T;
 
 /**
  * A function to merge multiple props-like objects.
@@ -20,3 +20,4 @@ export function mergeObjects(objects: object[], mergeStrategies: Record<string, 
 }
 
 export const mergeValue = (oldVal, newVal) => Object.assign({}, oldVal ?? {}, newVal);
+export const appendValue = <T>(oldVal: T[], newVal: T[]) => [...(oldVal ?? []), ...(newVal ?? [])];

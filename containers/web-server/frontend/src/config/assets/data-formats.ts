@@ -1,7 +1,9 @@
-import { HAZARDS_METADATA } from 'config/hazards/metadata';
-import { FieldSpec, FormatConfig } from 'lib/data-map/view-layers';
-import { isNullish, numFormat, numFormatMoney, paren } from 'lib/helpers';
 import _ from 'lodash';
+
+import { FieldSpec, FormatConfig } from '@/lib/data-map/view-layers';
+import { isNullish, numFormat, numFormatMoney, paren } from '@/lib/helpers';
+
+import { HAZARDS_METADATA } from '@/config/hazards/metadata';
 
 function getSourceLabel(eadSource: string) {
   if (eadSource === 'all') return 'All Hazards';

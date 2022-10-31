@@ -1,4 +1,4 @@
-import { DataParamGroupConfig } from 'lib/controls/data-params';
+import { DataParamGroupConfig } from '@/lib/controls/data-params';
 
 export interface HazardParams {
   returnPeriod: number;
@@ -7,14 +7,14 @@ export interface HazardParams {
   gcm: string;
 }
 
-export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> = {
+export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<any>> = {
   fluvial: {
     paramDomains: {
       returnPeriod: [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000],
 
       rcp: ['baseline', '2.6', '4.5', '8.5'],
       epoch: ['present', '2030', '2050', '2080'],
-      gcm: ["None", "WATCH", "NorESM1-M", "GFDL_ESM2M", "GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5A-LR", "MIROC-ESM-CHEM"],
+      gcm: ['None', 'WATCH', 'NorESM1-M', 'GFDL_ESM2M', 'GFDL-ESM2M', 'HadGEM2-ES', 'IPSL-CM5A-LR', 'MIROC-ESM-CHEM'],
     },
     paramDefaults: {
       returnPeriod: 100,
@@ -81,11 +81,11 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
     paramDomains: {
       returnPeriod: [
         10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 2000, 3000, 4000, 5000,
-        6000, 7000, 8000, 9000, 10000, 11000
+        6000, 7000, 8000, 9000, 10000, 11000,
       ],
       epoch: ['None'],
       rcp: ['None'],
-      gcm: ["CMCC-CM2-VHR4", "CNRM-CM6-1-HR", "EC-Earth3P-HR", "HadGEM3-GC31-HM", "constant"],
+      gcm: ['CMCC-CM2-VHR4', 'CNRM-CM6-1-HR', 'EC-Earth3P-HR', 'HadGEM3-GC31-HM', 'constant'],
     },
     paramDefaults: {
       returnPeriod: 10,
@@ -112,7 +112,7 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       rcp: ({ epoch }) => {
         if (epoch === 'baseline') return ['baseline'];
         else return ['2.6', '6.0'];
-      }
+      },
     },
   },
   extreme_heat_occurrence: {
@@ -132,7 +132,18 @@ export const HAZARD_DOMAINS: Record<string, DataParamGroupConfig<HazardParams>> 
       rcp: ({ epoch }) => {
         if (epoch === 'baseline') return ['baseline'];
         else return ['2.6', '6.0'];
-      }
+      },
     },
-  }
+  },
+  earthquake: {
+    paramDomains: {
+      returnPeriod: [475],
+      medium: ['soil'],
+    },
+    paramDefaults: {
+      returnPeriod: 475,
+      medium: 'soil',
+    },
+    paramDependencies: {},
+  },
 };

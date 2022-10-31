@@ -1,4 +1,5 @@
-import { StyleSelectionOption } from 'state/sections';
+import { StyleSelectionOption } from '@/state/sections';
+
 import { BUILDING_STYLES } from './buildings/styles';
 import { DROUGHT_STYLES } from './drought/styles';
 import { NETWORK_STYLES } from './networks/styles';

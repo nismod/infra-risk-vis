@@ -1,6 +1,8 @@
 import * as d3 from 'd3-color';
 import _ from 'lodash';
 
+import { ValueLabel } from './controls/params/value-label';
+
 /**
  * Common helper functions
  *
@@ -53,7 +55,7 @@ export function colorCssToRgb(cssColor: string): [number, number, number, number
   const color = d3.color(cssColor);
   const { r, g, b } = color.rgb();
   const a = color.opacity;
-  return (a === 1)? [r, g, b] : [r, g, b, a * 256];
+  return a === 1 ? [r, g, b] : [r, g, b, a * 256];
 }
 
 export function toDictionary<T, K extends string, V>(
@@ -142,4 +144,12 @@ export function valueType<C>(): ValueTypeCheck<C> {
  */
 export function isNullish(v: any): v is null | undefined {
   return v == null;
+}
+
+export function toLabelLookup<T extends string>(valueLabels: ValueLabel<T>[]) {
+  return toDictionary(
+    valueLabels,
+    (x) => x.value,
+    (x) => x.label,
+  );
 }

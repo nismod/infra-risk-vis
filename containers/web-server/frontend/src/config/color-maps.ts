@@ -1,7 +1,8 @@
-import * as d3ScaleChromatic from 'd3-scale-chromatic';
 import * as d3Scale from 'd3-scale';
-import { ColorSpec } from 'lib/data-map/view-layers';
-import { valueType } from 'lib/helpers';
+import * as d3ScaleChromatic from 'd3-scale-chromatic';
+
+import { ColorSpec } from '@/lib/data-map/view-layers';
+import { valueType } from '@/lib/helpers';
 
 export const RASTER_COLOR_MAPS = {
   fluvial: {
@@ -27,6 +28,10 @@ export const RASTER_COLOR_MAPS = {
   extreme_heat_occurrence: {
     scheme: 'reds',
     range: [0, 1],
+  },
+  earthquake: {
+    scheme: 'reds',
+    range: [0, 1.4],
   },
 };
 

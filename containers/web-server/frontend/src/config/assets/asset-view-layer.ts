@@ -1,37 +1,61 @@
-import {
-  StyleParams,
-  ViewLayer,
-  ViewLayerDataAccessFunction,
-  ViewLayerFunctionOptions,
-} from 'lib/data-map/view-layers';
-import { selectableMvtLayer } from 'lib/deck/layers/selectable-mvt-layer';
+import { colorMap } from '@/lib/color-map';
+import { StyleParams, ViewLayer, ViewLayerDataAccessFunction } from '@/lib/data-map/view-layers';
+import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
+import { dataColorMap } from '@/lib/deck/props/color-map';
+import { GetColor } from '@/lib/deck/props/style';
+
+import { SOURCES } from '../sources';
+import { getAssetDataAccessor } from './data-access';
 import { getAssetDataFormats } from './data-formats';
-import { ASSETS_SOURCE } from './source';
 
 interface ViewLayerMetadata {
-  group: string;
   spatialType: string;
   interactionGroup: string;
 }
 
-export function assetViewLayer(
-  assetId: string,
-  metadata: ViewLayerMetadata,
-  selectionPolygonOffset: number,
-  customFn: ({ zoom, styleParams }: { zoom: number; styleParams?: StyleParams }) => object[],
-  customDataAccessFn: ViewLayerDataAccessFunction,
-): ViewLayer {
-  const { group, spatialType, interactionGroup } = metadata;
+export interface DataStyle {
+  getColor?: GetColor;
+}
+export interface AssetViewLayerCustomFunctionOptions {
+  zoom: number;
+  dataStyle?: DataStyle;
+}
+export type AssetViewLayerCustomFunction = (options: AssetViewLayerCustomFunctionOptions) => object[];
+export interface AssetViewLayerOptions {
+  assetId: string;
+  metadata: ViewLayerMetadata;
+  selectionPolygonOffset?: number;
+  styleParams?: StyleParams;
+  customFn?: AssetViewLayerCustomFunction;
+  customDataAccessFn?: ViewLayerDataAccessFunction;
+}
+
+export function assetViewLayer({
+  assetId,
+  metadata: { spatialType, interactionGroup },
+  selectionPolygonOffset = -1000,
+  styleParams,
+  customFn,
+  customDataAccessFn,
+}: AssetViewLayerOptions): ViewLayer {
+  const dataStyle: DataStyle = styleParams?.colorMap
+    ? {
+        getColor: dataColorMap(
+          getAssetDataAccessor(assetId, styleParams.colorMap.fieldSpec),
+          colorMap(styleParams.colorMap.colorSpec),
+        ),
+      }
+    : null;
 
   return {
     id: assetId,
-    group,
     spatialType,
     interactionGroup,
     params: {
       assetId,
     },
-    fn: ({ deckProps, zoom, styleParams, selection }: ViewLayerFunctionOptions) =>
+    styleParams,
+    fn: ({ deckProps, zoom, selection }) =>
       selectableMvtLayer(
         {
           selectionOptions: {
@@ -44,9 +68,9 @@ export function assetViewLayer(
         },
         deckProps,
         {
-          data: ASSETS_SOURCE.getDataUrl({ assetId }),
+          data: SOURCES.vector.getUrl(assetId),
         },
-        ...customFn({ zoom, styleParams }),
+        ...(customFn?.({ zoom, dataStyle }) ?? []),
       ),
     dataAccessFn: customDataAccessFn,
     dataFormatsFn: getAssetDataFormats,
