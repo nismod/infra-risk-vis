@@ -1,11 +1,9 @@
-import { ApiClient } from '@/lib/api-client';
 import { FieldSpec } from '@/lib/data-map/view-layers';
+
+import { apiClient } from '@/api-client';
 
 export type DataLoaderSubscriber = (loader: DataLoader) => void;
 
-const apiClient = new ApiClient({
-  BASE: '/api',
-});
 export class DataLoader<T = any> {
   constructor(public readonly id: string, public readonly layer: string, public readonly fieldSpec: FieldSpec) {}
 

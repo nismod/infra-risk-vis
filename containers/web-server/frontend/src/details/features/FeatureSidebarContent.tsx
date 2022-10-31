@@ -2,10 +2,10 @@ import { Download } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 
-import { ApiClient } from '@/lib/api-client';
 import { downloadFile } from '@/lib/helpers';
 import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
+import { apiClient } from '@/api-client';
 import { BuildingLayerType } from '@/config/_old/buildings/metadata';
 import { NETWORKS_METADATA, NetworkLayerType } from '@/config/networks/metadata';
 import { IndustryType } from '@/state/data-selection/industry';
@@ -176,10 +176,6 @@ function makeDetailsCsv(fd) {
       .join('\n')
   );
 }
-
-const apiClient = new ApiClient({
-  BASE: '/api',
-});
 
 function useFeatureDetails(featureId: number) {
   const [featureDetails, setFeatureDetails] = useState(null);
