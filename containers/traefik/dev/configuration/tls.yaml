@@ -1,0 +1,11 @@
+tls:
+  certificates:
+    - certFile: "/certs/localhost.crt"
+      keyFile: "/certs/localhost.key"
+  stores:
+    default:
+      defaultCertificate:
+        certFile: "/certs/localhost.crt"
+        keyFile: "/certs/localhost.key"
+  domains:
+    - main: "localhost"
