@@ -20,6 +20,9 @@
     "road_edges_metro": {
       "mbtiles": "road_edges_metro.mbtiles"
     },
+    "road_edges_track": {
+      "mbtiles": "road_edges_track.mbtiles"
+    },
     "rail_edges": {
       "mbtiles": "rail_edges.mbtiles"
     },
