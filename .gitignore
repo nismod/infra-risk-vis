@@ -25,6 +25,8 @@ public/**/*.csv
 TODO
 NOTES
 venv
+.vscode
+.devcontainer
 
 # build
 build/
