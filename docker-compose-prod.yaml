@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.5
+    image: ghcr.io/nismod/gri-web-server:0.3
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-prod
@@ -24,7 +24,7 @@ services:
 
   vector-tileserver:
     build: ./containers/vector
-    image: ghcr.io/nismod/gri-vector-tileserver:0.4
+    image: ghcr.io/nismod/gri-vector-tileserver:0.6
     volumes:
       - ./tileserver/vector/data:/data
     expose:
