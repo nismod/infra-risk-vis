@@ -111,9 +111,14 @@ def _tile_db_from_keys(keys: List) -> str:
     return DOMAIN_TO_DB_MAP[domain]
 
 
-def _source_options(source_db: str) -> List[dict]:
+def _source_options(source_db: str, domain: str = None) -> List[dict]:
     """
     Gather all URL key combinations available in the given source
+
+    ::param source_db str The name of the source MySQL Database in-which the tiles reside
+    ::kwarg domain str Source options will be optionally filtered to only include this 'type' (the first index in the key-tuple)
+        domain in the source meta should always map to the type - which is the first key in the key tuple
+        e.g. 'fluvial in th example tile k:v pairs below'
 
     ('fluvial', '50', '8x5', '2080', 'NorESM1-M'):
         '/data/aqueduct/inunriver_rcp8p5_00000NorESM1-M_2080_rp00050.tif',
@@ -129,7 +134,11 @@ def _source_options(source_db: str) -> List[dict]:
     datasets = all_datasets(driver_path)
     keys = database_keys(driver_path)
     # Generate the output mapping
-    return [dict(zip(keys, _values)) for _values in datasets.keys()]
+    source_options = [dict(zip(keys, _values)) for _values in datasets.keys()]
+    # Optionally filter to a domain (type)
+    if domain:
+        source_options = [item for item in source_options if item["type"] == domain]
+    return source_options
 
 
 async def verify_token(x_token: str = Header()):
@@ -210,7 +219,9 @@ async def get_tile_source_domains(
             .filter(models.RasterTileSource.id == source_id)
             .one()
         )
-        domains = _source_options(res.source_db)
+        domains = _source_options(
+            res.source_db, domain=res.domain if res.domain else None
+        )
         meta = schemas.TileSourceDomains(domains=domains)
         logger.debug("%s", meta)
         return meta
