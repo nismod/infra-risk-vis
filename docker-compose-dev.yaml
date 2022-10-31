@@ -25,7 +25,7 @@ services:
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-web-server-dev:0.3
+    image: ghcr.io/nismod/gri-web-server-dev:0.6
     expose:
       - "80"
     labels:
@@ -125,8 +125,10 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
 
   vector-tileserver:
-    build: ./containers/vector
-    image: ghcr.io/nismod/gri-vector-tileserver:0.5
+    build:
+      context: ./containers/vector
+      dockerfile: Dockerfile-dev
+    image: ghcr.io/nismod/gri-vector-tileserver-dev:0.7
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config-dev.json:/config.json

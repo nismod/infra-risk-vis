@@ -35,7 +35,7 @@ services:
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
 
   backend:
-    image: ghcr.io/nismod/gri-backend:0.7
+    image: ghcr.io/nismod/gri-backend:0.8
     build: ./containers/backend
     volumes:
       - ./tileserver/raster/data:/data
@@ -53,8 +53,10 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
 
   vector-tileserver:
-    build: ./containers/vector
-    image: ghcr.io/nismod/gri-vector-tileserver:0.6
+    build:
+      context: ./containers/vector
+      dockerfile: Dockerfile-prod
+    image: ghcr.io/nismod/gri-vector-tileserver:0.7
     volumes:
       - ./tileserver/vector/data:/data
     expose:
