@@ -1,0 +1,47 @@
+import os
+import subprocess
+
+import geopandas
+import pandas
+
+
+# Example config
+configfile: "/opt/etl/pipelines/gem_exposure/config.yml"
+
+
+# Read further configuration data from CSV
+inputs = pandas.read_csv(config["inputs"])
+
+
+wildcard_constraints:
+    layer="[^/]+",
+
+
+# Run all file-base jobs, after load_to_database
+rule all:
+    input:
+        expand(
+            "/opt/tileserver/vector/data/{layer}.mbtiles", layer=inputs.layer
+        ),
+
+
+rule geojsonseq_to_vector_tiles:
+    input:
+        "vector/{layer}.geojsonl",
+    output:
+        "/opt/tileserver/vector/data/{layer}.mbtiles",
+    run:
+        max_zoom = 20
+        point_polygon_zoom_switch = 13
+
+        input_basename = os.path.basename(str(input))
+        input_layer = input_basename.replace(".geojsonl", "")
+        subprocess.run([
+            "tippecanoe",
+            "-zg",
+            f"--output={output}",
+            "--coalesce-densest-as-needed",
+            "--extend-zooms-if-still-dropping",
+            "--force",
+            f"{input}"
+        ], check=True)
