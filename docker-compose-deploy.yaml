@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  traefik:
+    image: "traefik:v2.9"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--api.insecure=false"
+      - "--api.dashboard=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.certresolverone.acme.tlschallenge=true"
+      - "--certificatesresolvers.certresolverone.acme.email=tom.russell@ouce.ox.ac.uk"
+      - "--certificatesresolvers.certresolverone.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "443:443"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  web-server:
+    image: ghcr.io/nismod/gri-web-server:0.6
+    expose:
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web-server.rule=Host(`global.infrastructureresilience.org`)"
+      - "traefik.http.routers.web-server.entrypoints=websecure"
+      - "traefik.http.routers.web-server.tls.certresolver=certresolverone"
+      - "traefik.http.services.web-server.loadbalancer.server.port=80"
+
+  backend:
+    image: ghcr.io/nismod/gri-backend:0.8
+    volumes:
+      - ./tileserver/raster/data:/data
+    env_file:
+      - ./envs/prod/.backend.env
+    expose:
+      - "8888"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`global.infrastructureresilience.org`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=certresolverone"
+      - "traefik.http.routers.backend.middlewares=backend-stripprefix"
+      - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.http.services.backend.loadbalancer.server.port=8888"
+
+  vector-tileserver:
+    image: ghcr.io/nismod/gri-vector-tileserver:0.7
+    volumes:
+      - ./tileserver/vector/data:/data
+    expose:
+      - "8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vector-tileserver.rule=Host(`global.infrastructureresilience.org`) && PathPrefix(`/vector`)"
+      - "traefik.http.routers.vector-tileserver.entrypoints=websecure"
+      - "traefik.http.routers.vector-tileserver.tls.certresolver=certresolverone"
+      - "traefik.http.routers.vector-tileserver.middlewares=vector-tileserver-stripprefix"
+      - "traefik.http.middlewares.vector-tileserver-stripprefix.stripprefix.prefixes=/vector"
+      - "traefik.http.services.vector-tileserver.loadbalancer.server.port=8080"
