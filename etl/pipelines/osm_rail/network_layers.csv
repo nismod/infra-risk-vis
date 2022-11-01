@@ -1,2 +1,2 @@
 ref,path,asset_id_column,asset_type_column
-transport_rail_edges,/opt/etl/raw_data/processed_data/input/osm_rail/20221021_global_rail_edges.geoparquet,edge_id,tag_railway
+transport_rail_nodes,/opt/etl/raw_data/processed_data/input/osm_rail/20221027_global_rail_stations.geoparquet,node_id,tag_railway

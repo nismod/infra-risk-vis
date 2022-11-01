@@ -71,12 +71,16 @@ def get_network_layer(layer_name, network_layers):
         print(f"Could not find {layer_name} in network layers.")
         raise e
 
-def get_network_layer_by_ref(network_tile_layer_ref: str, network_layers: pandas.DataFrame):
+
+def get_network_layer_by_ref(
+    network_tile_layer_ref: str, network_layers: pandas.DataFrame
+):
     try:
         return network_layers[network_layers.ref == network_tile_layer_ref].iloc[0]
     except IndexError as e:
         print(f"Could not find {network_tile_layer_ref} in network layers.")
         raise e
+
 
 def get_network_layer_path(layer):
     return f"{layer.path}"
@@ -85,8 +89,10 @@ def get_network_layer_path(layer):
 def get_tilelayer_by_layer_ref(layer_ref: str, network_tilelayers: pandas.DataFrame):
     return network_tilelayers[network_tilelayers.ref == layer_ref].iloc[0]
 
+
 def get_tilelayer_by_layer_name(layer_name: str, network_tilelayers: pandas.DataFrame):
     return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
+
 
 def load_tile_feature_layer(db: Session, network_tile_layer):
     """Load FeatureLayer to DB if it doesnt exist"""
@@ -118,13 +124,7 @@ if __name__ == "__main__":
         exit()
 
     print("Layer", layer)
-    # network_tile_layer = get_tilelayer_by_layer_ref(
-    #     network_layer.ref, network_tilelayers
-    # )
-    network_tile_layer = get_tilelayer_by_layer_name(
-        layer,
-        network_tilelayers
-    )
+    network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
     print("Network TileLayer:", network_tile_layer)
     network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
     print("Network Layer", network_layer)
