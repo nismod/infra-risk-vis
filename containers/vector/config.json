@@ -53,8 +53,8 @@
     "wdpa_land_polygons": {
       "mbtiles": "wdpa_land_polygons.mbtiles"
     },
-    "gem_seismic_exposure_per_country": {
-      "mbtiles": "gem_seismic_exposure_per_country.mbtiles"
+    "seismic_and_flooding_exposure_per_country": {
+      "mbtiles": "seismic_and_flooding_exposure_per_country.mbtiles"
     }
   }
 }
