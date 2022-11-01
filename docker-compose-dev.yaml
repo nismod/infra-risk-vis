@@ -82,28 +82,7 @@ services:
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/gem_exposure/Snakefile"
-      ]
-
-  snakemake-raster:
-    image: ghcr.io/nismod/gri-snakemake:0.1
-    build: ./etl
-    volumes:
-      - ./etl:/opt/etl
-      - ./tileserver:/opt/tileserver
-    env_file:
-      - ./envs/dev/.snakemake.env
-    command:
-      [
-        "--cores",
-        "1",
-        "--latency-wait",
-        "20",
-        "--resources",
-        "disk_mb=60",
-        "--rerun-incomplete",
-        "-s",
-        "/opt/etl/pipelines/traveltime_to_healthcare/Snakefile"
+        "/opt/etl/pipelines/osm_rail/Snakefile"
       ]
 
   backend:

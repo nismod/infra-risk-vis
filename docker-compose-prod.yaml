@@ -56,7 +56,7 @@ services:
     build:
       context: ./containers/vector
       dockerfile: Dockerfile-prod
-    image: ghcr.io/nismod/gri-vector-tileserver:0.8
+    image: ghcr.io/nismod/gri-vector-tileserver:0.9
     volumes:
       - ./tileserver/vector/data:/data
     expose:
