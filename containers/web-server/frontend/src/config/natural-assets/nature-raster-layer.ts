@@ -9,10 +9,10 @@ import { RasterColorMap, RasterLegend } from '@/map/legend/RasterLegend';
 import { RasterHoverDescription } from '@/map/tooltip/RasterHoverDescription';
 
 import { SOURCES } from '../sources';
-import { NATURAL_ASSET_VALUE_LABELS, NaturalAssetType } from './metadata';
+import { NATURE_RASTER_VALUE_LABELS, NatureRasterType } from './metadata';
 
-export const NATURAL_ASSETS_FORMATS: Record<
-  NaturalAssetType,
+export const NATURE_RASTER_FORMATS: Record<
+  NatureRasterType,
   {
     colorMap: RasterColorMap;
     formatValue: (x: number) => string;
@@ -42,10 +42,10 @@ export const NATURAL_ASSETS_FORMATS: Record<
   },
 };
 
-const valueLabelLookup = toLabelLookup(NATURAL_ASSET_VALUE_LABELS);
+const valueLabelLookup = toLabelLookup(NATURE_RASTER_VALUE_LABELS);
 
-export function naturalAssetsViewLayer(type: NaturalAssetType): ViewLayer {
-  const { colorMap, formatValue } = NATURAL_ASSETS_FORMATS[type];
+export function natureRasterViewLayer(type: NatureRasterType): ViewLayer {
+  const { colorMap, formatValue } = NATURE_RASTER_FORMATS[type];
   const label = `${valueLabelLookup[type]}`;
 
   const formatFn = (x: number) => (x != null ? formatValue(x) : '-');

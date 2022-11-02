@@ -1,10 +1,10 @@
 import { ValueLabel } from '@/lib/controls/params/value-label';
 
-export const NATURAL_ASSET_TYPES = ['biodiversity_intactness', 'forest_landscape_integrity', 'organic_carbon'] as const;
+export const NATURE_RASTER_TYPES = ['biodiversity_intactness', 'forest_landscape_integrity', 'organic_carbon'] as const;
 
-export type NaturalAssetType = typeof NATURAL_ASSET_TYPES[number];
+export type NatureRasterType = typeof NATURE_RASTER_TYPES[number];
 
-export const NATURAL_ASSET_VALUE_LABELS: ValueLabel<NaturalAssetType>[] = [
+export const NATURE_RASTER_VALUE_LABELS: ValueLabel<NatureRasterType>[] = [
   {
     value: 'biodiversity_intactness',
     label: 'Biodiversity Intactness',

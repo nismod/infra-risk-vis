@@ -13,6 +13,7 @@ import { healthcareLayersState } from './data-layers/healthcare';
 import { humanDevelopmentLayerState } from './data-layers/human-development';
 import { industryLayersState } from './data-layers/industry';
 import { naturalAssetsLayersState } from './data-layers/natural-assets';
+import { natureVulnerabilityLayersState } from './data-layers/nature-vulnerability';
 import { networkLayersState } from './data-layers/networks';
 import { populationLayerState } from './data-layers/population';
 import { protectedAreasLayerState } from './data-layers/protected-areas';
@@ -33,6 +34,7 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       get(populationLayerState),
       get(buildingDensityLayerState),
       get(naturalAssetsLayersState),
+      get(natureVulnerabilityLayersState),
       get(hazardLayerState),
       get(networkLayersState),
       get(industryLayersState),
