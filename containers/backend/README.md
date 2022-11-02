@@ -62,6 +62,12 @@ __NOTE__: TC_DRIVER_PATH is not used internally - for Terracotta the path is bui
 
 Tileserver also provides a meta store for information about each tile database, with associated CRUD operations for metadata management.
 
+#### Categorical Data
+
+These types of raster are supported.  Categorical colormaps can either be included in the `config.py`, or passed with each tile request, as per the terracotta documentation:  https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
+
+__NOTE__: Only `{pixel :(RGBA)}` explicit color maps are supported.
+
 #### Adding a Source to the Tileserver metastore
 
 POST the following JSON (adapt as required for the source) to: `http://backend-host:8080/tiles/sources`
@@ -207,6 +213,20 @@ DOMAIN_TO_DB_MAP = {
   "global_type": "Exposure",
   "domain": "traveltime_to_healthcare",
   "full_name": "Travel Time to Healthcare",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
+
+##### ESA Land Cover
+
+```json
+{
+  "source_db": "land_cover",
+  "global_type": "Exposure",
+  "domain": "land_cover",
+  "full_name": "ESA Land Cover",
   "description": "description",
   "license": "license",
   "variables": {}

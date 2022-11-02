@@ -64,4 +64,4 @@ provision.sh
 *.mbtiles
 *.tar.gz
 .vscode
-
+etl/raw_data/*

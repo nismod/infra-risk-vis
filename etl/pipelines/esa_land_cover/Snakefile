@@ -1,0 +1,124 @@
+import os
+import subprocess
+import shutil
+from typing import List
+import shutil
+
+import geopandas
+import pandas
+
+
+def disk_free_mb(wildcards, attempt):
+    _, _, free = shutil.disk_usage("/") 
+    return int(free / 1000000)
+
+# Load Config
+configfile: "/opt/etl/pipelines/esa_land_cover/config.yml"
+
+
+# Read further configuration data from CSV
+exposure_layers = pandas.read_csv(config["exposure_layers"])
+
+
+wildcard_constraints:
+    layer="[^/]+",
+
+# Run all file-base jobs, after load_to_database
+rule all:
+    input:
+        expand("/opt/tileserver/raster/data/land_cover/{layer}.tif", layer=exposure_layers.key),
+
+rule raster_temp_file:
+    output:
+        "/opt/etl/raster/link/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        60,
+    run:
+        layer = get_layer(wildcards.layer, exposure_layers)
+        print (layer.path, output)
+        shutil.copyfile(
+            layer.path,
+            str(output)
+        )
+
+def get_layer(layer_name, exposure_layers):
+    try:
+        print ("getting  layer: ", layer_name)
+        return exposure_layers[exposure_layers.key == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in exposure layers.")
+        raise e
+    finally:
+        print ("got exposure layer")
+
+rule raster_clip_ns:
+    input:
+        rules.raster_temp_file.output,
+    output:
+        "/opt/etl/raster/clip/{layer}.tif",
+    resources:
+        disk_mb=3000
+    priority:
+        80,
+    shell:
+        """
+        gdal_translate \
+            -projwin -175 84 175 -84 \
+            -a_srs EPSG:4326 \
+            NETCDF:C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.nc:lccs_class \
+            -of 'Gtiff' \
+            -co COMPRESS=LZW \
+            {input} \
+            {output} && \
+        rm {input}
+        """
+
+rule raster_to_cog:
+    input:
+        rules.raster_clip_ns.output,
+    output:
+        "/opt/etl/raster/cog/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        90,
+    shell:
+        """
+        # translate to Cloud-Optimised GeoTIFF
+        #
+        # could use gdalwarp directly - options chosen to match (reasonably
+        # closely) the output of `terracotta optimize-rasters`:
+        #
+        # gdalwarp "{input}" "{output}" \
+        #     -t_srs "EPSG:3857" \
+        #     -r near \
+        #     -of COG \
+        #     -co COMPRESS=DEFLATE \
+        #     -co BLOCKSIZE=256
+        #
+        terracotta optimize-rasters \
+            -o /opt/etl/raster/cog \
+            --overwrite \
+            --reproject \
+            --nproc -1 \
+            --resampling-method nearest \
+            {input} && \
+        rm {input}
+        """
+
+rule raster_cleanup:
+    input:
+        rules.raster_to_cog.output,
+    output:
+        "/opt/tileserver/raster/data/land_cover/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        100,
+    shell:
+        """
+        mv {input} {output}
+        """
+        

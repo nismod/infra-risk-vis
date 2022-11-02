@@ -21,8 +21,12 @@ from app.dependencies import get_db
 from db import models
 from app.internal.tiles.singleband import all_datasets, database_keys
 from app.internal.helpers import build_driver_path, handle_exception
-from app.exceptions import SourceDBDoesNotExistException, DomainAlreadyExistsException
-from config import API_TOKEN, DOMAIN_TO_DB_MAP
+from app.exceptions import (
+    SourceDBDoesNotExistException,
+    DomainAlreadyExistsException,
+    MissingExplicitColourMapException,
+)
+from config import API_TOKEN, DOMAIN_TO_DB_MAP, CATEGORICAL_COLOR_MAPS
 
 
 router = APIRouter(tags=["tiles"])
@@ -62,15 +66,11 @@ def _get_singleband_image(
 
     parsed_keys = _parse_keys(keys)
 
-    if options.get("colormap", "") == "explicit":
-        options["colormap"] = options.pop("explicit_color_map")
-
     # Collect TC Driver path for MySQL
     driver_path = build_driver_path(database)
 
     logger.debug(
-        "driver path: %s, parsed_keys: %s, tile_xyz: %s, options: %s",
-        driver_path,
+        "parsed_keys: %s, tile_xyz: %s, options: %s",
         parsed_keys,
         tile_xyz,
         options,
@@ -142,7 +142,6 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
 
 
 async def verify_token(x_token: str = Header()):
-    print(x_token, API_TOKEN)
     if x_token != API_TOKEN:
         raise HTTPException(status_code=401, detail="")
 
@@ -292,16 +291,18 @@ async def get_tile(
     tile_y: int,
     colormap: Union[str, None] = None,
     stretch_range: Union[str, None] = None,
+    explicit_color_map: Union[str, None] = None,
     db: Session = Depends(get_db),
 ):
     """
     This route does not work in a FastAPI thread pool environment (i.e. when not async)
     """
     logger.debug(
-        "tile path %s, colormap: %s, stretch_range: %s",
+        "tile path %s, colormap: %s, stretch_range: %s, explicit_color_map: %s",
         keys,
         colormap,
-        ast.literal_eval(stretch_range),
+        ast.literal_eval(stretch_range) if stretch_range else "",
+        explicit_color_map,
     )
     try:
         source_db = _tile_db_from_keys(keys)
@@ -316,7 +317,17 @@ async def get_tile(
         # Check the keys are appropriate for the given type
         options = {}
         if colormap:
-            options["colormap"] = colormap
+            if colormap == "explicit":
+                # Check if we have an internal categorical colormap for this DB
+                if source_db in CATEGORICAL_COLOR_MAPS.keys():
+                    options["colormap"] = CATEGORICAL_COLOR_MAPS[source_db]
+                elif not explicit_color_map:
+                    raise MissingExplicitColourMapException()
+                else:
+                    # Use the provided categorical colormap
+                    options["colormap"] = ast.literal_eval(explicit_color_map)
+            else:
+                options["colormap"] = colormap
         if stretch_range:
             options["stretch_range"] = ast.literal_eval(stretch_range)
 
@@ -334,6 +345,12 @@ async def get_tile(
 
         # Return the tile as stream
         return StreamingResponse(image, media_type="image/png")
+    except MissingExplicitColourMapException as err:
+        handle_exception(logger, err)
+        raise HTTPException(
+            status_code=400,
+            detail=f"colormap=explicit requires explicit_color_map to be included",
+        )
     except SourceDBDoesNotExistException as err:
         handle_exception(logger, err)
         raise HTTPException(
