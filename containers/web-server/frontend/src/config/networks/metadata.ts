@@ -61,7 +61,7 @@ export const NETWORK_LAYERS = [
   'elec_nodes_demand',
   'rail_edges',
   'rail_stations',
-  'rail_junctions',
+  'rail_nodes',
   'road_edges_class_a',
   'road_edges_class_b',
   'road_edges_class_c',
@@ -176,7 +176,7 @@ export const NETWORKS_METADATA = makeConfig<AssetMetadata, NetworkLayerType>([
     color: INFRASTRUCTURE_COLORS.railway.css,
   },
   {
-    id: 'rail_junctions',
+    id: 'rail_nodes',
     type: 'circle',
     label: 'Railway Junctions',
     color: INFRASTRUCTURE_COLORS.railway.css,

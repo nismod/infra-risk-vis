@@ -85,7 +85,7 @@ const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<string, AssetViewLayerCustomFunctio
     fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
     pointRadius(zoom),
   ],
-  rail_junctions: ({ zoom, dataStyle }) => [
+  rail_nodes: ({ zoom, dataStyle }) => [
     border(),
     fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
     pointRadius(zoom),

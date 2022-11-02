@@ -51,7 +51,7 @@ var componentMapping: Record<ComponentMappingKey, DetailsComponent> = {
 
   rail_edges: RailEdgeDetails,
   rail_stations: RailNodeDetails,
-  rail_junctions: RailNodeDetails,
+  rail_nodes: RailNodeDetails,
 
   road_bridges: BridgeDetails,
   road_edges_class_a: RoadEdgeDetails,
