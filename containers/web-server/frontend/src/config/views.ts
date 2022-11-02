@@ -41,6 +41,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: false,
       visible: false,
     },
+    'travel-time': {
+      expanded: false,
+      visible: false,
+    },
     'nature-vulnerability': {
       expanded: false,
       visible: false,
@@ -78,6 +82,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       visible: false,
     },
     'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'travel-time': {
       expanded: false,
       visible: false,
     },
@@ -121,6 +129,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: true,
       visible: true,
     },
+    'travel-time': {
+      expanded: true,
+      visible: false,
+    },
     'nature-vulnerability': {
       expanded: true,
       visible: false,
@@ -159,6 +171,10 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       visible: false,
     },
     'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'travel-time': {
       expanded: false,
       visible: false,
     },
