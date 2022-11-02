@@ -1,11 +1,13 @@
 import GL from '@luma.gl/constants';
 import React from 'react';
 
+import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use-interactions';
 import { ViewLayer } from '@/lib/data-map/view-layers';
 import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 import { numFormat } from '@/lib/helpers';
 
 import { RasterLegend } from '@/map/legend/RasterLegend';
+import { RasterHoverDescription } from '@/map/tooltip/RasterHoverDescription';
 
 import { SOURCES } from '../sources';
 
@@ -22,9 +24,12 @@ function getPopulationUrl() {
 }
 
 export function jrcPopulationViewLayer(): ViewLayer {
+  const label = 'Population';
+  const formatValue = (x) => numFormat(x);
+
   return {
     id: 'population',
-    interactionGroup: 'population',
+    interactionGroup: 'raster_assets',
     spatialType: 'raster',
     fn({ deckProps, zoom }) {
       return rasterTileLayer(
@@ -45,7 +50,16 @@ export function jrcPopulationViewLayer(): ViewLayer {
         key: 'population',
         label: 'Population',
         colorMap: JRC_POPULATION_COLOR_MAP,
-        getValueLabel: (x) => numFormat(x),
+        getValueLabel: formatValue,
+      });
+    },
+    renderTooltip(hoveredObject: InteractionTarget<RasterTarget>) {
+      const { color } = hoveredObject.target;
+      return React.createElement(RasterHoverDescription, {
+        color,
+        ...JRC_POPULATION_COLOR_MAP,
+        label,
+        formatValue,
       });
     },
   };

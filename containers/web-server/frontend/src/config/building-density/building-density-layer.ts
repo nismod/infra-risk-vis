@@ -27,7 +27,7 @@ export function buildingDensityLayer(type: BuildingDensityType): ViewLayer {
 
   return {
     id: 'buildings',
-    interactionGroup: 'buildings_ghsl',
+    interactionGroup: 'raster_assets',
     spatialType: 'raster',
     fn: ({ deckProps }) => {
       return rasterTileLayer({}, deckProps, {
