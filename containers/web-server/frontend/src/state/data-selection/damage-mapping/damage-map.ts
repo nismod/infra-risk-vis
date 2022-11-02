@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { atom, selector } from 'recoil';
 
-import { HAZARD_DOMAINS } from '@/config/hazards/domains';
-import { dataParamOptionsState, dataParamState } from '@/state/data-params';
+import { HAZARD_DOMAINS_CONFIG } from '@/config/hazards/domains';
+import { paramOptionsState, paramValueState } from '@/state/data-params';
 import { hazardSelectionState } from '@/state/data-selection/hazards/hazard-selection';
 import { networksStyleState } from '@/state/data-selection/networks/networks-style';
 
@@ -25,16 +25,16 @@ export const damageSourceStateEffect = ({ get, set }, damageSource) => {
   syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource);
 
   if (damageSource !== 'all') {
-    const damageSourceReturnPeriodDomain = get(dataParamOptionsState({ group: damageSource, param: 'returnPeriod' }));
+    const damageSourceReturnPeriodDomain = get(paramOptionsState({ group: damageSource, param: 'rp' }));
     const topReturnPeriod = damageSourceReturnPeriodDomain[damageSourceReturnPeriodDomain.length - 1];
 
     // CAUTION: this won't resolve the dependencies between data params if any depend on the return period
-    set(dataParamState({ group: damageSource, param: 'returnPeriod' }), topReturnPeriod);
+    set(paramValueState({ group: damageSource, param: 'rp' }), topReturnPeriod);
   }
 };
 
 function syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource) {
-  _.forEach(HAZARD_DOMAINS, (groupConfig, group) => {
+  _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
     set(hazardSelectionState(group), group === damageSource);
   });
 }

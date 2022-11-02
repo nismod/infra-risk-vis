@@ -5,14 +5,14 @@ export const HAZARD_SOURCE = {
     let path: string;
     // TODO: Gather required keys from API
     if (hazardType === 'earthquake') {
-      const { returnPeriod, medium } = hazardParams;
-      path = `earthquake/${returnPeriod}/${medium}`;
+      const { rp, medium } = hazardParams;
+      path = `earthquake/${rp}/${medium}`;
     } else {
-      const { returnPeriod, rcp, epoch, gcm } = hazardParams;
-      const sanitisedRcp = rcp.replace('.', 'x');
+      const { rp, rcp, epoch, gcm } = hazardParams;
+      const sanitisedRcp = rcp?.replace('.', 'x');
 
       if (hazardType === 'cyclone') {
-        path = `${hazardType}/${returnPeriod}/${gcm}`;
+        path = `${hazardType}/${rp}/${gcm}`;
       } else if (hazardType === 'extreme_heat') {
         // TODO: Add support for exposure metric (as well as occurrence)
         path = `extreme_heat/occurrence/${sanitisedRcp}/${epoch}/${gcm}`;
@@ -24,7 +24,7 @@ export const HAZARD_SOURCE = {
       } else if (hazardType === 'drought') {
         path = `drought/occurrence/${sanitisedRcp}/${epoch}/${gcm}`;
       } else {
-        path = `${hazardType}/${returnPeriod}/${sanitisedRcp}/${epoch}/${gcm}`;
+        path = `${hazardType}/${rp}/${sanitisedRcp}/${epoch}/${gcm}`;
       }
     }
 
