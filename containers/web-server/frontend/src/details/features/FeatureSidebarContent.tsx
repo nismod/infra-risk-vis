@@ -6,7 +6,10 @@ import { downloadFile } from '@/lib/helpers';
 import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
 import { apiClient } from '@/api-client';
-import { BuildingLayerType } from '@/config/_old/buildings/metadata';
+import { BUILDINGS_METADATA, BuildingLayerType } from '@/config/_old/buildings/metadata';
+import { AssetMetadata } from '@/config/assets/metadata';
+import { HEALTHSITES_METADATA } from '@/config/healthcare/healthsites-view-layer';
+import { INDUSTRY_METADATA } from '@/config/industry/industry-view-layer';
 import { NETWORKS_METADATA, NetworkLayerType } from '@/config/networks/metadata';
 import { IndustryType } from '@/state/data-selection/industry';
 
@@ -112,6 +115,13 @@ var componentMapping: Record<ComponentMappingKey, DetailsComponent> = {
   healthsites: DefaultDetails,
 };
 
+const detailMetadata: Record<ComponentMappingKey, AssetMetadata> = {
+  ...NETWORKS_METADATA,
+  ...BUILDINGS_METADATA,
+  ...INDUSTRY_METADATA,
+  healthsites: HEALTHSITES_METADATA,
+};
+
 interface FeatureSidebarContentProps {
   feature: any;
   assetType: string;
@@ -124,7 +134,7 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
   showRiskSection = true,
 }) => {
   const DetailsComponent = componentMapping[assetType] ?? DefaultDetails;
-  const { color, label } = NETWORKS_METADATA[assetType];
+  const { color, label } = detailMetadata[assetType];
 
   const f = feature.properties;
 
