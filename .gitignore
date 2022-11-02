@@ -25,6 +25,8 @@ public/**/*.csv
 TODO
 NOTES
 venv
+.vscode
+.devcontainer
 
 # build
 build/
@@ -58,5 +60,8 @@ deploy.sh
 main.tf
 provision.sh
 *.geoparquet
+*.gpkg
 *.mbtiles
-etl/raw_data/*
+*.tar.gz
+.vscode
+

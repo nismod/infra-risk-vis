@@ -1,0 +1,2 @@
+exposure,path,key
+population,/opt/etl/raw_data/processed_data/input/jrc_pop/GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif,GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0

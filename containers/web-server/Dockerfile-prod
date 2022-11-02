@@ -4,10 +4,10 @@
 FROM node:16 AS builder
 WORKDIR /app
 
-COPY ./containers/web-server/frontend/package.json .
+COPY frontend/package.json .
 RUN npm install
 
-COPY ./containers/web-server/frontend* .
+COPY frontend .
 RUN npm run build
 
 # stage 2 of 2
@@ -22,7 +22,7 @@ COPY --from=builder /app/build* .
 # and copy in the nginx config...
 # delete conf.d as it will contain default.conf which will conflict
 RUN rm -rf /etc/nginx/conf.d
-COPY ./containers/web-server/nginx/prod* /etc/nginx
+COPY nginx/prod /etc/nginx
 # SSL Certs mounted externally
 
 # containers run nginx with global directives and daemon off

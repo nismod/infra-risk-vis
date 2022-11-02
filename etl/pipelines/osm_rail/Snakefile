@@ -1,0 +1,108 @@
+import os
+import subprocess
+
+import geopandas
+import pandas
+
+
+# Example config
+configfile: "/opt/etl/pipelines/osm_rail/config.yml"
+
+
+# Read further configuration data from CSV
+network_layers = pandas.read_csv(config["network_layers"])
+network_tilelayers = pandas.read_csv(config["network_tilelayers"])
+
+
+wildcard_constraints:
+    layer="[^/]+",
+
+
+# Run all file-base jobs, after load_to_database
+rule all:
+    input:
+        expand(
+            "/opt/tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
+        ),
+        expand(
+            "/opt/etl/logs/network/{layer}.txt", layer=network_tilelayers.layer
+        ),
+        expand(
+            "vector/{layer}.geojsonl", layer=network_tilelayers.layer
+        ),
+
+
+rule networks_to_db:
+    """Read from source directory to database
+    """
+    output:
+        "/opt/etl/logs/network/{layer}.txt",
+    script:
+        "/opt/etl/pipelines/osm_rail/osm_rail_to_db.py"
+
+
+rule db_to_geojsonseq:
+    """Load from database to GeoJSONSeq
+    """
+    input:
+        "/opt/etl/logs/network/{layer}.txt",
+    output:
+        "vector/{layer}.geojsonl",
+    script:
+        "/opt/etl/pipelines/common/db_to_geojsonseq.py"
+
+
+rule geojsonseq_to_vector_tiles:
+    input:
+        "vector/{layer}.geojsonl",
+    output:
+        "/opt/tileserver/vector/data/{layer}.mbtiles",
+    run:
+        layer = get_tilelayer(wildcards.layer, network_tilelayers)
+
+        max_zoom = 20
+        point_polygon_zoom_switch = 13
+
+        if layer.spatial_type == "line":
+            options = [
+                "--minimum-zoom=4",
+                "-zg",
+                "--coalesce-densest-as-needed",
+                "--extend-zooms-if-still-dropping",
+                "--simplification=10",
+                f"--simplify-only-low-zooms",
+            ]
+        elif layer.spatial_type == "polygon":
+            options = [
+                "--drop-smallest-as-needed",
+                f"--minimum-zoom={point_polygon_zoom_switch}",
+                f"--maximum-zoom={max_zoom}",
+            ]
+        else:
+            options = [
+                "--drop-densest-as-needed",
+                "-Bg",
+                f"--maximum-zoom={max_zoom}",
+                "--full-detail=12"
+            ]
+
+        subprocess.run(
+            [
+                "tippecanoe",
+                "--use-attribute-for-id=uid",
+                "--read-parallel",
+                f"--output={output}",
+                f"--layer={wildcards.layer}",
+            ]
+            + options
+            + ["--force", f"{input}"],
+            check=True
+        )
+
+
+def get_tilelayer(layer_name, network_tilelayers):
+    try:
+        return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in tilelayers.")
+        raise e

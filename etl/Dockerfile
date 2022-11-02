@@ -17,7 +17,9 @@ RUN mamba install -y geopandas && \
     mamba install -y gdal && \
     mamba install -y terracotta && \
     mamba install -y tippecanoe && \
-    mamba install -y jq
+    mamba install -y jq && \
+    mamba install -y pyarrow && \
+    mamba install -y psycopg2-binary sqlalchemy==1.4.41 geoalchemy2==0.12.5 ujson==5.5.0
 
 # Test the environment is ready:
 RUN echo "Testing environment..."

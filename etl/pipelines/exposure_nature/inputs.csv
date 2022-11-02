@@ -1,0 +1,4 @@
+exposure,path,subtype,key
+nature,/opt/etl/raw_data/processed_data/input/organic_carbon/ocs_0-30cm_mean_1000_epsg4326.tif,organic_carbon,ocs_0-30cm_mean_1000_epsg4326
+nature,/opt/etl/raw_data/processed_data/input/forest_landscape_integrity/flii_earth.tif,forest_landscape_integrity,flii_earth
+nature,/opt/etl/raw_data/processed_data/input/biodiversity_intactness/lbii.tif,biodiversity_intactness,lbii

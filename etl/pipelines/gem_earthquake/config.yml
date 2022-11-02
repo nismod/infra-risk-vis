@@ -1,0 +1,2 @@
+hazard_layers: /opt/etl/pipelines/gem_earthquake/hazard_earthquake.csv
+raster_output_dir: /opt/tileserver/raster/data/gem_earthquake

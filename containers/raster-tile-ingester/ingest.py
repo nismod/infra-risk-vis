@@ -14,6 +14,7 @@ import sys
 from typing import Any, Dict, List
 import argparse
 import traceback
+import pymysql
 
 import tqdm
 import terracotta
@@ -23,7 +24,13 @@ parser = argparse.ArgumentParser(description="Terracotta Ingester")
 parser.add_argument(
     "operation",
     type=str,
-    choices=["load_csv", "load_json", "load_single", "delete_database_entries"],
+    choices=[
+        "load_csv",
+        "load_json",
+        "load_single",
+        "delete_database_entries",
+        "drop_database",
+    ],
     help="Type of load operation - load_csv requires input_csv_filepath",
 )
 parser.add_argument(
@@ -86,6 +93,37 @@ def load_csv(
                 }
             )
     return raster_files
+
+
+def _drop_db(db_name: str) -> None:
+    """
+    Drop the given database - must have root perms
+    """
+    import pymysql
+
+    tc_settings = terracotta.get_settings()
+    mysql_uri = tc_settings.DRIVER_PATH
+    if not "mysql://" in mysql_uri:
+        raise Exception("can only drop databaess from mysql")
+    parts = mysql_uri.replace("mysql://", "").split("@")
+    host = parts[1]
+    username, password = parts[0].split(":")
+    # Connect to the database
+    connection = pymysql.connect(
+        host=host,
+        user=username,
+        password=password,
+        database="mysql",
+        charset="utf8mb4",
+        cursorclass=pymysql.cursors.DictCursor,
+    )
+
+    with connection:
+        with connection.cursor() as cursor:
+            # Create a new record
+            sql = f"DROP DATABASE {db_name}"
+            cursor.execute(sql)
+        connection.commit()
 
 
 def _create_db(db_name: str, driver: terracotta, keys: str) -> Any:
@@ -161,9 +199,9 @@ def ingest_from_csv(
 
     progress_bar = tqdm.tqdm(raster_files)
     print("Starting ingest...")
-    for raster in progress_bar:
-        progress_bar.set_postfix(file=raster["path"])
-        with driver.connect():
+    with driver.connect():
+        for raster in progress_bar:
+            progress_bar.set_postfix(file=raster["path"])
             try:
                 # This does an internal DB check after each insert
                 dup_path = _check_duplicate_entry(raster, driver)
@@ -238,5 +276,7 @@ if __name__ == "__main__":
         ingest_from_csv(args.database_name, tile_keys, raster_files)
     elif args.operation == "delete_database_entries":
         _delete_database_entries(args.database_name)
+    elif args.operation == "drop_database":
+        _drop_db(args.database_name)
     else:
         print(f"Operation {args.operation} not yet supported")

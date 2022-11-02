@@ -1,0 +1,15 @@
+{
+  "options": {
+    "paths": {
+      "root": "",
+      "fonts": "fonts",
+      "mbtiles": "data"
+    }
+  },
+  "styles": {},
+  "data": {
+    "road_edges_class_b": {
+      "mbtiles": "road_edges_class_b.mbtiles"
+    }
+  }
+}

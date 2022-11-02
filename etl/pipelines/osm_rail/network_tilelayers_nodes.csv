@@ -1,0 +1,2 @@
+ref,sector,subsector,asset_type,spatial_type,layer
+transport_rail_nodes,transport,rail,station,point,rail_nodes

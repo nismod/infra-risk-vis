@@ -3,6 +3,7 @@ Data Set Downloaders
 """
 
 import os
+import shutil
 import sys
 import csv
 from typing import List
@@ -172,7 +173,7 @@ class HazardISIMPExtremeHeat:
         self,
         download_dir: str = None,
         hazard_csv_fpath: str = None,
-        world_pop_fpath: str = "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif",
+        world_pop_fpath: str = "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0_wgs84.tif",
     ):
         self.hazard_csv_fpath = hazard_csv_fpath
         self.download_dir = download_dir
@@ -359,8 +360,65 @@ class HazardISIMPExtremeHeat:
         fname = basename.replace("occurrence", "exposure")
         return f"{fname}.tif"
 
+    def match_raster_resoluton_and_extent(
+        self, master_fpath: str, slave_fpath: str, output_fpath: str, res=None
+    ) -> bool:
+        """
+        Generate a new raster that is a copy of slave, but with the resolution and size of the master
+        """
+        slave_ds = gdal.Open(slave_fpath)
+        if slave_ds is None:
+            raise IOError
+        slave_proj = slave_ds.GetProjection()
+        data_type = slave_ds.GetRasterBand(1).DataType
+        n_bands = slave_ds.RasterCount
+
+        master_ds = gdal.Open(master_fpath)
+        if master_ds is None:
+            raise IOError
+        master_proj = master_ds.GetProjection()
+        master_geotrans = master_ds.GetGeoTransform()
+        w = master_ds.RasterXSize
+        h = master_ds.RasterYSize
+        if res is not None:
+            master_geotrans[1] = float(res)
+            master_geotrans[-1] = -float(res)
+
+        dst_ds = gdal.GetDriverByName("GTiff").Create(
+            output_fpath, w, h, n_bands, data_type, ["COMPRESS=LZW"]
+        )
+        dst_ds.SetGeoTransform(master_geotrans)
+        dst_ds.SetProjection(master_proj)
+
+        gdal.ReprojectImage(
+            slave_ds, dst_ds, slave_proj, master_proj, gdal.GRA_NearestNeighbour
+        )
+        dst_ds = None  # Flush to disk
+        return os.path.exists(output_fpath)
+
+    def warp_occurrence_to_pop(self, input_occurrence_fpath: str, output_dir: str):
+        """
+        Warp the occurrence file to the same extent and res as worldpop
+        """
+        # Warp Occurrence to Worldpop proj, cellsize and extent
+        logging.debug(
+            "generating popn exposure tiff - warping occurrence to world pop size and proj"
+        )
+        tmp_occurrence_fpath = os.path.join(output_dir, "tmp_reproj.tif")
+        result = self.match_raster_resoluton_and_extent(
+            self.world_pop_fpath, input_occurrence_fpath, tmp_occurrence_fpath
+        )
+        shutil.move(tmp_occurrence_fpath, input_occurrence_fpath)
+        logging.debug(
+            "generating popn exposure tiff - matched res and scale of world pop raster: %s",
+            result,
+        )
+
     def generate_popn_exposure_tiff(
-        self, input_occurrence_file: ISIMPExtremeHeatOccurrence, output_dir: str
+        self,
+        input_occurrence_file: ISIMPExtremeHeatOccurrence,
+        output_dir: str,
+        replace_occurrence=True,
     ) -> ISIMPExtremeHeatExposure:
         """
         Generate a TIFF file of world population x heatwave occurrence
@@ -374,70 +432,56 @@ class HazardISIMPExtremeHeat:
             os.path.basename(input_occurrence_file.fpath)
         )
         output_fpath = os.path.join(output_dir, output_fname)
+        # Skip if it exists
+        if os.path.exists(output_fpath):
+            logging.warning(
+                "pop exposure output fpath appears to exist - skipping reprocessing: %s",
+                output_fpath,
+            )
+            return ISIMPExtremeHeatExposure(
+                input_file.fname,
+                output_fname,
+                output_fpath,
+                file_key_from_fname(output_fname),
+                input_occurrence_file.epoch,
+                input_occurrence_file.gcm,
+                input_occurrence_file.rcp,
+            )
 
         logging.debug(
             "generating popn exposure tiff - opening worldpop: %s",
             self.world_pop_fpath,
         )
-        # # Load world pop
-        # pop_raster = gdal.Open(self.world_pop_fpath)
-        # pop_target_proj = pop_raster.GetProjection()
-        # pop_target_geotrans = pop_raster.GetGeoTransform()
 
-        # # Load Temporally averaged TIFF
-        # logging.debug(
-        #     "generating popn exposure tiff - loading occurrence: %s",
-        #     input_occurrence_file.fpath,
-        # )
-        # exposure_raster = gdal.Open(input_occurrence_file.fpath)
-
-        # Warp Exposure to Worldpop proj, cellsize and extent
+        # Warp Occurrence to Worldpop proj, cellsize and extent
         logging.debug(
-            "generating popn exposure tiff - warping occurrence to world pop..."
+            "generating popn exposure tiff - warping occurrence to world pop size and proj"
         )
-        tmp_exposure_fpath = os.path.join(output_dir, "tmp_reproj_heat.tif")
-        warp_cmd = f"gdalwarp -ts 36082 18000 -t_srs {os.path.join(os.path.dirname(os.path.abspath(__file__)), 'target_mol.wkt')} {input_occurrence_file.fpath} {tmp_exposure_fpath}"
-        os.system(warp_cmd)
+        tmp_occurrence_fpath = os.path.join(output_dir, "tmp_reproj.tif")
+        result = self.match_raster_resoluton_and_extent(
+            self.world_pop_fpath, input_occurrence_file.fpath, tmp_occurrence_fpath
+        )
+        logging.debug(
+            "generating popn exposure tiff - matched res and scale of world pop raster: %s",
+            result,
+        )
 
-        # exposure_src_proj = exposure_raster.GetProjection()
-        # px_x_size = pop_raster.RasterXSize
-        # px_y_size = pop_raster.RasterYSize
-        # exposure_raster_reproj = gdal.GetDriverByName("Gtiff").Create(
-        #     tmp_exposure_fpath, px_x_size, px_y_size, 1, gdalconst.GDT_Float32
-        # )
-        # exposure_raster_reproj.SetGeoTransform(pop_target_geotrans)
-        # exposure_raster_reproj.SetProjection(pop_target_proj)
-        # gdal.ReprojectImage(
-        #     exposure_raster,
-        #     exposure_raster_reproj,
-        #     exposure_src_proj,
-        #     pop_target_proj,
-        #     gdalconst.GRA_NearestNeighbour,
-        # )
         logging.debug("generating popn exposure tiff - running exposure calc...")
         # Run the calculation for exposure
-        tmp_calc_fpath = os.path.join(output_dir, "tmp_calc_heat.tif")
-        calc_cmd = f'gdal_calc.py -A {tmp_exposure_fpath} -B {self.world_pop_fpath} --co="COMPRESS=LZW" --outfile={tmp_calc_fpath} --calc="A*B"'
+        calc_cmd = f'gdal_calc.py -A {self.world_pop_fpath} -B {tmp_occurrence_fpath} --co="COMPRESS=LZW" --outfile={output_fpath} --calc="A*B"'
         os.system(calc_cmd)
-        # Reproject the result to WGS84
-        logging.debug("generating popn exposure tiff - reprojecting exposure calc...")
-        reproj_cmd = f"gdalwarp -t_srs {os.path.join(os.path.dirname(os.path.abspath(__file__)), 'target_wgs84.wkt')} -of GTiff -co COMPRESS=LZW -te -175 -84 175 84 {tmp_calc_fpath} {output_fpath}"
-        os.system(reproj_cmd)
+
         logging.debug("generating popn exposure tiff - removing tmp files")
-        os.remove(tmp_exposure_fpath)
-        os.remove(tmp_calc_fpath)
-        # heat_data = exposure_raster_reproj.ReadAsArray()
+        # Replace Occurrence tif with the warped version
+        if replace_occurrence:
+            logging.debug(
+                "generating popn exposure tiff - replacing original occurrence with warped version",
+                result,
+            )
+            shutil.move(tmp_occurrence_fpath, input_occurrence_file.fpath)
+        else:
+            os.remove(tmp_occurrence_fpath)
 
-        # # Sanity check the shape - should both be single band and of same shape
-        # assert (
-        #     worldpop_data.shape == heat_data.shape
-        # ), f"worldpop and heatwave tiffs are of differing shape - aborting ({ worldpop_data.shape} vs {heat_data.shape})"
-
-        # # Do exposure calc
-        # exposure = heat_data * worldpop_data
-
-        # # Save
-        # self.np_to_geotiff(exposure, output_fpath)
         return ISIMPExtremeHeatExposure(
             input_file.fname,
             output_fname,
@@ -455,6 +499,7 @@ class HazardISIMPExtremeHeat:
         output_dir: str,
         averaging_year_start: int,
         averaging_year_end: int,
+        warp_occurrence_to_pop=True,
     ) -> ISIMPExtremeHeatOccurrence:
         """
         Generate a TIFF file using temporal averaging for the given time window
@@ -499,6 +544,9 @@ class HazardISIMPExtremeHeat:
             os.path.getsize(output_fpath),
             output_fpath,
         )
+        if warp_occurrence_to_pop:
+            # Overwrites existing
+            self.warp_occurrence_to_pop(output_fpath, output_dir)
         return ISIMPExtremeHeatOccurrence(
             input_file.fname,
             output_fname,
@@ -657,8 +705,10 @@ if __name__ == "__main__":
         download_dir=args.download_dir,
         hazard_csv_fpath=args.hazard_csv_fpath,
         world_pop_fpath=os.path.join(
-            os.path.dirname(os.path.abspath(__file__)),
-            "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif",
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "common",
+            "data",
+            "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0_wgs84.tif",
         ),
     )
     # Generate the files metadata
@@ -681,10 +731,10 @@ if __name__ == "__main__":
             len(input_file.occurrence_outputs),
             len(input_file.exposure_outputs),
         )
-    # Generate exposure tiffs
-    input_files = processor.occurrence_tiffs_to_exposure(
-        input_files, args.output_exposure_data_directory
-    )
-    # Generate the CSV
-    processor.append_hazard_csv(input_files)
+    # # Generate exposure tiffs
+    # input_files = processor.occurrence_tiffs_to_exposure(
+    #     input_files, args.output_exposure_data_directory
+    # )
+    # # Generate the CSV
+    # processor.append_hazard_csv(input_files)
     logging.info("Done.")

@@ -142,3 +142,73 @@ DOMAIN_TO_DB_MAP = {
 	}
 }
 ```
+
+##### JRC Population
+
+```json
+{
+  "source_db": "jrc_pop",
+  "global_type": "Exposure",
+  "domain": "population",
+  "full_name": "JRC Population",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
+
+##### ISIMP Drought
+
+```json
+{
+  "source_db": "drought",
+  "global_type": "Hazard",
+  "domain": "drought",
+  "full_name": "ISIMP Drought",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
+
+##### Exposure Nature
+
+```json
+{
+  "source_db": "exposure_nature",
+  "global_type": "Exposure",
+  "domain": "nature",
+  "full_name": "Nature Exposure",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
+
+##### GDSL Buildings
+
+```json
+{
+  "source_db": "buildings",
+  "global_type": "Exposure",
+  "domain": "buildings",
+  "full_name": "Building Exposure",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```
+
+##### Traveltime To Healthcare
+
+```json
+{
+  "source_db": "traveltime_to_healthcare",
+  "global_type": "Exposure",
+  "domain": "traveltime_to_healthcare",
+  "full_name": "Travel Time to Healthcare",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}
+```

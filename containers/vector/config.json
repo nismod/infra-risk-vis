@@ -7,5 +7,57 @@
     }
   },
   "styles": {},
-  "data": {}
+  "data": {
+    "road_edges_class_a": {
+      "mbtiles": "road_edges_class_a.mbtiles"
+    },
+    "road_edges_class_b": {
+      "mbtiles": "road_edges_class_b.mbtiles"
+    },
+    "road_edges_class_c": {
+      "mbtiles": "road_edges_class_c.mbtiles"
+    },
+    "road_edges_metro": {
+      "mbtiles": "road_edges_metro.mbtiles"
+    },
+    "road_edges_track": {
+      "mbtiles": "road_edges_track.mbtiles"
+    },
+    "rail_edges": {
+      "mbtiles": "rail_edges.mbtiles"
+    },
+    "rail_nodes": {
+      "mbtiles": "rail_nodes.mbtiles"
+    },
+    "healthsites": {
+      "mbtiles": "healthsites.mbtiles"
+    },
+    "steel": {
+      "mbtiles": "steel.mbtiles"
+    },
+    "cement": {
+      "mbtiles": "cement.mbtiles"
+    },
+    "hdi_regions": {
+      "mbtiles": "hdi_regions.mbtiles"
+    },
+    "hdi_countries": {
+      "mbtiles": "hdi_countries.mbtiles"
+    },
+    "wdpa_marine_polygons": {
+      "mbtiles": "wdpa_marine_polygons.mbtiles"
+    },
+    "wdpa_marine_points": {
+      "mbtiles": "wdpa_marine_points.mbtiles"
+    },
+    "wdpa_land_points": {
+      "mbtiles": "wdpa_land_points.mbtiles"
+    },
+    "wdpa_land_polygons": {
+      "mbtiles": "wdpa_land_polygons.mbtiles"
+    },
+    "seismic_and_flooding_exposure_per_country": {
+      "mbtiles": "seismic_and_flooding_exposure_per_country.mbtiles"
+    }
+  }
 }

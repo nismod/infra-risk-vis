@@ -1,0 +1,2 @@
+analysis_data_dir: /opt/etl/raw_data
+inputs: "/opt/etl/pipelines/gem_exposure/inputs.csv"

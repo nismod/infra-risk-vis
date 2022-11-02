@@ -1,0 +1,2 @@
+exposure_layers: /opt/etl/pipelines/traveltime_to_healthcare/inputs.csv
+raster_output_dir: /opt/tileserver/raster/data/traveltime_to_healthcare

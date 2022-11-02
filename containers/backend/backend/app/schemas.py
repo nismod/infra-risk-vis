@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Any, Generic, List, Literal, Optional, TypeVar
-from pydantic import BaseModel, conint, root_validator
+from pydantic import BaseModel, conint, root_validator, validator
 from pydantic.generics import GenericModel
 
 
@@ -192,7 +192,11 @@ class TileSourceMeta(BaseModel):
     variables: dict
 
     class Config:
-        orm_mode = True
+        orm_mode = True  #
+
+
+class TileSourceDomains(BaseModel):
+    domains: List[dict]
 
 
 class ColorMapOptions(BaseModel):
