@@ -10,7 +10,8 @@ export const VectorHoverDescription: FC<{
   hoveredObject: InteractionTarget<VectorTarget>;
   label: string;
   color: string;
-}> = ({ hoveredObject, label: title, color = '#ccc' }) => {
+  idValue: string;
+}> = ({ hoveredObject, label: title, color = '#ccc', idValue }) => {
   const {
     viewLayer,
     target: { feature },
@@ -28,7 +29,7 @@ export const VectorHoverDescription: FC<{
         {title}
       </Typography>
 
-      <DataItem label="ID" value={feature.properties.asset_id} />
+      <DataItem label="ID" value={idValue} />
       {colorMap && <DataDescription viewLayer={viewLayer} feature={feature} colorMap={colorMap} />}
     </>
   );

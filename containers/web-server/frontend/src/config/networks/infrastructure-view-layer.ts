@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
 import { StyleParams, ViewLayer } from '@/lib/data-map/view-layers';
 import { dataColorMap } from '@/lib/deck/props/color-map';
 import { border, lineStyle, pointRadius } from '@/lib/deck/props/style';
@@ -171,13 +172,14 @@ export function infrastructureViewLayer(assetId: string, styleParams: StyleParam
     styleParams,
     customFn,
     customDataAccessFn: assetDataAccessFunction(assetId),
-    renderTooltip: (hover) => {
+    renderTooltip: (hover: InteractionTarget<VectorTarget>) => {
       const { label, color } = NETWORKS_METADATA[assetId];
 
       return React.createElement(VectorHoverDescription, {
         hoveredObject: hover,
         label,
         color,
+        idValue: hover.target.feature.properties.asset_id.toFixed(0),
       });
     },
   });

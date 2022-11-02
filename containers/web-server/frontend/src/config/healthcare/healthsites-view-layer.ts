@@ -32,6 +32,7 @@ export function healthsitesViewLayer() {
         hoveredObject: hover,
         label,
         color,
+        idValue: hover.target.feature.properties.osm_id,
       });
     },
   });

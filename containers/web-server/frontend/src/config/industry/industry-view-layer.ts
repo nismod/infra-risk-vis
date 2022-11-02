@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
 import { fillColor, pointRadius } from '@/lib/deck/props/style';
 import { makeColorConfig, makeConfig } from '@/lib/helpers';
 
@@ -39,13 +40,14 @@ export function industryViewLayer(industry_type_id: IndustryType) {
     },
     customFn: ({ zoom }) => [pointRadius(zoom), fillColor(INDUSTRY_COLORS[industry_type_id].deck)],
     customDataAccessFn: assetDataAccessFunction(industry_type_id),
-    renderTooltip: (hover) => {
+    renderTooltip: (hover: InteractionTarget<VectorTarget>) => {
       const { label, color } = INDUSTRY_METADATA[industry_type_id];
 
       return React.createElement(VectorHoverDescription, {
         hoveredObject: hover,
         label,
         color,
+        idValue: hover.target.feature.properties.uid,
       });
     },
   });
