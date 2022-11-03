@@ -65,3 +65,4 @@ provision.sh
 *.tar.gz
 .vscode
 *.pkl
+*.parquet

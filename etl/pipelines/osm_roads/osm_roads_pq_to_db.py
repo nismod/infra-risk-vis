@@ -3,6 +3,10 @@
 import os
 import sys
 from typing import List
+import warnings
+from datetime import datetime
+
+warnings.filterwarnings("error")
 
 import pandas as pd
 from sqlalchemy import delete, insert
@@ -43,7 +47,7 @@ def load_batches(
     pq_fpath: str,
     filter: dataset.Expression,
     batch_size: int = 100,
-) -> None:
+) -> int:
     """
     Load the given parquet file into the Db in batches
 
@@ -58,10 +62,7 @@ def load_batches(
 
         # Load Damages and Expected
     """
-    total_batches = 0
     total_features = 0
-    total_rp_damages = 0
-    total_expected_damages = 0
 
     feature_columns = ["string_id", "layer", "properties", "geom"]
 
@@ -78,7 +79,9 @@ def load_batches(
     for idx, batch in enumerate(
         dataset.to_batches(batch_size=batch_size, filter=filter)
     ):
-        print(f"Doing batch {idx}")
+        print(
+            f"{datetime.now().isoformat()} - Doing batch {idx}, total features so far: {total_features}"
+        )
         if batch.num_rows == 0:
             continue
         # Load data to memory from disk
@@ -127,40 +130,53 @@ def load_batches(
         print(
             "Joined PK Shapes:", df.shape[0], len(feature_rows), df_pks_joined.shape[0]
         )
-        df_pks_joined.to_pickle(
-            "/home/dusted/code/oxford/infra-risk-vis/etl/pipelines/osm_roads/df_pks_joined.pkl"
-        )
 
         # Generate RPDamages rows for this batch
         df_rp_damage = parse_rp_damage_batch(df_pks_joined, primary_key_column="id")
-        print("RP Damages Shape:", df_rp_damage.shape)
-        expected_damage_rows = df_rp_damage.to_dict(orient="records")
-        print(df_rp_damage)
         if df_rp_damage.shape[0] > 0:
-            break
-        # db: Session
-        # with SessionLocal() as db:
-        #     # Dont need ids here
-        #     db.bulk_insert_mappings(
-        #         ReturnPeriodDamage, rp_damage_rows, return_defaults=False
-        #     )
-        #     db.commit()
+            # Impute a rename cols as required
+            df_rp_damage.rename(
+                columns={
+                    "MIN": "damage_amin",
+                    "MEAN": "damage_mean",
+                    "MAX": "damage_amax",
+                },
+                inplace=True,
+            )
+            df_rp_damage.reset_index(inplace=True)
+            df_rp_damage.rename(columns={"id": "feature_id"}, inplace=True)
+            df_rp_damage["loss_amin"] = 0.0
+            df_rp_damage["loss_mean"] = 0.0
+            df_rp_damage["loss_amax"] = 0.0
+            df_rp_damage["exposure"] = 0.0
+            print("RP Damages Shape:", df_rp_damage.shape)
+            rp_damage_rows = df_rp_damage.to_dict("records")
+            db: Session
+            with SessionLocal() as db:
+                # Dont need ids here
+                db.bulk_insert_mappings(
+                    ReturnPeriodDamage, rp_damage_rows, return_defaults=False
+                )
+                db.commit()
 
-        # # Generate Expected Damages rows for this batch
-        # df_expected_damage = parse_exp_damage_batch(
-        #     df_pks_joined, primary_key_column="id"
-        # )
-        # print("Expected Damages Shape:", df_expected_damage.shape)
-        # expected_damage_rows = df_expected_damage.to_dict(orient="records")
-        # db: Session
-        # with SessionLocal() as db:
-        #     # Dont need ids here
-        #     db.bulk_insert_mappings(
-        #         ExpectedDamage, expected_damage_rows, return_defaults=False
-        #     )
-        #     db.commit()
+        # Generate Expected Damages rows for this batch
+        df_expected_damage = parse_exp_damage_batch(
+            df_pks_joined, primary_key_column="id"
+        )
+        if df_expected_damage.shape[0] > 0:
+            df_expected_damage.reset_index(inplace=True)
+            df_expected_damage.rename(columns={"id": "feature_id"}, inplace=True)
+            print("Expected Damages Shape:", df_expected_damage.shape)
+            expected_damage_rows = df_expected_damage.to_dict("records")
+            db: Session
+            with SessionLocal() as db:
+                # Dont need ids here
+                db.bulk_insert_mappings(
+                    ExpectedDamage, expected_damage_rows, return_defaults=False
+                )
+                db.commit()
 
-    print(total_features)
+    return total_features
 
 
 def parse_rp_damage_batch(df: pd.DataFrame, primary_key_column="id") -> pd.DataFrame:
@@ -177,6 +193,12 @@ def parse_rp_damage_batch(df: pd.DataFrame, primary_key_column="id") -> pd.DataF
     meta = melted.variable.str.extract(r"^hazard-(\w+)_(\w+)_(\w+)_(\d+)_(\w+)?")
     meta.columns = ["hazard", "rcp", "var", "epoch", "rp"]
     meta["var"].fillna("none", inplace=True)
+    meta.loc[meta["hazard"] == "inunriver", "hazard"] = "river"
+    meta.loc[meta["hazard"] == "inuncoast", "hazard"] = "coastal"
+    meta["hazard"] = meta["hazard"].str.slice(0, 8)
+    meta.loc[meta["rcp"] == "historical", "rcp"] = "baseline"
+    meta["epoch"] = meta["epoch"].astype(int)
+    meta["rp"] = meta["rp"].str.replace("rp", "").astype(int)
 
     return (
         melted.join(meta)
@@ -186,6 +208,7 @@ def parse_rp_damage_batch(df: pd.DataFrame, primary_key_column="id") -> pd.DataF
             columns="var",
             values="value",
         )
+        .fillna(0)
     )
 
 
@@ -202,6 +225,10 @@ def parse_exp_damage_batch(df: pd.DataFrame, primary_key_column="id") -> pd.Data
     # parse string key column for metadata
     meta = data.variable.str.extract(r"^hazard-(\w+)_(\w+)_(\w+)_(\d+)")
     meta.columns = ["hazard", "rcp", "var", "epoch"]
+    meta.loc[meta["hazard"] == "inunriver", "hazard"] = "river"
+    meta.loc[meta["hazard"] == "inuncoast", "hazard"] = "coastal"
+    meta["hazard"] = meta["hazard"].str.slice(0, 8)
+    meta.loc[meta["rcp"] == "historical", "rcp"] = "baseline"
 
     # join metadata columns
     data = data.join(meta)
@@ -223,9 +250,6 @@ def parse_exp_damage_batch(df: pd.DataFrame, primary_key_column="id") -> pd.Data
     )
 
     data.rename({"min": "ead_amin", "mean": "ead_mean", "max": "ead_amax"})
-    data["eael_amin"] = 0
-    data["eael_mean"] = 0
-    data["eael_max"] = 0
 
     # ensure all columns are present - may be missing in case the data didn't
     # have any non-zero values in this batch
@@ -275,9 +299,8 @@ def clean_props(props, rename: dict, remove=[], remove_substr=True, append: dict
                     continue
             clean[k] = v
     # Merge additional keys
-    # res = {**clean, **append}
-    # print(res)
-    return clean
+    res = {**clean, **append}
+    return res
 
 
 def load_tile_feature_layer(db: Session, network_tile_layer):
@@ -296,6 +319,34 @@ def load_tile_feature_layer(db: Session, network_tile_layer):
         db.commit()
 
 
+def get_network_layer(layer_name, network_layers):
+    try:
+        return network_layers[network_layers.ref == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in network layers.")
+        raise e
+
+
+def get_network_layer_by_ref(network_tile_layer_ref: str, network_layers: pd.DataFrame):
+    try:
+        return network_layers[network_layers.ref == network_tile_layer_ref].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {network_tile_layer_ref} in network layers.")
+        raise e
+
+
+def get_network_layer_path(layer):
+    return f"{layer.path}"
+
+
+def get_tilelayer_by_layer_ref(layer_ref: str, network_tilelayers: pd.DataFrame):
+    return network_tilelayers[network_tilelayers.ref == layer_ref].iloc[0]
+
+
+def get_tilelayer_by_layer_name(layer_name: str, network_tilelayers: pd.DataFrame):
+    return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
+
+
 class Layer:
     asset_id_column = "edge_id"
     asset_type_column = "tag_highway"
@@ -310,29 +361,30 @@ class NetworkTileLayer:
 
 
 if __name__ == "__main__":
-    # layer = pd.DataFrame(
-    #     [
-    #         {
-    #             "asset_id_column": "edge_id",
-    #             "asset_type_column": "tag_highway",
-    #             "layer": "road_edges_motorway",
-    #         }
-    #     ]
-    # )
-
-    # network_tile_layer = pd.DataFrame(
-    #     [
-    #         {
-    #             "asset_type": "motorway",
-    #             "sector": "transport",
-    #             "subsector": "road",
-    #             "layer": "road_edges_motorway",
-    #         }
-    #     ]
-    # )
-
+    # For testing
     layer = Layer()
     network_tile_layer = NetworkTileLayer()
+
+    # try:
+    #     layer = snakemake.wildcards.layer
+    #     output = snakemake.output
+    #     analysis_data_dir = snakemake.config["analysis_data_dir"]
+
+    #     network_layers = pandas.read_csv(snakemake.config["network_layers"])
+    #     network_tilelayers = pandas.read_csv(snakemake.config["network_tilelayers"])
+
+    # except NameError:
+    #     print("Expected to run from snakemake")
+    #     exit()
+
+    # print("Layer", layer)
+    # network_tile_layer = get_tilelayer_by_layer_ref(
+    #     network_layer.ref, network_tilelayers
+    # )
+    # network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
+    # print("Network TileLayer:", network_tile_layer)
+    # network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
+    # print("Network Layer", network_layer)
 
     filter = ds.field(layer.asset_type_column) == network_tile_layer.asset_type
 
@@ -343,13 +395,17 @@ if __name__ == "__main__":
         print("Adding FeatureLayer if required")
         load_tile_feature_layer(db, network_tile_layer)
         print("Removing existing features for this tilelayer")
+        db.execute(delete(ReturnPeriodDamage))
+        db.execute(delete(ExpectedDamage))
         db.execute(delete(Feature).where(Feature.layer == network_tile_layer.layer))
         db.commit()
 
-    load_batches(
+    total_features = load_batches(
         layer,
         network_tile_layer,
         pq_fpath,
         filter,
         batch_size=1000,
     )
+
+    print(f"Loaded {total_features} features")
