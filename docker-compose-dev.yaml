@@ -25,7 +25,7 @@ services:
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-web-server-dev:0.6
+    image: ghcr.io/nismod/gri-web-server-dev:0.7
     expose:
       - "80"
     labels:
