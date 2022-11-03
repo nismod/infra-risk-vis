@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import ScrollToTop from '@/lib/react/ScrollToTop';
+import { Link } from 'react-router-dom';
 
 const HeadingBox = styled(Paper)(({ theme }) => ({
   backgroundColor: 'rgba(0, 92, 97, 0.3)',
@@ -73,6 +74,25 @@ export const IntroPage = () => (
               justifyContent="center"
               alignItems="center"
             ></Stack>
+
+            <Typography variant="h2">Disclaimer</Typography>
+
+            <p> This tool is provided for general information only and is not
+            intended to amount to advice on which you should rely. You must
+            obtain professional or specialist advice before taking, or
+            refraining from, any action on the basis of the content on our site.
+            </p>
+
+            <p> Although we make reasonable efforts to update the information on
+            our site, we make no representations, warranties or guarantees,
+            whether express or implied, that the content on our site (including
+            this tool) is accurate, complete or up to date. The University of
+            Oxford accepts no liability in relation to any issues or liabilities
+            that may subsequently arise from use of the data or this tool for
+            any purpose. Please consult our <Link to="/terms-of-use">website
+            terms of use</Link> for more information about our liability to you.
+            </p>
+
           </TextBox>
         </Grid>
       </Grid>

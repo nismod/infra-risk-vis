@@ -1,26 +1,33 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import React from 'react';
 
 import ScrollToTop from '@/lib/react/ScrollToTop';
+import { Link } from 'react-router-dom';
 
 export const DataPage = () => (
   <article>
     <ScrollToTop />
-    <h1>Data Sources and Access</h1>
+    <Typography variant="h1">Data Sources and Access</Typography>
 
-    <h4>Disclaimer</h4>
-    <p>
-      This website was created for communication purposes. The information included here must not be used for the design
-      of hazard-resistant structures or to support any important decision involving human life, capital or property. The
-      values of risk or hazard in this map do not constitute an alternative nor do they replace building actions defined
-      in national building codes. Readers seeking this information should consult national databases. The data presented
-      here are the combination of results computed using multiple input models covering the majority of landmass. These
-      models represent the best information currently publicly accessible, as far as the authors are aware. The
-      presentation here results from an integration process that is solely the responsibility of the University of
-      Oxford.
+    <Typography variant="h2">Disclaimer</Typography>
+
+    <p> This tool is provided for general information only and is not
+    intended to amount to advice on which you should rely. You must
+    obtain professional or specialist advice before taking, or
+    refraining from, any action on the basis of the content on our site.
     </p>
 
-    <h2>Hazard Data</h2>
+    <p> Although we make reasonable efforts to update the information on
+    our site, we make no representations, warranties or guarantees,
+    whether express or implied, that the content on our site (including
+    this tool) is accurate, complete or up to date. The University of
+    Oxford accepts no liability in relation to any issues or liabilities
+    that may subsequently arise from use of the data or this tool for
+    any purpose. Please consult our <Link to="/terms-of-use">website
+    terms of use</Link> for more information about our liability to you.
+    </p>
+
+    <Typography variant="h2">Hazard Data</Typography>
 
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
@@ -200,7 +207,7 @@ export const DataPage = () => (
       </Table>
     </TableContainer>
 
-    <h2>Exposure Data</h2>
+    <Typography variant="h2">Exposure Data</Typography>
 
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
@@ -518,7 +525,7 @@ export const DataPage = () => (
       </Table>
     </TableContainer>
 
-    <h2>Vulnerability Data</h2>
+    <Typography variant="h2">Vulnerability Data</Typography>
 
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
@@ -669,7 +676,7 @@ export const DataPage = () => (
     </TableContainer>
 
 
-    <h2>Contextual Map Data</h2>
+    <Typography variant="h2">Contextual Map Data</Typography>
 
     <p>
       Background map data is &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,
