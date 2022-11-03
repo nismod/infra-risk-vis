@@ -46,6 +46,13 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          verticalAlign: 'top',
+        }
+      }
+    }
   },
   typography: {
     h1: {
