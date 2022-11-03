@@ -1,2 +1,4 @@
 ref,sector,subsector,asset_type,spatial_type,layer
-transport_roads_edges,transport,road,tertiary,line,road_edges_track
+transport_roads_edges,transport,road,motorway,line,road_edges_class_a
+transport_roads_edges,transport,road,trunk,line,road_edges_class_b
+transport_roads_edges,transport,road,primary,line,road_edges_class_c

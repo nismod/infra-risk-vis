@@ -265,7 +265,9 @@ def parse_exp_damage_batch(df: pd.DataFrame, primary_key_column="id") -> pd.Data
         .fillna(0)
     )
 
-    data.rename({"min": "ead_amin", "mean": "ead_mean", "max": "ead_amax"})
+    data.rename(
+        columns={"MIN": "ead_amin", "MEAN": "ead_mean", "MAX": "ead_amax"}, inplace=True
+    )
 
     # ensure all columns are present - may be missing in case the data didn't
     # have any non-zero values in this batch
@@ -363,6 +365,17 @@ def get_tilelayer_by_layer_name(layer_name: str, network_tilelayers: pd.DataFram
     return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
 
 
+def write_output_log(
+    network_layer, total_feats: int, total_rp_damages: int, total_expected_damages: int
+):
+    with open(str(output), "w") as fh:
+        fh.write(f"Loaded to database.\n\n")
+        fh.write(f"From:\n{network_layer.path}\n\n")
+        fh.write(
+            f"Details:\n{str(network_layer)}, total_feats: {total_feats}, total_rp_damages:{total_rp_damages}, total_expected_damages:{total_expected_damages}\n"
+        )
+
+
 class Layer:
     asset_id_column = "edge_id"
     asset_type_column = "tag_highway"
@@ -378,34 +391,32 @@ class NetworkTileLayer:
 
 if __name__ == "__main__":
     # For testing
-    layer = Layer()
-    network_tile_layer = NetworkTileLayer()
+    # layer = Layer()
+    # network_tile_layer = NetworkTileLayer()
 
-    # try:
-    #     layer = snakemake.wildcards.layer
-    #     output = snakemake.output
-    #     analysis_data_dir = snakemake.config["analysis_data_dir"]
+    try:
+        layer = snakemake.wildcards.layer
+        output = snakemake.output
+        analysis_data_dir = snakemake.config["analysis_data_dir"]
 
-    #     network_layers = pandas.read_csv(snakemake.config["network_layers"])
-    #     network_tilelayers = pandas.read_csv(snakemake.config["network_tilelayers"])
+        network_layers = pd.read_csv(snakemake.config["network_layers"])
+        network_tilelayers = pd.read_csv(snakemake.config["network_tilelayers"])
 
-    # except NameError:
-    #     print("Expected to run from snakemake")
-    #     exit()
+    except NameError:
+        print("Expected to run from snakemake")
+        exit()
 
-    # print("Layer", layer)
-    # network_tile_layer = get_tilelayer_by_layer_ref(
-    #     network_layer.ref, network_tilelayers
-    # )
-    # network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
-    # print("Network TileLayer:", network_tile_layer)
-    # network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
-    # print("Network Layer", network_layer)
+    print("Layer", layer)
+    network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
+    print("Network TileLayer:", network_tile_layer)
+    network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
+    print("Network Layer", network_layer)
+    print(f"PQ Path: {network_layer.path}")
 
-    filter = ds.field(layer.asset_type_column) == network_tile_layer.asset_type
+    filter = ds.field(network_layer.asset_type_column) == network_tile_layer.asset_type
 
     # pq_fpath = "/home/dusted/code/oxford/infra-risk-vis/etl/raw_data/processed_data/input/osm_roads/20221102_egypt_with_EAD_and_RP_test.geoparquet"
-    pq_dir = "/home/dusted/code/oxford/infra-risk-vis/etl/raw_data/processed_data/input/osm_roads/20221103_global_road_EAD_and_cost_per_RP"
+    # pq_dir = "/home/dusted/code/oxford/infra-risk-vis/etl/raw_data/processed_data/input/osm_roads/20221103_global_road_EAD_and_cost_per_RP"
 
     db: Session
     with SessionLocal() as db:
@@ -421,7 +432,7 @@ if __name__ == "__main__":
     total_features = 0
     total_rp_damages = 0
     total_expected_damages = 0
-    for root, dirs, files in os.walk(pq_dir, topdown=False):
+    for root, dirs, files in os.walk(network_layer.path, topdown=False):
         for file in files:
             pq_fpath = os.path.join(root, file)
             print(
@@ -429,7 +440,7 @@ if __name__ == "__main__":
             )
 
             file_features, file_rp_damages, file_expected_damages = load_batches(
-                layer,
+                network_layer,
                 network_tile_layer,
                 pq_fpath,
                 filter,
@@ -443,3 +454,6 @@ if __name__ == "__main__":
             )
 
     print(f"Done - Loaded {total_features} features")
+    write_output_log(
+        network_layer, total_features, total_rp_damages, total_expected_damages
+    )
