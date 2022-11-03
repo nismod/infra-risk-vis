@@ -15,16 +15,24 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     pickMultiple: true,
   },
   {
-    id: 'population',
-    type: 'raster',
-    pickMultiple: false,
-  },
-  {
     id: 'hdi',
     type: 'vector',
     usesAutoHighlight: true,
     pickMultiple: false,
   },
+  {
+    id: 'wdpa',
+    type: 'vector',
+    pickingRadius: 0,
+    usesAutoHighlight: true,
+    pickMultiple: true,
+  },
+  {
+    id: 'raster_assets',
+    type: 'raster',
+    pickMultiple: true,
+  },
+  /*
   {
     id: 'regions',
     type: 'vector',
@@ -45,11 +53,5 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     usesAutoHighlight: true,
     pickMultiple: false,
   },
-  {
-    id: 'wdpa',
-    type: 'vector',
-    pickingRadius: 0,
-    usesAutoHighlight: true,
-    pickMultiple: true,
-  },
+  */
 ]);

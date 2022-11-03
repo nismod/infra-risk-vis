@@ -1,3 +1,4 @@
+/*
 import { Download } from '@mui/icons-material';
 import { FormControl, IconButton, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { Box } from '@mui/system';
@@ -7,8 +8,6 @@ import { useMemo } from 'react';
 import { ExpectedDamage, ReturnPeriodDamage } from '@/lib/api-client';
 import { downloadFile, titleCase, unique } from '@/lib/helpers';
 import { useSelect } from '@/lib/hooks/use-select';
-
-import { HAZARD_DOMAINS } from '@/config/hazards/domains';
 
 import { DamageTable } from './DamageTable';
 import { ExpectedDamageChart } from './ExpectedDamageChart';
@@ -167,10 +166,14 @@ function makeRPDamagesCsv(damages: RPDamageCell[]) {
       .join('\n')
   );
 }
+*/
 
 export const DamagesSection = ({ fd }) => {
+  //TODO update for new domains config
+  return null;
+
+  /*
   const damagesData = orderDamages(prepareExpectedDamages(fd?.damages_expected ?? []));
-  const returnPeriodDamagesData = orderRPDamages(prepareRPDamages(fd?.damages_return_period ?? []));
 
   const hazards = useMemo(() => unique(damagesData.map((d) => d.hazard)), [damagesData]);
   const epochs = useMemo(() => unique(damagesData.map((d) => d.epoch)).sort(), [damagesData]);
@@ -181,6 +184,9 @@ export const DamagesSection = ({ fd }) => {
     () => (selectedHazard ? damagesData.filter((x) => x.hazard === selectedHazard) : null),
     [selectedHazard, damagesData],
   );
+
+
+  const returnPeriodDamagesData = orderRPDamages(prepareRPDamages(fd?.damages_return_period ?? []));
   const selectedRPData = useMemo(
     () =>
       selectedHazard
@@ -333,4 +339,5 @@ export const DamagesSection = ({ fd }) => {
       </Box>
     </>
   );
+  */
 };

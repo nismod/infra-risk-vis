@@ -1,17 +1,13 @@
 import { SidebarPanel } from '@/sidebar/SidebarPanel';
-import { StyleSelection } from '@/sidebar/StyleSelection';
 import { SidebarPanelSection } from '@/sidebar/ui/SidebarPanelSection';
 
-import { BuildingsControl } from './BuildingsControl';
+import { BuildingDensityControl } from './BuildingDensityControl';
 
 export const BuildingsSection = () => {
   return (
-    <SidebarPanel id="buildings" title="Buildings" disabled>
+    <SidebarPanel id="buildings" title="Buildings">
       <SidebarPanelSection>
-        <BuildingsControl />
-      </SidebarPanelSection>
-      <SidebarPanelSection variant="style">
-        <StyleSelection id="buildings" />
+        <BuildingDensityControl />
       </SidebarPanelSection>
     </SidebarPanel>
   );

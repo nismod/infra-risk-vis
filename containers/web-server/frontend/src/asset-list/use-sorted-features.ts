@@ -4,13 +4,11 @@ import bbox from '@turf/bbox';
 import _ from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ApiClient, FeatureListItemOut_float_ } from '@/lib/api-client';
+import { FeatureListItemOut_float_ } from '@/lib/api-client';
 import { BoundingBox } from '@/lib/bounding-box';
 import { FieldSpec } from '@/lib/data-map/view-layers';
 
-const apiClient = new ApiClient({
-  BASE: 'api',
-});
+import { apiClient } from '@/api-client';
 
 export interface PageInfo {
   page: number;

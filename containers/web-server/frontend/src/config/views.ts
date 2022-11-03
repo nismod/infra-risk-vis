@@ -24,9 +24,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: false,
@@ -36,7 +33,15 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: false,
       visible: false,
     },
+    'natural-assets': {
+      expanded: false,
+      visible: false,
+    },
     'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'travel-time': {
       expanded: false,
       visible: false,
     },
@@ -63,9 +68,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: true,
@@ -75,7 +77,15 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: true,
       visible: false,
     },
+    'natural-assets': {
+      expanded: true,
+      visible: false,
+    },
     'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'travel-time': {
       expanded: false,
       visible: false,
     },
@@ -102,9 +112,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: false,
@@ -114,9 +121,17 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: false,
       visible: false,
     },
+    'natural-assets': {
+      expanded: false,
+      visible: false,
+    },
     'human-vulnerability': {
       expanded: true,
       visible: true,
+    },
+    'travel-time': {
+      expanded: true,
+      visible: false,
     },
     'nature-vulnerability': {
       expanded: true,
@@ -142,9 +157,6 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
     buildings: {
       expanded: false,
       visible: false,
-
-      styles: ['type'],
-      defaultStyle: 'type',
     },
     industry: {
       expanded: false,
@@ -154,7 +166,15 @@ export const VIEW_SECTIONS: Record<string, Record<string, ViewSectionConfig>> = 
       expanded: false,
       visible: false,
     },
+    'natural-assets': {
+      expanded: false,
+      visible: false,
+    },
     'human-vulnerability': {
+      expanded: false,
+      visible: false,
+    },
+    'travel-time': {
       expanded: false,
       visible: false,
     },

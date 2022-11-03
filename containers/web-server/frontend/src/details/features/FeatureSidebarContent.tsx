@@ -2,11 +2,16 @@ import { Download } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 
-import { ApiClient } from '@/lib/api-client';
 import { downloadFile } from '@/lib/helpers';
 import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
-import { NETWORKS_METADATA } from '@/config/networks/metadata';
+import { apiClient } from '@/api-client';
+import { BUILDINGS_METADATA, BuildingLayerType } from '@/config/_old/buildings/metadata';
+import { AssetMetadata } from '@/config/assets/metadata';
+import { HEALTHSITES_METADATA } from '@/config/healthcare/healthsites-view-layer';
+import { INDUSTRY_METADATA } from '@/config/industry/industry-view-layer';
+import { NETWORKS_METADATA, NetworkLayerType } from '@/config/networks/metadata';
+import { IndustryType } from '@/state/data-selection/industry';
 
 import { AdaptationSection } from './adaptation/AdaptationSection';
 import { DamagesSection } from './damages/DamagesSection';
@@ -30,7 +35,12 @@ import {
   WaterSupplyNodeDetails,
 } from './detail-components';
 
-var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> = {
+/**
+ * Add keys here to allow configuring details for more asset types
+ */
+type ComponentMappingKey = NetworkLayerType | BuildingLayerType | IndustryType | 'healthsites';
+
+var componentMapping: Record<ComponentMappingKey, DetailsComponent> = {
   airport_terminals: AirportDetails,
   airport_runways: AirportDetails,
 
@@ -41,7 +51,7 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
 
   rail_edges: RailEdgeDetails,
   rail_stations: RailNodeDetails,
-  rail_junctions: RailNodeDetails,
+  rail_nodes: RailNodeDetails,
 
   road_bridges: BridgeDetails,
   road_edges_class_a: RoadEdgeDetails,
@@ -105,6 +115,13 @@ var componentMapping: Record<keyof typeof NETWORKS_METADATA, DetailsComponent> =
   healthsites: DefaultDetails,
 };
 
+const detailMetadata: Record<ComponentMappingKey, AssetMetadata> = {
+  ...NETWORKS_METADATA,
+  ...BUILDINGS_METADATA,
+  ...INDUSTRY_METADATA,
+  healthsites: HEALTHSITES_METADATA,
+};
+
 interface FeatureSidebarContentProps {
   feature: any;
   assetType: string;
@@ -117,7 +134,7 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
   showRiskSection = true,
 }) => {
   const DetailsComponent = componentMapping[assetType] ?? DefaultDetails;
-  const { color, label } = NETWORKS_METADATA[assetType];
+  const { color, label } = detailMetadata[assetType];
 
   const f = feature.properties;
 
@@ -169,10 +186,6 @@ function makeDetailsCsv(fd) {
       .join('\n')
   );
 }
-
-const apiClient = new ApiClient({
-  BASE: '/api',
-});
 
 function useFeatureDetails(featureId: number) {
   const [featureDetails, setFeatureDetails] = useState(null);

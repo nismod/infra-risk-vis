@@ -1,5 +1,10 @@
 import { colorMap } from '@/lib/color-map';
-import { StyleParams, ViewLayer, ViewLayerDataAccessFunction } from '@/lib/data-map/view-layers';
+import {
+  StyleParams,
+  ViewLayer,
+  ViewLayerDataAccessFunction,
+  ViewLayerRenderTooltipFunction,
+} from '@/lib/data-map/view-layers';
 import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
 import { dataColorMap } from '@/lib/deck/props/color-map';
 import { GetColor } from '@/lib/deck/props/style';
@@ -28,6 +33,7 @@ export interface AssetViewLayerOptions {
   styleParams?: StyleParams;
   customFn?: AssetViewLayerCustomFunction;
   customDataAccessFn?: ViewLayerDataAccessFunction;
+  renderTooltip?: ViewLayerRenderTooltipFunction;
 }
 
 export function assetViewLayer({
@@ -37,6 +43,7 @@ export function assetViewLayer({
   styleParams,
   customFn,
   customDataAccessFn,
+  renderTooltip,
 }: AssetViewLayerOptions): ViewLayer {
   const dataStyle: DataStyle = styleParams?.colorMap
     ? {
@@ -74,5 +81,6 @@ export function assetViewLayer({
       ),
     dataAccessFn: customDataAccessFn,
     dataFormatsFn: getAssetDataFormats,
+    renderTooltip,
   };
 }

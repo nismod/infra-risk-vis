@@ -23,14 +23,24 @@ const LegendGradient: FC<{
 
 export interface GradientLegendProps {
   label: string | ReactNode;
+  description?: string;
   range: [number, number];
   colorMapValues: ColorValue[];
   getValueLabel: (x: any) => string;
 }
 
-export const GradientLegend: FC<GradientLegendProps> = ({ label, range, colorMapValues, getValueLabel }) => (
+export const GradientLegend: FC<GradientLegendProps> = ({
+  label,
+  description,
+  range,
+  colorMapValues,
+  getValueLabel,
+}) => (
   <Box mb={2}>
-    <Typography>{label}</Typography>
+    <Box mb={1}>
+      <Typography variant="body1">{label}</Typography>
+      {description && <Typography variant="body2">{description}</Typography>}
+    </Box>
     <Box
       height={legendHeight + 2}
       width={255}

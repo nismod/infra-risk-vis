@@ -67,58 +67,63 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
     id: 'transport',
     label: 'Transport',
     children: [
-      // {
-      //   id: 'rail-network',
-      //   label: 'Rail Network',
-      //   children: [
-      //     {
-      //       id: 'rail_edges',
-      //       label: 'Railways',
-      //     },
-      //     {
-      //       id: 'rail_stations',
-      //       label: 'Stations',
-      //     },
-      //     {
-      //       id: 'rail_junctions',
-      //       label: 'Junctions',
-      //     },
-      //   ],
-      // },
+      {
+        id: 'rail-network',
+        label: 'Rail Network',
+        children: [
+          {
+            id: 'rail_edges',
+            label: 'Railways',
+          },
+          // {
+          //   id: 'rail_stations',
+          //   label: 'Stations',
+          // },
+          {
+            id: 'rail_nodes',
+            label: 'Junctions',
+          },
+        ],
+      },
       {
         id: 'road-network',
         label: 'Road Network',
         children: [
+          /*
           {
             id: 'roads',
             label: 'Roads',
             children: [
-              {
-                id: 'road_edges_class_a',
-                label: 'Motorway',
-              },
-              {
-                id: 'road_edges_class_b',
-                label: 'Trunk',
-              },
-              {
-                id: 'road_edges_class_c',
-                label: 'Primary',
-              },
-              {
-                id: 'road_edges_metro',
-                label: 'Secondary',
-              },
-              {
-                id: 'road_edges_track',
-                label: 'Tertiary',
-              },
-              // {
-              //   id: 'road_edges_other',
-              //   label: 'Other',
-              // },
+              */
+          {
+            id: 'road_edges_class_a',
+            label: 'Motorway',
+          },
+          {
+            id: 'road_edges_class_b',
+            label: 'Trunk',
+          },
+          {
+            id: 'road_edges_class_c',
+            label: 'Primary',
+          },
+          {
+            id: 'road_edges_metro',
+            label: 'Secondary',
+          },
+          {
+            id: 'road_edges_track',
+            label: 'Tertiary',
+          },
+          // {
+          //   id: 'road_edges_other',
+          //   label: 'Other',
+          // },
+
+          /*
             ],
           },
+          */
           // {
           //   id: 'road_bridges',
           //   label: 'Bridges',

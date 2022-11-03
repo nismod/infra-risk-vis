@@ -28,7 +28,7 @@ export const mapFitBoundsState = atom<BoundingBox>({
 });
 
 const VIEW_LIMITS = {
-  minZoom: 2,
+  minZoom: 3,
   maxZoom: 12,
   maxPitch: 0,
   maxBearing: 0,

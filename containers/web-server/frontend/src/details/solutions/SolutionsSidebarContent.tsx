@@ -6,13 +6,13 @@ import { colorMap } from '@/lib/color-map';
 import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 import { DataItem } from '@/lib/ui/data-display/DataItem';
 
-import { VECTOR_COLOR_MAPS } from '@/config/color-maps';
-import { MARINE_HABITATS_LOOKUP } from '@/config/solutions/domains';
-import { habitatColorMap } from '@/state/layers/data-layers/marine';
-import { landuseColorMap } from '@/state/layers/data-layers/terrestrial';
+import { TERRESTRIAL_COLORMAPS } from '@/config/_old/solutions/colors';
+import { MARINE_HABITATS_LOOKUP } from '@/config/_old/solutions/domains';
+import { habitatColorMap } from '@/state/layers/data-layers/_old/marine';
+import { landuseColorMap } from '@/state/layers/data-layers/_old/terrestrial';
 
-const slopeColorFunction = colorMap(VECTOR_COLOR_MAPS.terrestrialSlope);
-const elevationColorFunction = colorMap(VECTOR_COLOR_MAPS.terrestrialElevation);
+const slopeColorFunction = colorMap(TERRESTRIAL_COLORMAPS.slope);
+const elevationColorFunction = colorMap(TERRESTRIAL_COLORMAPS.elevation);
 
 interface SolutionsSidebarContentProps {
   feature: any;

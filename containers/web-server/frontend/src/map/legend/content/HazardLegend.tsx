@@ -1,8 +1,9 @@
-import { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 import reactStringReplace from 'react-string-replace';
 
-import { RASTER_COLOR_MAPS } from '@/config/color-maps';
-import { HAZARDS_METADATA } from '@/config/hazards/metadata';
+import { ViewLayer } from '@/lib/data-map/view-layers';
+
+import { HAZARDS_METADATA, HAZARD_COLOR_MAPS, HazardType } from '@/config/hazards/metadata';
 
 import { RasterLegend } from '../RasterLegend';
 
@@ -18,16 +19,19 @@ function formatAbbreviations(label, abbreviations) {
   return label;
 }
 
-export const HazardLegend = ({ viewLayer }) => {
+export const HazardLegend: FC<{ viewLayer: ViewLayer<{ hazardType: HazardType }> }> = ({ viewLayer }) => {
   const {
     params: { hazardType },
   } = viewLayer;
-  let { label, dataUnit, labelAbbreviations = {} } = HAZARDS_METADATA[hazardType];
-  const colorMap = RASTER_COLOR_MAPS[hazardType];
+
+  let { label, dataUnit, labelAbbreviations = {}, legendAnnotation } = HAZARDS_METADATA[hazardType];
+  const colorMap = HAZARD_COLOR_MAPS[hazardType];
 
   label = formatAbbreviations(label, labelAbbreviations);
 
   const getValueLabel = useCallback((value: number) => `${value.toLocaleString()} ${dataUnit}`, [dataUnit]);
 
-  return <RasterLegend label={label} colorMap={colorMap} getValueLabel={getValueLabel} />;
+  return (
+    <RasterLegend label={label} description={legendAnnotation} colorMap={colorMap} getValueLabel={getValueLabel} />
+  );
 };

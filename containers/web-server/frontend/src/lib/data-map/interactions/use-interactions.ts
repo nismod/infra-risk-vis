@@ -23,7 +23,7 @@ export interface InteractionTarget<T> {
   interactionStyle: string;
 
   viewLayer: ViewLayer;
-  // logicalLayer: string;
+  deckLayerId: string;
 
   target: T;
 }
@@ -84,6 +84,7 @@ function processPickedObject(
       interactionGroup: groupName,
       interactionStyle: type,
       viewLayer: viewLayerLookup[viewLayerId],
+      deckLayerId,
       target,
     }
   );

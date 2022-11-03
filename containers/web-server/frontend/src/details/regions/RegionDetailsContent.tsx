@@ -5,7 +5,7 @@ import { InteractionTarget } from '@/lib/data-map/interactions/use-interactions'
 import { numFormat } from '@/lib/helpers';
 import { DataItem } from '@/lib/ui/data-display/DataItem';
 
-import { REGIONS_METADATA } from '@/config/regions/metadata';
+import { REGIONS_METADATA } from '@/config/_old/regions/metadata';
 
 export const RegionDetailsContent: FC<{ selectedRegion: InteractionTarget<any> }> = ({ selectedRegion }) => {
   const metadata = REGIONS_METADATA[selectedRegion.viewLayer.params.regionLevel];

@@ -3,7 +3,7 @@ import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 import { DataParam } from './DataParam';
 
 function epochLabel(value) {
-  if (value === 2010) return 'Present';
+  if (value === 2010 || value === 'present' || value === 'baseline') return 'Present';
   return value;
 }
 

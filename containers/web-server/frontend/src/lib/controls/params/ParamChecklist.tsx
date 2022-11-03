@@ -32,7 +32,7 @@ export const ParamChecklist = <K extends string = string>({
   return (
     <FormGroup>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <FormLabel>{title}</FormLabel>
+        {title && <FormLabel>{title}</FormLabel>}
         {showAllNone && (
           <Box>
             <Button disabled={isAll} onClick={() => onChecklistState(fromKeys(keys, true))}>
