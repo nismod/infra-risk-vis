@@ -16,7 +16,7 @@ import { naturalAssetsLayersState } from './data-layers/natural-assets';
 import { natureVulnerabilityLayersState } from './data-layers/nature-vulnerability';
 import { networkLayersState } from './data-layers/networks';
 import { populationLayerState } from './data-layers/population';
-import { protectedAreasLayerState } from './data-layers/protected-areas';
+import { protectedAreasPointLayerState, protectedAreasPolygonLayerState } from './data-layers/protected-areas';
 import { travelTimeLayerState } from './data-layers/travel-time';
 import { featureBoundingBoxLayerState } from './ui-layers/feature-bbox';
 
@@ -36,12 +36,13 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       get(buildingDensityLayerState),
       get(naturalAssetsLayersState),
       get(natureVulnerabilityLayersState),
+      get(protectedAreasPolygonLayerState),
       get(travelTimeLayerState),
       get(hazardLayerState),
       get(networkLayersState),
       get(industryLayersState),
       get(healthcareLayersState),
-      get(protectedAreasLayerState),
+      get(protectedAreasPointLayerState),
 
       /**
        * UI Layers

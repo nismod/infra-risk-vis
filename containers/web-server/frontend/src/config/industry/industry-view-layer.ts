@@ -4,12 +4,14 @@ import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use
 import { fillColor, pointRadius } from '@/lib/deck/props/style';
 import { makeColorConfig, makeConfig } from '@/lib/helpers';
 
+import { SimpleAssetDetails } from '@/details/features/asset-details';
 import { VectorHoverDescription } from '@/map/tooltip/VectorHoverDescription';
 import { IndustryType } from '@/state/data-selection/industry';
 
 import { assetViewLayer } from '../assets/asset-view-layer';
 import { assetDataAccessFunction } from '../assets/data-access';
 import { AssetMetadata } from '../assets/metadata';
+import { IndustryDetails } from './details';
 
 export const INDUSTRY_COLORS = makeColorConfig({
   cement: '#e4cda9',
@@ -32,6 +34,8 @@ export const INDUSTRY_METADATA = makeConfig<AssetMetadata, IndustryType>([
 ]);
 
 export function industryViewLayer(industry_type_id: IndustryType) {
+  const { label, color } = INDUSTRY_METADATA[industry_type_id];
+
   return assetViewLayer({
     assetId: industry_type_id,
     metadata: {
@@ -41,13 +45,21 @@ export function industryViewLayer(industry_type_id: IndustryType) {
     customFn: ({ zoom }) => [pointRadius(zoom), fillColor(INDUSTRY_COLORS[industry_type_id].deck)],
     customDataAccessFn: assetDataAccessFunction(industry_type_id),
     renderTooltip: (hover: InteractionTarget<VectorTarget>) => {
-      const { label, color } = INDUSTRY_METADATA[industry_type_id];
-
       return React.createElement(VectorHoverDescription, {
         hoveredObject: hover,
         label,
         color,
         idValue: hover.target.feature.properties.uid,
+      });
+    },
+    renderDetails(selection: InteractionTarget<VectorTarget>) {
+      const feature = selection.target.feature;
+
+      return React.createElement(SimpleAssetDetails, {
+        feature,
+        label,
+        color,
+        detailsComponent: IndustryDetails,
       });
     },
   });

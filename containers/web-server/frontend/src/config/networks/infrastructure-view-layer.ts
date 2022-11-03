@@ -9,10 +9,12 @@ import { fillColor, strokeColor } from '@/lib/deck/props/style';
 import { assetViewLayer } from '@/config/assets/asset-view-layer';
 import { assetDataAccessFunction } from '@/config/assets/data-access';
 import { INFRASTRUCTURE_COLORS } from '@/config/networks/colors';
+import { ExtendedAssetDetails } from '@/details/features/asset-details';
 import { VectorHoverDescription } from '@/map/tooltip/VectorHoverDescription';
 
 import { AssetViewLayerCustomFunction } from '../assets/asset-view-layer';
-import { NETWORKS_METADATA } from './metadata';
+import { INFRASTRUCTURE_LAYER_DETAILS } from './details';
+import { NETWORKS_METADATA, NetworkLayerType } from './metadata';
 
 const roadColor = {
   road_edges_class_a: INFRASTRUCTURE_COLORS.roads_class_a.css,
@@ -35,7 +37,7 @@ function makeRoadsFn(asset_id) {
     lineStyle(zoom),
   ];
 }
-
+/*
 function potableNodesFn({ zoom, dataStyle }) {
   return [border(), pointRadius(zoom), fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.water_supply.deck)];
 }
@@ -43,12 +45,13 @@ function potableNodesFn({ zoom, dataStyle }) {
 function wastewaterNodesFn({ zoom, dataStyle }) {
   return [border(), pointRadius(zoom), fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.water_wastewater.deck)];
 }
+*/
 
 function electricitySourceFn({ zoom, dataStyle }) {
   return [border(), fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_high.deck), pointRadius(zoom)];
 }
 
-const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<string, AssetViewLayerCustomFunction> = {
+const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<NetworkLayerType, AssetViewLayerCustomFunction> = {
   elec_edges_high: ({ zoom, dataStyle }) => [
     strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_high.deck),
     lineStyle(zoom),
@@ -81,11 +84,11 @@ const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<string, AssetViewLayerCustomFunctio
     strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
     lineStyle(zoom),
   ],
-  rail_stations: ({ zoom, dataStyle }) => [
-    border(),
-    fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
-    pointRadius(zoom),
-  ],
+  // rail_stations: ({ zoom, dataStyle }) => [
+  //   border(),
+  //   fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
+  //   pointRadius(zoom),
+  // ],
   rail_nodes: ({ zoom, dataStyle }) => [
     border(),
     fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
@@ -96,6 +99,7 @@ const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<string, AssetViewLayerCustomFunctio
   road_edges_class_c: makeRoadsFn('road_edges_class_c'),
   road_edges_metro: makeRoadsFn('road_edges_metro'),
   road_edges_track: makeRoadsFn('road_edges_track'),
+  /*
   road_edges_other: makeRoadsFn('road_edges_other'),
   road_bridges: ({ zoom, dataStyle }) => [
     border(),
@@ -159,27 +163,40 @@ const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<string, AssetViewLayerCustomFunctio
   water_waste_nodes_pump: wastewaterNodesFn,
   water_waste_nodes_relift: wastewaterNodesFn,
   water_waste_nodes_wwtp: wastewaterNodesFn,
+  */
 };
 
-export function infrastructureViewLayer(assetId: string, styleParams: StyleParams): ViewLayer {
-  const customFn = INFRASTRUCTURE_LAYER_FUNCTIONS[assetId];
+export function infrastructureViewLayer(infrastructureType: NetworkLayerType, styleParams: StyleParams): ViewLayer {
+  const customFn = INFRASTRUCTURE_LAYER_FUNCTIONS[infrastructureType];
+  const { label, color } = NETWORKS_METADATA[infrastructureType];
+
   return assetViewLayer({
-    assetId,
+    assetId: infrastructureType,
     metadata: {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
     styleParams,
     customFn,
-    customDataAccessFn: assetDataAccessFunction(assetId),
+    customDataAccessFn: assetDataAccessFunction(infrastructureType),
     renderTooltip: (hover: InteractionTarget<VectorTarget>) => {
-      const { label, color } = NETWORKS_METADATA[assetId];
-
       return React.createElement(VectorHoverDescription, {
         hoveredObject: hover,
         label,
         color,
         idValue: hover.target.feature.properties.asset_id.toFixed(0),
+      });
+    },
+    renderDetails: (selection: InteractionTarget<VectorTarget>) => {
+      const detailsComponent = INFRASTRUCTURE_LAYER_DETAILS[infrastructureType];
+      const feature = selection.target.feature;
+
+      return React.createElement(ExtendedAssetDetails, {
+        feature,
+        detailsComponent,
+        label,
+        color,
+        showRiskSection: true,
       });
     },
   });

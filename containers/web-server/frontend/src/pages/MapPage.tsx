@@ -1,24 +1,15 @@
 import { Box, Paper } from '@mui/material';
 import { FC } from 'react';
-import { selector, useRecoilValue } from 'recoil';
 
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 import { useSyncRecoilState } from '@/lib/recoil/sync-state';
 
-import { AdaptationsSidebar } from '@/details/adaptations/AdaptationsSidebar';
-import { FeatureSidebar } from '@/details/features/FeatureSidebar';
-import { RegionDetails } from '@/details/regions/RegionDetails';
-import { SolutionsSidebar } from '@/details/solutions/SolutionsSidebar';
+import { DetailsContent } from '@/details/DetailsContent';
 import { MapView } from '@/map/MapView';
 import { SidebarContent } from '@/sidebar/SidebarContent';
-import { sectionStyleValueState, sectionVisibilityState } from '@/state/sections';
 import { viewState, viewStateEffect } from '@/state/view';
 import { globalStyleVariables } from '@/theme';
-
-interface MapViewProps {
-  view: string;
-}
 
 const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   <Box
@@ -49,15 +40,13 @@ const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   </Box>
 );
 
-const showAdaptationsTableState = selector<boolean>({
-  key: 'showAdaptationsTable',
-  get: ({ get }) => get(sectionVisibilityState('assets')) && get(sectionStyleValueState('assets')) === 'adaptation',
-});
+interface MapPageProps {
+  view: string;
+}
 
-export const MapPage: FC<MapViewProps> = ({ view }) => {
+export const MapPage: FC<MapPageProps> = ({ view }) => {
   useSyncRecoilState(viewState, view);
 
-  const showAdaptationsTable = useRecoilValue(showAdaptationsTableState);
   return (
     <ErrorBoundary message="There was a problem displaying this page.">
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
@@ -74,13 +63,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
         </ErrorBoundary>
       </Box>
       <SidebarLayout top={0} left={undefined} bottom={70} right={70} width={globalStyleVariables.detailSidebarWidth}>
-        <Box mb={2}>
-          <SolutionsSidebar />
-        </Box>
-        <Box mb={2}>{showAdaptationsTable ? <AdaptationsSidebar /> : <FeatureSidebar />}</Box>
-        <Box mb={2}>
-          <RegionDetails />
-        </Box>
+        <DetailsContent />
       </SidebarLayout>
     </ErrorBoundary>
   );

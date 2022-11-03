@@ -45,6 +45,7 @@ export interface FormatConfig<D = any> {
 export type ViewLayerDataAccessFunction = (fieldSpec: FieldSpec) => Accessor<any>;
 export type ViewLayerDataFormatFunction = (fieldSpec: FieldSpec) => FormatConfig;
 export type ViewLayerRenderTooltipFunction = (hover: any) => ReactNode;
+export type ViewLayerRenderDetailsFunction = (selection: any) => ReactNode;
 export interface ViewLayer<ParamsT = any> {
   id: string;
   params?: ParamsT;
@@ -62,6 +63,7 @@ export interface ViewLayer<ParamsT = any> {
    */
   renderLegend?: () => ReactNode;
   renderTooltip?: ViewLayerRenderTooltipFunction;
+  renderDetails?: ViewLayerRenderDetailsFunction;
 }
 
 export function viewOnlyLayer(id, fn): ViewLayer {

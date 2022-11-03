@@ -4,6 +4,7 @@ import { atom, selector } from 'recoil';
 import { CheckboxTreeState, buildTreeConfig } from '@/lib/controls/checkbox-tree/CheckboxTree';
 
 import { NETWORK_LAYERS_HIERARCHY } from '@/config/networks/hierarchy';
+import { NetworkLayerType } from '@/config/networks/metadata';
 
 export const networkTreeExpandedState = atom<string[]>({
   key: 'networkTreeExpandedState',
@@ -20,13 +21,13 @@ export const networkTreeCheckboxState = atom<CheckboxTreeState>({
   },
 });
 
-export const networkSelectionState = selector<string[]>({
+export const networkSelectionState = selector<NetworkLayerType[]>({
   key: 'networkSelectionState',
   get: ({ get }) => {
     const checkboxState = get(networkTreeCheckboxState);
 
     return Object.keys(checkboxState.checked).filter(
       (id) => checkboxState.checked[id] && !networkTreeConfig.nodes[id].children,
-    );
+    ) as NetworkLayerType[];
   },
 });
