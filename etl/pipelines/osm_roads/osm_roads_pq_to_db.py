@@ -143,7 +143,6 @@ def load_batches(
             # )
 
             # Generate RPDamages rows for this batch
-            df_pks_joined.to_pickle("df_pks_joined.pkl")
             df_rp_damage = parse_rp_damage_batch(df_pks_joined, primary_key_column="id")
             if df_rp_damage.shape[0] > 0:
                 # Impute a rename cols as required
@@ -422,11 +421,6 @@ if __name__ == "__main__":
     with SessionLocal() as db:
         print("Adding FeatureLayer if required")
         load_tile_feature_layer(db, network_tile_layer)
-        print("Removing existing features for this tilelayer")
-        db.execute(delete(ReturnPeriodDamage))
-        db.execute(delete(ExpectedDamage))
-        db.execute(delete(Feature).where(Feature.layer == network_tile_layer.layer))
-        db.commit()
 
     # Walk dir and load slices
     total_features = 0
