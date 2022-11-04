@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ScrollToTop from '@/lib/react/ScrollToTop';
-import { Typography } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 export const TermsPage = () => (
   <article>
@@ -20,8 +20,8 @@ export const TermsPage = () => (
 
     <Typography variant="h2">What's in these terms?</Typography>
 
-    <p>These terms tell you the rules for using our website
-      https://global.infrastructureresilience.org (our site).</p>
+    <p>These terms tell you the rules for using our website <a
+      href="https://global.infrastructureresilience.org">https://global.infrastructureresilience.org</a> (our site).</p>
 
     <Typography variant="h2">Who we are and how to contact us</Typography>
 
@@ -254,8 +254,11 @@ export const TermsPage = () => (
       operating system and platform. </p>
 
     <p>We will automatically collect information about your visit to our site
-      including the full Uniform Resource Locators (URL) through the Website
-      (including date and time), pages you viewed, page response times.</p>
+      including the full Uniform Resource Locators (URL), clickstream to, through
+      and from the Website (including date and time), pages you viewed, response times,
+      download errors, length of visits to certain pages, page interaction information
+      (such as scrolling, clicks, and mouse-overs), and methods used to browse away from
+      the page.</p>
 
     <Typography variant="h2">When we collect your data</Typography>
 
@@ -286,6 +289,23 @@ export const TermsPage = () => (
     <p>Please note that we may process your data without your knowledge or
       consent, in compliance with the above rules, where this is required or
       permitted by law.</p>
+
+    <Typography variant="h2">Sharing your data with third parties</Typography>
+
+    <p>We may share your data with third parties who provide services on our behalf,
+      such as those who help us to operate the website, or with Google through Google
+      Analytics. All our third-party service providers are required to take appropriate
+      security measures to protect your data in line with our policies. We do not allow
+      them to use your data for their own purposes. We permit them to process your data
+      only for specified purposes and in accordance with our instructions.</p>
+
+    <p>We may also share your personal data with third parties if we are under a duty
+      to disclose or share your personal data in order to comply with any legal
+      obligation, or in order to enforce or apply our site terms of use or to protect
+      the rights, property or safety of our site, our users, and others.</p>
+
+    <p>Where your data is shared with third parties, we will seek to share the minimum
+      amount necessary.</p>
 
     <Typography variant="h2">Where we store or use your data</Typography>
 
@@ -355,17 +375,21 @@ export const TermsPage = () => (
     <p>If you want to exercise any of the rights described above or are
       dissatisfied with the way we have used your information, you should contact
       the University's Information Compliance Team at
-      data.protection@admin.ox.ac.uk. The same email address may be used to
+      <a href="mailto:data.protection@admin.ox.ac.uk">data.protection@admin.ox.ac.uk</a>. The same email address may be used to
       contact the University's Data Protection Officer. We will seek to deal with
       your request without undue delay, and in any event in accordance with the
       requirements of the GDPR. Please note that we may keep a record of your
       communications to help us resolve any issues which you raise.</p>
 
     <p>If you remain dissatisfied, you have the right to lodge a complaint with
-      the Information Commissioner's Office at https://ico.org.uk/concerns/. </p>
+      the Information Commissioner's Office at <a href="https://ico.org.uk/concerns/">https://ico.org.uk/concerns/</a>. </p>
 
     <Typography variant="h2">Cookies</Typography>
-    <p>Our site does not use cookies.</p>
+
+    <p>Our site uses cookies to distinguish you from other users of our site. This
+      helps us to provide you with a good experience when you browse our site and
+      also allows us to improve our site. For detailed information on the cookies
+      we use and the purposes for which we use them see our Cookie policy, below.</p>
 
     <Typography variant="h2">Changes to this policy</Typography>
 
@@ -385,7 +409,89 @@ export const TermsPage = () => (
 
     <Typography variant="h1">Cookie Policy</Typography>
 
-    <p>This site does not set cookies.</p>
+    <p>This statement explains how we use cookies on the website. For information about
+      what types of personal information will be gathered when you visit the website,
+      and how this information will be used, please see our Privacy Policy.</p>
+
+    <Typography variant="h2">How we use cookies</Typography>
+
+    <p>All of our web pages use "cookies". A cookie is a small file of letters and numbers
+      that we place on your computer or mobile device if you agree. These cookies allow us
+      to distinguish you from other users of our website, which helps us to provide you
+      with a good experience when you browse our website and enables us to improve our
+      website.</p>
+
+    <p>We use the following types of cookies:</p>
+
+    <p><strong>strictly necessary cookies</strong> - these are essential in to enable you
+      to move around
+      the websites and use their features. Without these cookies the services you have
+      asked for, such as registering for an account, cannot be provided.</p>
+    <p><strong>performance cookies</strong> - these cookies collect information about how
+      visitors use
+      a website, for instance which pages visitors go to most often. We use this
+      information to improve our websites and to aid us in investigating problems raised
+      by visitors. These cookies do not collect information that identifies a visitor.</p>
+
+    <p>Most web browsers allow some control of most cookies through the browser settings.
+      To find out more about cookies, including how to see what cookies have been set and
+      how to manage and delete them please visit <a
+      href="http://www.allaboutcookies.org/">http://www.allaboutcookies.org/</a>.</p>
+
+    <p>Cookies may be set either by global.infrastructureresilience.org ("first party cookies"), or by a third
+      party website ("third party cookies"). The tables below identifies the cookies we
+      use and explains the purposes for which they are used.</p>
+
+    <Typography variant="h3">First Party Cookies</Typography>
+
+    <p>These cookies are used to collect information about how visitors use our site.
+      We use the information to compile reports and to help us improve the website.
+      The cookies collect information in an anonymous form, including the number of
+      visitors to the website, where visitors have come to the site from and the pages
+      they visited.</p>
+
+    <p>Google provide an <a
+      href="http://www.google.co.uk/intl/en/analytics/privacyoverview.html">overview of
+      Google Analytics privacy</a> for reference.</p>
+
+    <TableContainer component={Paper} sx={{mb:2}}>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Provider</TableCell>
+            <TableCell>Cookie name</TableCell>
+            <TableCell>Default expiration time</TableCell>
+            <TableCell>Description</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <TableRow>
+            <TableCell rowSpan={2}>Google Analytics</TableCell>
+            <TableCell>_ga</TableCell>
+            <TableCell>2 years</TableCell>
+            <TableCell>Used to distinguish users.</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>_ga_G-932WHK2NN6</TableCell>
+            <TableCell>2 years</TableCell>
+            <TableCell>Used to persist session state.</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+
+    <Typography variant="h2">Changes to our Cookie Statement</Typography>
+
+    <p>Any changes we may make to our Cookie Statement in the future will be posted on
+      this page.</p>
+
+    <Typography variant="h2">Contact</Typography>
+
+    <p>Any queries or concerns about the use of cookies on this website should be sent
+      by email to <a href="mailto:data.protection@admin.ox.ac.uk">data.protection@admin.ox.ac.uk</a> or
+      addressed to the Data Protection
+      Office, University of Oxford, University Offices, Wellington Square, Oxford,
+      OX1 2JD.</p>
 
   </article>
 );
