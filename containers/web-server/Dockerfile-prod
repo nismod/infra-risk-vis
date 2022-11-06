@@ -5,7 +5,8 @@ FROM node:16 AS builder
 WORKDIR /app
 
 COPY frontend/package.json .
-RUN npm install
+COPY frontend/package-lock.json .
+RUN npm ci
 
 COPY frontend .
 RUN npm run build
