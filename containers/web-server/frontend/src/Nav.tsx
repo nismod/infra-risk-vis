@@ -1,6 +1,6 @@
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import { AppBar, Divider, Toolbar, Typography } from '@mui/material';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 export const Nav = () => {
   return (
@@ -34,6 +34,14 @@ export const Nav = () => {
         <NavLink className="nav-link" to="/data">
           <Typography variant="h6">Data Sources</Typography>
         </NavLink>
+        <Divider sx={{ flexGrow: 1 }}></Divider>
+        <Link className="nav-link" to="https://globalresilience.org" target="_blank" rel="noopener noreferrer">
+          <img
+            height="40"
+            src="/logo-grii.png"
+            alt="GRII"
+          />
+        </Link>
       </Toolbar>
     </AppBar>
   );
