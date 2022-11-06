@@ -35,7 +35,7 @@ services:
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
 
   backend:
-    image: ghcr.io/nismod/gri-backend:0.8
+    image: ghcr.io/nismod/gri-backend:0.9
     build: ./containers/backend
     volumes:
       - ./tileserver/raster/data:/data
