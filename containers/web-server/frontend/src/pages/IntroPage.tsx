@@ -26,10 +26,27 @@ export const IntroPage = () => (
       <Grid container columnSpacing={8} rowSpacing={4}>
         <Grid item xs={6}>
           <HeadingBox sx={{ mt: -2, pt: 8 }}>
-            <Typography variant="h1">Global Climate-related risk analytics</Typography>
+            <Typography variant="h1">Global climate-related risk analytics</Typography>
           </HeadingBox>
         </Grid>
-        <Grid item xs={6}></Grid>
+        <Grid item xs={6}>
+          <TextBox sx={{mt:-2, pt:8}}>
+            <p>
+
+              The Global Systemic Risk Assessment Tool (G-SRAT)
+              is the Data and Analytics Portal for the <a
+              href="http://www.globalresilienceindex.org/">Global Resilience Index Initative
+              (GRII)</a>.
+
+            </p>
+            <p>
+              This tool aims to support
+              climate adaptation decision-making by identifying spatial
+              vulnerabilities and risks under current and future climate scenarios.
+            </p>
+
+          </TextBox>
+        </Grid>
         <Grid item xs={12}>
           <TextBox sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
             <p>
@@ -77,7 +94,7 @@ export const IntroPage = () => (
 
             <Typography variant="h2">Disclaimer</Typography>
 
-            <p> This tool is provided for general information only and is not
+            <p>This tool is provided for general information only and is not
             intended to amount to advice on which you should rely. You must
             obtain professional or specialist advice before taking, or
             refraining from, any action on the basis of the content on our site.

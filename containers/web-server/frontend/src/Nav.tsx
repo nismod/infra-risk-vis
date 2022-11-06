@@ -17,7 +17,7 @@ export const Nav = () => {
         }}
       >
         <NavLink exact className="nav-link" to="/">
-          <Typography variant="h6">Global</Typography>
+          <Typography variant="h6">G-SRAT</Typography>
         </NavLink>
         <NavLink className="nav-link" to="/view/hazard">
           <Typography variant="h6">Hazard</Typography>
