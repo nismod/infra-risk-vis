@@ -57,6 +57,8 @@ export function assetViewLayer({
       }
     : null;
 
+  const dataLoader = customDataAccessFn?.(styleParams?.colorMap?.fieldSpec)?.dataLoader;
+
   return {
     id: assetId,
     spatialType,
@@ -73,7 +75,7 @@ export function assetViewLayer({
             polygonOffset: selectionPolygonOffset,
           },
           dataLoaderOptions: {
-            dataLoader: customDataAccessFn?.(styleParams?.colorMap?.fieldSpec)?.dataLoader,
+            dataLoader,
           },
         },
         deckProps,
