@@ -1,6 +1,7 @@
 import { FormControl, FormControlLabel, FormLabel, MenuItem, Radio, RadioGroup, Select } from '@mui/material';
 import { useRecoilState } from 'recoil';
 
+import { DataGroup } from '@/lib/data-selection/DataGroup';
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 
 import { HAZARDS_METADATA, HAZARDS_UI_ORDER } from '@/config/hazards/metadata';
@@ -48,10 +49,12 @@ export const DamageSourceControl = () => {
           </FormControl>
         </InputSection>
         <InputSection>
-          <InputRow>
-            <EpochControl group={damageSource} />
-            <RCPControl group={damageSource} />
-          </InputRow>
+          <DataGroup group={damageSource}>
+            <InputRow>
+              <EpochControl />
+              <RCPControl />
+            </InputRow>
+          </DataGroup>
         </InputSection>
       </LayerStylePanel>
     </>

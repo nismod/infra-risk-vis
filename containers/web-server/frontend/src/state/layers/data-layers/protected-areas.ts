@@ -5,13 +5,15 @@ import { truthyKeys } from '@/lib/helpers';
 
 import { ProtectedAreaType } from '@/config/protected-areas/metadata';
 import { protectedAreaViewLayer } from '@/config/protected-areas/protected-area-layer';
+import { sidebarPathVisibilityState } from '@/sidebar/SidebarContent';
 import { protectedAreaTypeSelectionState } from '@/state/data-selection/protected-areas';
-import { sectionVisibilityState } from '@/state/sections';
 
 export const protectedAreasKeysState = selector<ProtectedAreaType[]>({
   key: 'protectedAreasKeysState',
   get: ({ get }) =>
-    get(sectionVisibilityState('nature-vulnerability')) ? truthyKeys(get(protectedAreaTypeSelectionState)) : [],
+    get(sidebarPathVisibilityState('vulnerability/nature/protected-areas'))
+      ? truthyKeys(get(protectedAreaTypeSelectionState))
+      : [],
 });
 
 export const protectedAreasPointLayerState = selector<ViewLayer[]>({

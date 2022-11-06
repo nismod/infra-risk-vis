@@ -3,7 +3,7 @@ import { atom, selector } from 'recoil';
 
 import { HAZARD_DOMAINS_CONFIG } from '@/config/hazards/domains';
 import { paramOptionsState, paramValueState } from '@/state/data-params';
-import { hazardSelectionState } from '@/state/data-selection/hazards/hazard-selection';
+import { hazardToggleState } from '@/state/data-selection/hazards/hazard-selection';
 import { networksStyleState } from '@/state/data-selection/networks/networks-style';
 
 export const showDamagesState = selector({
@@ -35,6 +35,6 @@ export const damageSourceStateEffect = ({ get, set }, damageSource) => {
 
 function syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource) {
   _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
-    set(hazardSelectionState(group), group === damageSource);
+    set(hazardToggleState(group), group === damageSource);
   });
 }

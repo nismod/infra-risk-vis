@@ -1,12 +1,17 @@
 import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 
-import { DataParam } from './DataParam';
+import { useDataGroup } from '@/lib/data-selection/DataGroup';
+import { DataParam } from '@/lib/data-selection/DataParam';
+import { useInputDisabled } from '@/lib/data-selection/DisabledInput';
 
 function rcpLabel(value) {
   return value === 'baseline' ? 'Baseline' : value;
 }
 
-export const RCPControl = ({ group, disabled = false }) => {
+export const RCPControl = () => {
+  const group = useDataGroup();
+  const disabled = useInputDisabled();
+
   return (
     <FormControl fullWidth disabled={disabled}>
       <FormLabel>

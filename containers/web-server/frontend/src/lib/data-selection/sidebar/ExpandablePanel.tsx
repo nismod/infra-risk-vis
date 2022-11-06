@@ -1,20 +1,44 @@
 import { ArrowRight } from '@mui/icons-material';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionDetailsProps,
+  AccordionProps,
+  AccordionSummary,
+  AccordionSummaryProps,
+  Box,
+  Typography,
+} from '@mui/material';
 import { FC, ReactChild } from 'react';
 
 export const ExpandablePanel: FC<{
   expanded: boolean;
   onExpanded: (x: boolean) => void;
+  allowExpand?: boolean;
   title: string;
   actions: ReactChild;
   disabled?: boolean;
-}> = ({ expanded, onExpanded, title, actions, disabled = false, children }) => {
+  AccordionProps?: Partial<AccordionProps>;
+  AccordionSummaryProps?: Partial<AccordionSummaryProps>;
+  AccordionDetailsProps?: Partial<AccordionDetailsProps>;
+}> = ({
+  expanded,
+  onExpanded,
+  allowExpand = true,
+  title,
+  actions,
+  disabled = false,
+  children,
+  AccordionProps = {},
+  AccordionSummaryProps = {},
+  AccordionDetailsProps = {},
+}) => {
   return (
     <Accordion
       disabled={disabled}
       disableGutters
       square // clears the original border radius so that we can set our own
-      expanded={expanded}
+      expanded={allowExpand && expanded}
       onChange={(e, expanded) => onExpanded(expanded)}
       sx={{
         pointerEvents: 'auto',
@@ -22,6 +46,8 @@ export const ExpandablePanel: FC<{
         borderRadius: 1,
         overflow: 'hidden',
       }}
+      TransitionProps={{ unmountOnExit: true }}
+      {...AccordionProps}
     >
       <AccordionSummary
         sx={{
@@ -29,12 +55,13 @@ export const ExpandablePanel: FC<{
             transform: 'rotate(90deg)',
           },
           '& .MuiAccordionSummary-content': {
-            marginY: '6px',
+            marginY: '2px',
           },
-          paddingX: '6px',
+          paddingX: '2px',
           flexDirection: 'row-reverse', // this puts the expand icon to the left of the summary bar
         }}
-        expandIcon={<ArrowRight />}
+        expandIcon={allowExpand ? <ArrowRight /> : null}
+        {...AccordionSummaryProps}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
           <Box sx={{ flexGrow: 1 }}>
@@ -43,7 +70,9 @@ export const ExpandablePanel: FC<{
           <Box>{actions}</Box>
         </Box>
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: 0 }}>{children}</AccordionDetails>
+      <AccordionDetails sx={{ padding: 0 }} {...AccordionDetailsProps}>
+        {children}
+      </AccordionDetails>
     </Accordion>
   );
 };
