@@ -1,0 +1,178 @@
+#
+# Scratch notes of processing run out-of-pipeline
+#
+
+ls raw_data/processed_data/input/20221103_global_road_EAD_and_cost_per_RP/
+
+# Remove empty
+python pipelines/osm_roads/process_slices.py > num_rows.txt
+cat num_rows.txt | grep 't 0' > empty.txt
+sed -i 's/ 0//' empty.txt
+cat empty.txt | parallel -j 4 'mv raw_data/processed_data/input/20221103_global_road_EAD_and_cost_per_RP/{} raw_data/processed_data/input/.bak'
+python pipelines/osm_roads/process_slices.py > with_rows.txt
+
+
+## Test load to db
+#/home/tom/projects/infra-risk-vis/etl/raw_data/processed_data/input/20221103_global_road_EAD_and_cost_per_RP/slice-10_0.csv
+
+# psql -c '\copy features from slice-152_road_edges_motorway_features_0.csv with csv header'
+# psql -c '\copy damages_rp from slice-152_road_edges_motorway_rp_0.csv with csv header'
+# psql -c '\copy damages_expected from slice-152_road_edges_motorway_exp_0.csv with csv header'
+
+## Allow null geom
+# psql -c 'alter table features alter column geom drop not null'
+
+## Create load scripts
+# echo 'set -e' > load_m.sh
+# echo 'set -x' >> load_m.sh
+# find etl/raw_data/20221105_road_csv/ | grep motorway_features | sed "s/^/psql -c '\\\\copy features from /" | sed "s/$/ with csv header'/" | sort >> load_m.sh
+# echo 'set -e' > load_m_rp.sh
+# echo 'set -x' >> load_m_rp.sh
+# find etl/raw_data/20221105_road_csv/ | grep motorway_rp | sed "s/^/psql -c '\\\\copy damages_rp from /" | sed "s/$/ with csv header'/" | sort >> load_m_rp.sh
+# echo 'set -e' > load_m_exp.sh
+# echo 'set -x' >> load_m_exp.sh
+# find etl/raw_data/20221105_road_csv/ | grep motorway_exp | sed "s/^/psql -c '\\\\copy damages_expected from /" | sed "s/$/ with csv header'/" | sort >> load_m_exp.sh
+
+# echo 'set -e' > load_tr.sh
+# echo 'set -x' >> load_tr.sh
+# find etl/raw_data/20221105_road_csv/ | grep trunk_features | sed "s/^/psql -c '\\\\copy features from /" | sed "s/$/ with csv header'/" | sort >> load_tr.sh
+# echo 'set -e' > load_tr_rp.sh
+# echo 'set -x' >> load_tr_rp.sh
+# find etl/raw_data/20221105_road_csv/ | grep trunk_rp | sed "s/^/psql -c '\\\\copy damages_rp from /" | sed "s/$/ with csv header'/" | sort >> load_tr_rp.sh
+# echo 'set -e' > load_tr_exp.sh
+# echo 'set -x' >> load_tr_exp.sh
+# find etl/raw_data/20221105_road_csv/ | grep trunk_exp | sed "s/^/psql -c '\\\\copy damages_expected from /" | sed "s/$/ with csv header'/" | sort >> load_tr_exp.sh
+
+
+echo 'set -e' > load_p.sh
+echo 'set -x' >> load_p.sh
+find etl/raw_data/20221105_road_csv/ | grep primary_features | sed "s/^/psql -c '\\\\copy features from /" | sed "s/$/ with csv header'/" | sort >> load_p.sh
+echo 'set -e' > load_p_rp.sh
+echo 'set -x' >> load_p_rp.sh
+find etl/raw_data/20221105_road_csv/ | grep primary_rp | sed "s/^/psql -c '\\\\copy damages_rp from /" | sed "s/$/ with csv header'/" | sort >> load_p_rp.sh
+echo 'set -e' > load_p_exp.sh
+echo 'set -x' >> load_p_exp.sh
+find etl/raw_data/20221105_road_csv/ | grep primary_exp | sed "s/^/psql -c '\\\\copy damages_expected from /" | sed "s/$/ with csv header'/" | sort >> load_p_exp.sh
+
+
+
+echo 'set -e' > load_s.sh
+echo 'set -x' >> load_s.sh
+find etl/raw_data/20221105_road_csv/ | grep secondary_features | sed "s/^/psql -c '\\\\copy features from /" | sed "s/$/ with csv header'/" | sort >> load_s.sh
+echo 'set -e' > load_s_rp.sh
+echo 'set -x' >> load_s_rp.sh
+find etl/raw_data/20221105_road_csv/ | grep secondary_rp | sed "s/^/psql -c '\\\\copy damages_rp from /" | sed "s/$/ with csv header'/" | sort >> load_s_rp.sh
+echo 'set -e' > load_s_exp.sh
+echo 'set -x' >> load_s_exp.sh
+find etl/raw_data/20221105_road_csv/ | grep secondary_exp | sed "s/^/psql -c '\\\\copy damages_expected from /" | sed "s/$/ with csv header'/" | sort >> load_s_exp.sh
+
+
+
+echo 'set -e' > load_te.sh
+echo 'set -x' >> load_te.sh
+find etl/raw_data/20221105_road_csv/ | grep tertiary_features | sed "s/^/psql -c '\\\\copy features from /" | sed "s/$/ with csv header'/" | sort >> load_te.sh
+echo 'set -e' > load_te_rp.sh
+echo 'set -x' >> load_te_rp.sh
+find etl/raw_data/20221105_road_csv/ | grep tertiary_rp | sed "s/^/psql -c '\\\\copy damages_rp from /" | sed "s/$/ with csv header'/" | sort >> load_te_rp.sh
+echo 'set -e' > load_te_exp.sh
+echo 'set -x' >> load_te_exp.sh
+find etl/raw_data/20221105_road_csv/ | grep tertiary_exp | sed "s/^/psql -c '\\\\copy damages_expected from /" | sed "s/$/ with csv header'/" | sort >> load_te_exp.sh
+
+## Run load
+# one by one or all at once, should be okay - nice id order if one by one "\_(<,?)/"
+# nohup bash load_m.sh > load_m.log &
+# nohup bash load_tr.sh > load_tr.log &
+# nohup bash load_p.sh > load_p.log &
+# nohup bash load_s.sh > load_s.log &
+# nohup bash load_te.sh > load_te.log &
+
+
+# nohup bash load_m_rp.sh > load_m_rp.log &
+# nohup bash load_m_exp.sh > load_m_exp.log &
+
+# nohup bash load_tr_rp.sh > load_tr_rp.log &
+# nohup bash load_tr_exp.sh > load_tr_exp.log &
+
+# nohup bash load_p_rp.sh > load_p_rp.log &
+# nohup bash load_p_exp.sh > load_p_exp.log &
+
+# nohup bash load_s_rp.sh > load_s_rp.log &
+# nohup bash load_s_exp.sh > load_s_exp.log &
+
+# nohup bash load_te_rp.sh > load_te_rp.log &
+# nohup bash load_te_exp.sh > load_te_exp.log &
+
+## Run tiles
+# tippecanoe  -o road_edges_motorway.mbtiles \
+#     --temporary-directory=/mnt/d/tmp \
+#     --use-attribute-for-id=id \
+#     -zg \
+#     --minimum-zoom=2 \
+#     --read-parallel \
+#     --drop-densest-as-needed \
+#     --extend-zooms-if-still-dropping \
+#     road_edges_motorway.geojson
+
+# tippecanoe  -o road_edges_trunk.mbtiles \
+#     --temporary-directory=/mnt/d/tmp \
+#     --use-attribute-for-id=id \
+#     -zg \
+#     --minimum-zoom=2 \
+#     --read-parallel \
+#     --drop-densest-as-needed \
+#     --extend-zooms-if-still-dropping \
+#     --simplification=10 \
+#     --simplify-only-low-zooms \
+#     road_edges_trunk.geojson
+
+# tippecanoe  -o road_edges_primary.mbtiles \
+#     --temporary-directory=/mnt/d/tmp \
+#     --use-attribute-for-id=id \
+#     -zg \
+#     --minimum-zoom=3 \
+#     --read-parallel \
+#     --drop-densest-as-needed \
+#     --extend-zooms-if-still-dropping \
+#     --simplification=10 \
+#     --simplify-only-low-zooms \
+#     road_edges_primary.geojson
+
+# tippecanoe  -o road_edges_secondary.mbtiles \
+#     --temporary-directory=/mnt/d/tmp \
+#     --use-attribute-for-id=id \
+#     -zg \
+#     --minimum-zoom=4 \
+#     --read-parallel \
+#     --drop-densest-as-needed \
+#     --extend-zooms-if-still-dropping \
+#     --simplification=10 \
+#     --simplify-only-low-zooms \
+#     road_edges_secondary.geojson
+
+tippecanoe  -o road_edges_tertiary.mbtiles \
+    --temporary-directory=/mnt/d/tmp \
+    --use-attribute-for-id=id \
+    -zg \
+    --minimum-zoom=4 \
+    --read-parallel \
+    --drop-densest-as-needed \
+    --extend-zooms-if-still-dropping \
+    --simplification=10 \
+    --simplify-only-low-zooms \
+    road_edges_tertiary.geojson
+
+
+
+# sync to s3 for backup
+aws s3 cp road_edges_motorway.geojson s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_primary.geojson s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_secondary.geojson s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_tertiary.geojson s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_trunk.geojson s3://open-gira/road_extracts/20221105_processed/
+
+
+aws s3 cp road_edges_motorway.mbtiles s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_primary.mbtiles s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_secondary.mbtiles s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_tertiary.mbtiles s3://open-gira/road_extracts/20221105_processed/
+aws s3 cp road_edges_trunk.mbtiles s3://open-gira/road_extracts/20221105_processed/

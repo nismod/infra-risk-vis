@@ -85,9 +85,9 @@ def load_batches(
     for idx, batch in enumerate(
         dataset.to_batches(batch_size=batch_size, filter=filter)
     ):
-        # print(
-        #     f"{datetime.now().isoformat()} - Doing batch {idx}, total features so far: {total_features}"
-        # )
+        #print(
+        #    f"{datetime.now().isoformat()} - Doing batch {idx}, total features so far: {total_features}"
+        #)
         if batch.num_rows == 0:
             continue
         try:
@@ -135,12 +135,12 @@ def load_batches(
             )
             df_pk_ids.set_index(layer.asset_id_column, inplace=True)
             df_pks_joined = df.join(df_pk_ids)
-            # print(
-            #     "Joined PK Shapes:",
-            #     df.shape[0],
-            #     len(feature_rows),
-            #     df_pks_joined.shape[0],
-            # )
+            #print(
+            #    "Joined PK Shapes:",
+            #    df.shape[0],
+            #    len(feature_rows),
+            #    df_pks_joined.shape[0],
+            #)
 
             # Generate RPDamages rows for this batch
             df_rp_damage = parse_rp_damage_batch(df_pks_joined, primary_key_column="id")
@@ -170,7 +170,8 @@ def load_batches(
                     )
                     db.commit()
                 total_rp_damages += len(rp_damage_rows)
-
+                del rp_damage_rows
+                del df_rp_damage
             # Generate Expected Damages rows for this batch
             df_expected_damage = parse_exp_damage_batch(
                 df_pks_joined, primary_key_column="id"
@@ -188,6 +189,8 @@ def load_batches(
                     )
                     db.commit()
                     total_expected_damages += len(expected_damage_rows)
+                del expected_damage_rows
+                del df_expected_damage
         except Exception as err:
             print(f"Failed batch {idx} if pq file {pq_fpath}, due to {err} - skipped")
 
@@ -367,7 +370,7 @@ def get_tilelayer_by_layer_name(layer_name: str, network_tilelayers: pd.DataFram
 def write_output_log(
     network_layer, total_feats: int, total_rp_damages: int, total_expected_damages: int
 ):
-    with open(str(output), "w") as fh:
+    with open(network_layer.layer+'.txt', "w") as fh:
         fh.write(f"Loaded to database.\n\n")
         fh.write(f"From:\n{network_layer.path}\n\n")
         fh.write(
@@ -378,76 +381,98 @@ def write_output_log(
 class Layer:
     asset_id_column = "edge_id"
     asset_type_column = "tag_highway"
-    layer = "road_edges_motorway"
+    layer = "road_edges_metro"
 
 
 class NetworkTileLayer:
-    asset_type = "motorway"
+    asset_type = "secondary"
     sector = "transport"
     subsector = "road"
-    layer = "road_edges_motorway"
+    layer = "road_edges_metro"
 
 
 if __name__ == "__main__":
     # For testing
-    # layer = Layer()
-    # network_tile_layer = NetworkTileLayer()
+    layer = Layer()
+    network_tile_layer = NetworkTileLayer()
 
-    try:
-        layer = snakemake.wildcards.layer
-        output = snakemake.output
-        analysis_data_dir = snakemake.config["analysis_data_dir"]
+    #try:
+    #    layer = snakemake.wildcards.layer
+    #    output = snakemake.output
+    #    analysis_data_dir = snakemake.config["analysis_data_dir"]
 
-        network_layers = pd.read_csv(snakemake.config["network_layers"])
-        network_tilelayers = pd.read_csv(snakemake.config["network_tilelayers"])
+    #    network_layers = pd.read_csv(snakemake.config["network_layers"])
+    #    network_tilelayers = pd.read_csv(snakemake.config["network_tilelayers"])
 
-    except NameError:
-        print("Expected to run from snakemake")
-        exit()
+    #th open("/opt/infra-risk/class_c_completed.txt", "r") as f:except NameError:
+    #    print("Expected to run from snakemake")
+    #    exit()
 
-    print("Layer", layer)
-    network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
-    print("Network TileLayer:", network_tile_layer)
-    network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
-    print("Network Layer", network_layer)
-    print(f"PQ Path: {network_layer.path}")
+    #print("Layer", layer)
+    #network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
+    #print("Network TileLayer:", network_tile_layer)
+    #network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
+    #print("Network Layer", network_layer)
+    #print(f"PQ Path: {network_layer.path}")
 
-    filter = ds.field(network_layer.asset_type_column) == network_tile_layer.asset_type
+    #filter = ds.field(network_layer.asset_type_column) == network_tile_layer.asset_type
+    filter = ds.field(layer.asset_type_column) == network_tile_layer.asset_type
 
-    # pq_fpath = "/home/dusted/code/oxford/infra-risk-vis/etl/raw_data/processed_data/input/osm_roads/20221102_egypt_with_EAD_and_RP_test.geoparquet"
-    # pq_dir = "/home/dusted/code/oxford/infra-risk-vis/etl/raw_data/processed_data/input/osm_roads/20221103_global_road_EAD_and_cost_per_RP"
+    #pq_fpath = "/home/dusted/code/oxford/infra-risk-vis/etl/raw_data/processed_data/input/osm_roads/20221102_egypt_with_EAD_and_RP_test.geoparquet"
+    pq_dir = "/opt/infra-risk/etl/raw_data/processed_data/input/osm_roads/20221103_global_road_EAD_and_cost_per_RP"
 
     db: Session
     with SessionLocal() as db:
         print("Adding FeatureLayer if required")
         load_tile_feature_layer(db, network_tile_layer)
 
+    with open("/opt/infra-risk/class_metro_completed.txt", "r") as f:
+        skip = set([line.strip() for line in f])
+
+    dryrun = False
+
     # Walk dir and load slices
     total_features = 0
     total_rp_damages = 0
     total_expected_damages = 0
-    for root, dirs, files in os.walk(network_layer.path, topdown=False):
+    for root, dirs, files in os.walk(pq_dir, topdown=False):
         for file in files:
+            if '.geoparquet' not in file:
+                print ('skipping non parquet file: ', file)
+                continue
+            
+            if file in skip:
+                print('skipping already completed: ', file)
+                continue
+            else:
+                if dryrun:
+                    print('would not skip: ', file)
+
+            if dryrun:
+                continue
+            
             pq_fpath = os.path.join(root, file)
             print(
                 f"{datetime.now().isoformat()} - Processing {os.path.basename(pq_fpath)}"
             )
 
             file_features, file_rp_damages, file_expected_damages = load_batches(
-                network_layer,
+                layer,
                 network_tile_layer,
                 pq_fpath,
                 filter,
-                batch_size=10000,
+                batch_size=10,
             )
             total_features += file_features
             total_rp_damages += file_rp_damages
             total_expected_damages += file_expected_damages
+            with open("/opt/infra-risk/class_metro_completed.txt", "w") as f:
+                f.write(f'{file}\n')
             print(
                 f"{datetime.now().isoformat()} - Completed {os.path.basename(pq_fpath)}, total features: {total_features}, total_rp_damages: {total_rp_damages}, total_expected_damages: {total_expected_damages}"
             )
 
     print(f"Done - Loaded {total_features} features")
     write_output_log(
-        network_layer, total_features, total_rp_damages, total_expected_damages
+        layer, total_features, total_rp_damages, total_expected_damages
     )

@@ -1,0 +1,6 @@
+layer_name,sector,subsector,asset_type
+road_edges_motorway,transport,road,motorway
+road_edges_trunk,transport,road,trunk
+road_edges_primary,transport,road,primary
+road_edges_secondary,transport,road,secondary
+road_edges_tertiary,transport,road,tertiary
