@@ -3,6 +3,7 @@ import {
   StyleParams,
   ViewLayer,
   ViewLayerDataAccessFunction,
+  ViewLayerRenderDetailsFunction,
   ViewLayerRenderTooltipFunction,
 } from '@/lib/data-map/view-layers';
 import { selectableMvtLayer } from '@/lib/deck/layers/selectable-mvt-layer';
@@ -34,6 +35,7 @@ export interface AssetViewLayerOptions {
   customFn?: AssetViewLayerCustomFunction;
   customDataAccessFn?: ViewLayerDataAccessFunction;
   renderTooltip?: ViewLayerRenderTooltipFunction;
+  renderDetails?: ViewLayerRenderDetailsFunction;
 }
 
 export function assetViewLayer({
@@ -44,6 +46,7 @@ export function assetViewLayer({
   customFn,
   customDataAccessFn,
   renderTooltip,
+  renderDetails,
 }: AssetViewLayerOptions): ViewLayer {
   const dataStyle: DataStyle = styleParams?.colorMap
     ? {
@@ -82,5 +85,6 @@ export function assetViewLayer({
     dataAccessFn: customDataAccessFn,
     dataFormatsFn: getAssetDataFormats,
     renderTooltip,
+    renderDetails,
   };
 }

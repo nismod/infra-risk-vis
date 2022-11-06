@@ -22,7 +22,7 @@ const TRAVELTIME_COLORMAP: RasterColorMap = {
 };
 
 export function travelTimeViewLayer(type: TraveltimeType) {
-  const id = 'traveltime_to_healthcare';
+  const id = `traveltime_to_healthcare_${type}`;
   const label = `Travel Time to Healthcare (${type})`;
 
   const formatValue = (x: number) => (x == null ? '-' : `${x.toLocaleString(undefined, { maximumFractionDigits: 1 })}`);
@@ -34,7 +34,7 @@ export function travelTimeViewLayer(type: TraveltimeType) {
     fn({ deckProps }) {
       return rasterTileLayer({}, deckProps, {
         data: SOURCES.raster.getUrl({
-          path: `${id}/${type}`,
+          path: `traveltime_to_healthcare/${type}`,
           ...TRAVELTIME_COLORMAP,
         }),
         refinementStrategy: 'no-overlap',

@@ -12,7 +12,6 @@ import { ExpandableRow } from '@/asset-list/ExpandableRow';
 import { SortedAssetTable } from '@/asset-list/SortedAssetTable';
 import { ListFeature } from '@/asset-list/use-sorted-features';
 import { getAssetDataFormats } from '@/config/assets/data-formats';
-import { FeatureSidebarContent } from '@/details/features/FeatureSidebarContent';
 import { mapFitBoundsState } from '@/map/MapView';
 import {
   adaptationColorSpecState,
@@ -79,7 +78,8 @@ export const FeatureAdaptationsTable = () => {
             onMouseLeave={() => setHoveredFeature(null)}
             expandableContent={
               <Box py={1}>
-                <FeatureSidebarContent feature={feature} assetType={feature.layer} showRiskSection={false} />
+                {/* TODO: render details based on view layer */}
+                {/* <FeatureSidebarContent feature={feature} assetType={feature.layer} showRiskSection={false} /> */}
               </Box>
             }
           >

@@ -8,7 +8,6 @@ import { FieldSpecControl } from '@/asset-list/FieldSpecControl';
 import { SortedAssetTable } from '@/asset-list/SortedAssetTable';
 import { ListFeature } from '@/asset-list/use-sorted-features';
 import { getAssetDataFormats } from '@/config/assets/data-formats';
-import { FeatureSidebarContent } from '@/details/features/FeatureSidebarContent';
 
 export const AssetListPage = () => {
   const [layerSpec] = useState({
@@ -58,7 +57,8 @@ export const AssetListPage = () => {
                 onExpandedChange={(newExpanded) => setSelectedFeature(newExpanded ? feature : null)}
                 expandableContent={
                   <>
-                    <FeatureSidebarContent feature={feature} assetType={feature.layer} />
+                    {/* TODO: get view layer to display the right details for feature */}
+                    {/* <FeatureSidebarContent feature={feature} assetType={feature.layer} /> */}
                   </>
                 }
               >

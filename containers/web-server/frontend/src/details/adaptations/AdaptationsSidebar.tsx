@@ -4,7 +4,7 @@ import { FC } from 'react';
 
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 
-import { SidePanel } from '@/details/SidePanel';
+import { SidePanel } from '@/details/ui/SidePanel';
 
 import { FeatureAdaptationsTable } from './FeatureAdaptationsTable';
 
