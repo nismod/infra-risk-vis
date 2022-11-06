@@ -54,12 +54,11 @@ var componentMapping: Record<ComponentMappingKey, DetailsComponent> = {
   rail_nodes: RailNodeDetails,
 
   road_bridges: BridgeDetails,
-  road_edges_class_a: RoadEdgeDetails,
-  road_edges_class_b: RoadEdgeDetails,
-  road_edges_class_c: RoadEdgeDetails,
-  road_edges_metro: RoadEdgeDetails,
-  road_edges_track: RoadEdgeDetails,
-  road_edges_other: RoadEdgeDetails,
+  road_edges_motorway: RoadEdgeDetails,
+  road_edges_trunk: RoadEdgeDetails,
+  road_edges_primary: RoadEdgeDetails,
+  road_edges_secondary: RoadEdgeDetails,
+  road_edges_tertiary: RoadEdgeDetails,
 
   water_irrigation_edges: IrrigationDetails,
   water_irrigation_nodes: IrrigationDetails,

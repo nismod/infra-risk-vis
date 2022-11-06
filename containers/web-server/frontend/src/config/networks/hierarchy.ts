@@ -96,29 +96,25 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
             children: [
               */
           {
-            id: 'road_edges_class_a',
+            id: 'road_edges_motorway',
             label: 'Motorway',
           },
           {
-            id: 'road_edges_class_b',
+            id: 'road_edges_trunk',
             label: 'Trunk',
           },
           {
-            id: 'road_edges_class_c',
+            id: 'road_edges_primary',
             label: 'Primary',
           },
           {
-            id: 'road_edges_metro',
+            id: 'road_edges_secondary',
             label: 'Secondary',
           },
           {
-            id: 'road_edges_track',
+            id: 'road_edges_tertiary',
             label: 'Tertiary',
           },
-          // {
-          //   id: 'road_edges_other',
-          //   label: 'Other',
-          // },
 
           /*
             ],
