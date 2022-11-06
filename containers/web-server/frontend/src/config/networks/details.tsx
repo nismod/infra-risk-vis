@@ -181,18 +181,19 @@ export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
     </DetailHeader>
     <IdSubheader id={f.asset_id} />
     <List>
-      <DataItem label="Connection" value={`${f.from_node}–${f.to_node}`} />
-      <DataItem label="Street type" value={`${f.street_type ? f.street_type : 'none'}`} />
-      <DataItem label="Construction" value={f.road_construction} />
+      <DataItem label="OpenStreetMap ID" value={<a
+          href={`https://www.openstreetmap.org/way/${f.osm_way_id}`}
+          target="_blank"
+          rel="noopener noreferrer">{f.osm_way_id}</a>
+      } />
       <DataItem label="Length (m)" value={f.length_m} />
-      <DataItem label="Width (m)" value={f.road_width} />
-      <DataItem label="Vertical alignment" value={f.vertalignm} />
-      <DataItem label="Traffic (vehicles/day)" value={f.traffic_count} />
+      <DataItem label="Width (m)" value={f.width_m} />
+      <DataItem label="Lanes" value={f.lanes} />
+      <DataItem label="Material" value={f.material} />
       <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
+        label={`Rehabilitation cost (USD/km)`}
+        value={f.rehab_cost_USD_per_km}
       />
-      <DataItem label={`Reopening cost (${f.cost_reopen_unit})`} value={`${numFormat(f.cost_reopen)}`} />
     </List>
   </>
 );
