@@ -46,17 +46,31 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          verticalAlign: 'top',
+        }
+      }
+    }
   },
   typography: {
     h1: {
       fontWeight: 600,
       fontFamily: 'Catamaran, Roboto, sans-serif',
       fontSize: '2.75rem',
+      margin: '1rem 0',
     },
     h2: {
       fontWeight: 600,
       fontFamily: 'Catamaran, Roboto, sans-serif',
       fontSize: '1.6rem',
+      margin: '0.5rem 0',
+    },
+    h3: {
+      fontWeight: 600,
+      fontFamily: 'Catamaran, Roboto, sans-serif',
+      fontSize: '1.2rem',
     },
     h6: {
       fontWeight: 600,
