@@ -9,7 +9,7 @@ import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
 import { apiFeatureQuery } from '@/state/queries';
 
-import { AdaptationSection } from './adaptation/AdaptationSection';
+// import { AdaptationSection } from './adaptation/AdaptationSection';
 import { DamagesSection } from './damages/DamagesSection';
 import { DetailsComponentType } from './detail-components';
 
@@ -97,17 +97,20 @@ export const ExtendedAssetDetails: FC<ExtendedAssetDetailsProps> = ({
         <LoadDetails featureDetailsState={featureDetailsState}>
           {(featureDetails) => (
             <>
-              <code style={{ display: 'none' }} className="feature-details-debug">
-                {JSON.stringify(featureDetails.properties, null, 2)}
-              </code>
               <DetailsComponent f={featureDetails.properties} />
               <DownloadButton feature={featureDetails} />
               {showRiskSection && (
                 <>
                   <DamagesSection fd={featureDetails} />
-                  <AdaptationSection fd={featureDetails} />
+                  {/* <AdaptationSection fd={featureDetails} /> */}
                 </>
               )}
+              <details  className="feature-details-debug">
+                <summary><small>Feature data</small></summary>
+                <pre>
+                  {JSON.stringify(featureDetails, null, 2)}
+                </pre>
+              </details>
             </>
           )}
         </LoadDetails>

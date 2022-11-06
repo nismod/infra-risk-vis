@@ -17,11 +17,11 @@ import { INFRASTRUCTURE_LAYER_DETAILS } from './details';
 import { NETWORKS_METADATA, NetworkLayerType } from './metadata';
 
 const roadColor = {
-  road_edges_class_a: INFRASTRUCTURE_COLORS.roads_class_a.css,
-  road_edges_class_b: INFRASTRUCTURE_COLORS.roads_class_b.css,
-  road_edges_class_c: INFRASTRUCTURE_COLORS.roads_class_c.css,
-  road_edges_metro: INFRASTRUCTURE_COLORS.roads_metro.css,
-  road_edges_track: INFRASTRUCTURE_COLORS.roads_unknown.css,
+  road_edges_motorway: INFRASTRUCTURE_COLORS.roads_motorway.css,
+  road_edges_trunk: INFRASTRUCTURE_COLORS.roads_trunk.css,
+  road_edges_primary: INFRASTRUCTURE_COLORS.roads_primary.css,
+  road_edges_secondary: INFRASTRUCTURE_COLORS.roads_secondary.css,
+  road_edges_tertiary: INFRASTRUCTURE_COLORS.roads_unknown.css,
   road_edges_other: INFRASTRUCTURE_COLORS.roads_unknown.css,
 };
 
@@ -94,13 +94,12 @@ const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<NetworkLayerType, AssetViewLayerCus
     fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
     pointRadius(zoom),
   ],
-  road_edges_class_a: makeRoadsFn('road_edges_class_a'),
-  road_edges_class_b: makeRoadsFn('road_edges_class_b'),
-  road_edges_class_c: makeRoadsFn('road_edges_class_c'),
-  road_edges_metro: makeRoadsFn('road_edges_metro'),
-  road_edges_track: makeRoadsFn('road_edges_track'),
+  road_edges_motorway: makeRoadsFn('road_edges_motorway'),
+  road_edges_trunk: makeRoadsFn('road_edges_trunk'),
+  road_edges_primary: makeRoadsFn('road_edges_primary'),
+  road_edges_secondary: makeRoadsFn('road_edges_secondary'),
+  road_edges_tertiary: makeRoadsFn('road_edges_tertiary'),
   /*
-  road_edges_other: makeRoadsFn('road_edges_other'),
   road_bridges: ({ zoom, dataStyle }) => [
     border(),
     fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.bridges.deck),
@@ -184,7 +183,7 @@ export function infrastructureViewLayer(infrastructureType: NetworkLayerType, st
         hoveredObject: hover,
         label,
         color,
-        idValue: hover.target.feature.properties.asset_id.toFixed(0),
+        idValue: hover.target.feature.properties.asset_id,
       });
     },
     renderDetails: (selection: InteractionTarget<VectorTarget>) => {

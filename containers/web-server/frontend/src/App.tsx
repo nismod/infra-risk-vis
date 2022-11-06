@@ -7,6 +7,7 @@ import { Nav } from './Nav';
 import { DataPage } from './pages/DataPage';
 import { IntroPage } from './pages/IntroPage';
 import { MapPage } from './pages/MapPage';
+import { TermsPage } from './pages/TermsPage';
 import { theme } from './theme';
 
 import './index.css';
@@ -29,6 +30,10 @@ export const App = () => {
               <Route path="/data" exact>
                 <Toolbar /> {/* Prevents app bar from concealing content*/}
                 <DataPage />
+              </Route>
+              <Route path="/terms-of-use" exact>
+                <Toolbar /> {/* Prevents app bar from concealing content*/}
+                <TermsPage />
               </Route>
             </Switch>
           </Router>

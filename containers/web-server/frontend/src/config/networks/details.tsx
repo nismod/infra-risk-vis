@@ -181,18 +181,19 @@ export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
     </DetailHeader>
     <IdSubheader id={f.asset_id} />
     <List>
-      <DataItem label="Connection" value={`${f.from_node}–${f.to_node}`} />
-      <DataItem label="Street type" value={`${f.street_type ? f.street_type : 'none'}`} />
-      <DataItem label="Construction" value={f.road_construction} />
+      <DataItem label="OpenStreetMap ID" value={<a
+          href={`https://www.openstreetmap.org/way/${f.osm_way_id}`}
+          target="_blank"
+          rel="noopener noreferrer">{f.osm_way_id}</a>
+      } />
       <DataItem label="Length (m)" value={f.length_m} />
-      <DataItem label="Width (m)" value={f.road_width} />
-      <DataItem label="Vertical alignment" value={f.vertalignm} />
-      <DataItem label="Traffic (vehicles/day)" value={f.traffic_count} />
+      <DataItem label="Width (m)" value={f.width_m} />
+      <DataItem label="Lanes" value={f.lanes} />
+      <DataItem label="Material" value={f.material} />
       <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
+        label={`Rehabilitation cost (USD/km)`}
+        value={f.rehab_cost_USD_per_km}
       />
-      <DataItem label={`Reopening cost (${f.cost_reopen_unit})`} value={`${numFormat(f.cost_reopen)}`} />
     </List>
   </>
 );
@@ -243,29 +244,28 @@ export const INFRASTRUCTURE_LAYER_DETAILS: Record<NetworkLayerType, DetailsCompo
   /*
       airport_terminals: AirportDetails,
       airport_runways: AirportDetails,
-    
+
       port_areas_break: PortDetails,
       port_areas_container: PortDetails,
       port_areas_industry: PortDetails,
       port_areas_silo: PortDetails,
-    
+
       */
   rail_edges: RailEdgeDetails,
   // rail_stations: RailNodeDetails,
   rail_nodes: RailNodeDetails,
 
   // road_bridges: BridgeDetails,
-  road_edges_class_a: RoadEdgeDetails,
-  road_edges_class_b: RoadEdgeDetails,
-  road_edges_class_c: RoadEdgeDetails,
-  road_edges_metro: RoadEdgeDetails,
-  road_edges_track: RoadEdgeDetails,
-  // road_edges_other: RoadEdgeDetails,
+  road_edges_motorway: RoadEdgeDetails,
+  road_edges_trunk: RoadEdgeDetails,
+  road_edges_primary: RoadEdgeDetails,
+  road_edges_secondary: RoadEdgeDetails,
+  road_edges_tertiary: RoadEdgeDetails,
 
   /*
       water_irrigation_edges: IrrigationDetails,
       water_irrigation_nodes: IrrigationDetails,
-    
+
       water_potable_nodes_booster: WaterSupplyNodeDetails,
       water_potable_nodes_catchment: WaterSupplyNodeDetails,
       water_potable_nodes_entombment: WaterSupplyNodeDetails,
@@ -281,7 +281,7 @@ export const INFRASTRUCTURE_LAYER_DETAILS: Record<NetworkLayerType, DetailsCompo
       water_potable_nodes_sump: WaterSupplyNodeDetails,
       water_potable_nodes_tp: WaterSupplyNodeDetails,
       water_potable_edges: WaterPipelineDetails,
-    
+
       water_waste_nodes_sump: WastewaterNodeDetails,
       water_waste_nodes_pump: WastewaterNodeDetails,
       water_waste_nodes_relift: WastewaterNodeDetails,

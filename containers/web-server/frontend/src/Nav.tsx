@@ -32,7 +32,7 @@ export const Nav = () => {
           <Typography variant="h6">Risk</Typography>
         </NavLink>
         <NavLink className="nav-link" to="/data">
-          <Typography variant="h6">Data</Typography>
+          <Typography variant="h6">Data Sources</Typography>
         </NavLink>
       </Toolbar>
     </AppBar>

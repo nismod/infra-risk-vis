@@ -21,7 +21,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.6
+    image: ghcr.io/nismod/gri-web-server:0.7
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-prod
@@ -35,7 +35,7 @@ services:
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
 
   backend:
-    image: ghcr.io/nismod/gri-backend:0.8
+    image: ghcr.io/nismod/gri-backend:0.9
     build: ./containers/backend
     volumes:
       - ./tileserver/raster/data:/data
@@ -56,7 +56,7 @@ services:
     build:
       context: ./containers/vector
       dockerfile: Dockerfile-prod
-    image: ghcr.io/nismod/gri-vector-tileserver:0.9
+    image: ghcr.io/nismod/gri-vector-tileserver:0.10
     volumes:
       - ./tileserver/vector/data:/data
     expose:
