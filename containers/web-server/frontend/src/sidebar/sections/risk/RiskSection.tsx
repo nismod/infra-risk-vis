@@ -1,19 +1,17 @@
 import { FC } from 'react';
-import { useRecoilValue } from 'recoil';
 
-import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
+import { Layer } from '@/lib/data-selection/sidebar/components';
 
-import { DamageSourceControl } from '../networks/DamageSourceControl';
-import { RiskTypeControl } from './RiskTypeControl';
-import { riskSourceTypeState, riskTargetTypeState, riskTargetTypeStateEffect } from './state';
+import { PopulationExposureSection } from './population-exposure';
 
 export const RiskSection: FC = () => {
-  const riskTarget = useRecoilValue(riskTargetTypeState);
   return (
     <>
-      <StateEffectRoot state={riskTargetTypeState} effect={riskTargetTypeStateEffect} />
-      <RiskTypeControl />
-      {riskTarget === 'transport' && <DamageSourceControl />}
+      <Layer path="population" title="Population Exposure">
+        <PopulationExposureSection />
+      </Layer>
+      <Layer path="infrastructure" title="Infrastructure Risk"></Layer>
+      <Layer path="regional" title="Regional Risk"></Layer>
     </>
   );
 };

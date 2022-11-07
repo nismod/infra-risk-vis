@@ -5,13 +5,20 @@ import { FC } from 'react';
 export interface VisibilityToggleProps {
   visibility: boolean;
   onVisibility: (x: boolean) => void;
+  labelShow?: string;
+  labelHide?: string;
 }
 
-export const VisibilityToggle: FC<VisibilityToggleProps> = ({ visibility, onVisibility }) => {
+export const VisibilityToggle: FC<VisibilityToggleProps> = ({
+  visibility,
+  onVisibility,
+  labelShow = 'Show layer',
+  labelHide = 'Hide layer',
+}) => {
   return (
     <IconButton
       size="small"
-      title={visibility ? 'Hide layer' : 'Show layer'}
+      title={visibility ? labelHide : labelShow}
       onClick={(e) => {
         onVisibility(!visibility);
         e.stopPropagation();

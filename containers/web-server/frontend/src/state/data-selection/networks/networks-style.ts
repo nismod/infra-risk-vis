@@ -1,9 +1,10 @@
 import { selector } from 'recoil';
 
-import { sectionStyleValueState } from '@/state/sections';
+import { sidebarVisibilityToggleState } from '@/sidebar/SidebarContent';
 import { viewState } from '@/state/view';
 
 export const networksStyleState = selector<string>({
   key: 'networksStyleState',
-  get: ({ get }) => (get(viewState) === 'risk' ? 'damages' : 'type'), //get(sectionStyleValueState('assets')),
+  get: ({ get }) =>
+    get(viewState) === 'risk' && get(sidebarVisibilityToggleState('risk/infrastructure')) ? 'damages' : 'type',
 });

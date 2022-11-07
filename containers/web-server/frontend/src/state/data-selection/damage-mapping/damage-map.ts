@@ -2,16 +2,16 @@ import produce from 'immer';
 import _ from 'lodash';
 import { atom, selector } from 'recoil';
 
-import { StateEffect } from '@/lib/recoil/state-effects/types';
+import { CurrentStateEffect, StateEffect } from '@/lib/recoil/state-effects/types';
 
 import { HAZARD_DOMAINS_CONFIG } from '@/config/hazards/domains';
 import { sidebarVisibilityToggleState } from '@/sidebar/SidebarContent';
 import { paramsState } from '@/state/data-params';
 import { viewState } from '@/state/view';
 
-export const showDamagesState = selector({
-  key: 'showDamagesState',
-  get: ({ get }) => get(viewState) === 'risk', // get(networksStyleState) === 'damages',
+export const showInfrastructureDamagesState = selector({
+  key: 'showInfrastructureDamagesState',
+  get: ({ get }) => get(viewState) === 'risk' && get(sidebarVisibilityToggleState('risk/infrastructure')),
 });
 
 export const damageSourceState = atom({
@@ -24,16 +24,20 @@ export const damageTypeState = atom({
   default: 'direct',
 });
 
-const syncHazardsWithDamageSourceStateEffect = ({ get, set }, damageSource: string) => {
+export const syncHazardsWithDamageSourceStateEffect: CurrentStateEffect<string> = ({ get, set }, damageSource) => {
   _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
     set(sidebarVisibilityToggleState(`hazards/${group}`), group === damageSource);
   });
 };
 
-export const damageSourceStateEffect: StateEffect<string> = ({ get, set }, damageSource) => {
-  syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource);
+export const damageSourceStateEffect: StateEffect<string> = (iface, damageSource) => {
+  syncHazardsWithDamageSourceStateEffect(iface, damageSource);
+  const { get, set } = iface;
 
   if (damageSource !== 'all') {
+    /**
+     * If damage source is not 'all', set return period for hazard to highest available.
+     */
     const state = get(paramsState(damageSource));
 
     const damageSourceReturnPeriodDomain = state['rp'].options;

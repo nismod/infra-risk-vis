@@ -2,7 +2,7 @@ import { Alert } from '@mui/material';
 import { FC } from 'react';
 import { atomFamily, selectorFamily, useRecoilValue } from 'recoil';
 
-import { Layer, Section, SidebarPanel, SidebarRoot } from '@/lib/data-selection/sidebar/components';
+import { Layer, Section, SidebarRoot } from '@/lib/data-selection/sidebar/components';
 import { getParentPath } from '@/lib/data-selection/sidebar/paths';
 
 import { viewState } from '@/state/view';
@@ -126,9 +126,9 @@ export const SidebarContent: FC<{}> = () => {
         </Section>
       </Section>
       {view === 'risk' && (
-        <SidebarPanel path="risk" title="Risk">
+        <Section path="risk" title="Risk">
           <RiskSection />
-        </SidebarPanel>
+        </Section>
       )}
     </SidebarRoot>
   );

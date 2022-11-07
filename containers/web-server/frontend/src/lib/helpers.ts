@@ -187,3 +187,8 @@ export function toLabelLookup<T extends string>(valueLabels: ValueLabel<T>[]) {
     (x) => x.label,
   );
 }
+
+/**
+ * Ensure that a supplied string union is a subset of another union
+ */
+export type Subset<Original extends string, SubUnion extends Original> = SubUnion;
