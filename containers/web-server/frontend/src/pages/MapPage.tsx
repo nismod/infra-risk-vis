@@ -1,10 +1,11 @@
 import { Box, Paper } from '@mui/material';
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 import { useSyncRecoilState } from '@/lib/recoil/sync-state';
 
+import { InitData } from '@/InitData';
 import { DetailsContent } from '@/details/DetailsContent';
 import { MapView } from '@/map/MapView';
 import { SidebarContent } from '@/sidebar/SidebarContent';
@@ -49,6 +50,7 @@ export const MapPage: FC<MapPageProps> = ({ view }) => {
 
   return (
     <ErrorBoundary message="There was a problem displaying this page.">
+      <InitData />
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
       <SidebarLayout top={0} left={0} bottom={0} right={undefined} width={globalStyleVariables.controlSidebarWidth}>
         <Paper elevation={0}>
@@ -59,7 +61,9 @@ export const MapPage: FC<MapPageProps> = ({ view }) => {
       </SidebarLayout>
       <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
         <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">
-          <MapView />
+          <Suspense fallback={null}>
+            <MapView />
+          </Suspense>
         </ErrorBoundary>
       </Box>
       <SidebarLayout top={0} left={undefined} bottom={70} right={70} width={globalStyleVariables.detailSidebarWidth}>

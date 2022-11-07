@@ -16,7 +16,7 @@ import { DataParamGroupConfig, ParamDomain, ParamValue, resolveParamDependencies
  */
 export const paramsConfigState = atomFamily<DataParamGroupConfig, string>({
   key: 'paramsConfigState',
-  default: null,
+  default: () => new Promise(() => {}),
 });
 
 interface ValueAndOptions<T = any> {
@@ -29,7 +29,7 @@ interface ValueAndOptions<T = any> {
  */
 export const paramsState = atomFamily<Record<string, ValueAndOptions>, string>({
   key: 'paramsState',
-  default: (group: string) => null,
+  default: () => new Promise(() => {}),
 });
 
 /**

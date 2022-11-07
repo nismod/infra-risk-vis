@@ -1,5 +1,6 @@
 import { Stack } from '@mui/material';
 import { Suspense } from 'react';
+import { useRecoilValue } from 'recoil';
 
 import { DataGroup } from '@/lib/data-selection/DataGroup';
 
@@ -11,10 +12,16 @@ import { GCMControl } from '@/sidebar/ui/params/GCMControl';
 import { RCPControl } from '@/sidebar/ui/params/RCPControl';
 import { ReturnPeriodControl } from '@/sidebar/ui/params/ReturnPeriodControl';
 import { hazardDomainsConfigState } from '@/state/data-domains/hazards';
-import { useLoadParamsConfig } from '@/state/data-params';
+import { paramsConfigState, useLoadParamsConfig } from '@/state/data-params';
 
-const InitHazardData = ({ type }: { type: HazardType }) => {
+export const InitHazardData = ({ type }: { type: HazardType }) => {
   useLoadParamsConfig(hazardDomainsConfigState(type), type);
+
+  return null;
+};
+
+const EnsureHazardData = ({ type }) => {
+  useRecoilValue(paramsConfigState(type));
 
   return null;
 };
@@ -22,9 +29,9 @@ const InitHazardData = ({ type }: { type: HazardType }) => {
 const HazardControl = ({ type, children }) => {
   return (
     <Suspense fallback="Loading data...">
-      <InitHazardData type={type} />
+      <EnsureHazardData type={type} />
       <DataGroup group={type}>
-        <Stack spacing={1}>{children}</Stack>
+        <Stack spacing={3}>{children}</Stack>
       </DataGroup>
     </Suspense>
   );
