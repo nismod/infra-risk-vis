@@ -1,4 +1,4 @@
-import { FC, createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 
 export function getParentPath(path: string) {
   if (path === '') {
@@ -20,10 +20,3 @@ export const PathContext = createContext<string>('');
 export function usePath() {
   return useContext(PathContext);
 }
-
-export const SubPath: FC<{ path: string }> = ({ path, children }) => {
-  const parentPath = usePath();
-  const subPath = getSubPath(parentPath, path);
-
-  return <PathContext.Provider value={subPath}>{children}</PathContext.Provider>;
-};

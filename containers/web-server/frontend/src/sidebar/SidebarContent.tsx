@@ -40,6 +40,11 @@ export const sidebarExpandedState = atomFamily({
   default: false,
 });
 
+export const sidebarPathChildrenState = atomFamily({
+  key: 'sidebarPathChildrenState',
+  default: () => [],
+});
+
 export const sidebarPathVisibilityState = selectorFamily<boolean, string>({
   key: 'sidebarPathVisibilityState',
   get:
@@ -62,7 +67,11 @@ export const SidebarContent: FC<{}> = () => {
   }
 
   return (
-    <SidebarRoot visibilityState={sidebarVisibilityToggleState} expandedState={sidebarExpandedState}>
+    <SidebarRoot
+      visibilityState={sidebarVisibilityToggleState}
+      expandedState={sidebarExpandedState}
+      pathChildrenState={sidebarPathChildrenState}
+    >
       <Section path="hazards" title="Hazards">
         <Layer path="fluvial" title="River Flooding">
           <FluvialControl />

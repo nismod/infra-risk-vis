@@ -1,13 +1,13 @@
 import { ArrowRight } from '@mui/icons-material';
 import { Stack } from '@mui/material';
-import { FC, createContext, useContext } from 'react';
+import { FC, Suspense, createContext, useContext, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { RecoilStateFamily } from '@/lib/recoil/types';
 
 import { Accordion, AccordionDetails, AccordionSummary, AccordionTitle, ExpandablePanel } from './ExpandablePanel';
 import { VisibilityToggle } from './VisibilityToggle';
-import { SubPath, usePath } from './paths';
+import { PathContext, getSubPath, usePath } from './paths';
 
 const VisibilityStateContext = createContext<RecoilStateFamily<boolean, string>>(null);
 
@@ -23,6 +23,40 @@ export function useExpandedState(path: string) {
   const expandedState = useContext(ExpandedStateContext);
   return useRecoilState(expandedState(path));
 }
+
+const PathChildrenStateContext = createContext<RecoilStateFamily<string[], string>>(null);
+
+export function usePathChildrenState(path: string) {
+  const pathChildrenState = useContext(PathChildrenStateContext);
+  return useRecoilState(pathChildrenState(path));
+}
+
+function addValueToArray(val: string) {
+  return (arr: string[]) => Array.from(new Set([...arr, val]));
+}
+function removeValueFromArray(val: string) {
+  return (arr: string[]) => [...arr.filter((x) => x !== val)];
+}
+
+function useRegisterChild(parentPath, subPath) {
+  const [, setPathChildren] = usePathChildrenState(parentPath);
+
+  useEffect(() => {
+    setPathChildren(addValueToArray(subPath));
+
+    return () => {
+      setPathChildren(removeValueFromArray(subPath));
+    };
+  }, [subPath, setPathChildren]);
+}
+
+export const SubPath: FC<{ path: string }> = ({ path, children }) => {
+  const parentPath = usePath();
+  const subPath = getSubPath(parentPath, path);
+
+  useRegisterChild(parentPath, path);
+  return <PathContext.Provider value={subPath}>{children}</PathContext.Provider>;
+};
 
 export const Section: FC<{ path: string; title: string }> = ({ path, title, children }) => {
   return (
@@ -86,9 +120,11 @@ export const Layer: FC<{ path: string; title: string; disabled?: boolean }> = ({
 }) => {
   return (
     <SubPath path={path}>
-      <LayerImpl title={title} disabled={disabled}>
-        {children}
-      </LayerImpl>
+      <Suspense fallback="Loading layer data...">
+        <LayerImpl title={title} disabled={disabled}>
+          {children}
+        </LayerImpl>
+      </Suspense>
     </SubPath>
   );
 };
@@ -166,7 +202,16 @@ const LayerImpl: FC<{ title: string; disabled?: boolean }> = ({ title, disabled 
   */
 };
 
-export const SidebarPanel: FC<{ path: string; title: string }> = ({ path, title, children }) => {
+export const SidebarPanel: FC<{ path: string; title: string }> = ({ path, ...otherProps }) => {
+  return (
+    <SubPath path={path}>
+      <SidebarPanelImpl {...otherProps} />
+    </SubPath>
+  );
+};
+
+const SidebarPanelImpl: FC<{ title: string }> = ({ title, children }) => {
+  const path = usePath();
   const [expanded, setExpanded] = useExpandedState(path);
   return (
     <ExpandablePanel title={title} expanded={expanded} onExpanded={setExpanded} actions={null}>
@@ -178,10 +223,13 @@ export const SidebarPanel: FC<{ path: string; title: string }> = ({ path, title,
 export const SidebarRoot: FC<{
   visibilityState: RecoilStateFamily<boolean, string>;
   expandedState: RecoilStateFamily<boolean, string>;
-}> = ({ visibilityState, expandedState, children }) => {
+  pathChildrenState: RecoilStateFamily<string[], string>;
+}> = ({ visibilityState, expandedState, pathChildrenState, children }) => {
   return (
     <VisibilityStateContext.Provider value={visibilityState}>
-      <ExpandedStateContext.Provider value={expandedState}>{children}</ExpandedStateContext.Provider>
+      <ExpandedStateContext.Provider value={expandedState}>
+        <PathChildrenStateContext.Provider value={pathChildrenState}>{children}</PathChildrenStateContext.Provider>
+      </ExpandedStateContext.Provider>
     </VisibilityStateContext.Provider>
   );
 };
