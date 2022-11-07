@@ -5,8 +5,8 @@ import { useRecoilValue } from 'recoil';
 import { selectionState } from '@/lib/data-map/interactions/interaction-state';
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 
-import { DeselectButton } from '@/details/DeselectButton';
-import { SidePanel } from '@/details/SidePanel';
+import { DeselectButton } from '@/details/ui/DeselectButton';
+import { SidePanel } from '@/details/ui/SidePanel';
 
 import { SolutionsSidebarContent } from './SolutionsSidebarContent';
 

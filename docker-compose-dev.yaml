@@ -88,7 +88,7 @@ services:
 
   backend:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.8
+    image: ghcr.io/nismod/gri-backend:0.9
     volumes:
       - ./tileserver/raster/data:/data
     env_file:
@@ -108,7 +108,7 @@ services:
     build:
       context: ./containers/vector
       dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-vector-tileserver-dev:0.7
+    image: ghcr.io/nismod/gri-vector-tileserver-dev:0.10
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config-dev.json:/config.json

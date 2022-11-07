@@ -8,26 +8,20 @@
   },
   "styles": {},
   "data": {
-    "road_edges_class_a": {
-      "mbtiles": "road_edges_class_a.mbtiles"
+    "road_edges_motorway": {
+      "mbtiles": "road_edges_motorway.mbtiles"
     },
-    "road_edges_class_b": {
-      "mbtiles": "road_edges_class_b.mbtiles"
+    "road_edges_trunk": {
+      "mbtiles": "road_edges_trunk.mbtiles"
     },
-    "road_edges_class_c": {
-      "mbtiles": "road_edges_class_c.mbtiles"
+    "road_edges_primary": {
+      "mbtiles": "road_edges_primary.mbtiles"
     },
-    "road_edges_metro": {
-      "mbtiles": "road_edges_metro.mbtiles"
+    "road_edges_secondary": {
+      "mbtiles": "road_edges_secondary.mbtiles"
     },
-    "road_edges_track": {
-      "mbtiles": "road_edges_track.mbtiles"
-    },
-    "rail_edges": {
-      "mbtiles": "rail_edges.mbtiles"
-    },
-    "rail_nodes": {
-      "mbtiles": "rail_nodes.mbtiles"
+    "road_edges_tertiary": {
+      "mbtiles": "road_edges_tertiary.mbtiles"
     },
     "healthsites": {
       "mbtiles": "healthsites.mbtiles"

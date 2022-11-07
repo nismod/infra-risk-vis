@@ -60,14 +60,14 @@ export const NETWORK_LAYERS = [
   'elec_nodes_substation',
   'elec_nodes_demand',
   'rail_edges',
-  'rail_stations',
+  // 'rail_stations',
   'rail_nodes',
-  'road_edges_class_a',
-  'road_edges_class_b',
-  'road_edges_class_c',
-  'road_edges_metro',
-  'road_edges_track',
-  'road_edges_other',
+  'road_edges_motorway',
+  'road_edges_trunk',
+  'road_edges_primary',
+  'road_edges_secondary',
+  'road_edges_tertiary',
+  /*
   'road_bridges',
   'airport_runways',
   'airport_terminals',
@@ -98,6 +98,7 @@ export const NETWORK_LAYERS = [
   'water_waste_nodes_pump',
   'water_waste_nodes_relift',
   'water_waste_nodes_wwtp',
+  */
 ] as const;
 
 export type NetworkLayerType = typeof NETWORK_LAYERS[number];
@@ -169,12 +170,12 @@ export const NETWORKS_METADATA = makeConfig<AssetMetadata, NetworkLayerType>([
     label: 'Railways',
     color: INFRASTRUCTURE_COLORS.railway.css,
   },
-  {
-    id: 'rail_stations',
-    type: 'circle',
-    label: 'Stations',
-    color: INFRASTRUCTURE_COLORS.railway.css,
-  },
+  // {
+  //   id: 'rail_stations',
+  //   type: 'circle',
+  //   label: 'Stations',
+  //   color: INFRASTRUCTURE_COLORS.railway.css,
+  // },
   {
     id: 'rail_nodes',
     type: 'circle',
@@ -182,41 +183,36 @@ export const NETWORKS_METADATA = makeConfig<AssetMetadata, NetworkLayerType>([
     color: INFRASTRUCTURE_COLORS.railway.css,
   },
   {
-    id: 'road_edges_class_a',
+    id: 'road_edges_motorway',
     type: 'line',
     label: 'Roads (Motorway)',
-    color: INFRASTRUCTURE_COLORS.roads_class_a.css,
+    color: INFRASTRUCTURE_COLORS.roads_motorway.css,
   },
   {
-    id: 'road_edges_class_b',
+    id: 'road_edges_trunk',
     type: 'line',
     label: 'Roads (Trunk)',
-    color: INFRASTRUCTURE_COLORS.roads_class_b.css,
+    color: INFRASTRUCTURE_COLORS.roads_trunk.css,
   },
   {
-    id: 'road_edges_class_c',
+    id: 'road_edges_primary',
     type: 'line',
     label: 'Roads (Primary)',
-    color: INFRASTRUCTURE_COLORS.roads_class_c.css,
+    color: INFRASTRUCTURE_COLORS.roads_primary.css,
   },
   {
-    id: 'road_edges_metro',
+    id: 'road_edges_secondary',
     type: 'line',
     label: 'Roads (Secondary)',
-    color: INFRASTRUCTURE_COLORS.roads_metro.css,
+    color: INFRASTRUCTURE_COLORS.roads_secondary.css,
   },
   {
-    id: 'road_edges_track',
+    id: 'road_edges_tertiary',
     type: 'line',
     label: 'Roads (Tertiary)',
     color: INFRASTRUCTURE_COLORS.roads_unknown.css,
   },
-  {
-    id: 'road_edges_other',
-    type: 'line',
-    label: 'Roads (Other)',
-    color: INFRASTRUCTURE_COLORS.roads_unknown.css,
-  },
+  /*
   {
     id: 'road_bridges',
     type: 'circle',
@@ -397,4 +393,5 @@ export const NETWORKS_METADATA = makeConfig<AssetMetadata, NetworkLayerType>([
     label: 'Wastewater (Treament Plant)',
     color: INFRASTRUCTURE_COLORS.water_wastewater.css,
   },
+  */
 ]);

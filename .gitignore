@@ -4,6 +4,7 @@ mounts/raster/
 mounts/vector/
 incoming_data/
 intermediate_data/
+raw_data
 *.zip
 *.tif
 *.aux.xml
@@ -66,3 +67,4 @@ provision.sh
 .vscode
 *.pkl
 *.parquet
+etl/raw_data/*

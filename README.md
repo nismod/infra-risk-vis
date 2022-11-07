@@ -132,7 +132,7 @@ TC_REPROJECTION_METHOD="nearest"
 # Gri Backend Env - for managing entries in the internal API tileserver
 BACKEND_HOST=
 BACKEND_PORT=
-BACKEND_API_KEY=
+API_TOKEN=
 ```
 
 ### Data preperation within Docker

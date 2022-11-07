@@ -60,6 +60,13 @@ def all_datasets(tc_driver_path: str) -> dict:
     driver = get_driver(tc_driver_path, provider=settings.DRIVER_PROVIDER)
     return driver.get_datasets()
 
+def all_datasets(tc_driver_path: str) -> dict:
+    """All datasets in the given database"""
+    settings = get_settings()
+    driver = get_driver(tc_driver_path, provider=settings.DRIVER_PROVIDER)
+    return driver.get_datasets()
+
+
 def singleband(
     tc_driver_path: str,
     keys: Union[Sequence[str], Mapping[str, str]],

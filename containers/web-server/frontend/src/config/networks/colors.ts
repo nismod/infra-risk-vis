@@ -8,10 +8,10 @@ export const INFRASTRUCTURE_COLORS = makeColorConfig({
   railway: '#444',
 
   roads_unknown: '#b2afaa',
-  roads_class_a: '#941339',
-  roads_class_b: '#cb3e4e',
-  roads_class_c: '#8471a8',
-  roads_metro: '#487dbc',
+  roads_motorway: '#941339',
+  roads_trunk: '#cb3e4e',
+  roads_primary: '#8471a8',
+  roads_secondary: '#487dbc',
 
   bridges: '#941339',
 
