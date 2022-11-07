@@ -35,13 +35,13 @@ export const Nav = () => {
           <Typography variant="h6">Data Sources</Typography>
         </NavLink>
         <Divider sx={{ flexGrow: 1 }}></Divider>
-        <Link className="nav-link" to="https://globalresilience.org" target="_blank" rel="noopener noreferrer">
+        <a className="nav-link" href="http://www.globalresilienceindex.org/" target="_blank" rel="noopener noreferrer">
           <img
             height="40"
             src="/logo-grii.png"
             alt="GRII"
           />
-        </Link>
+        </a>
       </Toolbar>
     </AppBar>
   );

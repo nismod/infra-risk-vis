@@ -21,7 +21,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.7
+    image: ghcr.io/nismod/gri-web-server:0.8
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-prod
