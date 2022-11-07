@@ -17,16 +17,20 @@ const TooltipSection = ({ children }) => (
   </Box>
 );
 
+const ViewLayerTooltip = ({ hover }: { hover: InteractionTarget<any> }) => {
+  const { viewLayer } = hover;
+
+  return <>{viewLayer.renderTooltip?.(hover)}</>;
+};
+
 const InteractionGroupTooltip = ({ group }) => {
   const hover = useRecoilValue(hoverState(group));
 
   if (!hasHover(hover)) return null;
 
-  const contents = (
-    isArray(hover)
-      ? hover.map((hoveredObject) => hoveredObject.viewLayer.renderTooltip?.(hoveredObject))
-      : [hover.viewLayer.renderTooltip?.(hover)]
-  ).filter(Boolean);
+  const contents = isArray(hover)
+    ? hover.map((h) => <ViewLayerTooltip key={h.viewLayer.id} hover={h} />)
+    : [<ViewLayerTooltip key={hover.viewLayer.id} hover={hover} />];
 
   if (contents.length === 0) return null;
 
