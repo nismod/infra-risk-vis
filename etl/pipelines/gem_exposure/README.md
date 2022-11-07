@@ -2,11 +2,11 @@
 
 GEM data came in two packages:
 
-- Geopackage of Seismic Exposure per country
+1. Geopackage of Seismic Exposure per country
 
 __NOTE__: This gpkg file was missing a number of features globally - including Morocco, Arunachal Predesh and Kashmir
 
-- CSV of flooding exposure per country
+2. CSV of flooding exposure per country
 
 The above datasets were joined on `WB_A3` (the only common column apart from `WB_NAME`).  
 

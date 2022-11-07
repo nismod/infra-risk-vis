@@ -15,3 +15,17 @@ Download List File -> Generate meta -> generate occurrence (temporally averaged)
 [ Snakemake ]
 
 Zero nodata -> clip north/south -> export to Cloud Optimised GeoTiff
+
+### API Metadata
+
+```json
+{
+	"source_db": "extreme_heat",
+	"global_type": "Hazard", 
+	"domain": "extreme_heat", 
+	"full_name": "Hazard Extreme Heat", 
+	"description": "description", 
+	"license": "license", 
+	"variables": {}
+}
+```
