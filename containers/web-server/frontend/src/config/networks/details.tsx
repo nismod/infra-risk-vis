@@ -181,19 +181,19 @@ export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
     </DetailHeader>
     <IdSubheader id={f.asset_id} />
     <List>
-      <DataItem label="OpenStreetMap ID" value={<a
-          href={`https://www.openstreetmap.org/way/${f.osm_way_id}`}
-          target="_blank"
-          rel="noopener noreferrer">{f.osm_way_id}</a>
-      } />
+      <DataItem
+        label="OpenStreetMap ID"
+        value={
+          <a href={`https://www.openstreetmap.org/way/${f.osm_way_id}`} target="_blank" rel="noopener noreferrer">
+            {f.osm_way_id}
+          </a>
+        }
+      />
       <DataItem label="Length (m)" value={f.length_m} />
       <DataItem label="Width (m)" value={f.width_m} />
       <DataItem label="Lanes" value={f.lanes} />
       <DataItem label="Material" value={f.material} />
-      <DataItem
-        label={`Rehabilitation cost (USD/km)`}
-        value={f.rehab_cost_USD_per_km}
-      />
+      <DataItem label={`Rehabilitation cost (USD/km)`} value={f.rehab_cost_USD_per_km} />
     </List>
   </>
 );
@@ -290,6 +290,9 @@ export const INFRASTRUCTURE_LAYER_DETAILS: Record<NetworkLayerType, DetailsCompo
       water_waste_sewer_pressure: WaterPipelineDetails,
       */
 
+  power_distribution: PowerLineDetails,
+  power_transmission: PowerLineDetails,
+  /*
   elec_edges_high: PowerLineDetails,
   elec_edges_low: PowerLineDetails,
   elec_nodes_pole: PowerJunctionNodeDetails,
@@ -302,4 +305,5 @@ export const INFRASTRUCTURE_LAYER_DETAILS: Record<NetworkLayerType, DetailsCompo
   elec_nodes_hydro: PowerGenerationNodeDetails,
   elec_nodes_solar: PowerGenerationNodeDetails,
   elec_nodes_wind: PowerGenerationNodeDetails,
+  */
 };
