@@ -2,9 +2,6 @@
 
 """
 Script used for ingesting one or more rasters into a terracotta MySQL Database.
-
-The run environment must contain:
-    TC_DRIVER_PATH=mysql://USER:PASSWORD@HOST
 """
 from copy import copy
 import csv
@@ -26,12 +23,16 @@ parser.add_argument(
     type=str,
     choices=[
         "load_csv",
-        "load_json",
         "load_single_categorical",
         "delete_database_entries",
         "drop_database",
     ],
-    help="Type of load operation - load_csv requires input_csv_filepath",
+    help="""Type of load operation - 
+        - `load_csv` Loads all rasters in a CSV file generated from an ETL pipeline, e.g. with the header:  `hazard,metric,path,rcp,epoch,gcm,key`
+        - `load_single_categorical` Loads a single categorical raster (using provided category_map).  Requires: `input_raster_filepath`, `categorical_legend_csv_filepath`, `categorical_csv_label_column`, `categorical_csv_value_column`
+        - `delete_database_entries` Delete all raster entries from a given database (leaving the database empty).  Requires `database_name`
+        - `drop_database` Drop a database and all raster entries contained-within.  Requires `database_name`
+    """,
 )
 parser.add_argument(
     "--input_csv_filepath",
@@ -41,7 +42,7 @@ parser.add_argument(
 parser.add_argument(
     "--input_raster_filepath",
     type=str,
-    help="Absolute path to the raster file being loaded (if load_single_categorical)",
+    help="Absolute path to a categorical raster file being loaded",
 )
 parser.add_argument(
     "--categorical_legend_csv_filepath",
