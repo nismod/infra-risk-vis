@@ -1,22 +1,66 @@
+import React from 'react';
+
+import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
 import { fillColor, pointRadius } from '@/lib/deck/props/style';
+import { makeColorConfig, makeConfig } from '@/lib/helpers';
+
+import { SimpleAssetDetails } from '@/details/features/asset-details';
+import { VectorHoverDescription } from '@/map/tooltip/VectorHoverDescription';
+import { IndustryType } from '@/state/data-selection/industry';
 
 import { assetViewLayer } from '../assets/asset-view-layer';
 import { assetDataAccessFunction } from '../assets/data-access';
-import { COLORS } from '../colors';
+import { AssetMetadata } from '../assets/metadata';
+import { IndustryDetails } from './details';
 
-const industryColor = {
-  cement: COLORS.industry_cement.deck,
-  steel: COLORS.industry_steel.deck,
-};
+export const INDUSTRY_COLORS = makeColorConfig({
+  cement: '#e4cda9',
+  steel: '#5b8cc3',
+});
 
-export function industryViewLayer(industry_type_id) {
+export const INDUSTRY_METADATA = makeConfig<AssetMetadata, IndustryType>([
+  {
+    id: 'cement',
+    type: 'circle',
+    label: 'Industry (Cement)',
+    color: INDUSTRY_COLORS.cement.css,
+  },
+  {
+    id: 'steel',
+    type: 'circle',
+    label: 'Industry (Steel)',
+    color: INDUSTRY_COLORS.steel.css,
+  },
+]);
+
+export function industryViewLayer(industry_type_id: IndustryType) {
+  const { label, color } = INDUSTRY_METADATA[industry_type_id];
+
   return assetViewLayer({
     assetId: industry_type_id,
     metadata: {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(industryColor[industry_type_id])],
+    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(INDUSTRY_COLORS[industry_type_id].deck)],
     customDataAccessFn: assetDataAccessFunction(industry_type_id),
+    renderTooltip: (hover: InteractionTarget<VectorTarget>) => {
+      return React.createElement(VectorHoverDescription, {
+        hoveredObject: hover,
+        label,
+        color,
+        idValue: hover.target.feature.properties.uid,
+      });
+    },
+    renderDetails(selection: InteractionTarget<VectorTarget>) {
+      const feature = selection.target.feature;
+
+      return React.createElement(SimpleAssetDetails, {
+        feature,
+        label,
+        color,
+        detailsComponent: IndustryDetails,
+      });
+    },
   });
 }

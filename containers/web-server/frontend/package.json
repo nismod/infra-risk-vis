@@ -75,7 +75,7 @@
     "raster-init": "./tileserver/raster/ingest.sh ./tileserver/raster",
     "raster": "./tileserver/raster/serve.sh ./tileserver/raster",
     "lint": "eslint src/**/*.{js,jsx}",
-    "generate-client": "openapi --input http://localhost:8888/openapi.json --output ./src/lib/api-client --client fetch --name ApiClient --useOptions"
+    "generate-client": "openapi --input http://localhost:3000/api/openapi.json --output ./src/lib/api-client --client fetch --name ApiClient --useOptions"
   },
   "browserslist": [
     ">0.2%",

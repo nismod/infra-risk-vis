@@ -48,8 +48,7 @@ export const FieldSpecControl: FC<{
               { value: 'fluvial', label: 'River Flooding' },
               { value: 'coastal', label: 'Coastal Flooding' },
               { value: 'cyclone', label: 'Cyclones' },
-              { value: 'extreme_heat_occurrence', label: 'Extreme Heat (Occurrence)' },
-              { value: 'extreme_heat_exposure', label: 'Extreme Heat (Exposure)' },
+              { value: 'extreme_heat', label: 'Extreme Heat' },
             ]}
           />
           <ParamDropdown

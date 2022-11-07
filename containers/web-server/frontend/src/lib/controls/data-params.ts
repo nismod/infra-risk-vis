@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
-export type Param = any;
-export type ParamDomain<PT extends Param = Param> = PT[];
+export type ParamValue = any;
+export type ParamDomain<PT extends ParamValue = ParamValue> = PT[];
 
-export type ParamGroup = Record<string, Param>;
+export type ParamGroup = Record<string, ParamValue>;
 
-export type ParamDependency<PT extends Param, PGT extends ParamGroup> = (params: PGT) => ParamDomain<PT>;
+export type ParamDependency<PT extends ParamValue, PGT extends ParamGroup> = (params: PGT) => ParamDomain<PT>;
 
 export type ParamGroupDomains<PGT extends ParamGroup = ParamGroup> = {
   [K in keyof PGT]: ParamDomain<PGT[K]>;

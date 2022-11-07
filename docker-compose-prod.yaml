@@ -21,7 +21,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.6
+    image: ghcr.io/nismod/gri-web-server:0.8
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-prod
@@ -56,7 +56,7 @@ services:
     build:
       context: ./containers/vector
       dockerfile: Dockerfile-prod
-    image: ghcr.io/nismod/gri-vector-tileserver:0.9
+    image: ghcr.io/nismod/gri-vector-tileserver:0.10
     volumes:
       - ./tileserver/vector/data:/data
     expose:

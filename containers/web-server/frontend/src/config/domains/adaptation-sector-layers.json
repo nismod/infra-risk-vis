@@ -147,7 +147,7 @@
     "sector": "transport",
     "subsector": "rail",
     "asset_type": "junction",
-    "layer_name": "rail_junctions"
+    "layer_name": "rail_nodes"
   },
   {
     "sector": "transport",

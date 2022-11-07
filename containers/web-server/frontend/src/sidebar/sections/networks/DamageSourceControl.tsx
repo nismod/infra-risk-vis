@@ -9,7 +9,11 @@ import { InputSection } from '@/sidebar/ui/InputSection';
 import { LayerStylePanel } from '@/sidebar/ui/LayerStylePanel';
 import { EpochControl } from '@/sidebar/ui/params/EpochControl';
 import { RCPControl } from '@/sidebar/ui/params/RCPControl';
-import { damageSourceState, damageSourceStateEffect, damageTypeState } from '@/state/damage-mapping/damage-map';
+import {
+  damageSourceState,
+  damageSourceStateEffect,
+  damageTypeState,
+} from '@/state/data-selection/damage-mapping/damage-map';
 
 export const DamageSourceControl = () => {
   const [damageSource, setDamageSource] = useRecoilState(damageSourceState);

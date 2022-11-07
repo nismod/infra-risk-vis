@@ -7,14 +7,17 @@ import { labelsLayer } from '@/config/deck-layers/labels-layer';
 import { showLabelsState } from '@/map/layers/layers-state';
 import { isRetinaState } from '@/state/is-retina';
 
-import { buildingLayersState } from './data-layers/buildings';
+import { buildingDensityLayerState } from './data-layers/building-density';
 import { hazardLayerState } from './data-layers/hazards';
 import { healthcareLayersState } from './data-layers/healthcare';
 import { humanDevelopmentLayerState } from './data-layers/human-development';
 import { industryLayersState } from './data-layers/industry';
+import { naturalAssetsLayersState } from './data-layers/natural-assets';
+import { natureVulnerabilityLayersState } from './data-layers/nature-vulnerability';
 import { networkLayersState } from './data-layers/networks';
 import { populationLayerState } from './data-layers/population';
-import { protectedAreasLayerState } from './data-layers/protected-areas';
+import { protectedAreasPointLayerState, protectedAreasPolygonLayerState } from './data-layers/protected-areas';
+import { travelTimeLayerState } from './data-layers/travel-time';
 import { featureBoundingBoxLayerState } from './ui-layers/feature-bbox';
 
 export const viewLayersState = selector<ConfigTree<ViewLayer>>({
@@ -30,12 +33,16 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
 
       get(humanDevelopmentLayerState),
       get(populationLayerState),
+      get(buildingDensityLayerState),
+      get(naturalAssetsLayersState),
+      get(natureVulnerabilityLayersState),
+      get(protectedAreasPolygonLayerState),
+      get(travelTimeLayerState),
       get(hazardLayerState),
-      get(buildingLayersState),
       get(networkLayersState),
       get(industryLayersState),
       get(healthcareLayersState),
-      get(protectedAreasLayerState),
+      get(protectedAreasPointLayerState),
 
       /**
        * UI Layers

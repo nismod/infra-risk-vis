@@ -8,49 +8,32 @@ import { ExpectedDamage, ReturnPeriodDamage } from '@/lib/api-client';
 import { downloadFile, titleCase, unique } from '@/lib/helpers';
 import { useSelect } from '@/lib/hooks/use-select';
 
-import { HAZARD_DOMAINS } from '@/config/hazards/domains';
-
 import { DamageTable } from './DamageTable';
 import { ExpectedDamageChart } from './ExpectedDamageChart';
 import { RPDamageTable } from './RPDamageTable';
 import { ReturnPeriodDamageChart } from './ReturnPeriodDamageChart';
 
+
 const DAMAGES_ORDERING = (() => {
-  const ordering = [];
-  for (const [hazard, { paramDomains }] of Object.entries(HAZARD_DOMAINS)) {
-    if (paramDomains.rcp && paramDomains.epoch) {
-      for (const rcp of paramDomains.rcp) {
-        for (const epoch of paramDomains.epoch) {
-          ordering.push({
-            hazard,
-            rcp,
-            epoch,
-          });
-        }
-      }
+  const ordering = [
+    {
+      hazard: 'river',
+      rcp: 'baseline',
+      epoch: '1980',
     }
-  }
+  ];
   return ordering;
 })();
 
 const RP_ORDERING = (() => {
-  const ordering = [];
-  for (const [hazard, { paramDomains }] of Object.entries(HAZARD_DOMAINS)) {
-    if (paramDomains.returnPeriod && paramDomains.rcp && paramDomains.epoch) {
-      for (const rp of paramDomains.returnPeriod) {
-        for (const rcp of paramDomains.rcp) {
-          for (const epoch of paramDomains.epoch) {
-            ordering.push({
-              hazard,
-              rcp,
-              epoch,
-              rp,
-            });
-          }
-        }
-      }
+  const ordering = [
+    {
+      hazard: 'river',
+      rcp: 'baseline',
+      epoch: '1980',
+      rp: '100',
     }
-  }
+  ];
   return ordering;
 })();
 
@@ -168,9 +151,9 @@ function makeRPDamagesCsv(damages: RPDamageCell[]) {
   );
 }
 
+
 export const DamagesSection = ({ fd }) => {
   const damagesData = orderDamages(prepareExpectedDamages(fd?.damages_expected ?? []));
-  const returnPeriodDamagesData = orderRPDamages(prepareRPDamages(fd?.damages_return_period ?? []));
 
   const hazards = useMemo(() => unique(damagesData.map((d) => d.hazard)), [damagesData]);
   const epochs = useMemo(() => unique(damagesData.map((d) => d.epoch)).sort(), [damagesData]);
@@ -181,6 +164,9 @@ export const DamagesSection = ({ fd }) => {
     () => (selectedHazard ? damagesData.filter((x) => x.hazard === selectedHazard) : null),
     [selectedHazard, damagesData],
   );
+
+
+  const returnPeriodDamagesData = orderRPDamages(prepareRPDamages(fd?.damages_return_period ?? []));
   const selectedRPData = useMemo(
     () =>
       selectedHazard

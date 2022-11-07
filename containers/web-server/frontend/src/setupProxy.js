@@ -9,21 +9,20 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const proxyTable = {
-  '/vector': {
-    target: 'http://localhost:8080',
-    changeOrigin: true,
-    pathRewrite: { '^/vector': '/' },
-  },
+  // '/vector': {
+  //   target: 'http://localhost:8080',
+  //   changeOrigin: true,
+  //   pathRewrite: { '^/vector': '/' },
+  // },
 
-  '/api': {
-    target: 'http://localhost:8888',
-    changeOrigin: true,
-    pathRewrite: { '^/api': '/' },
-  },
+  // '/api': {
+  //   target: 'http://localhost:8888',
+  //   changeOrigin: true,
+  //   pathRewrite: { '^/api': '/' },
+  // },
 
   // connect to production for frontend-only development
 
-  /*
   '/vector': {
     target: 'https://global.infrastructureresilience.org',
     changeOrigin: true,
@@ -35,7 +34,6 @@ const proxyTable = {
     changeOrigin: true,
     secure: false,
   },
-  */
 };
 
 module.exports = function (app) {

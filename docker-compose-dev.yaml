@@ -82,7 +82,7 @@ services:
         "disk_mb=60",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/esa_land_cover/Snakefile"
+        "/opt/etl/pipelines/osm_rail/Snakefile"
       ]
 
   backend:
@@ -107,7 +107,7 @@ services:
     build:
       context: ./containers/vector
       dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-vector-tileserver-dev:0.7
+    image: ghcr.io/nismod/gri-vector-tileserver-dev:0.10
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config-dev.json:/config.json
@@ -145,34 +145,6 @@ services:
         "{\"file_basename\": \"key\", \"type\": \"exposure\", \"subtype\": \"subtype\"}",
         "--database_name",
         "traveltime_to_healthcare"
-      ]
-
-  raster-tile-ingester-categorical:
-    build: ./containers/raster-tile-ingester
-    image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
-    env_file:
-      - ./envs/dev/.raster-tile-ingester.env
-    volumes:
-      - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-      - ./tileserver/raster/data:/data # Must match path in Backend
-      - ./etl/pipelines/esa_land_cover/legend.csv:/opt/legend.csv
-    command:
-      [
-        "load_single_categorical",
-        "--categorical_legend_csv_filepath",
-        "/opt/legend.csv",
-        "--categorical_csv_label_column",
-        "Label",
-        "--categorical_csv_value_column",
-        "Value",
-        "--database_name",
-        "land_cover",
-        "--input_raster_filepath",
-        "/data/land_cover/C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.tif",
-        "--internal_raster_base_path",
-        "/data/land_cover",
-        "--categorical_key_values",
-        "{\"type\":\"land_cover\"}"
       ]
 
   ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name

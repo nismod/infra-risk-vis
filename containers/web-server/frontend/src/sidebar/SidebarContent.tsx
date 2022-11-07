@@ -11,8 +11,9 @@ import { IndustrySection } from './sections/industry/IndustrySection';
 import { NaturalAssetsSection } from './sections/natural-assets/NaturalAssetsSection';
 import { NetworksSection } from './sections/networks/NetworksSection';
 import { PopulationSection } from './sections/population/PopulationSection';
-import { HumanVulnerabilitySection } from './sections/vulnerability/HumanVulnerabilitySection';
+import { HumanDevelopmentSection } from './sections/vulnerability/HumanDevelopmentSection';
 import { NatureVulnerabilitySection } from './sections/vulnerability/NatureVulnerabilitySection';
+import { TravelTimeSection } from './sections/vulnerability/TravelTimeSection';
 
 const viewLabels = {
   hazard: 'Hazard',
@@ -42,7 +43,8 @@ export const SidebarContent: FC<{}> = () => {
           <NaturalAssetsSection />
 
           {/* Vulnerability sections */}
-          <HumanVulnerabilitySection />
+          <HumanDevelopmentSection />
+          <TravelTimeSection />
           <NatureVulnerabilitySection />
         </>
       );
