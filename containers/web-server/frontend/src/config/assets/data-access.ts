@@ -6,8 +6,21 @@ import { sumOrNone } from '@/lib/helpers';
 
 import { HAZARD_TYPES } from '../hazards/metadata';
 
+const hazardStringLookup = {
+  fluvial: 'river',
+};
+function lookupHazard(hazard: string) {
+  return hazardStringLookup[hazard] ?? hazard;
+}
+
+function lookupRcp(rcp: string) {
+  if (rcp == null) return rcp;
+  if (rcp === 'baseline') return rcp;
+  return `rcp${rcp.replace(/\./g, 'p')}`;
+}
+
 function getExpectedDamageKey(direct: boolean, hazard: string, rcp: string, epoch: number) {
-  return `${direct ? 'ead' : 'eael'}__${hazard}__rcp_${rcp}__epoch_${epoch}__conf_None`;
+  return `${direct ? 'ead' : 'eael'}__${lookupHazard(hazard)}__rcp_${lookupRcp(rcp)}__epoch_${epoch}`;
 }
 
 //TODO: not all hazard will have damages calculated

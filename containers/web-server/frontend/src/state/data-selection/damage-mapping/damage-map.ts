@@ -1,19 +1,22 @@
+import produce from 'immer';
 import _ from 'lodash';
 import { atom, selector } from 'recoil';
 
+import { StateEffect } from '@/lib/recoil/state-effects/types';
+
 import { HAZARD_DOMAINS_CONFIG } from '@/config/hazards/domains';
-import { paramOptionsState, paramValueState } from '@/state/data-params';
-import { hazardToggleState } from '@/state/data-selection/hazards/hazard-selection';
-import { networksStyleState } from '@/state/data-selection/networks/networks-style';
+import { sidebarVisibilityToggleState } from '@/sidebar/SidebarContent';
+import { paramsState } from '@/state/data-params';
+import { viewState } from '@/state/view';
 
 export const showDamagesState = selector({
   key: 'showDamagesState',
-  get: ({ get }) => get(networksStyleState) === 'damages',
+  get: ({ get }) => get(viewState) === 'risk', // get(networksStyleState) === 'damages',
 });
 
 export const damageSourceState = atom({
   key: 'damageSourceState',
-  default: 'all',
+  default: 'fluvial',
 });
 
 export const damageTypeState = atom({
@@ -21,20 +24,27 @@ export const damageTypeState = atom({
   default: 'direct',
 });
 
-export const damageSourceStateEffect = ({ get, set }, damageSource) => {
+const syncHazardsWithDamageSourceStateEffect = ({ get, set }, damageSource: string) => {
+  _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
+    set(sidebarVisibilityToggleState(`hazards/${group}`), group === damageSource);
+  });
+};
+
+export const damageSourceStateEffect: StateEffect<string> = ({ get, set }, damageSource) => {
   syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource);
 
   if (damageSource !== 'all') {
-    const damageSourceReturnPeriodDomain = get(paramOptionsState({ group: damageSource, param: 'rp' }));
+    const state = get(paramsState(damageSource));
+
+    const damageSourceReturnPeriodDomain = state['rp'].options;
     const topReturnPeriod = damageSourceReturnPeriodDomain[damageSourceReturnPeriodDomain.length - 1];
 
     // CAUTION: this won't resolve the dependencies between data params if any depend on the return period
-    set(paramValueState({ group: damageSource, param: 'rp' }), topReturnPeriod);
+    set(
+      paramsState(damageSource),
+      produce(state, (draft) => {
+        draft['rp'].value = topReturnPeriod;
+      }),
+    );
   }
 };
-
-function syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource) {
-  _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
-    set(hazardToggleState(group), group === damageSource);
-  });
-}

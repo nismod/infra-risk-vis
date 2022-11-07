@@ -18,6 +18,7 @@ import {
 } from './sections/hazards/HazardsControl';
 import { IndustryControl } from './sections/industry/IndustryControl';
 import { NetworkControl } from './sections/networks/NetworkControl';
+import { RiskSection } from './sections/risk/RiskSection';
 import { HdiControl } from './sections/vulnerability/HdiControl';
 import { TravelTimeControl } from './sections/vulnerability/TravelTimeControl';
 import { WdpaControls } from './sections/vulnerability/WdpaControl';
@@ -51,12 +52,6 @@ export const sidebarPathVisibilityState = selectorFamily<boolean, string>({
       );
     },
 });
-
-const OnlyInView: FC<{ view: string }> = ({ view, children }) => {
-  const currentView = useRecoilValue(viewState);
-
-  return currentView === view ? <>{children}</> : null;
-};
 
 export const SidebarContent: FC<{}> = () => {
   const view = useRecoilValue(viewState);
@@ -121,11 +116,11 @@ export const SidebarContent: FC<{}> = () => {
           </Layer>
         </Section>
       </Section>
-      <OnlyInView view="risk">
+      {view === 'risk' && (
         <SidebarPanel path="risk" title="Risk">
-          {/* TODO: RiskControl... */}
+          <RiskSection />
         </SidebarPanel>
-      </OnlyInView>
+      )}
     </SidebarRoot>
   );
 };
