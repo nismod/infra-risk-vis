@@ -1,23 +1,11 @@
 import { FC, useCallback } from 'react';
-import reactStringReplace from 'react-string-replace';
 
 import { ViewLayer } from '@/lib/data-map/view-layers';
+import { formatAbbreviations } from '@/lib/react/format-abbreviations';
 
 import { HAZARDS_METADATA, HAZARD_COLOR_MAPS, HazardType } from '@/config/hazards/metadata';
 
 import { RasterLegend } from '../RasterLegend';
-
-function formatAbbreviations(label, abbreviations) {
-  for (let [key, value] of Object.entries(abbreviations)) {
-    label = reactStringReplace(label, key, (match, i) => (
-      <abbr key={match + i} title={value as string}>
-        {key}
-      </abbr>
-    ));
-  }
-
-  return label;
-}
 
 export const HazardLegend: FC<{ viewLayer: ViewLayer<{ hazardType: HazardType }> }> = ({ viewLayer }) => {
   const {

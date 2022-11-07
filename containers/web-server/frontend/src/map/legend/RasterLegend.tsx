@@ -14,14 +14,14 @@ export const RasterLegend: FC<{
   colorMap: RasterColorMap;
   getValueLabel: (x: any) => string;
 }> = ({ label, description, colorMap: { scheme, range }, getValueLabel }) => {
-  const { error, loading, colorMapValues } = useRasterColorMapValues(scheme, range);
+  const colorMapValues = useRasterColorMapValues(scheme, range);
 
   return (
     <GradientLegend
       label={label}
       description={description}
       range={range}
-      colorMapValues={!(error || loading) ? colorMapValues : null}
+      colorMapValues={colorMapValues}
       getValueLabel={getValueLabel}
     />
   );

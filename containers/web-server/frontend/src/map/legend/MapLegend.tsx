@@ -1,12 +1,17 @@
 import { Box, Divider, Paper, Stack } from '@mui/material';
-import { FC } from 'react';
+import { FC, Fragment, Suspense } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { ColorMap, FormatConfig } from '@/lib/data-map/view-layers';
 
 import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
 
+import { GradientLegend } from './GradientLegend';
 import { VectorLegend } from './VectorLegend';
+
+const LegendLoading = () => {
+  return <GradientLegend label="Loading..." colorMapValues={null} range={[0, 1]} getValueLabel={() => ''} />;
+};
 
 export const MapLegend: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
@@ -26,7 +31,11 @@ export const MapLegend: FC<{}> = () => {
       // for raster layers, use the renderLegend() method of the view layer
       const layerLegend = viewLayer.renderLegend?.();
       if (layerLegend) {
-        rasterLegends.push(layerLegend);
+        rasterLegends.push(
+          <Fragment key={viewLayer.id}>
+            <Suspense fallback={<LegendLoading />}>{layerLegend}</Suspense>
+          </Fragment>,
+        );
       }
     } else {
       const { colorMap } = viewLayer.styleParams ?? {};
@@ -56,12 +65,14 @@ export const MapLegend: FC<{}> = () => {
   return rasterLegends.length || Object.keys(vectorLegendConfigs).length ? (
     <Paper>
       <Box p={1} maxWidth={270}>
-        <Stack gap={0.3} divider={<Divider />}>
-          {rasterLegends}
-          {Object.entries(vectorLegendConfigs).map(([legendKey, { colorMap, formatConfig }]) => (
-            <VectorLegend key={legendKey} colorMap={colorMap} legendFormatConfig={formatConfig} />
-          ))}
-        </Stack>
+        <Suspense fallback={'Loading legend...'}>
+          <Stack gap={0.3} divider={<Divider />}>
+            {rasterLegends}
+            {Object.entries(vectorLegendConfigs).map(([legendKey, { colorMap, formatConfig }]) => (
+              <VectorLegend key={legendKey} colorMap={colorMap} legendFormatConfig={formatConfig} />
+            ))}
+          </Stack>
+        </Suspense>
       </Box>
     </Paper>
   ) : null;

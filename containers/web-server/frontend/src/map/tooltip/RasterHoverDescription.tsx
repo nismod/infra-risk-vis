@@ -28,7 +28,7 @@ export const RasterHoverDescription: FC<RasterHoverDescriptionProps> = ({
   label,
   formatValue,
 }) => {
-  const { colorMapValues } = useRasterColorMapValues(scheme, range);
+  const colorMapValues = useRasterColorMapValues(scheme, range);
   const rasterValueLookup = useRasterColorMapLookup(colorMapValues);
 
   const colorString = `rgb(${color[0]},${color[1]},${color[2]})`;
