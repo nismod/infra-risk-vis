@@ -1,12 +1,7 @@
-import { Grid } from '@mui/material';
-import { Children } from 'react';
+import { Stack } from '@mui/material';
 
 export const InputRow = ({ children }) => (
-  <Grid container spacing={1}>
-    {Children.map(children, (child) => (
-      <Grid item xs>
-        {child}
-      </Grid>
-    ))}
-  </Grid>
+  <Stack direction="row" spacing={1}>
+    {children}
+  </Stack>
 );

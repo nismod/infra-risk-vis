@@ -1,15 +1,52 @@
 import { ArrowRight } from '@mui/icons-material';
 import {
-  Accordion,
-  AccordionDetails,
   AccordionDetailsProps,
   AccordionProps,
-  AccordionSummary,
   AccordionSummaryProps,
   Box,
+  Accordion as MuiAccordion,
+  AccordionDetails as MuiAccordionDetails,
+  AccordionSummary as MuiAccordionSummary,
   Typography,
 } from '@mui/material';
+import { styled } from '@mui/styles';
 import { FC, ReactChild } from 'react';
+
+export const Accordion = styled(MuiAccordion)({
+  pointerEvents: 'auto',
+  marginBottom: 1,
+  borderRadius: 1,
+  overflow: 'hidden',
+});
+
+export const AccordionSummary = styled(MuiAccordionSummary)({
+  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
+    transform: 'rotate(90deg)',
+  },
+  flexDirection: 'row-reverse', // this puts the expand icon to the left of the summary bar
+  '& .MuiAccordionSummary-content': {
+    marginTop: '0',
+    marginBottom: '0',
+  },
+  paddingRight: '5px',
+  paddingLeft: '5px',
+  paddingTop: '4px',
+  paddingBottom: '4px',
+  minHeight: '40px',
+});
+
+export const AccordionDetails = styled(MuiAccordionDetails)({});
+
+export const AccordionTitle = ({ title, actions }) => {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Typography>{title}</Typography>
+      </Box>
+      <Box>{actions}</Box>
+    </Box>
+  );
+};
 
 export const ExpandablePanel: FC<{
   expanded: boolean;
@@ -36,43 +73,25 @@ export const ExpandablePanel: FC<{
   return (
     <Accordion
       disabled={disabled}
-      disableGutters
-      square // clears the original border radius so that we can set our own
       expanded={allowExpand && expanded}
       onChange={(e, expanded) => onExpanded(expanded)}
-      sx={{
-        pointerEvents: 'auto',
-        marginBottom: 1,
-        borderRadius: 1,
-        overflow: 'hidden',
-      }}
+      disableGutters
       TransitionProps={{ unmountOnExit: true }}
       {...AccordionProps}
     >
       <AccordionSummary
         sx={{
-          '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-            transform: 'rotate(90deg)',
-          },
           '& .MuiAccordionSummary-content': {
-            marginY: '2px',
+            marginY: '0',
           },
-          paddingX: '2px',
-          flexDirection: 'row-reverse', // this puts the expand icon to the left of the summary bar
+          paddingX: '0',
         }}
-        expandIcon={allowExpand ? <ArrowRight /> : null}
+        expandIcon={<ArrowRight color={allowExpand ? 'action' : 'disabled'} />}
         {...AccordionSummaryProps}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography>{title}</Typography>
-          </Box>
-          <Box>{actions}</Box>
-        </Box>
+        <AccordionTitle title={title} actions={actions} />
       </AccordionSummary>
-      <AccordionDetails sx={{ padding: 0 }} {...AccordionDetailsProps}>
-        {children}
-      </AccordionDetails>
+      <AccordionDetails {...AccordionDetailsProps}>{children}</AccordionDetails>
     </Accordion>
   );
 };

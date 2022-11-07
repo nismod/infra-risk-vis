@@ -10,6 +10,7 @@ export interface VisibilityToggleProps {
 export const VisibilityToggle: FC<VisibilityToggleProps> = ({ visibility, onVisibility }) => {
   return (
     <IconButton
+      size="small"
       title={visibility ? 'Hide layer' : 'Show layer'}
       onClick={(e) => {
         onVisibility(!visibility);
