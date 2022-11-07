@@ -64,5 +64,10 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
         viewLayer: this,
       });
     },
+    renderTooltip(hover: InteractionTarget<RasterTarget>) {
+      return React.createElement(HazardHoverDescription, {
+        hoveredObject: hover,
+      });
+    },
   };
 }

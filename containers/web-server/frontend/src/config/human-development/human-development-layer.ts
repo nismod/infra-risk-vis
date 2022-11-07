@@ -14,6 +14,7 @@ import { toLabelLookup } from '@/lib/helpers';
 import { SimpleAssetDetails } from '@/details/features/asset-details';
 
 import { SOURCES } from '../sources';
+import { HdiHoverDescription } from './HdiHoverDescription';
 import { getHumanDevelopmentDataFormats } from './data-formats';
 import { HDI_REGION_LEVEL_DETAILS } from './details';
 import { HDI_REGION_LEVEL_LABELS, HdiRegionLevel, HdiVariableType } from './metadata';
@@ -104,6 +105,12 @@ export function humanDevelopmentLayer(regionLevel: HdiRegionLevel, variable: Hdi
         detailsComponent,
         feature: feature,
         label: `Human Development (${regionLevelLabel})`,
+      });
+    },
+
+    renderTooltip(hover: InteractionTarget<VectorTarget>) {
+      return React.createElement(HdiHoverDescription, {
+        hoveredObject: hover,
       });
     },
   };
