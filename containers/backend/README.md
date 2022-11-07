@@ -4,7 +4,9 @@ Server app, written in Python, includes database definition, etl and Tileserver.
 
 Features API leverages PostGres
 
-Tiles API leverages MySQL (until terracotta releases PostGres support officially)
+Tiles API leverages Terracotta Python API and MySQL.
+
+Tiles must be loaded sperately - there are no endpoints for ingesting data at present.
 
 ## Installation / Build
 
@@ -27,6 +29,7 @@ Outline of dependencies:
 ## Configuration
 
 Environment variables:
+
 - use `.env` to define environment variables
 - use [`PG*`](https://www.postgresql.org/docs/current/libpq-envars.html) to
   define database connection details. See `.env.example` for an example
@@ -34,13 +37,14 @@ Environment variables:
 ```
 PYTHONPATH=/code/backend
 # Features API
-PGDATABASE=jamaica
-PGUSER=docker
-PGPASSWORD=docker
-PGHOST=localhost
+PGDATABASE=
+PGUSER=
+PGPASSWORD=
+PGHOST=
+
 # Tiles API
-RASTER_BASE_PATH=/data
-TC_DRIVER_PATH=mysql://foo:bar@tiles-db/db
+RASTER_BASE_PATH=/data # Path at-which raster tiles can be found (must match the MySQL Tiles-db loaded path)
+TC_DRIVER_PATH=mysql://foo:bar@tiles-db/db # Tiles-db MySQL Host
 TC_SQL_USER=foo
 TC_SQL_PASSWORD=bar
 TC_ALLOWED_ORIGINS_METADATA='["*"]'
@@ -48,6 +52,9 @@ TC_ALLOWED_ORIGINS_TILES='["*"]'
 TC_PNG_COMPRESS_LEVEL=0
 TC_RESAMPLING_METHOD="nearest"
 TC_REPROJECTION_METHOD="nearest"
+
+API_TOKEN= # API token is only required for mutation operation.
+DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\"}' # Valid JSON of a mapping between front-end DOMAIN values and the database in-which the data is stored.
 ```
 
 ### Tileserver
@@ -64,23 +71,57 @@ Tileserver also provides a meta store for information about each tile database, 
 
 #### Categorical Data
 
-These types of raster are supported.  Categorical colormaps can either be included in the `config.py`, or passed with each tile request, as per the terracotta documentation:  https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
+Categorical rasters are supported.  Categorical colormaps can either be included in the `config.py`, or passed with each tile request, as per the terracotta documentation:  https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
 
-__NOTE__: Only `{pixel :(RGBA)}` explicit color maps are supported.
+__NOTE__: Only `{pixel :(RGBA)}` explicit color maps are supported in either the request or `config,py`
+
+If included in `config.py` the key must match an existing MySQL database, with pre-loaded categorical raster(s).
+
+e.g. for a `land_cover` database the entries would be similar to the following:
+
+```json
+CATEGORICAL_COLOR_MAPS = {
+    "land_cover": {
+        0: (0, 0, 0, 255),
+        10: (255, 255, 100, 255),
+        11: (255, 255, 100, 255),
+    }
+}
+```
+
+__NOTE__: Large rasters can fail to load due to dropped MySQL connections to Cloud-hosts after metadata creation.  This appears to be a bug with the underlying library.  The fix to-date has been to load them locally and subsequently push the MySQL database to the Cloud host.
 
 #### Adding a Source to the Tileserver metastore
 
-POST the following JSON (adapt as required for the source) to: `http://backend-host:8080/tiles/sources`
+1. Add the source to the domain:mysqldatabase mapping in the config (which is loaded from the environment as json):
 
-__NOTE__: Also Add the entry into `domain:DB` map in backend/config.py.  This is an interim measure until we can get the UI querying the domain from API
-
-
-```
-DOMAIN_TO_DB_MAP = {
+```json
+{
     "fluvial": "aqueduct",
     "coastal": "aqueduct",
     "extreme_heat": "extreme_heat",
     "cyclone": "cyclone",
+}
+```
+
+E.g. in the environment one would add the following:
+
+```
+DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
+```
+
+2. `POST` metadata about the raster to: `http://backend-host:8080/tiles/sources`.  Examples of the payload are show below.
+
+
+```json
+{
+  "source_db": "aqueduct", # the MySQL database the source was ingested-into
+  "global_type": "Hazard", # The global hazard type listed for the source tiles
+  "domain": "fluvial", # The domain within the UI that the hazard maps-into
+  "full_name": "Hazard Aqueduct - Fluvial", # Currently for internal description only
+  "description": "description", # Currently for internal description only
+  "license": "license", # Currently for internal description only
+  "variables": {} # Currently for internal description only
 }
 ```
 
@@ -89,13 +130,13 @@ DOMAIN_TO_DB_MAP = {
 ```json
 [
 	{
-		"source_db": "aqueduct", # the MySQL database the source was ingested-into
-		"global_type": "Hazard", # The global hazard type listed for the source tiles
-		"domain": "fluvial", # The domain within the UI that the hazard maps-into
-		"full_name": "Hazard Aqueduct - Fluvial", # Currently for internal description only
-		"description": "description", # Currently for internal description only
-		"license": "license", # Currently for internal description only
-		"variables": {} # Currently for internal description only
+		"source_db": "aqueduct",
+		"global_type": "Hazard",
+		"domain": "fluvial",
+		"full_name": "Hazard Aqueduct - Fluvial",
+		"description": "description",
+		"license": "license",
+		"variables": {}
 	},
 	{
 		"source_db": "aqueduct",

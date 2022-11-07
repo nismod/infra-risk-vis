@@ -15,22 +15,43 @@ parser.add_argument(
 
 
 def main(
-    csv_fpath, value_col="Value", red_col="R", green_col="G", blue_col="B", alpha=255
+    csv_fpath,
+    value_col="Value",
+    red_col="R",
+    green_col="G",
+    blue_col="B",
+    alpha=255,
+    include_names=True,
+    name_col="Label",
 ):
     with open(csv_fpath, mode="r", encoding="utf-8-sig") as csvfile:
         reader = csv.DictReader(csvfile)
         output = {}
         for line in reader:
-            output[int(line[value_col])] = (
-                int(line[red_col]),
-                int(line[green_col]),
-                int(line[blue_col]),
-                alpha,
-            )
+            if include_names is True:
+                value = {
+                    "name": line[name_col],
+                    "color": (
+                        int(line[red_col]),
+                        int(line[green_col]),
+                        int(line[blue_col]),
+                        alpha,
+                    ),
+                }
+            else:
+                value = (
+                    int(line[red_col]),
+                    int(line[green_col]),
+                    int(line[blue_col]),
+                    alpha,
+                )
+            output[int(line[value_col])] = value
     return output
 
 
 if __name__ == "__main__":
     args = parser.parse_args()
     output = main(args.csv_fpath)
-    print(output)
+    with open("landcover.json", "w") as fptr:
+        json.dump(output, fptr)
+    print(json.dumps(output))
