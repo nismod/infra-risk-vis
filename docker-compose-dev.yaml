@@ -54,6 +54,7 @@ services:
       - 3306:3306
     volumes:
       - ./tileserver/raster/db:/var/lib/mysql
+      - ./backup:/backup
 
   pgadmin:
     image: dpage/pgadmin4:latest

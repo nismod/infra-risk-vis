@@ -428,6 +428,9 @@ if __name__ == "__main__":
     total_expected_damages = 0
     for root, dirs, files in os.walk(network_layer.path, topdown=False):
         for file in files:
+            if ".geoparquet" not in file:
+                print("skipping non parquet file: ", file)
+                continue
             pq_fpath = os.path.join(root, file)
             print(
                 f"{datetime.now().isoformat()} - Processing {os.path.basename(pq_fpath)}"
