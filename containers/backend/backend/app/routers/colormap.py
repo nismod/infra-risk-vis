@@ -34,7 +34,15 @@ async def get_colormap(
     num_values: int = 255,
 ) -> schemas.ColorMap:
     """
-    Retrieve colormap
+    Retrieve colormap values.  e.g. `colormap?colormap=reds&stretch_range=[0,10]`
+
+    ::param colormap str The name of the colormap, e.g. `colormap=reds`
+
+    ::param stretch_range iterable The url-encoded stretch-range over-which the colors should be generated
+
+        e.g. `stretch_range=[0,10]`
+
+    ::kwarg num_values int Number of values to generate in the colormap
     """
     logger.debug(
         "performing %s, using %s, %s, %s",

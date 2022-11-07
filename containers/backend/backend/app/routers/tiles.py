@@ -295,7 +295,31 @@ async def get_tile(
     db: Session = Depends(get_db),
 ):
     """
-    This route does not work in a FastAPI thread pool environment (i.e. when not async)
+    Serves XYZ Raster Tiles with the given colormap / stretch range or explicit color map for categorical data.
+
+    ::param keys str A string containing the url-encoded keys which address the required raster.
+
+        This string is constructed as-per Terracotta URL requests, e.g: `aqueduct/gsm1/1980/baseline`
+
+        Information about datasets available, their associated keys and order can be found using the `/tiles/sources/21/domains` endpoint.
+
+    ::param tile_z int Tile Z address
+    ::param tile_x int Tile X address
+    ::param tile_y int Tile Y address
+
+    ::kwarg colormap str A string representing the colormap to be used to render the tile.  Colormaps can be access separately through the `/colormap` endpoint
+
+        e.g. `colormap=reds`
+
+    ::kwarg stretch_range iterable The range over-which to stretch the pixel values
+
+        e.g. `stretch_range=[0,10]`
+
+    ::kwarg explicit_color_map str A categorical colormap `{pixel_value: (R,G,B,A)}` to be used with a given categorical data-source.
+
+        __NOTE__: `colormap` arg must be set to "explicit" in order to use `explicit_color_map`
+
+        .e.g colormap=explicit&explicit_color_map="{\"0\": (0,0,0,255), "1": 0,0,255,255, "2": 0,255,255,255, "3": 255,255,255,255}"
     """
     logger.debug(
         "tile path %s, colormap: %s, stretch_range: %s, explicit_color_map: %s",

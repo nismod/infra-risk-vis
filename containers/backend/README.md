@@ -1,34 +1,32 @@
-# API backend
+# GRI Infra-Risk-Vis API
 
-Server app, written in Python, includes database definition, etl and Tileserver.
+REST API, written in Python, includes database definition, etl and Tileserver.
 
-Features API leverages PostGres
+Features API leverages PostGres (+PostGIS)
 
 Tiles API leverages Terracotta Python API and MySQL.
 
-Tiles must be loaded sperately - there are no endpoints for ingesting data at present.
+Tiles must be loaded separately - there are no endpoints for ingesting data at present.
 
 ## Installation / Build
 
-`Dockerfile` shows example setup. See
-[docs](https://pipenv.pypa.io/en/latest/basics/#pipenv-and-docker-containers)
-for how to build venv and run in a more production-oriented way.
+### Docker
 
-Outline of dependencies:
-- system `python` and `pip` (e.g. `apt install python3 python3-pip` on Ubuntu)
-- `pipenv` or `pip` to manage dependencies (e.g. `pip install pipenv`)
-- optionally [`pyenv`](https://github.com/pyenv/pyenv) to provide alternative
-  version to system python
-- `pyproject.toml` defines python package dependencies
-  - includes editable install of `backend` for this application as a package, as
-    minimally configured in `setup.py`
-- system library dependencies of python packages include
-  `libgdal-dev libgeos-dev libpq-dev libproj-dev`
+```bash
+docker-compose -f docker-compose-[dev / prod / deploy].yaml build backend
+```
 
+### Running Locally
+
+```bash
+cd containers/backend/backend
+uvicorn app.main:app --port 8888 --reload
+```
 
 ## Configuration
 
 Environment variables:
+
 
 - use `.env` to define environment variables
 - use [`PG*`](https://www.postgresql.org/docs/current/libpq-envars.html) to
@@ -53,7 +51,7 @@ TC_PNG_COMPRESS_LEVEL=0
 TC_RESAMPLING_METHOD="nearest"
 TC_REPROJECTION_METHOD="nearest"
 
-API_TOKEN= # API token is only required for mutation operation.
+API_TOKEN= # API token is only required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
 DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\"}' # Valid JSON of a mapping between front-end DOMAIN values and the database in-which the data is stored.
 ```
 
@@ -69,9 +67,13 @@ __NOTE__: TC_DRIVER_PATH is not used internally - for Terracotta the path is bui
 
 Tileserver also provides a meta store for information about each tile database, with associated CRUD operations for metadata management.
 
+#### Colormaps
+
+Colormaps for use with Terracotta can be generated using the `/colormap` endpoint.
+
 #### Categorical Data
 
-Categorical rasters are supported.  Categorical colormaps can either be included in the `config.py`, or passed with each tile request, as per the terracotta documentation:  https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
+Categorical rasters are supported.  Categorical colormaps can either be included in the `config.py`, or passed with each tile request, as per the Terracotta documentation:  https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
 
 __NOTE__: Only `{pixel :(RGBA)}` explicit color maps are supported in either the request or `config,py`
 
