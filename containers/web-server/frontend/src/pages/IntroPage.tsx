@@ -134,13 +134,23 @@ export const IntroPage = () => (
 
             <p>
 
-            This builds on previous research and development funded by UK
-            AID through the UK Foreign and Commonwealth Development Office
-            (FCDO) as part of a project with the Government of Jamaica (GoJ)
-            under the Coalition for Climate Resilient Investment&rsquo;s (CCRI)
-            work on "Systemic Resilience" in collaboration with the Green
-            Climate Fund, and also through the High-Volume Transport Applied
-            Research project.
+            This builds on previous research and development funded by UK AID
+            through the UK Foreign and Commonwealth Development Office (FCDO) as
+            part of a project with the Government of Jamaica (GoJ) under the
+            Coalition for Climate Resilient Investment&rsquo;s (CCRI) work on
+            "Systemic Resilience" in collaboration with the Green Climate Fund,
+            and also through the High-Volume Transport Applied Research project.
+
+            </p>
+            <p>
+
+            Similarly, earlier versions of the tool piloted in Argentina and
+            South-East Asia were funded by the Disaster Risk Financing and
+            Insurance Program (DRFIP) of the World Bank with support from the
+            Japan—World Bank Program for Mainstreaming DRM in Developing
+            Countries, which is financed by the Government of Japan and managed
+            by the Global Facility for Disaster Reduction and Recovery (GFDRR)
+            through the Tokyo Disaster Risk Management Hub.
 
             </p>
 
