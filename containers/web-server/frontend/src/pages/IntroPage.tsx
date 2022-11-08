@@ -50,39 +50,72 @@ export const IntroPage = () => (
         <Grid item xs={12}>
           <TextBox sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
             <p>
-              The research, analysis and development has been led by researchers in the&nbsp;
-              <a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
-                Oxford Programme for Sustainable Infrastructure Systems
+
+              The research, analysis and development has been led by researchers
+              in the <a href="https://opsis.eci.ox.ac.uk/" target="_blank"
+              rel="noopener noreferrer"> Oxford Programme for Sustainable
+              Infrastructure Systems</a> at the University of Oxford as part of
+              the <a href="http://www.globalresilienceindex.org/"
+              target="_blank" rel="noopener noreferrer">Global Resilience Index
+              Initiative</a>.
+
+            </p>
+
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem />}
+              justifyContent="center"
+              alignItems="center"
+              spacing={2}
+            >
+              <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
+                <img
+                  height="100"
+                  src="/logo-opsis.png"
+                  alt="Oxford Programme for Sustainable Infrastructure Systems"
+                />
               </a>
-              , University of Oxford as part of the Global Resilience Index
-              Initiative.
-            </p>
-            <p>
-              <Stack
-                direction="row"
-                divider={<Divider orientation="vertical" flexItem />}
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
-              >
-                <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
-                  <img
-                    height="120"
-                    src="/logo-opsis.png"
-                    alt="Oxford Programme for Sustainable Infrastructure Systems"
-                  />
-                </a>
 
 
-                <a href="http://www.globalresilienceindex.org/" target="_blank" rel="noopener noreferrer">
-                  <img
-                    height="100"
-                    src="/logo-grii.png"
-                    alt="Global Resilience Index Initiative"
-                  />
-                </a>
-              </Stack>
-            </p>
+              <a href="http://www.globalresilienceindex.org/" target="_blank" rel="noopener noreferrer">
+                <img
+                  height="80"
+                  src="/logo-grii.png"
+                  alt="Global Resilience Index Initiative"
+                />
+              </a>
+            </Stack>
+
+            <Typography variant="h2">GRII Partners</Typography>
+
+
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem />}
+              spacing={2}
+              sx={{mb:2}}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <a href="https://ukcgfi.org/" target="_blank" rel="noopener noreferrer">
+                <img height="60" src="/logo-cgfi.png" alt="CGFI" />
+              </a>
+              <a href="https://resilientinvestment.org/" target="_blank" rel="noopener noreferrer">
+                <img height="80" src="/logo-ccri.png" alt="CCRI" />
+              </a>
+              <a href="https://www.cdri.world/" target="_blank" rel="noopener noreferrer">
+                <img height="70" src="/logo-cdri.png" alt="CDRI" />
+              </a>
+              <a href="https://www.globalquakemodel.org/who-we-are" target="_blank" rel="noopener noreferrer">
+                <img height="60" src="/logo-gem.png" alt="GEM" />
+              </a>
+              <a href="https://www.insdevforum.org/" target="_blank" rel="noopener noreferrer">
+                <img height="40" src="/logo-idf.png" alt="IDF" />
+              </a>
+              <a href="https://www.undrr.org/" target="_blank" rel="noopener noreferrer">
+                <img height="50" src="/logo-undrr.png" alt="UNDRR" />
+              </a>
+            </Stack>
 
             <Typography variant="h2">Funding and support</Typography>
 
@@ -115,9 +148,6 @@ export const IntroPage = () => (
               justifyContent="center"
               alignItems="center"
             >
-              <a href="https://ukcgfi.org/" target="_blank" rel="noopener noreferrer">
-                <img height="60" src="/logo-cgfi.png" alt="CGFI" />
-              </a>
               <a href="https://www.ukri.org/councils/nerc/" target="_blank" rel="noopener noreferrer">
                 <img height="60" src="/logo-nerc.png" alt="NERC" />
               </a>
@@ -125,7 +155,7 @@ export const IntroPage = () => (
                 <img height="40" src="/logo-wbg.png" alt="World Bank Group" />
               </a>
               <a href="https://www.insdevforum.org/" target="_blank" rel="noopener noreferrer">
-                <img height="50" src="/logo-idf.png" alt="IDF" />
+                <img height="40" src="/logo-idf.png" alt="IDF" />
               </a>
               <a href="https://www.wtwco.com/" target="_blank" rel="noopener noreferrer">
                 <img height="30" src="/logo-wtw.png" alt="WTW" />
