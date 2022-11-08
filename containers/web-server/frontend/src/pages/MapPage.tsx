@@ -25,8 +25,9 @@ const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   >
     <Box
       overflow="auto"
+      minHeight="100%"
       maxHeight="100%"
-      sx={{ pointerEvents: 'auto' }}
+      sx={{ pointerEvents: 'none' }}
       position="absolute"
       left={0}
       right={-20}

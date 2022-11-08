@@ -7,9 +7,11 @@ import { StateEffect } from '@/lib/recoil/state-effects/types';
 // import { VIEW_SECTIONS } from '@/config/views';
 // import { sectionStyleOptionsState, sectionStyleValueState } from '@/state/sections';
 
-export const viewState = atom({
+export type ViewType = 'hazard' | 'exposure' | 'vulnerability' | 'risk';
+
+export const viewState = atom<ViewType>({
   key: 'viewState',
-  default: 'exposure',
+  default: 'hazard',
 });
 
 export const viewStateEffect: StateEffect<string> = ({ get, set }, view, previousView) => {

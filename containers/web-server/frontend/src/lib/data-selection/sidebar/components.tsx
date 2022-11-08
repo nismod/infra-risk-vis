@@ -1,6 +1,7 @@
 import { ArrowRight } from '@mui/icons-material';
 import { Stack } from '@mui/material';
-import { FC, Suspense, createContext, useContext, useEffect } from 'react';
+import { FC, Suspense, createContext, forwardRef, useContext, useEffect } from 'react';
+import { Flipped } from 'react-flip-toolkit';
 import { useRecoilState } from 'recoil';
 
 import { RecoilStateFamily } from '@/lib/recoil/types';
@@ -58,56 +59,63 @@ export const SubPath: FC<{ path: string }> = ({ path, children }) => {
   return <PathContext.Provider value={subPath}>{children}</PathContext.Provider>;
 };
 
-export const Section: FC<{ path: string; title: string }> = ({ path, title, children }) => {
+interface SectionProps {
+  title: string;
+}
+export const Section: FC<{ path: string } & SectionProps> = ({ path, ...otherProps }) => {
   return (
     <SubPath path={path}>
-      <SectionImpl title={title}>{children}</SectionImpl>
+      <SectionImpl {...otherProps} />
     </SubPath>
   );
 };
 
-const SectionImpl = ({ title, children }) => {
+const SectionImpl: FC<SectionProps> = ({ title, children }) => {
   const path = usePath();
   const [visible, setVisible] = useVisibilityState(path);
   const [expanded, setExpanded] = useExpandedState(path);
 
   return (
-    <Accordion
-      expanded={expanded}
-      onChange={(e, expanded) => setExpanded(expanded)}
-      disableGutters
-      sx={{
-        bgcolor: '#fafafa',
-        paddingLeft: '0px',
-      }}
-    >
-      <AccordionSummary
-        sx={(theme) => ({
-          '& + .MuiCollapse-root': {
-            borderLeft: '4px solid #fafafa',
-          },
-          '&:hover + .MuiCollapse-root': {
-            borderLeftColor: theme.palette.primary.main,
-          },
-        })}
-      >
-        <AccordionTitle
-          title={title}
-          actions={
-            <VisibilityToggle
-              visibility={visible}
-              onVisibility={(visible) => {
-                setVisible(visible);
-                setExpanded(visible);
-              }}
+    <Flipped flipId={path}>
+      <div>
+        <Accordion
+          expanded={expanded}
+          onChange={(e, expanded) => setExpanded(expanded)}
+          disableGutters
+          sx={{
+            bgcolor: '#fafafa',
+            paddingLeft: '0px',
+          }}
+        >
+          <AccordionSummary
+            sx={(theme) => ({
+              '& + .MuiCollapse-root': {
+                borderLeft: '4px solid #fafafa',
+              },
+              '&:hover + .MuiCollapse-root': {
+                borderLeftColor: theme.palette.primary.main,
+              },
+            })}
+          >
+            <AccordionTitle
+              title={title}
+              actions={
+                <VisibilityToggle
+                  visibility={visible}
+                  onVisibility={(visible) => {
+                    setVisible(visible);
+                    setExpanded(visible);
+                  }}
+                />
+              }
             />
-          }
-        />
-      </AccordionSummary>
-      <AccordionDetails sx={{ padding: '0.5em', paddingRight: 0 }}>
-        <Stack spacing={0.5}>{children}</Stack>
-      </AccordionDetails>
-    </Accordion>
+          </AccordionSummary>
+          <AccordionDetails sx={{ padding: '0.5em', paddingRight: 0 }}>
+            <Stack spacing={0.5}>{children}</Stack>
+          </AccordionDetails>
+        </Accordion>
+      </div>
+    </Flipped>
   );
 };
 
