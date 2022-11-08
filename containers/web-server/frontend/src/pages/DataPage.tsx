@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 export const DataPage = () => (
   <article>
     <ScrollToTop />
-    <Typography variant="h1">Data Sources and Access</Typography>
+    <Typography variant="h1">About GRII, Data Sources and Access</Typography>
 
     <Typography variant="h2">Disclaimer</Typography>
 
@@ -27,9 +27,40 @@ export const DataPage = () => (
     terms of use</Link> for more information about our liability to you.
     </p>
 
+
+    <Typography variant="h2">Acknowledgments</Typography>
+
+    <p>
+
+    In addition to its founding Partners, GRII is supported by a wide
+    range of contributing technical organisations that share data,
+    analytics and expertise, including: the University of Oxford (the <a
+    href="https://www.smithschool.ox.ac.uk/research/sustainable-finance">Oxford
+    Sustainable Finance Group</a> and <a
+    href="https://opsis.eci.ox.ac.uk/">Oxford Programme for Sustainable
+    Infrastructure Systems</a> ), the <a
+    href="https://www.insdevforum.org/working-groups/rmsg/">Insurance
+    Development Forum’s Risk Modelling Steering Group</a> (RMSG), the <a
+    href="https://www.globalquakemodel.org/who-we-are">Global Earthquake
+    Model Foundation</a> (GEM), the <a
+    href="https://www.disasterprotection.org/">Centre for Disaster
+    Protection</a>, <a href="https://www.fathom.global/">Fathom</a> , <a
+    href="https://www.jbarisk.com/">JBA</a>, <a
+    href="https://www.nasdaq.com/solutions/nasdaq-risk-platform">NASDAQ</a>
+    , <a href="https://oasislmf.org/">OASIS Loss Modelling
+    Framework</a>, <a href="https://www.wtwco.com/en-US">Willis Towers
+    Watson</a>, <a href="https://www.aon.com/home/index">Aon</a>, and
+    the <a href="https://www.worldbank.org/en/home">World Bank</a> ( <a
+    href="https://www.gfdrr.org/en">GFDRR</a> and <a
+    href="https://www.worldbank.org/en/programs/disaster-risk-financing-and-insurance-program">DRFIP</a>).
+    The ambition is to expand these technical collaborations over time
+    to build the climate risk data ecosystem.
+
+    </p>
+
     <Typography variant="h2">Hazard Data</Typography>
 
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{mb:4}}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -209,7 +240,7 @@ export const DataPage = () => (
 
     <Typography variant="h2">Exposure Data</Typography>
 
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{mb:4}}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -527,7 +558,7 @@ export const DataPage = () => (
 
     <Typography variant="h2">Vulnerability Data</Typography>
 
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{mb:4}}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -674,6 +705,29 @@ export const DataPage = () => (
         </TableBody>
       </Table>
     </TableContainer>
+
+
+    <Typography variant="h2">Source Code</Typography>
+
+    <p>This website is developed here:</p>
+
+    <ul>
+      <li>
+        <a href="https://github.com/nismod/infra-risk-vis" target="blank">
+          github.com/nismod/infra-risk-vis
+        </a>
+      </li>
+    </ul>
+
+    <p>Much of the risk analytics are produced using the workflow developed here:</p>
+
+    <ul>
+      <li>
+        <a href="https://github.com/nismod/open-gira" target="blank">
+          github.com/nismod/open-gira
+        </a>
+      </li>
+    </ul>
 
 
     <Typography variant="h2">Contextual Map Data</Typography>

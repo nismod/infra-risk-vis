@@ -54,7 +54,8 @@ export const IntroPage = () => (
               <a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
                 Oxford Programme for Sustainable Infrastructure Systems
               </a>
-              , University of Oxford
+              , University of Oxford as part of the Global Resilience Index
+              Initiative.
             </p>
             <p>
               <Stack
@@ -66,9 +67,18 @@ export const IntroPage = () => (
               >
                 <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
                   <img
-                    height="100"
+                    height="120"
                     src="/logo-opsis.png"
                     alt="Oxford Programme for Sustainable Infrastructure Systems"
+                  />
+                </a>
+
+
+                <a href="http://www.globalresilienceindex.org/" target="_blank" rel="noopener noreferrer">
+                  <img
+                    height="100"
+                    src="/logo-grii.png"
+                    alt="Global Resilience Index Initiative"
                   />
                 </a>
               </Stack>
@@ -77,20 +87,62 @@ export const IntroPage = () => (
             <Typography variant="h2">Funding and support</Typography>
 
             <p>
-              This project is led by researchers in the&nbsp;
-              <a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
-                Oxford Programme for Sustainable Infrastructure Systems
-              </a>{' '}
-              in the Environmental Change Institute, University of Oxford.
+
+            This project is led by researchers in the <a
+            href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener
+            noreferrer">Oxford Programme for Sustainable Infrastructure
+            Systems</a> in the Environmental Change Institute, University of
+            Oxford, with some analysis specifically contributed by the <a
+            href="https://www.globalquakemodel.org/who-we-are">Global Earthquake
+            Model Foundation</a>, as well as the many open data sources listed{' '}
+            <Link to="/data">here</Link>.
+
+            </p>
+            <p>
+
+            This project has been funded by the UK Natural Environment Research
+            Council (NERC) through the UK Centre for Greening Finance and
+            Investment, the World Bank Group, Insurance for Development Forum,
+            and Willis Towers Watson.
+
             </p>
 
             <Stack
               direction="row"
               divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
+              sx={{mb:2}}
               justifyContent="center"
               alignItems="center"
-            ></Stack>
+            >
+              <a href="https://ukcgfi.org/" target="_blank" rel="noopener noreferrer">
+                <img height="60" src="/logo-cgfi.png" alt="CGFI" />
+              </a>
+              <a href="https://www.ukri.org/councils/nerc/" target="_blank" rel="noopener noreferrer">
+                <img height="60" src="/logo-nerc.png" alt="NERC" />
+              </a>
+              <a href="https://www.worldbank.org/en/home" target="_blank" rel="noopener noreferrer">
+                <img height="40" src="/logo-wbg.png" alt="World Bank Group" />
+              </a>
+              <a href="https://www.insdevforum.org/" target="_blank" rel="noopener noreferrer">
+                <img height="50" src="/logo-idf.png" alt="IDF" />
+              </a>
+              <a href="https://www.wtwco.com/" target="_blank" rel="noopener noreferrer">
+                <img height="30" src="/logo-wtw.png" alt="WTW" />
+              </a>
+            </Stack>
+
+            <p>
+
+            This builds on previous research and development funded by UK
+            AID through the UK Foreign and Commonwealth Development Office
+            (FCDO) as part of a project with the Government of Jamaica (GoJ)
+            under the Coalition for Climate Resilient Investment&rsquo;s (CCRI)
+            work on "Systemic Resilience" in collaboration with the Green
+            Climate Fund, and also through the High-Volume Transport Applied
+            Research project.
+
+            </p>
 
             <Typography variant="h2">Disclaimer</Typography>
 
