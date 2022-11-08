@@ -29,6 +29,13 @@ export const populationExposureHazardState = atom<ExposureSource>({
 export function syncExposure({ get, set }: TransactionInterface_UNSTABLE, layer: string) {
   const hazardSubPaths = get(sidebarPathChildrenState('exposure'));
 
+  /**
+   * Using sidebarVisibilityToggleState here for individual levels
+   * instead of the recursive sidebarPathVisibilityState
+   * because Recoil doesn't allow setting selectors in atomic transactions
+   */
+
+  set(sidebarVisibilityToggleState('exposure'), true);
   _.forEach(hazardSubPaths, (subPath) => {
     set(sidebarVisibilityToggleState(`exposure/${subPath}`), subPath === layer);
   });
