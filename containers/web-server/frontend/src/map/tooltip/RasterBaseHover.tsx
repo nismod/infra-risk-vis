@@ -9,7 +9,7 @@ import { ColorValue } from '../legend/GradientLegend';
 export type RGBAColor = [number, number, number, number];
 
 export function serializeColor([r, g, b, a]: [r: number, g: number, b: number, a: number]) {
-  return `rgb(${r},${g},${b},${a})`;
+  return `rgb(${r},${g},${b})`;
 }
 function useRasterColorMapLookup(colorMapValues: ColorValue[]) {
   return useMemo(

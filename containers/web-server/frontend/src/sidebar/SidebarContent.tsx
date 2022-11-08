@@ -113,7 +113,7 @@ const ExposureSection = () => (
       <IndustryControl />
     </Layer>
     <Layer path="healthsites" title="Healthcare Facilities" />
-    <Layer path="land-cover" title="Land Cover" disabled />
+    <Layer path="land-cover" title="Land Cover" />
     <Layer path="organic-carbon" title="Soil Organic Carbon" />
   </Section>
 );

@@ -12,6 +12,7 @@ import { hazardLayerState } from './data-layers/hazards';
 import { healthcareLayersState } from './data-layers/healthcare';
 import { humanDevelopmentLayerState } from './data-layers/human-development';
 import { industryLayersState } from './data-layers/industry';
+import { landCoverLayerState } from './data-layers/land-cover';
 import {
   biodiversityIntactnessLayerState,
   forestLandscapeIntegrityLayerState,
@@ -35,6 +36,7 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
        * Data layers
        */
 
+      get(landCoverLayerState),
       get(humanDevelopmentLayerState),
       get(populationLayerState),
       get(buildingDensityLayerState),

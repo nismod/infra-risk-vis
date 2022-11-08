@@ -1,6 +1,6 @@
 import { ArrowRight } from '@mui/icons-material';
 import { Stack } from '@mui/material';
-import { FC, Suspense, createContext, forwardRef, useContext, useEffect } from 'react';
+import { FC, Suspense, createContext, useContext, useEffect } from 'react';
 import { Flipped } from 'react-flip-toolkit';
 import { useRecoilState } from 'recoil';
 
