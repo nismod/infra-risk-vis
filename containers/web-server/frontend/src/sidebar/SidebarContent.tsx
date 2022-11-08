@@ -1,9 +1,11 @@
-import { Alert } from '@mui/material';
+import { Alert, Paper } from '@mui/material';
+import { Box } from '@mui/system';
 import { FC } from 'react';
 import { atomFamily, selectorFamily, useRecoilValue } from 'recoil';
 
 import { Layer, Section, SidebarRoot } from '@/lib/data-selection/sidebar/components';
 import { getParentPath } from '@/lib/data-selection/sidebar/paths';
+import { RecoilStateFamily } from '@/lib/recoil/types';
 
 import { viewState } from '@/state/view';
 
@@ -45,7 +47,7 @@ export const sidebarPathChildrenState = atomFamily({
   default: () => [],
 });
 
-export const sidebarPathVisibilityState = selectorFamily<boolean, string>({
+export const sidebarPathVisibilityState: RecoilStateFamily<boolean, string> = selectorFamily<boolean, string>({
   key: 'sidebarPathVisibilityState',
   get:
     (path: string) =>
@@ -55,6 +57,19 @@ export const sidebarPathVisibilityState = selectorFamily<boolean, string>({
       return (
         (parentPath === '' || get(sidebarPathVisibilityState(parentPath))) && get(sidebarVisibilityToggleState(path))
       );
+    },
+  set:
+    (path: string) =>
+    ({ get, set }, newVisibility) => {
+      if (newVisibility) {
+        set(sidebarVisibilityToggleState(path), true);
+        const parentPath = getParentPath(path);
+        if (parentPath !== '' && get(sidebarPathVisibilityState(parentPath)) === false) {
+          set(sidebarPathVisibilityState(parentPath), true);
+        }
+      } else {
+        set(sidebarVisibilityToggleState(path), false);
+      }
     },
 });
 
@@ -72,64 +87,68 @@ export const SidebarContent: FC<{}> = () => {
       expandedState={sidebarExpandedState}
       pathChildrenState={sidebarPathChildrenState}
     >
-      <Section path="hazards" title="Hazards">
-        <Layer path="fluvial" title="River Flooding">
-          <FluvialControl />
-        </Layer>
-        <Layer path="coastal" title="Coastal Flooding">
-          <CoastalControl />
-        </Layer>
-        <Layer path="cyclone" title="Tropical Cyclones">
-          <CycloneControl />
-        </Layer>
-        <Layer path="extreme_heat" title="Extreme Heat">
-          <ExtremeHeatControl />
-        </Layer>
-        <Layer path="drought" title="Droughts">
-          <DroughtControl />
-        </Layer>
-        <Layer path="earthquake" title="Seismic">
-          <EarthquakeControl />
-        </Layer>
-        <Layer path="wildfire" title="Wildfires" disabled />
-      </Section>
-      <Section path="exposure" title="Exposure">
-        <Layer path="population" title="Population" />
-        <Layer path="buildings" title="Buildings">
-          <BuildingDensityControl />
-        </Layer>
-        <Layer path="infrastructure" title="Infrastructure">
-          <NetworkControl />
-        </Layer>
-        <Layer path="industry" title="Industry">
-          <IndustryControl />
-        </Layer>
-        <Layer path="healthsites" title="Healthcare Facilities" />
-        <Layer path="land-cover" title="Land Cover" disabled />
-        <Layer path="organic-carbon" title="Soil Organic Carbon" />
-      </Section>
-      <Section path="vulnerability" title="Vulnerability">
-        <Section path="human" title="Human">
-          <Layer path="human-development" title="Human Development">
-            <HdiControl />
-          </Layer>
-          <Layer path="travel-time" title="Travel Time to Healthcare">
-            <TravelTimeControl />
-          </Layer>
-        </Section>
-        <Section path="nature" title="Nature">
-          <Layer path="biodiversity-intactness" title="Biodiversity Intactness" />
-          <Layer path="forest-integrity" title="Forest Landscape Integrity" />
-          <Layer path="protected-areas" title="Protected Areas (WDPA)">
-            <WdpaControls />
-          </Layer>
-        </Section>
-      </Section>
       {view === 'risk' && (
-        <Section path="risk" title="Risk">
-          <RiskSection />
-        </Section>
+        <Box mb={2}>
+          <Section path="risk" title="Risk">
+            <RiskSection />
+          </Section>
+        </Box>
       )}
+      <Paper elevation={0}>
+        <Section path="hazards" title="Hazards">
+          <Layer path="fluvial" title="River Flooding">
+            <FluvialControl />
+          </Layer>
+          <Layer path="coastal" title="Coastal Flooding">
+            <CoastalControl />
+          </Layer>
+          <Layer path="cyclone" title="Tropical Cyclones">
+            <CycloneControl />
+          </Layer>
+          <Layer path="extreme_heat" title="Extreme Heat">
+            <ExtremeHeatControl />
+          </Layer>
+          <Layer path="drought" title="Droughts">
+            <DroughtControl />
+          </Layer>
+          <Layer path="earthquake" title="Seismic">
+            <EarthquakeControl />
+          </Layer>
+          <Layer path="wildfire" title="Wildfires" disabled />
+        </Section>
+        <Section path="exposure" title="Exposure">
+          <Layer path="population" title="Population" />
+          <Layer path="buildings" title="Buildings">
+            <BuildingDensityControl />
+          </Layer>
+          <Layer path="infrastructure" title="Infrastructure">
+            <NetworkControl />
+          </Layer>
+          <Layer path="industry" title="Industry">
+            <IndustryControl />
+          </Layer>
+          <Layer path="healthsites" title="Healthcare Facilities" />
+          <Layer path="land-cover" title="Land Cover" disabled />
+          <Layer path="organic-carbon" title="Soil Organic Carbon" />
+        </Section>
+        <Section path="vulnerability" title="Vulnerability">
+          <Section path="human" title="Human">
+            <Layer path="human-development" title="Human Development">
+              <HdiControl />
+            </Layer>
+            <Layer path="travel-time" title="Travel Time to Healthcare">
+              <TravelTimeControl />
+            </Layer>
+          </Section>
+          <Section path="nature" title="Nature">
+            <Layer path="biodiversity-intactness" title="Biodiversity Intactness" />
+            <Layer path="forest-integrity" title="Forest Landscape Integrity" />
+            <Layer path="protected-areas" title="Protected Areas (WDPA)">
+              <WdpaControls />
+            </Layer>
+          </Section>
+        </Section>
+      </Paper>
     </SidebarRoot>
   );
 };

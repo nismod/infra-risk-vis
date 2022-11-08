@@ -192,3 +192,10 @@ export function toLabelLookup<T extends string>(valueLabels: ValueLabel<T>[]) {
  * Ensure that a supplied string union is a subset of another union
  */
 export type Subset<Original extends string, SubUnion extends Original> = SubUnion;
+
+export function makeOptions<T>(values: T[], labelFn = (x: T) => x) {
+  return values.map((val) => ({
+    value: val,
+    label: labelFn(val),
+  }));
+}

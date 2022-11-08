@@ -7,7 +7,11 @@ import { DataGroup } from '@/lib/data-selection/DataGroup';
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 
 import { ExposureSource } from '@/config/hazards/exposure/exposure-view-layer';
-import { sidebarPathChildrenState, sidebarVisibilityToggleState } from '@/sidebar/SidebarContent';
+import {
+  sidebarPathChildrenState,
+  sidebarPathVisibilityState,
+  sidebarVisibilityToggleState,
+} from '@/sidebar/SidebarContent';
 import { InputRow } from '@/sidebar/ui/InputRow';
 import { InputSection } from '@/sidebar/ui/InputSection';
 import { EpochControl } from '@/sidebar/ui/params/EpochControl';
@@ -22,28 +26,43 @@ export const populationExposureHazardState = atom<ExposureSource>({
 /**
  * set only population layer to visible
  */
-function syncExposure({ get, set }: TransactionInterface_UNSTABLE) {
+export function syncExposure({ get, set }: TransactionInterface_UNSTABLE, layer: string) {
   const hazardSubPaths = get(sidebarPathChildrenState('exposure'));
 
   _.forEach(hazardSubPaths, (subPath) => {
-    set(sidebarVisibilityToggleState(`exposure/${subPath}`), subPath === 'population');
+    set(sidebarVisibilityToggleState(`exposure/${subPath}`), subPath === layer);
   });
 }
+
+export function hideExposure({ set }: TransactionInterface_UNSTABLE, layer: string) {
+  set(sidebarVisibilityToggleState(`exposure/${layer}`), false);
+}
+
+const InitPopulationView = () => {
+  const updateExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => syncExposure(iface, 'population'), []);
+  const hideExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => hideExposure(iface, 'population'), []);
+  useEffect(() => {
+    console.log('Initializing population exposure');
+    updateExposureTx();
+
+    return () => {
+      console.log('Cleaning up population exposure');
+      hideExposureTx();
+    };
+  }, [updateExposureTx, hideExposureTx]);
+
+  return null;
+};
 
 export const PopulationExposureSection = () => {
   const [hazard, setHazard] = useRecoilState(populationExposureHazardState);
 
-  const [showHazards, setShowHazards] = useRecoilState(sidebarVisibilityToggleState('hazards'));
-  const [showPopulation, setShowPopulation] = useRecoilState(sidebarVisibilityToggleState('exposure'));
-
-  const updateExposure = useRecoilTransaction_UNSTABLE((iface) => () => syncExposure(iface));
-
-  useEffect(() => {
-    updateExposure();
-  }, [updateExposure]);
+  const [showHazards, setShowHazards] = useRecoilState(sidebarPathVisibilityState(`hazards/${hazard}`));
+  const [showPopulation, setShowPopulation] = useRecoilState(sidebarPathVisibilityState('exposure/population'));
 
   return (
     <>
+      <InitPopulationView />
       <StateEffectRoot state={populationExposureHazardState} effect={syncHazardsWithDamageSourceStateEffect} />
       <InputSection>
         <FormControl>
@@ -65,7 +84,7 @@ export const PopulationExposureSection = () => {
       <InputSection>
         <FormControlLabel
           control={<Switch />}
-          value={showHazards}
+          checked={showHazards}
           onChange={(e, checked) => setShowHazards(checked)}
           label="Hazard layer"
         />
@@ -73,7 +92,7 @@ export const PopulationExposureSection = () => {
       <InputSection>
         <FormControlLabel
           control={<Switch />}
-          value={showPopulation}
+          checked={showPopulation}
           onChange={(e, checked) => setShowPopulation(checked)}
           label="Population layer"
         />

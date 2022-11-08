@@ -6,6 +6,7 @@ import {
   selectorFamily,
   useRecoilTransaction_UNSTABLE,
   useRecoilValue,
+  useRecoilValueLoadable,
   useSetRecoilState,
 } from 'recoil';
 
@@ -47,13 +48,17 @@ export function useLoadParamsConfig(configState: RecoilValue<DataParamGroupConfi
   const config = useRecoilValue(configState);
   const setTargetConfig = useSetRecoilState(paramsConfigState(targetGroup));
   const setTargetState = useSetRecoilState(paramsState(targetGroup));
+  const { state: loadableState } = useRecoilValueLoadable(paramsConfigState(targetGroup));
 
   useEffect(() => {
-    const [values, options] = resolveParamDependencies(config.paramDefaults, config);
-    const initialState = _.mapValues(values, (value, key) => ({ value, options: options[key] }));
-    setTargetState(initialState);
-    setTargetConfig(config);
-  }, [config, setTargetConfig, setTargetState]);
+    // only load config once
+    if (loadableState !== 'hasValue') {
+      const [values, options] = resolveParamDependencies(config.paramDefaults, config);
+      const initialState = _.mapValues(values, (value, key) => ({ value, options: options[key] }));
+      setTargetState(initialState);
+      setTargetConfig(config);
+    }
+  }, [config, setTargetConfig, setTargetState, loadableState]);
 }
 
 /**

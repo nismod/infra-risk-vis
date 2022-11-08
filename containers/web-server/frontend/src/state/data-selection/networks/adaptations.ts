@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { atom, selector } from 'recoil';
+import { TransactionInterface_UNSTABLE, atom, selector } from 'recoil';
 
 import { recalculateCheckboxStates } from '@/lib/controls/checkbox-tree/CheckboxTree';
 import { d3Scale, d3ScaleChromatic, discardSides, invertColorScale } from '@/lib/data-map/color-maps';
@@ -32,18 +32,7 @@ export const adaptationCostBenefitRatioEaelDaysState = atom<number>({
   default: 15,
 });
 
-export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams> = (
-  { get, set },
-  adaptationParams,
-) => {
-  const { sector, subsector, asset_type } = adaptationParams;
-
-  const layers = _.uniq(
-    adaptationSectorLayers
-      .filter((x) => x.sector === sector && x.subsector === subsector && x.asset_type === asset_type)
-      .map((x) => x.layer_name),
-  );
-
+export function syncInfrastructureSelectionStateEffect({ get, set }: TransactionInterface_UNSTABLE, layers: string[]) {
   const currentSelection = get(networkTreeCheckboxState);
   const updatedTreeState = {
     checked: {
@@ -55,6 +44,18 @@ export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams
   const resolvedTreeState = recalculateCheckboxStates(updatedTreeState, networkTreeConfig);
 
   set(networkTreeCheckboxState, resolvedTreeState);
+}
+
+export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams> = (iface, adaptationParams) => {
+  const { sector, subsector, asset_type } = adaptationParams;
+
+  const layers = _.uniq(
+    adaptationSectorLayers
+      .filter((x) => x.sector === sector && x.subsector === subsector && x.asset_type === asset_type)
+      .map((x) => x.layer_name),
+  );
+
+  syncInfrastructureSelectionStateEffect(iface, layers);
 
   // currently not auto-updating the expanded state of the tree since that can make the adaptations UI section move out of view
   // set(networkTreeExpandedState, truthyKeys(resolvedTreeState.indeterminate));

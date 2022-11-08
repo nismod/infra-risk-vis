@@ -1,4 +1,4 @@
-import { Box, Paper } from '@mui/material';
+import { Box } from '@mui/material';
 import { FC, Suspense } from 'react';
 
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
@@ -53,11 +53,9 @@ export const MapPage: FC<MapPageProps> = ({ view }) => {
       <InitData />
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
       <SidebarLayout top={0} left={0} bottom={0} right={undefined} width={globalStyleVariables.controlSidebarWidth}>
-        <Paper elevation={0}>
-          <ErrorBoundary message="There was a problem displaying the sidebar.">
-            <SidebarContent />
-          </ErrorBoundary>
-        </Paper>
+        <ErrorBoundary message="There was a problem displaying the sidebar.">
+          <SidebarContent />
+        </ErrorBoundary>
       </SidebarLayout>
       <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
         <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">

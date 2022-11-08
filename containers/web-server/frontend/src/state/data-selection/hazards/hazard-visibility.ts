@@ -8,15 +8,8 @@ import { getHazardSelectionAggregate } from './hazard-selection';
 export const hazardVisibilityState = selector({
   key: 'hazardVisibilityState',
   get: ({ get }) => {
-    if (get(showInfrastructureDamagesState)) {
-      const selectedDamageSource = get(damageSourceState);
-      if (selectedDamageSource === 'all') {
-        return {};
-      } else {
-        return {
-          [selectedDamageSource]: true,
-        };
-      }
+    if (get(showInfrastructureDamagesState) && get(damageSourceState) === 'all') {
+      return {};
     } else {
       return getHazardSelectionAggregate({ get }, HAZARDS_MAP_ORDER);
     }

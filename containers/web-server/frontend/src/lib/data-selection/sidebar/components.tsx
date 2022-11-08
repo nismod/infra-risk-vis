@@ -9,7 +9,7 @@ import { Accordion, AccordionDetails, AccordionSummary, AccordionTitle, Expandab
 import { VisibilityToggle } from './VisibilityToggle';
 import { PathContext, getSubPath, usePath } from './paths';
 
-const VisibilityStateContext = createContext<RecoilStateFamily<boolean, string>>(null);
+export const VisibilityStateContext = createContext<RecoilStateFamily<boolean, string>>(null);
 
 export function useVisibilityState(path: string) {
   const visibilityState = useContext(VisibilityStateContext);
@@ -17,14 +17,14 @@ export function useVisibilityState(path: string) {
   return useRecoilState(visibilityState(path));
 }
 
-const ExpandedStateContext = createContext<RecoilStateFamily<boolean, string>>(null);
+export const ExpandedStateContext = createContext<RecoilStateFamily<boolean, string>>(null);
 
 export function useExpandedState(path: string) {
   const expandedState = useContext(ExpandedStateContext);
   return useRecoilState(expandedState(path));
 }
 
-const PathChildrenStateContext = createContext<RecoilStateFamily<string[], string>>(null);
+export const PathChildrenStateContext = createContext<RecoilStateFamily<string[], string>>(null);
 
 export function usePathChildrenState(path: string) {
   const pathChildrenState = useContext(PathChildrenStateContext);
@@ -73,7 +73,6 @@ const SectionImpl = ({ title, children }) => {
 
   return (
     <Accordion
-      title={title}
       expanded={expanded}
       onChange={(e, expanded) => setExpanded(expanded)}
       disableGutters
@@ -112,24 +111,22 @@ const SectionImpl = ({ title, children }) => {
   );
 };
 
-export const Layer: FC<{ path: string; title: string; disabled?: boolean }> = ({
-  path,
-  title,
-  disabled = false,
-  children,
-}) => {
+interface LayerProps {
+  title: string;
+  disabled?: boolean;
+  unmountOnHide?: boolean;
+}
+export const Layer: FC<{ path: string } & LayerProps> = ({ path, ...otherProps }) => {
   return (
     <SubPath path={path}>
       <Suspense fallback="Loading layer data...">
-        <LayerImpl title={title} disabled={disabled}>
-          {children}
-        </LayerImpl>
+        <LayerImpl {...otherProps} />
       </Suspense>
     </SubPath>
   );
 };
 
-const LayerImpl: FC<{ title: string; disabled?: boolean }> = ({ title, disabled = false, children }) => {
+const LayerImpl: FC<LayerProps> = ({ title, disabled = false, unmountOnHide = false, children }) => {
   const path = usePath();
   const [visible, setVisible] = useVisibilityState(path);
   const [expanded, setExpanded] = useExpandedState(path);
@@ -139,7 +136,6 @@ const LayerImpl: FC<{ title: string; disabled?: boolean }> = ({ title, disabled 
   return (
     <Accordion
       disabled={disabled}
-      title={title}
       expanded={allowExpand && expanded}
       onChange={(e, expanded) => setExpanded(expanded)}
       disableGutters
@@ -147,6 +143,9 @@ const LayerImpl: FC<{ title: string; disabled?: boolean }> = ({ title, disabled 
         border: '2px solid #eee',
       }}
       elevation={0}
+      TransitionProps={{
+        unmountOnExit: !visible && unmountOnHide,
+      }}
     >
       <AccordionSummary
         sx={{ cursor: allowExpand ? 'pointer' : 'default' }}
