@@ -42,7 +42,7 @@ PGHOST=
 
 # Tiles API
 RASTER_BASE_PATH=/data # Path at-which raster tiles can be found (must match the MySQL Tiles-db loaded path)
-TC_DRIVER_PATH=mysql://foo:bar@tiles-db/db # Tiles-db MySQL Host
+TC_DRIVER_PATH=mysql://foo:bar@tiles-db # Tiles-db MySQL Host (__NOTE__: Does not require database in the URL - this is parsed internally.)
 TC_SQL_USER=foo
 TC_SQL_PASSWORD=bar
 TC_ALLOWED_ORIGINS_METADATA='["*"]'

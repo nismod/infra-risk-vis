@@ -68,3 +68,4 @@ provision.sh
 *.pkl
 *.parquet
 etl/raw_data/*
+.vscode/
