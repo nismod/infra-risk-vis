@@ -1,7 +1,8 @@
+import * as d3Color from 'd3-color';
 import * as d3Scale from 'd3-scale';
 import * as d3ScaleChromatic from 'd3-scale-chromatic';
 
-export { d3Scale, d3ScaleChromatic };
+export { d3Scale, d3ScaleChromatic, d3Color };
 
 export function invertColorScale<T>(colorScale: (t: number) => T) {
   return (i: number) => colorScale(1 - i);

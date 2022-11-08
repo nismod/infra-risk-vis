@@ -2,6 +2,8 @@ import { selectorFamily, useRecoilValue } from 'recoil';
 
 import { apiClient } from '@/api-client';
 
+import { ColorValue } from './GradientLegend';
+
 const colorMapValuesQuery = selectorFamily({
   key: 'colorMapValuesQuery',
   get: (colorScheme: string) => async () => {
@@ -29,6 +31,6 @@ const colorMapValuesState = selectorFamily({
     },
 });
 
-export function useRasterColorMapValues(colorScheme: string, stretchRange: [number, number]) {
+export function useRasterColorMapValues(colorScheme: string, stretchRange: [number, number]): ColorValue[] {
   return useRecoilValue(colorMapValuesState({ scheme: colorScheme, range: stretchRange }));
 }
