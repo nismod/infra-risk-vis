@@ -1,23 +1,21 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import { atom } from 'recoil';
 
 import { StateEffect } from '@/lib/recoil/state-effects/types';
 
-import { SECTIONS_CONFIG } from '@/config/sections';
-import { VIEW_SECTIONS } from '@/config/views';
-import {
-  sectionStyleOptionsState,
-  sectionStyleValueState,
-  sectionVisibilityState,
-  sidebarSectionExpandedState,
-} from '@/state/sections';
+// import { SECTIONS_CONFIG } from '@/config/sections';
+// import { VIEW_SECTIONS } from '@/config/views';
+// import { sectionStyleOptionsState, sectionStyleValueState } from '@/state/sections';
 
-export const viewState = atom({
+export type ViewType = 'hazard' | 'exposure' | 'vulnerability' | 'risk';
+
+export const viewState = atom<ViewType>({
   key: 'viewState',
-  default: 'exposure',
+  default: 'hazard',
 });
 
 export const viewStateEffect: StateEffect<string> = ({ get, set }, view, previousView) => {
+  /*
   const viewSectionsConfig = VIEW_SECTIONS[view];
 
   const previousViewSectionsConfig = VIEW_SECTIONS[previousView];
@@ -34,4 +32,5 @@ export const viewStateEffect: StateEffect<string> = ({ get, set }, view, previou
     set(sectionStyleOptionsState(section), styleOptions);
     set(sectionStyleValueState(section), sectionConfig.defaultStyle);
   });
+  */
 };

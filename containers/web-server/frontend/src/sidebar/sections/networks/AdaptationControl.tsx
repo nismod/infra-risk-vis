@@ -6,18 +6,19 @@ import { useRecoilState } from 'recoil';
 
 import { CustomNumberSlider } from '@/lib/controls/CustomSlider';
 import { ParamDropdown } from '@/lib/controls/ParamDropdown';
+import { DataParam } from '@/lib/data-selection/DataParam';
+import { makeOptions } from '@/lib/helpers';
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 
 import { InputRow } from '@/sidebar/ui/InputRow';
 import { InputSection } from '@/sidebar/ui/InputSection';
 import { LayerStylePanel } from '@/sidebar/ui/LayerStylePanel';
-import { DataParam } from '@/sidebar/ui/params/DataParam';
 import { dataParamsByGroupState } from '@/state/data-params';
 import {
   adaptationCostBenefitRatioEaelDaysState,
   adaptationDataParamsStateEffect,
   adaptationFieldState,
-} from '@/state/layers/data-layers/networks';
+} from '@/state/data-selection/networks/adaptations';
 
 function hazardLabel(val) {
   switch (val) {
@@ -34,12 +35,6 @@ function autoLabel(x) {
   return _.startCase(_.lowerCase(x));
 }
 
-function makeOptions(values, labelFn = (x) => x) {
-  return values.map((val) => ({
-    value: val,
-    label: labelFn(val),
-  }));
-}
 const EAEL_DAYS_MARKS = [1, 5, 10, 15, 20, 25, 30].map((x) => ({ value: x, label: x }));
 const CostBenefitRatioInputs: FC = () => {
   const [eaelDays, setEaelDays] = useRecoilState(adaptationCostBenefitRatioEaelDaysState);

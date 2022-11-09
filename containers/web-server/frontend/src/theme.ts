@@ -50,9 +50,18 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           verticalAlign: 'top',
-        }
-      }
-    }
+        },
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          '& +.MuiInputBase-root': {
+            marginTop: '2px',
+          },
+        },
+      },
+    },
   },
   typography: {
     h1: {

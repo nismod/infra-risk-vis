@@ -1,19 +1,22 @@
+import produce from 'immer';
 import _ from 'lodash';
 import { atom, selector } from 'recoil';
 
-import { HAZARD_DOMAINS_CONFIG } from '@/config/hazards/domains';
-import { paramOptionsState, paramValueState } from '@/state/data-params';
-import { hazardSelectionState } from '@/state/data-selection/hazards/hazard-selection';
-import { networksStyleState } from '@/state/data-selection/networks/networks-style';
+import { CurrentStateEffect, StateEffect } from '@/lib/recoil/state-effects/types';
 
-export const showDamagesState = selector({
-  key: 'showDamagesState',
-  get: ({ get }) => get(networksStyleState) === 'damages',
+import { HAZARD_DOMAINS_CONFIG } from '@/config/hazards/domains';
+import { sidebarVisibilityToggleState } from '@/sidebar/SidebarContent';
+import { paramsState } from '@/state/data-params';
+import { viewState } from '@/state/view';
+
+export const showInfrastructureDamagesState = selector({
+  key: 'showInfrastructureDamagesState',
+  get: ({ get }) => get(viewState) === 'risk' && get(sidebarVisibilityToggleState('risk/infrastructure')),
 });
 
 export const damageSourceState = atom({
   key: 'damageSourceState',
-  default: 'all',
+  default: 'fluvial',
 });
 
 export const damageTypeState = atom({
@@ -21,20 +24,31 @@ export const damageTypeState = atom({
   default: 'direct',
 });
 
-export const damageSourceStateEffect = ({ get, set }, damageSource) => {
-  syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource);
+export const syncHazardsWithDamageSourceStateEffect: CurrentStateEffect<string> = ({ get, set }, damageSource) => {
+  _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
+    set(sidebarVisibilityToggleState(`hazards/${group}`), group === damageSource);
+  });
+};
+
+export const damageSourceStateEffect: StateEffect<string> = (iface, damageSource) => {
+  syncHazardsWithDamageSourceStateEffect(iface, damageSource);
+  const { get, set } = iface;
 
   if (damageSource !== 'all') {
-    const damageSourceReturnPeriodDomain = get(paramOptionsState({ group: damageSource, param: 'rp' }));
+    /**
+     * If damage source is not 'all', set return period for hazard to highest available.
+     */
+    const state = get(paramsState(damageSource));
+
+    const damageSourceReturnPeriodDomain = state['rp'].options;
     const topReturnPeriod = damageSourceReturnPeriodDomain[damageSourceReturnPeriodDomain.length - 1];
 
     // CAUTION: this won't resolve the dependencies between data params if any depend on the return period
-    set(paramValueState({ group: damageSource, param: 'rp' }), topReturnPeriod);
+    set(
+      paramsState(damageSource),
+      produce(state, (draft) => {
+        draft['rp'].value = topReturnPeriod;
+      }),
+    );
   }
 };
-
-function syncHazardsWithDamageSourceStateEffect({ get, set }, damageSource) {
-  _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
-    set(hazardSelectionState(group), group === damageSource);
-  });
-}

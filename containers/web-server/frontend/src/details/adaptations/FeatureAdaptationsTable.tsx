@@ -17,7 +17,7 @@ import {
   adaptationColorSpecState,
   adaptationFieldSpecState,
   adaptationLayerSpecState,
-} from '@/state/layers/data-layers/networks';
+} from '@/state/data-selection/networks/adaptations';
 
 import './asset-table.css';
 

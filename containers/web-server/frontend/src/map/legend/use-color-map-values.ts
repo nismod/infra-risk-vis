@@ -1,29 +1,36 @@
-import { useMemo } from 'react';
-import { useFetch } from 'use-http';
+import { selectorFamily, useRecoilValue } from 'recoil';
 
-export function useRasterColorMapValues(colorScheme: string, stretchRange: [number, number]) {
-  const [rangeMin, rangeMax] = stretchRange;
+import { apiClient } from '@/api-client';
 
-  const {
-    loading,
-    error,
-    data: { colormap: colorMapValues = null } = {},
-  } = useFetch(`/api/colormap?colormap=${colorScheme}&stretch_range=[0,1]`, { persist: false }, [colorScheme]);
+import { ColorValue } from './GradientLegend';
 
-  const rangeSize = rangeMax - rangeMin;
+const colorMapValuesQuery = selectorFamily({
+  key: 'colorMapValuesQuery',
+  get: (colorScheme: string) => async () => {
+    return await apiClient.colormap.colormapGetColormap({
+      colormap: colorScheme,
+      stretchRange: '[0,1]',
+    });
+  },
+});
 
-  const result = useMemo(
-    () =>
-      colorMapValues?.map(({ value, rgba: [r, g, b] }) => ({
+const colorMapValuesState = selectorFamily({
+  key: 'colorMapValuesState',
+  get:
+    (colorSpec: { scheme: string; range: [number, number] }) =>
+    ({ get }) => {
+      const values = get(colorMapValuesQuery(colorSpec.scheme));
+      const [rangeMin, rangeMax] = colorSpec.range;
+
+      const rangeSize = rangeMax - rangeMin;
+
+      return values.colormap.map(({ value, rgba: [r, g, b] }) => ({
         value: rangeMin + value * rangeSize,
         color: `rgb(${r},${g},${b})`,
-      })),
-    [colorMapValues, rangeMin, rangeSize],
-  );
+      }));
+    },
+});
 
-  return {
-    loading,
-    error,
-    colorMapValues: result,
-  };
+export function useRasterColorMapValues(colorScheme: string, stretchRange: [number, number]): ColorValue[] {
+  return useRecoilValue(colorMapValuesState({ scheme: colorScheme, range: stretchRange }));
 }

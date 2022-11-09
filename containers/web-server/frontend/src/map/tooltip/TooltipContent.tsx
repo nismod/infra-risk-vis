@@ -1,4 +1,5 @@
-import { Box, Paper } from '@mui/material';
+import { Box } from '@mui/material';
+import { isArray } from 'lodash';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 
@@ -6,63 +7,61 @@ import { hasHover, hoverState } from '@/lib/data-map/interactions/interaction-st
 import { InteractionTarget } from '@/lib/data-map/interactions/use-interactions';
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 
-import { HazardHoverDescription } from './content/HazardHoverDescription';
-import { HdiHoverDescription } from './content/HdiHoverDescription';
+import { AutoHidePaper, PreventHide } from './auto-hide';
 import { WdpaHoverDescription } from './content/WdpaHoverDescription';
 
 const TooltipSection = ({ children }) => (
   <Box px={1} py={0.5} borderBottom="1px solid #ccc">
+    <PreventHide />
     {children}
   </Box>
 );
 
-export const TooltipContent: FC = () => {
-  const hoveredVector = useRecoilValue(hoverState('assets')) as InteractionTarget<any>;
-  const hoveredHazards = useRecoilValue(hoverState('hazards')) as InteractionTarget<any>[];
-  const hoveredHdi = useRecoilValue(hoverState('hdi')) as InteractionTarget<any>;
+const ViewLayerTooltip = ({ hover }: { hover: InteractionTarget<any> }) => {
+  const { viewLayer } = hover;
+
+  return <>{viewLayer.renderTooltip?.(hover)}</>;
+};
+
+const InteractionGroupTooltip = ({ group }) => {
+  const hover = useRecoilValue(hoverState(group));
+
+  if (!hasHover(hover)) return null;
+
+  const contents = isArray(hover)
+    ? hover.map((h) => <ViewLayerTooltip key={h.viewLayer.id} hover={h} />)
+    : [<ViewLayerTooltip key={hover.viewLayer.id} hover={hover} />];
+
+  if (contents.length === 0) return null;
+
+  return <TooltipSection>{contents}</TooltipSection>;
+};
+
+const WdpaTooltipSection = () => {
   const hoveredWdpas = useRecoilValue(hoverState('wdpa')) as InteractionTarget<any>[];
-  const hoveredRasterAssets = useRecoilValue(hoverState('raster_assets')) as InteractionTarget<any>[];
 
-  const assetsHovered = hasHover(hoveredVector);
-  const hazardsHovered = hasHover(hoveredHazards);
-  const hdiHovered = hasHover(hoveredHdi);
-  const wdpaHovered = hasHover(hoveredWdpas);
-  const rasterAssetsHovered = hasHover(hoveredRasterAssets);
-
-  const doShow = assetsHovered || hazardsHovered || hdiHovered || wdpaHovered || rasterAssetsHovered;
-
-  if (!doShow) return null;
+  if (!hasHover(hoveredWdpas)) return null;
 
   return (
-    <Paper>
+    <TooltipSection>
+      <WdpaHoverDescription hoveredObjects={hoveredWdpas} />
+    </TooltipSection>
+  );
+};
+
+export const TooltipContent: FC = () => {
+  return (
+    <AutoHidePaper>
       <Box minWidth={200}>
         <ErrorBoundary message="There was a problem displaying the tooltip.">
-          {/* TODO: generate tooltip contents straight from view layers */}
-          {assetsHovered ? (
-            <TooltipSection>{hoveredVector.viewLayer.renderTooltip?.(hoveredVector)}</TooltipSection>
-          ) : null}
-          {hazardsHovered ? (
-            <TooltipSection>
-              {hoveredHazards.map((hr) => (
-                <HazardHoverDescription hoveredObject={hr} key={`${hr.viewLayer.id}-${hr.target.id}`} />
-              ))}
-            </TooltipSection>
-          ) : null}
-          {rasterAssetsHovered ? (
-            <TooltipSection>{hoveredRasterAssets.map((ho) => ho.viewLayer.renderTooltip?.(ho))}</TooltipSection>
-          ) : null}
-          {hdiHovered ? (
-            <TooltipSection>
-              <HdiHoverDescription hoveredObject={hoveredHdi} />
-            </TooltipSection>
-          ) : null}
-          {wdpaHovered ? (
-            <TooltipSection>
-              <WdpaHoverDescription hoveredObjects={hoveredWdpas} />
-            </TooltipSection>
-          ) : null}
+          <InteractionGroupTooltip group="assets" />
+          <InteractionGroupTooltip group="hazards" />
+          <InteractionGroupTooltip group="raster_assets" />
+          <InteractionGroupTooltip group="hdi" />
+
+          <WdpaTooltipSection />
         </ErrorBoundary>
       </Box>
-    </Paper>
+    </AutoHidePaper>
   );
 };

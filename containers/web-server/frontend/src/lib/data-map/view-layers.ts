@@ -18,6 +18,7 @@ export interface ColorSpec {
   scale: (domain: [number, number], interpolator: (t: number, n: number) => string) => ScaleSequential<any, any>;
   range: [number, number];
   empty: string;
+  zeroIsEmpty?: boolean;
 }
 export interface ColorMap {
   fieldSpec: FieldSpec;

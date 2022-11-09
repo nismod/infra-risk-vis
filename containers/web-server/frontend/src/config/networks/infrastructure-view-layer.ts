@@ -47,39 +47,49 @@ function wastewaterNodesFn({ zoom, dataStyle }) {
 }
 */
 
+/*
 function electricitySourceFn({ zoom, dataStyle }) {
   return [border(), fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_high.deck), pointRadius(zoom)];
 }
+*/
 
 const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<NetworkLayerType, AssetViewLayerCustomFunction> = {
-  elec_edges_high: ({ zoom, dataStyle }) => [
+  power_transmission: ({ zoom, dataStyle }) => [
     strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_high.deck),
     lineStyle(zoom),
   ],
-  elec_edges_low: ({ zoom, dataStyle }) => [
+  power_distribution: ({ zoom, dataStyle }) => [
     strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_low.deck),
     lineStyle(zoom),
   ],
-  elec_nodes_diesel: electricitySourceFn,
-  elec_nodes_gas: electricitySourceFn,
-  elec_nodes_hydro: electricitySourceFn,
-  elec_nodes_solar: electricitySourceFn,
-  elec_nodes_wind: electricitySourceFn,
-  elec_nodes_demand: ({ zoom, dataStyle }) => [
-    border(),
-    fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_low.deck),
-    pointRadius(zoom),
-  ],
-  elec_nodes_pole: ({ zoom, dataStyle }) => [
-    border(),
-    fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_unknown.deck),
-    pointRadius(zoom),
-  ],
-  elec_nodes_substation: ({ zoom, dataStyle }) => [
-    border(),
-    fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_unknown.deck),
-    pointRadius(zoom),
-  ],
+  // elec_edges_high: ({ zoom, dataStyle }) => [
+  //   strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_high.deck),
+  //   lineStyle(zoom),
+  // ],
+  // elec_edges_low: ({ zoom, dataStyle }) => [
+  //   strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_low.deck),
+  //   lineStyle(zoom),
+  // ],
+  // elec_nodes_diesel: electricitySourceFn,
+  // elec_nodes_gas: electricitySourceFn,
+  // elec_nodes_hydro: electricitySourceFn,
+  // elec_nodes_solar: electricitySourceFn,
+  // elec_nodes_wind: electricitySourceFn,
+  // elec_nodes_demand: ({ zoom, dataStyle }) => [
+  //   border(),
+  //   fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_low.deck),
+  //   pointRadius(zoom),
+  // ],
+  // elec_nodes_pole: ({ zoom, dataStyle }) => [
+  //   border(),
+  //   fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_unknown.deck),
+  //   pointRadius(zoom),
+  // ],
+  // elec_nodes_substation: ({ zoom, dataStyle }) => [
+  //   border(),
+  //   fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_unknown.deck),
+  //   pointRadius(zoom),
+  // ],
   rail_edges: ({ zoom, dataStyle }) => [
     strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
     lineStyle(zoom),

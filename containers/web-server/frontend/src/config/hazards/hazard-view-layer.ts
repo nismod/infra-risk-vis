@@ -1,37 +1,28 @@
 import GL from '@luma.gl/constants';
 import React from 'react';
 
+import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use-interactions';
 import { ViewLayer } from '@/lib/data-map/view-layers';
 import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 
 import { HazardLegend } from '@/map/legend/content/HazardLegend';
 
+import { HazardHoverDescription } from './HazardHoverDescription';
 import { HAZARD_COLOR_MAPS } from './metadata';
-import { HAZARD_SOURCE } from './source';
+import { getHazardDataPath, getHazardDataUrl } from './source';
 
-export function getHazardId({ hazardType, hazardParams }: { hazardType: string; hazardParams: any }) {
-  if (hazardType === 'earthquake') {
-    const { rp, medium } = hazardParams;
-
-    return `${hazardType}__rp_${rp}__medium_${medium}`;
-  } else if (hazardType === 'drought') {
-    const { rcp, epoch, gcm } = hazardParams;
-
-    return `${hazardType}__rcp_${rcp}__epoch_${epoch}__gcm_${gcm}`;
-  } else {
-    const { rp, rcp, epoch, gcm } = hazardParams;
-
-    return `${hazardType}__rp_${rp}__rcp_${rcp}__epoch_${epoch}__gcm_${gcm}`;
-  }
+export function getHazardId(hazardType: string, hazardParams: any) {
+  return getHazardDataPath({ hazardType, metric: 'occurrence', hazardParams });
 }
 
 export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLayer {
   const magFilter = hazardType === 'cyclone' ? GL.NEAREST : GL.LINEAR;
 
-  const deckId = getHazardId({ hazardType, hazardParams });
+  const id = hazardType;
+  const deckId = getHazardId(hazardType, hazardParams);
 
   return {
-    id: hazardType,
+    id,
     spatialType: 'raster',
     interactionGroup: 'hazards',
     params: { hazardType, hazardParams },
@@ -52,8 +43,8 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
         },
         deckProps,
         {
-          id: `${hazardType}@${deckId}`, // follow the convention viewLayerId@deckLayerId
-          data: HAZARD_SOURCE.getDataUrl({ hazardType, hazardParams }, { scheme, range }),
+          id: `${id}@${deckId}`, // follow the convention viewLayerId@deckLayerId
+          data: getHazardDataUrl({ hazardType, metric: 'occurrence', hazardParams }, { scheme, range }),
           refinementStrategy: 'no-overlap',
         },
       );
@@ -62,6 +53,11 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
       return React.createElement(HazardLegend, {
         key: hazardType,
         viewLayer: this,
+      });
+    },
+    renderTooltip(hover: InteractionTarget<RasterTarget>) {
+      return React.createElement(HazardHoverDescription, {
+        hoveredObject: hover,
       });
     },
   };

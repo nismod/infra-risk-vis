@@ -12,10 +12,15 @@ import { hazardLayerState } from './data-layers/hazards';
 import { healthcareLayersState } from './data-layers/healthcare';
 import { humanDevelopmentLayerState } from './data-layers/human-development';
 import { industryLayersState } from './data-layers/industry';
-import { naturalAssetsLayersState } from './data-layers/natural-assets';
-import { natureVulnerabilityLayersState } from './data-layers/nature-vulnerability';
+import { landCoverLayerState } from './data-layers/land-cover';
+import {
+  biodiversityIntactnessLayerState,
+  forestLandscapeIntegrityLayerState,
+} from './data-layers/nature-vulnerability';
 import { networkLayersState } from './data-layers/networks';
+import { organicCarbonLayerState } from './data-layers/organic-carbon';
 import { populationLayerState } from './data-layers/population';
+import { populationExposureLayerState } from './data-layers/population-exposure';
 import { protectedAreasPointLayerState, protectedAreasPolygonLayerState } from './data-layers/protected-areas';
 import { travelTimeLayerState } from './data-layers/travel-time';
 import { featureBoundingBoxLayerState } from './ui-layers/feature-bbox';
@@ -31,14 +36,17 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
        * Data layers
        */
 
+      get(landCoverLayerState),
       get(humanDevelopmentLayerState),
       get(populationLayerState),
       get(buildingDensityLayerState),
-      get(naturalAssetsLayersState),
-      get(natureVulnerabilityLayersState),
+      get(organicCarbonLayerState),
+      get(biodiversityIntactnessLayerState),
+      get(forestLandscapeIntegrityLayerState),
       get(protectedAreasPolygonLayerState),
       get(travelTimeLayerState),
       get(hazardLayerState),
+      get(populationExposureLayerState),
       get(networkLayersState),
       get(industryLayersState),
       get(healthcareLayersState),

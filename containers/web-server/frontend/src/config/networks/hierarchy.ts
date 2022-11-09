@@ -5,165 +5,107 @@ interface NetworkLayerData {
 }
 
 export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
+  {
+    id: 'power',
+    label: 'Power',
+    children: [
+      {
+        id: 'power_transmission',
+        label: 'Transmission (OSM)',
+      },
+      {
+        id: 'power_distribution',
+        label: 'Distribution (Gridfinder)',
+      },
+    ],
+  },
+  {
+    id: 'rail-network',
+    label: 'Rail Network',
+    children: [
+      {
+        id: 'rail_edges',
+        label: 'Railways',
+      },
+      // {
+      //   id: 'rail_stations',
+      //   label: 'Stations',
+      // },
+      {
+        id: 'rail_nodes',
+        label: 'Junctions',
+      },
+    ],
+  },
+  {
+    id: 'road-network',
+    label: 'Road Network',
+    children: [
+      {
+        id: 'road_edges_motorway',
+        label: 'Motorway',
+      },
+      {
+        id: 'road_edges_trunk',
+        label: 'Trunk',
+      },
+      {
+        id: 'road_edges_primary',
+        label: 'Primary',
+      },
+      {
+        id: 'road_edges_secondary',
+        label: 'Secondary',
+      },
+      {
+        id: 'road_edges_tertiary',
+        label: 'Tertiary',
+      },
+    ],
+  },
   // {
-  //   id: 'power',
-  //   label: 'Power',
+  //   id: 'transport',
+  //   label: 'Transport',
+  //   children: [
+
+  // {
+  //   id: 'port_areas',
+  //   label: 'Ports',
   //   children: [
   //     {
-  //       id: 'power-lines',
-  //       label: 'Transmission',
-  //       children: [
-  //         {
-  //           id: 'elec_edges_high',
-  //           label: 'High Voltage',
-  //         },
-  //         {
-  //           id: 'elec_edges_low',
-  //           label: 'Low Voltage',
-  //         },
-  //         {
-  //           id: 'elec_nodes_pole',
-  //           label: 'Poles',
-  //         },
-  //         {
-  //           id: 'elec_nodes_substation',
-  //           label: 'Substations',
-  //         },
-  //       ],
+  //       id: 'port_areas_break',
+  //       label: 'Break',
   //     },
   //     {
-  //       id: 'elec_nodes_source',
-  //       label: 'Generation',
-  //       children: [
-  //         {
-  //           id: 'elec_nodes_diesel',
-  //           label: 'Diesel',
-  //         },
-  //         {
-  //           id: 'elec_nodes_gas',
-  //           label: 'Gas',
-  //         },
-  //         {
-  //           id: 'elec_nodes_hydro',
-  //           label: 'Hydro',
-  //         },
-  //         {
-  //           id: 'elec_nodes_solar',
-  //           label: 'Solar',
-  //         },
-  //         {
-  //           id: 'elec_nodes_wind',
-  //           label: 'Wind',
-  //         },
-  //       ],
+  //       id: 'port_areas_container',
+  //       label: 'Container',
   //     },
   //     {
-  //       id: 'elec_nodes_demand',
-  //       label: 'Demand',
+  //       id: 'port_areas_industry',
+  //       label: 'Industry',
+  //     },
+  //     {
+  //       id: 'port_areas_silo',
+  //       label: 'Silo',
   //     },
   //   ],
   // },
-  {
-    id: 'transport',
-    label: 'Transport',
-    children: [
-      {
-        id: 'rail-network',
-        label: 'Rail Network',
-        children: [
-          {
-            id: 'rail_edges',
-            label: 'Railways',
-          },
-          // {
-          //   id: 'rail_stations',
-          //   label: 'Stations',
-          // },
-          {
-            id: 'rail_nodes',
-            label: 'Junctions',
-          },
-        ],
-      },
-      {
-        id: 'road-network',
-        label: 'Road Network',
-        children: [
-          /*
-          {
-            id: 'roads',
-            label: 'Roads',
-            children: [
-              */
-          {
-            id: 'road_edges_motorway',
-            label: 'Motorway',
-          },
-          {
-            id: 'road_edges_trunk',
-            label: 'Trunk',
-          },
-          {
-            id: 'road_edges_primary',
-            label: 'Primary',
-          },
-          {
-            id: 'road_edges_secondary',
-            label: 'Secondary',
-          },
-          {
-            id: 'road_edges_tertiary',
-            label: 'Tertiary',
-          },
-
-          /*
-            ],
-          },
-          */
-          // {
-          //   id: 'road_bridges',
-          //   label: 'Bridges',
-          // },
-        ],
-      },
-      // {
-      //   id: 'port_areas',
-      //   label: 'Ports',
-      //   children: [
-      //     {
-      //       id: 'port_areas_break',
-      //       label: 'Break',
-      //     },
-      //     {
-      //       id: 'port_areas_container',
-      //       label: 'Container',
-      //     },
-      //     {
-      //       id: 'port_areas_industry',
-      //       label: 'Industry',
-      //     },
-      //     {
-      //       id: 'port_areas_silo',
-      //       label: 'Silo',
-      //     },
-      //   ],
-      // },
-      // {
-      //   id: 'air',
-      //   label: 'Airports',
-      //   children: [
-      //     {
-      //       id: 'airport_runways',
-      //       label: 'Runways',
-      //     },
-      //     {
-      //       id: 'airport_terminals',
-      //       label: 'Terminals',
-      //     },
-      //   ],
-      // },
-    ],
-  },
+  // {
+  //   id: 'air',
+  //   label: 'Airports',
+  //   children: [
+  //     {
+  //       id: 'airport_runways',
+  //       label: 'Runways',
+  //     },
+  //     {
+  //       id: 'airport_terminals',
+  //       label: 'Terminals',
+  //     },
+  //   ],
+  // },
+  // ],
+  // },
   // {
   //   id: 'water',
   //   label: 'Water',

@@ -4,6 +4,7 @@ import { ColorSpec } from '@/lib/data-map/view-layers';
 export const DAMAGE_COLORMAP: ColorSpec = {
   scale: d3Scale.scaleSequential,
   scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
-  range: [0, 1e6],
+  range: [0, 1e5],
   empty: '#ccc',
+  zeroIsEmpty: true,
 };

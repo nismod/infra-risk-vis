@@ -1,6 +1,8 @@
 import { FormControl, FormLabel, MenuItem, Select } from '@mui/material';
 
-import { DataParam } from './DataParam';
+import { useDataGroup } from '@/lib/data-selection/DataGroup';
+import { DataParam } from '@/lib/data-selection/DataParam';
+import { useInputDisabled } from '@/lib/data-selection/DisabledInput';
 
 const gcmLabelLookup = {
   'EC-EARTH3P-HR': 'EC-Earth3P-HR',
@@ -15,7 +17,10 @@ function gcmLabel(value: string) {
   return gcmLabelLookup[upper] ?? upper;
 }
 
-export const GCMControl = ({ group, disabled = false }) => {
+export const GCMControl = () => {
+  const group = useDataGroup();
+  const disabled = useInputDisabled();
+
   return (
     <FormControl fullWidth disabled={disabled}>
       <FormLabel>
