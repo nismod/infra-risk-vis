@@ -50,47 +50,139 @@ export const IntroPage = () => (
         <Grid item xs={12}>
           <TextBox sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
             <p>
-              The research, analysis and development has been led by researchers in the&nbsp;
-              <a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
-                Oxford Programme for Sustainable Infrastructure Systems
+
+              The research, analysis and development has been led by researchers
+              in the <a href="https://opsis.eci.ox.ac.uk/" target="_blank"
+              rel="noopener noreferrer"> Oxford Programme for Sustainable
+              Infrastructure Systems</a> at the University of Oxford as part of
+              the <a href="http://www.globalresilienceindex.org/"
+              target="_blank" rel="noopener noreferrer">Global Resilience Index
+              Initiative</a>.
+
+            </p>
+
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem />}
+              justifyContent="center"
+              alignItems="center"
+              spacing={2}
+            >
+              <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
+                <img
+                  height="100"
+                  src="/logo-opsis.png"
+                  alt="Oxford Programme for Sustainable Infrastructure Systems"
+                />
               </a>
-              , University of Oxford
-            </p>
-            <p>
-              <Stack
-                direction="row"
-                divider={<Divider orientation="vertical" flexItem />}
-                justifyContent="center"
-                alignItems="center"
-                spacing={2}
-              >
-                <a href="https://opsis.eci.ox.ac.uk" target="_blank" rel="noopener noreferrer">
-                  <img
-                    height="100"
-                    src="/logo-opsis.png"
-                    alt="Oxford Programme for Sustainable Infrastructure Systems"
-                  />
-                </a>
-              </Stack>
-            </p>
+
+
+              <a href="http://www.globalresilienceindex.org/" target="_blank" rel="noopener noreferrer">
+                <img
+                  height="80"
+                  src="/logo-grii.png"
+                  alt="Global Resilience Index Initiative"
+                />
+              </a>
+            </Stack>
+
+            <Typography variant="h2">GRII Partners</Typography>
+
+
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" flexItem />}
+              spacing={2}
+              sx={{mb:2}}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <a href="https://ukcgfi.org/" target="_blank" rel="noopener noreferrer">
+                <img height="60" src="/logo-cgfi.png" alt="CGFI" />
+              </a>
+              <a href="https://resilientinvestment.org/" target="_blank" rel="noopener noreferrer">
+                <img height="80" src="/logo-ccri.png" alt="CCRI" />
+              </a>
+              <a href="https://www.cdri.world/" target="_blank" rel="noopener noreferrer">
+                <img height="70" src="/logo-cdri.png" alt="CDRI" />
+              </a>
+              <a href="https://www.globalquakemodel.org/who-we-are" target="_blank" rel="noopener noreferrer">
+                <img height="60" src="/logo-gem.png" alt="GEM" />
+              </a>
+              <a href="https://www.insdevforum.org/" target="_blank" rel="noopener noreferrer">
+                <img height="40" src="/logo-idf.png" alt="IDF" />
+              </a>
+              <a href="https://www.undrr.org/" target="_blank" rel="noopener noreferrer">
+                <img height="50" src="/logo-undrr.png" alt="UNDRR" />
+              </a>
+            </Stack>
 
             <Typography variant="h2">Funding and support</Typography>
 
             <p>
-              This project is led by researchers in the&nbsp;
-              <a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
-                Oxford Programme for Sustainable Infrastructure Systems
-              </a>{' '}
-              in the Environmental Change Institute, University of Oxford.
+
+            This project is led by researchers in the <a
+            href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener
+            noreferrer">Oxford Programme for Sustainable Infrastructure
+            Systems</a> in the Environmental Change Institute, University of
+            Oxford, with some analysis specifically contributed by the <a
+            href="https://www.globalquakemodel.org/who-we-are">Global Earthquake
+            Model Foundation</a>, as well as the many open data sources listed{' '}
+            <Link to="/data">here</Link>.
+
+            </p>
+            <p>
+
+            This project has been funded by the UK Natural Environment Research
+            Council (NERC) through the UK Centre for Greening Finance and
+            Investment, the World Bank Group, Insurance for Development Forum,
+            and Willis Towers Watson.
+
             </p>
 
             <Stack
               direction="row"
               divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
+              sx={{mb:2}}
               justifyContent="center"
               alignItems="center"
-            ></Stack>
+            >
+              <a href="https://www.ukri.org/councils/nerc/" target="_blank" rel="noopener noreferrer">
+                <img height="60" src="/logo-nerc.png" alt="NERC" />
+              </a>
+              <a href="https://www.worldbank.org/en/home" target="_blank" rel="noopener noreferrer">
+                <img height="40" src="/logo-wbg.png" alt="World Bank Group" />
+              </a>
+              <a href="https://www.insdevforum.org/" target="_blank" rel="noopener noreferrer">
+                <img height="40" src="/logo-idf.png" alt="IDF" />
+              </a>
+              <a href="https://www.wtwco.com/" target="_blank" rel="noopener noreferrer">
+                <img height="30" src="/logo-wtw.png" alt="WTW" />
+              </a>
+            </Stack>
+
+            <p>
+
+            This builds on previous research and development funded by UK AID
+            through the UK Foreign and Commonwealth Development Office (FCDO) as
+            part of a project with the Government of Jamaica (GoJ) under the
+            Coalition for Climate Resilient Investment&rsquo;s (CCRI) work on
+            "Systemic Resilience" in collaboration with the Green Climate Fund,
+            and also through the High-Volume Transport Applied Research project.
+
+            </p>
+            <p>
+
+            Similarly, earlier versions of the tool piloted in Argentina and
+            South-East Asia were funded by the Disaster Risk Financing and
+            Insurance Program (DRFIP) of the World Bank with support from the
+            Japan—World Bank Program for Mainstreaming DRM in Developing
+            Countries, which is financed by the Government of Japan and managed
+            by the Global Facility for Disaster Reduction and Recovery (GFDRR)
+            through the Tokyo Disaster Risk Management Hub.
+
+            </p>
 
             <Typography variant="h2">Disclaimer</Typography>
 
