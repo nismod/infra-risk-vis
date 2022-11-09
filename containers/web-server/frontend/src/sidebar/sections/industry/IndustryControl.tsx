@@ -11,14 +11,14 @@ export const IndustryControl = () => {
 
   return (
     <ParamChecklist<IndustryType>
-      title="Industry types"
       options={Object.keys(checkboxState) as IndustryType[]}
       checklistState={checkboxState}
       onChecklistState={setCheckboxState}
       renderLabel={(key) => {
-        const { color, type, label } = INDUSTRY_METADATA[key];
-        return <LayerLabel color={color} type={type as LayerLabelShapeType} label={label} />;
+        const { color, type, shortLabel } = INDUSTRY_METADATA[key];
+        return <LayerLabel color={color} type={type as LayerLabelShapeType} label={shortLabel} />;
       }}
+      showAllNone={false}
     />
   );
 };

@@ -18,17 +18,19 @@ export const INDUSTRY_COLORS = makeColorConfig({
   steel: '#5b8cc3',
 });
 
-export const INDUSTRY_METADATA = makeConfig<AssetMetadata, IndustryType>([
+export const INDUSTRY_METADATA = makeConfig<AssetMetadata & { shortLabel: string }, IndustryType>([
   {
     id: 'cement',
     type: 'circle',
     label: 'Industry (Cement)',
+    shortLabel: 'Cement',
     color: INDUSTRY_COLORS.cement.css,
   },
   {
     id: 'steel',
     type: 'circle',
     label: 'Industry (Steel)',
+    shortLabel: 'Steel',
     color: INDUSTRY_COLORS.steel.css,
   },
 ]);

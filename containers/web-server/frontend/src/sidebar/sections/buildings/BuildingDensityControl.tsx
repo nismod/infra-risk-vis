@@ -7,12 +7,5 @@ import { buildingDensityTypeState } from '@/state/data-selection/building-densit
 
 export const BuildingDensityControl = () => {
   const [type, setType] = useRecoilState(buildingDensityTypeState);
-  return (
-    <ParamDropdown<BuildingDensityType>
-      title="Building type"
-      value={type}
-      onChange={setType}
-      options={BUILDING_DENSITY_TYPE_LABELS}
-    />
-  );
+  return <ParamDropdown<BuildingDensityType> value={type} onChange={setType} options={BUILDING_DENSITY_TYPE_LABELS} />;
 };

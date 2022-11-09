@@ -15,6 +15,6 @@ export const NATURE_RASTER_VALUE_LABELS: ValueLabel<NatureRasterType>[] = [
   },
   {
     value: 'organic_carbon',
-    label: 'Organic Carbon',
+    label: 'Soil Organic Carbon',
   },
 ];

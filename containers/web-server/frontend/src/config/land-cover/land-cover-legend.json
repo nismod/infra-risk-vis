@@ -9,7 +9,7 @@
         ]
     },
     "10": {
-        "name": "Cropland,rainfed",
+        "name": "Cropland, rainfed",
         "color": [
             255,
             255,
@@ -18,7 +18,7 @@
         ]
     },
     "11": {
-        "name": "Cropland,rainfed, herbaceous cover",
+        "name": "Cropland, rainfed, herbaceous cover",
         "color": [
             255,
             255,
@@ -27,7 +27,7 @@
         ]
     },
     "12": {
-        "name": "Cropland,rainfed, tree or shrub cover",
+        "name": "Cropland, rainfed, tree or shrub cover",
         "color": [
             255,
             255,
@@ -36,7 +36,7 @@
         ]
     },
     "20": {
-        "name": "Cropland,irrigated or post-flooding",
+        "name": "Cropland, irrigated or post-flooding",
         "color": [
             170,
             240,
@@ -45,7 +45,7 @@
         ]
     },
     "30": {
-        "name": "Mosaic cropland (>50%) / natural vegetation (tree,shrub,herbaceous cover) (<50%)",
+        "name": "Mosaic cropland (>50%) / natural vegetation (tree, shrub, herbaceous cover) (<50%)",
         "color": [
             220,
             240,
@@ -54,7 +54,7 @@
         ]
     },
     "40": {
-        "name": "Mosaic natural vegetation (tree,shrub,herbaceous cover) (>50%) / cropland (<50%)",
+        "name": "Mosaic natural vegetation (tree, shrub, herbaceous cover) (>50%) / cropland (<50%)",
         "color": [
             200,
             200,
@@ -63,7 +63,7 @@
         ]
     },
     "50": {
-        "name": "Tree cover,broadleaved,evergreen,closed to open (>15%)",
+        "name": "Tree cover, broadleaved, evergreen, closed to open (>15%)",
         "color": [
             0,
             100,
@@ -72,7 +72,7 @@
         ]
     },
     "60": {
-        "name": "Tree cover,broadleaved,deciduous,closed to open (>15%)",
+        "name": "Tree cover, broadleaved, deciduous, closed to open (>15%)",
         "color": [
             0,
             160,
@@ -81,7 +81,7 @@
         ]
     },
     "61": {
-        "name": "Tree cover,broadleaved,deciduous,closed (>40%)",
+        "name": "Tree cover, broadleaved, deciduous, closed (>40%)",
         "color": [
             0,
             160,
@@ -90,7 +90,7 @@
         ]
     },
     "62": {
-        "name": "Tree cover,broadleaved,deciduous,open (15-40%)",
+        "name": "Tree cover, broadleaved, deciduous, open (15-40%)",
         "color": [
             170,
             200,
@@ -99,7 +99,7 @@
         ]
     },
     "70": {
-        "name": "Tree cover,needleleaved,evergreen,closed to open (>15%)",
+        "name": "Tree cover, needleleaved, evergreen, closed to open (>15%)",
         "color": [
             0,
             60,
@@ -108,7 +108,7 @@
         ]
     },
     "71": {
-        "name": "Tree cover,needleleaved,evergreen,closed (>40%)",
+        "name": "Tree cover, needleleaved, evergreen, closed (>40%)",
         "color": [
             0,
             60,
@@ -117,7 +117,7 @@
         ]
     },
     "72": {
-        "name": "Tree cover,needleleaved,evergreen,open (15-40%)",
+        "name": "Tree cover, needleleaved, evergreen, open (15-40%)",
         "color": [
             0,
             80,
@@ -126,7 +126,7 @@
         ]
     },
     "80": {
-        "name": "Tree cover,needleleaved,deciduous,closed to open (>15%)",
+        "name": "Tree cover, needleleaved, deciduous, closed to open (>15%)",
         "color": [
             40,
             80,
@@ -135,7 +135,7 @@
         ]
     },
     "81": {
-        "name": "Tree cover,needleleaved,deciduous,closed (>40%)",
+        "name": "Tree cover, needleleaved, deciduous, closed (>40%)",
         "color": [
             40,
             80,
@@ -144,7 +144,7 @@
         ]
     },
     "82": {
-        "name": "Tree cover,needleleaved,deciduous,open (15-40%)",
+        "name": "Tree cover, needleleaved, deciduous, open (15-40%)",
         "color": [
             40,
             100,
@@ -153,7 +153,7 @@
         ]
     },
     "90": {
-        "name": "Tree cover,mixed leaf type (broadleaved and needleleaved)",
+        "name": "Tree cover, mixed leaf type (broadleaved and needleleaved)",
         "color": [
             120,
             130,
@@ -225,7 +225,7 @@
         ]
     },
     "150": {
-        "name": "Sparse vegetation (tree,shrub,herbaceous cover) (<15%)",
+        "name": "Sparse vegetation (tree, shrub, herbaceous cover) (<15%)",
         "color": [
             255,
             235,
@@ -261,7 +261,7 @@
         ]
     },
     "160": {
-        "name": "Tree cover,flooded,fresh or brackish water",
+        "name": "Tree cover, flooded, fresh or brackish water",
         "color": [
             0,
             120,
@@ -270,7 +270,7 @@
         ]
     },
     "170": {
-        "name": "Tree cover,flooded,saline water",
+        "name": "Tree cover, flooded, saline water",
         "color": [
             0,
             150,
@@ -279,7 +279,7 @@
         ]
     },
     "180": {
-        "name": "Shrub or herbaceous cover,flooded,fresh/saline/brackish water",
+        "name": "Shrub or herbaceous cover, flooded, fresh/saline/brackish water",
         "color": [
             0,
             220,

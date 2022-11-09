@@ -15,7 +15,7 @@ export const HEALTHSITES_COLOR = makeColor('#72dfda');
 
 export const HEALTHSITES_METADATA: AssetMetadata = {
   type: 'circle',
-  label: 'Health Sites',
+  label: 'Healthcare',
   color: HEALTHSITES_COLOR.css,
 };
 

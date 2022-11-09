@@ -32,7 +32,7 @@ const infrastructureRiskConfig = atom({
   key: 'infrastructureRiskConfig',
   default: {
     paramDomains: {
-      sector: ['roads', 'rail', 'power'],
+      sector: ['roads', 'power'],
       hazard: ['fluvial', 'cyclone'],
     },
     paramDefaults: {
@@ -81,11 +81,9 @@ const InitInfrastructureView = () => {
   const updateExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => syncExposure(iface, 'infrastructure'), []);
   const hideExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => hideExposure(iface, 'infrastructure'), []);
   useEffect(() => {
-    console.log('Initializing infrastructure exposure');
     updateExposureTx();
 
     return () => {
-      console.log('Cleaning up infrastructure exposure');
       hideExposureTx();
     };
   }, [updateExposureTx, hideExposureTx]);

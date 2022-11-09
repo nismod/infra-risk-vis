@@ -5,6 +5,6 @@ export const DAMAGE_COLORMAP: ColorSpec = {
   scale: d3Scale.scaleSequential,
   scheme: invertColorScale(d3ScaleChromatic.interpolateInferno),
   range: [0, 1e5],
-  empty: '#ccc',
+  empty: 'rgba(200,200,200,0.3)',
   zeroIsEmpty: true,
 };

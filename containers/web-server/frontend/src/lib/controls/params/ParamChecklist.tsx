@@ -7,7 +7,7 @@ import { fromKeys } from '@/lib/helpers';
 import { ValueLabel, getValueLabel } from './value-label';
 
 interface ParamChecklistProps<K extends string> {
-  title: string;
+  title?: string;
   options: K[] | ValueLabel<K>[];
   checklistState: { [key in K]: boolean };
   onChecklistState: (state: { [key in K]: boolean }) => void;

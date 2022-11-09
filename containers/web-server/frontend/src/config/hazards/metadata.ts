@@ -12,11 +12,11 @@ export type HazardType = typeof HAZARD_TYPES[number];
 export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
   fluvial: {
     scheme: 'blues',
-    range: [0, 10],
+    range: [0, 5],
   },
   coastal: {
     scheme: 'greens',
-    range: [0, 10],
+    range: [0, 5],
   },
   cyclone: {
     scheme: 'reds',
@@ -50,11 +50,11 @@ export const HAZARDS_METADATA: Record<HazardType, HazardMetadata> = {
   },
   fluvial: {
     label: 'River Flooding',
-    formatValue: makeValueFormat('_m', { maximumFractionDigits: 1 }),
+    formatValue: makeValueFormat('_m', { maximumFractionDigits: 2 }),
   },
   coastal: {
     label: 'Coastal Flooding',
-    formatValue: makeValueFormat('_m', { maximumFractionDigits: 1 }),
+    formatValue: makeValueFormat('_m', { maximumFractionDigits: 2 }),
   },
   extreme_heat: {
     label: 'Extreme Heat',

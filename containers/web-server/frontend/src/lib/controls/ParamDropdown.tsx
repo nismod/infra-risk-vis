@@ -4,7 +4,7 @@ import { PropsWithChildren, useCallback } from 'react';
 import { ValueLabel, isValueLabel } from './params/value-label';
 
 interface ParamDropdownProps<V extends string | number = string> {
-  title: string;
+  title?: string;
   value: V;
   options: (V | ValueLabel<V>)[];
   onChange: (value: V) => void;
@@ -23,7 +23,7 @@ export const ParamDropdown = <V extends string | number = string>({
   const handleChange = useCallback((e) => onChange(e.target.value), [onChange]);
   return (
     <FormControl fullWidth>
-      <FormLabel>{title}</FormLabel>
+      {title && <FormLabel>{title}</FormLabel>}
       <Select
         value={value}
         onChange={handleChange}
