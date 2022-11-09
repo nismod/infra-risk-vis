@@ -1,5 +1,3 @@
-import { toNumber } from 'lodash';
-
 import { HazardType } from './metadata';
 
 export interface HazardParams {
@@ -12,12 +10,6 @@ export interface HazardParams {
 interface HazardDomainConfig {
   defaults: Record<string, any>;
   dependencies: Record<string, string[]>;
-  preprocess: Record<string, (value: any) => any>;
-}
-
-const rcpRegex = /\dx\d/;
-function preprocessRcp(rcp: string) {
-  return rcp.match(rcpRegex) ? rcp.replace('x', '.') : rcp;
 }
 
 export const HAZARD_DOMAINS_CONFIG: Record<HazardType, HazardDomainConfig> = {
@@ -32,24 +24,16 @@ export const HAZARD_DOMAINS_CONFIG: Record<HazardType, HazardDomainConfig> = {
       rcp: ['epoch'],
       gcm: ['epoch'],
     },
-    preprocess: {
-      rcp: preprocessRcp,
-      rp: toNumber,
-    },
   },
   coastal: {
     defaults: {
-      rp: 1,
-      epoch: '2010',
+      rp: 100,
+      epoch: 'present',
       rcp: 'baseline',
       gcm: 'None',
     },
     dependencies: {
       rcp: ['epoch'],
-    },
-    preprocess: {
-      rcp: preprocessRcp,
-      rp: toNumber,
     },
   },
   cyclone: {
@@ -67,10 +51,6 @@ export const HAZARD_DOMAINS_CONFIG: Record<HazardType, HazardDomainConfig> = {
       gcm: ['epoch'],
       rcp: ['epoch'],
     },
-    preprocess: {
-      rp: toNumber,
-      rcp: preprocessRcp,
-    },
   },
   extreme_heat: {
     defaults: {
@@ -81,9 +61,6 @@ export const HAZARD_DOMAINS_CONFIG: Record<HazardType, HazardDomainConfig> = {
     dependencies: {
       rcp: ['epoch'],
     },
-    preprocess: {
-      rcp: preprocessRcp,
-    },
   },
   earthquake: {
     defaults: {
@@ -91,9 +68,6 @@ export const HAZARD_DOMAINS_CONFIG: Record<HazardType, HazardDomainConfig> = {
       medium: 'soil',
     },
     dependencies: {},
-    preprocess: {
-      rp: toNumber,
-    },
   },
   drought: {
     defaults: {
@@ -104,9 +78,6 @@ export const HAZARD_DOMAINS_CONFIG: Record<HazardType, HazardDomainConfig> = {
     dependencies: {
       rcp: ['epoch'],
       gcm: ['epoch'],
-    },
-    preprocess: {
-      rcp: preprocessRcp,
     },
   },
 };

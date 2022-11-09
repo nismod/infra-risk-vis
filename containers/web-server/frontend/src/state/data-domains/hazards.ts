@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { toNumber } from 'lodash';
 import { selectorFamily } from 'recoil';
 
 import { DataParamGroupConfig, inferDependenciesFromData, inferDomainsFromData } from '@/lib/controls/data-params';
@@ -8,15 +8,25 @@ import { HazardType } from '@/config/hazards/metadata';
 
 import { rasterSourceDomainsQuery } from './sources';
 
+const rcpRegex = /\dx\d/;
+function preprocessRcp(rcp: string) {
+  return rcp.match(rcpRegex) ? rcp.replace('x', '.') : rcp;
+}
+
+const HAZARD_DOMAIN_PREPROCESSING = {
+  rcp: preprocessRcp,
+  rp: toNumber,
+};
+
 function numbersLast(value) {
   return isNaN(value) ? 0 : 1;
 }
-
 /**
  * Last-minute hack for sorting the epoch etc. labels correctly in the UI
  */
 const HAZARD_DOMAIN_SORTING_FUNCTIONS = {
   epoch: [numbersLast, _.identity],
+  rcp: [numbersLast, _.identity],
 };
 
 /**
@@ -37,7 +47,8 @@ export const hazardDomainsConfigState = selectorFamily<DataParamGroupConfig, Haz
   get:
     (hazardType: HazardType) =>
     ({ get }) => {
-      const { defaults, dependencies, preprocess } = HAZARD_DOMAINS_CONFIG[hazardType];
+      const { defaults, dependencies } = HAZARD_DOMAINS_CONFIG[hazardType];
+      const preprocess = HAZARD_DOMAIN_PREPROCESSING;
 
       const paramNames = Object.keys(defaults);
 
@@ -60,11 +71,10 @@ export const hazardDomainsConfigState = selectorFamily<DataParamGroupConfig, Haz
       const sortedDomains = _.mapValues(inferredDomains, (domain, domainName) =>
         _.sortBy(domain, HAZARD_DOMAIN_SORTING_FUNCTIONS[domainName]),
       );
-
       return {
         paramDomains: sortedDomains,
         paramDefaults: defaults,
-        paramDependencies: inferDependenciesFromData(uniqueDomains, dependencies),
+        paramDependencies: inferDependenciesFromData(uniqueDomains, dependencies, HAZARD_DOMAIN_SORTING_FUNCTIONS),
       };
     },
 });
