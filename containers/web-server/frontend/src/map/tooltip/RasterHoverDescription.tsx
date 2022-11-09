@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { useRasterColorMapValues } from '@/map/legend/use-color-map-values';
 
@@ -9,7 +9,7 @@ export interface RasterHoverDescriptionProps {
   range: [number, number];
   color: [number, number, number, number];
   label: string;
-  formatValue: (x: any) => string;
+  formatValue: (x: any) => ReactNode | string;
 }
 
 export const RasterHoverDescription: FC<RasterHoverDescriptionProps> = ({ scheme, range, ...otherProps }) => {

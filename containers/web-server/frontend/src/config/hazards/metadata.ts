@@ -1,3 +1,6 @@
+import { ReactNode } from 'react';
+
+import { makeValueFormat } from '@/lib/formats';
 import { makeOrderingCheck } from '@/lib/helpers';
 
 import { RasterColorMap } from '@/map/legend/RasterLegend';
@@ -35,49 +38,39 @@ export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
 
 export interface HazardMetadata {
   label: string;
-  formatValue: (x: number) => string;
+  formatValue: (x: number) => ReactNode | string;
   labelAbbreviations?: Record<string, string>;
   legendAnnotation?: string;
-}
-
-/**
- * Helper function to format hazard values in legends, tooltips etc
- * @param formatString simple format string where _ will be replaced by the formatted number
- * @param numberFormatOptions options to pass to Number.toLocaleString()
- * @returns formatted value as a string
- */
-function hazardFormat(formatString: string, numberFormatOptions: Intl.NumberFormatOptions) {
-  return (value: number) => formatString.replace('_', value.toLocaleString(undefined, numberFormatOptions));
 }
 
 export const HAZARDS_METADATA: Record<HazardType, HazardMetadata> = {
   cyclone: {
     label: 'Cyclones',
-    formatValue: hazardFormat('_m/s', { maximumFractionDigits: 1 }),
+    formatValue: makeValueFormat('_m/s', { maximumFractionDigits: 1 }),
   },
   fluvial: {
     label: 'River Flooding',
-    formatValue: hazardFormat('_m', { maximumFractionDigits: 1 }),
+    formatValue: makeValueFormat('_m', { maximumFractionDigits: 1 }),
   },
   coastal: {
     label: 'Coastal Flooding',
-    formatValue: hazardFormat('_m', { maximumFractionDigits: 1 }),
+    formatValue: makeValueFormat('_m', { maximumFractionDigits: 1 }),
   },
   extreme_heat: {
     label: 'Extreme Heat',
-    formatValue: hazardFormat('_', { maximumFractionDigits: 2 }),
+    formatValue: makeValueFormat('_', { maximumFractionDigits: 2 }),
     legendAnnotation: 'Annual probability of extreme event',
   },
   earthquake: {
     label: 'Seismic Hazard (PGA)',
-    formatValue: hazardFormat('_g', { maximumFractionDigits: 3 }),
+    formatValue: makeValueFormat('_g', { maximumFractionDigits: 3 }),
     labelAbbreviations: {
       PGA: 'Peak Ground Acceleration',
     },
   },
   drought: {
     label: 'Droughts',
-    formatValue: hazardFormat('_', { maximumFractionDigits: 1, style: 'percent' }),
+    formatValue: makeValueFormat('_', { maximumFractionDigits: 1, style: 'percent' }),
     legendAnnotation: 'Annual probability of extreme event',
   },
 };

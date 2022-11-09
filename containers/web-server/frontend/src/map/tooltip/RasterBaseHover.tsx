@@ -1,5 +1,5 @@
 import { Box } from '@mui/system';
-import { FC, useMemo } from 'react';
+import { FC, ReactNode, useMemo } from 'react';
 
 import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 import { DataItem } from '@/lib/ui/data-display/DataItem';
@@ -22,7 +22,7 @@ export interface RasterBaseHoverProps {
   colorMapValues: ColorValue[];
   color: RGBAColor;
   label: string;
-  formatValue: (x: any) => string;
+  formatValue: (x: any) => ReactNode | string;
 }
 
 export const RasterBaseHover: FC<RasterBaseHoverProps> = ({ colorMapValues, color, label, formatValue }) => {

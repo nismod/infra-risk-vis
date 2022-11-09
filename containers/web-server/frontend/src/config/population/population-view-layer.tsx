@@ -4,7 +4,7 @@ import React from 'react';
 import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use-interactions';
 import { ViewLayer } from '@/lib/data-map/view-layers';
 import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
-import { numFormat } from '@/lib/helpers';
+import { makeValueFormat } from '@/lib/formats';
 
 import { RasterLegend } from '@/map/legend/RasterLegend';
 import { RasterHoverDescription } from '@/map/tooltip/RasterHoverDescription';
@@ -24,8 +24,15 @@ function getPopulationUrl() {
 }
 
 export function jrcPopulationViewLayer(): ViewLayer {
-  const label = 'Population';
-  const formatValue = (x) => numFormat(x);
+  const label = 'Population Density';
+  const formatValue = makeValueFormat(
+    (x) => (
+      <>
+        {x}/km<sup>2</sup>
+      </>
+    ),
+    { maximumFractionDigits: 1 },
+  );
 
   return {
     id: 'population',
@@ -48,7 +55,7 @@ export function jrcPopulationViewLayer(): ViewLayer {
     renderLegend() {
       return React.createElement(RasterLegend, {
         key: 'population',
-        label: 'Population',
+        label,
         colorMap: JRC_POPULATION_COLOR_MAP,
         getValueLabel: formatValue,
       });

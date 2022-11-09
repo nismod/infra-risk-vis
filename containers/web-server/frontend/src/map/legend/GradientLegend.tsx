@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Fade, Tooltip, Typography } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 const legendHeight = 10;
@@ -10,12 +10,23 @@ export interface ColorValue {
 
 const LegendGradient: FC<{
   colorMapValues: ColorValue[];
-  getValueLabel: (value: number) => string;
+  getValueLabel: (value: number) => ReactNode | string;
 }> = ({ colorMapValues, getValueLabel }) => {
   return (
     <>
       {colorMapValues.map(({ color, value }, i) => (
-        <Box key={i} height={legendHeight} width={1} bgcolor={color} title={getValueLabel(value)} />
+        <Tooltip
+          title={getValueLabel(value)}
+          arrow
+          placement="top"
+          enterDelay={500}
+          leaveDelay={0}
+          // deactivates transition animation
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 0 }}
+        >
+          <Box key={i} height={legendHeight} flexGrow={1} bgcolor={color} />
+        </Tooltip>
       ))}
     </>
   );
@@ -26,7 +37,7 @@ export interface GradientLegendProps {
   description?: string;
   range: [number, number];
   colorMapValues: ColorValue[];
-  getValueLabel: (x: any) => string;
+  getValueLabel: (x: any) => ReactNode | string;
 }
 
 export const GradientLegend: FC<GradientLegendProps> = ({
