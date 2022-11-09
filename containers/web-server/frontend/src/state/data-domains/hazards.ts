@@ -8,6 +8,17 @@ import { HazardType } from '@/config/hazards/metadata';
 
 import { rasterSourceDomainsQuery } from './sources';
 
+function numbersLast(value) {
+  return isNaN(value) ? 0 : 1;
+}
+
+/**
+ * Last-minute hack for sorting the epoch etc. labels correctly in the UI
+ */
+const HAZARD_DOMAIN_SORTING_FUNCTIONS = {
+  epoch: [numbersLast, _.identity],
+};
+
 export const hazardDomainsConfigState = selectorFamily<DataParamGroupConfig, HazardType>({
   key: 'hazardDomainsConfigState',
   get:
@@ -31,7 +42,9 @@ export const hazardDomainsConfigState = selectorFamily<DataParamGroupConfig, Haz
 
       const inferredDomains = inferDomainsFromData(uniqueDomains);
       // sortBy sorts integers correctly, whereas sort stringifies which results in 1, 10, 2, 20 etc
-      const sortedDomains = _.mapValues(inferredDomains, (domain) => _.sortBy(domain));
+      const sortedDomains = _.mapValues(inferredDomains, (domain, domainName) =>
+        _.sortBy(domain, HAZARD_DOMAIN_SORTING_FUNCTIONS[domainName]),
+      );
 
       return {
         paramDomains: sortedDomains,
