@@ -189,8 +189,7 @@ export const DataPage = () => (
               Tropical cyclone maximum wind speed (in m/s) return periods,
               generated using the STORM climate change datasets. 1 in 10 to 1 in
               10,000 year return periods at 10 km resolution. Baseline and RCP
-              8.5 climate scenarios. Current and future maps in 2030, 2050 and
-              2080.
+              8.5 climate scenarios. Current and future (2050) epochs.
 
             </TableCell>
           </TableRow>

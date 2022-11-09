@@ -125,10 +125,14 @@ export const IntroPage = () => (
             href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener
             noreferrer">Oxford Programme for Sustainable Infrastructure
             Systems</a> in the Environmental Change Institute, University of
-            Oxford, with some analysis specifically contributed by the <a
-            href="https://www.globalquakemodel.org/who-we-are">Global Earthquake
-            Model Foundation</a>, as well as the many open data sources listed{' '}
-            <Link to="/data">here</Link>.
+            Oxford, with contributions of data from the <a
+            href="https://www.globalquakemodel.org/who-we-are" target="_blank"
+            rel="noopener noreferrer">Global Earthquake Model Foundation</a>,
+            the <a href="https://www.cgfi.ac.uk/spatial-finance-initiative/"
+            target="_blank" rel="noopener noreferrer">Spatial Finance
+            Initiative</a>, as well as the many open data sources listed <Link
+            to="/data">here</Link>. Appropriate open data sources are regularly
+            reviewed as part of the GRII taskforce.
 
             </p>
             <p>
