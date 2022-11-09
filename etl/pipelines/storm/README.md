@@ -13,3 +13,17 @@ Manually Download Tiffs from Source -> `present` and `future` folders
 ```
 Source Tiff Directories -> Generate File Metadata from filenames & data dictionary -> Snakemake [zero_nodata -> clip_north_south -> cloud_optimise -> Move to output] -> Ingest to Terracotta DB
 ```
+
+### API Metadata
+
+```json
+{
+	"source_db": "storm",
+	"global_type": "Hazard", 
+	"domain": "cyclone", 
+	"full_name": "Hazard Tropical Storm", 
+	"description": "description", 
+	"license": "license", 
+	"variables": {}
+}
+```

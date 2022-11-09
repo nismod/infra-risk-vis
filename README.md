@@ -8,11 +8,7 @@ The tool presents the infrastructure systems and hazards considered in the
 analysis, then presents results as modelled for the whole system at a fine
 scale.
 
-See an overview of infrastructure networks:
-
-![Networks](images/screenshot-overview.png)
-
-Other functionality planned (and incorporated in some way in previous versions):
+Other functionalit:
 
 - Summarise risk analysis at an administrative regional scale.
 - Zoom in to see networks in detail.
@@ -34,18 +30,20 @@ visualisation and how to run the tool.
 
 The visualisation tool runs using prepared versions of analysis data and
 results
+
 - Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
   a terracotta MySQL database, hosted within the backend API.
+
 - Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
   Vector Tiles
 
-See `./etl` directory for details.
+See [ETL](etl/README.md) directory for details.
 
 Data to be served from the vector and raster tileservers should be placed on
 the host within `tileserver/<data_type>`. These folders are made available to the
 running tileservers as docker bind mounts.
 
-For example, in `tileserver/raster/` there might live TIF files like these:
+For example, in `tileserver/raster/data/<flooding>` there might live TIF files like these:
 ```
 coastal_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
 coastal_mangrove__rp_25__rcp_baseline__epoch_2010__conf_None.tif
@@ -73,27 +71,36 @@ The following env files are required (in `envs/dev/.*`):
 
 ##### .backend.env
 
+Backend API Environment variables (only required in Dev)
+
 ```
-PGHOST=
-PGDATABASE=
+PYTHONPATH=/code/backend
+# Features API
+PGDATABASE= # Used to store feature data
 PGUSER=
 PGPASSWORD=
+PGHOST=
 
 # Tiles API
-LOG_LEVEL=INFO
-RASTER_BASE_PATH=/data  # The mount underwich GeoTiffs for the tileserver can be found
-MYSQL_URI=  # MySQL URI for tiles-db
-API_TOKEN=  # Only required for mutating tiles metadata in the API
-
-# Terracotta internal
+RASTER_BASE_PATH=/data # Path at-which raster tiles can be found (must match the MySQL Tiles-db loaded path)
+TC_DRIVER_PATH=mysql://foo:bar@tiles-db # Tiles-db MySQL Host (__NOTE__: Does not require database in the URL - this is parsed internally.)
+TC_SQL_USER=
+TC_SQL_PASSWORD=
 TC_ALLOWED_ORIGINS_METADATA='["*"]'
 TC_ALLOWED_ORIGINS_TILES='["*"]'
 TC_PNG_COMPRESS_LEVEL=0
 TC_RESAMPLING_METHOD="nearest"
 TC_REPROJECTION_METHOD="nearest"
+
+API_TOKEN= # API token is only required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
+DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\"}' # Valid JSON of a mapping between front-end DOMAIN values and the database in-which the data is stored.
 ```
 
 ##### .db.env
+
+Postgres container environment variables (only required in Dev)
+
+Postgres is used to store feature data. (OSM etc)
 
 ```
 POSTGRES_DB=
@@ -105,6 +112,10 @@ POSTGRES_MULTIPLE_EXTENSIONS=postgis
 
 ##### .mysql.env
 
+MySQL container environment variables (only required in Dev).
+
+MySQL is used by Terracotta to store raster-tile data
+
 ```
 MYSQL_USER=
 MYSQL_PASSWORD=
@@ -112,6 +123,8 @@ MYSQL_ROOT_PASSWORD=
 ```
 
 ##### .pgadmin.env
+
+PGAdmin for administration of Postgres
 
 ```
 PGADMIN_DEFAULT_EMAIL=
@@ -121,6 +134,8 @@ WORKERS=1
 
 ##### .raster-tile-ingester.env
 
+Utility container for managing (ingestion, deletion) of raster tiles.
+
 ```
 # Terracotta Env
 TC_DRIVER_PATH=mysql://
@@ -128,18 +143,29 @@ TC_DRIVER_PROVIDER=mysql
 TC_PNG_COMPRESS_LEVEL=0
 TC_RESAMPLING_METHOD="nearest"
 TC_REPROJECTION_METHOD="nearest"
+```
 
-# Gri Backend Env - for managing entries in the internal API tileserver
-BACKEND_HOST=
-BACKEND_PORT=
-BACKEND_API_KEY=
+##### .snakemake.env
+
+Utility container for running Snakemake workflows.
+
+```
+# Postgres
+PGHOST=db
+PGDATABASE=global
+PGUSER=docker
+PGPASSWORD=docker
 ```
 
 ### Data preperation within Docker
 
 Data Preperation can be run within Docker, end to end.
 
-pipelines/{workflow}/{workflow_preprocessor.py} (pre-processing and generation of csv for snakemake) -> pipelines/{workflow}/Snakemake (generated COG Files) -> docker raster-tile-ingester (ingests to tile server DB) -> Add meta to backend API (see: containers/backend/README.md)
+More details can be found in the [ETL](etl/README.md) folder and underlying [pipeline](etl/pipelines/) folders
+
+pipelines/{workflow}/{workflow_preprocessor.py} (pre-processing and generation of csv for snakemake) -> pipelines/{workflow}/Snakemake (generated COG Files) -> docker 
+
+raster-tile-ingester (ingests to tile server DB) -> MySQL Terracotta tiles Database
 
 #### Snakemake
 
@@ -159,29 +185,45 @@ docker-compose -f docker-compose-dev.yaml run snakemake
 
 Update docker-compose-dev.yaml `raster-tile-ingester` block as req. for a dataset (after running its pre-processing and Snakemake pipeline)
 
+For more information see [raster-tile-ingester](containers/raster-tile-ingester/README.md)
+
 ```bash
 docker-compose -f docker-compose-dev.yaml run raster-tile-ingester
 ```
 
 
-## Build
+## Build - Docker
+
+Repository: `ghcr.io/nismod`
 
 The application is built with several 'services', each facilitated by a running
 docker container.
 
 Services:
-- Web server (nginx)
-- Vector tileserver (tileserver-gl)
-- Backend / API (bespoke Python app for vector data and raster tiles (+meta))
-- API Database (PostgreSQL with PostGIS serves backend)
-- Tiles Database (MySQL serves tile ingester and backend /tiles endpoints)
+- Web server (nginx) `ghcr.io/nismod/gri-web-server`
+- Vector tileserver (tileserver-gl) `ghcr.io/nismod/gri-vector-tileserver`
+- Backend / API (bespoke Python app for vector data and raster tiles (+meta)) `ghcr.io/nismod/gri-backend`
+- API Database (PostgreSQL with PostGIS serves backend) (Dev only)
+- Tiles Database (MySQL serves tile ingester and backend /tiles endpoints) (Dev only)
 
 The services are orchestrated using `docker compose`. N.B. The app was built
 with docker engine version 20.10.16 and compose version 2.5.0. It may not work
 with other versions.
 
-The `compose.yml` file contains service names and definitions, and paths to
+The `compose.yml` files contain service names and definitions, and paths to
 build contexts (all located within `containers/`).
+
+### docker-compose-dev.yaml
+
+Containers used for local development of the entire stack, including ETL.
+
+### docker-compose-prod.yaml
+
+Used to run local builds of Production containers.
+
+### docker-compose-deploy.prod
+
+Used for deployment of containers into a production environment.
 
 
 ## Deploy

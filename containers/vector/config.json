@@ -12,16 +12,16 @@
       "mbtiles": "road_edges_motorway.mbtiles"
     },
     "road_edges_trunk": {
-       "mbtiles": "road_edges_trunk.mbtiles"
+      "mbtiles": "road_edges_trunk.mbtiles"
     },
     "road_edges_primary": {
-       "mbtiles": "road_edges_primary.mbtiles"
+      "mbtiles": "road_edges_primary.mbtiles"
     },
     "road_edges_secondary": {
-       "mbtiles": "road_edges_secondary.mbtiles"
+      "mbtiles": "road_edges_secondary.mbtiles"
     },
     "road_edges_tertiary": {
-       "mbtiles": "road_edges_tertiary.mbtiles"
+      "mbtiles": "road_edges_tertiary.mbtiles"
     },
     "healthsites": {
       "mbtiles": "healthsites.mbtiles"

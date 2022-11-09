@@ -65,4 +65,7 @@ provision.sh
 *.mbtiles
 *.tar.gz
 .vscode
-
+*.pkl
+*.parquet
+etl/raw_data/*
+.vscode/

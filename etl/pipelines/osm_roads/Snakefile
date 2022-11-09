@@ -24,32 +24,32 @@ rule all:
         expand(
             "/opt/tileserver/vector/data/{layer}.mbtiles", layer=network_tilelayers.layer
         ),
-        #expand(
-        #    "/opt/etl/logs/network/{layer}.txt", layer=network_tilelayers.layer
-        #),
-        # expand(
-        #     "vector/{layer}.geojsonl", layer=network_tilelayers.layer
-        # ),
+        expand(
+           "/opt/etl/logs/network/{layer}.txt", layer=network_tilelayers.layer
+        ),
+        expand(
+            "vector/{layer}.geojsonl", layer=network_tilelayers.layer
+        ),
 
 
-#rule networks_to_db:
-#    """Read from source directory to database
-#    """
-#    output:
-#        "/opt/etl/logs/network/{layer}.txt",
-#    script:
-#        "/opt/etl/pipelines/osm_roads/osm_roads_to_db.py"
+rule networks_to_db:
+   """Read from source directory to database
+   """
+   output:
+       "/opt/etl/logs/network/{layer}.txt",
+   script:
+       "/opt/etl/pipelines/osm_roads/osm_roads_pq_to_db.py"
 
 
-# rule db_to_geojsonseq:
-#     """Load from database to GeoJSONSeq
-#     """
-#     input:
-#         "/opt/etl/logs/network/{layer}.txt",
-#     output:
-#         "vector/{layer}.geojsonl",
-#     script:
-#         "/opt/etl/pipelines/common/db_to_geojsonseq.py"
+rule db_to_geojsonseq:
+    """Load from database to GeoJSONSeq
+    """
+    input:
+        "/opt/etl/logs/network/{layer}.txt",
+    output:
+        "vector/{layer}.geojsonl",
+    script:
+        "/opt/etl/pipelines/common/db_to_geojsonseq.py"
 
 
 rule geojsonseq_to_vector_tiles:
@@ -84,7 +84,9 @@ rule geojsonseq_to_vector_tiles:
                 ]
             else:
                 options = [
-                    "--drop-densest-as-needed",
+                    "-zg",
+                    "--coalesce-densest-as-needed",
+                    "--extend-zooms-if-still-dropping",
                     "--minimum-zoom=3",
                     f"--maximum-zoom={max_zoom}",
                 ]
