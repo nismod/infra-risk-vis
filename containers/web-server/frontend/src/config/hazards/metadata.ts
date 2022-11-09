@@ -35,47 +35,50 @@ export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
 
 export interface HazardMetadata {
   label: string;
-  dataUnit: string;
-  fractionDigits?: number;
+  formatValue: (x: number) => string;
   labelAbbreviations?: Record<string, string>;
   legendAnnotation?: string;
+}
+
+/**
+ * Helper function to format hazard values in legends, tooltips etc
+ * @param formatString simple format string where _ will be replaced by the formatted number
+ * @param numberFormatOptions options to pass to Number.toLocaleString()
+ * @returns formatted value as a string
+ */
+function hazardFormat(formatString: string, numberFormatOptions: Intl.NumberFormatOptions) {
+  return (value: number) => formatString.replace('_', value.toLocaleString(undefined, numberFormatOptions));
 }
 
 export const HAZARDS_METADATA: Record<HazardType, HazardMetadata> = {
   cyclone: {
     label: 'Cyclones',
-    dataUnit: 'm/s',
-    fractionDigits: 1,
+    formatValue: hazardFormat('_m/s', { maximumFractionDigits: 1 }),
   },
   fluvial: {
     label: 'River Flooding',
-    dataUnit: 'm',
-    fractionDigits: 1,
+    formatValue: hazardFormat('_m', { maximumFractionDigits: 1 }),
   },
   coastal: {
     label: 'Coastal Flooding',
-    dataUnit: 'm',
-    fractionDigits: 1,
+    formatValue: hazardFormat('_m', { maximumFractionDigits: 1 }),
   },
   extreme_heat: {
     label: 'Extreme Heat',
-    dataUnit: '',
-    legendAnnotation: 'Annual probability of occurrence',
-    fractionDigits: 2,
+    formatValue: hazardFormat('_', { maximumFractionDigits: 2 }),
+    legendAnnotation: 'Annual probability of extreme event',
   },
   earthquake: {
     label: 'Seismic Hazard (PGA)',
-    dataUnit: 'g',
-    fractionDigits: 3,
+    formatValue: hazardFormat('_g', { maximumFractionDigits: 3 }),
     labelAbbreviations: {
       PGA: 'Peak Ground Acceleration',
     },
   },
   drought: {
     label: 'Droughts',
-    dataUnit: '',
-    legendAnnotation: 'Annual probability of occurrence',
-    fractionDigits: 2,
+    formatValue: hazardFormat('_', { maximumFractionDigits: 1, style: 'percent' }),
+    legendAnnotation: 'Annual probability of extreme event',
   },
 };
 
