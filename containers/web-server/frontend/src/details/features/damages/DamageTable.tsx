@@ -13,10 +13,10 @@ export const DamageTable = ({ damages }) => (
           </TableCell>
           <TableCell sx={padding}>Epoch</TableCell>
           <TableCell sx={padding} align="right">
-            <abbr title="Expected Annual Damages">EAD (J$)</abbr>
+            <abbr title="Expected Annual Damages">EAD (USD)</abbr>
           </TableCell>
           <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
-            <abbr title="Expected Annual Economic Losses">EAEL</abbr> (J$/day)
+            <abbr title="Expected Annual Economic Losses">EAEL</abbr> (USD/day)
           </TableCell>
         </TableRow>
       </TableHead>

@@ -163,7 +163,7 @@ Data Preperation can be run within Docker, end to end.
 
 More details can be found in the [ETL](etl/README.md) folder and underlying [pipeline](etl/pipelines/) folders
 
-pipelines/{workflow}/{workflow_preprocessor.py} (pre-processing and generation of csv for snakemake) -> pipelines/{workflow}/Snakemake (generated COG Files) -> docker 
+pipelines/{workflow}/{workflow_preprocessor.py} (pre-processing and generation of csv for snakemake) -> pipelines/{workflow}/Snakemake (generated COG Files) -> docker
 
 raster-tile-ingester (ingests to tile server DB) -> MySQL Terracotta tiles Database
 
@@ -259,10 +259,27 @@ This tool has been developed through several projects.
   Countries, which is financed by the Government of Japan and managed by the
   Global Facility for Disaster Reduction and Recovery (GFDRR) through the Tokyo
   Disaster Risk Management Hub.
-- current development is by the Oxford Programme for Sustainable Infrastructure
-  Systems in the Environmental Change Institute, University of Oxford, for the
+- [v0.3](https://github.com/oi-analytics/oi-risk-vis/releases/tag/v0.3.0-jamaica)
+  was developed by the Oxford Programme for Sustainable Infrastructure Systems
+  (OPSIS) in the Environmental Change Institute, University of Oxford, for the
   Government of Jamaica (GoJ) as part of a project funded by UK Aid (FCDO). The
   initiative forms part of the Coalition for Climate Resilient Investment’s
   (CCRI) collaboration with the GoJ, which also includes analysis of
   nature-based approaches to build resilience in Jamaica to be procured and
   funded by the Green Climate Fund (GCF).
+- [release/caribbean](https://github.com/nismod/infra-risk-vis/tree/release/caribbean)
+  was developed as part of the Jamaica project.
+- [release/east-africa](https://github.com/nismod/infra-risk-vis/tree/release/east-africa)
+  was developed by researchers in the University of Southampton's Transportation
+  Research Group and the Oxford Programme for Sustainable Infrastructure
+  Systems, University of Oxford, supported by engagement with infrastructure and
+  climate specialists and related government bodies, and funded by UKAID through
+  the UK Foreign, Commonwealth & Development Office under the High Volume
+  Transport Applied Research Programme, managed by DT Global.
+- current work on global-scale data and analysis continues to be led by
+  researchers in OPSIS, as part of the Global Resilience Index Initiative, in
+  collaboration with the Oxford Spatial Finance Initiative and Global Earthquake
+  Model Foundation. This work has been funded by the World Bank Group, Willis
+  Towers Watson Insurance for Development Forum, and the UK Natural Environment
+  Research Council (NERC) through the UK Centre for Greening Finance and
+  Investment.

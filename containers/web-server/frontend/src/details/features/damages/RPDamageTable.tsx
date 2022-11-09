@@ -15,10 +15,10 @@ export const RPDamageTable = ({ damages }) => (
             <abbr title="Representative Concentration Pathway (Climate Scenario)">RCP</abbr>
           </TableCell>
           <TableCell sx={padding} align="right">
-            Damages (J$)
+            Damages (USD)
           </TableCell>
           <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
-            Loss (J$/day)
+            Loss (USD/day)
           </TableCell>
         </TableRow>
       </TableHead>

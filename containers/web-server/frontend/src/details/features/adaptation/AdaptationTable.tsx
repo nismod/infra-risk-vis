@@ -23,7 +23,7 @@ export const AdaptationTable = ({ options }) => {
               Cost
             </TableCell>
             <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
-              Avoided Risk (J$)
+              Avoided Risk (USD)
             </TableCell>
           </TableRow>
         </TableHead>
