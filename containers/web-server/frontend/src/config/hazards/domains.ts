@@ -56,10 +56,20 @@ export const HAZARD_DOMAINS_CONFIG: Record<HazardType, HazardDomainConfig> = {
     defaults: {
       rp: 10,
       gcm: 'constant',
+      /**
+       * epoch and rcp for cyclones are added programmatically upon load
+       * adjust custom code for data loading when these fields are added to the backend
+       */
+      epoch: 'present',
+      rcp: 'baseline',
     },
-    dependencies: {},
+    dependencies: {
+      gcm: ['epoch'],
+      rcp: ['epoch'],
+    },
     preprocess: {
       rp: toNumber,
+      rcp: preprocessRcp,
     },
   },
   extreme_heat: {
