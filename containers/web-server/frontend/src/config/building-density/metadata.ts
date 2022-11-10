@@ -25,7 +25,7 @@ export const BUILDING_DENSITY_COLORMAPS: Record<BuildingDensityType, RasterColor
   },
   non_residential: {
     scheme: 'purples',
-    range: [0, 500_000],
-    rangeTruncated: [false, true],
+    range: [0, 300_000],
+    rangeTruncated: [false, false],
   },
 };
