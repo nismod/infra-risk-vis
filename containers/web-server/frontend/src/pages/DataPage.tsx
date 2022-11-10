@@ -511,6 +511,39 @@ export const DataPage = () => (
           <TableRow>
             <TableCell>
 
+              Land Cover
+
+            </TableCell>
+            <TableCell>
+
+              <a
+              href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/satellite-land-cover?tab=overview">
+              ESA Land cover classification </a>
+
+            </TableCell>
+            <TableCell>
+
+              European Space Agency Climate Change Initiative Land Cover project
+              (2021) Land cover classification gridded maps from 1992 to present
+              derived from satellite observations, v2.1.1.
+              https://doi.org/10.24381/cds.006f2c9a
+
+            </TableCell>
+            <TableCell>ESA CCI</TableCell>
+            <TableCell>
+
+              The source of these data are the ESA Climate Change Initiative and
+              in particular its Land Cover project © ESA Climate Change
+              Initiative Land Cover led by UCLouvain (2017), ESA Climate Change
+              Initiative &ndash; Land Cover project 2020 and EC C3S Land Cover.
+
+            </TableCell>
+
+          </TableRow>
+
+          <TableRow>
+            <TableCell>
+
               Soil Organic Carbon stock
 
             </TableCell>
