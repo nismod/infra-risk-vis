@@ -1,25 +1,63 @@
+import { GeoJsonLayerProps } from 'deck.gl/typed';
+
 import { Getter } from './getters';
 
-export function lineStyle(zoom) {
-  return {
-    getLineWidth: 15,
-    lineWidthUnit: 'meters',
+type ScaleLevel = 0 | 1 | 2;
+
+const lineSizeLevels: Record<
+  ScaleLevel,
+  {
+    getLineWidth: number;
+    lineWidthMinPixels: number;
+    lineWidthMaxPixels: number;
+  }
+> = {
+  0: {
+    getLineWidth: 90,
+    lineWidthMinPixels: 1,
+    lineWidthMaxPixels: 7,
+  },
+  1: {
+    getLineWidth: 60,
+    lineWidthMinPixels: 1,
+    lineWidthMaxPixels: 6,
+  },
+  2: {
+    getLineWidth: 20,
     lineWidthMinPixels: 1,
     lineWidthMaxPixels: 5,
+  },
+};
+
+export function lineStyle(zoom, level: ScaleLevel = 2) {
+  return {
     lineJointRounded: true,
     lineCapRounded: true,
+    lineWidthUnit: 'meters',
+
+    ...lineSizeLevels[level],
 
     // widthScale: 2 ** (15 - zoom),
   };
 }
 
-export function pointRadius(zoom) {
+const pointSizeLevels: Record<
+  ScaleLevel,
+  {
+    getPointRadius: number;
+    pointRadiusMinPixels: number;
+    pointRadiusMaxPixels: number;
+  }
+> = {
+  0: { getPointRadius: 1500, pointRadiusMinPixels: 3, pointRadiusMaxPixels: 6 },
+  1: { getPointRadius: 1200, pointRadiusMinPixels: 2, pointRadiusMaxPixels: 4 },
+  2: { getPointRadius: 300, pointRadiusMinPixels: 2, pointRadiusMaxPixels: 4 },
+};
+
+export function pointRadius(zoom, level: ScaleLevel = 2): Partial<GeoJsonLayerProps> {
   return {
-    getPointRadius: 20,
-    pointRadiusUnit: 'meters',
-    pointRadiusMinPixels: 3,
-    pointRadiusMaxPixels: 10,
-    // radiusScale: 2 ** (15 - zoom),
+    pointRadiusUnits: 'meters',
+    ...pointSizeLevels[level],
   };
 }
 

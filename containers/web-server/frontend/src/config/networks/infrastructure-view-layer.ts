@@ -25,7 +25,7 @@ const roadColor = {
   road_edges_other: INFRASTRUCTURE_COLORS.roads_unknown.css,
 };
 
-function makeRoadsFn(asset_id) {
+function makeRoadsFn(asset_id, scaleLevel) {
   return ({ zoom, dataStyle }) => [
     strokeColor(
       dataStyle?.getColor ??
@@ -34,7 +34,7 @@ function makeRoadsFn(asset_id) {
           (x) => roadColor[x],
         ),
     ),
-    lineStyle(zoom),
+    lineStyle(zoom, scaleLevel),
   ];
 }
 /*
@@ -56,11 +56,11 @@ function electricitySourceFn({ zoom, dataStyle }) {
 const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<NetworkLayerType, AssetViewLayerCustomFunction> = {
   power_transmission: ({ zoom, dataStyle }) => [
     strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_high.deck),
-    lineStyle(zoom),
+    lineStyle(zoom, 0),
   ],
   power_distribution: ({ zoom, dataStyle }) => [
     strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_low.deck),
-    lineStyle(zoom),
+    lineStyle(zoom, 1),
   ],
   // elec_edges_high: ({ zoom, dataStyle }) => [
   //   strokeColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.electricity_high.deck),
@@ -104,11 +104,11 @@ const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<NetworkLayerType, AssetViewLayerCus
     fillColor(dataStyle?.getColor ?? INFRASTRUCTURE_COLORS.railway.deck),
     pointRadius(zoom),
   ],
-  road_edges_motorway: makeRoadsFn('road_edges_motorway'),
-  road_edges_trunk: makeRoadsFn('road_edges_trunk'),
-  road_edges_primary: makeRoadsFn('road_edges_primary'),
-  road_edges_secondary: makeRoadsFn('road_edges_secondary'),
-  road_edges_tertiary: makeRoadsFn('road_edges_tertiary'),
+  road_edges_motorway: makeRoadsFn('road_edges_motorway', 0),
+  road_edges_trunk: makeRoadsFn('road_edges_trunk', 0),
+  road_edges_primary: makeRoadsFn('road_edges_primary', 1),
+  road_edges_secondary: makeRoadsFn('road_edges_secondary', 1),
+  road_edges_tertiary: makeRoadsFn('road_edges_tertiary', 2),
   /*
   road_bridges: ({ zoom, dataStyle }) => [
     border(),

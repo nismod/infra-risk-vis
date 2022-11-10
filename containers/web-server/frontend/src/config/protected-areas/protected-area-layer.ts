@@ -45,7 +45,7 @@ export function protectedAreaViewLayer(shapeType: ShapeType, type: ProtectedArea
           uniqueIdProperty,
           filled: true,
         },
-        shapeType === 'points' && [pointRadius(zoom), fillColor(color.deck), border()],
+        shapeType === 'points' && [pointRadius(zoom, 0), fillColor(color.deck), border()],
         shapeType === 'polygons' && [
           {
             refinementStrategy: 'no-overlap',

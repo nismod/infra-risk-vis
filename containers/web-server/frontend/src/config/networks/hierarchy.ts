@@ -21,7 +21,7 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
   },
   {
     id: 'rail-network',
-    label: 'Rail Network',
+    label: 'Rail',
     children: [
       {
         id: 'rail_edges',
@@ -33,13 +33,13 @@ export const NETWORK_LAYERS_HIERARCHY: TreeNode<NetworkLayerData>[] = [
       // },
       {
         id: 'rail_nodes',
-        label: 'Junctions',
+        label: 'Stations',
       },
     ],
   },
   {
     id: 'road-network',
-    label: 'Road Network',
+    label: 'Roads',
     children: [
       {
         id: 'road_edges_motorway',

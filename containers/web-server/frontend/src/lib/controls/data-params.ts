@@ -54,29 +54,55 @@ export function resolveParamDependencies<PGT extends ParamGroup = ParamGroup>(
 
 type DependenciesSpec<T extends object> = Record<keyof T, (keyof T)[]>;
 
+type SortIteratees<T> = _.Many<_.ListIteratee<T>>; // taken from lodash _.sortBy
+type SortSpec<T extends object> = Partial<Record<keyof T, SortIteratees<any>>>;
+
 function getGroupKey<T>(keys: (keyof T)[]) {
   return (obj: T) => keys.map((k) => obj[k]).join('+');
 }
 
+/**
+ * group a collection by multiple properties
+ * @param data the collection to group
+ * @param properties list of string names of the properties
+ * @returns dictionary of arrays, keyed by a generated group key
+ */
 function groupByMulti<T>(data: T[], properties: (keyof T)[]) {
   return _.groupBy(data, getGroupKey(properties));
 }
 
-function makeDependencyFunction<T extends object>(data: T[], param: keyof T, inputs: (keyof T)[]) {
-  const grouped = groupByMulti(data, inputs);
-  const groupedDomains = _.mapValues(grouped, (g) => _.uniq(g.map((d) => d[param])));
+function makeDependencyFunction<T extends object>(
+  data: T[],
+  param: keyof T,
+  dependencies: (keyof T)[],
+  sortByIteratees: SortIteratees<T[typeof param]> = _.identity,
+) {
+  // group the data objected by co-occurring values of the dependency fields
+  const grouped = groupByMulti(data, dependencies);
 
-  return (params: T) => groupedDomains[getGroupKey(inputs)(params)];
+  // for each combination of dependency values, get a sorted and unique list
+  // of values of the dependent parameter
+  const groupedDomains = _.mapValues(grouped, (objects) =>
+    _(objects)
+      .map((obj) => obj[param])
+      .uniq()
+      .sortBy(sortByIteratees)
+      .value(),
+  );
+
+  // return a function that gets the possible options of the dependent parameter based on a current state of the params
+  return (params: T) => groupedDomains[getGroupKey(dependencies)(params)];
 }
 
 export function inferDependenciesFromData<T extends object>(
   data: T[],
   depSpec: DependenciesSpec<T>,
+  sortSpec?: SortSpec<T>,
 ): ParamGroupDependencies<T> {
   const dependencies: ParamGroupDependencies<T> = {};
   for (const [param, inputs] of Object.entries(depSpec) as [keyof T, (keyof T)[]][]) {
     if (inputs.length > 0) {
-      dependencies[param] = makeDependencyFunction(data, param as keyof T, inputs as (keyof T)[]);
+      dependencies[param] = makeDependencyFunction(data, param as keyof T, inputs as (keyof T)[], sortSpec?.[param]);
     }
   }
   return dependencies;

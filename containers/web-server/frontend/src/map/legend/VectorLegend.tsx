@@ -21,7 +21,10 @@ export const VectorLegend: FC<{ colorMap: ColorMap; legendFormatConfig: FormatCo
     <GradientLegend
       label={label}
       range={colorSpec.range}
-      colorMapValues={colorMapValues}
+      colorMap={{
+        colorMapValues,
+        rangeTruncated: [false, false],
+      }}
       getValueLabel={getValueLabel}
     />
   );

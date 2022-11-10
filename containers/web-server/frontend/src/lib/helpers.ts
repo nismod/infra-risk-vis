@@ -140,16 +140,6 @@ export function sumOrNone(arr: number[]): number | null {
   return result;
 }
 
-// adapted from https://stackoverflow.com/a/44661948/1478817
-export function downloadFile(content: string, mimeType: string, fileName: string) {
-  const element = document.createElement('a');
-  const file = new Blob([content], { type: mimeType });
-  element.href = URL.createObjectURL(file);
-  element.download = fileName;
-  document.body.appendChild(element); // Required for this to work in FireFox
-  element.click();
-}
-
 /**
  * Generic type for a function validating that the argument is a object with
  * Used to enforce value types in a config object, but not obscuring the key names
@@ -198,4 +188,15 @@ export function makeOptions<T>(values: T[], labelFn = (x: T) => x) {
     value: val,
     label: labelFn(val),
   }));
+}
+
+/**
+ * From https://stackoverflow.com/a/43053803/1478817
+ * Compute a "cartesian product" of multiple arrays
+ * (all combinations of values from all arrays).
+ * @param a
+ * @returns
+ */
+export function cartesian(...a: any[][]) {
+  return a.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
 }

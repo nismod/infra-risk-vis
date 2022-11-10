@@ -65,6 +65,10 @@ export const CycloneControl = () => {
   return (
     <HazardControl type="cyclone">
       <ReturnPeriodControl valueLabelDisplay="auto" showMarkLabelsFor={[10, 50, 100, 500, 1000, 5000, 10000]} />
+      <InputRow>
+        <EpochControl />
+        <RCPControl />
+      </InputRow>
       <GCMControl />
     </HazardControl>
   );

@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 
 import { ViewLayer } from '@/lib/data-map/view-layers';
 import { formatAbbreviations } from '@/lib/react/format-abbreviations';
@@ -12,14 +12,10 @@ export const HazardLegend: FC<{ viewLayer: ViewLayer<{ hazardType: HazardType }>
     params: { hazardType },
   } = viewLayer;
 
-  let { label, dataUnit, labelAbbreviations = {}, legendAnnotation } = HAZARDS_METADATA[hazardType];
+  let { label, formatValue, labelAbbreviations = {}, legendAnnotation } = HAZARDS_METADATA[hazardType];
   const colorMap = HAZARD_COLOR_MAPS[hazardType];
 
   label = formatAbbreviations(label, labelAbbreviations);
 
-  const getValueLabel = useCallback((value: number) => `${value.toLocaleString()} ${dataUnit}`, [dataUnit]);
-
-  return (
-    <RasterLegend label={label} description={legendAnnotation} colorMap={colorMap} getValueLabel={getValueLabel} />
-  );
+  return <RasterLegend label={label} description={legendAnnotation} colorMap={colorMap} getValueLabel={formatValue} />;
 };

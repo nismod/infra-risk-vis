@@ -17,10 +17,12 @@ export const EXPOSURE_COLOR_MAPS: Record<ExposureSource, RasterColorMap> = {
   extreme_heat: {
     scheme: 'reds',
     range: [0, 1000],
+    rangeTruncated: [false, true],
   },
   drought: {
     scheme: 'oranges',
     range: [0, 1000],
+    rangeTruncated: [false, true],
   },
 };
 
@@ -43,11 +45,21 @@ export function exposureViewLayer(hazardType: ExposureSource, hazardParams: any)
     interactionGroup: 'hazards',
     params: { hazardType, hazardParams },
     fn: ({ deckProps, zoom }) => {
-      return rasterTileLayer({}, deckProps, {
-        id: `${id}@${deckId}`, // follow the convention viewLayerId@deckLayerId
-        data: getHazardDataUrl({ hazardType, metric: 'exposure', hazardParams }, colorMap),
-        refinementStrategy: 'no-overlap',
-      });
+      return rasterTileLayer(
+        {
+          transparentColor: [255, 255, 255, 0],
+        },
+        deckProps,
+        {
+          id: `${id}@${deckId}`, // follow the convention viewLayerId@deckLayerId
+          data: getHazardDataUrl({ hazardType, metric: 'exposure', hazardParams }, colorMap),
+          refinementStrategy: 'no-overlap',
+        },
+        // temporarily hide EH below zoom 6 due to artifacts in data
+        hazardType === 'extreme_heat' && {
+          minZoom: 6,
+        },
+      );
     },
     renderLegend() {
       return React.createElement(RasterLegend, {
@@ -58,7 +70,7 @@ export function exposureViewLayer(hazardType: ExposureSource, hazardParams: any)
     },
     renderTooltip(hover: InteractionTarget<RasterTarget>) {
       return React.createElement(RasterHoverDescription, {
-        ...colorMap,
+        colorMap,
         color: hover.target.color,
         label,
         formatValue: numFormatWhole,

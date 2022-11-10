@@ -9,7 +9,7 @@ const gcmLabelLookup = {
   'HADGEM2-ES': 'HadGEM2-ES',
   'HADGEM3-GC31-HM': 'HadGEM3-GC31-HM',
   'NORESM1-M': 'NorESM1-M',
-  CONSTANT: 'Constant',
+  CONSTANT: 'None (Baseline)',
 };
 
 function gcmLabel(value: string) {
@@ -24,7 +24,7 @@ export const GCMControl = () => {
   return (
     <FormControl fullWidth disabled={disabled}>
       <FormLabel>
-        <abbr title="Global Circulation Model">GCM</abbr>
+        <abbr title="General Circulation Model">GCM</abbr>
       </FormLabel>
       <DataParam group={group} id="gcm">
         {({ value, onChange, options }) => (

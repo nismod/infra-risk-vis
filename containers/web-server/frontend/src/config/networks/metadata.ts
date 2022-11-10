@@ -193,7 +193,7 @@ export const NETWORKS_METADATA = makeConfig<AssetMetadata, NetworkLayerType>([
   {
     id: 'rail_nodes',
     type: 'circle',
-    label: 'Railway Junctions',
+    label: 'Railway Stations',
     color: INFRASTRUCTURE_COLORS.railway.css,
   },
   {

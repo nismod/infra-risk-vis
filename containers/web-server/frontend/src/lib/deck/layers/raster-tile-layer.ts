@@ -1,3 +1,5 @@
+import { BitmapLayerProps } from 'deck.gl/typed';
+
 import { bitmapLayer, tileLayer } from './base';
 
 function getBoundsForTile(tileProps) {
@@ -8,7 +10,7 @@ function getBoundsForTile(tileProps) {
   return [west, south, east, north];
 }
 
-export function rasterTileLayer(bitmapProps, ...props) {
+export function rasterTileLayer(bitmapProps: Partial<BitmapLayerProps>, ...props) {
   return tileLayer(props, {
     renderSubLayers: (tileProps) =>
       bitmapLayer(

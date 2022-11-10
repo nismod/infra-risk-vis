@@ -49,11 +49,9 @@ const InitPopulationView = () => {
   const updateExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => syncExposure(iface, 'population'), []);
   const hideExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => hideExposure(iface, 'population'), []);
   useEffect(() => {
-    console.log('Initializing population exposure');
     updateExposureTx();
 
     return () => {
-      console.log('Cleaning up population exposure');
       hideExposureTx();
     };
   }, [updateExposureTx, hideExposureTx]);

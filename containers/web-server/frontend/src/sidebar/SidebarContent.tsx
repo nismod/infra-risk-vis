@@ -1,12 +1,12 @@
 import { Alert, Stack } from '@mui/material';
 import _ from 'lodash';
 import { FC, ReactElement } from 'react';
-import { Flipper } from 'react-flip-toolkit';
-import { atomFamily, selectorFamily, useRecoilCallback, useRecoilValue } from 'recoil';
+import { atomFamily, selectorFamily, useRecoilValue } from 'recoil';
 
 import { Layer, Section, SidebarRoot } from '@/lib/data-selection/sidebar/components';
 import { getParentPath } from '@/lib/data-selection/sidebar/paths';
 import { EnforceSingleChild } from '@/lib/data-selection/sidebar/single-child';
+import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
 import { RecoilStateFamily } from '@/lib/recoil/types';
 
 import { ViewType, viewState } from '@/state/view';
@@ -93,7 +93,7 @@ const HazardsSection = () => (
     <Layer path="drought" title="Droughts">
       <DroughtControl />
     </Layer>
-    <Layer path="earthquake" title="Seismic">
+    <Layer path="earthquake" title="Earthquakes">
       <EarthquakeControl />
     </Layer>
     <Layer path="wildfire" title="Wildfires" disabled />
@@ -112,7 +112,7 @@ const ExposureSection = () => (
     <Layer path="industry" title="Industry">
       <IndustryControl />
     </Layer>
-    <Layer path="healthsites" title="Healthcare Facilities" />
+    <Layer path="healthsites" title="Healthcare" />
     <Layer path="land-cover" title="Land Cover" />
     <Layer path="organic-carbon" title="Soil Organic Carbon" />
   </Section>
@@ -120,7 +120,7 @@ const ExposureSection = () => (
 
 const VulnerabilitySection = () => (
   <Section path="vulnerability" title="Vulnerability">
-    <Section path="human" title="Human">
+    <Section path="human" title="People">
       <Layer path="human-development" title="Human Development">
         <HdiControl />
       </Layer>
@@ -128,7 +128,7 @@ const VulnerabilitySection = () => (
         <TravelTimeControl />
       </Layer>
     </Section>
-    <Section path="nature" title="Nature">
+    <Section path="nature" title="Planet">
       <Layer path="biodiversity-intactness" title="Biodiversity Intactness" />
       <Layer path="forest-integrity" title="Forest Landscape Integrity" />
       <Layer path="protected-areas" title="Protected Areas (WDPA)">
@@ -199,19 +199,6 @@ const VIEW_TRANSITIONS: Record<ViewType, any> = {
   },
 };
 
-/*
-const viewPretransitionEffect = ({ set }, newView, currentView) => {
-  if (currentView == null) return;
-
-  const hidePaths = VIEW_TRANSITIONS[currentView].exit;
-
-  for (const path of hidePaths) {
-    set(sidebarExpandedState(path), false);
-    set(sidebarVisibilityToggleState(path), false);
-  }
-};
-*/
-
 const viewTransitionEffect = ({ set }, newView) => {
   const { showPaths = [], hideRest = false } = VIEW_TRANSITIONS[newView].enter;
 
@@ -232,15 +219,6 @@ const viewTransitionEffect = ({ set }, newView) => {
 
 export const SidebarContent: FC<{}> = () => {
   const view = useRecoilValue(viewState);
-  const transitioningView = view;
-
-  const transitionView = useRecoilCallback(
-    ({ transact_UNSTABLE }) =>
-      (viewName: ViewType) => {
-        transact_UNSTABLE((ops) => viewTransitionEffect(ops, viewName));
-      },
-    [],
-  );
 
   const knownViews = Object.keys(viewLabels);
   if (!knownViews.includes(view)) {
@@ -254,7 +232,7 @@ export const SidebarContent: FC<{}> = () => {
     risk: null,
   };
 
-  if (transitioningView === 'risk') {
+  if (view === 'risk') {
     sections['risk'] = <RiskSection key="risk" />;
   }
 
@@ -264,19 +242,18 @@ export const SidebarContent: FC<{}> = () => {
       expandedState={sidebarExpandedState}
       pathChildrenState={sidebarPathChildrenState}
     >
-      <Flipper flipKey={transitioningView} onComplete={() => transitionView(view)}>
-        <Stack
-          sx={{
-            '& > :first-of-type': {
-              marginBottom: 2,
-            },
-          }}
-        >
-          {sections[transitioningView]}
+      <StateEffectRoot state={viewState} effect={viewTransitionEffect} />
+      <Stack
+        sx={{
+          '& > :first-of-type': {
+            marginBottom: 2,
+          },
+        }}
+      >
+        {sections[view]}
 
-          {_.map(sections, (sectionElement, sectionView) => sectionView !== transitioningView && sectionElement)}
-        </Stack>
-      </Flipper>
+        {_.map(sections, (sectionElement, sectionView) => sectionView !== view && sectionElement)}
+      </Stack>
     </SidebarRoot>
   );
 };

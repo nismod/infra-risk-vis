@@ -1,3 +1,6 @@
+import { ReactNode } from 'react';
+
+import { makeValueFormat } from '@/lib/formats';
 import { makeOrderingCheck } from '@/lib/helpers';
 
 import { RasterColorMap } from '@/map/legend/RasterLegend';
@@ -9,11 +12,13 @@ export type HazardType = typeof HAZARD_TYPES[number];
 export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
   fluvial: {
     scheme: 'blues',
-    range: [0, 10],
+    range: [0, 5],
+    rangeTruncated: [false, true],
   },
   coastal: {
     scheme: 'greens',
-    range: [0, 10],
+    range: [0, 5],
+    rangeTruncated: [false, true],
   },
   cyclone: {
     scheme: 'reds',
@@ -26,6 +31,7 @@ export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
   earthquake: {
     scheme: 'reds',
     range: [0, 1.4],
+    rangeTruncated: [false, true],
   },
   drought: {
     scheme: 'oranges',
@@ -35,8 +41,7 @@ export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
 
 export interface HazardMetadata {
   label: string;
-  dataUnit: string;
-  fractionDigits?: number;
+  formatValue: (x: number) => ReactNode | string;
   labelAbbreviations?: Record<string, string>;
   legendAnnotation?: string;
 }
@@ -44,38 +49,32 @@ export interface HazardMetadata {
 export const HAZARDS_METADATA: Record<HazardType, HazardMetadata> = {
   cyclone: {
     label: 'Cyclones',
-    dataUnit: 'm/s',
-    fractionDigits: 1,
+    formatValue: makeValueFormat('_m/s', { maximumFractionDigits: 1 }),
   },
   fluvial: {
     label: 'River Flooding',
-    dataUnit: 'm',
-    fractionDigits: 1,
+    formatValue: makeValueFormat('_m', { maximumFractionDigits: 2 }),
   },
   coastal: {
     label: 'Coastal Flooding',
-    dataUnit: 'm',
-    fractionDigits: 1,
+    formatValue: makeValueFormat('_m', { maximumFractionDigits: 2 }),
   },
   extreme_heat: {
     label: 'Extreme Heat',
-    dataUnit: '',
-    legendAnnotation: 'Annual probability of occurrence',
-    fractionDigits: 2,
+    formatValue: makeValueFormat('_', { maximumFractionDigits: 1, style: 'percent' }),
+    legendAnnotation: 'Annual probability of extreme event',
   },
   earthquake: {
     label: 'Seismic Hazard (PGA)',
-    dataUnit: 'g',
-    fractionDigits: 3,
+    formatValue: makeValueFormat('_g', { maximumFractionDigits: 3 }),
     labelAbbreviations: {
       PGA: 'Peak Ground Acceleration',
     },
   },
   drought: {
     label: 'Droughts',
-    dataUnit: '',
-    legendAnnotation: 'Annual probability of occurrence',
-    fractionDigits: 2,
+    formatValue: makeValueFormat('_', { maximumFractionDigits: 1, style: 'percent' }),
+    legendAnnotation: 'Annual probability of extreme event',
   },
 };
 

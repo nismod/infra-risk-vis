@@ -1,7 +1,6 @@
 import { ArrowRight } from '@mui/icons-material';
 import { Stack } from '@mui/material';
 import { FC, Suspense, createContext, useContext, useEffect } from 'react';
-import { Flipped } from 'react-flip-toolkit';
 import { useRecoilState } from 'recoil';
 
 import { RecoilStateFamily } from '@/lib/recoil/types';
@@ -76,46 +75,42 @@ const SectionImpl: FC<SectionProps> = ({ title, children }) => {
   const [expanded, setExpanded] = useExpandedState(path);
 
   return (
-    <Flipped flipId={path}>
-      <div>
-        <Accordion
-          expanded={expanded}
-          onChange={(e, expanded) => setExpanded(expanded)}
-          disableGutters
-          sx={{
-            bgcolor: '#fafafa',
-            paddingLeft: '0px',
-          }}
-        >
-          <AccordionSummary
-            sx={(theme) => ({
-              '& + .MuiCollapse-root': {
-                borderLeft: '4px solid #fafafa',
-              },
-              '&:hover + .MuiCollapse-root': {
-                borderLeftColor: theme.palette.primary.main,
-              },
-            })}
-          >
-            <AccordionTitle
-              title={title}
-              actions={
-                <VisibilityToggle
-                  visibility={visible}
-                  onVisibility={(visible) => {
-                    setVisible(visible);
-                    setExpanded(visible);
-                  }}
-                />
-              }
+    <Accordion
+      expanded={expanded}
+      onChange={(e, expanded) => setExpanded(expanded)}
+      disableGutters
+      sx={{
+        bgcolor: '#fafafa',
+        paddingLeft: '0px',
+      }}
+    >
+      <AccordionSummary
+        sx={(theme) => ({
+          '& + .MuiCollapse-root': {
+            borderLeft: '4px solid #fafafa',
+          },
+          '&:hover + .MuiCollapse-root': {
+            borderLeftColor: theme.palette.primary.main,
+          },
+        })}
+      >
+        <AccordionTitle
+          title={title}
+          actions={
+            <VisibilityToggle
+              visibility={visible}
+              onVisibility={(visible) => {
+                setVisible(visible);
+                setExpanded(visible);
+              }}
             />
-          </AccordionSummary>
-          <AccordionDetails sx={{ padding: '0.5em', paddingRight: 0 }}>
-            <Stack spacing={0.5}>{children}</Stack>
-          </AccordionDetails>
-        </Accordion>
-      </div>
-    </Flipped>
+          }
+        />
+      </AccordionSummary>
+      <AccordionDetails sx={{ padding: '0.5em', paddingRight: 0 }}>
+        <Stack spacing={0.5}>{children}</Stack>
+      </AccordionDetails>
+    </Accordion>
   );
 };
 

@@ -34,12 +34,11 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
           textureParameters: {
             [GL.TEXTURE_MAG_FILTER]: magFilter,
           },
-          opacity: hazardType === 'cyclone' || hazardType === 'earthquake' ? 0.6 : 1,
+          opacity: hazardType === 'cyclone' ? 0.6 : 1,
 
           // TODO: tweak transparentColor to tweak border color / transparent layer tint
-          /*
-          transparentColor: [128, 128, 128, 0],
-          */
+
+          transparentColor: [255, 255, 255, 0],
         },
         deckProps,
         {

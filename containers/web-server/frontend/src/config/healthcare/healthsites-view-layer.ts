@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { fillColor, pointRadius } from '@/lib/deck/props/style';
+import { border, fillColor, pointRadius } from '@/lib/deck/props/style';
 import { makeColor } from '@/lib/helpers';
 
 import { SimpleAssetDetails } from '@/details/features/asset-details';
@@ -15,7 +15,7 @@ export const HEALTHSITES_COLOR = makeColor('#72dfda');
 
 export const HEALTHSITES_METADATA: AssetMetadata = {
   type: 'circle',
-  label: 'Health Sites',
+  label: 'Healthcare',
   color: HEALTHSITES_COLOR.css,
 };
 
@@ -28,7 +28,7 @@ export function healthsitesViewLayer() {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(HEALTHSITES_COLOR.deck)],
+    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(HEALTHSITES_COLOR.deck), border([255, 255, 255])],
     customDataAccessFn: assetDataAccessFunction('healthsites'),
     renderTooltip: (hover) => {
       return React.createElement(VectorHoverDescription, {

@@ -3,6 +3,7 @@ import React from 'react';
 
 import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use-interactions';
 import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
+import { makeValueFormat, nullFormat } from '@/lib/formats';
 
 import { RasterColorMap, RasterLegend } from '@/map/legend/RasterLegend';
 import { RasterHoverDescription } from '@/map/tooltip/RasterHoverDescription';
@@ -13,19 +14,27 @@ export const TRAVELTIME_TYPES = ['motorized', 'walking'] as const;
 
 export type TraveltimeType = typeof TRAVELTIME_TYPES[number];
 
-export const TRAVELTIME_VALUE_LABELS = TRAVELTIME_TYPES.map((x) => ({ value: x, label: capitalize(x) }));
+// dataset has American spelling - change to British
+function makeBritish(type) {
+  return type === 'motorized' ? 'motorised' : 'walking';
+}
+
+export const TRAVELTIME_VALUE_LABELS = TRAVELTIME_TYPES.map((x) => ({
+  value: x,
+  label: capitalize(makeBritish(x)),
+}));
 
 const TRAVELTIME_COLORMAP: RasterColorMap = {
-  //TODO
   scheme: 'rdbu_r',
   range: [0, 240],
+  rangeTruncated: [false, true],
 };
 
 export function travelTimeViewLayer(type: TraveltimeType) {
   const id = `traveltime_to_healthcare_${type}`;
   const label = `Travel Time to Healthcare (${type})`;
 
-  const formatValue = (x: number) => (x == null ? '-' : `${x.toLocaleString(undefined, { maximumFractionDigits: 1 })}`);
+  const formatValue = nullFormat(makeValueFormat('_ min', { maximumFractionDigits: 0 }));
 
   return {
     id,
@@ -50,7 +59,7 @@ export function travelTimeViewLayer(type: TraveltimeType) {
     renderTooltip(hover: InteractionTarget<RasterTarget>) {
       const { color } = hover.target;
       return React.createElement(RasterHoverDescription, {
-        ...TRAVELTIME_COLORMAP,
+        colorMap: TRAVELTIME_COLORMAP,
         color,
         label,
         formatValue,
