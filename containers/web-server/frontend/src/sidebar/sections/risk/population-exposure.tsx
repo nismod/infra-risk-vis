@@ -17,6 +17,7 @@ import { InputSection } from '@/sidebar/ui/InputSection';
 import { EpochControl } from '@/sidebar/ui/params/EpochControl';
 import { RCPControl } from '@/sidebar/ui/params/RCPControl';
 import { syncHazardsWithDamageSourceStateEffect } from '@/state/data-selection/damage-mapping/damage-map';
+import { DataNotice } from '@/sidebar/ui/DataNotice';
 
 export const populationExposureHazardState = atom<ExposureSource>({
   key: 'populationExposureHazardState',
@@ -69,6 +70,11 @@ export const PopulationExposureSection = () => {
     <>
       <InitPopulationView />
       <StateEffectRoot state={populationExposureHazardState} effect={syncHazardsWithDamageSourceStateEffect} />
+      <DataNotice>
+        Map shows expected annual population exposed to extreme events, based
+        on the annual probability of the hazard. Zoom in for extreme heat
+        exposure to show.<br/>
+      </DataNotice>
       <InputSection>
         <FormControl>
           <FormLabel>Hazard</FormLabel>

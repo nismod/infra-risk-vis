@@ -16,7 +16,7 @@ export type ExposureSource = Subset<HazardType, 'extreme_heat' | 'drought'>;
 export const EXPOSURE_COLOR_MAPS: Record<ExposureSource, RasterColorMap> = {
   extreme_heat: {
     scheme: 'reds',
-    range: [0, 1000],
+    range: [0, 5000],
     rangeTruncated: [false, true],
   },
   drought: {
@@ -37,7 +37,7 @@ export function exposureViewLayer(hazardType: ExposureSource, hazardParams: any)
   let { label: hazardLabel } = HAZARDS_METADATA[hazardType];
   const colorMap = EXPOSURE_COLOR_MAPS[hazardType];
 
-  const label = `Pop. Exposed (${hazardLabel})`;
+  const label = `Expected Annual Population Exposed (${hazardLabel})`;
 
   return {
     id,
