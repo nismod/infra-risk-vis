@@ -13,10 +13,12 @@ export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
   fluvial: {
     scheme: 'blues',
     range: [0, 5],
+    rangeTruncated: [false, true],
   },
   coastal: {
     scheme: 'greens',
     range: [0, 5],
+    rangeTruncated: [false, true],
   },
   cyclone: {
     scheme: 'reds',
@@ -29,6 +31,7 @@ export const HAZARD_COLOR_MAPS: Record<HazardType, RasterColorMap> = {
   earthquake: {
     scheme: 'reds',
     range: [0, 1.4],
+    rangeTruncated: [false, true],
   },
   drought: {
     scheme: 'oranges',

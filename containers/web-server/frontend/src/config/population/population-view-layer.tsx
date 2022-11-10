@@ -6,14 +6,15 @@ import { ViewLayer } from '@/lib/data-map/view-layers';
 import { rasterTileLayer } from '@/lib/deck/layers/raster-tile-layer';
 import { makeValueFormat } from '@/lib/formats';
 
-import { RasterLegend } from '@/map/legend/RasterLegend';
+import { RasterColorMap, RasterLegend } from '@/map/legend/RasterLegend';
 import { RasterHoverDescription } from '@/map/tooltip/RasterHoverDescription';
 
 import { SOURCES } from '../sources';
 
-export const JRC_POPULATION_COLOR_MAP: { scheme: string; range: [number, number] } = {
+export const JRC_POPULATION_COLOR_MAP: RasterColorMap = {
   scheme: 'purd',
   range: [0, 1e4],
+  rangeTruncated: [false, true],
 };
 
 function getPopulationUrl() {
@@ -65,7 +66,7 @@ export function jrcPopulationViewLayer(): ViewLayer {
       const { color } = hoveredObject.target;
       return React.createElement(RasterHoverDescription, {
         color,
-        ...JRC_POPULATION_COLOR_MAP,
+        colorMap: JRC_POPULATION_COLOR_MAP,
         label,
         formatValue,
       });

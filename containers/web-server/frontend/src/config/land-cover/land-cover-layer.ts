@@ -37,7 +37,10 @@ export function landCoverViewLayer(): ViewLayer {
       ),
     renderTooltip(hover: InteractionTarget<RasterTarget>) {
       return React.createElement(RasterBaseHover, {
-        colorMapValues: landCoverColorMap,
+        colorMap: {
+          colorMapValues: landCoverColorMap,
+          rangeTruncated: [false, false],
+        },
         color: hover.target.color,
         label: 'Land Cover',
         formatValue: (x) => landCoverLabels[x],

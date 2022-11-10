@@ -24,6 +24,7 @@ export const NATURE_RASTER_FORMATS: Record<
     colorMap: {
       scheme: 'rdbu', //TODO - original dataset colormap has middle around 0.9
       range: [0.6, 1],
+      rangeTruncated: [true, false],
     },
     formatValue: (x) => `${(x * 100).toLocaleString(undefined, { maximumFractionDigits: 1 })}%`,
   },
@@ -37,9 +38,9 @@ export const NATURE_RASTER_FORMATS: Record<
   },
   organic_carbon: {
     colorMap: {
-      //TODO
       scheme: 'binary',
       range: [0, 150],
+      rangeTruncated: [false, true],
     },
     formatValue: (x) => `${x.toLocaleString(undefined, { maximumFractionDigits: 1 })} t/ha`,
   },
@@ -82,7 +83,7 @@ export function natureRasterViewLayer(type: NatureRasterType): ViewLayer {
       }),
     renderTooltip(hoveredObject: InteractionTarget<RasterTarget>) {
       return React.createElement(RasterHoverDescription, {
-        ...colorMap,
+        colorMap,
         color: hoveredObject.target.color,
         label,
         formatValue: formatFn,

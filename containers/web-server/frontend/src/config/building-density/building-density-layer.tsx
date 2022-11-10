@@ -57,7 +57,7 @@ export function buildingDensityLayer(type: BuildingDensityType): ViewLayer {
     },
     renderTooltip(hoveredObject: InteractionTarget<RasterTarget>) {
       return React.createElement(RasterHoverDescription, {
-        ...colorMap,
+        colorMap,
         color: hoveredObject.target.color,
         label,
         formatValue,

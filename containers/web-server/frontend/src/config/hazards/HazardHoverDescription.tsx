@@ -13,13 +13,11 @@ export const HazardHoverDescription: FC<{ hoveredObject: InteractionTarget<Raste
     },
   } = hoveredObject;
   const { label, formatValue } = HAZARDS_METADATA[hazardType as HazardType];
-  const { scheme, range } = HAZARD_COLOR_MAPS[hazardType as HazardType];
 
   return (
     <RasterHoverDescription
       color={color}
-      scheme={scheme}
-      range={range}
+      colorMap={HAZARD_COLOR_MAPS[hazardType as HazardType]}
       label={label}
       formatValue={(x) => (x != null ? formatValue(x) : '')}
     />

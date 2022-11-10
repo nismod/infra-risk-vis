@@ -2,7 +2,7 @@ import { selectorFamily, useRecoilValue } from 'recoil';
 
 import { apiClient } from '@/api-client';
 
-import { ColorValue } from './GradientLegend';
+import { ColorValue } from './RasterLegend';
 
 const colorMapValuesQuery = selectorFamily({
   key: 'colorMapValuesQuery',

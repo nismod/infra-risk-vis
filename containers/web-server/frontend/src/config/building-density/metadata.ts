@@ -21,9 +21,11 @@ export const BUILDING_DENSITY_COLORMAPS: Record<BuildingDensityType, RasterColor
   all: {
     scheme: 'orrd',
     range: [0, 500_000],
+    rangeTruncated: [false, true],
   },
   non_residential: {
     scheme: 'purples',
     range: [0, 500_000],
+    rangeTruncated: [false, true],
   },
 };

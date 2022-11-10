@@ -27,6 +27,7 @@ export const TRAVELTIME_VALUE_LABELS = TRAVELTIME_TYPES.map((x) => ({
 const TRAVELTIME_COLORMAP: RasterColorMap = {
   scheme: 'rdbu_r',
   range: [0, 240],
+  rangeTruncated: [false, true],
 };
 
 export function travelTimeViewLayer(type: TraveltimeType) {
@@ -58,7 +59,7 @@ export function travelTimeViewLayer(type: TraveltimeType) {
     renderTooltip(hover: InteractionTarget<RasterTarget>) {
       const { color } = hover.target;
       return React.createElement(RasterHoverDescription, {
-        ...TRAVELTIME_COLORMAP,
+        colorMap: TRAVELTIME_COLORMAP,
         color,
         label,
         formatValue,

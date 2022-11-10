@@ -17,10 +17,12 @@ export const EXPOSURE_COLOR_MAPS: Record<ExposureSource, RasterColorMap> = {
   extreme_heat: {
     scheme: 'reds',
     range: [0, 1000],
+    rangeTruncated: [false, true],
   },
   drought: {
     scheme: 'oranges',
     range: [0, 1000],
+    rangeTruncated: [false, true],
   },
 };
 
@@ -64,7 +66,7 @@ export function exposureViewLayer(hazardType: ExposureSource, hazardParams: any)
     },
     renderTooltip(hover: InteractionTarget<RasterTarget>) {
       return React.createElement(RasterHoverDescription, {
-        ...colorMap,
+        colorMap,
         color: hover.target.color,
         label,
         formatValue: numFormatWhole,
