@@ -55,6 +55,10 @@ export function exposureViewLayer(hazardType: ExposureSource, hazardParams: any)
           data: getHazardDataUrl({ hazardType, metric: 'exposure', hazardParams }, colorMap),
           refinementStrategy: 'no-overlap',
         },
+        // temporarily hide EH below zoom 6 due to artifacts in data
+        hazardType === 'extreme_heat' && {
+          minZoom: 6,
+        },
       );
     },
     renderLegend() {
