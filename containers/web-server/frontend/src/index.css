@@ -32,11 +32,10 @@
 }
 
 article {
-  max-width: 60rem;
+  max-width: 70rem;
   padding: 1rem 1rem 5rem 1rem;
   margin: 0 auto;
   font-size: 1.2rem;
-  max-width: 60rem;
 }
 
 .home article {

@@ -1,4 +1,5 @@
-import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Alert, Divider, Grid, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
+
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
@@ -19,24 +20,27 @@ const TextBox = styled(Paper)(() => ({
   borderRadius: 0,
 }));
 
-export const IntroPage = () => (
+export const IntroPage = () => {
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+
+  return (
   <div className="home">
     <article>
       <ScrollToTop />
       <Grid container columnSpacing={8} rowSpacing={4}>
-        <Grid item xs={6}>
+        <Grid item md={6}>
           <HeadingBox sx={{ mt: -2, pt: 8 }}>
             <Typography variant="h1">Global climate-related risk analytics</Typography>
           </HeadingBox>
         </Grid>
-        <Grid item xs={6}>
-          <TextBox sx={{mt:-2, pt:8}}>
+        <Grid item md={6}>
+          <TextBox sx={{ mt: -2, py: 8 }}>
             <p>
 
               The Global Systemic Risk Assessment Tool (G-SRAT)
               is the Data and Analytics Portal for the <a
-              href="http://www.globalresilienceindex.org/">Global Resilience Index Initative
-              (GRII)</a>.
+                href="http://www.globalresilienceindex.org/">Global Resilience Index Initative
+                (GRII)</a>.
 
             </p>
             <p>
@@ -47,22 +51,35 @@ export const IntroPage = () => (
 
           </TextBox>
         </Grid>
+        {
+          isMobile?
+          <Grid item xs={12}>
+          <Alert sx={{my:2}} severity='warning'>
+
+            This site is not currently well-designed for small screens. For
+            a better experience, we recommend visiting from a larger device
+            or window.
+
+          </Alert>
+          </Grid>
+          : null
+        }
         <Grid item xs={12}>
           <TextBox sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
             <p>
 
               The research, analysis and development has been led by researchers
               in the <a href="https://opsis.eci.ox.ac.uk/" target="_blank"
-              rel="noopener noreferrer"> Oxford Programme for Sustainable
-              Infrastructure Systems</a> at the University of Oxford as part of
+                rel="noopener noreferrer"> Oxford Programme for Sustainable
+                Infrastructure Systems</a> at the University of Oxford as part of
               the <a href="http://www.globalresilienceindex.org/"
-              target="_blank" rel="noopener noreferrer">Global Resilience Index
-              Initiative</a>.
+                target="_blank" rel="noopener noreferrer">Global Resilience Index
+                Initiative</a>.
 
             </p>
 
             <Stack
-              direction="row"
+              direction={{ xs: 'column', md: 'row' }}
               divider={<Divider orientation="vertical" flexItem />}
               justifyContent="center"
               alignItems="center"
@@ -90,30 +107,30 @@ export const IntroPage = () => (
 
 
             <Stack
-              direction="row"
+              direction={{ xs: 'column', md: 'row' }}
               divider={<Divider orientation="vertical" flexItem />}
-              spacing={2}
-              sx={{mb:2}}
+              spacing={{ md: 1, lg: 2 }}
+              sx={{ mb: 2 }}
               justifyContent="center"
               alignItems="center"
             >
               <a href="https://ukcgfi.org/" target="_blank" rel="noopener noreferrer">
-                <img height="60" src="/logo-cgfi.png" alt="CGFI" />
+                <img height="50" src="/logo-cgfi.png" alt="CGFI" />
               </a>
               <a href="https://resilientinvestment.org/" target="_blank" rel="noopener noreferrer">
-                <img height="80" src="/logo-ccri.png" alt="CCRI" />
+                <img height="70" src="/logo-ccri.png" alt="CCRI" />
               </a>
               <a href="https://www.cdri.world/" target="_blank" rel="noopener noreferrer">
-                <img height="70" src="/logo-cdri.png" alt="CDRI" />
+                <img height="60" src="/logo-cdri.png" alt="CDRI" />
               </a>
               <a href="https://www.globalquakemodel.org/who-we-are" target="_blank" rel="noopener noreferrer">
-                <img height="60" src="/logo-gem.png" alt="GEM" />
+                <img height="50" src="/logo-gem.png" alt="GEM" />
               </a>
               <a href="https://www.insdevforum.org/" target="_blank" rel="noopener noreferrer">
-                <img height="40" src="/logo-idf.png" alt="IDF" />
+                <img height="30" src="/logo-idf.png" alt="IDF" />
               </a>
               <a href="https://www.undrr.org/" target="_blank" rel="noopener noreferrer">
-                <img height="50" src="/logo-undrr.png" alt="UNDRR" />
+                <img height="40" src="/logo-undrr.png" alt="UNDRR" />
               </a>
             </Stack>
 
@@ -145,10 +162,10 @@ export const IntroPage = () => (
             </p>
 
             <Stack
-              direction="row"
+              direction={{ xs: 'column', md: 'row' }}
               divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
-              sx={{mb:2}}
+              sx={{ mb: 2 }}
               justifyContent="center"
               alignItems="center"
             >
@@ -211,4 +228,5 @@ export const IntroPage = () => (
       </Grid>
     </article>
   </div>
-);
+  )
+};
