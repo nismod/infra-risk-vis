@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 
 import { ViewLayer } from '@/lib/data-map/view-layers';
 import { formatAbbreviations } from '@/lib/react/format-abbreviations';

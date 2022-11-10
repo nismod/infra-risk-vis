@@ -16,6 +16,7 @@ const LegendGradient: FC<{
     <>
       {colorMapValues.map(({ color, value }, i) => (
         <Tooltip
+          key={i}
           title={getValueLabel(value)}
           arrow
           placement="top"
@@ -25,7 +26,7 @@ const LegendGradient: FC<{
           TransitionComponent={Fade}
           TransitionProps={{ timeout: 0 }}
         >
-          <Box key={i} height={legendHeight} flexGrow={1} bgcolor={color} />
+          <Box height={legendHeight} flexGrow={1} bgcolor={color} />
         </Tooltip>
       ))}
     </>
