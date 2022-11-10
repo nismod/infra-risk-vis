@@ -32,7 +32,7 @@ const infrastructureRiskConfig = atom({
   key: 'infrastructureRiskConfig',
   default: {
     paramDomains: {
-      sector: ['roads', 'power'],
+      sector: ['roads', 'rail', 'power'],
       hazard: ['fluvial', 'cyclone'],
     },
     paramDefaults: {

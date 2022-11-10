@@ -205,7 +205,7 @@ export function infrastructureViewLayer(infrastructureType: NetworkLayerType, st
         detailsComponent,
         label,
         color,
-        showRiskSection: true,
+        showRiskSection: (infrastructureType !== 'rail_nodes'),
       });
     },
   });

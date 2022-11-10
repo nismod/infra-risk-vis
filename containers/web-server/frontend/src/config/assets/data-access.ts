@@ -20,7 +20,7 @@ function lookupHazard(hazard: string) {
 function lookupRcp(rcp: string, layer: string) {
   if (rcp == null) return rcp;
   if (rcp === 'baseline') {
-    if (layer.startsWith('road_')) {
+    if (layer.startsWith('road_') || layer.startsWith('rail_')) {
       return 'historical';
     }
     return rcp;
@@ -36,7 +36,7 @@ function lookupEpoch(epoch: string, hazard: HazardType, layer: string) {
     if (hazard === 'cyclone') {
       return '2020';
     }
-    if (layer.startsWith('road_')) {
+    if (layer.startsWith('road_') || layer.startsWith('rail_')) {
       return '1980';
     }
   }

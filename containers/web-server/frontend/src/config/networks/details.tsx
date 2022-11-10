@@ -142,32 +142,36 @@ export const WaterSupplyNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
 
 export const RailEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
-    <DetailHeader>{f.rail_sect}</DetailHeader>
+    <DetailHeader>{f.tag_name}</DetailHeader>
     <IdSubheader id={f.asset_id} />
     <List>
-      <DataItem label="Connection" value={`${f.from_node}–${f.to_node}`} />
-      <DataItem label="Owner" value={f.type} />
-      <DataItem label="Status" value={f.status} />
-      <DataItem label="Length (m)" value={f.shape_length} />
       <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
+        label="OpenStreetMap ID"
+        value={
+          <a href={`https://www.openstreetmap.org/way/${f.osm_way_id}`} target="_blank" rel="noopener noreferrer">
+            {f.osm_way_id}
+          </a>
+        }
       />
+      <DataItem label={`Rehabilitation cost (USD/km)`} value={f.rehab_cost_USD_per_km} />
     </List>
   </>
 );
 
 export const RailNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
-    <DetailHeader>{f.Station}</DetailHeader>
+    <DetailHeader>{f.tag_name}</DetailHeader>
     <IdSubheader id={f.asset_id} />
     <List>
-      <DataItem label="Lines" value={f.Lines} />
-      <DataItem label="Status" value={`${f.status} ${paren(f.Condition)}`} />
       <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
+        label="OpenStreetMap ID"
+        value={
+          <a href={`https://www.openstreetmap.org/node/${f.osm_node_id}`} target="_blank" rel="noopener noreferrer">
+            {f.osm_node_id}
+          </a>
+        }
       />
+      <DataItem label="Type" value={f._asset_type} />
     </List>
   </>
 );
