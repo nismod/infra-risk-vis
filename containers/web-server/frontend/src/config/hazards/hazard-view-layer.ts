@@ -37,9 +37,8 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
           opacity: hazardType === 'cyclone' ? 0.6 : 1,
 
           // TODO: tweak transparentColor to tweak border color / transparent layer tint
-          /*
-          transparentColor: [128, 128, 128, 0],
-          */
+
+          transparentColor: [255, 255, 255, 0],
         },
         deckProps,
         {

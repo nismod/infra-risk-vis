@@ -43,11 +43,17 @@ export function exposureViewLayer(hazardType: ExposureSource, hazardParams: any)
     interactionGroup: 'hazards',
     params: { hazardType, hazardParams },
     fn: ({ deckProps, zoom }) => {
-      return rasterTileLayer({}, deckProps, {
-        id: `${id}@${deckId}`, // follow the convention viewLayerId@deckLayerId
-        data: getHazardDataUrl({ hazardType, metric: 'exposure', hazardParams }, colorMap),
-        refinementStrategy: 'no-overlap',
-      });
+      return rasterTileLayer(
+        {
+          transparentColor: [255, 255, 255, 0],
+        },
+        deckProps,
+        {
+          id: `${id}@${deckId}`, // follow the convention viewLayerId@deckLayerId
+          data: getHazardDataUrl({ hazardType, metric: 'exposure', hazardParams }, colorMap),
+          refinementStrategy: 'no-overlap',
+        },
+      );
     },
     renderLegend() {
       return React.createElement(RasterLegend, {

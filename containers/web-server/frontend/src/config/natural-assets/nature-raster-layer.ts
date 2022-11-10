@@ -1,3 +1,4 @@
+import { Color } from 'deck.gl/typed';
 import React from 'react';
 
 import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use-interactions';
@@ -16,6 +17,7 @@ export const NATURE_RASTER_FORMATS: Record<
   {
     colorMap: RasterColorMap;
     formatValue: (x: number) => string;
+    transparentColor?: Color;
   }
 > = {
   biodiversity_intactness: {
@@ -31,6 +33,7 @@ export const NATURE_RASTER_FORMATS: Record<
       range: [0, 10_000],
     },
     formatValue: (x) => `${(x / 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })}`,
+    transparentColor: [255, 255, 255, 0],
   },
   organic_carbon: {
     colorMap: {
@@ -45,7 +48,7 @@ export const NATURE_RASTER_FORMATS: Record<
 const valueLabelLookup = toLabelLookup(NATURE_RASTER_VALUE_LABELS);
 
 export function natureRasterViewLayer(type: NatureRasterType): ViewLayer {
-  const { colorMap, formatValue } = NATURE_RASTER_FORMATS[type];
+  const { colorMap, formatValue, transparentColor = [0, 0, 0, 0] } = NATURE_RASTER_FORMATS[type];
   const label = `${valueLabelLookup[type]}`;
 
   const formatFn = (x: number) => (x != null ? formatValue(x) : '-');
@@ -58,13 +61,19 @@ export function natureRasterViewLayer(type: NatureRasterType): ViewLayer {
       type,
     },
     fn: ({ deckProps }) =>
-      rasterTileLayer({}, deckProps, {
-        data: SOURCES.raster.getUrl({
-          path: `nature/${type}`,
-          ...colorMap,
-        }),
-        refinementStrategy: 'no-overlap',
-      }),
+      rasterTileLayer(
+        {
+          transparentColor,
+        },
+        deckProps,
+        {
+          data: SOURCES.raster.getUrl({
+            path: `nature/${type}`,
+            ...colorMap,
+          }),
+          refinementStrategy: 'no-overlap',
+        },
+      ),
     renderLegend: () =>
       React.createElement(RasterLegend, {
         label,

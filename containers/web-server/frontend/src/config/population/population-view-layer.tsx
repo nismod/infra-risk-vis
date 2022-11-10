@@ -44,11 +44,12 @@ export function jrcPopulationViewLayer(): ViewLayer {
           textureParameters: {
             [GL.TEXTURE_MAG_FILTER]: zoom >= 7 ? GL.NEAREST : GL.LINEAR,
           },
+          transparentColor: [255, 255, 255, 0],
         },
         deckProps,
         {
           data: getPopulationUrl(),
-          refinementStrategy: 'best-available',
+          refinementStrategy: 'no-overlap',
         },
       );
     },

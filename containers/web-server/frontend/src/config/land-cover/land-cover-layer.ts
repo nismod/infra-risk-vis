@@ -25,8 +25,8 @@ export function landCoverViewLayer(): ViewLayer {
     fn: ({ deckProps }) =>
       rasterTileLayer(
         {
-          textureParametres: {
-            [GL.TEXTURE_MAG_FILTER]: GL.NEAREST,
+          textureParameters: {
+            [GL.TEXTURE_MAG_FILTER]: GL.LINEAR,
           },
         },
         deckProps,

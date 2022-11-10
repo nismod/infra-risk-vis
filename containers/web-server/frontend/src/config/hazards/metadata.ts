@@ -58,7 +58,7 @@ export const HAZARDS_METADATA: Record<HazardType, HazardMetadata> = {
   },
   extreme_heat: {
     label: 'Extreme Heat',
-    formatValue: makeValueFormat('_', { maximumFractionDigits: 2 }),
+    formatValue: makeValueFormat('_', { maximumFractionDigits: 1, style: 'percent' }),
     legendAnnotation: 'Annual probability of extreme event',
   },
   earthquake: {

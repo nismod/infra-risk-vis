@@ -35,12 +35,18 @@ export function buildingDensityLayer(type: BuildingDensityType): ViewLayer {
     interactionGroup: 'raster_assets',
     spatialType: 'raster',
     fn: ({ deckProps }) => {
-      return rasterTileLayer({}, deckProps, {
-        data: SOURCES.raster.getUrl({
-          path: `buildings/${type}`,
-          ...colorMap,
-        }),
-      });
+      return rasterTileLayer(
+        {
+          transparentColor: [255, 255, 255, 0],
+        },
+        deckProps,
+        {
+          data: SOURCES.raster.getUrl({
+            path: `buildings/${type}`,
+            ...colorMap,
+          }),
+        },
+      );
     },
     renderLegend() {
       return React.createElement(RasterLegend, {
