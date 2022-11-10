@@ -28,6 +28,7 @@ import { HdiControl } from './sections/vulnerability/HdiControl';
 import { TravelTimeControl } from './sections/vulnerability/TravelTimeControl';
 import { WdpaControls } from './sections/vulnerability/WdpaControl';
 import { DataNotice } from './ui/DataNotice';
+import { RegionalRiskSection } from './sections/risk/regional-risk';
 
 const viewLabels = {
   hazard: 'Hazard',
@@ -180,7 +181,9 @@ const RiskSection = () => (
     <Layer path="infrastructure" title="Infrastructure Risk" unmountOnHide={true}>
       <InfrastructureRiskSection />
     </Layer>
-    <Layer path="regional" title="Regional Risk" disabled></Layer>
+    <Layer path="regional" title="Regional Summary" unmountOnHide={true}>
+      <RegionalRiskSection />
+    </Layer>
   </Section>
 );
 

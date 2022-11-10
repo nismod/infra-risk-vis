@@ -58,6 +58,7 @@ export const TooltipContent: FC = () => {
           <InteractionGroupTooltip group="hazards" />
           <InteractionGroupTooltip group="raster_assets" />
           <InteractionGroupTooltip group="hdi" />
+          <InteractionGroupTooltip group="rexp" />
 
           <WdpaTooltipSection />
         </ErrorBoundary>

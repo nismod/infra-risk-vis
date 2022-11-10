@@ -19,6 +19,7 @@ export const DetailsContent = () => {
       <InteractionGroupDetails group="assets" />
       <InteractionGroupDetails group="wdpa" />
       <InteractionGroupDetails group="hdi" />
+      <InteractionGroupDetails group="rexp" />
     </Stack>
   );
 };

@@ -15,6 +15,12 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     pickMultiple: true,
   },
   {
+    id: 'rexp',
+    type: 'vector',
+    usesAutoHighlight: true,
+    pickMultiple: false,
+  },
+  {
     id: 'hdi',
     type: 'vector',
     usesAutoHighlight: true,

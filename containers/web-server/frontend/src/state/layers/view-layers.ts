@@ -21,6 +21,7 @@ import { networkLayersState } from './data-layers/networks';
 import { organicCarbonLayerState } from './data-layers/organic-carbon';
 import { populationLayerState } from './data-layers/population';
 import { populationExposureLayerState } from './data-layers/population-exposure';
+import { regionalExposureLayerState } from './data-layers/regional-risk';
 import { protectedAreasPointLayerState, protectedAreasPolygonLayerState } from './data-layers/protected-areas';
 import { travelTimeLayerState } from './data-layers/travel-time';
 import { featureBoundingBoxLayerState } from './ui-layers/feature-bbox';
@@ -51,6 +52,7 @@ export const viewLayersState = selector<ConfigTree<ViewLayer>>({
       get(industryLayersState),
       get(healthcareLayersState),
       get(protectedAreasPointLayerState),
+      get(regionalExposureLayerState),
 
       /**
        * UI Layers

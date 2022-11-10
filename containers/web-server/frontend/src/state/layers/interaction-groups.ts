@@ -10,6 +10,7 @@ export const interactionGroupsState = selector({
       INTERACTION_GROUPS.assets,
       INTERACTION_GROUPS.wdpa,
       INTERACTION_GROUPS.hdi,
+      INTERACTION_GROUPS.rexp,
       INTERACTION_GROUPS.hazards,
       INTERACTION_GROUPS.raster_assets,
     ];
