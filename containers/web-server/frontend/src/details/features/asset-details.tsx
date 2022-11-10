@@ -1,14 +1,13 @@
-import { Download } from '@mui/icons-material';
-import { IconButton, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC, ReactElement, Suspense } from 'react';
 import { RecoilValue, useRecoilValue } from 'recoil';
 
-import { downloadFile } from '@/lib/helpers';
 import { ColorBox } from '@/lib/ui/data-display/ColorBox';
 
 import { apiFeatureQuery } from '@/state/queries';
 
+import { ButtonPlacement, DownloadButton } from './DownloadButton';
 // import { AdaptationSection } from './adaptation/AdaptationSection';
 import { DamagesSection } from './damages/DamagesSection';
 import { DetailsComponentType } from './detail-components';
@@ -22,22 +21,6 @@ const LoadDetails: FC<LoadDetailsProps> = ({ featureDetailsState, children }) =>
   const featureDetails = useRecoilValue(featureDetailsState);
 
   return children(featureDetails);
-};
-
-const DownloadButton = ({ feature }) => {
-  return (
-    <IconButton
-      sx={{
-        position: 'absolute',
-        top: 0,
-        right: 30, // hack: larger right margin to allow space for close button
-      }}
-      title="Download CSV with feature metadata"
-      onClick={() => downloadFile(makeDetailsCsv(feature), 'text/csv', `feature_${feature.id}.csv`)}
-    >
-      <Download />
-    </IconButton>
-  );
 };
 
 export interface AssetDetailsProps {
@@ -71,7 +54,15 @@ export const SimpleAssetDetails: FC<SimpleAssetDetailsProps> = ({ label, color, 
   return (
     <AssetDetails label={label} color={color} feature={feature}>
       <DetailsComponent f={feature.properties} />
-      <DownloadButton feature={feature} />
+      <ButtonPlacement
+        right={30} //hack: larger right margin to allow space for close button
+      >
+        <DownloadButton
+          makeContent={() => makeDetailsCsv(feature)}
+          title="Download CSV with feature metadata"
+          filename={`feature_${feature.id}.csv`}
+        />
+      </ButtonPlacement>
     </AssetDetails>
   );
 };
@@ -93,23 +84,31 @@ export const ExtendedAssetDetails: FC<ExtendedAssetDetailsProps> = ({
 
   return (
     <AssetDetails label={label} color={color} feature={feature}>
+      <ButtonPlacement
+        right={30} // hack: larger right margin to allow space for close button
+      >
+        <DownloadButton
+          makeContent={() => makeDetailsCsv(feature)}
+          title="Download CSV with feature metadata"
+          filename={`feature_${feature.id}.csv`}
+        />
+      </ButtonPlacement>
       <Suspense fallback="Loading data...">
         <LoadDetails featureDetailsState={featureDetailsState}>
           {(featureDetails) => (
             <>
               <DetailsComponent f={featureDetails.properties} />
-              <DownloadButton feature={featureDetails} />
               {showRiskSection && (
                 <>
                   <DamagesSection fd={featureDetails} />
                   {/* <AdaptationSection fd={featureDetails} /> */}
                 </>
               )}
-              <details  className="feature-details-debug">
-                <summary><small>Feature data</small></summary>
-                <pre>
-                  {JSON.stringify(featureDetails, null, 2)}
-                </pre>
+              <details className="feature-details-debug">
+                <summary>
+                  <small>Feature data</small>
+                </summary>
+                <pre>{JSON.stringify(featureDetails, null, 2)}</pre>
               </details>
             </>
           )}

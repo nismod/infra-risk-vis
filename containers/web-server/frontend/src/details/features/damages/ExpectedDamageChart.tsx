@@ -1,9 +1,12 @@
-import { useMemo } from 'react';
+import _ from 'lodash';
+import { FC, useMemo } from 'react';
 import { VegaLite } from 'react-vega';
 
 import { unique } from '@/lib/helpers';
 
-const makeSpec = (yearValues: number[], field_min: string, field: string, field_max: string, field_title: string) => ({
+import { ExpectedDamageCell } from './ExpectedDamagesSection';
+
+const makeSpec = (yearValues: string[], field_min: string, field: string, field_max: string, field_title: string) => ({
   $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
   data: {
     name: 'table',
@@ -59,11 +62,42 @@ const makeSpec = (yearValues: number[], field_min: string, field: string, field_
   },
 });
 
-export const ExpectedDamageChart = ({ data, field, field_min, field_max, field_title, ...props }) => {
-  const spec = useMemo(
-    () => makeSpec(unique<number>(data.table.map((d) => d.epoch)).sort(), field_min, field, field_max, field_title),
-    [data, field_min, field, field_max, field_title],
+// need to map special value to year to maintain chronological ordering on the X axis
+function prepareEpoch(epoch: string) {
+  return epoch === 'present' ? '2020' : epoch;
+}
+
+interface ExpectedDamageChartProps {
+  data: {
+    table: ExpectedDamageCell[];
+  };
+  field: keyof ExpectedDamageCell;
+  field_min: keyof ExpectedDamageCell;
+  field_max: keyof ExpectedDamageCell;
+  field_title: string;
+}
+
+export const ExpectedDamageChart: FC<ExpectedDamageChartProps> = ({
+  data,
+  field,
+  field_min,
+  field_max,
+  field_title,
+  ...props
+}) => {
+  // For some reason, Vega was complaining about not being able to extend objects, hence the cloning here.
+  // Perhaps it's to do with Recoil freezing state objects
+  const clonedData = useMemo(
+    () => ({
+      table: _.cloneDeep(data.table).map((d) => ({ ...d, epoch: prepareEpoch(d.epoch) })),
+    }),
+    [data],
   );
 
-  return <VegaLite data={data} spec={spec as any} {...props} />;
+  const spec = useMemo(
+    () => makeSpec(unique(clonedData.table.map((d) => d.epoch)).sort(), field_min, field, field_max, field_title),
+    [clonedData, field_min, field, field_max, field_title],
+  );
+
+  return <VegaLite data={clonedData} spec={spec as any} {...props} />;
 };

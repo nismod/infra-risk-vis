@@ -1,11 +1,11 @@
-import { Download } from '@mui/icons-material';
-import { IconButton, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useMemo } from 'react';
 
 import { Adaptation } from '@/lib/api-client';
-import { downloadFile, unique } from '@/lib/helpers';
+import { unique } from '@/lib/helpers';
 
+import { DownloadButton } from '../DownloadButton';
 import { AdaptationTable } from './AdaptationTable';
 
 function makeAdaptationCsv(options: Adaptation[]) {
@@ -75,17 +75,19 @@ export const AdaptationSection = ({ fd }) => {
       <Box py={2}>
         <Box position="relative">
           <Typography variant="h6">Adaptation Options</Typography>
-          <IconButton
+          <Box
             sx={{
               position: 'absolute',
               top: 0,
               right: 0,
             }}
-            title="Download CSV with adaptation options data"
-            onClick={() => downloadFile(makeAdaptationCsv(options), 'text/csv', `feature_${fd.id}_adaptation.csv`)}
           >
-            <Download />
-          </IconButton>
+            <DownloadButton
+              title="Download CSV with adaptation options data"
+              makeContent={() => makeAdaptationCsv(options)}
+              filename={`feature_${fd.id}_adaptation.csv`}
+            />
+          </Box>
         </Box>
         <Box>
           {options.length ? (
