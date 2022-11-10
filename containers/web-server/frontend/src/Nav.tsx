@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Divider, Drawer, IconButton, MenuList, MenuItem, ListItemText, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import { AppBar, Divider, Drawer, IconButton, MenuList, MenuItem, Toolbar, Typography, useMediaQuery } from '@mui/material';
 import { Menu } from "@mui/icons-material";
 import { NavLink } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ export const Nav = () => {
                 >
                 <Menu htmlColor='white' />
               </IconButton>
-              <NavLink exact className="nav-link" to="/">
+              <NavLink exact className="nav-link" to="/" onClick={() => setOpenDrawer(false)}>
                 <Typography variant="h6">G-SRAT</Typography>
               </NavLink>
               <Divider sx={{flexGrow: 1}} />
@@ -53,51 +53,39 @@ export const Nav = () => {
               >
                 <Toolbar sx={{width: 240}} /> {/* Prevents app bar from concealing content*/}
                 <MenuList>
-                  <MenuItem onClick={() => setOpenDrawer(false)}>
-                    <ListItemText>
-                      <NavLink exact className="nav-link" to="/">
-                        Home
-                      </NavLink>
-                    </ListItemText>
+                  <MenuItem sx={{p:0}} onClick={() => setOpenDrawer(false)}>
+                    <NavLink exact className="nav-link in-drawer" to="/">
+                      Home
+                    </NavLink>
                   </MenuItem>
-                  <MenuItem onClick={() => setOpenDrawer(false)}>
-                    <ListItemText>
-                      <NavLink className="nav-link" to="/view/hazard">
-                        Hazard
-                      </NavLink>
-                    </ListItemText>
+                  <MenuItem sx={{p:0}} onClick={() => setOpenDrawer(false)}>
+                    <NavLink className="nav-link in-drawer" to="/view/hazard">
+                      Hazard
+                    </NavLink>
                   </MenuItem>
 
-                  <MenuItem onClick={() => setOpenDrawer(false)}>
-                    <ListItemText>
-                      <NavLink className="nav-link" to="/view/exposure">
-                        Exposure
-                      </NavLink>
-                    </ListItemText>
+                  <MenuItem sx={{p:0}} onClick={() => setOpenDrawer(false)}>
+                    <NavLink className="nav-link in-drawer" to="/view/exposure">
+                      Exposure
+                    </NavLink>
                   </MenuItem>
 
-                  <MenuItem onClick={() => setOpenDrawer(false)}>
-                    <ListItemText>
-                      <NavLink className="nav-link" to="/view/vulnerability">
-                        Vulnerability
-                      </NavLink>
-                    </ListItemText>
+                  <MenuItem sx={{p:0}} onClick={() => setOpenDrawer(false)}>
+                    <NavLink className="nav-link in-drawer" to="/view/vulnerability">
+                      Vulnerability
+                    </NavLink>
                   </MenuItem>
 
-                  <MenuItem onClick={() => setOpenDrawer(false)}>
-                    <ListItemText>
-                      <NavLink className="nav-link" to="/view/risk">
-                        Risk
-                      </NavLink>
-                    </ListItemText>
+                  <MenuItem sx={{p:0}} onClick={() => setOpenDrawer(false)}>
+                    <NavLink className="nav-link in-drawer" to="/view/risk">
+                      Risk
+                    </NavLink>
                   </MenuItem>
 
-                  <MenuItem>
-                    <ListItemText>
-                      <NavLink className="nav-link" to="/data">
-                        About
-                      </NavLink>
-                    </ListItemText>
+                  <MenuItem sx={{p:0}} onClick={() => setOpenDrawer(false)}>
+                    <NavLink className="nav-link in-drawer" to="/data">
+                      About
+                    </NavLink>
                   </MenuItem>
                 </MenuList>
               </Drawer>

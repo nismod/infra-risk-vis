@@ -28,7 +28,7 @@ export const IntroPage = () => {
     <article>
       <ScrollToTop />
       <Grid container columnSpacing={8} rowSpacing={4}>
-        <Grid item md={6}>
+        <Grid item md={6} sx={{width:'100%'}}>
           <HeadingBox sx={{ mt: -2, pt: 8 }}>
             <Typography variant="h1">Global climate-related risk analytics</Typography>
           </HeadingBox>

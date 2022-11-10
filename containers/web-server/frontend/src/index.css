@@ -21,6 +21,14 @@
   text-decoration: none;
 }
 
+.nav-link.in-drawer {
+  padding: 0.4em 1em;
+  margin: 0;
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
 /**
  * Page layout
  */
