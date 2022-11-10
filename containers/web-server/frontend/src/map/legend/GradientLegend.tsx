@@ -20,7 +20,7 @@ const LegendGradient: FC<{
           title={getValueLabel(value)}
           arrow
           placement="top"
-          enterDelay={500}
+          enterDelay={200}
           leaveDelay={0}
           // deactivates transition animation
           TransitionComponent={Fade}
@@ -55,7 +55,7 @@ export const GradientLegend: FC<GradientLegendProps> = ({
     </Box>
     <Box
       height={legendHeight + 2}
-      width={255}
+      width={256}
       bgcolor="#ccc"
       display="flex"
       flexDirection="row"
