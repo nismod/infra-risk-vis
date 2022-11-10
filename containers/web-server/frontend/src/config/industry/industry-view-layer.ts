@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { InteractionTarget, VectorTarget } from '@/lib/data-map/interactions/use-interactions';
-import { fillColor, pointRadius } from '@/lib/deck/props/style';
+import { border, fillColor, pointRadius } from '@/lib/deck/props/style';
 import { makeColorConfig, makeConfig } from '@/lib/helpers';
 
 import { SimpleAssetDetails } from '@/details/features/asset-details';
@@ -44,7 +44,11 @@ export function industryViewLayer(industry_type_id: IndustryType) {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(INDUSTRY_COLORS[industry_type_id].deck)],
+    customFn: ({ zoom }) => [
+      pointRadius(zoom, 1),
+      fillColor(INDUSTRY_COLORS[industry_type_id].deck),
+      border([100, 100, 100]),
+    ],
     customDataAccessFn: assetDataAccessFunction(industry_type_id),
     renderTooltip: (hover: InteractionTarget<VectorTarget>) => {
       return React.createElement(VectorHoverDescription, {
