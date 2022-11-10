@@ -115,7 +115,7 @@ export const ExpectedDamagesSection = () => {
     <Box py={2}>
       <Stack spacing={3}>
         <Box position="relative">
-          <Typography variant="h6">Expected Annual Damgaes</Typography>
+          <Typography variant="h6">Expected Annual Damages</Typography>
           {fd && (
             <ButtonPlacement>
               <DownloadButton
