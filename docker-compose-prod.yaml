@@ -10,11 +10,15 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--api.insecure=false"
       - "--api.dashboard=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.certresolverone.acme.tlschallenge=true"
       - "--certificatesresolvers.certresolverone.acme.email=tom.russell@ouce.ox.ac.uk"
       - "--certificatesresolvers.certresolverone.acme.storage=/letsencrypt/acme.json"
     ports:
+      - "80:80"
       - "443:443"
     volumes:
       - "./letsencrypt:/letsencrypt"
@@ -59,6 +63,7 @@ services:
     image: ghcr.io/nismod/gri-vector-tileserver:0.10
     volumes:
       - ./tileserver/vector/data:/data
+      - ./vector-tileserver/config.json:/config.json
     expose:
       - "8080"
     labels:
