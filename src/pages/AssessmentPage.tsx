@@ -149,7 +149,8 @@ type InterventionKey =
   | 'system_eff'
   | 'fleet_eff'
   | 'fleet_elec'
-  | 'road_user_charging';
+  | 'road_user_charging'
+  | 'custom';
 
 type InterventionStrength = Record<InterventionKey, number>;
 
@@ -163,6 +164,7 @@ const ZERO_INTERVENTION: InterventionStrength = {
   'fleet_eff': 0,
   'fleet_elec': 0,
   'road_user_charging': 0,
+  'custom': 0,
 }
 
 const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
@@ -175,6 +177,7 @@ const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
   {value: 'fleet_eff',  label: 'Fleet vehicle efficiencies'},
   {value: 'fleet_elec',  label: 'Fleet electrification'},
   {value: 'road_user_charging',  label: 'Road user charging'},
+  {value: 'custom',  label: 'Custom intervention'},
 ];
 
 const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
@@ -237,6 +240,7 @@ const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
       'env_energy_use': 0.5,
       'econ_freight': -0.5,
   },
+  'custom': ZERO_EFFECT
 };
 
 interface Assessment {
