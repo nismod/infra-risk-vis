@@ -1,11 +1,12 @@
 import React, { Fragment, useState } from 'react';
 import _ from 'lodash';
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Select, InputLabel, FormControl, MenuItem, Slider, Collapse, Box, IconButton } from '@mui/material';
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Select, InputLabel, FormControl, MenuItem, Slider, Collapse, Box, IconButton, Typography, TextField } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // PlayCircleOutline, Delete
 import { atom, selector, useRecoilState } from 'recoil';
 
 import { ValueLabel } from 'lib/controls/params/value-label';
 import ScrollToTop from 'lib/hooks/scroll-to-top';
+import { isNumeric, numFormat } from 'lib/helpers';
 
 type IndicatorKey =
   'env_ghg'
@@ -293,109 +294,125 @@ const indicatorWeights = selector({
   }
 });
 
-const ValueDisplay = ({value}) => {
+const CompactValue = ({label, value, maximumSignificantDigits=3}) => {
+  if (isNumeric(value)) {
+    value = numFormat(value, maximumSignificantDigits);
+  }
   return (
+    <div>
+      <Typography variant="subtitle2" component="span">{label}:</Typography>{' '}
+      <Typography variant="body2" component="span">{value}</Typography>
+    </div>
+  );
+}
+
+const ValueDisplay = ({value}) => (
+  <>
     <Slider
       disabled
       min={-1}
       max={1}
       marks={[
-        {value: -1, label: '-'},
-        {value: 0, label: '0'},
-        {value: 1, label: '+'},
+        { value: -1, label: '-' },
+        { value: 0, label: '0' },
+        { value: 1, label: '+' },
       ]}
       track={false}
-      value={value}
-      />
-  );
-};
+      value={value} />
+      <CompactValue label="Effect" value={value} />
+  </>
+);
 
-const WeightDisplay = ({value}) => {
-  return (
+const WeightDisplay = ({value}) => (
+  <>
     <Slider
       disabled
       min={0}
       max={1}
       marks={[
-        {value: 0, label: '0'},
-        {value: 1, label: '+'},
+        { value: 0, label: '0' },
+        { value: 1, label: '+' },
       ]}
       track={false}
-      value={value}
-      />
-  );
-};
+      value={value} />
+    <CompactValue label="Weight" value={value} />
+  </>
+);
 
-const InterventionEffects = (
-  { label, defaultEffect, revisedEffect, options, strength, setStrength, setEffect }:
-    {
-      label: string,
-      defaultEffect: Effect,
-      revisedEffect: Effect,
-      options: { value: number, label: string }[],
-      strength: number,
-      setStrength: (e: any) => void,
-      setEffect: (key: string, value: number | number[]) => void,
-    }
-) => {
-    const [open, setOpen] = useState(false);
-    return (
-      <Fragment>
-        <TableRow>
-          <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={() => setOpen(!open)}
+function InterventionEffects({ label, defaultEffect, revisedEffect, options, strength, setStrength, setEffect }: {
+  label: string;
+  defaultEffect: Effect;
+  revisedEffect: Effect;
+  options: { value: number; label: string; }[];
+  strength: number;
+  setStrength: (e: any) => void;
+  setEffect: (key: string, value: number | number[]) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Fragment>
+      <TableRow>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TableCell>
+        <TableCell>
+          {label}
+        </TableCell>
+        <TableCell>
+          <FormControl fullWidth sx={{ my: 1 }}>
+            <InputLabel>{label}</InputLabel>
+            <Select
+              value={strength}
+              label={label}
+              onChange={setStrength}
             >
-              {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-            </IconButton>
-          </TableCell>
-          <TableCell>
-            {label}
-          </TableCell>
-          <TableCell>
-            <FormControl fullWidth sx={{ my: 1 }}>
-              <InputLabel>{label}</InputLabel>
-              <Select
-                value={strength}
-                label={label}
-                onChange={setStrength}
-              >
-                {options.map(({ value, label }) => (
-                  <MenuItem key={value} value={value}>{label}</MenuItem>
-                ))}
-              </Select>
-              <Slider
-                aria-label={label}
-                value={strength}
-                onChange={(e, value) => {
-                  setStrength({target: {value: value}});
-                }}
-                step={1}
-                track={false}
-                marks={[
-                  {value: -1, label: '-'},
-                  {value: 0, label: '0'},
-                  {value: 1, label: '+'},
-                ]}
-                min={-1}
-                max={1} />
-            </FormControl>
-          </TableCell>
-        </TableRow>
-        <TableRow>
-          <TableCell colSpan={3} sx={{p:0}}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Box sx={{ m: 2 }}>
+              {options.map(({ value, label }) => (
+                <MenuItem key={value} value={value}>{label}</MenuItem>
+              ))}
+            </Select>
+            <Slider
+              aria-label={label}
+              value={strength}
+              onChange={(e, value) => {
+                setStrength({ target: { value: value } });
+              } }
+              step={1}
+              track={false}
+              marks={[
+                { value: -1, label: '-' },
+                { value: 0, label: '0' },
+                { value: 1, label: '+' },
+              ]}
+              min={-1}
+              max={1} />
+            <CompactValue label="Strength" value={strength} />
+          </FormControl>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell colSpan={3} sx={{ p: 0 }}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ m: 2 }}>
               <TableContainer component={Paper}>
                 <Table size="small">
+                  <colgroup>
+                    <col width="50%" />
+                    <col width="15%" />
+                    <col width="20%" />
+                    <col width="15%" />
+                  </colgroup>
                   <TableHead>
                     <TableRow>
                       <TableCell>Indicator</TableCell>
-                      <TableCell>Default Effect</TableCell>
-                      <TableCell>Override</TableCell>
-                      <TableCell>Current Effect</TableCell>
+                      <TableCell>Default</TableCell>
+                      <TableCell>Revised</TableCell>
+                      <TableCell>Effective</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -406,7 +423,7 @@ const InterventionEffects = (
                         <TableRow key={key}>
                           <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
                           <TableCell>
-                            <ValueDisplay value={defaultEffect[key]}/>
+                            <ValueDisplay value={defaultEffect[key]} />
                           </TableCell>
                           <TableCell>
                             <Slider
@@ -415,15 +432,26 @@ const InterventionEffects = (
                               onChange={(e, value) => {
                                 setEffect(key, value);
                               } }
-                              step={0.5}
+                              step={0.01}
                               track={false}
                               marks={[
-                                {value: -1, label: '-'},
-                                {value: 0, label: '0'},
-                                {value: 1, label: '+'},
+                                { value: -1, label: '-' },
+                                { value: 0, label: '0' },
+                                { value: 1, label: '+' },
                               ]}
                               min={-1}
                               max={1} />
+                              <input
+                                type="number"
+                                style={{width:"150px"}}
+                                value={revisedEffect[key]}
+                                step={0.01}
+                                min={-1}
+                                max={1}
+                                onChange={(e) => {
+                                  setEffect(key, Number.parseFloat(e.target.value));
+                                }}
+                              />
                           </TableCell>
                           <TableCell>
                             <ValueDisplay value={revisedEffect[value] * strength} />
@@ -434,13 +462,13 @@ const InterventionEffects = (
                   </TableBody>
                 </Table>
               </TableContainer>
-              </Box>
-            </Collapse>
-          </TableCell>
-        </TableRow>
-      </Fragment>
-    );
-  }
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </Fragment>
+  );
+}
 
 const AdjustSelector = ({ label, assessed_value, weight, setWeight}) => {
   return (
@@ -457,13 +485,24 @@ const AdjustSelector = ({ label, assessed_value, weight, setWeight}) => {
           aria-label={label}
           value={weight}
           onChange={setWeight}
-          step={0.25}
+          step={0.01}
           marks={[
             {value: 0, label: '0'},
             {value: 1, label: '+'},
           ]}
           min={0}
           max={1}
+        />
+        <input
+          type="number"
+          style={{width:"150px"}}
+          value={weight}
+          step={0.01}
+          min={0}
+          max={1}
+          onChange={(e) => {
+            setWeight(e, Number.parseFloat(e.target.value));
+          }}
         />
       </TableCell>
       <TableCell>
