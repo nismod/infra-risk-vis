@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import _ from 'lodash';
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Select, InputLabel, FormControl, MenuItem, Slider, Collapse, Box, IconButton, Typography, TextField } from '@mui/material';
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Select, InputLabel, FormControl, MenuItem, Slider, Collapse, Box, IconButton, Typography, TextField, useTheme, TextareaAutosize } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'; // PlayCircleOutline, Delete
 import { atom, selector, useRecoilState } from 'recoil';
 
@@ -349,6 +349,7 @@ function InterventionEffects({ label, defaultEffect, revisedEffect, options, str
   setEffect: (key: string, value: number | number[]) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const theme = useTheme();
   return (
     <Fragment>
       <TableRow>
@@ -419,7 +420,9 @@ function InterventionEffects({ label, defaultEffect, revisedEffect, options, str
                     {INDICATOR_LABELS.map((option) => {
                       let { value, label } = option;
                       const key = value;
+                      const hasNote = false; // consider how best to store notes, option to add even if no revision
                       return revisedEffect ? (
+                        <>
                         <TableRow key={key}>
                           <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
                           <TableCell>
@@ -457,6 +460,23 @@ function InterventionEffects({ label, defaultEffect, revisedEffect, options, str
                             <ValueDisplay value={revisedEffect[value] * strength} />
                           </TableCell>
                         </TableRow>
+                        {
+                          (hasNote || revisedEffect[key] !== defaultEffect[key])?
+                          <TableRow key={`annotation-${key}`} sx={{backgroundColor: theme.palette.action.hover}}>                            
+                            <TableCell></TableCell>
+                            <TableCell colSpan={3}>
+                              <TextareaAutosize
+                                aria-label="Notes"
+                                placeholder="Reasons given for change from default effect&hellip;"
+                                style={{width:"100%", margin:"5px 0", fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'}}
+                                minRows={3}
+                              />
+                            </TableCell>
+                          </TableRow>
+                          : null
+                        }
+                        </>
+
                       ) : null;
                     })}
                   </TableBody>
