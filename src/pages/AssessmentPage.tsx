@@ -27,6 +27,7 @@ import { atom, selector, useRecoilState } from 'recoil';
 import { ValueLabel } from 'lib/controls/params/value-label';
 import ScrollToTop from 'lib/hooks/scroll-to-top';
 import { isNumeric, numFormat } from 'lib/helpers';
+import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 
 type IndicatorKey =
   | 'env_ghg'
@@ -85,33 +86,39 @@ const INDICATOR_LABELS: ValueLabel<IndicatorKey>[] = [
   { value: 'soc_inclusivity', label: 'Inclusivity' },
 ];
 
-type Effect = Record<IndicatorKey, number>;
+type Effect = Record<IndicatorKey, AnnotatedValue>;
+
+interface AnnotatedValue {
+  value: number;
+  notes?: string;
+}
+
 const ZERO_EFFECT = {
-  env_ghg: 0,
-  env_air_quality: 0,
-  env_energy_use: 0,
-  env_habitat_disruption: 0,
-  env_land: 0,
-  econ_passenger: 0,
-  econ_freight: 0,
-  econ_passenger_occupancy: 0,
-  econ_freight_load: 0,
-  econ_age: 0,
-  econ_road_quality: 0,
-  econ_length: 0,
-  econ_density: 0,
-  econ_border: 0,
-  soc_passenger_time: 0,
-  soc_passenger_length: 0,
-  soc_accidents_death: 0,
-  soc_accidents_injury: 0,
-  soc_accidents_death_pc: 0,
-  soc_accidents_injury_pc: 0,
-  soc_noise: 0,
-  soc_disease: 0,
-  soc_diversity: 0,
-  soc_equality: 0,
-  soc_inclusivity: 0,
+  env_ghg: {value: 0},
+  env_air_quality: {value: 0},
+  env_energy_use: {value: 0},
+  env_habitat_disruption: {value: 0},
+  env_land: {value: 0},
+  econ_passenger: {value: 0},
+  econ_freight: {value: 0},
+  econ_passenger_occupancy: {value: 0},
+  econ_freight_load: {value: 0},
+  econ_age: {value: 0},
+  econ_road_quality: {value: 0},
+  econ_length: {value: 0},
+  econ_density: {value: 0},
+  econ_border: {value: 0},
+  soc_passenger_time: {value: 0},
+  soc_passenger_length: {value: 0},
+  soc_accidents_death: {value: 0},
+  soc_accidents_injury: {value: 0},
+  soc_accidents_death_pc: {value: 0},
+  soc_accidents_injury_pc: {value: 0},
+  soc_noise: {value: 0},
+  soc_disease: {value: 0},
+  soc_diversity: {value: 0},
+  soc_equality: {value: 0},
+  soc_inclusivity: {value: 0},
 };
 const DEFAULT_WEIGHT = 0.5;
 
@@ -134,27 +141,27 @@ const SCENARIO_LABELS: ValueLabel<ScenarioKey>[] = [
 const SCENARIO_EFFECTS: Record<ScenarioKey, Effect> = {
   population: {
     ...ZERO_EFFECT,
-    env_ghg: -1,
-    env_energy_use: -1,
-    econ_passenger: 1,
-    econ_freight: 1,
-    soc_accidents_death: -0.5,
-    soc_accidents_injury: -0.5,
+    env_ghg: {value: -1},
+    env_energy_use: {value: -1},
+    econ_passenger: {value: 1},
+    econ_freight: {value: 1},
+    soc_accidents_death: {value: -0.5},
+    soc_accidents_injury: {value: -0.5},
   },
   economic: {
     ...ZERO_EFFECT,
-    env_ghg: -1,
-    env_energy_use: -1,
-    econ_passenger: 1,
-    econ_freight: 1,
-    econ_age: 0.5,
+    env_ghg: {value: -1},
+    env_energy_use: {value: -1},
+    econ_passenger: {value: 1},
+    econ_freight: {value: 1},
+    econ_age: {value: 0.5},
   },
   'energy-cost': {
     ...ZERO_EFFECT,
-    env_ghg: 1,
-    env_energy_use: 1,
-    econ_passenger: -1,
-    econ_freight: -1,
+    env_ghg: {value: 1},
+    env_energy_use: {value: 1},
+    econ_passenger: {value: -1},
+    econ_freight: {value: -1},
   },
 };
 
@@ -201,62 +208,62 @@ const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
 const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
   infra_construction: {
     ...ZERO_EFFECT,
-    env_habitat_disruption: -1,
-    env_land: -1,
-    econ_length: 0.5,
-    econ_density: 0.5,
-    soc_passenger_length: 0.5,
+    env_habitat_disruption: {value: -1},
+    env_land: {value: -1},
+    econ_length: {value: 0.5},
+    econ_density: {value: 0.5},
+    soc_passenger_length: {value: 0.5},
   },
   infra_maintenance: {
     ...ZERO_EFFECT,
-    env_ghg: 0.5,
-    env_energy_use: 0.5,
-    econ_road_quality: 1,
-    soc_passenger_time: 0.5,
-    soc_noise: 0.5,
+    env_ghg: {value: 0.5},
+    env_energy_use: {value: 0.5},
+    econ_road_quality: {value: 1},
+    soc_passenger_time: {value: 0.5},
+    soc_noise: {value: 0.5},
   },
   demand_goods: {
     ...ZERO_EFFECT,
-    env_ghg: -0.5,
-    env_energy_use: -0.5,
-    econ_freight: 1,
-    econ_freight_load: 1,
+    env_ghg: {value: -0.5},
+    env_energy_use: {value: -0.5},
+    econ_freight: {value: 1},
+    econ_freight_load: {value: 1},
   },
   demand_travel: {
     ...ZERO_EFFECT,
-    env_ghg: -0.5,
-    env_energy_use: -0.5,
-    econ_passenger: 1,
-    econ_passenger_occupancy: 1,
+    env_ghg: {value: -0.5},
+    env_energy_use: {value: -0.5},
+    econ_passenger: {value: 1},
+    econ_passenger_occupancy: {value: 1},
   },
   logistics_planning: {
     ...ZERO_EFFECT,
-    econ_freight_load: 0.5,
-    econ_border: 0.5,
+    econ_freight_load: {value: 0.5},
+    econ_border: {value: 0.5},
   },
   system_eff: {
     ...ZERO_EFFECT,
-    env_ghg: 0.5,
-    env_energy_use: 0.5,
-    econ_freight: 0.5,
-    soc_passenger_time: 0.5,
+    env_ghg: {value: 0.5},
+    env_energy_use: {value: 0.5},
+    econ_freight: {value: 0.5},
+    soc_passenger_time: {value: 0.5},
   },
   fleet_eff: {
     ...ZERO_EFFECT,
-    env_ghg: 0.5,
-    env_energy_use: 0.5,
+    env_ghg: {value: 0.5},
+    env_energy_use: {value: 0.5},
   },
   fleet_elec: {
     ...ZERO_EFFECT,
-    env_ghg: 1,
-    env_air_quality: 0.5,
-    soc_disease: 0.5,
+    env_ghg: {value: 1},
+    env_air_quality: {value: 0.5},
+    soc_disease: {value: 0.5},
   },
   road_user_charging: {
     ...ZERO_EFFECT,
-    env_ghg: 0.5,
-    env_energy_use: 0.5,
-    econ_freight: -0.5,
+    env_ghg: {value: 0.5},
+    env_energy_use: {value: 0.5},
+    econ_freight: {value: -0.5},
   },
   custom: ZERO_EFFECT,
 };
@@ -292,7 +299,7 @@ const currentAssessment = atom<Assessment>({
     defaultScenarioEffects: SCENARIO_EFFECTS,
     revisedScenarioEffects: SCENARIO_EFFECTS,
 
-    indicatorWeights: _.mapValues(ZERO_EFFECT, () => DEFAULT_WEIGHT),
+    indicatorWeights: _.mapValues(ZERO_EFFECT, () => ({value: DEFAULT_WEIGHT})),
   },
 });
 
@@ -327,7 +334,7 @@ const CompactValue = ({ label, value, maximumSignificantDigits = 3 }) => {
   );
 };
 
-const ValueDisplay = ({ value }) => (
+const ValueDisplay = ({ value }: { value: number }) => (
   <>
     <Slider
       disabled
@@ -345,7 +352,7 @@ const ValueDisplay = ({ value }) => (
   </>
 );
 
-const WeightDisplay = ({ value, label }) => {
+const WeightDisplay = ({ value, label }: { value: number, label: string }) => {
   label = label ?? "Weight";
   return (
     <>
@@ -379,7 +386,7 @@ function InterventionEffects({
   options: { value: number; label: string }[];
   strength: number;
   setStrength: (e: any) => void;
-  setEffect: (key: string, value: number | number[]) => void;
+  setEffect: (key: string, value: AnnotatedValue) => void;
 }) {
   const [open, setOpen] = useState(false);
   const theme = useTheme();
@@ -446,20 +453,19 @@ function InterventionEffects({
                     {INDICATOR_LABELS.map((option) => {
                       let { value, label } = option;
                       const key = value;
-                      const hasNote = false; // consider how best to store notes, option to add even if no revision
                       return revisedEffect ? (
                         <>
                           <TableRow key={key}>
                             <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
                             <TableCell>
-                              <ValueDisplay value={defaultEffect[key]} />
+                              <ValueDisplay value={defaultEffect[key].value} />
                             </TableCell>
                             <TableCell>
                               <Slider
                                 aria-label={`${label} Revised`}
-                                value={revisedEffect[key]}
-                                onChange={(e, value) => {
-                                  setEffect(key, value);
+                                value={revisedEffect[key].value}
+                                onChange={(e, value: number) => {
+                                  setEffect(key, {...revisedEffect[key], value: value});
                                 }}
                                 step={0.01}
                                 track={false}
@@ -474,20 +480,20 @@ function InterventionEffects({
                               <input
                                 type="number"
                                 style={{ width: '150px' }}
-                                value={revisedEffect[key]}
+                                value={revisedEffect[key].value}
                                 step={0.01}
                                 min={-1}
                                 max={1}
                                 onChange={(e) => {
-                                  setEffect(key, Number.parseFloat(e.target.value));
+                                  setEffect(key, {...revisedEffect[key], value: Number.parseFloat(e.target.value)});
                                 }}
                               />
                             </TableCell>
                             <TableCell>
-                              <ValueDisplay value={revisedEffect[value] * strength} />
+                              <ValueDisplay value={revisedEffect[key].value * strength} />
                             </TableCell>
                           </TableRow>
-                          {hasNote || revisedEffect[key] !== defaultEffect[key] ? (
+                          {((!!revisedEffect[key].notes) || (revisedEffect[key].value !== defaultEffect[key].value)) ? (
                             <TableRow key={`annotation-${key}`} sx={{ backgroundColor: theme.palette.action.hover }}>
                               <TableCell></TableCell>
                               <TableCell colSpan={3}>
@@ -500,6 +506,10 @@ function InterventionEffects({
                                     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
                                   }}
                                   minRows={3}
+                                  value={revisedEffect[key].notes}
+                                  onChange={(e) => {
+                                    setEffect(key, {...revisedEffect[key], notes: e.target.value});
+                                  }}
                                 />
                               </TableCell>
                             </TableRow>
@@ -655,7 +665,73 @@ const IndicatorTableColGroup = () => (
   </colgroup>
 );
 
-export const AssessmentPage = () => {
+
+const QualitativeText = ({ value }: { value: Number }) => {
+  let text = 'neutral';
+  const weak_threshold = 0.05;
+  const strong_threshold = 0.3
+  if (value <= -strong_threshold) {
+    text = 'strongly negative'
+  }
+  if (value >= strong_threshold) {
+    text = 'strongly positive'
+  }
+  if ((value > weak_threshold) && (value < strong_threshold )) {
+    text = 'slightly positive'
+  }
+  if ((value < -weak_threshold) && (value > -strong_threshold )) {
+    text = 'slightly negative'
+  }
+  return (
+    <strong>{text}</strong>
+  )
+};
+
+
+const Summary = ({
+  unweighted,
+  overall_assessed,
+  overall_weighted,
+}: {
+  unweighted: Effect;
+  overall_assessed: Number;
+  overall_weighted: Number;
+}) => {
+  const [currentWeights, _setWeights] = useRecoilState(indicatorWeights);
+
+  // Force our way around type-checking - recoil returns the expected Effect
+  // @ts-ignore
+  let weights: Effect = { ...currentWeights };
+
+  const [_assessed_env, weighted_env, _total_weight_env] = weightedSum(unweighted, weights, 'env');
+  const [_assessed_soc, weighted_soc, _total_weight_soc] = weightedSum(unweighted, weights, 'soc');
+  const [_assessed_econ, weighted_econ, _total_weight_econ] = weightedSum(unweighted, weights, 'econ');
+
+  return (
+    <>
+      <h2>Summary</h2>
+      <p>Overall, the proposed interventions are expected to have:</p>
+      <ul>
+        <li>
+          a <QualitativeText value={weighted_env} /> effect on environmental sustainability
+        </li>
+        <li>
+          a <QualitativeText value={weighted_soc} /> effect on social sustainability
+        </li>
+        <li>
+          a <QualitativeText value={weighted_econ} /> effect on economic sustainability
+        </li>
+      </ul>
+      <p>
+        Given the weights assigned, this could be consider a <QualitativeText value={overall_weighted} />{' '}
+        effect overall.
+      </p>
+    </>
+  );
+};
+
+export const AssessmentView = () => {
+
   const [assessment, setAssessment] = useRecoilState(currentAssessment);
 
   let currentIndicatorsUnweighted: Effect = { ...ZERO_EFFECT };
@@ -926,65 +1002,9 @@ export const AssessmentPage = () => {
   );
 };
 
-const QualitativeText = ({ value }: { value: Number }) => {
-  let text = 'neutral';
-  const weak_threshold = 0.05;
-  const strong_threshold = 0.3
-  if (value <= -strong_threshold) {
-    text = 'strongly negative'
-  }
-  if (value >= strong_threshold) {
-    text = 'strongly positive'
-  }
-  if ((value > weak_threshold) && (value < strong_threshold )) {
-    text = 'slightly positive'
-  }
-  if ((value < -weak_threshold) && (value > -strong_threshold )) {
-    text = 'slightly negative'
-  }
-  return (
-    <strong>{text}</strong>
-  )
-};
 
-const Summary = ({
-  unweighted,
-  overall_assessed,
-  overall_weighted,
-}: {
-  unweighted: Effect;
-  overall_assessed: Number;
-  overall_weighted: Number;
-}) => {
-  const [currentWeights, _setWeights] = useRecoilState(indicatorWeights);
-
-  // Force our way around type-checking - recoil returns the expected Effect
-  // @ts-ignore
-  let weights: Effect = { ...currentWeights };
-
-  const [_assessed_env, weighted_env, _total_weight_env] = weightedSum(unweighted, weights, 'env');
-  const [_assessed_soc, weighted_soc, _total_weight_soc] = weightedSum(unweighted, weights, 'soc');
-  const [_assessed_econ, weighted_econ, _total_weight_econ] = weightedSum(unweighted, weights, 'econ');
-
-  return (
-    <>
-      <h2>Summary</h2>
-      <p>Overall, the proposed interventions are expected to have:</p>
-      <ul>
-        <li>
-          a <QualitativeText value={weighted_env} /> effect on environmental sustainability
-        </li>
-        <li>
-          a <QualitativeText value={weighted_soc} /> effect on social sustainability
-        </li>
-        <li>
-          a <QualitativeText value={weighted_econ} /> effect on economic sustainability
-        </li>
-      </ul>
-      <p>
-        Given the weights assigned, this could be consider a <QualitativeText value={overall_weighted} />{' '}
-        effect overall.
-      </p>
-    </>
-  );
-};
+export const AssessmentPage = () => (
+  <ErrorBoundary message="There was a problem displaying this page.">
+    <AssessmentView />
+  </ErrorBoundary>
+);
