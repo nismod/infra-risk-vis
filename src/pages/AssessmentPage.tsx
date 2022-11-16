@@ -133,7 +133,7 @@ const SCENARIO_LABELS: ValueLabel<ScenarioKey>[] = [
 
 const SCENARIO_EFFECTS: Record<ScenarioKey, Effect> = {
   population: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: -1,
     env_energy_use: -1,
     econ_passenger: 1,
@@ -142,7 +142,7 @@ const SCENARIO_EFFECTS: Record<ScenarioKey, Effect> = {
     soc_accidents_injury: -0.5,
   },
   economic: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: -1,
     env_energy_use: -1,
     econ_passenger: 1,
@@ -150,7 +150,7 @@ const SCENARIO_EFFECTS: Record<ScenarioKey, Effect> = {
     econ_age: 0.5,
   },
   'energy-cost': {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: 1,
     env_energy_use: 1,
     econ_passenger: -1,
@@ -200,7 +200,7 @@ const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
 
 const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
   infra_construction: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_habitat_disruption: -1,
     env_land: -1,
     econ_length: 0.5,
@@ -208,7 +208,7 @@ const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
     soc_passenger_length: 0.5,
   },
   infra_maintenance: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: 0.5,
     env_energy_use: 0.5,
     econ_road_quality: 1,
@@ -216,33 +216,33 @@ const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
     soc_noise: 0.5,
   },
   demand_goods: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: -0.5,
     env_energy_use: -0.5,
     econ_freight: 1,
     econ_freight_load: 1,
   },
   demand_travel: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: -0.5,
     env_energy_use: -0.5,
     econ_passenger: 1,
     econ_passenger_occupancy: 1,
   },
   logistics_planning: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     econ_freight_load: 0.5,
     econ_border: 0.5,
   },
   system_eff: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: 0.5,
     env_energy_use: 0.5,
     econ_freight: 0.5,
     soc_passenger_time: 0.5,
   },
   fleet_eff: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: 0.5,
     env_energy_use: 0.5,
   },
@@ -253,7 +253,7 @@ const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
     soc_disease: 0.5,
   },
   road_user_charging: {
-      ...ZERO_EFFECT,
+    ...ZERO_EFFECT,
     env_ghg: 0.5,
     env_energy_use: 0.5,
     econ_freight: -0.5,
@@ -341,7 +341,7 @@ const ValueDisplay = ({ value }) => (
       track={false}
       value={value}
     />
-      <CompactValue label="Effect" value={value} />
+    <CompactValue label="Effect" value={value} />
   </>
 );
 
@@ -447,26 +447,26 @@ function InterventionEffects({
                       const hasNote = false; // consider how best to store notes, option to add even if no revision
                       return revisedEffect ? (
                         <>
-                        <TableRow key={key}>
-                          <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
-                          <TableCell>
-                            <ValueDisplay value={defaultEffect[key]} />
-                          </TableCell>
-                          <TableCell>
-                            <Slider
-                              aria-label={`${label} Revised`}
-                              value={revisedEffect[key]}
-                              onChange={(e, value) => {
-                                setEffect(key, value);
+                          <TableRow key={key}>
+                            <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
+                            <TableCell>
+                              <ValueDisplay value={defaultEffect[key]} />
+                            </TableCell>
+                            <TableCell>
+                              <Slider
+                                aria-label={`${label} Revised`}
+                                value={revisedEffect[key]}
+                                onChange={(e, value) => {
+                                  setEffect(key, value);
                                 }}
-                              step={0.01}
-                              track={false}
-                              marks={[
-                                { value: -1, label: '-' },
-                                { value: 0, label: '0' },
-                                { value: 1, label: '+' },
-                              ]}
-                              min={-1}
+                                step={0.01}
+                                track={false}
+                                marks={[
+                                  { value: -1, label: '-' },
+                                  { value: 0, label: '0' },
+                                  { value: 1, label: '+' },
+                                ]}
+                                min={-1}
                                 max={1}
                               />
                               <input
@@ -480,27 +480,27 @@ function InterventionEffects({
                                   setEffect(key, Number.parseFloat(e.target.value));
                                 }}
                               />
-                          </TableCell>
-                          <TableCell>
-                            <ValueDisplay value={revisedEffect[value] * strength} />
-                          </TableCell>
-                        </TableRow>
+                            </TableCell>
+                            <TableCell>
+                              <ValueDisplay value={revisedEffect[value] * strength} />
+                            </TableCell>
+                          </TableRow>
                           {hasNote || revisedEffect[key] !== defaultEffect[key] ? (
                             <TableRow key={`annotation-${key}`} sx={{ backgroundColor: theme.palette.action.hover }}>
-                            <TableCell></TableCell>
-                            <TableCell colSpan={3}>
-                              <TextareaAutosize
-                                aria-label="Notes"
-                                placeholder="Reasons given for change from default effect&hellip;"
+                              <TableCell></TableCell>
+                              <TableCell colSpan={3}>
+                                <TextareaAutosize
+                                  aria-label="Notes"
+                                  placeholder="Reasons given for change from default effect&hellip;"
                                   style={{
                                     width: '100%',
                                     margin: '5px 0',
                                     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
                                   }}
-                                minRows={3}
-                              />
-                            </TableCell>
-                          </TableRow>
+                                  minRows={3}
+                                />
+                              </TableCell>
+                            </TableRow>
                           ) : null}
                         </>
                       ) : null;
@@ -550,7 +550,7 @@ const AdjustSelector = ({ label, assessed_value, weight, setWeight }) => {
         />
       </TableCell>
       <TableCell>
-      <ValueDisplay value={assessed_value * weight} />
+        <ValueDisplay value={assessed_value * weight} />
       </TableCell>
     </TableRow>
   );
@@ -591,28 +591,28 @@ const IndicatorWeights = ({ label, prefix, unweighted }: { label: string; prefix
   return (
     <Fragment>
       <TableRow>
-      <TableCell>
+        <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-        </IconButton>
-      </TableCell>
-      <TableCell>{label}</TableCell>
-      <TableCell>
-        <ValueDisplay value={assessed_value} />
-      </TableCell>
-      <TableCell>
-        <WeightDisplay value={total_weight} />
-      </TableCell>
-      <TableCell>
-        <ValueDisplay value={weighted_value} />
-      </TableCell>
-    </TableRow>
-    <TableRow>
-      <TableCell colSpan={5} sx={{ p: 0 }}>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <Table>
+          </IconButton>
+        </TableCell>
+        <TableCell>{label}</TableCell>
+        <TableCell>
+          <ValueDisplay value={assessed_value} />
+        </TableCell>
+        <TableCell>
+          <WeightDisplay value={total_weight} />
+        </TableCell>
+        <TableCell>
+          <ValueDisplay value={weighted_value} />
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell colSpan={5} sx={{ p: 0 }}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Table>
               <IndicatorTableColGroup />
-            <TableBody>
+              <TableBody>
                 {INDICATOR_LABELS.map((option) => {
                   let { value, label } = option;
                   const key = value;
@@ -629,17 +629,17 @@ const IndicatorWeights = ({ label, prefix, unweighted }: { label: string; prefix
                             [key]: weight,
                           });
                         }}
-                        />
+                      />
                     );
                   }
                   return null;
                 })}
-            </TableBody>
-          </Table>
-        </Collapse>
-      </TableCell>
-    </TableRow>
-  </Fragment>
+              </TableBody>
+            </Table>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </Fragment>
   );
 };
 
@@ -681,7 +681,7 @@ export const AssessmentPage = () => {
   return (
     <article>
       <ScrollToTop />
-{/*
+      {/*
       <h1>Assessments</h1>
 
       <TableContainer component={Paper} sx={{ my: 2 }}>
@@ -846,7 +846,7 @@ export const AssessmentPage = () => {
                         },
                       });
                     }}
-                  options={[
+                    options={[
                       { value: -1, label: 'Low' },
                       { value: 0, label: 'Central' },
                       { value: 1, label: 'High' },
@@ -892,13 +892,74 @@ export const AssessmentPage = () => {
           </Table>
         </TableContainer>
       </form>
-      {/*
-      <br />
-      <br />
-      <br />
-
-      <h2>Assessment Outcomes</h2>
-       */}
+      <Summary
+        overall_assessed={assessed_value}
+        overall_weighted={weighted_value}
+        unweighted={currentIndicatorsUnweighted}
+      />
     </article>
+  );
+};
+
+const QualitativeText = ({ value }: { value: Number }) => {
+  let text = 'neutral';
+  const weak_threshold = 0.05;
+  const strong_threshold = 0.3
+  if (value <= -strong_threshold) {
+    text = 'strongly negative'
+  }
+  if (value >= strong_threshold) {
+    text = 'strongly positive'
+  }
+  if ((value > weak_threshold) && (value < strong_threshold )) {
+    text = 'slightly positive'
+  }
+  if ((value < -weak_threshold) && (value > -strong_threshold )) {
+    text = 'slightly negative'
+  }
+  return (
+    <strong>{text}</strong>
+  )
+};
+
+const Summary = ({
+  unweighted,
+  overall_assessed,
+  overall_weighted,
+}: {
+  unweighted: Effect;
+  overall_assessed: Number;
+  overall_weighted: Number;
+}) => {
+  const [currentWeights, _setWeights] = useRecoilState(indicatorWeights);
+
+  // Force our way around type-checking - recoil returns the expected Effect
+  // @ts-ignore
+  let weights: Effect = { ...currentWeights };
+
+  const [_assessed_env, weighted_env, _total_weight_env] = weightedSum(unweighted, weights, 'env');
+  const [_assessed_soc, weighted_soc, _total_weight_soc] = weightedSum(unweighted, weights, 'soc');
+  const [_assessed_econ, weighted_econ, _total_weight_econ] = weightedSum(unweighted, weights, 'econ');
+
+  return (
+    <>
+      <h2>Summary</h2>
+      <p>Overall, the proposed interventions are expected to have:</p>
+      <ul>
+        <li>
+          a <QualitativeText value={weighted_env} /> effect on environmental sustainability
+        </li>
+        <li>
+          a <QualitativeText value={weighted_soc} /> effect on social sustainability
+        </li>
+        <li>
+          a <QualitativeText value={weighted_econ} /> effect on economic sustainability
+        </li>
+      </ul>
+      <p>
+        Given the weights assigned, this could be consider a <QualitativeText value={overall_weighted} />{' '}
+        effect overall.
+      </p>
+    </>
   );
 };
