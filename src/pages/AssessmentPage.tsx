@@ -345,22 +345,24 @@ const ValueDisplay = ({ value }) => (
   </>
 );
 
-const WeightDisplay = ({ value }) => (
-  <>
-    <Slider
-      disabled
-      min={0}
-      max={1}
-      marks={[
-        { value: 0, label: '0' },
-        { value: 1, label: '+' },
-      ]}
-      track={false}
-      value={value}
-    />
-    <CompactValue label="Weight" value={value} />
-  </>
-);
+const WeightDisplay = ({ value, label }) => {
+  label = label ?? "Weight";
+  return (
+    <>
+      <Slider
+        disabled
+        min={0}
+        max={1}
+        marks={[
+          { value: 0, label: '0' },
+          { value: 1, label: '+' },
+        ]}
+        track={false}
+        value={value} />
+      <CompactValue label={label} value={value} />
+    </>
+  );
+};
 
 function InterventionEffects({
   label,
@@ -601,7 +603,7 @@ const IndicatorWeights = ({ label, prefix, unweighted }: { label: string; prefix
           <ValueDisplay value={assessed_value} />
         </TableCell>
         <TableCell>
-          <WeightDisplay value={total_weight} />
+          <WeightDisplay value={total_weight} label="Mean Weight"/>
         </TableCell>
         <TableCell>
           <ValueDisplay value={weighted_value} />
@@ -672,11 +674,34 @@ export const AssessmentPage = () => {
     }
   }
 
+  // Weighted as given per-indicator (means groups with more indicators have more weight)
+
   // eslint-disable-next-line
   const [assessed_value, weighted_value, total_weight] = weightedSum(
     currentIndicatorsUnweighted,
     assessment.indicatorWeights,
   );
+
+  // Equally-weighted at top level:
+
+  // const [assessed_value_env, weighted_value_env, total_weight_env] = weightedSum(
+  //   currentIndicatorsUnweighted,
+  //   assessment.indicatorWeights,
+  //   "env"
+  // );
+  // const [assessed_value_soc, weighted_value_soc, total_weight_soc] = weightedSum(
+  //   currentIndicatorsUnweighted,
+  //   assessment.indicatorWeights,
+  //   "soc"
+  // );
+  // const [assessed_value_econ, weighted_value_econ, total_weight_econ] = weightedSum(
+  //   currentIndicatorsUnweighted,
+  //   assessment.indicatorWeights,
+  //   "econ"
+  // );
+
+  // const assessed_value = (assessed_value_env + assessed_value_soc + assessed_value_econ) / 3;
+  // const weighted_value = (weighted_value_env + weighted_value_soc + weighted_value_econ) / 3;
 
   return (
     <article>
