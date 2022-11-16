@@ -739,7 +739,7 @@ export const AssessmentPage = () => {
       <h2>Assessment</h2>
       <form>
         <h3>Intervention Options</h3>
-        <TableContainer component={Paper} sx={{ my: 2 }}>
+        <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
           <Table>
             <colgroup>
               <col width="7%" />
@@ -799,7 +799,7 @@ export const AssessmentPage = () => {
         </TableContainer>
 
         <h3>Scenarios</h3>
-        <TableContainer component={Paper} sx={{ my: 2 }}>
+        <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
           <Table>
             <colgroup>
               <col width="7%" />
@@ -859,7 +859,7 @@ export const AssessmentPage = () => {
         </TableContainer>
 
         <h3>Impacts</h3>
-        <TableContainer component={Paper} sx={{ my: 2 }}>
+        <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
           <Table>
             <IndicatorTableColGroup />
             <TableHead>
