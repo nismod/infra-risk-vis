@@ -4,33 +4,52 @@ import { useRecoilState } from "recoil";
 
 import { unweightedIndicatorSum, weightedSum } from "config/assessment/assessment";
 import { Effect } from "config/assessment/effect";
-import { INTERVENTION_LABELS } from "config/assessment/interventions";
+import { InterventionSelection, INTERVENTION_HIERARCHY, INTERVENTION_LABELS, NO_INTERVENTIONS } from "config/assessment/interventions";
 import { SCENARIO_LABELS } from "config/assessment/scenarios";
 import ScrollToTop from "lib/hooks/scroll-to-top";
-import { currentAssessment } from "state/assessment";
+import { currentAssessment, interventionTreeConfig, interventionSelection } from "state/assessment";
 
 import { IndicatorTableColGroup } from "./IndicatorTableColGroup";
 import { Summary } from "./Summary";
 import { ValueDisplay } from "./ValueDisplay";
 import { Intervention } from "./Intervention";
 import { WeightGroup } from "./WeightGroup";
+import { CheckboxTree } from "lib/controls/checkbox-tree/CheckboxTree";
 
 export const AssessmentView = () => {
   const [assessment, setAssessment] = useRecoilState(currentAssessment);
+  const [_currentInterventions, setInterventionSelection] = useRecoilState(interventionSelection);
+  // @ts-ignore: InterventionSelection
+  const currentInterventions: InterventionSelection = _currentInterventions;
   let currentIndicatorsUnweighted: Effect = unweightedIndicatorSum(assessment)
 
-  // eslint-disable-next-line
   const [assessed_value, weighted_value, _total_weight] = weightedSum(
     currentIndicatorsUnweighted,
     assessment.indicatorWeights,
   );
 
   return (
+    <>
     <article>
       <ScrollToTop />
 
       <h2>Assessment</h2>
       <form>
+        <h3>Select Interventions</h3>
+        <CheckboxTree
+          nodes={INTERVENTION_HIERARCHY}
+          config={interventionTreeConfig}
+          getLabel={(node) => node.label}
+          checkboxState={{checked: currentInterventions, indeterminate: NO_INTERVENTIONS}}
+          onCheckboxState={(checkboxState)=>{
+            // @ts-ignore: checkboxState.checked can coerce to InterventionSelection
+            const nextInterventions: InterventionSelection = checkboxState.checked;
+            setInterventionSelection(nextInterventions)
+          }}
+          expanded={[]}
+          onExpanded={()=>{}}
+          disableCheck={false}
+          />
         <h3>Intervention Options</h3>
         <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
           <Table>
@@ -49,7 +68,7 @@ export const AssessmentView = () => {
             <TableBody>
               {_.map(INTERVENTION_LABELS, (intervention) => {
                 const i_key = intervention.value;
-                return (
+                return currentInterventions[i_key]? (
                   <Intervention
                     key={intervention.value}
                     label={intervention.label}
@@ -81,11 +100,11 @@ export const AssessmentView = () => {
                     }}
                     options={[
                       { value: -1, label: 'Decrease/Lessen' },
-                      { value: 0, label: 'As expected' },
+                      { value: 0, label: 'No intervention' },
                       { value: 1, label: 'Increase/Improve' },
                     ]}
                   />
-                );
+                ) : null;
               })}
             </TableBody>
           </Table>
@@ -191,5 +210,6 @@ export const AssessmentView = () => {
         unweighted={currentIndicatorsUnweighted}
       />
     </article>
+    </>
   );
 };

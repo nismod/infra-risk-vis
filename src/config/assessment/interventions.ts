@@ -1,4 +1,6 @@
+import { TreeNode } from 'lib/controls/checkbox-tree/tree-node';
 import { ValueLabel } from 'lib/controls/params/value-label';
+import _ from 'lodash';
 import { Effect, ZERO_EFFECT } from './effect';
 
 export type InterventionKey =
@@ -14,6 +16,7 @@ export type InterventionKey =
   | 'custom';
 
 export type InterventionStrength = Record<InterventionKey, number>;
+export type InterventionSelection = Record<InterventionKey, boolean>;
 
 export const ZERO_INTERVENTION: InterventionStrength = {
   infra_construction: 0,
@@ -28,6 +31,19 @@ export const ZERO_INTERVENTION: InterventionStrength = {
   custom: 0,
 };
 
+export const NO_INTERVENTIONS: InterventionSelection = {
+  infra_construction: false,
+  infra_maintenance: false,
+  demand_goods: false,
+  demand_travel: false,
+  logistics_planning: false,
+  system_eff: false,
+  fleet_eff: false,
+  fleet_elec: false,
+  road_user_charging: false,
+  custom: false,
+};
+
 export const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
   { value: 'infra_construction', label: 'Infrastructure construction' },
   { value: 'infra_maintenance', label: 'Infrastructure maintenance' },
@@ -40,6 +56,13 @@ export const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
   { value: 'road_user_charging', label: 'Road user charging' },
   { value: 'custom', label: 'Custom intervention' },
 ];
+
+interface InterventionLabel {
+  label: string;
+}
+
+export const INTERVENTION_HIERARCHY: TreeNode<InterventionLabel>[] = _.map(
+  INTERVENTION_LABELS, ({value, label}: {value: string, label: string}) => ({id: value, label}));
 
 export const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
   infra_construction: {

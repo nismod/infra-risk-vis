@@ -1,5 +1,5 @@
 import { Effect, ZERO_EFFECT } from "./effect";
-import { InterventionKey, InterventionStrength } from "./interventions";
+import { InterventionKey, InterventionStrength, InterventionSelection } from "./interventions";
 import { ScenarioKey, ScenarioStrength } from "./scenarios";
 
 export interface Assessment {
@@ -7,6 +7,7 @@ export interface Assessment {
   notes: string;
   createdAt: Date;
 
+  interventionSelection: InterventionSelection;
   interventionStrength: InterventionStrength;
   defaultInterventionEffects: Record<InterventionKey, Effect>;
   revisedInterventionEffects: Record<InterventionKey, Effect>;
@@ -50,10 +51,14 @@ export function unweightedIndicatorSum(assessment: Assessment): Effect {
     }
   }
   for (let key in assessment.revisedInterventionEffects) {
-    const effect: Effect = assessment.revisedInterventionEffects[key];
-    const strength: number = assessment.interventionStrength[key];
-    for (let indicator in effect) {
-      indicatorsUnweighted[indicator] = { value: indicatorsUnweighted[indicator].value + (effect[indicator].value * strength) };
+    // if the intervention is selected
+    if (assessment.interventionSelection[key]){
+      // sum up the values of the indicators (in the direction of its strength, +/-1)
+      const effect: Effect = assessment.revisedInterventionEffects[key];
+      const strength: number = assessment.interventionStrength[key];
+      for (let indicator in effect) {
+        indicatorsUnweighted[indicator] = { value: indicatorsUnweighted[indicator].value + (effect[indicator].value * strength) };
+      }
     }
   }
   return indicatorsUnweighted
