@@ -22,7 +22,6 @@ import {
 import { AnnotatedValue, Effect } from 'config/assessment/effect';
 import { INDICATOR_LABELS } from 'config/assessment/indicators';
 import { useState } from 'react';
-import { CompactValue } from './CompactValue';
 import { IndicatorRow } from './IndicatorRow';
 
 export function Intervention({
@@ -69,23 +68,6 @@ export function Intervention({
                 </MenuItem>
               ))}
             </Select>
-            <Slider
-              aria-label={label}
-              value={strength}
-              onChange={(e, value) => {
-                setStrength({ target: { value: value } });
-              }}
-              step={1}
-              track={false}
-              marks={[
-                { value: -1, label: '-' },
-                { value: 0, label: '0' },
-                { value: 1, label: '+' },
-              ]}
-              min={-1}
-              max={1}
-            />
-            <CompactValue label="Strength" value={strength} />
           </FormControl>
         </TableCell>
       </TableRow>
