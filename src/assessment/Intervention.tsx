@@ -18,90 +18,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextareaAutosize,
-  useTheme,
 } from '@mui/material';
 import { AnnotatedValue, Effect } from 'config/assessment/effect';
 import { INDICATOR_LABELS } from 'config/assessment/indicators';
 import { useState } from 'react';
 import { CompactValue } from './CompactValue';
-import { ValueDisplay } from './ValueDisplay';
-
-const IndicatorRow = ({
-  label,
-  strength,
-  defaultIndicator,
-  revisedIndicator,
-  setIndicator,
-}: {
-  label: string;
-  strength: number;
-  defaultIndicator: AnnotatedValue;
-  revisedIndicator: AnnotatedValue;
-  setIndicator: (value: AnnotatedValue) => void;
-}) => {
-    const theme = useTheme();
-    return (
-      <>
-        <TableRow>
-          <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
-          <TableCell>
-            <ValueDisplay value={defaultIndicator.value} />
-          </TableCell>
-          <TableCell>
-            <Slider
-              aria-label={`${label} Revised`}
-              value={revisedIndicator.value}
-              onChange={(e, value: number) => {
-                setIndicator({ ...revisedIndicator, value: value });
-              } }
-              step={0.01}
-              track={false}
-              marks={[
-                { value: -1, label: '-' },
-                { value: 0, label: '0' },
-                { value: 1, label: '+' },
-              ]}
-              min={-1}
-              max={1} />
-            <input
-              type="number"
-              style={{ width: '150px' }}
-              value={revisedIndicator.value}
-              step={0.01}
-              min={-1}
-              max={1}
-              onChange={(e) => {
-                setIndicator({ ...revisedIndicator, value: Number.parseFloat(e.target.value) });
-              } } />
-          </TableCell>
-          <TableCell>
-            <ValueDisplay value={revisedIndicator.value * strength} />
-          </TableCell>
-        </TableRow>
-        {!!revisedIndicator.notes || revisedIndicator.value !== defaultIndicator.value ? (
-          <TableRow sx={{ backgroundColor: theme.palette.action.hover }}>
-            <TableCell></TableCell>
-            <TableCell colSpan={3}>
-              <TextareaAutosize
-                aria-label="Notes"
-                placeholder="Reasons given for change from default effect&hellip;"
-                style={{
-                  width: '100%',
-                  margin: '5px 0',
-                  fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-                }}
-                minRows={3}
-                value={revisedIndicator.notes}
-                onChange={(e) => {
-                  setIndicator({ ...revisedIndicator, notes: e.target.value });
-                } } />
-            </TableCell>
-          </TableRow>
-        ) : null}
-      </>
-    );
-  };
+import { IndicatorRow } from './IndicatorRow';
 
 export function Intervention({
   label,
@@ -197,7 +119,7 @@ export function Intervention({
                       const key = value;  // confusingly, take "value" as key into effects objects
                       return (revisedEffect && (showZeros || (defaultEffect[key].value !== 0 || revisedEffect[key].value !== 0 || revisedEffect[key].notes))) ? 
                         <IndicatorRow 
-                          key={key} 
+                          key={key}
                           group={key.split("_")[0]}
                           defaultIndicator={defaultEffect[key]}
                           revisedIndicator={revisedEffect[key]}
