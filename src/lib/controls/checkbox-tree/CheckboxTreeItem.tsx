@@ -25,7 +25,7 @@ export function CheckboxTreeItem<T>({
         <FormControlLabel
           key={root.id}
           label={getLabel(root)}
-          style={{ pointerEvents: 'none' }}
+          style={{ width: '100%' }}
           control={
             <Checkbox
               checked={checkboxState.indeterminate[root.id] || checkboxState.checked[root.id]}
