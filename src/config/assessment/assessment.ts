@@ -26,10 +26,10 @@ export function weightedSum(unweighted: Effect, weights: Effect, prefix: string 
 
   for (let key in unweighted) {
     if (!prefix || key.includes(prefix)) {
-      assessed_sum += unweighted[key];
+      assessed_sum += unweighted[key].value;
       count += 1;
-      weighted_sum += unweighted[key] * weights[key];
-      weight += weights[key];
+      weighted_sum += unweighted[key].value * weights[key].value;
+      weight += weights[key].value;
     }
   }
 
@@ -46,14 +46,14 @@ export function unweightedIndicatorSum(assessment: Assessment): Effect {
     const effect: Effect = assessment.revisedScenarioEffects[key];
     const strength: number = assessment.scenarioStrength[key];
     for (let indicator in effect) {
-      indicatorsUnweighted[indicator] += effect[indicator] * strength;
+      indicatorsUnweighted[indicator] = { value: indicatorsUnweighted[indicator].value + (effect[indicator].value * strength) };
     }
   }
   for (let key in assessment.revisedInterventionEffects) {
     const effect: Effect = assessment.revisedInterventionEffects[key];
     const strength: number = assessment.interventionStrength[key];
     for (let indicator in effect) {
-      indicatorsUnweighted[indicator] += effect[indicator] * strength;
+      indicatorsUnweighted[indicator] = { value: indicatorsUnweighted[indicator].value + (effect[indicator].value * strength) };
     }
   }
   return indicatorsUnweighted
