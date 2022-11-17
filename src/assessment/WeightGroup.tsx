@@ -24,7 +24,7 @@ export const WeightGroup = ({ label, prefix, unweighted }: { label: string; pref
 
   return (
     <Fragment>
-      <TableRow>
+      <TableRow className={`group-${prefix}`}>
         <TableCell>
           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
@@ -41,7 +41,7 @@ export const WeightGroup = ({ label, prefix, unweighted }: { label: string; pref
           <ValueDisplay value={weighted_value} />
         </TableCell>
       </TableRow>
-      <TableRow>
+      <TableRow className={`group-${prefix}`}>
         <TableCell colSpan={5} sx={{ p: 0 }}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Table>

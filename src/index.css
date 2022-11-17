@@ -49,3 +49,23 @@ article p {
 .mapboxgl-ctrl-logo {
   display: none !important;
 }
+
+tr.group-env,
+tr.group-soc,
+tr.group-econ,
+tr.group-header {
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+tr.group-env {
+  border-color: #92ce61;
+}
+tr.group-soc {
+  border-color: #5d8cc5;
+}
+tr.group-econ {
+  border-color: #cf9a5a;
+}
+tr.group-header {
+  border-color: #aaa;
+}

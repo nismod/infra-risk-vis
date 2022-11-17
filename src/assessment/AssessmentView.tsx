@@ -152,11 +152,11 @@ export const AssessmentView = () => {
         </TableContainer>
 
         <h3>Impacts</h3>
-        <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
+        <TableContainer component={Paper} sx={{ my: 2 }}>
           <Table>
             <IndicatorTableColGroup />
             <TableHead>
-              <TableRow>
+              <TableRow className="group-header">
                 <TableCell />
                 <TableCell>Indicator</TableCell>
                 <TableCell>Assessed value</TableCell>
@@ -165,10 +165,10 @@ export const AssessmentView = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <WeightGroup label="Environmental" prefix="env_" unweighted={currentIndicatorsUnweighted} />
-              <WeightGroup label="Economic" prefix="econ_" unweighted={currentIndicatorsUnweighted} />
-              <WeightGroup label="Social" prefix="soc_" unweighted={currentIndicatorsUnweighted} />
-              <TableRow>
+              <WeightGroup label="Environmental" prefix="env" unweighted={currentIndicatorsUnweighted} />
+              <WeightGroup label="Economic" prefix="econ" unweighted={currentIndicatorsUnweighted} />
+              <WeightGroup label="Social" prefix="soc" unweighted={currentIndicatorsUnweighted} />
+              <TableRow className="group-header">
                 <TableCell />
                 <TableCell component="th">
                   <strong style={{ fontWeight: 500 }}>Overall</strong>
