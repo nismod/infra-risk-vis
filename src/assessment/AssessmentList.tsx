@@ -126,7 +126,7 @@ function AssessmentCreator() {
       <TableCell></TableCell>
       <TableCell>
         <IconButton variant="outlined" startIcon={<PlayCircleOutline />} onClick={addItem}>
-          Create
+          Start new
         </IconButton>
       </TableCell>
     </TableRow>
