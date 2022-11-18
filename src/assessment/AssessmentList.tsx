@@ -1,17 +1,28 @@
-import { PlayCircleOutline, Edit, DeleteOutline } from "@mui/icons-material";
-import { Button as IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { PlayCircleOutline, Edit, DeleteOutline, Download } from "@mui/icons-material";
+import { Button as IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Assessment } from "config/assessment/assessment";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from "recoil";
 
-import { assessmentList, currentAssessment, currentAssessmentID } from "state/assessment";
+import { downloadFile } from 'lib/helpers';
+import { assessmentList, currentAssessment } from "state/assessment";
+
+function deleteAssessment(to_delete: Assessment, setAssessments: SetterOrUpdater<Assessment[]>) {
+  setAssessments((prev: Assessment[]) => prev.filter((assessment) => assessment.id !== to_delete.id));
+}
+
+function downloadAssessment(assessment: Assessment){
+  const data = JSON.stringify({
+    apiVersion: 1,
+    assessment: assessment,
+    savedAt: new Date()
+  })
+  downloadFile(data, 'text/json', `assessment_${assessment.id}.json`)
+}
 
 export const AssessmentList = () => {
   const [assessments, setAssessments] = useRecoilState(assessmentList);
-  const setAssessmentID = useSetRecoilState(currentAssessmentID);
+  const setAssessment = useSetRecoilState(currentAssessment);
 
-  function deleteAssessment(to_delete: Assessment) {
-    setAssessments((prev: Assessment[]) => prev.filter((assessment) => assessment.id !== to_delete.id));
-  }
 
   return (
     <>
@@ -21,8 +32,8 @@ export const AssessmentList = () => {
         <Table>
           <colgroup>
             <col width="10%" />
-            <col width="80%" />
-            <col width="10%" />
+            <col width="70%" />
+            <col width="20%" />
           </colgroup>
           <TableHead>
             <TableRow>
@@ -42,11 +53,14 @@ export const AssessmentList = () => {
                     <Typography variant="body1">{assessment.description || "Untitled"}</Typography>
                   </TableCell>
                   <TableCell>
-                    <IconButton onClick={() => {setAssessmentID(assessment.id)}} title="Edit" sx={{px: 1,minWidth: '0px'}}>
+                    <IconButton onClick={() => {setAssessment(assessment)}} title="Edit" sx={{px: 1,minWidth: '0px'}}>
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={() => {deleteAssessment(assessment)}} title="Delete" sx={{px: 1,minWidth: '0px'}}>
+                    <IconButton onClick={() => {deleteAssessment(assessment,setAssessments)}} title="Delete" sx={{px: 1,minWidth: '0px'}}>
                       <DeleteOutline />
+                    </IconButton>
+                    <IconButton onClick={() => {downloadAssessment(assessment)}} title="Save as file" sx={{px: 1,minWidth: '0px'}}>
+                      <Download />
                     </IconButton>
                   </TableCell>
                 </TableRow>
