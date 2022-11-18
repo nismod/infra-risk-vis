@@ -10,7 +10,6 @@ import {
   MenuItem,
   Paper,
   Select,
-  Slider,
   Switch,
   Table,
   TableBody,
