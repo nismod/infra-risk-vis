@@ -23,8 +23,13 @@ export const currentAssessmentID = atom<string>({
   default: NIL_UUID,
 });
 
-export const currentAssessment = selector({
+export const currentAssessment = atom<Assessment>({
   key: 'currentAssessment',
+  default: undefined
+});
+
+export const currentAssessmentInList = selector({
+  key: 'currentAssessmentInList',
   get: ({get}) => {
     const assessmentID = get(currentAssessmentID);
     const assessments = get(assessmentList);

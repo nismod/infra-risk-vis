@@ -7,7 +7,7 @@ import { unweightedIndicatorSum, weightedSum } from "config/assessment/assessmen
 import { Effect } from "config/assessment/effect";
 import { InterventionSelection, INTERVENTION_HIERARCHY, INTERVENTION_LABELS, NO_INTERVENTIONS } from "config/assessment/interventions";
 import { SCENARIO_LABELS } from "config/assessment/scenarios";
-import { currentAssessment, interventionTreeConfig, interventionSelection, currentAssessmentID } from "state/assessment";
+import { currentAssessment, interventionTreeConfig, interventionSelection, currentAssessmentInList } from "state/assessment";
 
 import { IndicatorTableColGroup } from "./IndicatorTableColGroup";
 import { Summary } from "./Summary";
@@ -18,7 +18,7 @@ import { CheckboxTree } from "lib/controls/checkbox-tree/CheckboxTree";
 
 export const AssessmentView = () => {
   const [assessment, setAssessment] = useRecoilState(currentAssessment);
-  const setAssessmentID = useSetRecoilState(currentAssessmentID);
+  const setAssessmentInList = useSetRecoilState(currentAssessmentInList);
   
   const [currentInterventionsUntyped, setInterventionSelection] = useRecoilState(interventionSelection);
   // @ts-ignore: InterventionSelection
@@ -224,7 +224,8 @@ export const AssessmentView = () => {
       />
       <Button 
         onClick={()=>{
-          setAssessmentID(NIL_UUID)
+          setAssessmentInList(assessment)
+          setAssessment(undefined)
         }}>
         Save
       </Button>

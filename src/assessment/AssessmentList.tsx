@@ -76,12 +76,10 @@ export const AssessmentList = () => {
 
 function AssessmentCreator() {
   const setAssessment = useSetRecoilState(currentAssessment);
-  const setAssessmentID = useSetRecoilState(currentAssessmentID);
 
   const addItem = () => {
     const newAssessment = new Assessment();
     setAssessment(newAssessment);
-    setAssessmentID(newAssessment.id);
   };
 
   return (
