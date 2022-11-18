@@ -1,8 +1,8 @@
-import { weightedSum } from "config/assessment/assessment";
-import { Effect } from "config/assessment/effect";
-import { useRecoilState } from "recoil";
-import { indicatorWeights } from "state/assessment";
-import { QualitativeText } from "./QualitativeText";
+import { weightedSum } from 'config/assessment/assessment';
+import { Effect } from 'config/assessment/effect';
+import { useRecoilState } from 'recoil';
+import { indicatorWeights } from 'state/assessment';
+import { QualitativeText } from './QualitativeText';
 
 export const Summary = ({
   unweighted,
@@ -39,8 +39,8 @@ export const Summary = ({
         </li>
       </ul>
       <p>
-        Given the weights assigned, this could be consider a <QualitativeText value={overall_weighted} />{' '}
-        effect overall.
+        Given the weights assigned, this could be considered a <QualitativeText value={overall_weighted} /> effect
+        overall.
       </p>
     </>
   );
