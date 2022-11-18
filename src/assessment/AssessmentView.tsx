@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography, TextField, Button } from "@mui/material";
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography, TextField, Button, Stack } from "@mui/material";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { NIL as NIL_UUID } from 'uuid';
 
@@ -32,19 +32,34 @@ export const AssessmentView = () => {
   const createdAt = new Date(assessment.createdAt) 
   return (
     <>
-      <h2>Assessment</h2>
       <Typography variant="caption" component="p">ID: {assessment.id}</Typography>
-      <Typography variant="caption" component="p">Created: {createdAt.toLocaleString()}</Typography>
+      <Typography variant="caption" component="p"sx={{mb:2}}>Created: {createdAt.toLocaleString()}</Typography>
+      <h2>Assessment</h2>
 
       <form>
         <TextField
           fullWidth
-          label="Short description"
+          sx={{my:1}}
+          label="Title"
           value={assessment.description} 
           onChange={(e) => {
             setAssessment({
               ...assessment,
               description: e.target.value,
+            });
+          }}
+          />
+        <TextField
+          fullWidth
+          sx={{my:1}}
+          multiline
+          minRows={3}
+          label="Notes"
+          value={assessment.notes} 
+          onChange={(e) => {
+            setAssessment({
+              ...assessment,
+              notes: e.target.value,
             });
           }}
           />
@@ -222,13 +237,30 @@ export const AssessmentView = () => {
         overall_weighted={weighted_value}
         unweighted={currentIndicatorsUnweighted}
       />
-      <Button 
-        onClick={()=>{
-          setAssessmentInList(assessment)
-          setAssessment(undefined)
-        }}>
-        Save
-      </Button>
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="flex-start"
+        spacing={2}
+        >
+        <Button 
+          variant="contained" 
+          color="primary"
+          onClick={()=>{
+            setAssessmentInList(assessment)
+            setAssessment(undefined)
+          }}>
+          Save
+        </Button>
+        <Button 
+          variant="outlined"
+          color="error"
+          onClick={()=>{
+            setAssessment(undefined)
+          }}>
+          Discard
+        </Button>
+      </Stack>
     </>
   );
 };
