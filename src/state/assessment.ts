@@ -7,9 +7,8 @@ import { Assessment } from 'config/assessment/assessment';
 import { INTERVENTION_HIERARCHY } from 'config/assessment/interventions';
 import { buildTreeConfig } from 'lib/controls/checkbox-tree/CheckboxTree';
 
-
 const { persistAtom } = recoilPersist({
-  key: 'infrastructure-resilience'
+  key: 'infrastructure-resilience',
 });
 
 export const assessmentList = atom<Assessment[]>({
@@ -18,34 +17,27 @@ export const assessmentList = atom<Assessment[]>({
   effects: [persistAtom],
 });
 
-export const currentAssessmentID = atom<string>({
-  key: 'currentAssessmentID',
-  default: NIL_UUID,
-});
-
 export const currentAssessment = atom<Assessment>({
   key: 'currentAssessment',
-  default: undefined
+  default: undefined,
 });
 
 export const currentAssessmentInList = selector({
   key: 'currentAssessmentInList',
-  get: ({get}) => {
-    const assessmentID = get(currentAssessmentID);
-    const assessments = get(assessmentList);
-    return assessments.find((assessment) => assessment.id === assessmentID);
+  get: ({ get }) => {
+    console.error('Intended for setting only');
+    return undefined;
   },
-  set: ({get, set}, newValue: Assessment) => {
+  set: ({ get, set }, newValue: Assessment) => {
     const assessments = get(assessmentList);
-    const index = findIndexByID(assessments, newValue.id)
-    console.log(index, newValue, assessments)
-    index === -1?
-      set(assessmentList, [...assessments, newValue])
-      : set(assessmentList, replaceItemAtIndex(assessments, index, newValue))
+    const index = findIndexByID(assessments, newValue.id);
+    index === -1
+      ? set(assessmentList, [...assessments, newValue])
+      : set(assessmentList, replaceItemAtIndex(assessments, index, newValue));
   },
 });
 
-function findIndexByID(arr: Assessment[], id: string) {
+export function findIndexByID(arr: Assessment[], id: string) {
   return arr.findIndex((item) => item.id === id);
 }
 
