@@ -1,8 +1,12 @@
+import _ from "lodash";
+import { v4 as uuid } from 'uuid';
 import { Effect, ZERO_EFFECT } from "./effect";
-import { InterventionKey, InterventionStrength, InterventionSelection } from "./interventions";
-import { ScenarioKey, ScenarioStrength } from "./scenarios";
+import { DEFAULT_WEIGHT } from "./indicators";
+import { InterventionKey, InterventionStrength, InterventionSelection, NO_INTERVENTIONS, ZERO_INTERVENTION, INTERVENTION_EFFECTS } from "./interventions";
+import { ScenarioKey, ScenarioStrength, SCENARIO_EFFECTS, ZERO_SCENARIO } from "./scenarios";
 
-export interface Assessment {
+export class Assessment {
+  id: string;
   description: string;
   notes: string;
   createdAt: Date;
@@ -17,6 +21,26 @@ export interface Assessment {
   revisedScenarioEffects: Record<ScenarioKey, Effect>;
 
   indicatorWeights: Effect;
+
+  constructor() {
+    return {
+      id: uuid(),
+      description: '',
+      notes: '',
+      createdAt: new Date(),
+      
+      interventionSelection: {...NO_INTERVENTIONS},
+      interventionStrength: {...ZERO_INTERVENTION},
+      defaultInterventionEffects: {...INTERVENTION_EFFECTS},
+      revisedInterventionEffects: {...INTERVENTION_EFFECTS},
+
+      scenarioStrength: {...ZERO_SCENARIO},
+      defaultScenarioEffects: {...SCENARIO_EFFECTS},
+      revisedScenarioEffects: {...SCENARIO_EFFECTS},
+
+      indicatorWeights: _.mapValues(ZERO_EFFECT, () => ({ value: DEFAULT_WEIGHT })),
+    }
+  }
 }
 
 export function weightedSum(unweighted: Effect, weights: Effect, prefix: string = '') {

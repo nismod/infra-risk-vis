@@ -1,13 +1,13 @@
 import _ from "lodash";
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import { useRecoilState } from "recoil";
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Typography, TextField, Button } from "@mui/material";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { NIL as NIL_UUID } from 'uuid';
 
 import { unweightedIndicatorSum, weightedSum } from "config/assessment/assessment";
 import { Effect } from "config/assessment/effect";
 import { InterventionSelection, INTERVENTION_HIERARCHY, INTERVENTION_LABELS, NO_INTERVENTIONS } from "config/assessment/interventions";
 import { SCENARIO_LABELS } from "config/assessment/scenarios";
-import ScrollToTop from "lib/hooks/scroll-to-top";
-import { currentAssessment, interventionTreeConfig, interventionSelection } from "state/assessment";
+import { currentAssessment, interventionTreeConfig, interventionSelection, currentAssessmentID } from "state/assessment";
 
 import { IndicatorTableColGroup } from "./IndicatorTableColGroup";
 import { Summary } from "./Summary";
@@ -18,23 +18,36 @@ import { CheckboxTree } from "lib/controls/checkbox-tree/CheckboxTree";
 
 export const AssessmentView = () => {
   const [assessment, setAssessment] = useRecoilState(currentAssessment);
-  const [_currentInterventions, setInterventionSelection] = useRecoilState(interventionSelection);
+  const setAssessmentID = useSetRecoilState(currentAssessmentID);
+  
+  const [currentInterventionsUntyped, setInterventionSelection] = useRecoilState(interventionSelection);
   // @ts-ignore: InterventionSelection
-  const currentInterventions: InterventionSelection = _currentInterventions;
+  const currentInterventions: InterventionSelection = currentInterventionsUntyped;
   let currentIndicatorsUnweighted: Effect = unweightedIndicatorSum(assessment)
 
   const [assessed_value, weighted_value, _total_weight] = weightedSum(
     currentIndicatorsUnweighted,
     assessment.indicatorWeights,
   );
-
+  const createdAt = new Date(assessment.createdAt) 
   return (
     <>
-    <article>
-      <ScrollToTop />
-
       <h2>Assessment</h2>
+      <Typography variant="caption" component="p">ID: {assessment.id}</Typography>
+      <Typography variant="caption" component="p">Created: {createdAt.toLocaleString()}</Typography>
+
       <form>
+        <TextField
+          fullWidth
+          label="Short description"
+          value={assessment.description} 
+          onChange={(e) => {
+            setAssessment({
+              ...assessment,
+              description: e.target.value,
+            });
+          }}
+          />
         <h3>Select Interventions</h3>
         <CheckboxTree
           nodes={INTERVENTION_HIERARCHY}
@@ -209,7 +222,12 @@ export const AssessmentView = () => {
         overall_weighted={weighted_value}
         unweighted={currentIndicatorsUnweighted}
       />
-    </article>
+      <Button 
+        onClick={()=>{
+          setAssessmentID(NIL_UUID)
+        }}>
+        Save
+      </Button>
     </>
   );
 };

@@ -34,10 +34,12 @@
     "react-scripts": "^5.0.0",
     "react-transition-group": "^4.4.2",
     "react-vega": "^7.4.2",
-    "recoil": "^0.6.1",
+    "recoil": "^0.7.6",
+    "recoil-persist": "^4.2.0",
     "tileserver-gl-light": "^3.1.1",
     "use-http": "^1.0.26",
     "use-immer": "^0.6.0",
+    "uuid": "^9.0.0",
     "vega": "^5.19.1",
     "vega-lite": "^5.0.0"
   },
