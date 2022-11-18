@@ -32,10 +32,10 @@ export const Summary = ({
           a <QualitativeText value={weighted_env} /> effect on environmental sustainability
         </li>
         <li>
-          a <QualitativeText value={weighted_soc} /> effect on social sustainability
+          a <QualitativeText value={weighted_econ} /> effect on economic sustainability
         </li>
         <li>
-          a <QualitativeText value={weighted_econ} /> effect on economic sustainability
+          a <QualitativeText value={weighted_soc} /> effect on social sustainability
         </li>
       </ul>
       <p>
