@@ -1,19 +1,32 @@
-import { TableRow, TableCell, Slider } from "@mui/material";
-import { ValueDisplay } from "./ValueDisplay";
+import { TableRow, TableCell, Slider } from '@mui/material';
+import { AnnotatedValue } from 'config/assessment/effect';
+import { ValueDisplay } from './ValueDisplay';
 
-export const WeightRow = ({ label, assessed_value, weight, setWeight }) => {
+export const WeightRow = ({
+  label,
+  assessed_value,
+  weight,
+  setWeight,
+}: {
+  label: string;
+  assessed_value: AnnotatedValue;
+  weight: AnnotatedValue;
+  setWeight: (value: AnnotatedValue) => void;
+}) => {
   return (
     <TableRow>
       <TableCell />
       <TableCell>{label}</TableCell>
       <TableCell>
-        <ValueDisplay value={assessed_value} />
+        <ValueDisplay value={assessed_value.value} />
       </TableCell>
       <TableCell>
         <Slider
           aria-label={label}
-          value={weight}
-          onChange={setWeight}
+          value={weight.value}
+          onChange={(e, value: number) => {
+            setWeight({ ...weight, value: value });
+          }}
           step={0.01}
           marks={[
             { value: 0, label: '0' },
@@ -25,17 +38,17 @@ export const WeightRow = ({ label, assessed_value, weight, setWeight }) => {
         <input
           type="number"
           style={{ width: '150px' }}
-          value={weight}
+          value={weight.value}
           step={0.01}
           min={0}
           max={1}
           onChange={(e) => {
-            setWeight(e, Number.parseFloat(e.target.value));
+            setWeight({ ...weight, value: Number.parseFloat(e.target.value) });
           }}
         />
       </TableCell>
       <TableCell>
-        <ValueDisplay value={assessed_value * weight} />
+        <ValueDisplay value={assessed_value.value * weight.value} />
       </TableCell>
     </TableRow>
   );

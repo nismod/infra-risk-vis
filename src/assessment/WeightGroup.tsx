@@ -55,9 +55,9 @@ export const WeightGroup = ({ label, prefix, unweighted }: { label: string; pref
                       <WeightRow
                         key={key}
                         label={label}
-                        assessed_value={unweighted[key].value}
-                        weight={weights[key].value}
-                        setWeight={(_, weight) => {
+                        assessed_value={unweighted[key]}
+                        weight={weights[key]}
+                        setWeight={(weight) => {
                           setWeights({
                             ...weights,
                             [key]: weight,
