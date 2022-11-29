@@ -38,7 +38,7 @@ const RP_ORDERING = (() => {
             hazard,
             rcp,
             epoch,
-            rp
+            rp,
           });
         }
       }
@@ -59,12 +59,12 @@ interface ExpectedDamageCell {
   hazard: string;
   rcp: string;
   epoch: string;
-  ead_mean: number,
-  ead_amin: number,
-  ead_amax: number,
-  eael_mean: number,
-  eael_amin: number,
-  eael_amax: number,
+  ead_mean: number;
+  ead_amin: number;
+  ead_amax: number;
+  eael_mean: number;
+  eael_amin: number;
+  eael_amax: number;
 }
 function getExpectedDamageObject(d: ExpectedDamage): ExpectedDamageCell {
   return {
@@ -88,12 +88,12 @@ interface RPDamageCell {
   rp: number;
   probability: number;
   epoch: string;
-  damage_mean: number,
-  damage_amin: number,
-  damage_amax: number,
-  loss_mean: number,
-  loss_amin: number,
-  loss_amax: number,
+  damage_mean: number;
+  damage_amin: number;
+  damage_amax: number;
+  loss_mean: number;
+  loss_amin: number;
+  loss_amax: number;
 }
 
 function getRPDamageObject(d: ReturnPeriodDamage): RPDamageCell {
@@ -138,13 +138,27 @@ function orderRPDamages(damages: RPDamageCell[]) {
 }
 
 function makeDamagesCsv(damages: ExpectedDamageCell[]) {
-  return 'hazard,rcp,epoch,ead_mean,ead_amin,ead_amax,eael_mean,eael_amin,eael_amax\n' + damages.map(
-    (d) => `${d.hazard},${d.rcp},${d.epoch},${d.ead_mean},${d.ead_amin},${d.ead_amax},${d.eael_mean},${d.eael_amin},${d.eael_amax}`).join('\n');
+  return (
+    'hazard,rcp,epoch,ead_mean,ead_amin,ead_amax,eael_mean,eael_amin,eael_amax\n' +
+    damages
+      .map(
+        (d) =>
+          `${d.hazard},${d.rcp},${d.epoch},${d.ead_mean},${d.ead_amin},${d.ead_amax},${d.eael_mean},${d.eael_amin},${d.eael_amax}`,
+      )
+      .join('\n')
+  );
 }
 
 function makeRPDamagesCsv(damages: RPDamageCell[]) {
-  return 'hazard,rcp,epoch,rp,damage_mean,damage_amin,damage_amax,loss_mean,loss_amin,loss_amax\n' + damages.map(
-    (d) => `${d.hazard},${d.rcp},${d.epoch},${d.rp},${d.damage_mean},${d.damage_amin},${d.damage_amax},${d.loss_mean},${d.loss_amin},${d.loss_amax}`).join('\n');
+  return (
+    'hazard,rcp,epoch,rp,damage_mean,damage_amin,damage_amax,loss_mean,loss_amin,loss_amax\n' +
+    damages
+      .map(
+        (d) =>
+          `${d.hazard},${d.rcp},${d.epoch},${d.rp},${d.damage_mean},${d.damage_amin},${d.damage_amax},${d.loss_mean},${d.loss_amin},${d.loss_amax}`,
+      )
+      .join('\n')
+  );
 }
 
 export const DamagesSection = ({ fd }) => {
@@ -161,14 +175,14 @@ export const DamagesSection = ({ fd }) => {
     [selectedHazard, damagesData],
   );
   const selectedRPData = useMemo(
-    () => (selectedHazard ? returnPeriodDamagesData.filter((x) => x.hazard === selectedHazard && x.epoch === selectedEpoch) : null),
+    () =>
+      selectedHazard
+        ? returnPeriodDamagesData.filter((x) => x.hazard === selectedHazard && x.epoch === selectedEpoch)
+        : null,
     [selectedHazard, selectedEpoch, returnPeriodDamagesData],
   );
 
-  const has_eael = useMemo(
-    () => (selectedData ? selectedData.some((d)=> d.eael_amax > 0) : null),
-    [selectedData],
-  );
+  const has_eael = useMemo(() => (selectedData ? selectedData.some((d) => d.eael_amax > 0) : null), [selectedData]);
 
   return (
     <>
@@ -188,13 +202,13 @@ export const DamagesSection = ({ fd }) => {
           </IconButton>
         </Box>
         {hazards.length ? (
-          <FormControl fullWidth sx={{my:2}} disabled={hazards.length === 1}>
+          <FormControl fullWidth sx={{ my: 2 }} disabled={hazards.length === 1}>
             <InputLabel>Hazard</InputLabel>
             <Select
               label="Hazard"
               value={selectedHazard ?? ''}
               onChange={(e) => setSelectedHazard(e.target.value as string)}
-              >
+            >
               {hazards.map((h) => (
                 <MenuItem key={h} value={h}>
                   {titleCase(h)}
@@ -202,8 +216,7 @@ export const DamagesSection = ({ fd }) => {
               ))}
             </Select>
           </FormControl>
-          ) : null
-        }
+        ) : null}
         {selectedData ? (
           <>
             <Box mt={1}>
@@ -212,10 +225,10 @@ export const DamagesSection = ({ fd }) => {
                 data={{
                   table: selectedData,
                 }}
-                field='ead_mean'
-                field_min='ead_amin'
-                field_max='ead_amax'
-                field_title='EAD (US$)'
+                field="ead_mean"
+                field_min="ead_amin"
+                field_max="ead_amax"
+                field_title="EAD (US$)"
                 actions={false}
                 padding={0}
                 width={260} // this is currently picked to fit the chart to the sidebar width
@@ -223,26 +236,25 @@ export const DamagesSection = ({ fd }) => {
                 renderer="svg"
               />
             </Box>
-            {has_eael? (
+            {has_eael ? (
               <Box mt={1}>
                 <Typography variant="subtitle2">Expected Annual Economic Losses</Typography>
                 <ExpectedDamageChart
                   data={{
                     table: selectedData,
                   }}
-                  field='eael_mean'
-                  field_min='eael_amin'
-                  field_max='eael_amax'
-                  field_title='EAEL (US$/day)'
+                  field="eael_mean"
+                  field_min="eael_amin"
+                  field_max="eael_amax"
+                  field_title="EAEL (US$/day)"
                   actions={false}
                   padding={0}
                   width={260} // this is currently picked to fit the chart to the sidebar width
                   height={150}
                   renderer="svg"
-                  />
+                />
               </Box>
-              ) : null
-            }
+            ) : null}
             <Box mt={1}>
               <DamageTable damages={selectedData} />
             </Box>
@@ -263,19 +275,21 @@ export const DamagesSection = ({ fd }) => {
               right: 0,
             }}
             title="Download CSV with return period data"
-            onClick={() => downloadFile(makeRPDamagesCsv(returnPeriodDamagesData), 'text/csv', `feature_${fd.id}_damages_rp.csv`)}
+            onClick={() =>
+              downloadFile(makeRPDamagesCsv(returnPeriodDamagesData), 'text/csv', `feature_${fd.id}_damages_rp.csv`)
+            }
           >
             <Download />
           </IconButton>
         </Box>
         {epochs.length ? (
-          <FormControl fullWidth sx={{my:2}} disabled={epochs.length === 1}>
+          <FormControl fullWidth sx={{ my: 2 }} disabled={epochs.length === 1}>
             <InputLabel>Epoch</InputLabel>
             <Select
               label="Epoch"
               value={selectedEpoch ?? ''}
               onChange={(e) => setSelectedEpoch(e.target.value as string)}
-              >
+            >
               {epochs.map((h) => (
                 <MenuItem key={h} value={h}>
                   {titleCase(h)}
@@ -283,8 +297,7 @@ export const DamagesSection = ({ fd }) => {
               ))}
             </Select>
           </FormControl>
-          ) : null
-        }
+        ) : null}
         {selectedRPData ? (
           <>
             <Box mt={1}>
@@ -292,8 +305,10 @@ export const DamagesSection = ({ fd }) => {
                 data={{
                   table: selectedRPData,
                 }}
-                field_key='damage_mean'
-                field_title='Damage (US$)'
+                field="damage_mean"
+                field_min="damage_amin"
+                field_max="damage_amax"
+                field_title="Damage (US$)"
                 actions={false}
                 padding={0}
                 width={260} // this is currently picked to fit the chart to the sidebar width
