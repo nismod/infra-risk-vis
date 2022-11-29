@@ -2,7 +2,7 @@ import { ComponentType, FC } from 'react';
 
 import { List, ListItem, ListItemText, Typography } from '@mui/material';
 
-import { titleCase, isNumeric, numFormat, paren, numRangeFormat } from 'lib/helpers';
+import { titleCase, isNumeric, numFormat, paren, numRangeFormat, numFormatDP } from 'lib/helpers';
 
 interface DataItemProps {
   label: string;
@@ -209,12 +209,25 @@ export const RailEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
     <DetailSubheader id={f.asset_id} />
     <List>
       <DataItem label="Connection" value={`${f.from_node}–${f.to_node}`} />
-      <DataItem label="Owner" value={f.type} />
-      <DataItem label="Status" value={f.status} />
-      <DataItem label="Length (m)" value={f.shape_length} />
+      <DataItem label="Line" value={f.line} />
+      <DataItem label="Status" value={f.asset_type} />
+      <DataItem label="Length (m)" value={numFormatDP(f.length_m, 0)} />
+      <DataItem label="Gauge" value={f.gauge} />
+      <DataItem
+        label="Speed (km/h)"
+        value={f.min_speed === f.max_speed ? f.max_speed : `${numFormat(f.min_speed)}–${numFormat(f.max_speed)}`}
+      />
+      <DataItem
+        label={`Tariff (${f.tariff_cost_unit})`}
+        value={`${numFormat(f.min_tariff)}–${numFormat(f.max_tariff)}`}
+      />
+      <DataItem
+        label={`Flow cost (${f.flow_cost_unit})`}
+        value={`${numFormat(f.min_flow_cost)}–${numFormat(f.max_flow_cost)}`}
+      />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
+        value={`${numFormat(f.cost_min)}–${numFormat(f.cost_max)}`}
       />
     </List>
   </>
@@ -247,17 +260,28 @@ export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
     <DetailSubheader id={f.asset_id} />
     <List>
       <DataItem label="Connection" value={`${f.from_node}–${f.to_node}`} />
-      <DataItem label="Street type" value={`${f.street_type ? f.street_type : 'none'}`} />
-      <DataItem label="Construction" value={f.road_construction} />
-      <DataItem label="Length (m)" value={f.length_m} />
-      <DataItem label="Width (m)" value={f.road_width} />
-      <DataItem label="Vertical alignment" value={f.vertalignm} />
-      <DataItem label="Traffic (vehicles/day)" value={f.traffic_count} />
+      <DataItem label="Road Class" value={`${f.asset_type ? f.asset_type : 'none'}`} />
+      <DataItem label="Surface" value={f.surface} />
+      <DataItem label="Lanes" value={f.lanes} />
+      <DataItem label="Length (m)" value={numFormatDP(f.length_m, 0)} />
+      <DataItem label="Width (m)" value={f.width_m} />
+
+      <DataItem
+        label="Speed (km/h)"
+        value={f.min_speed === f.max_speed ? f.max_speed : `${numFormat(f.min_speed)}–${numFormat(f.max_speed)}`}
+      />
+      <DataItem
+        label={`Tariff (${f.tariff_cost_unit})`}
+        value={`${numFormat(f.min_tariff)}–${numFormat(f.max_tariff)}`}
+      />
+      <DataItem
+        label={`Flow cost (${f.flow_cost_unit})`}
+        value={`${numFormat(f.min_flow_cost)}–${numFormat(f.max_flow_cost)}`}
+      />
       <DataItem
         label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
+        value={`${numFormat(f.cost_min)}–${numFormat(f.cost_max)}`}
       />
-      <DataItem label={`Reopening cost (${f.cost_reopen_unit})`} value={`${numFormat(f.cost_reopen)}`} />
     </List>
   </>
 );

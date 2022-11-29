@@ -23,6 +23,10 @@ export function numFormat(n: number, maximumSignificantDigits: number = 3) {
   return n == null ? `-` : n.toLocaleString(undefined, { maximumSignificantDigits });
 }
 
+export function numFormatDP(n: number, maximumFractionDigits: number = 2) {
+  return n == null ? `-` : n.toLocaleString(undefined, { maximumFractionDigits });
+}
+
 export function numFormatMoney(value: number) {
   return value.toLocaleString(undefined, {
     maximumSignificantDigits: 3,
@@ -30,10 +34,10 @@ export function numFormatMoney(value: number) {
   });
 }
 
-export function numRangeFormat(n1: number, n2: number) {
+export function numRangeFormat(n1: number, n2: number, maximumSignificantDigits: number = 3) {
   if (n1 == null || n2 == null) return null;
 
-  return `${numFormat(n1)}–${numFormat(n2)}`;
+  return `${numFormat(n1, maximumSignificantDigits)}–${numFormat(n2, maximumSignificantDigits)}`;
 }
 
 /**
@@ -53,7 +57,7 @@ export function colorCssToRgb(cssColor: string): [number, number, number, number
   const color = d3.color(cssColor);
   const { r, g, b } = color.rgb();
   const a = color.opacity;
-  return (a === 1)? [r, g, b] : [r, g, b, a * 256];
+  return a === 1 ? [r, g, b] : [r, g, b, a * 256];
 }
 
 export function toDictionary<T, K extends string, V>(
