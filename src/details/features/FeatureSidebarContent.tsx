@@ -150,7 +150,7 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
               <AdaptationSection fd={featureDetails} />
             </>
           )}
-          <details className="feature-details-debug">
+          <details className="feature-details-debug" style={{ display: 'none' }}>
             <summary>
               <small>Feature data</small>
             </summary>
