@@ -310,8 +310,8 @@ def clean_props(props, rename: dict, remove=[], remove_substr=True, append: dict
             clean[f"_{k}"] = v
         else:
             if (
-                remove_substr is True
-                and any([item.find(k) != -1 for item in remove]) is False
+                (remove_substr is True)
+                and (any([k.find(item) != -1 for item in remove]))
             ):
                 continue
             else:
@@ -440,7 +440,7 @@ if __name__ == "__main__":
             if '.geoparquet' not in file:
                 print ('skipping non parquet file: ', file)
                 continue
-            
+
             if file in skip:
                 print('skipping already completed: ', file)
                 continue
@@ -450,7 +450,7 @@ if __name__ == "__main__":
 
             if dryrun:
                 continue
-            
+
             pq_fpath = os.path.join(root, file)
             print(
                 f"{datetime.now().isoformat()} - Processing {os.path.basename(pq_fpath)}"

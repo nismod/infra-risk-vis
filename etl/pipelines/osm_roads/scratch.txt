@@ -163,6 +163,32 @@ tippecanoe  -o road_edges_tertiary.mbtiles \
 
 
 
+tippecanoe  -o power_transmission.mbtiles \
+    --temporary-directory=/mnt/d/tmp \
+    --use-attribute-for-id=id \
+    -zg \
+    --minimum-zoom=3 \
+    --read-parallel \
+    --drop-densest-as-needed \
+    --extend-zooms-if-still-dropping \
+    --simplification=10 \
+    --simplify-only-low-zooms \
+    power_transmission.geojson
+
+
+tippecanoe  -o power_distribution.mbtiles \
+    --temporary-directory=/mnt/d/tmp \
+    --use-attribute-for-id=id \
+    -zg \
+    --minimum-zoom=3 \
+    --read-parallel \
+    --drop-densest-as-needed \
+    --extend-zooms-if-still-dropping \
+    --simplification=10 \
+    --simplify-only-low-zooms \
+    power_distribution.geojson
+
+
 # sync to s3 for backup
 aws s3 cp road_edges_motorway.geojson s3://open-gira/road_extracts/20221105_processed/
 aws s3 cp road_edges_primary.geojson s3://open-gira/road_extracts/20221105_processed/
@@ -176,3 +202,188 @@ aws s3 cp road_edges_primary.mbtiles s3://open-gira/road_extracts/20221105_proce
 aws s3 cp road_edges_secondary.mbtiles s3://open-gira/road_extracts/20221105_processed/
 aws s3 cp road_edges_tertiary.mbtiles s3://open-gira/road_extracts/20221105_processed/
 aws s3 cp road_edges_trunk.mbtiles s3://open-gira/road_extracts/20221105_processed/
+
+
+# Rail CSV
+echo 'set -e' > load_rail.sh
+echo 'set -x' >> load_rail.sh
+find raw_data/processed_data/input/ | grep rail_edges_features | sed "s/^/psql -c '\\\\copy features from /" | sed "s/$/ with csv header'/" | sort >> load_rail.sh
+echo 'set -e' > load_rail_rp.sh
+echo 'set -x' >> load_rail_rp.sh
+find raw_data/processed_data/input/ | grep rail_edges_rp | sed "s/^/psql -c '\\\\copy damages_rp from /" | sed "s/$/ with csv header'/" | sort >> load_rail_rp.sh
+echo 'set -e' > load_rail_exp.sh
+echo 'set -x' >> load_rail_exp.sh
+find raw_data/processed_data/input/ | grep rail_edges_exp | sed "s/^/psql -c '\\\\copy damages_expected from /" | sed "s/$/ with csv header'/" | sort >> load_rail_exp.sh
+
+echo 'set -e' > load_stations.sh
+echo 'set -x' >> load_stations.sh
+find raw_data/processed_data/input/ | grep rail_nodes_features | sed "s/^/psql -c '\\\\copy features from /" | sed "s/$/ with csv header'/" | sort >> load_stations.sh
+echo 'set -e' > load_stations_rp.sh
+echo 'set -x' >> load_stations_rp.sh
+find raw_data/processed_data/input/ | grep rail_nodes_rp | sed "s/^/psql -c '\\\\copy damages_rp from /" | sed "s/$/ with csv header'/" | sort >> load_stations_rp.sh
+echo 'set -e' > load_stations_exp.sh
+echo 'set -x' >> load_stations_exp.sh
+find raw_data/processed_data/input/ | grep rail_nodes_exp | sed "s/^/psql -c '\\\\copy damages_expected from /" | sed "s/$/ with csv header'/" | sort >> load_stations_exp.sh
+
+
+tippecanoe  -o rail_edges.mbtiles \
+    --temporary-directory=/mnt/d/tmp \
+    --use-attribute-for-id=id \
+    -zg \
+    --minimum-zoom=2 \
+    --read-parallel \
+    --drop-densest-as-needed \
+    --extend-zooms-if-still-dropping \
+    --simplification=10 \
+    --simplify-only-low-zooms \
+    rail_edges.geojson
+
+tippecanoe  -o rail_nodes.mbtiles \
+    --temporary-directory=/mnt/d/tmp \
+    --use-attribute-for-id=id \
+    -zg \
+    -Bg \
+    --minimum-zoom=2 \
+    --read-parallel \
+    --drop-densest-as-needed \
+    --extend-zooms-if-still-dropping \
+    rail_nodes.geojson
+
+
+# Log scale
+gdal_calc.py \
+    -A "GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif" \
+    --outfile="GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.log10.tif" \
+    --overwrite \
+    --co=SPARSE_OK=YES \
+    --co="COMPRESS=LZW" \
+    --calc="numpy.log10(A, where=(A>0))"
+
+
+# Reproject
+gdalwarp \
+    -t_srs "EPSG:4326"
+    -co "COMPRESS=LZW" \
+    ghsl/GHS_POP_E2020_GLOBE_R2022A_54009_1000_V1_0.tif \
+    ghsl/GHS_POP_E2020_GLOBE_R2022A_4326.tif
+
+# Align to hazard grid
+gdalwarp \
+    -te -180 -90 180 90 \
+    -ts 43200 21600 \
+    -r near  \
+    -co "COMPRESS=LZW" \
+    ghsl/GHS_POP_E2020_GLOBE_R2022A_4326.tif   \
+    ghsl/GHS_POP_E2020_GLOBE_R2022A_4326.aligned.tif
+
+# Zero out any nodata
+gdal_calc.py \
+    -A "ghsl/GHS_POP_E2020_GLOBE_R2022A_4326.aligned.tif" \
+    --outfile="ghsl/GHS_POP_E2020_GLOBE_R2022A_4326.zeros.tif" \
+    --quiet \
+    --overwrite \
+    --co=SPARSE_OK=YES \
+    --co="COMPRESS=LZW" \
+    --calc="numpy.where(A<=0,0,A)" \
+    --hideNoData
+
+# Calculate hazard threshold
+find hazard-aqueduct-river/raw/*.tif -exec basename {} \;  | parallel -j 4 \
+gdal_calc.py  \
+    -A hazard-aqueduct-river/raw/{} \
+    -B ghsl/GHS_POP_E2020_GLOBE_R2022A_4326.zeros.tif \
+    --outfile=hazard-aqueduct-river/exposure_0.5m/{}  \
+    --quiet \
+    --overwrite \
+    --calc='"((A>=0.5)&(A<999))*B"' \
+    --co=SPARSE_OK=YES \
+    --co="COMPRESS=LZW" \
+    --hideNoData
+
+# Population
+exactextract \
+  -r "pop2020:ghsl/GHS_POP_E2020_GLOBE_R2022A_4326.zeros.tif" \
+  -p admin-boundaries/gadm36_level1.shp \
+  -f GID_1 \
+  -s "pop2020=sum(pop2020)" \
+  -o population.csv
+
+# Calculate exposure
+
+# extract_regional_exposure.sh :
+year="2030"
+rcp="rcp4p5"
+gcm="MIROC-ESM-CHEM"
+level=1
+exactextract \
+  -r "rp00002:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00002.tif" \
+  -r "rp00005:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00005.tif" \
+  -r "rp00010:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00010.tif" \
+  -r "rp00025:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00025.tif" \
+  -r "rp00050:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00050.tif" \
+  -r "rp00100:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00100.tif" \
+  -r "rp00250:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00250.tif" \
+  -r "rp00500:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp00500.tif" \
+  -r "rp01000:hazard-aqueduct-river/threshold_0.5m/inunriver_${rcp}_${gcm}_${year}_rp01000.tif" \
+  -p "admin-boundaries/gadm36_level${level}.shp" \
+  -f GID_1 \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00002=sum(rp00002)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00005=sum(rp00005)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00010=sum(rp00010)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00025=sum(rp00025)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00050=sum(rp00050)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00100=sum(rp00100)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00250=sum(rp00250)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp00500=sum(rp00500)" \
+  -s "pop_exposed_inunriver_${rcp}_${gcm}_${year}_rp01000=sum(rp01000)" \
+  -o "pop_exposed_inunriver_${rcp}_${gcm}_${year}_admin${level}.csv"
+
+
+cat << EOF > to_run.csv
+rcp gcm epoch level
+historical 000000000WATCH 1980 0
+rcp4p5 00000NorESM1-M 2030 0
+rcp4p5 00000NorESM1-M 2050 0
+rcp4p5 00000NorESM1-M 2080 0
+rcp4p5 0000GFDL-ESM2M 2030 0
+rcp4p5 0000GFDL-ESM2M 2050 0
+rcp4p5 0000GFDL-ESM2M 2080 0  #
+rcp4p5 0000HadGEM2-ES 2030 0
+rcp4p5 0000HadGEM2-ES 2050 0
+rcp4p5 0000HadGEM2-ES 2080 0
+rcp4p5 00IPSL-CM5A-LR 2030 0
+rcp4p5 00IPSL-CM5A-LR 2050 0
+rcp4p5 00IPSL-CM5A-LR 2080 0
+rcp8p5 00000NorESM1-M 2030 0
+rcp8p5 00000NorESM1-M 2050 0
+rcp8p5 00000NorESM1-M 2080 0
+rcp8p5 0000GFDL-ESM2M 2030 0
+rcp8p5 0000GFDL-ESM2M 2050 0
+rcp8p5 0000GFDL-ESM2M 2080 0
+rcp8p5 0000HadGEM2-ES 2030 0
+rcp8p5 0000HadGEM2-ES 2050 0
+rcp8p5 0000HadGEM2-ES 2080 0
+rcp8p5 00IPSL-CM5A-LR 2030 0
+rcp8p5 00IPSL-CM5A-LR 2050 0
+rcp8p5 00IPSL-CM5A-LR 2080 0
+rcp4p5 MIROC-ESM-CHEM 2030 0
+rcp4p5 MIROC-ESM-CHEM 2050 0
+rcp4p5 MIROC-ESM-CHEM 2080 0
+rcp8p5 MIROC-ESM-CHEM 2030 0
+rcp8p5 MIROC-ESM-CHEM 2050 0
+rcp8p5 MIROC-ESM-CHEM 2080 0
+EOF
+
+parallel -j4 --header : -a to_run.csv --colsep ' ' "bash extract_regional_exposure.sh {rcp} {gcm} {epoch} {level}"
+
+
+
+tippecanoe \
+    -zg \
+    --generate-ids \
+    --output=adm0_exposure.mbtiles \
+    --drop-densest-as-needed \
+    --detect-shared-borders \
+    --simplification=10 \
+    --simplify-only-low-zooms \
+    adm0_exposure.geojson
