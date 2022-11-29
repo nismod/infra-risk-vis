@@ -16,6 +16,7 @@ import { Assessment } from 'config/assessment/assessment';
 import { downloadFile } from 'lib/helpers';
 import { assessmentList, currentAssessment } from 'state/assessment';
 import { AssessmentUpload } from './AssessmentUpload';
+import { HelpNote } from './HelpNote';
 
 function deleteAssessment(to_delete: Assessment, setAssessments: SetterOrUpdater<Assessment[]>) {
   setAssessments((prev: Assessment[]) => prev.filter((assessment) => assessment.id !== to_delete.id));
@@ -36,7 +37,15 @@ export const AssessmentList = () => {
 
   return (
     <>
-      <h1>Assessments</h1>
+      <h1>Sustainability Assessments</h1>
+
+      <HelpNote>
+        <p>Click "Start New" to start a sustainability assessment.</p>
+        <p>
+          Assessments are stored in the current browser window and not shared or saved online. To share an assessment,
+          save it as a file using the download icon. Load shared files using the import box below.
+        </p>
+      </HelpNote>
 
       <TableContainer component={Paper} sx={{ my: 2 }}>
         <Table>

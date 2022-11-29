@@ -91,7 +91,7 @@ export function AssessmentUpload() {
       <h3>Import from file</h3>
       <div {...getRootProps({ className: 'dropzone', style })}>
         <input {...getInputProps()} />
-        <p style={{ margin: 0 }}>Drag an assessment file here, or click to select files</p>
+        <p style={{ margin: 0 }}>Drag an assessment file over this area, or click to select files</p>
       </div>
       {error ? (
         <Alert

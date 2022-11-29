@@ -36,6 +36,7 @@ import { ValueDisplay } from './ValueDisplay';
 import { Intervention } from './Intervention';
 import { WeightGroup } from './WeightGroup';
 import { CheckboxTree } from 'lib/controls/checkbox-tree/CheckboxTree';
+import { HelpNote } from './HelpNote';
 
 export const AssessmentView = () => {
   const [assessment, setAssessment] = useRecoilState(currentAssessment);
@@ -59,7 +60,7 @@ export const AssessmentView = () => {
       <Typography variant="caption" component="p" sx={{ mb: 2 }}>
         Created: {createdAt.toLocaleString()}
       </Typography>
-      <h2>Assessment</h2>
+      <h2>Sustainability Assessment</h2>
 
       <form>
         <TextField
@@ -89,6 +90,13 @@ export const AssessmentView = () => {
           }}
         />
         <h3>Select Interventions</h3>
+        <HelpNote>
+          <p>
+            Select an intervention for assessment. This will provide a template with some preset values for the
+            sustainability indicators.
+          </p>
+          <p>If none of the below are relevant, select "Custom intervention".</p>
+        </HelpNote>
         <CheckboxTree
           nodes={INTERVENTION_HIERARCHY}
           config={interventionTreeConfig}
@@ -104,6 +112,18 @@ export const AssessmentView = () => {
           disableCheck={false}
         />
         <h3>Intervention Options</h3>
+        <HelpNote>
+          <p>The table below shows the interventions that have been selected for evaluation.</p>
+          <p>
+            Choose a direction of change for each intervention. The default is "No intervention" and assumes doing
+            nothing. For example, set this to "Increase/Improve" in order to evaluate a project or positive change.
+          </p>
+          <p>
+            Expand each row to evaluate the impact of the intervention against each indicator. This will show the
+            default (preset) value and any changes to the indicators. Make a note of reasons for any changes from the
+            default values.
+          </p>
+        </HelpNote>
         <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
           <Table>
             <colgroup>
@@ -164,6 +184,19 @@ export const AssessmentView = () => {
         </TableContainer>
 
         <h3>Scenarios</h3>
+        <HelpNote>
+          <p>The table below shows the scenarios that have been selected for evaluation.</p>
+          <p>
+            Choose a direction of change for each scenario. The default is "Central" which gives a baseline scenario
+            with neutral effects. For example, test interventions under a range of scenarios to evaluate how there may
+            be a range of sustainability outcomes.
+          </p>
+          <p>
+            Expand each row to evaluate the impact of the scenario against each indicator. This will show the default
+            (preset) value and any changes to the indicators. Make a note of reasons for any changes from the default
+            values.
+          </p>
+        </HelpNote>
         <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
           <Table>
             <colgroup>
@@ -224,6 +257,16 @@ export const AssessmentView = () => {
         </TableContainer>
 
         <h3>Impacts</h3>
+        <HelpNote>
+          <p>
+            The table below gives a summary of the indicator values chosen, averaging the effects of interventions and
+            scenarios, then grouping into environmental, economic, and social sustainability.
+          </p>
+          <p>
+            Expand each row to change the weighting given to each indicator. By default, each indicator is weighted
+            equally at 0.5.
+          </p>
+        </HelpNote>
         <TableContainer component={Paper} sx={{ my: 2 }}>
           <Table>
             <IndicatorTableColGroup />
