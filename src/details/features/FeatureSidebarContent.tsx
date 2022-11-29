@@ -150,6 +150,12 @@ export const FeatureSidebarContent: FC<FeatureSidebarContentProps> = ({
               <AdaptationSection fd={featureDetails} />
             </>
           )}
+          <details className="feature-details-debug">
+            <summary>
+              <small>Feature data</small>
+            </summary>
+            <pre>{JSON.stringify(featureDetails, null, 2)}</pre>
+          </details>
         </>
       )}
     </Box>
