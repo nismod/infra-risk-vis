@@ -1,5 +1,6 @@
 """Load network features from a single source file-layer to database.
 """
+import logging
 import os
 import sys
 import warnings
@@ -7,6 +8,7 @@ from datetime import datetime
 
 warnings.filterwarnings("error")
 
+import numpy as np
 import pandas as pd
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import exists
@@ -42,6 +44,7 @@ def wkb_to_wkt(geom_wkb) -> str:
 def load_batches(
     layer,
     network_tile_layer,
+    base_id,
     pq_fpath: str,
     batch_size: int = 100,
 ) -> int:
@@ -63,7 +66,7 @@ def load_batches(
     total_rp_damages = 0
     total_expected_damages = 0
 
-    feature_columns = ["string_id", "layer", "properties", "geom"]
+    feature_columns = ["id", "string_id", "layer", "properties"] # , "geom"
 
     rename = {
         layer.asset_id_column: "asset_id",
@@ -89,6 +92,9 @@ def load_batches(
 
         # Load data to memory from disk
         df = batch.to_pandas().reset_index()
+        df["id"] = np.arange(base_id, base_id + batch.num_rows)
+        base_id += batch.num_rows
+        # logging.info(f"Max id: {base_id}, current batch: {batch.num_rows}")
         # Map the feature rows to as-expected by the table
         # - Generate the props field
         df["properties"] = df.apply(
@@ -108,33 +114,19 @@ def load_batches(
         # Generate the string_id column
         df["string_id"] = df[layer.asset_id_column]
         df["layer"] = network_tile_layer.layer
-        df["geom"] = df["geometry"].apply(lambda x: wkb_to_wkt(x))
+        # df["geom"] = df["geometry"].apply(lambda x: wkb_to_wkt(x))
+
         # Generate dicts for bulk insert
         feature_rows = df[feature_columns].to_dict(orient="records")
+        total_features += len(feature_rows)
+
         db: Session
         with SessionLocal() as db:
-            # This return_defaults makes it slower - but I cant see another way around it
-            db.bulk_insert_mappings(Feature, feature_rows, return_defaults=True)
+            db.bulk_insert_mappings(Feature, feature_rows, return_defaults=False)
             db.commit()
-        # Get the pks
-        feature_pk_ids = [row["id"] for row in feature_rows]
-        # Check we inserted enough rows
-        if not len(feature_pk_ids) == batch.num_rows:
-            print(f" Warning - Missed some rows in batch: {idx}")
-        total_features += len(feature_pk_ids)
-
-        # Generate a DF to join of the pk ids.  The list sorting should be enough, but we'll join for safety
-        df_pk_ids = pd.DataFrame(
-            [
-                {"id": item["id"], layer.asset_id_column: item["string_id"]}
-                for item in feature_rows
-            ]
-        )
-        df_pk_ids.set_index(layer.asset_id_column, inplace=True)
-        df_pks_joined = df.set_index(layer.asset_id_column).join(df_pk_ids)
 
         # Generate RPDamages rows for this batch
-        df_rp_damage = parse_rp_damage_batch(df_pks_joined, primary_key_column="id")
+        df_rp_damage = parse_rp_damage_batch(df, primary_key_column="id")
         if df_rp_damage.shape[0] > 0:
             df_rp_damage.reset_index(inplace=True)
             df_rp_damage.rename(columns={"id": "feature_id"}, inplace=True)
@@ -143,7 +135,7 @@ def load_batches(
             df_rp_damage["loss_amax"] = 0.0
             df_rp_damage["exposure"] = 0.0
 
-            rp_damage_rows = df_rp_damage.to_dict("records")
+            rp_damage_rows = df_rp_damage.to_dict(orient="records")
             db: Session
             with SessionLocal() as db:
                 # Dont need ids here
@@ -155,13 +147,13 @@ def load_batches(
 
         # Generate Expected Damages rows for this batch
         df_expected_damage = parse_exp_damage_batch(
-            df_pks_joined, primary_key_column="id"
+            df, primary_key_column="id"
         )
         if df_expected_damage.shape[0] > 0:
             df_expected_damage.reset_index(inplace=True)
             df_expected_damage.rename(columns={"id": "feature_id"}, inplace=True)
             # print("Expected Damages Shape:", df_expected_damage.shape)
-            expected_damage_rows = df_expected_damage.to_dict("records")
+            expected_damage_rows = df_expected_damage.to_dict(orient="records")
             db: Session
             with SessionLocal() as db:
                 # Dont need ids here
@@ -289,8 +281,8 @@ def clean_props(props, rename: dict, remove=[], remove_substr=True, append: dict
             clean[f"_{k}"] = v
         else:
             if (
-                remove_substr is True
-                and any([item.find(k) != -1 for item in remove]) is False
+                (remove_substr is True)
+                and (any([k.find(item) != -1 for item in remove]))
             ):
                 continue
             else:
@@ -357,6 +349,7 @@ def write_output_log(
         )
 
 
+base_id = 50_000_000
 class Layer:
     asset_id_column = "edge_id"
     asset_type_column = ""
@@ -371,6 +364,7 @@ class NetworkTileLayer:
 
 
 if __name__ == "__main__":
+    logging.basicConfig(format="%(asctime)s %(message)s", level=logging.INFO)
     # For testing
     network_layer = Layer()
     network_tile_layer = NetworkTileLayer()
@@ -395,8 +389,9 @@ if __name__ == "__main__":
     file_features, file_rp_damages, file_expected_damages = load_batches(
         network_layer,
         network_tile_layer,
+        base_id,
         pq_fpath,
-        batch_size=20000,
+        batch_size=10000,
     )
     total_features += file_features
     total_rp_damages += file_rp_damages
