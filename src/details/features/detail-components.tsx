@@ -65,16 +65,12 @@ export const DefaultDetails: FC<DetailsComponentProps> = ({ f }) => {
 export const AirportDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
-      {f.name}
+      {f.Name}
     </Typography>
     <DetailSubheader id={f.asset_id} />
     <List>
-      <DataItem label="Passengers (people/year)" value={f.passenger_number} />
-      <DataItem label="Freight (tonnes/year)" value={f.freight_tonnes} />
-      <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} ${paren(numRangeFormat(f.cost_min, f.cost_max))}`}
-      />
+      <DataItem label="Passengers (people/year)" value={f.Passengers} />
+      <DataItem label="Freight (tonnes/year)" value={f.Freight} />
     </List>
   </>
 );
@@ -168,20 +164,6 @@ export const PortDetails: FC<DetailsComponentProps> = ({ f }) => (
       {f.name}
     </Typography>
     <DetailSubheader id={f.asset_id} />
-    <List>
-      <DataItem label="Vessels (vessels/year)" value={f.vessels_number} />
-      <DataItem label="Passengers (people/year)" value={f.passenger_number} />
-      <DataItem label="Commodity" value={f.commodity} />
-      <DataItem label="Export (tonnes/year)" value={f.export_tonnes} />
-      <DataItem label="Import (tonnes/year)" value={f.import_tonnes} />
-      <DataItem label="Import of vehicles (tonnes/year)" value={f.import_vehicles_tonnes} />
-      <DataItem label="Transhipment (tonnes/year)" value={f.transhipment_tonnes} />
-      <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} ${paren(numRangeFormat(f.cost_min, f.cost_max))}`}
-      />
-      <DataItem label="Notes" value={f.comment} />
-    </List>
   </>
 );
 
@@ -236,16 +218,12 @@ export const RailEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
 export const RailNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <Typography variant="h6" component="h1">
-      {f.Station}
+      {f.name ?? 'Station'}
     </Typography>
     <DetailSubheader id={f.asset_id} />
     <List>
-      <DataItem label="Lines" value={f.Lines} />
-      <DataItem label="Status" value={`${f.status} ${paren(f.Condition)}`} />
-      <DataItem
-        label={`Rehabilitation cost (${f.cost_unit})`}
-        value={`${numFormat(f.cost_mean)} (${numFormat(f.cost_min)}–${numFormat(f.cost_max)})`}
-      />
+      <DataItem label="Facility" value={f.facility} />
+      <DataItem label="Gauge" value={f.gauge} />
     </List>
   </>
 );
