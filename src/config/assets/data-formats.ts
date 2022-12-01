@@ -39,7 +39,7 @@ const adaptationFieldLabels = {
   avoided_ead_mean: 'Avoided Direct Damages',
   avoided_eael_mean: 'Avoided Economic Losses',
   adaptation_cost: 'Adaptation Cost',
-  cost_benefit_ratio: 'Cost Benefit Ratio',
+  cost_benefit_ratio: 'Benefit-Cost Ratio',
 };
 
 function getAdaptationFieldLabel(field: string) {

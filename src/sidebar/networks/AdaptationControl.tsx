@@ -9,17 +9,14 @@ import { InputSection } from 'sidebar/ui/InputSection';
 import { LayerStylePanel } from 'sidebar/ui/LayerStylePanel';
 import { DataParam } from 'sidebar/ui/params/DataParam';
 import { dataParamsByGroupState } from 'state/data-params';
-import {
-  adaptationDataParamsStateEffect,
-  adaptationFieldState,
-} from 'state/layers/networks';
+import { adaptationDataParamsStateEffect, adaptationFieldState } from 'state/layers/networks';
 
 function hazardLabel(val) {
   switch (val) {
     case 'river':
       return 'River Flooding';
-      case 'coastal':
-        return 'Coastal Flooding';
+    case 'coastal':
+      return 'Coastal Flooding';
     default:
       throw new Error('Unsupported hazard type: ' + val);
   }
@@ -113,7 +110,7 @@ export const AdaptationControl: FC<{}> = () => {
           options={[
             { value: 'avoided_ead_mean', label: 'Avoided Risk' }, // TODO using ead field for total risk
             { value: 'adaptation_cost', label: 'Adaptation Cost' },
-            { value: 'cost_benefit_ratio', label: 'Cost-Benefit Ratio' },
+            { value: 'cost_benefit_ratio', label: 'Benefit-Cost Ratio' },
           ]}
         />
       </InputSection>
