@@ -140,7 +140,7 @@ export const DataPage = () => (
           </TableRow>
           <TableRow>
             <TableCell>Coastal flooding (storm surge)</TableCell>
-            <TableCell><a href="https://www.deltares.nl/en/news/regional-study-assess-effects-sea-level-rise-resilience-caribbean/">Deltares NL Caribbean product</a></TableCell>
+            <TableCell><a href="http://web.archive.org/web/20200418050005/https://www.deltares.nl/en/news/regional-study-assess-effects-sea-level-rise-resilience-caribbean/">Deltares NL Caribbean product</a></TableCell>
             <TableCell>1/1, 1/2, 1/5, 1/10, 1/50, 1/100</TableCell>
             <TableCell>Flood depths in meters over 90m grid squares </TableCell>
             <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission scenarios.<br/>Current + future maps in 2030, 2050, 2070 and 2100</TableCell>
