@@ -40,7 +40,7 @@ export interface DataManager {
 
 export interface FormatConfig<D = any> {
   getDataLabel: (fieldSpec: FieldSpec) => string;
-  getValueFormatted: (value: D, fieldSpec: FieldSpec) => string;
+  getValueFormatted: (value: D, fieldSpec: FieldSpec) => string | ReactNode;
 }
 
 export type ViewLayerDataAccessFunction = (fieldSpec: FieldSpec) => Accessor<any>;
