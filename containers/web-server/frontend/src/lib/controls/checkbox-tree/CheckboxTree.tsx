@@ -72,6 +72,7 @@ export function CheckboxTree<T>({
   expanded,
   onExpanded,
   disableCheck = false,
+  toggleOnLeafClick = true,
 }: {
   config: CheckboxTreeConfig<T>;
   nodes: TreeNode<T>[];
@@ -81,6 +82,11 @@ export function CheckboxTree<T>({
   expanded: string[];
   onExpanded: (expanded: string[]) => void;
   disableCheck?: boolean;
+  /**
+   * When clicking on a leaf item, should the checkbox be toggled?
+   * @defaultValue true
+   */
+  toggleOnLeafClick?: boolean;
 }) {
   const handleChange = useCallback(
     (checked: boolean, node: TreeNode<T>) => {
@@ -113,6 +119,7 @@ export function CheckboxTree<T>({
             handleChange={handleChange}
             getLabel={getLabel}
             disableCheck={disableCheck}
+            toggleOnLeafClick={toggleOnLeafClick}
           />
         ))}
       </TreeView>
