@@ -28,13 +28,15 @@ export const MapLayerSelection = () => {
 
   const buttonStyle = showPopover ? { borderTopRightRadius: 0, borderBottomRightRadius: 0 } : {};
   return (
-    <Box
+    <div
       onMouseEnter={() => setShowPopover(true)}
       onMouseLeave={() => setShowPopover(false)}
       style={{ display: 'flex' }}
     >
       <Button
         aria-label="Toggle map background"
+        aria-owns={showPopover ? 'map-layers-popover' : undefined}
+        aria-haspopup="true"
         variant="contained"
         style={{
           paddingInline: 0,
@@ -45,11 +47,12 @@ export const MapLayerSelection = () => {
           height: '36px',
           ...buttonStyle,
         }}
+        onClick={() => setShowPopover((showPopover) => !showPopover)}
       >
         <LayersIcon />
       </Button>
       {showPopover && (
-        <Paper style={{ overflow: 'hidden', borderTopLeftRadius: 0 }}>
+        <Paper id="map-layers-popover" style={{ overflow: 'hidden', borderTopLeftRadius: 0 }}>
           <Box width={220}>
             <Box px={2} py="6px" height={37} display="flex" borderBottom="1px solid #ddd">
               <ToggleButtonGroup exclusive color="primary" value={background} onChange={handleBackground} fullWidth>
@@ -68,6 +71,6 @@ export const MapLayerSelection = () => {
           </Box>
         </Paper>
       )}
-    </Box>
+    </div>
   );
 };
