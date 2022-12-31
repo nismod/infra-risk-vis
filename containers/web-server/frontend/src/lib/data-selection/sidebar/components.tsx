@@ -1,5 +1,6 @@
 import { ArrowRight } from '@mui/icons-material';
-import { Stack } from '@mui/material';
+import { Icon, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/system';
 import { FC, Suspense, createContext, useContext, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -114,6 +115,10 @@ const SectionImpl: FC<SectionProps> = ({ title, children }) => {
   );
 };
 
+const CharacterIcon = styled(Icon)({
+  lineHeight: 1,
+});
+
 interface LayerProps {
   title: string;
   disabled?: boolean;
@@ -134,13 +139,14 @@ const LayerImpl: FC<LayerProps> = ({ title, disabled = false, unmountOnHide = fa
   const [visible, setVisible] = useVisibilityState(path);
   const [expanded, setExpanded] = useExpandedState(path);
 
-  const allowExpand = visible && children != null;
+  const hasChildren = children != null;
+  const allowExpand = visible && hasChildren;
 
   return (
     <Accordion
       disabled={disabled}
       expanded={allowExpand && expanded}
-      onChange={(e, expanded) => setExpanded(expanded)}
+      onChange={(e, expanded) => allowExpand && setExpanded(expanded)}
       disableGutters
       sx={{
         border: '2px solid #eee',
@@ -151,8 +157,16 @@ const LayerImpl: FC<LayerProps> = ({ title, disabled = false, unmountOnHide = fa
       }}
     >
       <AccordionSummary
-        sx={{ cursor: allowExpand ? 'pointer' : 'default' }}
-        expandIcon={<ArrowRight color={allowExpand ? 'action' : 'disabled'} />}
+        // TODO: find a better way than adding !important to change cursor
+        sx={{ cursor: allowExpand ? 'pointer' : 'default !important' }}
+        // if layer has no children, display bullet Icon
+        expandIcon={
+          hasChildren ? (
+            <ArrowRight color={allowExpand ? 'action' : 'disabled'} />
+          ) : (
+            <CharacterIcon color="disabled">•</CharacterIcon>
+          )
+        }
       >
         <AccordionTitle
           title={title}
