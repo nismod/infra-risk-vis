@@ -176,7 +176,7 @@ const LayerImpl: FC<LayerProps> = ({ title, disabled = false, unmountOnHide = fa
                 visibility={visible}
                 onVisibility={(visible) => {
                   setVisible(visible);
-                  setExpanded(visible);
+                  hasChildren && setExpanded(visible);
                 }}
               />
             )
