@@ -20,10 +20,10 @@ export const REGIONAL_EXPOSURE_VARIABLE_LABELS: ValueLabel<RegionalExposureVaria
   },
   {
     value: 'pop_exposed_river_historical_WATCH_1980_thresholdNone',
-    label: 'River flooding (baseline, 100yr)'
+    label: 'River flooding (baseline, 100yr)',
   },
   {
     value: 'pop_exposed_river_rcp4p5_MIROC-ESM-CHEM_2050_thresholdNone',
-    label: 'River flooding (RCP4.5, 2050, 100yr)'
-  }
+    label: 'River flooding (RCP4.5, 2050, 100yr)',
+  },
 ];
