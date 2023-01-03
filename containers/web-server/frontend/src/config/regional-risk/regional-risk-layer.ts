@@ -11,12 +11,12 @@ import { featureProperty } from '@/lib/deck/props/data-source';
 import { border, fillColor } from '@/lib/deck/props/style';
 
 import { SimpleAssetDetails } from '@/details/features/asset-details';
+import { VectorHoverDescription } from '@/map/tooltip/VectorHoverDescription';
 
 import { SOURCES } from '../sources';
 import { getRegionalExposureDataFormats } from './data-formats';
-import { RegionalExposureVariableType } from './metadata';
 import { RegionalExposureDetails } from './details';
-import { VectorHoverDescription } from '@/map/tooltip/VectorHoverDescription';
+import { RegionalExposureVariableType } from './metadata';
 
 const rexpColorLookup: Record<RegionalExposureVariableType, ColorSpec> = {
   'pop_exposed_seismic_threshold0.1g': {
@@ -31,7 +31,7 @@ const rexpColorLookup: Record<RegionalExposureVariableType, ColorSpec> = {
     range: [0, 100_000_000],
     empty: '#ccc',
   },
-  'pop_exposed_river_historical_WATCH_1980_thresholdNone': {
+  pop_exposed_river_historical_WATCH_1980_thresholdNone: {
     scale: d3Scale.scaleSequential,
     scheme: d3ScaleChromatic.interpolateBlues,
     range: [0, 100_000_000],
@@ -83,7 +83,7 @@ export function regionalExposureLayer(variable: RegionalExposureVariableType): V
         {
           data: SOURCES.vector.getUrl(id),
         },
-        border([40, 40, 40, 255]),
+        border([100, 100, 100]),
         fillColor(dataStyleColor),
         {
           highlightColor: [255, 255, 255, 100],
@@ -97,14 +97,14 @@ export function regionalExposureLayer(variable: RegionalExposureVariableType): V
 
       return React.createElement(SimpleAssetDetails, {
         feature: feature,
-        label: "Regional Exposure",
+        label: 'Regional Exposure',
         detailsComponent: RegionalExposureDetails,
       });
     },
     renderTooltip: (hover: InteractionTarget<VectorTarget>) => {
       return React.createElement(VectorHoverDescription, {
         hoveredObject: hover,
-        label: "Regional Exposure",
+        label: 'Regional Exposure',
         color: '#83B4FF',
         idValue: hover.target.feature.properties.ISO_A3,
       });

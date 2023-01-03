@@ -9,6 +9,5 @@ import { regionalExposureVariableState } from '@/state/data-selection/regional-r
 export const regionalExposureLayerState = selector<ViewLayer>({
   key: 'regionalExposureLayerState',
   get: ({ get }) =>
-    get(sidebarPathVisibilityState('risk/regional')) &&
-    regionalExposureLayer(get(regionalExposureVariableState)),
+    get(sidebarPathVisibilityState('risk/regional')) && regionalExposureLayer(get(regionalExposureVariableState)),
 });

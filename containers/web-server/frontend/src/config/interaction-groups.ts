@@ -19,6 +19,7 @@ export const INTERACTION_GROUPS = makeConfig<InteractionGroupConfig, string>([
     type: 'vector',
     usesAutoHighlight: true,
     pickMultiple: false,
+    pickingRadius: 8,
   },
   {
     id: 'hdi',
