@@ -83,7 +83,7 @@ export function regionalExposureLayer(variable: RegionalExposureVariableType): V
         {
           data: SOURCES.vector.getUrl(id),
         },
-        border([40, 40, 40, 255]),
+        border([100, 100, 100]),
         fillColor(dataStyleColor),
         {
           highlightColor: [255, 255, 255, 100],
