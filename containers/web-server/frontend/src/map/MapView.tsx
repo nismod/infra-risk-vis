@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-gl';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { atom, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 
 import { BoundingBox } from '@/lib/bounding-box';
 import { DataMap } from '@/lib/data-map/DataMap';
@@ -63,6 +63,12 @@ export const MapView = () => {
     },
     [setFitBounds],
   );
+
+  const resetFitBounds = useResetRecoilState(mapFitBoundsState);
+  useEffect(() => {
+    // reset map fit bounds whenever MapView is mounted
+    resetFitBounds();
+  }, [resetFitBounds]);
 
   return (
     <DataMap
