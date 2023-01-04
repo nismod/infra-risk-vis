@@ -5,7 +5,9 @@ import { InteractionTarget, RasterTarget } from '@/lib/data-map/interactions/use
 import { HAZARDS_METADATA, HAZARD_COLOR_MAPS, HazardType } from '@/config/hazards/metadata';
 import { RasterHoverDescription } from '@/map/tooltip/RasterHoverDescription';
 
-export const HazardHoverDescription: FC<{ hoveredObject: InteractionTarget<RasterTarget> }> = ({ hoveredObject }) => {
+export const HazardHoverDescription: FC<{ hoveredObject: InteractionTarget<RasterTarget> }> = ({
+  hoveredObject,
+}) => {
   const {
     target: { color },
     viewLayer: {

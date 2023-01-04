@@ -7,7 +7,10 @@ interface SelectableMvtLayerOptions {
   dataLoaderOptions?: DataLoaderOptions;
 }
 
-export function selectableMvtLayer({ selectionOptions, dataLoaderOptions }: SelectableMvtLayerOptions, ...props) {
+export function selectableMvtLayer(
+  { selectionOptions, dataLoaderOptions }: SelectableMvtLayerOptions,
+  ...props
+) {
   return mvtLayer(
     {
       binary: false,

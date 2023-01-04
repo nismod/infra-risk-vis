@@ -13,7 +13,9 @@ export const networkLayersState = selector<ViewLayer[]>({
   key: 'networkLayersState',
   get: ({ get }) =>
     get(sidebarPathVisibilityState('exposure/infrastructure'))
-      ? get(networkSelectionState).map((network) => infrastructureViewLayer(network, get(networkStyleParamsState)))
+      ? get(networkSelectionState).map((network) =>
+          infrastructureViewLayer(network, get(networkStyleParamsState)),
+        )
       : [],
 });
 

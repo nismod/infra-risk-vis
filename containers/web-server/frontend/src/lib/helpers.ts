@@ -96,7 +96,9 @@ type ValueMissingError<T extends string, E extends T> = `${Exclude<T, E>} is mis
  * @returns
  */
 export const makeOrderingCheck = <T extends string>() => {
-  return <E extends T[]>(array: E & ([T] extends [E[number]] ? unknown : ValueMissingError<T, E[number]>)) => array;
+  return <E extends T[]>(
+    array: E & ([T] extends [E[number]] ? unknown : ValueMissingError<T, E[number]>),
+  ) => array;
 };
 
 /**

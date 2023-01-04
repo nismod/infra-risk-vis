@@ -47,12 +47,17 @@ function lookupEpoch(epoch: string, hazard: HazardType, layer: string) {
  * Construct the feature property name based on what data is requested
  * Handle various quirks in the data naming
  */
-function getExpectedDamageKey(layer: string, direct: boolean, hazard: HazardType, rcp: string, epoch: string) {
-  return `${direct ? 'ead' : 'eael'}__${lookupHazard(hazard)}__rcp_${lookupRcp(rcp, layer)}__epoch_${lookupEpoch(
-    epoch,
-    hazard,
+function getExpectedDamageKey(
+  layer: string,
+  direct: boolean,
+  hazard: HazardType,
+  rcp: string,
+  epoch: string,
+) {
+  return `${direct ? 'ead' : 'eael'}__${lookupHazard(hazard)}__rcp_${lookupRcp(
+    rcp,
     layer,
-  )}`;
+  )}__epoch_${lookupEpoch(epoch, hazard, layer)}`;
 }
 
 /**

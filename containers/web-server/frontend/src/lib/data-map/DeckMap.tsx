@@ -38,7 +38,11 @@ export const DeckMap: FC<DeckMapProps> = ({
 
   const zoom = viewState.zoom;
 
-  const layers = useTriggerMemo(() => layersFunction({ zoom }), [layersFunction, zoom], dataLoadTrigger);
+  const layers = useTriggerMemo(
+    () => layersFunction({ zoom }),
+    [layersFunction, zoom],
+    dataLoadTrigger,
+  );
 
   return (
     <ViewStateContext.Provider value={{ viewState, setViewState }}>

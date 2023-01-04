@@ -3,7 +3,11 @@ import { FC } from 'react';
 
 import { DataItem } from '@/lib/ui/data-display/DataItem';
 
-import { DetailHeader, DetailsComponentProps, IdSubheader } from '@/details/features/detail-components';
+import {
+  DetailHeader,
+  DetailsComponentProps,
+  IdSubheader,
+} from '@/details/features/detail-components';
 
 export const HealthsiteDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>

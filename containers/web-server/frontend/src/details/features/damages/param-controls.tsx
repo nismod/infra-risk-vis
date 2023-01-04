@@ -21,7 +21,11 @@ export const HazardSelect = () => {
   return hazards.length ? (
     <FormControl fullWidth sx={{ my: 2 }} disabled={hazards.length === 1}>
       <InputLabel>Hazard</InputLabel>
-      <Select label="Hazard" value={selectedHazard ?? ''} onChange={(e) => setSelectedHazard(e.target.value as string)}>
+      <Select
+        label="Hazard"
+        value={selectedHazard ?? ''}
+        onChange={(e) => setSelectedHazard(e.target.value as string)}
+      >
         {hazards.map((h) => (
           <MenuItem key={h} value={h}>
             {HAZARDS_METADATA[h]?.label ?? titleCase(h)}
@@ -45,7 +49,11 @@ export const EpochSelect = () => {
   return epochs.length ? (
     <FormControl fullWidth disabled={epochs.length === 1}>
       <InputLabel>Epoch</InputLabel>
-      <Select label="Epoch" value={selectedEpoch ?? ''} onChange={(e) => setSelectedEpoch(e.target.value as string)}>
+      <Select
+        label="Epoch"
+        value={selectedEpoch ?? ''}
+        onChange={(e) => setSelectedEpoch(e.target.value as string)}
+      >
         {epochs.map((h) => (
           <MenuItem key={h} value={h}>
             {titleCase(h)}

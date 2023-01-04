@@ -1,7 +1,12 @@
 import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Switch } from '@mui/material';
 import _ from 'lodash';
 import { useEffect } from 'react';
-import { TransactionInterface_UNSTABLE, atom, useRecoilState, useRecoilTransaction_UNSTABLE } from 'recoil';
+import {
+  TransactionInterface_UNSTABLE,
+  atom,
+  useRecoilState,
+  useRecoilTransaction_UNSTABLE,
+} from 'recoil';
 
 import { DataGroup } from '@/lib/data-selection/DataGroup';
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
@@ -12,12 +17,12 @@ import {
   sidebarPathVisibilityState,
   sidebarVisibilityToggleState,
 } from '@/sidebar/SidebarContent';
+import { DataNotice } from '@/sidebar/ui/DataNotice';
 import { InputRow } from '@/sidebar/ui/InputRow';
 import { InputSection } from '@/sidebar/ui/InputSection';
 import { EpochControl } from '@/sidebar/ui/params/EpochControl';
 import { RCPControl } from '@/sidebar/ui/params/RCPControl';
 import { syncHazardsWithDamageSourceStateEffect } from '@/state/data-selection/damage-mapping/damage-map';
-import { DataNotice } from '@/sidebar/ui/DataNotice';
 
 export const populationExposureHazardState = atom<ExposureSource>({
   key: 'populationExposureHazardState',
@@ -47,8 +52,14 @@ export function hideExposure({ set }: TransactionInterface_UNSTABLE, layer: stri
 }
 
 const InitPopulationView = () => {
-  const updateExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => syncExposure(iface, 'population'), []);
-  const hideExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => hideExposure(iface, 'population'), []);
+  const updateExposureTx = useRecoilTransaction_UNSTABLE(
+    (iface) => () => syncExposure(iface, 'population'),
+    [],
+  );
+  const hideExposureTx = useRecoilTransaction_UNSTABLE(
+    (iface) => () => hideExposure(iface, 'population'),
+    [],
+  );
   useEffect(() => {
     updateExposureTx();
 
@@ -63,17 +74,24 @@ const InitPopulationView = () => {
 export const PopulationExposureSection = () => {
   const [hazard, setHazard] = useRecoilState(populationExposureHazardState);
 
-  const [showHazards, setShowHazards] = useRecoilState(sidebarPathVisibilityState(`hazards/${hazard}`));
-  const [showPopulation, setShowPopulation] = useRecoilState(sidebarPathVisibilityState('exposure/population'));
+  const [showHazards, setShowHazards] = useRecoilState(
+    sidebarPathVisibilityState(`hazards/${hazard}`),
+  );
+  const [showPopulation, setShowPopulation] = useRecoilState(
+    sidebarPathVisibilityState('exposure/population'),
+  );
 
   return (
     <>
       <InitPopulationView />
-      <StateEffectRoot state={populationExposureHazardState} effect={syncHazardsWithDamageSourceStateEffect} />
+      <StateEffectRoot
+        state={populationExposureHazardState}
+        effect={syncHazardsWithDamageSourceStateEffect}
+      />
       <DataNotice>
-        Map shows expected annual population exposed to extreme events, based
-        on the annual probability of the hazard. Zoom in for extreme heat
-        exposure to show.<br/>
+        Map shows expected annual population exposed to extreme events, based on the annual
+        probability of the hazard. Zoom in for extreme heat exposure to show.
+        <br />
       </DataNotice>
       <InputSection>
         <FormControl>

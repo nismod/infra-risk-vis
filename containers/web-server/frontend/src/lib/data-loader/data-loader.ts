@@ -5,7 +5,11 @@ import { apiClient } from '@/api-client';
 export type DataLoaderSubscriber = (loader: DataLoader) => void;
 
 export class DataLoader<T = any> {
-  constructor(public readonly id: string, public readonly layer: string, public readonly fieldSpec: FieldSpec) {}
+  constructor(
+    public readonly id: string,
+    public readonly layer: string,
+    public readonly fieldSpec: FieldSpec,
+  ) {}
 
   private _updateTrigger: number = 1;
 
@@ -62,7 +66,9 @@ export class DataLoader<T = any> {
   }
 
   async loadDataForIds(ids: number[]) {
-    const tempMissingIds = ids.filter((id) => this.data.get(id) === undefined && !this.loadingIds.has(id));
+    const tempMissingIds = ids.filter(
+      (id) => this.data.get(id) === undefined && !this.loadingIds.has(id),
+    );
     if (tempMissingIds.length === 0) return;
 
     const loadedData = await this.requestMissingData(tempMissingIds);

@@ -28,7 +28,11 @@ export function healthsitesViewLayer() {
       spatialType: 'vector',
       interactionGroup: 'assets',
     },
-    customFn: ({ zoom }) => [pointRadius(zoom), fillColor(HEALTHSITES_COLOR.deck), border([255, 255, 255])],
+    customFn: ({ zoom }) => [
+      pointRadius(zoom),
+      fillColor(HEALTHSITES_COLOR.deck),
+      border([255, 255, 255]),
+    ],
     customDataAccessFn: assetDataAccessFunction('healthsites'),
     renderTooltip: (hover) => {
       return React.createElement(VectorHoverDescription, {

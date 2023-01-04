@@ -12,7 +12,13 @@ export const ReturnPeriodControl = ({ ...otherProps }) => {
       <FormLabel>Return Period</FormLabel>
       <DataParam group={group} id="rp">
         {({ value, onChange, options }) => (
-          <CustomNumberSlider marks={options} value={value} onChange={onChange} size="small" {...otherProps} />
+          <CustomNumberSlider
+            marks={options}
+            value={value}
+            onChange={onChange}
+            size="small"
+            {...otherProps}
+          />
         )}
       </DataParam>
     </FormControl>

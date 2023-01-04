@@ -27,7 +27,11 @@ const RISK_TARGET_SIDEBAR_SECTIONS: Record<RiskTargetType, string> = {
   transport: 'exposure/infrastructure',
 };
 
-export const riskTargetTypeStateEffect: StateEffect<RiskTargetType> = ({ set }, riskTarget, previousRiskTarget) => {
+export const riskTargetTypeStateEffect: StateEffect<RiskTargetType> = (
+  { set },
+  riskTarget,
+  previousRiskTarget,
+) => {
   const previousTargetSection = RISK_TARGET_SIDEBAR_SECTIONS[previousRiskTarget];
   const newTargetSection = RISK_TARGET_SIDEBAR_SECTIONS[riskTarget];
 
@@ -35,7 +39,13 @@ export const riskTargetTypeStateEffect: StateEffect<RiskTargetType> = ({ set }, 
   set(sidebarVisibilityToggleState(newTargetSection), true);
 };
 
-export const RISK_SOURCES = ['fluvial', 'cyclone', 'extreme_heat', 'drought', 'earthquake'] as const;
+export const RISK_SOURCES = [
+  'fluvial',
+  'cyclone',
+  'extreme_heat',
+  'drought',
+  'earthquake',
+] as const;
 
 export type RiskSourceType = typeof RISK_SOURCES[number];
 

@@ -24,11 +24,11 @@ import { IndustryControl } from './sections/industry/IndustryControl';
 import { NetworkControl } from './sections/networks/NetworkControl';
 import { InfrastructureRiskSection } from './sections/risk/infrastructure-risk';
 import { PopulationExposureSection } from './sections/risk/population-exposure';
+import { RegionalRiskSection } from './sections/risk/regional-risk';
 import { HdiControl } from './sections/vulnerability/HdiControl';
 import { TravelTimeControl } from './sections/vulnerability/TravelTimeControl';
 import { WdpaControls } from './sections/vulnerability/WdpaControl';
 import { DataNotice } from './ui/DataNotice';
-import { RegionalRiskSection } from './sections/risk/regional-risk';
 
 const viewLabels = {
   hazard: 'Hazard',
@@ -52,7 +52,10 @@ export const sidebarPathChildrenState = atomFamily({
   default: () => [],
 });
 
-export const sidebarPathVisibilityState: RecoilStateFamily<boolean, string> = selectorFamily<boolean, string>({
+export const sidebarPathVisibilityState: RecoilStateFamily<boolean, string> = selectorFamily<
+  boolean,
+  string
+>({
   key: 'sidebarPathVisibilityState',
   get:
     (path: string) =>
@@ -60,7 +63,8 @@ export const sidebarPathVisibilityState: RecoilStateFamily<boolean, string> = se
       const parentPath = getParentPath(path);
 
       return (
-        (parentPath === '' || get(sidebarPathVisibilityState(parentPath))) && get(sidebarVisibilityToggleState(path))
+        (parentPath === '' || get(sidebarPathVisibilityState(parentPath))) &&
+        get(sidebarVisibilityToggleState(path))
       );
     },
   set:
@@ -106,47 +110,46 @@ const ExposureSection = () => (
   <Section path="exposure" title="Exposure">
     <Layer path="population" title="Population">
       <DataNotice>
-        Map shows population density in 2020, from the JRC Global Human
-        Settlement Layer (2022).
+        Map shows population density in 2020, from the JRC Global Human Settlement Layer (2022).
       </DataNotice>
     </Layer>
     <Layer path="buildings" title="Buildings">
       <DataNotice>
-        Map shows density of built-up surface in 2020, from the JRC Global Human
-        Settlement Layer (2022).
+        Map shows density of built-up surface in 2020, from the JRC Global Human Settlement Layer
+        (2022).
       </DataNotice>
       <BuildingDensityControl />
     </Layer>
     <Layer path="infrastructure" title="Infrastructure">
       <DataNotice>
-        Map shows infrastructure networks: road and rail derived from
-        OpenStreetMap, power from Gridfinder, Arderne et al (2020).
+        Map shows infrastructure networks: road and rail derived from OpenStreetMap, power from
+        Gridfinder, Arderne et al (2020).
       </DataNotice>
       <NetworkControl />
     </Layer>
     <Layer path="industry" title="Industry">
       <DataNotice>
-        Map shows global databases of cement, iron and steel production assets,
-        from the Spatial Finance Initiative, McCarten et al (2021).
+        Map shows global databases of cement, iron and steel production assets, from the Spatial
+        Finance Initiative, McCarten et al (2021).
       </DataNotice>
       <IndustryControl />
     </Layer>
     <Layer path="healthsites" title="Healthcare">
       <DataNotice>
-        Map shows locations of healthcare facilities from the healthsites.io
-        project, containing data extracted from OpenStreetMap.
+        Map shows locations of healthcare facilities from the healthsites.io project, containing
+        data extracted from OpenStreetMap.
       </DataNotice>
     </Layer>
     <Layer path="land-cover" title="Land Cover">
       <DataNotice>
-        Map shows land cover classification gridded maps from the European
-        Space Agency Climate Change Initiative Land Cover project (2021).
+        Map shows land cover classification gridded maps from the European Space Agency Climate
+        Change Initiative Land Cover project (2021).
       </DataNotice>
     </Layer>
     <Layer path="organic-carbon" title="Soil Organic Carbon">
       <DataNotice>
-        Map shows soil organic carbon content at 0-30cm, in tonnes/hectare,
-        aggregated to a 1000m grid, from SoilGrids 2.0, Poggio et al (2021).
+        Map shows soil organic carbon content at 0-30cm, in tonnes/hectare, aggregated to a 1000m
+        grid, from SoilGrids 2.0, Poggio et al (2021).
       </DataNotice>
     </Layer>
   </Section>
@@ -274,7 +277,6 @@ export const SidebarContent: FC<{}> = () => {
     sections['risk'] = <RiskSection key="risk" />;
   }
 
-
   return (
     <SidebarRoot
       visibilityState={sidebarVisibilityToggleState}
@@ -282,17 +284,12 @@ export const SidebarContent: FC<{}> = () => {
       pathChildrenState={sidebarPathChildrenState}
     >
       <StateEffectRoot state={viewState} effect={viewTransitionEffect} />
-      {
-          isMobile?
-          <Alert sx={{mb:2}} severity='warning'>
-
-            This site is not currently well-designed for small screens. For
-            a better experience, we recommend visiting from a larger device
-            or window.
-
-          </Alert>
-          : null
-      }
+      {isMobile ? (
+        <Alert sx={{ mb: 2 }} severity="warning">
+          This site is not currently well-designed for small screens. For a better experience, we
+          recommend visiting from a larger device or window.
+        </Alert>
+      ) : null}
       <Stack
         sx={{
           '& > :first-of-type': {

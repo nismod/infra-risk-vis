@@ -10,7 +10,12 @@ interface DownloadButtonProps {
   mimeType?: string;
 }
 
-export const DownloadButton: FC<DownloadButtonProps> = ({ makeContent, filename, title, mimeType = 'text/csv' }) => {
+export const DownloadButton: FC<DownloadButtonProps> = ({
+  makeContent,
+  filename,
+  title,
+  mimeType = 'text/csv',
+}) => {
   return (
     <IconButton title={title} onClick={() => downloadFile(makeContent(), mimeType, filename)}>
       <Download />

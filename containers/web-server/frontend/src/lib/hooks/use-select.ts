@@ -6,7 +6,11 @@ function firstElem<T>(options: T) {
   return options?.[0];
 }
 
-export function useSelect<T>(options: T[], allowEmpty: boolean = false, defaultFn: DefaultFunction<T> = firstElem) {
+export function useSelect<T>(
+  options: T[],
+  allowEmpty: boolean = false,
+  defaultFn: DefaultFunction<T> = firstElem,
+) {
   const [selectedOption, setSelectedOption] = useState(defaultFn(options));
 
   const defaultValue = useMemo(() => defaultFn(options), [options, defaultFn]);

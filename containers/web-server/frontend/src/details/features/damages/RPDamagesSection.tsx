@@ -37,7 +37,9 @@ interface RPDamageCell {
 }
 
 function getRPDamageObject(d: ReturnPeriodDamage): RPDamageCell {
-  let { hazard, epoch, rcp } = _.mapValues(QUIRKY_FIELDS_MAPPING, (fn, key) => fn?.(d[key].toString()));
+  let { hazard, epoch, rcp } = _.mapValues(QUIRKY_FIELDS_MAPPING, (fn, key) =>
+    fn?.(d[key].toString()),
+  );
 
   return {
     key: getRPDamageKey({ hazard, epoch, rcp, rp: d.rp }),
@@ -94,7 +96,9 @@ const selectedRpDataState = selector({
     const selectedHazard = get(selectedHazardState);
 
     return selectedHazard
-      ? get(rpDamageDataState).filter((x) => x.hazard === selectedHazard && x.epoch === get(selectedEpochState))
+      ? get(rpDamageDataState).filter(
+          (x) => x.hazard === selectedHazard && x.epoch === get(selectedEpochState),
+        )
       : null;
   },
 });

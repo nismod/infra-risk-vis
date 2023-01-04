@@ -10,7 +10,12 @@ import {
   useSetRecoilState,
 } from 'recoil';
 
-import { DataParamGroupConfig, ParamDomain, ParamValue, resolveParamDependencies } from '@/lib/controls/data-params';
+import {
+  DataParamGroupConfig,
+  ParamDomain,
+  ParamValue,
+  resolveParamDependencies,
+} from '@/lib/controls/data-params';
 
 /**
  * Data params config state (domains, defaults, dependencies) per group
@@ -44,7 +49,10 @@ export const paramsState = atomFamily<Record<string, ValueAndOptions>, string>({
  * @param configState a recoil state representing the loaded configuration. Can be async.
  * @param targetGroup string representing the target data params group
  */
-export function useLoadParamsConfig(configState: RecoilValue<DataParamGroupConfig>, targetGroup: string) {
+export function useLoadParamsConfig(
+  configState: RecoilValue<DataParamGroupConfig>,
+  targetGroup: string,
+) {
   const config = useRecoilValue(configState);
   const setTargetConfig = useSetRecoilState(paramsConfigState(targetGroup));
   const setTargetState = useSetRecoilState(paramsState(targetGroup));
@@ -80,7 +88,10 @@ export function useUpdateDataParam(group: string, paramId: string) {
         const oldValues = _.mapValues(state, (x) => x.value);
         const newValues = { ...oldValues, [paramId]: newValue };
 
-        const [resolvedValues, resolvedOptions] = resolveParamDependencies<Record<string, any>>(newValues, config);
+        const [resolvedValues, resolvedOptions] = resolveParamDependencies<Record<string, any>>(
+          newValues,
+          config,
+        );
 
         const resolvedState = _.mapValues(state, (x, key) => ({
           value: resolvedValues[key],

@@ -28,7 +28,12 @@ export const SortedAssetTable: FC<{
     setPage(1);
   }, [layerSpec, fieldSpec]);
 
-  const { features, pageInfo, loading, error } = useSortedFeatures(layerSpec, fieldSpec, page, pageSize);
+  const { features, pageInfo, loading, error } = useSortedFeatures(
+    layerSpec,
+    fieldSpec,
+    page,
+    pageSize,
+  );
 
   const handleTablePaginationChange = useCallback((event, value) => setPage(value + 1), [setPage]);
 
@@ -59,7 +64,9 @@ export const SortedAssetTable: FC<{
             )}
             {!loading &&
               !error &&
-              features.map((feature, index) => renderRow(feature, index, currentPageFirstItemIndex + index))}
+              features.map((feature, index) =>
+                renderRow(feature, index, currentPageFirstItemIndex + index),
+              )}
           </TableBody>
         </Table>
       </TableContainer>

@@ -9,5 +9,6 @@ import { travelTimeTypeState } from '@/state/data-selection/travel-time';
 export const travelTimeLayerState = selector<ViewLayer>({
   key: 'travelTimeLayerState',
   get: ({ get }) =>
-    get(sidebarPathVisibilityState('vulnerability/human/travel-time')) && travelTimeViewLayer(get(travelTimeTypeState)),
+    get(sidebarPathVisibilityState('vulnerability/human/travel-time')) &&
+    travelTimeViewLayer(get(travelTimeTypeState)),
 });

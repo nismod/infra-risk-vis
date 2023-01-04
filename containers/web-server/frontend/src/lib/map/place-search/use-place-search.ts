@@ -28,7 +28,9 @@ function processNominatimData(data: NominatimSearchResult[]): PlaceSearchResult[
 }
 
 export function usePlaceSearch(searchValue: string) {
-  const { get, error } = useFetch(`https://nominatim.openstreetmap.org/search.php?format=jsonv2&q=${searchValue}`);
+  const { get, error } = useFetch(
+    `https://nominatim.openstreetmap.org/search.php?format=jsonv2&q=${searchValue}`,
+  );
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);

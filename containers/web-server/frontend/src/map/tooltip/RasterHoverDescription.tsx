@@ -12,7 +12,10 @@ export interface RasterHoverDescriptionProps {
   formatValue: (x: any) => ReactNode | string;
 }
 
-export const RasterHoverDescription: FC<RasterHoverDescriptionProps> = ({ colorMap, ...otherProps }) => {
+export const RasterHoverDescription: FC<RasterHoverDescriptionProps> = ({
+  colorMap,
+  ...otherProps
+}) => {
   const { scheme, range, rangeTruncated } = colorMap;
   const colorMapValues = useRasterColorMapValues(scheme, range);
   const colorMapSpec = {

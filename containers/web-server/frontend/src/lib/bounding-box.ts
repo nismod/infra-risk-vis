@@ -47,7 +47,12 @@ export function appToDeckBoundingBox(appBoundingBox: BoundingBox): DeckBoundingB
 }
 
 export function nominatimToAppBoundingBox(nominatimBoundingBox: NominatimBoundingBox): BoundingBox {
-  return [nominatimBoundingBox[2], nominatimBoundingBox[0], nominatimBoundingBox[3], nominatimBoundingBox[1]];
+  return [
+    nominatimBoundingBox[2],
+    nominatimBoundingBox[0],
+    nominatimBoundingBox[3],
+    nominatimBoundingBox[1],
+  ];
 }
 
 export function extendBbox(boundingBox: BoundingBox, kilometers: number): BoundingBox {

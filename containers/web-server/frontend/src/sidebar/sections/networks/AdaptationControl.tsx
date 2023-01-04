@@ -42,7 +42,9 @@ const CostBenefitRatioInputs: FC = () => {
   return (
     <Box mt={1}>
       <Typography>The cost-benefit ratio is calculated using the following formula:</Typography>
-      <Typography>(Avoided Direct Damages + Avoided Economic Losses * No. of Days) / Adaptation Cost</Typography>
+      <Typography>
+        (Avoided Direct Damages + Avoided Economic Losses * No. of Days) / Adaptation Cost
+      </Typography>
       <FormLabel htmlFor="adaptation-cost-benefit-eael-days">No. of Days</FormLabel>
       <Slider
         id="adaptation-cost-benefit-eael-days"
@@ -62,7 +64,10 @@ export const AdaptationControl: FC<{}> = () => {
   const [adaptationField, setAdaptationField] = useRecoilState(adaptationFieldState);
   return (
     <LayerStylePanel>
-      <StateEffectRoot state={dataParamsByGroupState('adaptation')} effect={adaptationDataParamsStateEffect} />
+      <StateEffectRoot
+        state={dataParamsByGroupState('adaptation')}
+        effect={adaptationDataParamsStateEffect}
+      />
       <InputSection>
         <InputRow>
           <DataParam group="adaptation" id="sector">
@@ -122,7 +127,12 @@ export const AdaptationControl: FC<{}> = () => {
       <InputSection>
         <DataParam group="adaptation" id="adaptation_name">
           {({ value, onChange, options }) => (
-            <ParamDropdown title="Adaptation type" value={value} onChange={onChange} options={options} />
+            <ParamDropdown
+              title="Adaptation type"
+              value={value}
+              onChange={onChange}
+              options={options}
+            />
           )}
         </DataParam>
       </InputSection>
@@ -132,10 +142,20 @@ export const AdaptationControl: FC<{}> = () => {
             options.length > 2 ? (
               <>
                 <FormLabel>Protection level</FormLabel>
-                <CustomNumberSlider title="Protection level" value={value} onChange={onChange} marks={options} />
+                <CustomNumberSlider
+                  title="Protection level"
+                  value={value}
+                  onChange={onChange}
+                  marks={options}
+                />
               </>
             ) : (
-              <ParamDropdown title="Protection level" value={value} onChange={onChange} options={options} />
+              <ParamDropdown
+                title="Protection level"
+                value={value}
+                onChange={onChange}
+                options={options}
+              />
             )
           }
         </DataParam>

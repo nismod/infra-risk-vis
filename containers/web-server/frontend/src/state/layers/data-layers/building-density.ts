@@ -9,5 +9,6 @@ import { buildingDensityTypeState } from '@/state/data-selection/building-densit
 export const buildingDensityLayerState = selector<ViewLayer>({
   key: 'buildingDensityLayerState',
   get: ({ get }) =>
-    get(sidebarPathVisibilityState('exposure/buildings')) && buildingDensityLayer(get(buildingDensityTypeState)),
+    get(sidebarPathVisibilityState('exposure/buildings')) &&
+    buildingDensityLayer(get(buildingDensityTypeState)),
 });

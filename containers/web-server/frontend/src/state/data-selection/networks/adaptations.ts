@@ -2,7 +2,12 @@ import _ from 'lodash';
 import { TransactionInterface_UNSTABLE, atom, selector } from 'recoil';
 
 import { recalculateCheckboxStates } from '@/lib/controls/checkbox-tree/CheckboxTree';
-import { d3Scale, d3ScaleChromatic, discardSides, invertColorScale } from '@/lib/data-map/color-maps';
+import {
+  d3Scale,
+  d3ScaleChromatic,
+  discardSides,
+  invertColorScale,
+} from '@/lib/data-map/color-maps';
 import { ColorSpec, FieldSpec, StyleParams } from '@/lib/data-map/view-layers';
 import { valueType } from '@/lib/helpers';
 import { StateEffect } from '@/lib/recoil/state-effects/types';
@@ -32,7 +37,10 @@ export const adaptationCostBenefitRatioEaelDaysState = atom<number>({
   default: 15,
 });
 
-export function syncInfrastructureSelectionStateEffect({ get, set }: TransactionInterface_UNSTABLE, layers: string[]) {
+export function syncInfrastructureSelectionStateEffect(
+  { get, set }: TransactionInterface_UNSTABLE,
+  layers: string[],
+) {
   const currentSelection = get(networkTreeCheckboxState);
   const updatedTreeState = {
     checked: {
@@ -46,12 +54,17 @@ export function syncInfrastructureSelectionStateEffect({ get, set }: Transaction
   set(networkTreeCheckboxState, resolvedTreeState);
 }
 
-export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams> = (iface, adaptationParams) => {
+export const adaptationDataParamsStateEffect: StateEffect<AdaptationOptionParams> = (
+  iface,
+  adaptationParams,
+) => {
   const { sector, subsector, asset_type } = adaptationParams;
 
   const layers = _.uniq(
     adaptationSectorLayers
-      .filter((x) => x.sector === sector && x.subsector === subsector && x.asset_type === asset_type)
+      .filter(
+        (x) => x.sector === sector && x.subsector === subsector && x.asset_type === asset_type,
+      )
       .map((x) => x.layer_name),
   );
 
@@ -78,7 +91,9 @@ export const adaptationFieldSpecState = selector<FieldSpec>({
   key: 'adaptationFieldSpecState',
   get: ({ get }) => {
     const field = get(adaptationFieldState);
-    const { hazard, rcp, adaptation_name, adaptation_protection_level } = get(dataParamsByGroupState('adaptation'));
+    const { hazard, rcp, adaptation_name, adaptation_protection_level } = get(
+      dataParamsByGroupState('adaptation'),
+    );
 
     let fieldParams: any = {};
     if (field === 'cost_benefit_ratio') {

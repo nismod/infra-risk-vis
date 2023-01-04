@@ -6,7 +6,13 @@ import { useRecoilState } from 'recoil';
 
 import { RecoilStateFamily } from '@/lib/recoil/types';
 
-import { Accordion, AccordionDetails, AccordionSummary, AccordionTitle, ExpandablePanel } from './ExpandablePanel';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  AccordionTitle,
+  ExpandablePanel,
+} from './ExpandablePanel';
 import { VisibilityToggle } from './VisibilityToggle';
 import { PathContext, getSubPath, usePath } from './paths';
 
@@ -134,7 +140,12 @@ export const Layer: FC<{ path: string } & LayerProps> = ({ path, ...otherProps }
   );
 };
 
-const LayerImpl: FC<LayerProps> = ({ title, disabled = false, unmountOnHide = false, children }) => {
+const LayerImpl: FC<LayerProps> = ({
+  title,
+  disabled = false,
+  unmountOnHide = false,
+  children,
+}) => {
   const path = usePath();
   const [visible, setVisible] = useVisibilityState(path);
   const [expanded, setExpanded] = useExpandedState(path);
@@ -244,7 +255,9 @@ export const SidebarRoot: FC<{
   return (
     <VisibilityStateContext.Provider value={visibilityState}>
       <ExpandedStateContext.Provider value={expandedState}>
-        <PathChildrenStateContext.Provider value={pathChildrenState}>{children}</PathChildrenStateContext.Provider>
+        <PathChildrenStateContext.Provider value={pathChildrenState}>
+          {children}
+        </PathChildrenStateContext.Provider>
       </ExpandedStateContext.Provider>
     </VisibilityStateContext.Provider>
   );

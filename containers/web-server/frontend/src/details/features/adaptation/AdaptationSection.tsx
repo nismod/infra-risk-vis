@@ -68,7 +68,10 @@ export const AdaptationSection = ({ fd }) => {
       }) ?? []
     );
   }, [fd]);
-  const option_names = useMemo(() => unique(options.map((d) => d.adaptation_name)), [options]).sort();
+  const option_names = useMemo(
+    () => unique(options.map((d) => d.adaptation_name)),
+    [options],
+  ).sort();
 
   return (
     <>
@@ -99,8 +102,8 @@ export const AdaptationSection = ({ fd }) => {
                     {name}
                   </Typography>
                   <Typography variant="body2" component="p" sx={{ mb: 2 }}>
-                    The adaptation costs and benefits, subject to different climate scenarios and (for some options)
-                    protection standards, assuming a 15-day disruption.
+                    The adaptation costs and benefits, subject to different climate scenarios and
+                    (for some options) protection standards, assuming a 15-day disruption.
                   </Typography>
 
                   <AdaptationTable options={filteredOptions} />

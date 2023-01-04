@@ -47,7 +47,10 @@ export const FeatureAdaptationsTable = () => {
     [setMapFitBounds],
   );
 
-  const handleZoomOutGlobal = useCallback(() => setMapFitBounds([...GLOBAL_BBOX]), [setMapFitBounds]);
+  const handleZoomOutGlobal = useCallback(
+    () => setMapFitBounds([...GLOBAL_BBOX]),
+    [setMapFitBounds],
+  );
 
   const colorFn = useMemo(() => colorMap(colorSpec), [colorSpec]);
   const { getDataLabel, getValueFormatted } = getAssetDataFormats(fieldSpec);

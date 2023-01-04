@@ -34,7 +34,9 @@ export const AdaptationTable = ({ options }) => {
               <TableCell sx={padding}>{d.rcp}</TableCell>
               <TableCell sx={padding}>{d.adaptation_protection_level}</TableCell>
               <TableCell sx={padding} align="right">
-                {numFormat((d.avoided_ead_mean + d.avoided_eael_mean * numDays) / d.adaptation_cost)}
+                {numFormat(
+                  (d.avoided_ead_mean + d.avoided_eael_mean * numDays) / d.adaptation_cost,
+                )}
                 <br />
                 {numRangeFormat(
                   (d.avoided_ead_amin + d.avoided_eael_amin * numDays) / d.adaptation_cost,

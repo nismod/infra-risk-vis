@@ -19,7 +19,12 @@ export const RCPControl = () => {
       </FormLabel>
       <DataParam group={group} id="rcp">
         {({ value, onChange, options }) => (
-          <Select variant="standard" value={value} onChange={(e) => onChange(e.target.value)} fullWidth>
+          <Select
+            variant="standard"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            fullWidth
+          >
             {options.map((rcp) => (
               <MenuItem key={rcp} value={rcp}>
                 {rcpLabel(rcp)}

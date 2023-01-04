@@ -26,7 +26,9 @@ export interface AssetViewLayerCustomFunctionOptions {
   zoom: number;
   dataStyle?: DataStyle;
 }
-export type AssetViewLayerCustomFunction = (options: AssetViewLayerCustomFunctionOptions) => object[];
+export type AssetViewLayerCustomFunction = (
+  options: AssetViewLayerCustomFunctionOptions,
+) => object[];
 export interface AssetViewLayerOptions {
   assetId: string;
   metadata: ViewLayerMetadata;

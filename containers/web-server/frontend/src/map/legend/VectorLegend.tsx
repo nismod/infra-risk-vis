@@ -15,7 +15,10 @@ export const VectorLegend: FC<{ colorMap: ColorMap; legendFormatConfig: FormatCo
   const { getDataLabel, getValueFormatted } = legendFormatConfig;
 
   const label = getDataLabel(fieldSpec);
-  const getValueLabel = useMemo(() => (value) => getValueFormatted(value, fieldSpec), [fieldSpec, getValueFormatted]);
+  const getValueLabel = useMemo(
+    () => (value) => getValueFormatted(value, fieldSpec),
+    [fieldSpec, getValueFormatted],
+  );
 
   return (
     <GradientLegend

@@ -54,7 +54,13 @@ export interface GradientLegendProps {
   getValueLabel: (x: any) => ReactNode | string;
 }
 
-export const GradientLegend: FC<GradientLegendProps> = ({ label, description, range, colorMap, getValueLabel }) => (
+export const GradientLegend: FC<GradientLegendProps> = ({
+  label,
+  description,
+  range,
+  colorMap,
+  getValueLabel,
+}) => (
   <Box mb={2}>
     <Box mb={1}>
       <Typography variant="body1">{label}</Typography>

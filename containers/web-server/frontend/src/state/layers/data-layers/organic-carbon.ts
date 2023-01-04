@@ -8,5 +8,7 @@ import { sidebarPathVisibilityState } from '@/sidebar/SidebarContent';
 export const organicCarbonLayerState = selector<ViewLayer>({
   key: 'organicCarbonLayerState',
   get: ({ get }) =>
-    get(sidebarPathVisibilityState('exposure/organic-carbon')) ? natureRasterViewLayer('organic_carbon') : null,
+    get(sidebarPathVisibilityState('exposure/organic-carbon'))
+      ? natureRasterViewLayer('organic_carbon')
+      : null,
 });

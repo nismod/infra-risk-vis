@@ -60,7 +60,9 @@ function formatAdaptationValue(value: number, { field }: FieldSpec) {
 
 const ADAPTATION_DEFAULT_FORMAT: FormatConfig<number> = {
   getDataLabel: (colorField) => {
-    return `${getAdaptationFieldLabel(colorField.field)} ${paren(colorField.fieldDimensions.adaptation_name)}`;
+    return `${getAdaptationFieldLabel(colorField.field)} ${paren(
+      colorField.fieldDimensions.adaptation_name,
+    )}`;
   },
   getValueFormatted: formatAdaptationValue,
 };

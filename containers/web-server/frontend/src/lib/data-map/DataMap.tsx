@@ -40,7 +40,10 @@ export const DataMap: FC<DataMapProps> = ({
   );
 
   const dataLoaders = useMemo(
-    () => viewLayers.map((vl) => vl.dataAccessFn?.(vl.styleParams?.colorMap?.fieldSpec)?.dataLoader).filter(Boolean),
+    () =>
+      viewLayers
+        .map((vl) => vl.dataAccessFn?.(vl.styleParams?.colorMap?.fieldSpec)?.dataLoader)
+        .filter(Boolean),
     [viewLayers],
   );
 
@@ -80,7 +83,9 @@ export const DataMap: FC<DataMapProps> = ({
 
   const deckLayersFunction = useCallback(
     ({ zoom }: { zoom: number }) =>
-      viewLayers.map((viewLayer) => makeDeckLayers(viewLayer, viewLayersParams[viewLayer.id], zoom)),
+      viewLayers.map((viewLayer) =>
+        makeDeckLayers(viewLayer, viewLayersParams[viewLayer.id], zoom),
+      ),
     [viewLayers, viewLayersParams],
   );
 

@@ -43,7 +43,10 @@ export function hazardViewLayer(hazardType: string, hazardParams: any): ViewLaye
         deckProps,
         {
           id: `${id}@${deckId}`, // follow the convention viewLayerId@deckLayerId
-          data: getHazardDataUrl({ hazardType, metric: 'occurrence', hazardParams }, { scheme, range }),
+          data: getHazardDataUrl(
+            { hazardType, metric: 'occurrence', hazardParams },
+            { scheme, range },
+          ),
           refinementStrategy: 'no-overlap',
         },
       );

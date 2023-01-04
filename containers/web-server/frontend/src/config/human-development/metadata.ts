@@ -24,7 +24,12 @@ export const HDI_REGION_LEVEL_METADATA = {
   },
 };
 
-export const HDI_VARIABLES = ['subnational_hdi', 'health_index', 'educational_index', 'income_index'] as const;
+export const HDI_VARIABLES = [
+  'subnational_hdi',
+  'health_index',
+  'educational_index',
+  'income_index',
+] as const;
 
 export type HdiVariableType = typeof HDI_VARIABLES[number];
 

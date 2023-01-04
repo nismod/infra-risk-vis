@@ -5,7 +5,9 @@ export type ParamDomain<PT extends ParamValue = ParamValue> = PT[];
 
 export type ParamGroup = Record<string, ParamValue>;
 
-export type ParamDependency<PT extends ParamValue, PGT extends ParamGroup> = (params: PGT) => ParamDomain<PT>;
+export type ParamDependency<PT extends ParamValue, PGT extends ParamGroup> = (
+  params: PGT,
+) => ParamDomain<PT>;
 
 export type ParamGroupDomains<PGT extends ParamGroup = ParamGroup> = {
   [K in keyof PGT]: ParamDomain<PGT[K]>;
@@ -36,7 +38,11 @@ export function resolveParamDependencies<PGT extends ParamGroup = ParamGroup>(
   const newOptions: ParamGroupDomains<PGT> = {} as any;
 
   for (const [param, paramValue] of Object.entries(updatedParams)) {
-    const newParamOptions = getNewParamOptions(resolvedParams, paramDomains[param], paramDependencies[param]);
+    const newParamOptions = getNewParamOptions(
+      resolvedParams,
+      paramDomains[param],
+      paramDependencies[param],
+    );
 
     // if the new options don't include the current param value, switch value to the first option
     if (!newParamOptions.includes(paramValue)) {
@@ -102,7 +108,12 @@ export function inferDependenciesFromData<T extends object>(
   const dependencies: ParamGroupDependencies<T> = {};
   for (const [param, inputs] of Object.entries(depSpec) as [keyof T, (keyof T)[]][]) {
     if (inputs.length > 0) {
-      dependencies[param] = makeDependencyFunction(data, param as keyof T, inputs as (keyof T)[], sortSpec?.[param]);
+      dependencies[param] = makeDependencyFunction(
+        data,
+        param as keyof T,
+        inputs as (keyof T)[],
+        sortSpec?.[param],
+      );
     }
   }
   return dependencies;

@@ -36,7 +36,12 @@ function processFeature(f: FeatureListItemOut_float_): ListFeature {
   };
 }
 
-export const useSortedFeatures = (layerSpec: LayerSpec, fieldSpec: FieldSpec, page = 1, pageSize = 50) => {
+export const useSortedFeatures = (
+  layerSpec: LayerSpec,
+  fieldSpec: FieldSpec,
+  page = 1,
+  pageSize = 50,
+) => {
   const [features, setFeatures] = useState([]);
   const [pageInfo, setPageInfo] = useState<PageInfo>(null);
   const [loading, setLoading] = useState(false);

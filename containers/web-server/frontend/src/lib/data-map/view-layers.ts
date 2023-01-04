@@ -15,7 +15,10 @@ export interface FieldSpec {
 
 export interface ColorSpec {
   scheme: (t: number, n: number) => string;
-  scale: (domain: [number, number], interpolator: (t: number, n: number) => string) => ScaleSequential<any, any>;
+  scale: (
+    domain: [number, number],
+    interpolator: (t: number, n: number) => string,
+  ) => ScaleSequential<any, any>;
   range: [number, number];
   empty: string;
   zeroIsEmpty?: boolean;

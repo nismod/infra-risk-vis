@@ -8,12 +8,17 @@ type MergeStrategy<T = any> = (oldValue: T, newValue: T) => T;
  * @param mergeStrategies
  * @returns
  */
-export function mergeObjects(objects: object[], mergeStrategies: Record<string, MergeStrategy>): object {
+export function mergeObjects(
+  objects: object[],
+  mergeStrategies: Record<string, MergeStrategy>,
+): object {
   const mergedProps = {};
 
   for (const props of objects) {
     for (const [key, value] of Object.entries(props)) {
-      mergedProps[key] = mergeStrategies[key] ? mergeStrategies[key](mergedProps[key], value) : value;
+      mergedProps[key] = mergeStrategies[key]
+        ? mergeStrategies[key](mergedProps[key], value)
+        : value;
     }
   }
   return mergedProps;
