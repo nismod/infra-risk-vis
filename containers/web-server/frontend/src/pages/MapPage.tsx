@@ -52,19 +52,41 @@ export const MapPage: FC<MapPageProps> = ({ view }) => {
     <ErrorBoundary message="There was a problem displaying this page.">
       <InitData />
       <StateEffectRoot state={viewState} effect={viewStateEffect} />
-      <SidebarLayout top={0} left={0} bottom={0} right={undefined} width={globalStyleVariables.controlSidebarWidth}>
+      <SidebarLayout
+        top={0}
+        left={0}
+        bottom={0}
+        right={undefined}
+        width={globalStyleVariables.controlSidebarWidth}
+      >
         <ErrorBoundary message="There was a problem displaying the sidebar.">
           <SidebarContent />
         </ErrorBoundary>
       </SidebarLayout>
-      <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
-        <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">
+      <Box
+        position="absolute"
+        overflow="clip"
+        top={globalStyleVariables.navbarHeight}
+        left={0}
+        right={0}
+        bottom={0}
+      >
+        <ErrorBoundary
+          message="There was a problem displaying the map."
+          justifyErrorContent="center"
+        >
           <Suspense fallback={null}>
             <MapView />
           </Suspense>
         </ErrorBoundary>
       </Box>
-      <SidebarLayout top={0} left={undefined} bottom={70} right={70} width={globalStyleVariables.detailSidebarWidth}>
+      <SidebarLayout
+        top={0}
+        left={undefined}
+        bottom={70}
+        right={70}
+        width={globalStyleVariables.detailSidebarWidth}
+      >
         <DetailsContent />
       </SidebarLayout>
     </ErrorBoundary>

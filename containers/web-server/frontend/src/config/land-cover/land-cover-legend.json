@@ -1,326 +1,146 @@
 {
-    "0": {
-        "name": "No Data",
-        "color": [
-            0,
-            0,
-            0,
-            255
-        ]
-    },
-    "10": {
-        "name": "Cropland, rainfed",
-        "color": [
-            255,
-            255,
-            100,
-            255
-        ]
-    },
-    "11": {
-        "name": "Cropland, rainfed, herbaceous cover",
-        "color": [
-            255,
-            255,
-            100,
-            255
-        ]
-    },
-    "12": {
-        "name": "Cropland, rainfed, tree or shrub cover",
-        "color": [
-            255,
-            255,
-            0,
-            255
-        ]
-    },
-    "20": {
-        "name": "Cropland, irrigated or post-flooding",
-        "color": [
-            170,
-            240,
-            240,
-            255
-        ]
-    },
-    "30": {
-        "name": "Mosaic cropland (>50%) / natural vegetation (tree, shrub, herbaceous cover) (<50%)",
-        "color": [
-            220,
-            240,
-            100,
-            255
-        ]
-    },
-    "40": {
-        "name": "Mosaic natural vegetation (tree, shrub, herbaceous cover) (>50%) / cropland (<50%)",
-        "color": [
-            200,
-            200,
-            100,
-            255
-        ]
-    },
-    "50": {
-        "name": "Tree cover, broadleaved, evergreen, closed to open (>15%)",
-        "color": [
-            0,
-            100,
-            0,
-            255
-        ]
-    },
-    "60": {
-        "name": "Tree cover, broadleaved, deciduous, closed to open (>15%)",
-        "color": [
-            0,
-            160,
-            0,
-            255
-        ]
-    },
-    "61": {
-        "name": "Tree cover, broadleaved, deciduous, closed (>40%)",
-        "color": [
-            0,
-            160,
-            0,
-            255
-        ]
-    },
-    "62": {
-        "name": "Tree cover, broadleaved, deciduous, open (15-40%)",
-        "color": [
-            170,
-            200,
-            0,
-            255
-        ]
-    },
-    "70": {
-        "name": "Tree cover, needleleaved, evergreen, closed to open (>15%)",
-        "color": [
-            0,
-            60,
-            0,
-            255
-        ]
-    },
-    "71": {
-        "name": "Tree cover, needleleaved, evergreen, closed (>40%)",
-        "color": [
-            0,
-            60,
-            0,
-            255
-        ]
-    },
-    "72": {
-        "name": "Tree cover, needleleaved, evergreen, open (15-40%)",
-        "color": [
-            0,
-            80,
-            0,
-            255
-        ]
-    },
-    "80": {
-        "name": "Tree cover, needleleaved, deciduous, closed to open (>15%)",
-        "color": [
-            40,
-            80,
-            0,
-            255
-        ]
-    },
-    "81": {
-        "name": "Tree cover, needleleaved, deciduous, closed (>40%)",
-        "color": [
-            40,
-            80,
-            0,
-            255
-        ]
-    },
-    "82": {
-        "name": "Tree cover, needleleaved, deciduous, open (15-40%)",
-        "color": [
-            40,
-            100,
-            0,
-            255
-        ]
-    },
-    "90": {
-        "name": "Tree cover, mixed leaf type (broadleaved and needleleaved)",
-        "color": [
-            120,
-            130,
-            0,
-            255
-        ]
-    },
-    "100": {
-        "name": "Mosaic tree and shrub (>50%) / herbaceous cover (<50%)",
-        "color": [
-            140,
-            160,
-            0,
-            255
-        ]
-    },
-    "110": {
-        "name": "Mosaic herbaceous cover (>50%) / tree and shrub (<50%)",
-        "color": [
-            190,
-            150,
-            0,
-            255
-        ]
-    },
-    "120": {
-        "name": "Shrubland",
-        "color": [
-            150,
-            100,
-            0,
-            255
-        ]
-    },
-    "121": {
-        "name": "Evergreen shrubland",
-        "color": [
-            150,
-            100,
-            0,
-            255
-        ]
-    },
-    "122": {
-        "name": "Deciduous shrubland",
-        "color": [
-            150,
-            100,
-            0,
-            255
-        ]
-    },
-    "130": {
-        "name": "Grassland",
-        "color": [
-            255,
-            180,
-            50,
-            255
-        ]
-    },
-    "140": {
-        "name": "Lichens and mosses",
-        "color": [
-            255,
-            220,
-            210,
-            255
-        ]
-    },
-    "150": {
-        "name": "Sparse vegetation (tree, shrub, herbaceous cover) (<15%)",
-        "color": [
-            255,
-            235,
-            175,
-            255
-        ]
-    },
-    "151": {
-        "name": "Sparse tree (<15%)",
-        "color": [
-            255,
-            200,
-            100,
-            255
-        ]
-    },
-    "152": {
-        "name": "Sparse shrub (<15%)",
-        "color": [
-            255,
-            210,
-            120,
-            255
-        ]
-    },
-    "153": {
-        "name": "Sparse herbaceous cover (<15%)",
-        "color": [
-            255,
-            235,
-            175,
-            255
-        ]
-    },
-    "160": {
-        "name": "Tree cover, flooded, fresh or brackish water",
-        "color": [
-            0,
-            120,
-            90,
-            255
-        ]
-    },
-    "170": {
-        "name": "Tree cover, flooded, saline water",
-        "color": [
-            0,
-            150,
-            120,
-            255
-        ]
-    },
-    "180": {
-        "name": "Shrub or herbaceous cover, flooded, fresh/saline/brackish water",
-        "color": [
-            0,
-            220,
-            130,
-            255
-        ]
-    },
-    "190": {
-        "name": "Urban areas",
-        "color": [
-            195,
-            20,
-            0,
-            255
-        ]
-    },
-    "200": {
-        "name": "Bare areas",
-        "color": [
-            255,
-            245,
-            215,
-            255
-        ]
-    },
-    "210": {
-        "name": "Water bodies",
-        "color": [
-            0,
-            70,
-            200,
-            255
-        ]
-    },
-    "220": {
-        "name": "Permanent snow and ice",
-        "color": [
-            255,
-            255,
-            255,
-            255
-        ]
-    }
+  "0": {
+    "name": "No Data",
+    "color": [0, 0, 0, 255]
+  },
+  "10": {
+    "name": "Cropland, rainfed",
+    "color": [255, 255, 100, 255]
+  },
+  "11": {
+    "name": "Cropland, rainfed, herbaceous cover",
+    "color": [255, 255, 100, 255]
+  },
+  "12": {
+    "name": "Cropland, rainfed, tree or shrub cover",
+    "color": [255, 255, 0, 255]
+  },
+  "20": {
+    "name": "Cropland, irrigated or post-flooding",
+    "color": [170, 240, 240, 255]
+  },
+  "30": {
+    "name": "Mosaic cropland (>50%) / natural vegetation (tree, shrub, herbaceous cover) (<50%)",
+    "color": [220, 240, 100, 255]
+  },
+  "40": {
+    "name": "Mosaic natural vegetation (tree, shrub, herbaceous cover) (>50%) / cropland (<50%)",
+    "color": [200, 200, 100, 255]
+  },
+  "50": {
+    "name": "Tree cover, broadleaved, evergreen, closed to open (>15%)",
+    "color": [0, 100, 0, 255]
+  },
+  "60": {
+    "name": "Tree cover, broadleaved, deciduous, closed to open (>15%)",
+    "color": [0, 160, 0, 255]
+  },
+  "61": {
+    "name": "Tree cover, broadleaved, deciduous, closed (>40%)",
+    "color": [0, 160, 0, 255]
+  },
+  "62": {
+    "name": "Tree cover, broadleaved, deciduous, open (15-40%)",
+    "color": [170, 200, 0, 255]
+  },
+  "70": {
+    "name": "Tree cover, needleleaved, evergreen, closed to open (>15%)",
+    "color": [0, 60, 0, 255]
+  },
+  "71": {
+    "name": "Tree cover, needleleaved, evergreen, closed (>40%)",
+    "color": [0, 60, 0, 255]
+  },
+  "72": {
+    "name": "Tree cover, needleleaved, evergreen, open (15-40%)",
+    "color": [0, 80, 0, 255]
+  },
+  "80": {
+    "name": "Tree cover, needleleaved, deciduous, closed to open (>15%)",
+    "color": [40, 80, 0, 255]
+  },
+  "81": {
+    "name": "Tree cover, needleleaved, deciduous, closed (>40%)",
+    "color": [40, 80, 0, 255]
+  },
+  "82": {
+    "name": "Tree cover, needleleaved, deciduous, open (15-40%)",
+    "color": [40, 100, 0, 255]
+  },
+  "90": {
+    "name": "Tree cover, mixed leaf type (broadleaved and needleleaved)",
+    "color": [120, 130, 0, 255]
+  },
+  "100": {
+    "name": "Mosaic tree and shrub (>50%) / herbaceous cover (<50%)",
+    "color": [140, 160, 0, 255]
+  },
+  "110": {
+    "name": "Mosaic herbaceous cover (>50%) / tree and shrub (<50%)",
+    "color": [190, 150, 0, 255]
+  },
+  "120": {
+    "name": "Shrubland",
+    "color": [150, 100, 0, 255]
+  },
+  "121": {
+    "name": "Evergreen shrubland",
+    "color": [150, 100, 0, 255]
+  },
+  "122": {
+    "name": "Deciduous shrubland",
+    "color": [150, 100, 0, 255]
+  },
+  "130": {
+    "name": "Grassland",
+    "color": [255, 180, 50, 255]
+  },
+  "140": {
+    "name": "Lichens and mosses",
+    "color": [255, 220, 210, 255]
+  },
+  "150": {
+    "name": "Sparse vegetation (tree, shrub, herbaceous cover) (<15%)",
+    "color": [255, 235, 175, 255]
+  },
+  "151": {
+    "name": "Sparse tree (<15%)",
+    "color": [255, 200, 100, 255]
+  },
+  "152": {
+    "name": "Sparse shrub (<15%)",
+    "color": [255, 210, 120, 255]
+  },
+  "153": {
+    "name": "Sparse herbaceous cover (<15%)",
+    "color": [255, 235, 175, 255]
+  },
+  "160": {
+    "name": "Tree cover, flooded, fresh or brackish water",
+    "color": [0, 120, 90, 255]
+  },
+  "170": {
+    "name": "Tree cover, flooded, saline water",
+    "color": [0, 150, 120, 255]
+  },
+  "180": {
+    "name": "Shrub or herbaceous cover, flooded, fresh/saline/brackish water",
+    "color": [0, 220, 130, 255]
+  },
+  "190": {
+    "name": "Urban areas",
+    "color": [195, 20, 0, 255]
+  },
+  "200": {
+    "name": "Bare areas",
+    "color": [255, 245, 215, 255]
+  },
+  "210": {
+    "name": "Water bodies",
+    "color": [0, 70, 200, 255]
+  },
+  "220": {
+    "name": "Permanent snow and ice",
+    "color": [255, 255, 255, 255]
+  }
 }

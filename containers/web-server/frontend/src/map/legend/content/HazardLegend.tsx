@@ -7,15 +7,29 @@ import { HAZARDS_METADATA, HAZARD_COLOR_MAPS, HazardType } from '@/config/hazard
 
 import { RasterLegend } from '../RasterLegend';
 
-export const HazardLegend: FC<{ viewLayer: ViewLayer<{ hazardType: HazardType }> }> = ({ viewLayer }) => {
+export const HazardLegend: FC<{ viewLayer: ViewLayer<{ hazardType: HazardType }> }> = ({
+  viewLayer,
+}) => {
   const {
     params: { hazardType },
   } = viewLayer;
 
-  let { label, formatValue, labelAbbreviations = {}, legendAnnotation } = HAZARDS_METADATA[hazardType];
+  let {
+    label,
+    formatValue,
+    labelAbbreviations = {},
+    legendAnnotation,
+  } = HAZARDS_METADATA[hazardType];
   const colorMap = HAZARD_COLOR_MAPS[hazardType];
 
   label = formatAbbreviations(label, labelAbbreviations);
 
-  return <RasterLegend label={label} description={legendAnnotation} colorMap={colorMap} getValueLabel={formatValue} />;
+  return (
+    <RasterLegend
+      label={label}
+      description={legendAnnotation}
+      colorMap={colorMap}
+      getValueLabel={formatValue}
+    />
+  );
 };

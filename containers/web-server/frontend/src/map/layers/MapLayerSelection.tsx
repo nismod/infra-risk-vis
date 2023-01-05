@@ -1,5 +1,13 @@
 import { Layers as LayersIcon } from '@mui/icons-material';
-import { Box, Button, Checkbox, FormControlLabel, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Paper,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material';
 import { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
@@ -55,7 +63,13 @@ export const MapLayerSelection = () => {
         <Paper id="map-layers-popover" style={{ overflow: 'hidden', borderTopLeftRadius: 0 }}>
           <Box width={220}>
             <Box px={2} py="6px" height={37} display="flex" borderBottom="1px solid #ddd">
-              <ToggleButtonGroup exclusive color="primary" value={background} onChange={handleBackground} fullWidth>
+              <ToggleButtonGroup
+                exclusive
+                color="primary"
+                value={background}
+                onChange={handleBackground}
+                fullWidth
+              >
                 <ToggleButton value="light">Map</ToggleButton>
                 <ToggleButton value="satellite">Satellite</ToggleButton>
               </ToggleButtonGroup>
@@ -64,7 +78,12 @@ export const MapLayerSelection = () => {
               <Box>
                 <FormControlLabel
                   label="Show labels"
-                  control={<Checkbox checked={showLabels} onChange={(e, checked) => setShowLabels(checked)} />}
+                  control={
+                    <Checkbox
+                      checked={showLabels}
+                      onChange={(e, checked) => setShowLabels(checked)}
+                    />
+                  }
                 />
               </Box>
             </Box>

@@ -48,7 +48,10 @@ const hdiColorLookup: Record<HdiVariableType, ColorSpec> = {
 
 const hdiRegionLabelLookup = toLabelLookup(HDI_REGION_LEVEL_LABELS);
 
-export function humanDevelopmentLayer(regionLevel: HdiRegionLevel, variable: HdiVariableType): ViewLayer {
+export function humanDevelopmentLayer(
+  regionLevel: HdiRegionLevel,
+  variable: HdiVariableType,
+): ViewLayer {
   const fieldSpec: FieldSpec = {
     fieldGroup: 'properties',
     field: variable,

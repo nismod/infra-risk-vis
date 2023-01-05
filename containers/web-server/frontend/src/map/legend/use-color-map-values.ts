@@ -31,6 +31,9 @@ const colorMapValuesState = selectorFamily({
     },
 });
 
-export function useRasterColorMapValues(colorScheme: string, stretchRange: [number, number]): ColorValue[] {
+export function useRasterColorMapValues(
+  colorScheme: string,
+  stretchRange: [number, number],
+): ColorValue[] {
   return useRecoilValue(colorMapValuesState({ scheme: colorScheme, range: stretchRange }));
 }

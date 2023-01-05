@@ -20,7 +20,8 @@ export const featureState = atom<FeatureOut>({
 
 export const hazardDataParamsState = selector({
   key: 'DamagesSection/hazardDataParams',
-  get: ({ get }) => get(waitForAll(_.mapValues(HAZARD_DOMAINS_CONFIG, (cfg, hazard) => paramsConfigState(hazard)))),
+  get: ({ get }) =>
+    get(waitForAll(_.mapValues(HAZARD_DOMAINS_CONFIG, (cfg, hazard) => paramsConfigState(hazard)))),
 });
 
 export const DamagesSection = ({ fd }) => {
@@ -44,7 +45,11 @@ export const QUIRKY_FIELDS_MAPPING = {
   },
 };
 
-export function orderDamages<K, T extends K>(damages: T[], ordering: K[], getKeyFn: (obj: K) => string) {
+export function orderDamages<K, T extends K>(
+  damages: T[],
+  ordering: K[],
+  getKeyFn: (obj: K) => string,
+) {
   const lookup = _.keyBy(damages, 'key');
 
   return ordering

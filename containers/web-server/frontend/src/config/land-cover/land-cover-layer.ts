@@ -15,7 +15,9 @@ const landCoverColorMap = _.map(landCoverLegend, ({ color: rgba }, code) => ({
   color: serializeColor(rgba as any),
 }));
 
-const landCoverLabels = Object.fromEntries(_.map(landCoverLegend, ({ name }, code) => [parseInt(code, 10), name]));
+const landCoverLabels = Object.fromEntries(
+  _.map(landCoverLegend, ({ name }, code) => [parseInt(code, 10), name]),
+);
 
 export function landCoverViewLayer(): ViewLayer {
   return {

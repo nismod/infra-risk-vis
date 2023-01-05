@@ -47,7 +47,11 @@ export const EnforceSingleChild = () => {
   return (
     <>
       {subPaths.map((sp) => (
-        <ChildVisibilityWatcher key={sp} childPath={getSubPath(path, sp)} onVisibility={(v) => handleChange(sp, v)} />
+        <ChildVisibilityWatcher
+          key={sp}
+          childPath={getSubPath(path, sp)}
+          onVisibility={(v) => handleChange(sp, v)}
+        />
       ))}
     </>
   );

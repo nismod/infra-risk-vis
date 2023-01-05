@@ -26,6 +26,9 @@ export const MapGLContextExtender: FC<MapGLContextExtenderProps> = ({ viewLimits
   const plainViewport = Object.fromEntries(Object.entries(baseContext.viewport ?? {}));
   const viewport: any = Object.assign(plainViewport, viewLimits);
 
-  const extendedContext = useMemo(() => ({ ..._.omit(baseContext, 'viewport'), viewport }), [baseContext, viewport]);
+  const extendedContext = useMemo(
+    () => ({ ..._.omit(baseContext, 'viewport'), viewport }),
+    [baseContext, viewport],
+  );
   return <MapContext.Provider value={extendedContext}>{children}</MapContext.Provider>;
 };

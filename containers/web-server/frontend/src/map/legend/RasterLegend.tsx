@@ -29,7 +29,12 @@ export const RasterLegend: FC<{
   description?: string;
   colorMap: RasterColorMap;
   getValueLabel: (x: any) => ReactNode | string;
-}> = ({ label, description, colorMap: { scheme, range, rangeTruncated = [false, false] }, getValueLabel }) => {
+}> = ({
+  label,
+  description,
+  colorMap: { scheme, range, rangeTruncated = [false, false] },
+  getValueLabel,
+}) => {
   const colorMapValues = useRasterColorMapValues(scheme, range);
 
   const colorMap = {

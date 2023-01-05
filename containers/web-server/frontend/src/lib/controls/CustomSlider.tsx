@@ -11,7 +11,10 @@ type CustomSliderProps<T> = {
   value: T;
   onChange: (newVal: T) => void;
   showMarkLabelsFor?: T[];
-} & Omit<ComponentProps<typeof Slider>, 'marks' | 'value' | 'onChange' | 'min' | 'max' | 'step' | 'scale'>;
+} & Omit<
+  ComponentProps<typeof Slider>,
+  'marks' | 'value' | 'onChange' | 'min' | 'max' | 'step' | 'scale'
+>;
 
 export const CustomNumberSlider: FC<CustomSliderProps<number>> = ({
   marks,

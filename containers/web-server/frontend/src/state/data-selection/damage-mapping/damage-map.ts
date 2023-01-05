@@ -11,7 +11,8 @@ import { viewState } from '@/state/view';
 
 export const showInfrastructureDamagesState = selector({
   key: 'showInfrastructureDamagesState',
-  get: ({ get }) => get(viewState) === 'risk' && get(sidebarVisibilityToggleState('risk/infrastructure')),
+  get: ({ get }) =>
+    get(viewState) === 'risk' && get(sidebarVisibilityToggleState('risk/infrastructure')),
 });
 
 export const damageSourceState = atom({
@@ -24,7 +25,10 @@ export const damageTypeState = atom({
   default: 'direct',
 });
 
-export const syncHazardsWithDamageSourceStateEffect: CurrentStateEffect<string> = ({ get, set }, damageSource) => {
+export const syncHazardsWithDamageSourceStateEffect: CurrentStateEffect<string> = (
+  { get, set },
+  damageSource,
+) => {
   _.forEach(HAZARD_DOMAINS_CONFIG, (groupConfig, group) => {
     set(sidebarVisibilityToggleState(`hazards/${group}`), group === damageSource);
   });
@@ -41,7 +45,8 @@ export const damageSourceStateEffect: StateEffect<string> = (iface, damageSource
     const state = get(paramsState(damageSource));
 
     const damageSourceReturnPeriodDomain = state['rp'].options;
-    const topReturnPeriod = damageSourceReturnPeriodDomain[damageSourceReturnPeriodDomain.length - 1];
+    const topReturnPeriod =
+      damageSourceReturnPeriodDomain[damageSourceReturnPeriodDomain.length - 1];
 
     // CAUTION: this won't resolve the dependencies between data params if any depend on the return period
     set(

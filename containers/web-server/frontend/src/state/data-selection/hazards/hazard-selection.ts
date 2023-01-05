@@ -30,6 +30,9 @@ interface TransactionGetterInterface {
   get<T>(a: RecoilValue<T>): T;
 }
 
-export function getHazardSelectionAggregate({ get }: TransactionGetterInterface, hazards: readonly string[]) {
+export function getHazardSelectionAggregate(
+  { get }: TransactionGetterInterface,
+  hazards: readonly string[],
+) {
   return _.fromPairs(hazards.map((group) => [group, get(hazardSelectionState(group))]));
 }

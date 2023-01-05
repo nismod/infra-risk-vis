@@ -82,7 +82,14 @@ export const MapView = () => {
           <DataMapTooltip>
             <TooltipContent />
           </DataMapTooltip>
-          <Box position="absolute" top={0} left={globalStyleVariables.controlSidebarWidth} ml={3} m={1} zIndex={1000}>
+          <Box
+            position="absolute"
+            top={0}
+            left={globalStyleVariables.controlSidebarWidth}
+            ml={3}
+            m={1}
+            zIndex={1000}
+          >
             <Box mb={1}>
               <MapSearch onSelectedResult={handleSelectedSearchResult} />
             </Box>

@@ -11,6 +11,8 @@ export const industryLayersState = selector<ViewLayer[]>({
   key: 'industryLayerState',
   get: ({ get }) =>
     get(sidebarPathVisibilityState('exposure/industry'))
-      ? truthyKeys(get(industrySelectionState)).map((industryType) => industryViewLayer(industryType))
+      ? truthyKeys(get(industrySelectionState)).map((industryType) =>
+          industryViewLayer(industryType),
+        )
       : [],
 });

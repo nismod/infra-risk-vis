@@ -1,4 +1,8 @@
-import { DataParamGroupConfig, inferDependenciesFromData, inferDomainsFromData } from '@/lib/controls/data-params';
+import {
+  DataParamGroupConfig,
+  inferDependenciesFromData,
+  inferDomainsFromData,
+} from '@/lib/controls/data-params';
 
 import adaptationOptions from './adaptation-options.json';
 

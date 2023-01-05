@@ -28,7 +28,12 @@ export const GCMControl = () => {
       </FormLabel>
       <DataParam group={group} id="gcm">
         {({ value, onChange, options }) => (
-          <Select variant="standard" value={value} onChange={(e) => onChange(e.target.value)} fullWidth>
+          <Select
+            variant="standard"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            fullWidth
+          >
             {options.map((epoch) => (
               <MenuItem key={epoch} value={epoch}>
                 {gcmLabel(epoch)}

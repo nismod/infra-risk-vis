@@ -5,7 +5,14 @@ import { makeOrderingCheck } from '@/lib/helpers';
 
 import { RasterColorMap } from '@/map/legend/RasterLegend';
 
-export const HAZARD_TYPES = ['fluvial', 'coastal', 'cyclone', 'extreme_heat', 'earthquake', 'drought'] as const;
+export const HAZARD_TYPES = [
+  'fluvial',
+  'coastal',
+  'cyclone',
+  'extreme_heat',
+  'earthquake',
+  'drought',
+] as const;
 
 export type HazardType = typeof HAZARD_TYPES[number];
 

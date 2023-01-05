@@ -48,7 +48,12 @@ type SimpleAssetDetailsProps = AssetDetailsProps & {
   detailsComponent: DetailsComponentType;
 };
 
-export const SimpleAssetDetails: FC<SimpleAssetDetailsProps> = ({ label, color, detailsComponent, feature }) => {
+export const SimpleAssetDetails: FC<SimpleAssetDetailsProps> = ({
+  label,
+  color,
+  detailsComponent,
+  feature,
+}) => {
   const DetailsComponent = detailsComponent;
 
   return (

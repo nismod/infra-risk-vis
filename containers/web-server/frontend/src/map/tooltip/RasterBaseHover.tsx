@@ -12,9 +12,13 @@ export type RGBAColor = [number, number, number, number];
 export function serializeColor([r, g, b, a]: [r: number, g: number, b: number, a: number]) {
   return `rgb(${r},${g},${b})`;
 }
-function useRasterColorMapLookup(colorMapValues: ColorValue[]): Record<string, { value: any; i: number }> {
+function useRasterColorMapLookup(
+  colorMapValues: ColorValue[],
+): Record<string, { value: any; i: number }> {
   return useMemo(
-    () => colorMapValues && Object.fromEntries(colorMapValues.map(({ value, color }, i) => [color, { value, i }])),
+    () =>
+      colorMapValues &&
+      Object.fromEntries(colorMapValues.map(({ value, color }, i) => [color, { value, i }])),
     [colorMapValues],
   );
 }
@@ -26,7 +30,12 @@ export interface RasterBaseHoverProps {
   formatValue: (x: any) => ReactNode | string;
 }
 
-export const RasterBaseHover: FC<RasterBaseHoverProps> = ({ colorMap, color, label, formatValue }) => {
+export const RasterBaseHover: FC<RasterBaseHoverProps> = ({
+  colorMap,
+  color,
+  label,
+  formatValue,
+}) => {
   const { colorMapValues, rangeTruncated = [false, false] } = colorMap;
   const rasterValueLookup = useRasterColorMapLookup(colorMapValues);
 
@@ -40,7 +49,9 @@ export const RasterBaseHover: FC<RasterBaseHoverProps> = ({ colorMap, color, lab
         value={
           <>
             <ColorBox color={colorString} />
-            {value == null ? formatValue(value) : formatRangeTruncation(formatValue(value), i, rangeTruncated)}
+            {value == null
+              ? formatValue(value)
+              : formatRangeTruncation(formatValue(value), i, rangeTruncated)}
           </>
         }
       />

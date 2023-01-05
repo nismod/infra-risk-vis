@@ -7,5 +7,6 @@ import { sidebarPathVisibilityState } from '@/sidebar/SidebarContent';
 
 export const populationLayerState = selector<ViewLayer>({
   key: 'populationLayerState',
-  get: ({ get }) => get(sidebarPathVisibilityState('exposure/population')) && jrcPopulationViewLayer(),
+  get: ({ get }) =>
+    get(sidebarPathVisibilityState('exposure/population')) && jrcPopulationViewLayer(),
 });

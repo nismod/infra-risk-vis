@@ -21,21 +21,23 @@ export const DamageTable = ({ damages }) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {damages.map(({ key, rcp, epoch, ead_mean, ead_amin, ead_amax, eael_mean, eael_amin, eael_amax }) => (
-          <TableRow key={key}>
-            <TableCell sx={{ pl: 0, pr: padding.px, py: padding.py }}>{rcp}</TableCell>
-            <TableCell sx={padding}>{epoch}</TableCell>
-            <TableCell sx={padding} align="right">
-              {numFormat(ead_mean)}
-              <br />({numRangeFormat(ead_amin, ead_amax)})
-            </TableCell>
-            <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
-              {eael_amax ? numFormat(eael_mean) : '-'}
-              <br />
-              {eael_amax ? `(${numRangeFormat(eael_amin, eael_amax)})` : null}
-            </TableCell>
-          </TableRow>
-        ))}
+        {damages.map(
+          ({ key, rcp, epoch, ead_mean, ead_amin, ead_amax, eael_mean, eael_amin, eael_amax }) => (
+            <TableRow key={key}>
+              <TableCell sx={{ pl: 0, pr: padding.px, py: padding.py }}>{rcp}</TableCell>
+              <TableCell sx={padding}>{epoch}</TableCell>
+              <TableCell sx={padding} align="right">
+                {numFormat(ead_mean)}
+                <br />({numRangeFormat(ead_amin, ead_amax)})
+              </TableCell>
+              <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
+                {eael_amax ? numFormat(eael_mean) : '-'}
+                <br />
+                {eael_amax ? `(${numRangeFormat(eael_amin, eael_amax)})` : null}
+              </TableCell>
+            </TableRow>
+          ),
+        )}
       </TableBody>
     </Table>
   </TableContainer>

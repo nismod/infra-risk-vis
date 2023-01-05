@@ -18,10 +18,12 @@ export const protectedAreasKeysState = selector<ProtectedAreaType[]>({
 
 export const protectedAreasPointLayerState = selector<ViewLayer[]>({
   key: 'protectedAreasPointLayerState',
-  get: ({ get }) => get(protectedAreasKeysState).map((type) => protectedAreaViewLayer('points', type)),
+  get: ({ get }) =>
+    get(protectedAreasKeysState).map((type) => protectedAreaViewLayer('points', type)),
 });
 
 export const protectedAreasPolygonLayerState = selector<ViewLayer[]>({
   key: 'protectedAreasPolygonLayerState',
-  get: ({ get }) => get(protectedAreasKeysState).map((type) => protectedAreaViewLayer('polygons', type)),
+  get: ({ get }) =>
+    get(protectedAreasKeysState).map((type) => protectedAreaViewLayer('polygons', type)),
 });

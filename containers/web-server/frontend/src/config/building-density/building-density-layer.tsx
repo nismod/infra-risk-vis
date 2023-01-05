@@ -10,7 +10,11 @@ import { RasterLegend } from '@/map/legend/RasterLegend';
 import { RasterHoverDescription } from '@/map/tooltip/RasterHoverDescription';
 
 import { SOURCES } from '../sources';
-import { BUILDING_DENSITY_COLORMAPS, BUILDING_DENSITY_TYPE_LABELS, BuildingDensityType } from './metadata';
+import {
+  BUILDING_DENSITY_COLORMAPS,
+  BUILDING_DENSITY_TYPE_LABELS,
+  BuildingDensityType,
+} from './metadata';
 
 const typeLabelLookup = toLabelLookup(BUILDING_DENSITY_TYPE_LABELS);
 

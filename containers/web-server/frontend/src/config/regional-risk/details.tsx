@@ -3,7 +3,11 @@ import { FC } from 'react';
 
 import { DataItem } from '@/lib/ui/data-display/DataItem';
 
-import { DetailHeader, DetailsComponentProps, IdSubheader } from '@/details/features/detail-components';
+import {
+  DetailHeader,
+  DetailsComponentProps,
+  IdSubheader,
+} from '@/details/features/detail-components';
 
 import { REGIONAL_EXPOSURE_VARIABLE_LABELS } from './metadata';
 

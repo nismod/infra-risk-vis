@@ -35,7 +35,9 @@ export interface ExpectedDamageCell {
   eael_amax: number;
 }
 function getExpectedDamageObject(d: ExpectedDamage): ExpectedDamageCell {
-  let { hazard, epoch, rcp } = _.mapValues(QUIRKY_FIELDS_MAPPING, (fn, key) => fn?.(d[key].toString()));
+  let { hazard, epoch, rcp } = _.mapValues(QUIRKY_FIELDS_MAPPING, (fn, key) =>
+    fn?.(d[key].toString()),
+  );
 
   return {
     key: getDamageKey({ hazard, rcp, epoch }),
@@ -101,7 +103,10 @@ export const ExpectedDamagesSection = () => {
   const damagesData = useRecoilValue(damagesDataState);
   const selectedData = useRecoilValue(selectedDamagesDataState);
 
-  const has_eael = useMemo(() => (selectedData ? selectedData.some((d) => d.eael_amax > 0) : null), [selectedData]);
+  const has_eael = useMemo(
+    () => (selectedData ? selectedData.some((d) => d.eael_amax > 0) : null),
+    [selectedData],
+  );
 
   const eadChartProps = {
     actions: false,

@@ -78,6 +78,7 @@
     "raster-init": "./tileserver/raster/ingest.sh ./tileserver/raster",
     "raster": "./tileserver/raster/serve.sh ./tileserver/raster",
     "lint": "eslint src/**/*.{js,jsx}",
+    "format": "prettier --write .",
     "generate-client": "openapi --input http://localhost:3000/api/openapi.json --output ./src/lib/api-client --client fetch --name ApiClient --useOptions"
   },
   "browserslist": [

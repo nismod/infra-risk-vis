@@ -1,6 +1,10 @@
 import { ValueLabel } from '@/lib/controls/params/value-label';
 
-export const NATURE_RASTER_TYPES = ['biodiversity_intactness', 'forest_landscape_integrity', 'organic_carbon'] as const;
+export const NATURE_RASTER_TYPES = [
+  'biodiversity_intactness',
+  'forest_landscape_integrity',
+  'organic_carbon',
+] as const;
 
 export type NatureRasterType = typeof NATURE_RASTER_TYPES[number];
 

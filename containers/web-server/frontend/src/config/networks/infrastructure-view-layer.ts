@@ -175,7 +175,10 @@ const INFRASTRUCTURE_LAYER_FUNCTIONS: Record<NetworkLayerType, AssetViewLayerCus
   */
 };
 
-export function infrastructureViewLayer(infrastructureType: NetworkLayerType, styleParams: StyleParams): ViewLayer {
+export function infrastructureViewLayer(
+  infrastructureType: NetworkLayerType,
+  styleParams: StyleParams,
+): ViewLayer {
   const customFn = INFRASTRUCTURE_LAYER_FUNCTIONS[infrastructureType];
   const { label, color } = NETWORKS_METADATA[infrastructureType];
 

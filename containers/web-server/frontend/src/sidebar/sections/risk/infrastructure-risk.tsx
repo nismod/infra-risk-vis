@@ -78,8 +78,14 @@ function labelHazard(x) {
 }
 
 const InitInfrastructureView = () => {
-  const updateExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => syncExposure(iface, 'infrastructure'), []);
-  const hideExposureTx = useRecoilTransaction_UNSTABLE((iface) => () => hideExposure(iface, 'infrastructure'), []);
+  const updateExposureTx = useRecoilTransaction_UNSTABLE(
+    (iface) => () => syncExposure(iface, 'infrastructure'),
+    [],
+  );
+  const hideExposureTx = useRecoilTransaction_UNSTABLE(
+    (iface) => () => hideExposure(iface, 'infrastructure'),
+    [],
+  );
   useEffect(() => {
     updateExposureTx();
 
@@ -95,7 +101,9 @@ export const InfrastructureRiskSection = () => {
   useLoadParamsConfig(infrastructureRiskConfig, 'infrastructure-risk');
   const damageSource = useRecoilValue(damageSourceState);
 
-  const [showHazard, setShowHazard] = useRecoilState(sidebarPathVisibilityState(`hazards/${damageSource}`));
+  const [showHazard, setShowHazard] = useRecoilState(
+    sidebarPathVisibilityState(`hazards/${damageSource}`),
+  );
 
   return (
     <>

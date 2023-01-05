@@ -1,7 +1,11 @@
 import _, { toNumber } from 'lodash';
 import { selectorFamily } from 'recoil';
 
-import { DataParamGroupConfig, inferDependenciesFromData, inferDomainsFromData } from '@/lib/controls/data-params';
+import {
+  DataParamGroupConfig,
+  inferDependenciesFromData,
+  inferDomainsFromData,
+} from '@/lib/controls/data-params';
 
 import { HAZARD_DOMAINS_CONFIG } from '@/config/hazards/domains';
 import { HazardType } from '@/config/hazards/metadata';
@@ -63,7 +67,9 @@ export const hazardDomainsConfigState = selectorFamily<DataParamGroupConfig, Haz
         .uniqWith(_.isEqual)
 
         // preprocess all fields according to config
-        .map((obj) => _.mapValues(obj, (value, key) => (preprocess[key] ? preprocess[key](value) : value)))
+        .map((obj) =>
+          _.mapValues(obj, (value, key) => (preprocess[key] ? preprocess[key](value) : value)),
+        )
         .value();
 
       const inferredDomains = inferDomainsFromData(uniqueDomains);
@@ -74,7 +80,11 @@ export const hazardDomainsConfigState = selectorFamily<DataParamGroupConfig, Haz
       return {
         paramDomains: sortedDomains,
         paramDefaults: defaults,
-        paramDependencies: inferDependenciesFromData(uniqueDomains, dependencies, HAZARD_DOMAIN_SORTING_FUNCTIONS),
+        paramDependencies: inferDependenciesFromData(
+          uniqueDomains,
+          dependencies,
+          HAZARD_DOMAIN_SORTING_FUNCTIONS,
+        ),
       };
     },
 });

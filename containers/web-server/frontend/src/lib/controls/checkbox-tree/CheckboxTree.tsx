@@ -1,4 +1,7 @@
-import { ChevronRight as ChevronRightIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
+import {
+  ChevronRight as ChevronRightIcon,
+  ExpandMore as ExpandMoreIcon,
+} from '@mui/icons-material';
 import { TreeView } from '@mui/lab';
 import produce from 'immer';
 import React, { useCallback } from 'react';
@@ -50,7 +53,8 @@ export function recalculateCheckboxStates<T>(
         if (nodeChildren) {
           const checked = nodeChildren.every((child) => state.checked[child.id]);
           const indeterminate =
-            !checked && nodeChildren.some((child) => state.checked[child.id] || state.indeterminate[child.id]);
+            !checked &&
+            nodeChildren.some((child) => state.checked[child.id] || state.indeterminate[child.id]);
           state.checked[node.id] = checked;
           state.indeterminate[node.id] = indeterminate;
         }

@@ -9,7 +9,9 @@ const InteractionGroupDetails = ({ group }) => {
   const selection = useRecoilValue(selectionState(group));
 
   return selection?.viewLayer.renderDetails ? (
-    <DetailsPanel interactionGroup={group}>{selection.viewLayer.renderDetails(selection)}</DetailsPanel>
+    <DetailsPanel interactionGroup={group}>
+      {selection.viewLayer.renderDetails(selection)}
+    </DetailsPanel>
   ) : null;
 };
 

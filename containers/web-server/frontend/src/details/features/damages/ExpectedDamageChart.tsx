@@ -6,7 +6,13 @@ import { unique } from '@/lib/helpers';
 
 import { ExpectedDamageCell } from './ExpectedDamagesSection';
 
-const makeSpec = (yearValues: string[], field_min: string, field: string, field_max: string, field_title: string) => ({
+const makeSpec = (
+  yearValues: string[],
+  field_min: string,
+  field: string,
+  field_max: string,
+  field_title: string,
+) => ({
   $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
   data: {
     name: 'table',
@@ -95,7 +101,14 @@ export const ExpectedDamageChart: FC<ExpectedDamageChartProps> = ({
   );
 
   const spec = useMemo(
-    () => makeSpec(unique(clonedData.table.map((d) => d.epoch)).sort(), field_min, field, field_max, field_title),
+    () =>
+      makeSpec(
+        unique(clonedData.table.map((d) => d.epoch)).sort(),
+        field_min,
+        field,
+        field_max,
+        field_title,
+      ),
     [clonedData, field_min, field, field_max, field_title],
   );
 

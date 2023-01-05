@@ -86,7 +86,10 @@ export const IrrigationDetails: FC<DetailsComponentProps> = ({ f }) => (
   <>
     <IdSubheader id={f.asset_id} />
     <List>
-      <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
+      <DataItem
+        label={`Rehabilitation cost (${f.cost_unit})`}
+        value={numRangeFormat(f.cost_min, f.cost_max)}
+      />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
@@ -99,7 +102,10 @@ export const WaterPipelineDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem label="Material" value={f.Material} />
       <DataItem label="Diameter (m)" value={f.Diameter} />
       <DataItem label="Length (m)" value={f.Length} />
-      <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
+      <DataItem
+        label={`Rehabilitation cost (${f.cost_unit})`}
+        value={numRangeFormat(f.cost_min, f.cost_max)}
+      />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
@@ -134,7 +140,10 @@ export const WaterSupplyNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem label="Tank" value={f.Tank_Type} />
       <DataItem label="Population served" value={f.asset_pop_new_2010} />
       <DataItem label="Capacity (mgd, millions of gallons/day)" value={f['capacity (mgd)']} />
-      <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
+      <DataItem
+        label={`Rehabilitation cost (${f.cost_unit})`}
+        value={numRangeFormat(f.cost_min, f.cost_max)}
+      />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>
@@ -148,7 +157,11 @@ export const RailEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem
         label="OpenStreetMap ID"
         value={
-          <a href={`https://www.openstreetmap.org/way/${f.osm_way_id}`} target="_blank" rel="noopener noreferrer">
+          <a
+            href={`https://www.openstreetmap.org/way/${f.osm_way_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {f.osm_way_id}
           </a>
         }
@@ -166,7 +179,11 @@ export const RailNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem
         label="OpenStreetMap ID"
         value={
-          <a href={`https://www.openstreetmap.org/node/${f.osm_node_id}`} target="_blank" rel="noopener noreferrer">
+          <a
+            href={`https://www.openstreetmap.org/node/${f.osm_node_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {f.osm_node_id}
           </a>
         }
@@ -188,7 +205,11 @@ export const RoadEdgeDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem
         label="OpenStreetMap ID"
         value={
-          <a href={`https://www.openstreetmap.org/way/${f.osm_way_id}`} target="_blank" rel="noopener noreferrer">
+          <a
+            href={`https://www.openstreetmap.org/way/${f.osm_way_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {f.osm_way_id}
           </a>
         }
@@ -238,7 +259,10 @@ export const WastewaterNodeDetails: FC<DetailsComponentProps> = ({ f }) => (
       <DataItem label="Treatment type" value={f.Type_of_Tr} />
       <DataItem label="Status" value={f.Status} />
       <DataItem label="Capacity (mgd, millions of gallons/day)" value={f['capacity (mgd)']} />
-      <DataItem label={`Rehabilitation cost (${f.cost_unit})`} value={numRangeFormat(f.cost_min, f.cost_max)} />
+      <DataItem
+        label={`Rehabilitation cost (${f.cost_unit})`}
+        value={numRangeFormat(f.cost_min, f.cost_max)}
+      />
       <DataItem label="Notes" value={f.comment} />
     </List>
   </>

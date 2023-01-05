@@ -10,7 +10,9 @@ import { GradientLegend } from './GradientLegend';
 import { VectorLegend } from './VectorLegend';
 
 const LegendLoading = () => {
-  return <GradientLegend label="Loading..." colorMap={null} range={[0, 1]} getValueLabel={() => ''} />;
+  return (
+    <GradientLegend label="Loading..." colorMap={null} range={[0, 1]} getValueLabel={() => ''} />
+  );
 };
 
 export const MapLegend: FC<{}> = () => {

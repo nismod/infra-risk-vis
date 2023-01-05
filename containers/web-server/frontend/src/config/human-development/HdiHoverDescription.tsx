@@ -19,7 +19,11 @@ export const HdiHoverDescription: FC<{
   return (
     <>
       <Typography variant="body2">{feature.properties[regionNameField]}</Typography>
-      <DataDescription viewLayer={viewLayer} feature={feature} colorMap={viewLayer.styleParams?.colorMap} />
+      <DataDescription
+        viewLayer={viewLayer}
+        feature={feature}
+        colorMap={viewLayer.styleParams?.colorMap}
+      />
     </>
   );
 };
