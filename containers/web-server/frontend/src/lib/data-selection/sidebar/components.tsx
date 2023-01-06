@@ -1,5 +1,5 @@
 import { ArrowRight } from '@mui/icons-material';
-import { Icon, Stack, Typography } from '@mui/material';
+import { Icon, Stack } from '@mui/material';
 import { styled } from '@mui/system';
 import { FC, Suspense, createContext, useContext, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
