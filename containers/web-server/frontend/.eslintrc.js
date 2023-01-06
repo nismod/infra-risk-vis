@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['react-app', 'eslint:recommended'],
+  extends: ['react-app', 'eslint:recommended', 'eslint-config-prettier'],
   rules: {
     'react/prop-types': 'off',
     'no-unused-vars': 'off',
