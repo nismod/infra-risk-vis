@@ -45,7 +45,7 @@ const makeSpec = (rpValues: number[], field_min: string, field: string, field_ma
           { field: field_min, type: 'quantitative', format: ',.3r', title: 'Lower bound' },
           { field: field_max, type: 'quantitative', format: ',.3r', title: 'Upper bound' },
           { field: 'rcp', title: 'RCP' },
-          { field: 'rp', title: 'Return Period' },
+          { field: 'rp', title: 'Return Period (years)' },
         ],
       },
     },
@@ -97,7 +97,7 @@ const makeSpec = (rpValues: number[], field_min: string, field: string, field_ma
         tooltip: [
           { field: field, type: 'quantitative', format: ',.3r', title: field_title },
           { field: 'rcp', title: 'RCP' },
-          { field: 'rp', title: 'Return Period' },
+          { field: 'rp', title: 'Return Period (years)' },
         ],
       },
     },

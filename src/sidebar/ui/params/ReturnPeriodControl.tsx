@@ -5,7 +5,7 @@ import { DataParam } from './DataParam';
 export const ReturnPeriodControl = ({ group, ...otherProps }) => {
   return (
     <FormControl fullWidth>
-      <FormLabel>Return Period</FormLabel>
+      <FormLabel>Return Period (years)</FormLabel>
       <DataParam group={group} id="returnPeriod">
         {({ value, onChange, options }) => (
           <CustomNumberSlider marks={options} value={value} onChange={onChange} {...otherProps} />
