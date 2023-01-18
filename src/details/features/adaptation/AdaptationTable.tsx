@@ -18,7 +18,7 @@ export const AdaptationTable = ({ options }) => {
               <abbr title="Benefit Cost Ratio: mean, (min–max)">BCR</abbr>
             </TableCell>
             <TableCell sx={padding} align="right">
-              Cost
+              Cost (US$)
             </TableCell>
             <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
               <abbr title="Avoided Risk in US dollars: mean, (min–max)">Avoided Risk (US$)</abbr>
