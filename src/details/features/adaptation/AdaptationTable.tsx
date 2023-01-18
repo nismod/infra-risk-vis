@@ -15,13 +15,13 @@ export const AdaptationTable = ({ options }) => {
               <abbr title="Representative Concentration Pathway (Climate Scenario)">RCP</abbr>
             </TableCell>
             <TableCell sx={padding} align="right">
-              <abbr title="Benefit Cost Ratio">BCR</abbr>
+              <abbr title="Benefit Cost Ratio: mean, (min–max)">BCR</abbr>
             </TableCell>
             <TableCell sx={padding} align="right">
               Cost
             </TableCell>
             <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
-              Avoided Risk (US$)
+              <abbr title="Avoided Risk in US dollars: mean, (min–max)">Avoided Risk (US$)</abbr>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -31,23 +31,25 @@ export const AdaptationTable = ({ options }) => {
               <TableCell sx={padding}>{d.rcp}</TableCell>
               <TableCell sx={padding} align="right">
                 {numFormat((d.avoided_ead_mean + d.avoided_eael_mean * numDays) / d.adaptation_cost, 2)}
-                <br />
+                <br />(
                 {numRangeFormat(
                   (d.avoided_ead_amin + d.avoided_eael_amin * numDays) / d.adaptation_cost,
                   (d.avoided_ead_amax + d.avoided_eael_amax * numDays) / d.adaptation_cost,
                   2,
                 )}
+                )
               </TableCell>
               <TableCell sx={padding} align="right">
                 {numFormat(d.adaptation_cost)}
               </TableCell>
               <TableCell sx={{ pr: 0, pl: padding.px, py: padding.py }} align="right">
                 {numFormat(d.avoided_ead_mean + d.avoided_eael_mean * numDays)}
-                <br />
+                <br />(
                 {numRangeFormat(
                   d.avoided_ead_amin + d.avoided_eael_amin * numDays,
                   d.avoided_ead_amax + d.avoided_eael_amax * numDays,
                 )}
+                )
               </TableCell>
             </TableRow>
           ))}
