@@ -50,7 +50,7 @@ export const FeatureAdaptationsTable = () => {
   return (
     <>
       <Box position="absolute" top={0} right={25} zIndex={1000}>
-        <IconButton onClick={handleZoomOutJamaica} title="Zoom out to whole island">
+        <IconButton onClick={handleZoomOutJamaica} title="Zoom out to whole area">
           <ZoomOut />
         </IconButton>
       </Box>
@@ -68,7 +68,14 @@ export const FeatureAdaptationsTable = () => {
           <ExpandableRow
             key={feature.string_id}
             expanded={feature === selectedFeature}
-            onExpandedChange={(expanded) => setSelectedFeature(expanded ? feature : null)}
+            onExpandedChange={(expanded) => {
+              if (expanded) {
+                handleZoomInFeature(feature);
+                setSelectedFeature(feature);
+              } else {
+                setSelectedFeature(null);
+              }
+            }}
             onMouseEnter={() => setHoveredFeature(feature)}
             onMouseLeave={() => setHoveredFeature(null)}
             expandableContent={
@@ -89,10 +96,6 @@ export const FeatureAdaptationsTable = () => {
                 size="small"
                 sx={{
                   padding: 0,
-                }}
-                onClick={(e) => {
-                  handleZoomInFeature(feature);
-                  e.stopPropagation();
                 }}
               >
                 <ZoomIn />
