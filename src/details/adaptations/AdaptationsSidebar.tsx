@@ -1,11 +1,18 @@
-import { Typography } from '@mui/material';
+import { Alert, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { getAssetDataFormats } from 'config/assets/data-formats';
 import { SidePanel } from 'details/SidePanel';
 import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+import _ from 'lodash';
 import { FC } from 'react';
+import { useRecoilValue } from 'recoil';
+import { adaptationFieldSpecState, adaptationLayerSpecState } from 'state/layers/networks';
 import { FeatureAdaptationsTable } from './FeatureAdaptationsTable';
 
 export const AdaptationsSidebar: FC<{}> = () => {
+  const { sector, subsector, assetType } = useRecoilValue(adaptationLayerSpecState);
+  const fieldSpec = useRecoilValue(adaptationFieldSpecState);
+  const { getDataLabel } = getAssetDataFormats(fieldSpec);
   return (
     <SidePanel height="80vh" pb={1} px={0} pt={0}>
       <ErrorBoundary message="There was a problem displaying these details.">
@@ -13,8 +20,13 @@ export const AdaptationsSidebar: FC<{}> = () => {
           <Typography variant="h6" gutterBottom>
             Adaptation Options
           </Typography>
+
+          <Alert severity="info">
+            This table shows all {_.startCase(subsector)} ({_.startCase(assetType)}) assets, sorted by{' '}
+            {getDataLabel(fieldSpec)} in descending order.
+          </Alert>
         </Box>
-        <Box height="73vh" position="relative">
+        <Box height="67vh" position="relative">
           <FeatureAdaptationsTable />
         </Box>
       </ErrorBoundary>
