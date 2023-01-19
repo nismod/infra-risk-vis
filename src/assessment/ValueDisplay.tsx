@@ -1,5 +1,6 @@
 import { Slider as BaseSlider } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { numRound } from 'lib/helpers';
 
 export const Slider = styled(BaseSlider)(({ theme }) => ({
   marginTop: '15px',
@@ -31,7 +32,7 @@ export const ValueDisplay = ({ value }: { value: number }) => (
         { value: 1, label: '+' },
       ]}
       track={false}
-      value={value}
+      value={numRound(value)}
       valueLabelDisplay="on"
     />
   </>

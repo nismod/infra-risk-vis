@@ -284,7 +284,7 @@ export const AssessmentView = () => {
             equally at 0.5.
           </p>
         </HelpNote>
-        <TableContainer component={Paper} sx={{ my: 2 }}>
+        <TableContainer component={Paper} sx={{ my: 2, overflow: 'hidden' }}>
           <Table>
             <IndicatorTableColGroup />
             <TableHead>

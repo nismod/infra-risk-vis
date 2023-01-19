@@ -40,6 +40,10 @@ export function numRangeFormat(n1: number, n2: number, maximumSignificantDigits:
   return `${numFormat(n1, maximumSignificantDigits)}–${numFormat(n2, maximumSignificantDigits)}`;
 }
 
+export function numRound(n: number) {
+  return Math.round((n + Number.EPSILON) * 100) / 100;
+}
+
 /**
  * Wrap value in parentheses, if value is not empty
  * @param x value to wrap

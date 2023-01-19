@@ -1,6 +1,6 @@
-import { TableRow, TableCell, Slider } from '@mui/material';
+import { TableRow, TableCell } from '@mui/material';
 import { AnnotatedValue } from 'config/assessment/effect';
-import { ValueDisplay } from './ValueDisplay';
+import { Slider, ValueDisplay } from './ValueDisplay';
 
 export const WeightRow = ({
   label,
@@ -17,10 +17,10 @@ export const WeightRow = ({
     <TableRow>
       <TableCell />
       <TableCell>{label}</TableCell>
-      <TableCell>
+      <TableCell sx={{ verticalAlign: 'top' }}>
         <ValueDisplay value={assessed_value.value} />
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ verticalAlign: 'top' }}>
         <Slider
           aria-label={label}
           value={weight.value}
@@ -34,6 +34,7 @@ export const WeightRow = ({
           ]}
           min={0}
           max={1}
+          valueLabelDisplay="on"
         />
         <input
           type="number"
@@ -47,7 +48,7 @@ export const WeightRow = ({
           }}
         />
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ verticalAlign: 'top' }}>
         <ValueDisplay value={assessed_value.value * weight.value} />
       </TableCell>
     </TableRow>

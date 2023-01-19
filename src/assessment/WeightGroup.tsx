@@ -1,16 +1,16 @@
-import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
-import { TableRow, TableCell, IconButton, Collapse, Table, TableBody } from "@mui/material";
-import { useState, Fragment } from "react";
-import { useRecoilState } from "recoil";
+import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
+import { TableRow, TableCell, IconButton, Collapse, Table, TableBody } from '@mui/material';
+import { useState, Fragment } from 'react';
+import { useRecoilState } from 'recoil';
 
-import { weightedSum } from "config/assessment/assessment";
-import { Effect } from "config/assessment/effect";
-import { INDICATOR_LABELS } from "config/assessment/indicators";
-import { indicatorWeights } from "state/assessment";
-import { IndicatorTableColGroup } from "./IndicatorTableColGroup";
-import { ValueDisplay } from "./ValueDisplay";
-import { WeightDisplay } from "./WeightDisplay";
-import { WeightRow } from "./WeightRow";
+import { weightedSum } from 'config/assessment/assessment';
+import { Effect } from 'config/assessment/effect';
+import { INDICATOR_LABELS } from 'config/assessment/indicators';
+import { indicatorWeights } from 'state/assessment';
+import { IndicatorTableColGroup } from './IndicatorTableColGroup';
+import { ValueDisplay } from './ValueDisplay';
+import { WeightDisplay } from './WeightDisplay';
+import { WeightRow } from './WeightRow';
 
 export const WeightGroup = ({ label, prefix, unweighted }: { label: string; prefix: string; unweighted: Effect }) => {
   const [open, setOpen] = useState(false);
@@ -31,13 +31,13 @@ export const WeightGroup = ({ label, prefix, unweighted }: { label: string; pref
           </IconButton>
         </TableCell>
         <TableCell>{label}</TableCell>
-        <TableCell>
+        <TableCell sx={{ verticalAlign: 'top' }}>
           <ValueDisplay value={assessed_value} />
         </TableCell>
-        <TableCell>
-          <WeightDisplay value={total_weight} label="Mean Weight"/>
+        <TableCell sx={{ verticalAlign: 'top' }}>
+          <WeightDisplay value={total_weight} label="Mean Weight" />
         </TableCell>
-        <TableCell>
+        <TableCell sx={{ verticalAlign: 'top' }}>
           <ValueDisplay value={weighted_value} />
         </TableCell>
       </TableRow>

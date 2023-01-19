@@ -81,7 +81,7 @@ export function Intervention({
                   label="Show all indicators"
                 />
               </FormGroup>
-              <TableContainer component={Paper}>
+              <TableContainer component={Paper} sx={{ overflow: 'hidden' }}>
                 <Table size="small">
                   <colgroup>
                     <col width="50%" />
