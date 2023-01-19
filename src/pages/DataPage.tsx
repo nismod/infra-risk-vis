@@ -10,25 +10,23 @@ export const DataPage = () => (
         severity="success"
         action={
           <Button color="inherit" size="small">
-            <a href="https://github.com/nismod/infra-risk-vis/issues">
-              REPORT
-            </a>
+            <a href="https://github.com/nismod/infra-risk-vis/issues">REPORT</a>
           </Button>
         }
       >
-        The tool has recently been released. Please tell us if anything is not
-        working as it should and suggest potential improvements.
+        The tool has recently been released. Please tell us if anything is not working as it should and suggest
+        potential improvements.
       </Alert>
     </p>
 
-    <p>The modelling and analysis presented here aim to support climate
-      adaptation decision-making by identifying spatial criticalities and risks
-      under current and future climate scenarios.</p>
+    <p>
+      The modelling and analysis presented here aim to support climate adaptation decision-making by identifying spatial
+      criticalities and risks under current and future climate scenarios.
+    </p>
 
     <p>The following table summarises the data and model results presented.</p>
 
-
-    <TableContainer component={Paper} sx={{my:2}}>
+    <TableContainer component={Paper} sx={{ my: 2 }}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -56,8 +54,8 @@ export const DataPage = () => (
             <TableCell>Major sea and inland ports, international airports</TableCell>
             <TableCell>Not assessed for damages</TableCell>
             <TableCell>
-              Included in the network as sources/sinks for transport flow mapping,
-              but not assessed for effects of service disruption due to flooding.
+              Included in the network as sources/sinks for transport flow mapping, but not assessed for effects of
+              service disruption due to flooding.
             </TableCell>
           </TableRow>
         </TableBody>
@@ -69,18 +67,19 @@ export const DataPage = () => (
     <p>The primary output metrics from the analysis are:</p>
 
     <ul>
-      <li>Expected Annual Damages (EAD) (direct physical risks) estimated as the
-        area under the direct damage vs exceedance probability curve </li>
-      <li>Expected Annual Economic Losses (EAEL) (indirect economic risks)
-        estimated as the area under the economic loss vs exceedance probability
-        curve </li>
+      <li>
+        Expected Annual Damages (EAD) (direct physical risks) estimated as the area under the direct damage vs
+        exceedance probability curve{' '}
+      </li>
+      <li>
+        Expected Annual Economic Losses (EAEL) (indirect economic risks) estimated as the area under the economic loss
+        vs exceedance probability curve{' '}
+      </li>
     </ul>
-
 
     <h2>Open-source code</h2>
 
-    <p>This tool to visualize the model outputs is developed and documented
-      here:</p>
+    <p>This tool to visualize the model outputs is developed and documented here:</p>
 
     <ul>
       <li>
@@ -90,8 +89,7 @@ export const DataPage = () => (
       </li>
     </ul>
 
-    <p>The analytics for Kenya, Tanzania, Uganda and Zambia are produced using
-    the code and models here:</p>
+    <p>The analytics for Kenya, Tanzania, Uganda and Zambia are produced using the code and models here:</p>
 
     <ul>
       <li>
@@ -122,18 +120,17 @@ export const DataPage = () => (
           <TableRow>
             <TableCell>River and coastal flooding</TableCell>
             <TableCell>
-              <a href="https://www.wri.org/data/aqueduct-floods-hazard-maps">
-                WRI Aqueduct Floods Hazard Maps
-              </a>
+              <a href="https://www.wri.org/data/aqueduct-floods-hazard-maps">WRI Aqueduct Floods Hazard Maps</a>
             </TableCell>
             <TableCell>1/20, 1/50, 1/100, 1/200, 1/500, and 1/1500</TableCell>
             <TableCell>Flood depths in meters on a ~1km grid</TableCell>
-            <TableCell>Current climate and future RCP&nbsp;4.5 and 8.5 emission scenarios in 2030, 2050 and 2080</TableCell>
+            <TableCell>
+              Current climate and future RCP&nbsp;4.5 and 8.5 emission scenarios in 2030, 2050 and 2080
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>
     </TableContainer>
-
 
     <h2>Infrastructure Network Data</h2>
 
@@ -174,8 +171,15 @@ export const DataPage = () => (
 
     <h2>Contextual Map Data</h2>
 
-    <p>Background map data is &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>.</p>
+    <p>
+      Background map data is &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors,
+      style &copy; <a href="https://carto.com/attributions">CARTO</a>.
+    </p>
 
-    <p>Satellite imagery background is derived from <a href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020).</p>
+    <p>
+      Satellite imagery background is derived from{' '}
+      <a href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</a> by{' '}
+      <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020).
+    </p>
   </article>
 );
