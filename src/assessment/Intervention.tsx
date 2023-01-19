@@ -99,7 +99,7 @@ export function Intervention({
                   </TableHead>
                   <TableBody>
                     {INDICATOR_LABELS.map((option) => {
-                      let { value, label } = option;
+                      let { value, label, description } = option;
                       const key = value; // confusingly, take "value" as key into effects objects
                       return revisedEffect &&
                         (showZeros ||
@@ -113,6 +113,7 @@ export function Intervention({
                           revisedIndicator={revisedEffect[key]}
                           strength={strength}
                           label={label}
+                          description={description}
                           setIndicator={(indicator) => setEffect(key, indicator)}
                         />
                       ) : null;

@@ -1,10 +1,13 @@
 import { TableCell, TableRow, TextareaAutosize, useTheme } from '@mui/material';
 import { AnnotatedValue } from 'config/assessment/effect';
+import { useState } from 'react';
+import { HelpTooltip } from './HelpTooltip';
 import { Slider, ValueDisplay } from './ValueDisplay';
 
 export const IndicatorRow = ({
   group,
   label,
+  description,
   strength,
   defaultIndicator,
   revisedIndicator,
@@ -12,16 +15,21 @@ export const IndicatorRow = ({
 }: {
   group: string;
   label: string;
+  description?: string;
   strength: number;
   defaultIndicator: AnnotatedValue;
   revisedIndicator: AnnotatedValue;
   setIndicator: (value: AnnotatedValue) => void;
 }) => {
   const theme = useTheme();
+
   return (
     <>
       <TableRow className={`group-${group}`}>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
+        <TableCell sx={{ verticalAlign: 'top', py: 2 }}>
+          {label}
+          {HelpTooltip(description)}
+        </TableCell>
         <TableCell sx={{ verticalAlign: 'top' }}>
           <ValueDisplay value={defaultIndicator.value} />
         </TableCell>
