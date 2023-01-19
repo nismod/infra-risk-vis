@@ -1,13 +1,14 @@
-import {
-  Slider, TableCell, TableRow,
-  TextareaAutosize,
-  useTheme
-} from '@mui/material';
+import { TableCell, TableRow, TextareaAutosize, useTheme } from '@mui/material';
 import { AnnotatedValue } from 'config/assessment/effect';
-import { ValueDisplay } from './ValueDisplay';
+import { Slider, ValueDisplay } from './ValueDisplay';
 
 export const IndicatorRow = ({
-  group, label, strength, defaultIndicator, revisedIndicator, setIndicator,
+  group,
+  label,
+  strength,
+  defaultIndicator,
+  revisedIndicator,
+  setIndicator,
 }: {
   group: string;
   label: string;
@@ -21,10 +22,10 @@ export const IndicatorRow = ({
     <>
       <TableRow className={`group-${group}`}>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{label}</TableCell>
-        <TableCell>
+        <TableCell sx={{ verticalAlign: 'top' }}>
           <ValueDisplay value={defaultIndicator.value} />
         </TableCell>
-        <TableCell>
+        <TableCell sx={{ verticalAlign: 'top' }}>
           <Slider
             aria-label={`${label} Revised`}
             value={revisedIndicator.value}
@@ -39,7 +40,9 @@ export const IndicatorRow = ({
               { value: 1, label: '+' },
             ]}
             min={-1}
-            max={1} />
+            max={1}
+            valueLabelDisplay="on"
+          />
           <input
             type="number"
             style={{ width: '150px' }}
@@ -49,9 +52,10 @@ export const IndicatorRow = ({
             max={1}
             onChange={(e) => {
               setIndicator({ ...revisedIndicator, value: Number.parseFloat(e.target.value) });
-            }} />
+            }}
+          />
         </TableCell>
-        <TableCell>
+        <TableCell sx={{ verticalAlign: 'top' }}>
           <ValueDisplay value={revisedIndicator.value * strength} />
         </TableCell>
       </TableRow>
@@ -71,7 +75,8 @@ export const IndicatorRow = ({
               value={revisedIndicator.notes}
               onChange={(e) => {
                 setIndicator({ ...revisedIndicator, notes: e.target.value });
-              }} />
+              }}
+            />
           </TableCell>
         </TableRow>
       ) : null}

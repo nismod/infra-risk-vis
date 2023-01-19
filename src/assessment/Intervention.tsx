@@ -76,7 +76,10 @@ export function Intervention({
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ m: 2 }}>
               <FormGroup>
-                <FormControlLabel control={<Switch checked={showZeros} onChange={handleZerosSwitch} />} label="Show zero-value indicators" />
+                <FormControlLabel
+                  control={<Switch checked={showZeros} onChange={handleZerosSwitch} />}
+                  label="Show all indicators"
+                />
               </FormGroup>
               <TableContainer component={Paper}>
                 <Table size="small">
@@ -97,18 +100,22 @@ export function Intervention({
                   <TableBody>
                     {INDICATOR_LABELS.map((option) => {
                       let { value, label } = option;
-                      const key = value;  // confusingly, take "value" as key into effects objects
-                      return (revisedEffect && (showZeros || (defaultEffect[key].value !== 0 || revisedEffect[key].value !== 0 || revisedEffect[key].notes))) ? 
-                        <IndicatorRow 
+                      const key = value; // confusingly, take "value" as key into effects objects
+                      return revisedEffect &&
+                        (showZeros ||
+                          defaultEffect[key].value !== 0 ||
+                          revisedEffect[key].value !== 0 ||
+                          revisedEffect[key].notes) ? (
+                        <IndicatorRow
                           key={key}
-                          group={key.split("_")[0]}
+                          group={key.split('_')[0]}
                           defaultIndicator={defaultEffect[key]}
                           revisedIndicator={revisedEffect[key]}
                           strength={strength}
                           label={label}
-                          setIndicator={(indicator)=> setEffect(key, indicator)}
-                        /> 
-                        : null;
+                          setIndicator={(indicator) => setEffect(key, indicator)}
+                        />
+                      ) : null;
                     })}
                   </TableBody>
                 </Table>

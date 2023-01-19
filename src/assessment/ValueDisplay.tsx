@@ -1,5 +1,23 @@
-import { Slider } from "@mui/material";
-import { CompactValue } from "./CompactValue";
+import { Slider as BaseSlider } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+export const Slider = styled(BaseSlider)(({ theme }) => ({
+  marginTop: '15px',
+  '& .MuiSlider-valueLabel': {
+    fontSize: 12,
+    fontWeight: 'normal',
+    top: 0,
+    backgroundColor: 'unset',
+    color: theme.palette.text.primary,
+    '&:before': {
+      display: 'none',
+    },
+    '& *': {
+      background: 'transparent',
+      color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+    },
+  },
+}));
 
 export const ValueDisplay = ({ value }: { value: number }) => (
   <>
@@ -14,7 +32,7 @@ export const ValueDisplay = ({ value }: { value: number }) => (
       ]}
       track={false}
       value={value}
+      valueLabelDisplay="on"
     />
-    <CompactValue label="Effect" value={value} />
   </>
 );
