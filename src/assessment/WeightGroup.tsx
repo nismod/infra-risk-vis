@@ -48,13 +48,14 @@ export const WeightGroup = ({ label, prefix, unweighted }: { label: string; pref
               <IndicatorTableColGroup />
               <TableBody>
                 {INDICATOR_LABELS.map((option) => {
-                  let { value, label } = option;
+                  let { value, label, description } = option;
                   const key = value;
                   if (key.includes(prefix)) {
                     return (
                       <WeightRow
                         key={key}
                         label={label}
+                        description={description}
                         assessed_value={unweighted[key]}
                         weight={weights[key]}
                         setWeight={(weight) => {

@@ -1,14 +1,17 @@
 import { TableRow, TableCell } from '@mui/material';
 import { AnnotatedValue } from 'config/assessment/effect';
+import { HelpTooltip } from './HelpTooltip';
 import { Slider, ValueDisplay } from './ValueDisplay';
 
 export const WeightRow = ({
   label,
+  description,
   assessed_value,
   weight,
   setWeight,
 }: {
   label: string;
+  description: string;
   assessed_value: AnnotatedValue;
   weight: AnnotatedValue;
   setWeight: (value: AnnotatedValue) => void;
@@ -16,7 +19,10 @@ export const WeightRow = ({
   return (
     <TableRow>
       <TableCell />
-      <TableCell>{label}</TableCell>
+      <TableCell sx={{ verticalAlign: 'top', py: 2 }}>
+        {label}
+        {HelpTooltip(description)}
+      </TableCell>
       <TableCell sx={{ verticalAlign: 'top' }}>
         <ValueDisplay value={assessed_value.value} />
       </TableCell>

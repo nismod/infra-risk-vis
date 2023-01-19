@@ -15,7 +15,7 @@ export const IndicatorRow = ({
 }: {
   group: string;
   label: string;
-  description?: string;
+  description: string;
   strength: number;
   defaultIndicator: AnnotatedValue;
   revisedIndicator: AnnotatedValue;
