@@ -41,9 +41,10 @@ export const AssessmentList = () => {
 
       <HelpNote>
         <p>Click "Start New" to start a sustainability assessment.</p>
+        <p>Assessments are stored in the current browser window and not shared or saved online.</p>
         <p>
-          Assessments are stored in the current browser window and not shared or saved online. To share an assessment,
-          save it as a file using the download icon. Load shared files using the import box below.
+          To share an assessment, save it as a file using the download icon. Load shared files using the import box
+          below.
         </p>
       </HelpNote>
 
