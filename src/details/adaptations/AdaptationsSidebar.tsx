@@ -1,5 +1,6 @@
-import { Alert, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { HelpNote } from 'assessment/HelpNote';
 import { getAssetDataFormats } from 'config/assets/data-formats';
 import { SidePanel } from 'details/SidePanel';
 import { ErrorBoundary } from 'lib/react/ErrorBoundary';
@@ -20,12 +21,11 @@ export const AdaptationsSidebar: FC<{}> = () => {
           <Typography variant="h6" gutterBottom>
             Adaptation Options
           </Typography>
-
-          <Alert severity="info">
-            This table shows all {_.startCase(subsector)} ({_.startCase(assetType)}) assets, sorted by{' '}
-            {getDataLabel(fieldSpec)} in descending order.
-          </Alert>
         </Box>
+        <HelpNote sx={{ mx: 1 }}>
+          This table shows all {_.startCase(subsector)} ({_.startCase(assetType)}) assets, sorted by{' '}
+          {getDataLabel(fieldSpec)} in descending order.
+        </HelpNote>
         <Box height="67vh" position="relative">
           <FeatureAdaptationsTable />
         </Box>
