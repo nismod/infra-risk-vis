@@ -68,7 +68,7 @@ export function AssessmentUpload() {
         reader.readAsText(file);
       });
     },
-    [assessments],
+    [assessments, setAssessments, setError],
   );
 
   const { getRootProps, getInputProps, isFocused, isDragAccept, isDragReject } = useDropzone({

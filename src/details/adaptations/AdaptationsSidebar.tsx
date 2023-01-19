@@ -11,7 +11,7 @@ import { adaptationFieldSpecState, adaptationLayerSpecState } from 'state/layers
 import { FeatureAdaptationsTable } from './FeatureAdaptationsTable';
 
 export const AdaptationsSidebar: FC<{}> = () => {
-  const { sector, subsector, assetType } = useRecoilValue(adaptationLayerSpecState);
+  const { subsector, assetType } = useRecoilValue(adaptationLayerSpecState);
   const fieldSpec = useRecoilValue(adaptationFieldSpecState);
   const { getDataLabel } = getAssetDataFormats(fieldSpec);
   return (

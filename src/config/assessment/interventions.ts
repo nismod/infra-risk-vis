@@ -1,4 +1,3 @@
-import { TreeNode } from 'lib/controls/checkbox-tree/tree-node';
 import { ValueLabel } from 'lib/controls/params/value-label';
 import _ from 'lodash';
 import { Effect, ZERO_EFFECT } from './effect';

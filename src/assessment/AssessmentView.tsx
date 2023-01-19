@@ -317,11 +317,7 @@ export const AssessmentView = () => {
           </Table>
         </TableContainer>
       </form>
-      <Summary
-        overall_assessed={assessed_value}
-        overall_weighted={weighted_value}
-        unweighted={currentIndicatorsUnweighted}
-      />
+      <Summary overall_weighted={weighted_value} unweighted={currentIndicatorsUnweighted} />
       <Stack direction="row" justifyContent="flex-end" alignItems="flex-start" spacing={2}>
         <Button
           variant="contained"

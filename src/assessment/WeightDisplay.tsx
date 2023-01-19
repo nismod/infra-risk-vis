@@ -1,8 +1,7 @@
 import { Slider } from './ValueDisplay';
 import { numRound } from 'lib/helpers';
 
-export const WeightDisplay = ({ value, label }: { value: number; label: string }) => {
-  label = label ?? 'Weight';
+export const WeightDisplay = ({ value }: { value: number }) => {
   return (
     <Slider
       disabled

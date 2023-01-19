@@ -1,5 +1,5 @@
-import { Typography } from "@mui/material";
-import { isNumeric, numFormat } from "lib/helpers";
+import { Typography } from '@mui/material';
+import { isNumeric, numFormat } from 'lib/helpers';
 
 export const CompactValue = ({ label, value, maximumSignificantDigits = 3 }) => {
   if (isNumeric(value)) {

@@ -4,15 +4,7 @@ import { useRecoilState } from 'recoil';
 import { indicatorWeights } from 'state/assessment';
 import { QualitativeText } from './QualitativeText';
 
-export const Summary = ({
-  unweighted,
-  overall_assessed,
-  overall_weighted,
-}: {
-  unweighted: Effect;
-  overall_assessed: Number;
-  overall_weighted: Number;
-}) => {
+export const Summary = ({ unweighted, overall_weighted }: { unweighted: Effect; overall_weighted: Number }) => {
   const [currentWeights, _setWeights] = useRecoilState(indicatorWeights);
 
   // Force our way around type-checking - recoil returns the expected Effect

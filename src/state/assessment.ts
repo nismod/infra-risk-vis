@@ -21,7 +21,7 @@ export const currentAssessment = atom<Assessment>({
 
 export const currentAssessmentInList = selector({
   key: 'currentAssessmentInList',
-  get: ({ get }) => {
+  get: () => {
     console.error('Intended for setting only');
     return undefined;
   },

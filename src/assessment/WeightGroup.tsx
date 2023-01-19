@@ -35,7 +35,7 @@ export const WeightGroup = ({ label, prefix, unweighted }: { label: string; pref
           <ValueDisplay value={assessed_value} />
         </TableCell>
         <TableCell sx={{ verticalAlign: 'top' }}>
-          <WeightDisplay value={total_weight} label="Mean Weight" />
+          <WeightDisplay value={total_weight} />
         </TableCell>
         <TableCell sx={{ verticalAlign: 'top' }}>
           <ValueDisplay value={weighted_value} />

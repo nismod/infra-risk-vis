@@ -1,6 +1,5 @@
 import { TableCell, TableRow, TextareaAutosize, useTheme } from '@mui/material';
 import { AnnotatedValue } from 'config/assessment/effect';
-import { useState } from 'react';
 import { HelpTooltip } from './HelpTooltip';
 import { Slider, ValueDisplay } from './ValueDisplay';
 
