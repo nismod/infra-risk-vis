@@ -45,24 +45,66 @@ export const NO_INTERVENTIONS: InterventionSelection = {
 };
 
 export const INTERVENTION_LABELS: ValueLabel<InterventionKey>[] = [
-  { value: 'infra_construction', label: 'Infrastructure construction' },
-  { value: 'infra_maintenance', label: 'Infrastructure maintenance' },
-  { value: 'demand_goods', label: 'Demand for goods' },
-  { value: 'demand_travel', label: 'Demand for travel' },
-  { value: 'logistics_planning', label: 'Logistics planning' },
-  { value: 'system_eff', label: 'System efficiencies' },
-  { value: 'fleet_eff', label: 'Fleet vehicle efficiencies' },
-  { value: 'fleet_elec', label: 'Fleet electrification' },
-  { value: 'road_user_charging', label: 'Road user charging' },
-  { value: 'custom', label: 'Custom intervention' },
+  {
+    value: 'infra_construction',
+    label: 'Infrastructure construction',
+    description:
+      'The construction of new road and rail routes, or expansion of existing routes. This is likely to have an impact on route choice at a local level.',
+  },
+  {
+    value: 'infra_maintenance',
+    label: 'Infrastructure maintenance',
+    description:
+      'Improvements made to existing roads and rail. These are unlikely to have any major effect on transport volumes, but there will be slight capacity improvements.',
+  },
+  {
+    value: 'demand_goods',
+    label: 'Demand for goods',
+    description:
+      'Behaviour change that results in a reduced or increased demand for goods. This could change the requirement for long-distance freight services, with the potential to impact the whole LDT network usage.',
+  },
+  {
+    value: 'demand_travel',
+    label: 'Demand for travel',
+    description:
+      'Any societal behaviour change which affects demand for long-distance travel. This could have a wide-ranging impact on LDT passenger services.',
+  },
+  {
+    value: 'logistics_planning',
+    label: 'Logistics planning',
+    description:
+      'Co-operation between logistics providers and national authorities. The impact that better logistics planning can have on the overall use of the long-distance transport networks is relatively small, but better planning should result in more efficient loading and freight management, together with an easing of restriction at border crossings.',
+  },
+  {
+    value: 'system_eff',
+    label: 'System efficiencies',
+    description:
+      'Technological improvements to vehicle routing and increased use of web-based mobility tools. This will benefit both freight and passenger vehicles on the long-distance transport network, and may help to reduce transport volumes and reduce congestion.',
+  },
+  {
+    value: 'fleet_eff',
+    label: 'Fleet vehicle efficiencies',
+    description:
+      'Improvements to engine efficiencies and use of lighter materials during manufacture. This is likely to reduce emissions and energy consumption very slightly.',
+  },
+  {
+    value: 'fleet_elec',
+    label: 'Fleet electrification',
+    description:
+      'An indication of the number of electric vehicles, particularly freight vehicles using LDT networks. This is likely to be very small in the future, but plans to introduce legislation to phase out fossil-fuelled vehicles are starting to be developed in some sub-Saharan countries.',
+  },
+  {
+    value: 'road_user_charging',
+    label: 'Road user charging',
+    description:
+      'The implementation of long-distance road user charging schemes through tolling interurban toll roads. This could have a significant impact on the long-distance freight movements of specific routes, but as freight companies can pass on any extra costs to customers, there are only likely to be relatively minor impacts on emissions, energy consumption and freight transport volumes.',
+  },
+  {
+    value: 'custom',
+    label: 'Custom intervention',
+    description: 'An intervention that can be configured to represent any other change to the transport system.',
+  },
 ];
-
-interface InterventionLabel {
-  label: string;
-}
-
-export const INTERVENTION_HIERARCHY: TreeNode<InterventionLabel>[] = _.map(
-  INTERVENTION_LABELS, ({value, label}: {value: string, label: string}) => ({id: value, label}));
 
 export const INTERVENTION_EFFECTS: Record<InterventionKey, Effect> = {
   infra_construction: {

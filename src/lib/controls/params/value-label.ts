@@ -1,6 +1,7 @@
 export interface ValueLabel<K extends string | number = string> {
   value: K;
   label: string;
+  description?: string;
 }
 
 export function isValueLabel(value): value is ValueLabel {

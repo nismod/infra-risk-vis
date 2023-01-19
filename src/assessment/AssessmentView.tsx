@@ -11,31 +11,22 @@ import {
   TextField,
   Button,
   Stack,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { unweightedIndicatorSum, weightedSum } from 'config/assessment/assessment';
 import { Effect } from 'config/assessment/effect';
-import {
-  InterventionSelection,
-  INTERVENTION_HIERARCHY,
-  INTERVENTION_LABELS,
-  NO_INTERVENTIONS,
-} from 'config/assessment/interventions';
+import { InterventionSelection, INTERVENTION_LABELS } from 'config/assessment/interventions';
 import { SCENARIO_LABELS } from 'config/assessment/scenarios';
-import {
-  currentAssessment,
-  interventionTreeConfig,
-  interventionSelection,
-  currentAssessmentInList,
-} from 'state/assessment';
+import { currentAssessment, interventionSelection, currentAssessmentInList } from 'state/assessment';
 
 import { IndicatorTableColGroup } from './IndicatorTableColGroup';
 import { Summary } from './Summary';
 import { ValueDisplay } from './ValueDisplay';
 import { Intervention } from './Intervention';
 import { WeightGroup } from './WeightGroup';
-import { CheckboxTree } from 'lib/controls/checkbox-tree/CheckboxTree';
 import { HelpNote } from './HelpNote';
 
 export const AssessmentView = () => {
@@ -92,25 +83,51 @@ export const AssessmentView = () => {
         <h3>Select Interventions</h3>
         <HelpNote>
           <p>
-            Select an intervention for assessment. This will provide a template with some preset values for the
-            sustainability indicators.
+            Select one or more interventions for assessment. This will provide a template with some preset values for
+            the sustainability indicators.
           </p>
           <p>If none of the below are relevant, select "Custom intervention".</p>
         </HelpNote>
-        <CheckboxTree
-          nodes={INTERVENTION_HIERARCHY}
-          config={interventionTreeConfig}
-          getLabel={(node) => node.label}
-          checkboxState={{ checked: currentInterventions, indeterminate: NO_INTERVENTIONS }}
-          onCheckboxState={(checkboxState) => {
-            // @ts-ignore: checkboxState.checked can coerce to InterventionSelection
-            const nextInterventions: InterventionSelection = checkboxState.checked;
-            setInterventionSelection(nextInterventions);
-          }}
-          expanded={[]}
-          onExpanded={() => {}}
-          disableCheck={false}
-        />
+        <TableContainer component={Paper} sx={{ my: 2, px: 1 }}>
+          <Table>
+            <colgroup>
+              <col width="30%" />
+              <col width="70%" />
+            </colgroup>
+            <TableHead>
+              <TableRow>
+                <TableCell>Intervention</TableCell>
+                <TableCell>Description</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {INTERVENTION_LABELS.map((intervention) => (
+                <TableRow>
+                  <TableCell>
+                    <FormControlLabel
+                      key={intervention.value}
+                      label={intervention.label}
+                      style={{ width: '100%' }}
+                      control={
+                        <Checkbox
+                          checked={currentInterventions[intervention.value]}
+                          onChange={(event) => {
+                            const nextInterventions: InterventionSelection = { ...currentInterventions };
+                            nextInterventions[intervention.value] = event.currentTarget.checked;
+                            setInterventionSelection(nextInterventions);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          style={{ pointerEvents: 'auto' }}
+                        />
+                      }
+                    ></FormControlLabel>
+                  </TableCell>
+                  <TableCell>{intervention.description}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <h3>Intervention Options</h3>
         <HelpNote>
           <p>The table below shows the interventions that have been selected for evaluation.</p>

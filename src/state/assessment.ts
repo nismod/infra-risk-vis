@@ -1,11 +1,8 @@
 import _ from 'lodash';
 import { atom, selector } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { NIL as NIL_UUID } from 'uuid';
 
 import { Assessment } from 'config/assessment/assessment';
-import { INTERVENTION_HIERARCHY } from 'config/assessment/interventions';
-import { buildTreeConfig } from 'lib/controls/checkbox-tree/CheckboxTree';
 
 const { persistAtom } = recoilPersist({
   key: 'infrastructure-resilience',
@@ -74,5 +71,3 @@ export const interventionSelection = selector({
     });
   },
 });
-
-export const interventionTreeConfig = buildTreeConfig(INTERVENTION_HIERARCHY);
