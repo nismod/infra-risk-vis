@@ -75,7 +75,7 @@ export function Intervention({
         <TableCell colSpan={3} sx={{ p: 0 }}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ m: 2 }}>
-              <FormGroup>
+              <FormGroup sx={{ my: 2 }}>
                 <FormControlLabel
                   control={<Switch checked={showZeros} onChange={handleZerosSwitch} />}
                   label="Show all indicators"
