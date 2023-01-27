@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC, Suspense } from 'react';
+import { FC } from 'react';
 
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 import { StateEffectRoot } from '@/lib/recoil/state-effects/StateEffectRoot';
@@ -8,14 +8,14 @@ import { useSyncRecoilState } from '@/lib/recoil/sync-state';
 import { InitData } from '@/InitData';
 import { DetailsContent } from '@/details/DetailsContent';
 import { MapView } from '@/map/MapView';
-import { SidebarContent } from '@/sidebar/SidebarContent';
+import { LayersSidebar } from '@/sidebar/LayersSidebar';
 import { viewState, viewStateEffect } from '@/state/view';
 import { globalStyleVariables } from '@/theme';
 
 const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   <Box
     position="absolute"
-    top={globalStyleVariables.navbarHeight + top}
+    top={top}
     bottom={bottom}
     left={left}
     right={right}
@@ -41,17 +41,9 @@ const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   </Box>
 );
 
-interface MapPageProps {
-  view: string;
-}
-
-export const MapPage: FC<MapPageProps> = ({ view }) => {
-  useSyncRecoilState(viewState, view);
-
+const MapPageDesktopLayout = () => {
   return (
-    <ErrorBoundary message="There was a problem displaying this page.">
-      <InitData />
-      <StateEffectRoot state={viewState} effect={viewStateEffect} />
+    <>
       <SidebarLayout
         top={0}
         left={0}
@@ -59,26 +51,10 @@ export const MapPage: FC<MapPageProps> = ({ view }) => {
         right={undefined}
         width={globalStyleVariables.controlSidebarWidth}
       >
-        <ErrorBoundary message="There was a problem displaying the sidebar.">
-          <SidebarContent />
-        </ErrorBoundary>
+        <LayersSidebar />
       </SidebarLayout>
-      <Box
-        position="absolute"
-        overflow="clip"
-        top={globalStyleVariables.navbarHeight}
-        left={0}
-        right={0}
-        bottom={0}
-      >
-        <ErrorBoundary
-          message="There was a problem displaying the map."
-          justifyErrorContent="center"
-        >
-          <Suspense fallback={null}>
-            <MapView />
-          </Suspense>
-        </ErrorBoundary>
+      <Box position="absolute" overflow="clip" top={0} left={0} right={0} bottom={0}>
+        <MapView />
       </Box>
       <SidebarLayout
         top={0}
@@ -89,6 +65,18 @@ export const MapPage: FC<MapPageProps> = ({ view }) => {
       >
         <DetailsContent />
       </SidebarLayout>
+    </>
+  );
+};
+
+export const MapPage: FC<{ view: string }> = ({ view }) => {
+  useSyncRecoilState(viewState, view);
+
+  return (
+    <ErrorBoundary message="There was a problem displaying this page.">
+      <InitData />
+      <StateEffectRoot state={viewState} effect={viewStateEffect} />
+      <MapPageDesktopLayout />
     </ErrorBoundary>
   );
 };

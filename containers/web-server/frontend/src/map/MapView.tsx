@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useCallback, useEffect } from 'react';
+import { Suspense, useCallback, useEffect } from 'react';
 import { AttributionControl, NavigationControl, ScaleControl } from 'react-map-gl';
 import { atom, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 
@@ -10,6 +10,7 @@ import { MapGLContextExtender } from '@/lib/data-map/MapGLContextExtender';
 import { MapBoundsFitter } from '@/lib/map/MapBoundsFitter';
 import { MapSearch } from '@/lib/map/place-search/MapSearch';
 import { PlaceSearchResult } from '@/lib/map/place-search/use-place-search';
+import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 
 import { interactionGroupsState } from '@/state/layers/interaction-groups';
 import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
@@ -41,7 +42,7 @@ const INITIAL_VIEW_STATE = {
   ...VIEW_LIMITS,
 };
 
-export const MapView = () => {
+const MapViewContent = () => {
   const background = useRecoilValue(backgroundState);
   const viewLayers = useRecoilValue(viewLayersFlatState);
   const saveViewLayers = useSaveViewLayers();
@@ -141,3 +142,11 @@ export const MapView = () => {
     </DataMap>
   );
 };
+
+export const MapView = () => (
+  <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">
+    <Suspense fallback={null}>
+      <MapViewContent />
+    </Suspense>
+  </ErrorBoundary>
+);

@@ -9,26 +9,6 @@
   overflow-x: hidden;
 }
 
-.nav-brand {
-  margin-right: 12px;
-}
-
-.nav-link {
-  padding: 0 3px 1px 3px;
-  margin: 0 9px -18px 9px;
-  color: inherit;
-  border-bottom: 6px solid transparent;
-  text-decoration: none;
-}
-
-.nav-link.in-drawer {
-  padding: 0.4em 1em;
-  margin: 0;
-  display: block;
-  width: 100%;
-  border: 0;
-}
-
 /**
  * Page layout
  */
