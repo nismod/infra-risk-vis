@@ -1,0 +1,10 @@
+{
+  "/vector": {
+    "target": "https://global.infrastructureresilience.org",
+    "changeOrigin": true
+  },
+  "/api": {
+    "target": "https://global.infrastructureresilience.org",
+    "changeOrigin": true
+  }
+}

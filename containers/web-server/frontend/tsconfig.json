@@ -1,7 +1,6 @@
 {
-  "extends": "./tsconfig-typings.json",
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,7 +17,11 @@
     "jsx": "react-jsx",
     "noImplicitAny": false,
     "downlevelIteration": true,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.vite.json" }]
 }

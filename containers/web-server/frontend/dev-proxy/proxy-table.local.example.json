@@ -1,0 +1,16 @@
+{
+  "/vector": {
+    "target": "http://localhost:8080",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/vector": "/"
+    }
+  },
+  "/api": {
+    "target": "http://localhost:8888",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": "/"
+    }
+  }
+}

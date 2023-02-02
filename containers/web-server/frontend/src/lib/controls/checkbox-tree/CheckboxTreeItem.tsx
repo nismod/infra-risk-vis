@@ -39,7 +39,7 @@ export function CheckboxTreeItem<T>({
     <TreeItem
       key={root.id}
       nodeId={root.id}
-      onClick={toggleOnLeafClick && isLeaf && handleLeafClick}
+      onClick={toggleOnLeafClick && isLeaf ? handleLeafClick : undefined}
       label={
         <FormControlLabel
           key={root.id}

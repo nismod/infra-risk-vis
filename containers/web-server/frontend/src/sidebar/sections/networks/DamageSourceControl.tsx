@@ -1,12 +1,4 @@
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Select,
-} from '@mui/material';
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { useRecoilState } from 'recoil';
 
 import { DataGroup } from '@/lib/data-selection/DataGroup';
