@@ -244,6 +244,37 @@ To stop a foregrounded compose stack, issue SIGTERM with Ctrl-C. If services
 haven't stopped in 10 seconds they will be brutally terminated. To bring a
 daemonised stack down, use `docker compose down`.
 
+## Example service update
+
+Locally, build the frontend, push to the container registry:
+
+```bash
+# Edit docker-compose.yaml image version, in this example line 28:
+#     image: ghcr.io/nismod/gri-web-server:0.16
+
+# Build
+docker compose -f docker-compose-prod.yaml build web-server
+
+# Log in to the container registry
+# see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+
+# Push
+docker push ghcr.io/nismod/gri-web-server:0.16
+```
+
+On remote, pull the image and reload service:
+
+```bash
+# Pull image
+docker pull ghcr.io/nismod/gri-web-server:0.16
+
+# Edit docker-compose.yaml image version (or sync up), in this example line 28:
+#     image: ghcr.io/nismod/gri-web-server:0.16
+
+# Restart service
+docker compose up -d web-server
+```
+
 ## Acknowledgements
 
 This tool has been developed through several projects.
