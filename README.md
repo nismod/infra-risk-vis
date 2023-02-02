@@ -308,9 +308,10 @@ This tool has been developed through several projects.
   the UK Foreign, Commonwealth & Development Office under the High Volume
   Transport Applied Research Programme, managed by DT Global.
 - current work on global-scale data and analysis continues to be led by
-  researchers in OPSIS, as part of the Global Resilience Index Initiative, in
-  collaboration with the Oxford Spatial Finance Initiative and Global Earthquake
-  Model Foundation. This work has been funded by the World Bank Group, Willis
-  Towers Watson Insurance for Development Forum, and the UK Natural Environment
-  Research Council (NERC) through the UK Centre for Greening Finance and
-  Investment.
+  researchers in OPSIS. In part this is in collaboration with the Global
+  Resilience Index Initiative, including the Oxford Spatial Finance Initiative
+  and Global Earthquake Model Foundation. This work has been funded by the World
+  Bank Group, Willis Towers Watson Insurance for Development Forum, the UK
+  Natural Environment Research Council (NERC) through the UK Centre for Greening
+  Finance and Investment, and UK Foreign, Commonwealth and Development Office
+  (FCDO) through the Climate Compatible Growth (CCG) programme.
