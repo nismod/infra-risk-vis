@@ -35,12 +35,9 @@ export const IntroPage = () => {
           <Grid item md={6}>
             <TextBox sx={{ mt: -2, py: 8 }}>
               <p>
-                The Global Systemic Risk Assessment Tool (G-SRAT) is the Data and Analytics Portal
-                for the{' '}
-                <a href="http://www.globalresilienceindex.org/">
-                  Global Resilience Index Initative (GRII)
-                </a>
-                .
+                The Global Systemic Risk Assessment Tool (G-SRAT) is a data and analytics portal
+                covering hazards, exposure, vulnerability and risk to infrastructure and people
+                around the world.
               </p>
               <p>
                 This tool aims to support climate adaptation decision-making by identifying spatial
@@ -64,15 +61,7 @@ export const IntroPage = () => {
                   {' '}
                   Oxford Programme for Sustainable Infrastructure Systems
                 </a>{' '}
-                at the University of Oxford as part of the{' '}
-                <a
-                  href="http://www.globalresilienceindex.org/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Global Resilience Index Initiative
-                </a>
-                .
+                at the University of Oxford.
               </p>
 
               <Stack
@@ -89,7 +78,56 @@ export const IntroPage = () => {
                     alt="Oxford Programme for Sustainable Infrastructure Systems"
                   />
                 </a>
+              </Stack>
 
+              <Typography variant="h2">Funding and support</Typography>
+
+              <p>
+                This project is led by researchers in the{' '}
+                <a
+                  href="https://opsis.eci.ox.ac.uk/"
+                  target="_blank"
+                  rel="noopener
+            noreferrer"
+                >
+                  Oxford Programme for Sustainable Infrastructure Systems
+                </a>{' '}
+                in the Environmental Change Institute, University of Oxford, with contributions of
+                data from the{' '}
+                <a
+                  href="https://www.globalquakemodel.org/who-we-are"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Global Earthquake Model Foundation
+                </a>{' '}
+                and the{' '}
+                <a
+                  href="https://www.cgfi.ac.uk/spatial-finance-initiative/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Spatial Finance Initiative
+                </a>{' '}
+                as part of the{' '}
+                <a
+                  href="http://www.globalresilienceindex.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Global Resilience Index Initiative
+                </a>{' '}
+                (GRII) as well as the many open data sources listed <Link to="/data">here</Link>.
+                Appropriate open data sources are regularly reviewed as part of the GRII taskforce.
+              </p>
+
+              <Stack
+                direction={{ xs: 'column', md: 'row' }}
+                divider={<Divider orientation="vertical" flexItem />}
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+              >
                 <a
                   href="http://www.globalresilienceindex.org/"
                   target="_blank"
@@ -98,8 +136,6 @@ export const IntroPage = () => {
                   <img height="80" src="/logo-grii.png" alt="Global Resilience Index Initiative" />
                 </a>
               </Stack>
-
-              <Typography variant="h2">GRII Partners</Typography>
 
               <Stack
                 direction={{ xs: 'column', md: 'row' }}
@@ -136,43 +172,19 @@ export const IntroPage = () => {
                   <img height="40" src="/logo-undrr.png" alt="UNDRR" />
                 </a>
               </Stack>
-
-              <Typography variant="h2">Funding and support</Typography>
-
-              <p>
-                This project is led by researchers in the{' '}
-                <a
-                  href="https://opsis.eci.ox.ac.uk/"
-                  target="_blank"
-                  rel="noopener
-            noreferrer"
-                >
-                  Oxford Programme for Sustainable Infrastructure Systems
-                </a>{' '}
-                in the Environmental Change Institute, University of Oxford, with contributions of
-                data from the{' '}
-                <a
-                  href="https://www.globalquakemodel.org/who-we-are"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Global Earthquake Model Foundation
-                </a>
-                , the{' '}
-                <a
-                  href="https://www.cgfi.ac.uk/spatial-finance-initiative/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Spatial Finance Initiative
-                </a>
-                , as well as the many open data sources listed <Link to="/data">here</Link>.
-                Appropriate open data sources are regularly reviewed as part of the GRII taskforce.
-              </p>
               <p>
                 This project has been funded by the UK Natural Environment Research Council (NERC)
                 through the UK Centre for Greening Finance and Investment, the World Bank Group,
-                Insurance for Development Forum, and Willis Towers Watson.
+                Insurance for Development Forum, the UK Foreign Commonwealth and Development Office
+                (FCDO) through the{' '}
+                <a
+                  href="https://climatecompatiblegrowth.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Climate Compatible Growth (CCG)
+                </a>{' '}
+                programme and Willis Towers Watson.
               </p>
 
               <Stack
@@ -199,6 +211,13 @@ export const IntroPage = () => {
                 </a>
                 <a href="https://www.insdevforum.org/" target="_blank" rel="noopener noreferrer">
                   <img height="40" src="/logo-idf.png" alt="IDF" />
+                </a>
+                <a
+                  href="https://www.gov.uk/international/international-aid-and-development"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img height="100" src="/logo-uk-aid.png" alt="UK Aid" />
                 </a>
                 <a href="https://www.wtwco.com/" target="_blank" rel="noopener noreferrer">
                   <img height="30" src="/logo-wtw.png" alt="WTW" />
