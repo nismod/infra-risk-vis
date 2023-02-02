@@ -8,7 +8,7 @@ The tool presents the infrastructure systems and hazards considered in the
 analysis, then presents results as modelled for the whole system at a fine
 scale.
 
-Other functionalit:
+Other functionality:
 
 - Summarise risk analysis at an administrative regional scale.
 - Zoom in to see networks in detail.
@@ -44,6 +44,7 @@ the host within `tileserver/<data_type>`. These folders are made available to th
 running tileservers as docker bind mounts.
 
 For example, in `tileserver/raster/data/<flooding>` there might live TIF files like these:
+
 ```
 coastal_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
 coastal_mangrove__rp_25__rcp_baseline__epoch_2010__conf_None.tif
@@ -52,6 +53,7 @@ coastal_nomangrove_minus_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.t
 ```
 
 And in `tileserver/vector/`, mbtiles files like these:
+
 ```
 airport_runways.mbtiles
 airport_terminals.mbtiles
@@ -61,7 +63,7 @@ buildings_industrial.mbtiles
 
 ### Docker Development Environment
 
-`docker-compse-dev.yaml` includes a set of services for use in the dataprocessing and development process.
+`docker-compose-dev.yaml` includes a set of services for use in the data processing and development process.
 
 The following environment files are required:
 
@@ -157,40 +159,38 @@ PGUSER=docker
 PGPASSWORD=docker
 ```
 
-### Data preperation within Docker
+### Data preparation within Docker
 
-Data Preperation can be run within Docker, end to end.
+Data preparation can be run within Docker, end to end.
 
 More details can be found in the [ETL](etl/README.md) folder and underlying [pipeline](etl/pipelines/) folders
 
-pipelines/{workflow}/{workflow_preprocessor.py} (pre-processing and generation of csv for snakemake) -> pipelines/{workflow}/Snakemake (generated COG Files) -> docker
+`pipelines/{workflow}/{workflow_preprocessor.py}` (pre-processing and generation of csv for snakemake) -> `pipelines/{workflow}/Snakemake` (generated COG Files) -> `docker`
 
-raster-tile-ingester (ingests to tile server DB) -> MySQL Terracotta tiles Database
+`raster-tile-ingester` (ingests to tile server DB) -> MySQL Terracotta tiles Database
 
 #### Snakemake
 
-bash
-```
+```bash
 docker run -it -v ${PWD}/etl:/opt/etl gri-snakemake:latest --cores 1 -s /opt/etl/Snakefile
 ```
 
 or using Docker Compose `snakemake` service:
 
-bash
-```
+```bash
 docker-compose -f docker-compose-dev.yaml run snakemake
 ```
 
 #### Raster Tileserver Ingester
 
-Update docker-compose-dev.yaml `raster-tile-ingester` block as req. for a dataset (after running its pre-processing and Snakemake pipeline)
+Update `docker-compose-dev.yaml` `raster-tile-ingester` block as required for a
+dataset (after running its pre-processing and Snakemake pipeline)
 
 For more information see [raster-tile-ingester](containers/raster-tile-ingester/README.md)
 
 ```bash
 docker-compose -f docker-compose-dev.yaml run raster-tile-ingester
 ```
-
 
 ## Build - Docker
 
@@ -200,6 +200,7 @@ The application is built with several 'services', each facilitated by a running
 docker container.
 
 Services:
+
 - Web server (nginx) `ghcr.io/nismod/gri-web-server`
 - Vector tileserver (tileserver-gl) `ghcr.io/nismod/gri-vector-tileserver`
 - Backend / API (bespoke Python app for vector data and raster tiles (+meta)) `ghcr.io/nismod/gri-backend`
@@ -224,7 +225,6 @@ Used to run local builds of Production containers.
 ### docker-compose-deploy.prod
 
 Used for deployment of containers into a production environment.
-
 
 ## Deploy
 
