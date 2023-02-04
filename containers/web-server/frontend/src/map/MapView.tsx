@@ -6,7 +6,6 @@ import { atom, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoi
 import { BoundingBox } from '@/lib/bounding-box';
 import { DataMap } from '@/lib/data-map/DataMap';
 import { DataMapTooltip } from '@/lib/data-map/DataMapTooltip';
-import { MapGLContextExtender } from '@/lib/data-map/MapGLContextExtender';
 import { MapBoundsFitter } from '@/lib/map/MapBoundsFitter';
 import { MapSearch } from '@/lib/map/place-search/MapSearch';
 import { PlaceSearchResult } from '@/lib/map/place-search/use-place-search';
@@ -121,16 +120,14 @@ const MapViewContent = () => {
           bottom: 0,
         }}
       />
-      <MapGLContextExtender viewLimits={VIEW_LIMITS}>
-        <NavigationControl
-          showCompass={false}
-          capturePointerMove={true}
-          style={{
-            right: 10,
-            top: 10,
-          }}
-        />
-      </MapGLContextExtender>
+      <NavigationControl
+        showCompass={false}
+        capturePointerMove={true}
+        style={{
+          right: 10,
+          top: 10,
+        }}
+      />
       <ScaleControl
         maxWidth={100}
         unit="metric"

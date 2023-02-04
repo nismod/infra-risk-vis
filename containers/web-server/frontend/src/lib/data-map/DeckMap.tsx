@@ -1,9 +1,15 @@
 import { Box } from '@mui/material';
-import DeckGL, { DeckGLContextValue, DeckGLRef, DeckProps, MapView } from 'deck.gl/typed';
+import DeckGL, {
+  DeckGLContextValue,
+  DeckGLRef,
+  DeckProps,
+  MapView,
+  MapViewState,
+} from 'deck.gl/typed';
 import { FC, Provider, ReactNode, createContext, useRef, useState } from 'react';
-import { MapContext } from 'react-map-gl';
 
 import { useTriggerMemo } from '../hooks/use-trigger-memo';
+import { MapContextProviderWithLimits } from './MapContextProviderWithLimits';
 
 interface DeckMapProps {
   initialViewState: any;
@@ -17,8 +23,8 @@ interface DeckMapProps {
 }
 
 export const ViewStateContext = createContext<{
-  viewState: any;
-  setViewState: (viewState: any) => void;
+  viewState: MapViewState;
+  setViewState: (viewState: MapViewState) => void;
 }>(null);
 
 export const DeckMap: FC<DeckMapProps> = ({
@@ -74,7 +80,7 @@ export const DeckMap: FC<DeckMapProps> = ({
         onClick={(info) => deckRef.current && onClick?.(info, deckRef.current)}
         pickingRadius={pickingRadius}
         ContextProvider={
-          MapContext.Provider as unknown as Provider<DeckGLContextValue> /* unknown because TS doesn't like the cast */
+          MapContextProviderWithLimits as unknown as Provider<DeckGLContextValue> /* unknown because TS doesn't like the cast */
         }
       >
         {/* make sure components like StaticMap are immediate children of DeckGL so that they 
