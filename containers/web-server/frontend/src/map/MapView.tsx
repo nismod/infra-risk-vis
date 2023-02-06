@@ -11,6 +11,7 @@ import { MapSearch } from '@/lib/map/place-search/MapSearch';
 import { PlaceSearchResult } from '@/lib/map/place-search/use-place-search';
 import { ErrorBoundary } from '@/lib/react/ErrorBoundary';
 
+import { mapViewConfig } from '@/config/map-view';
 import { interactionGroupsState } from '@/state/layers/interaction-groups';
 import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
 import { useSaveViewLayers, viewLayersParamsState } from '@/state/layers/view-layers-params';
@@ -27,18 +28,9 @@ export const mapFitBoundsState = atom<BoundingBox>({
   default: null,
 });
 
-const VIEW_LIMITS = {
-  minZoom: 3,
-  maxZoom: 12,
-  maxPitch: 0,
-  maxBearing: 0,
-};
-
 const INITIAL_VIEW_STATE = {
-  latitude: 20.0,
-  longitude: -40.0,
-  zoom: 3,
-  ...VIEW_LIMITS,
+  ...mapViewConfig.initialViewState,
+  ...mapViewConfig.viewLimits,
 };
 
 const MapViewContent = () => {
