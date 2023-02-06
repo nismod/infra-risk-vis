@@ -11,6 +11,7 @@ import { TermsPage } from './pages/TermsPage';
 import { globalStyleVariables, theme } from './theme';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+import 'react-spring-bottom-sheet/dist/style.css';
 import './index.css';
 
 export const App = () => {

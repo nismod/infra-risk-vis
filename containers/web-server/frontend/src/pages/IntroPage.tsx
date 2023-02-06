@@ -1,10 +1,8 @@
-import { Alert, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
 import ScrollToTop from '@/lib/react/ScrollToTop';
-
-import { useIsMobile } from '@/use-is-mobile';
 
 const HeadingBox = styled(Paper)(({ theme }) => ({
   backgroundColor: 'rgba(0, 92, 97, 0.3)',
@@ -21,8 +19,6 @@ const TextBox = styled(Paper)(() => ({
 }));
 
 export const IntroPage = () => {
-  const isMobile = useIsMobile();
-
   return (
     <div className="home">
       <article>
@@ -49,14 +45,6 @@ export const IntroPage = () => {
               </p>
             </TextBox>
           </Grid>
-          {isMobile ? (
-            <Grid item xs={12}>
-              <Alert sx={{ my: 2 }} severity="warning">
-                This site is not currently well-designed for small screens. For a better experience,
-                we recommend visiting from a larger device or window.
-              </Alert>
-            </Grid>
-          ) : null}
           <Grid item xs={12}>
             <TextBox sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
               <p>
