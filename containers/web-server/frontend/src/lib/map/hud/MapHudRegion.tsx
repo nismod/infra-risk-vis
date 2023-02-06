@@ -2,6 +2,8 @@ import { PropsOf } from '@emotion/react';
 import { Box, Stack } from '@mui/material';
 import React, { FC } from 'react';
 
+import { eventPreventDefault } from '@/lib/helpers';
+
 const hudRegions = {
   'top-left': {
     style: {
@@ -46,7 +48,14 @@ export const MapHudRegion: FC<MapHudProps> = ({ position, style = {}, StackProps
     style,
   };
   return (
-    <Box position="absolute" {...effectiveStyle}>
+    <Box
+      position="absolute"
+      {...effectiveStyle}
+      // stop interactions with HUD from triggering map events: https://github.com/visgl/deck.gl/discussions/6252
+      onPointerUp={eventPreventDefault}
+      onMouseMove={eventPreventDefault}
+      sx={{ pointerEvents: 'auto' }}
+    >
       <Stack {...StackProps}>
         {React.Children.map(children, (ch) => (
           <Box display="flex" justifyContent={justifyContent}>

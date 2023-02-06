@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import { FC, ReactNode, useCallback, useEffect, useMemo } from 'react';
-import { StaticMap } from 'react-map-gl';
 
 import { usePrevious } from '@/lib/hooks/use-previous';
 import { useTrackingRef } from '@/lib/hooks/use-tracking-ref';
@@ -15,8 +14,6 @@ export interface DataMapProps {
   viewLayers: ViewLayer[];
   viewLayersParams: Record<string, ViewLayerParams>;
   interactionGroups: any;
-  backgroundStyle: any;
-  uiOverlays?: ReactNode;
 }
 
 // set a convention where the view layer id is either the first part of the deck id before the @ sign, or it's the whole id
@@ -29,8 +26,6 @@ export const DataMap: FC<DataMapProps> = ({
   viewLayers,
   viewLayersParams,
   interactionGroups,
-  backgroundStyle,
-  uiOverlays,
   children,
 }) => {
   const { onHover, onClick, layerFilter, pickingRadius } = useInteractions(
@@ -98,9 +93,7 @@ export const DataMap: FC<DataMapProps> = ({
       onClick={onClick}
       layerRenderFilter={layerFilter}
       pickingRadius={pickingRadius}
-      uiOverlays={uiOverlays}
     >
-      <StaticMap mapStyle={backgroundStyle} attributionControl={false} />
       {children}
     </DeckMap>
   );

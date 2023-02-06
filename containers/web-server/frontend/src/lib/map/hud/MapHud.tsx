@@ -8,7 +8,12 @@ export const MapHud: FC<{ top?: number; right?: number; bottom?: number; left?: 
   bottom = 0,
   left = 0,
 }) => (
-  <Box position="absolute" {...{ top, right, bottom, left }} zIndex={1000}>
+  <Box
+    position="absolute"
+    {...{ top, right, bottom, left }}
+    zIndex={1000}
+    sx={{ pointerEvents: 'none' }}
+  >
     {children}
   </Box>
 );

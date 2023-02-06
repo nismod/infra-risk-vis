@@ -202,3 +202,7 @@ export function makeOptions<T>(values: T[], labelFn = (x: T) => x) {
 export function cartesian(...a: any[][]) {
   return a.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
 }
+
+export function eventPreventDefault(e) {
+  e.preventDefault();
+}
