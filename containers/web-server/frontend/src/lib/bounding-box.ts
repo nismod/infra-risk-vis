@@ -6,38 +6,19 @@ import buffer from '@turf/buffer';
  * 2D bbox format as defined in GeoJSON, turf etc:
  * [minX, minY, maxX, maxY]
  */
-export type BoundingBox = [
-  number, // minX
-  number, // minY
-  number, // maxX
-  number, // maxY
-];
+export type BoundingBox = [minX: number, minY: number, maxX: number, maxY: number];
 
 /**
  * Nominatim search result bbox format:
  * [minY, maxY, minX, maxX]
  */
-export type NominatimBoundingBox = [
-  number, // minY
-  number, // maxY
-  number, // minX
-  number, // maxX
-];
+export type NominatimBoundingBox = [minY: number, maxY: number, minX: number, maxX: number];
 
 /**
  * Deck.GL bbox format:
  * [[minX, minY], [maxX, maxY]]
  */
-export type DeckBoundingBox = [
-  [
-    number, // minX
-    number, // minY
-  ],
-  [
-    number, // maxX
-    number, // maxY
-  ],
-];
+export type DeckBoundingBox = [[minX: number, minY: number], [maxX: number, maxY: number]];
 
 export function appToDeckBoundingBox(appBoundingBox: BoundingBox): DeckBoundingBox {
   return [
