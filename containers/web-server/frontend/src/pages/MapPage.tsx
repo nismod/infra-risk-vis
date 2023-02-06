@@ -11,6 +11,7 @@ import { MapView } from '@/map/MapView';
 import { LayersSidebar } from '@/sidebar/LayersSidebar';
 import { viewState, viewStateEffect } from '@/state/view';
 import { globalStyleVariables } from '@/theme';
+import { useIsMobile } from '@/use-is-mobile';
 
 const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   <Box

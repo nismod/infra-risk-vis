@@ -1,9 +1,10 @@
-import { Alert, Divider, Grid, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Alert, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import ScrollToTop from '@/lib/react/ScrollToTop';
+
+import { useIsMobile } from '@/use-is-mobile';
 
 const HeadingBox = styled(Paper)(({ theme }) => ({
   backgroundColor: 'rgba(0, 92, 97, 0.3)',
@@ -20,7 +21,7 @@ const TextBox = styled(Paper)(() => ({
 }));
 
 export const IntroPage = () => {
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+  const isMobile = useIsMobile();
 
   return (
     <div className="home">

@@ -9,11 +9,12 @@ import {
   Link as MuiLink,
   Toolbar,
   styled,
-  useMediaQuery,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { FC, forwardRef, useCallback, useState } from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
+
+import { useIsMobile } from './use-is-mobile';
 
 const Link = styled(MuiLink)({
   color: 'inherit',
@@ -146,7 +147,7 @@ const DesktopNavContent = () => (
 const topStripeHeight = 6;
 
 export const Nav: FC<{ height: number }> = ({ height }) => {
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
+  const isMobile = useIsMobile();
 
   return (
     <AppBar position="fixed" sx={{ color: 'white' }}>
