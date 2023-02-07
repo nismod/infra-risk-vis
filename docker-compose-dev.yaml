@@ -148,7 +148,7 @@ services:
       - envs/dev/.irv-autopkg.env
     expose:
       - "8000"
-    command: uvicorn api.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --root-path /extract
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.irv-autopkg-api.rule=Host(`localhost`) && PathPrefix(`/extract`)"
