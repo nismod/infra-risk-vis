@@ -279,7 +279,7 @@ docker compose up -d web-server
 
 Provides API for extraction of data (and hosting of results) from various layers using pre-defined boundaries.
 
-See [irv-autopkg] (http://github.com/nismod/irv-autopkg) for more information.
+See [`irv-autopkg`](http://github.com/nismod/irv-autopkg) for more information.
 
 ## Acknowledgements
 
