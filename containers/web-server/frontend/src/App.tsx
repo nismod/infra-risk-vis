@@ -6,8 +6,8 @@ import { RecoilRoot } from 'recoil';
 import { Nav } from './Nav';
 import { DataPage } from './pages/DataPage';
 import { IntroPage } from './pages/IntroPage';
-import { MapPage } from './pages/MapPage';
 import { TermsPage } from './pages/TermsPage';
+import { MapPage } from './pages/map/MapPage';
 import { globalStyleVariables, theme } from './theme';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
