@@ -9,7 +9,7 @@ import { viewState, viewStateEffect } from '@/state/view';
 import { useIsMobile } from '@/use-is-mobile';
 
 import { MapPageDesktopLayout } from './layouts/MapPageDesktopLayout';
-import { MapPageMobileLayout } from './layouts/MapPageMobileLayout';
+import { MapPageMobileLayout } from './layouts/mobile/MapPageMobileLayout';
 
 const MapPageLayout = () => {
   const isMobile = useIsMobile();
