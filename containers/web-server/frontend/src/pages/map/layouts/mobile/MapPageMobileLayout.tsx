@@ -10,6 +10,8 @@ import { globalStyleVariables } from '@/theme';
 import { mobileTabHasContentState } from './tab-has-content';
 import { TabConfig, mobileTabsConfig } from './tabs-config';
 
+import './bottom-sheet.css';
+
 /**
  * Custom BottomNavigationAction that gets disabled if the corresponding tab doesn't have any content.
  *
