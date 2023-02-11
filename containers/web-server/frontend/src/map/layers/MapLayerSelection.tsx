@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  ClickAwayListener,
   FormControlLabel,
   Paper,
   ToggleButton,
@@ -36,60 +37,62 @@ export const MapLayerSelection = () => {
 
   const buttonStyle = showPopover ? { borderTopRightRadius: 0, borderBottomRightRadius: 0 } : {};
   return (
-    <div
-      onMouseEnter={() => setShowPopover(true)}
-      onMouseLeave={() => setShowPopover(false)}
-      style={{ display: 'flex' }}
-    >
-      <Button
-        aria-label="Toggle map background"
-        aria-owns={showPopover ? 'map-layers-popover' : undefined}
-        aria-haspopup="true"
-        variant="contained"
-        style={{
-          paddingInline: 0,
-          backgroundColor: 'white',
-          color: 'black',
-          minWidth: 'auto',
-          width: '40px',
-          height: '36px',
-          ...buttonStyle,
-        }}
-        onClick={() => setShowPopover((showPopover) => !showPopover)}
+    <ClickAwayListener onClickAway={() => setShowPopover(false)}>
+      <div
+        onMouseEnter={() => setShowPopover(true)}
+        onMouseLeave={() => setShowPopover(false)}
+        style={{ display: 'flex' }}
       >
-        <LayersIcon />
-      </Button>
-      {showPopover && (
-        <Paper id="map-layers-popover" style={{ overflow: 'hidden', borderTopLeftRadius: 0 }}>
-          <Box width={220}>
-            <Box px={2} py="6px" height={37} display="flex" borderBottom="1px solid #ddd">
-              <ToggleButtonGroup
-                exclusive
-                color="primary"
-                value={background}
-                onChange={handleBackground}
-                fullWidth
-              >
-                <ToggleButton value="light">Map</ToggleButton>
-                <ToggleButton value="satellite">Satellite</ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
-            <Box px={2}>
-              <Box>
-                <FormControlLabel
-                  label="Show labels"
-                  control={
-                    <Checkbox
-                      checked={showLabels}
-                      onChange={(e, checked) => setShowLabels(checked)}
-                    />
-                  }
-                />
+        <Button
+          aria-label="Toggle map background"
+          aria-owns={showPopover ? 'map-layers-popover' : undefined}
+          aria-haspopup="true"
+          variant="contained"
+          style={{
+            paddingInline: 0,
+            backgroundColor: 'white',
+            color: 'black',
+            minWidth: 'auto',
+            width: '40px',
+            height: '36px',
+            ...buttonStyle,
+          }}
+          onClick={() => setShowPopover((showPopover) => !showPopover)}
+        >
+          <LayersIcon />
+        </Button>
+        {showPopover && (
+          <Paper id="map-layers-popover" style={{ overflow: 'hidden', borderTopLeftRadius: 0 }}>
+            <Box width={220}>
+              <Box px={2} py="6px" height={37} display="flex" borderBottom="1px solid #ddd">
+                <ToggleButtonGroup
+                  exclusive
+                  color="primary"
+                  value={background}
+                  onChange={handleBackground}
+                  fullWidth
+                >
+                  <ToggleButton value="light">Map</ToggleButton>
+                  <ToggleButton value="satellite">Satellite</ToggleButton>
+                </ToggleButtonGroup>
+              </Box>
+              <Box px={2}>
+                <Box>
+                  <FormControlLabel
+                    label="Show labels"
+                    control={
+                      <Checkbox
+                        checked={showLabels}
+                        onChange={(e, checked) => setShowLabels(checked)}
+                      />
+                    }
+                  />
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </Paper>
-      )}
-    </div>
+          </Paper>
+        )}
+      </div>
+    </ClickAwayListener>
   );
 };
