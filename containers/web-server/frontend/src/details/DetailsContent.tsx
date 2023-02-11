@@ -3,15 +3,20 @@ import { useRecoilValue } from 'recoil';
 
 import { selectionState } from '@/lib/data-map/interactions/interaction-state';
 
+import { MobileTabContentWatcher } from '@/pages/map/layouts/mobile/tab-has-content';
+
 import { DetailsPanel } from './ui/DetailsPanel';
 
 const InteractionGroupDetails = ({ group }) => {
   const selection = useRecoilValue(selectionState(group));
 
   return selection?.viewLayer.renderDetails ? (
-    <DetailsPanel interactionGroup={group}>
-      {selection.viewLayer.renderDetails(selection)}
-    </DetailsPanel>
+    <>
+      <MobileTabContentWatcher tabId="details" />
+      <DetailsPanel interactionGroup={group}>
+        {selection.viewLayer.renderDetails(selection)}
+      </DetailsPanel>
+    </>
   ) : null;
 };
 
