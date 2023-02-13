@@ -275,6 +275,12 @@ docker pull ghcr.io/nismod/gri-web-server:0.16
 docker compose up -d web-server
 ```
 
+## IRV AutoPackage Service
+
+Provides API for extraction of data (and hosting of results) from various layers using pre-defined boundaries.
+
+See [`irv-autopkg`](http://github.com/nismod/irv-autopkg) for more information.
+
 ## Acknowledgements
 
 This tool has been developed through several projects.

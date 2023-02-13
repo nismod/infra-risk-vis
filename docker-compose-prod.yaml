@@ -11,8 +11,9 @@ services:
       - "--api.insecure=false"
       - "--api.dashboard=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.web.http.redirections.entryPoint.permanent=true"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.certresolverone.acme.tlschallenge=true"
       - "--certificatesresolvers.certresolverone.acme.email=tom.russell@ouce.ox.ac.uk"
@@ -25,7 +26,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.16
+    image: ghcr.io/nismod/gri-web-server:0.17
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-prod

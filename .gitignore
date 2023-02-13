@@ -69,3 +69,5 @@ provision.sh
 *.parquet
 etl/raw_data/*
 .vscode/
+.DS_Store
+irv-autopkg/*

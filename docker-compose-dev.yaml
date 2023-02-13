@@ -25,14 +25,14 @@ services:
     build:
       context: ./containers/web-server
       dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-web-server-dev:0.7
-    expose:
-      - "80"
+    image: ghcr.io/nismod/gri-web-server:0.17
+    volumes:
+      - ./irv-autopkg/packages:/usr/share/nginx/html/packages
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web-server.rule=Host(`localhost`)"
       - "traefik.http.routers.web-server.entrypoints=websecure"
-      - "traefik.http.routers.web-server.tls=true"
+      - "traefik.http.routers.web-server.tls=false"
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
 
   db:
@@ -122,6 +122,41 @@ services:
       - "traefik.http.routers.vector-tileserver.middlewares=vector-tileserver-stripprefix"
       - "traefik.http.middlewares.vector-tileserver-stripprefix.stripprefix.prefixes=/vector"
       - "traefik.http.services.vector-tileserver.loadbalancer.server.port=8080"
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    command: redis-server --save 20 1 --loglevel debug
+    volumes: 
+      - ./irv-autopkg/redis:/data
+
+  irv-autopkg-worker:
+    image: ghcr.io/nismod/irv-autopkg:0.1.0-dev
+    volumes:
+      - ./irv-autopkg/packages:/data/packages
+      - ./irv-autopkg/tmp:/data/tmp
+    env_file:
+      - envs/dev/.irv-autopkg.env
+    command: celery --app dataproc.tasks worker --loglevel=info --concurrency=4
+
+  irv-autopkg-api:
+    image: ghcr.io/nismod/irv-autopkg:0.1.0-dev
+    volumes:
+      - ./irv-autopkg/packages:/data/packages
+      - ./irv-autopkg/tmp:/data/tmp
+    env_file:
+      - envs/dev/.irv-autopkg.env
+    expose:
+      - "8000"
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --root-path /extract
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.irv-autopkg-api.rule=Host(`localhost`) && PathPrefix(`/extract`)"
+      - "traefik.http.routers.irv-autopkg-api.entrypoints=websecure"
+      - "traefik.http.routers.irv-autopkg-api.tls=false"
+      - "traefik.http.routers.irv-autopkg-api.middlewares=irv-autopkg-api-stripprefix"
+      - "traefik.http.middlewares.irv-autopkg-api-stripprefix.stripprefix.prefixes=/extract"
+      - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
 
   #### Utility Containers
   raster-tile-ingester:
