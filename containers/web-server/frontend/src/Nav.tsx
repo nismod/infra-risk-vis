@@ -4,128 +4,162 @@ import {
   Divider,
   Drawer,
   IconButton,
-  MenuItem,
-  MenuList,
+  List,
+  ListItem,
+  Link as MuiLink,
   Toolbar,
-  Typography,
-  useMediaQuery,
+  styled,
 } from '@mui/material';
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Box } from '@mui/system';
+import { FC, forwardRef, useCallback, useState } from 'react';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 
-import { globalStyleVariables } from '@/theme';
+import { useIsMobile } from './use-is-mobile';
 
-export const Nav = () => {
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
-  const [openDrawer, setOpenDrawer] = useState(false);
+const Link = styled(MuiLink)({
+  color: 'inherit',
+  textDecoration: 'none',
+});
+
+const DrawerLink = styled(Link)({
+  '&.active': {
+    backgroundColor: '#eeeeee',
+  },
+});
+
+const ToolbarLink = styled(Link)({
+  padding: '0 3px 1px 3px',
+  margin: '0 9px -10px 9px',
+  borderBottom: '6px solid transparent',
+  '&:hover,&:focus,&:active,&.active': {
+    borderBottomColor: '#ffffff',
+  },
+});
+
+const ToolbarNavLink = forwardRef<any, any>(({ ...others }, ref) => (
+  <ToolbarLink variant="h6" component={RouterNavLink} ref={ref} {...others} />
+));
+
+const DrawerNavLink = forwardRef<any, any>(({ ...others }, ref) => (
+  <DrawerLink component={RouterNavLink} ref={ref} {...others} />
+));
+
+const GrowingDivider = styled(Divider)({
+  flexGrow: 1,
+});
+
+const GriiLink = () => (
+  <Link
+    pl={1.5}
+    href="http://www.globalresilienceindex.org/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <img height="35" src="/logo-grii-white.png" alt="GRII" />
+  </Link>
+);
+
+const navItems = [
+  {
+    to: '/view/hazard',
+    title: 'Hazard',
+  },
+  {
+    to: '/view/exposure',
+    title: 'Exposure',
+  },
+  {
+    to: '/view/vulnerability',
+    title: 'Vulnerability',
+  },
+  {
+    to: '/view/risk',
+    title: 'Risk',
+  },
+  {
+    to: '/data',
+    title: 'About',
+  },
+];
+
+const drawerWidth = 240;
+
+const MobileDrawer = styled(Drawer)({
+  width: drawerWidth,
+  flexShrink: 0,
+  [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+});
+
+const MobileNavContent = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
 
   return (
-    <AppBar position="fixed">
+    <>
+      <IconButton color="inherit" onClick={() => setDrawerOpen((open) => !open)} title="Menu">
+        <Menu />
+      </IconButton>
+
+      <ToolbarNavLink exact to="/" onClick={closeDrawer}>
+        G-SRAT
+      </ToolbarNavLink>
+
+      <GrowingDivider />
+      <GriiLink />
+
+      <MobileDrawer open={drawerOpen} onClose={closeDrawer}>
+        <Toolbar /> {/* Prevents app bar from concealing content*/}
+        <List>
+          <ListItem component={DrawerNavLink} exact to="/" onClick={closeDrawer}>
+            Home
+          </ListItem>
+          {navItems.map(({ to, title }) => (
+            <ListItem key={to} component={DrawerNavLink} to={to} onClick={closeDrawer}>
+              {title}
+            </ListItem>
+          ))}
+        </List>
+      </MobileDrawer>
+    </>
+  );
+};
+
+const DesktopNavContent = () => (
+  <>
+    <ToolbarNavLink exact to="/">
+      G-SRAT
+    </ToolbarNavLink>
+
+    {navItems.map(({ to, title }) => (
+      <ToolbarNavLink key={to} to={to}>
+        {title}
+      </ToolbarNavLink>
+    ))}
+
+    <GrowingDivider />
+    <GriiLink />
+  </>
+);
+
+const topStripeHeight = 6;
+
+export const Nav: FC<{ height: number }> = ({ height }) => {
+  const isMobile = useIsMobile();
+
+  return (
+    <AppBar position="fixed" sx={{ color: 'white' }}>
+      <Box height={topStripeHeight} width="100%" bgcolor="rgb(197,206,0)" />
       <Toolbar
+        variant="dense"
         sx={{
-          background:
-            'linear-gradient(180deg, rgba(197,206,0,1) 0%, rgba(197,206,0,1) 10%, rgba(0,126,133,1) 10%, rgba(0,126,133,1) 100%);',
-          '& a.nav-link': {
-            '&:hover,&:focus,&:active,&.active': {
-              borderBottomColor: '#ffffff',
-            },
-          },
-          minHeight: globalStyleVariables.navbarHeight,
+          backgroundColor: 'rgb(0,126,133)',
+          height: height - topStripeHeight,
         }}
       >
-        {isMobile ? (
-          <>
-            <IconButton
-              onClick={() => setOpenDrawer(!openDrawer)}
-              sx={{ mt: 1, pl: 0 }}
-              title="Menu"
-            >
-              <Menu htmlColor="white" />
-            </IconButton>
-            <NavLink exact className="nav-link" to="/" onClick={() => setOpenDrawer(false)}>
-              <Typography variant="h6">G-SRAT</Typography>
-            </NavLink>
-            <Divider sx={{ flexGrow: 1 }} />
-            <a
-              className="nav-link"
-              href="http://www.globalresilienceindex.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img height="35" src="/logo-grii-white.png" alt="GRII" />
-            </a>
-
-            <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} sx={{ width: 240 }}>
-              <Toolbar sx={{ width: 240 }} /> {/* Prevents app bar from concealing content*/}
-              <MenuList>
-                <MenuItem sx={{ p: 0 }} onClick={() => setOpenDrawer(false)}>
-                  <NavLink exact className="nav-link in-drawer" to="/">
-                    Home
-                  </NavLink>
-                </MenuItem>
-                <MenuItem sx={{ p: 0 }} onClick={() => setOpenDrawer(false)}>
-                  <NavLink className="nav-link in-drawer" to="/view/hazard">
-                    Hazard
-                  </NavLink>
-                </MenuItem>
-
-                <MenuItem sx={{ p: 0 }} onClick={() => setOpenDrawer(false)}>
-                  <NavLink className="nav-link in-drawer" to="/view/exposure">
-                    Exposure
-                  </NavLink>
-                </MenuItem>
-
-                <MenuItem sx={{ p: 0 }} onClick={() => setOpenDrawer(false)}>
-                  <NavLink className="nav-link in-drawer" to="/view/vulnerability">
-                    Vulnerability
-                  </NavLink>
-                </MenuItem>
-
-                <MenuItem sx={{ p: 0 }} onClick={() => setOpenDrawer(false)}>
-                  <NavLink className="nav-link in-drawer" to="/view/risk">
-                    Risk
-                  </NavLink>
-                </MenuItem>
-
-                <MenuItem sx={{ p: 0 }} onClick={() => setOpenDrawer(false)}>
-                  <NavLink className="nav-link in-drawer" to="/data">
-                    About
-                  </NavLink>
-                </MenuItem>
-              </MenuList>
-            </Drawer>
-          </>
-        ) : (
-          <>
-            <NavLink exact className="nav-link" to="/">
-              <Typography variant="h6">G-SRAT</Typography>
-            </NavLink>
-            <NavLink className="nav-link" to="/view/hazard">
-              <Typography variant="h6">Hazard</Typography>
-            </NavLink>
-            <NavLink className="nav-link" to="/view/exposure">
-              <Typography variant="h6">Exposure</Typography>
-            </NavLink>
-            <NavLink className="nav-link" to="/view/vulnerability">
-              <Typography variant="h6">Vulnerability</Typography>
-            </NavLink>
-            <NavLink className="nav-link" to="/view/risk">
-              <Typography variant="h6">Risk</Typography>
-            </NavLink>
-            <NavLink className="nav-link" to="/data">
-              <Typography variant="h6">About</Typography>
-            </NavLink>
-            <Divider sx={{ flexGrow: 1 }} />
-            <a
-              className="nav-link"
-              href="http://www.globalresilienceindex.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img height="35" src="/logo-grii-white.png" alt="GRII" />
-            </a>
-          </>
-        )}
+        {isMobile ? <MobileNavContent /> : <DesktopNavContent />}
       </Toolbar>
     </AppBar>
   );

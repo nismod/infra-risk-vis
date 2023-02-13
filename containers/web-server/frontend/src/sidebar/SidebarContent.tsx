@@ -1,4 +1,4 @@
-import { Alert, Stack, useMediaQuery } from '@mui/material';
+import { Alert, Stack } from '@mui/material';
 import _ from 'lodash';
 import { FC, ReactElement } from 'react';
 import { atomFamily, selectorFamily, useRecoilValue } from 'recoil';
@@ -259,8 +259,6 @@ const viewTransitionEffect = ({ set }, newView) => {
 export const SidebarContent: FC<{}> = () => {
   const view = useRecoilValue(viewState);
 
-  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('md'));
-
   const knownViews = Object.keys(viewLabels);
   if (!knownViews.includes(view)) {
     return <Alert severity="error">Unknown view!</Alert>;
@@ -284,12 +282,6 @@ export const SidebarContent: FC<{}> = () => {
       pathChildrenState={sidebarPathChildrenState}
     >
       <StateEffectRoot state={viewState} effect={viewTransitionEffect} />
-      {isMobile ? (
-        <Alert sx={{ mb: 2 }} severity="warning">
-          This site is not currently well-designed for small screens. For a better experience, we
-          recommend visiting from a larger device or window.
-        </Alert>
-      ) : null}
       <Stack
         sx={{
           '& > :first-of-type': {

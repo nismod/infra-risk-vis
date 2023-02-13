@@ -1,6 +1,6 @@
 import { easeCubic } from 'd3-ease';
 import { FC, useContext } from 'react';
-import { FlyToInterpolator, MapContext } from 'react-map-gl';
+import { FlyToInterpolator, WebMercatorViewport } from 'react-map-gl';
 
 import { BoundingBox, appToDeckBoundingBox } from '@/lib/bounding-box';
 import { ViewStateContext } from '@/lib/data-map/DeckMap';
@@ -11,13 +11,13 @@ interface MapBoundsFitterProps {
 }
 
 export const MapBoundsFitter: FC<MapBoundsFitterProps> = ({ boundingBox }) => {
-  const { viewport } = useContext(MapContext);
   const { viewState, setViewState } = useContext(ViewStateContext);
 
   useChangeEffect(
     () => {
       if (boundingBox != null) {
         const deckBbox = appToDeckBoundingBox(boundingBox);
+        const viewport = new WebMercatorViewport({ width: 800, height: 600 });
         const { latitude, longitude, zoom } = viewport.fitBounds(deckBbox, { padding: 20 });
 
         setViewState({
@@ -31,7 +31,7 @@ export const MapBoundsFitter: FC<MapBoundsFitterProps> = ({ boundingBox }) => {
         });
       }
     },
-    [boundingBox, viewState, setViewState, viewport],
+    [boundingBox, viewState, setViewState],
     [boundingBox],
   );
 

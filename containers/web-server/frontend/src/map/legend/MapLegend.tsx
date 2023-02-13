@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 
 import { ColorMap, FormatConfig } from '@/lib/data-map/view-layers';
 
+import { MobileTabContentWatcher } from '@/pages/map/layouts/mobile/tab-has-content';
 import { viewLayersFlatState } from '@/state/layers/view-layers-flat';
 
 import { GradientLegend } from './GradientLegend';
@@ -34,9 +35,9 @@ export const MapLegend: FC<{}> = () => {
       const layerLegend = viewLayer.renderLegend?.();
       if (layerLegend) {
         rasterLegends.push(
-          <Fragment key={viewLayer.id}>
-            <Suspense fallback={<LegendLoading />}>{layerLegend}</Suspense>
-          </Fragment>,
+          <Suspense key={viewLayer.id} fallback={<LegendLoading />}>
+            {layerLegend}
+          </Suspense>,
         );
       }
     } else {
@@ -65,17 +66,26 @@ export const MapLegend: FC<{}> = () => {
   });
 
   return rasterLegends.length || Object.keys(vectorLegendConfigs).length ? (
-    <Paper>
-      <Box p={1} maxWidth={270}>
-        <Suspense fallback={'Loading legend...'}>
-          <Stack gap={0.3} divider={<Divider />}>
-            {rasterLegends}
-            {Object.entries(vectorLegendConfigs).map(([legendKey, { colorMap, formatConfig }]) => (
-              <VectorLegend key={legendKey} colorMap={colorMap} legendFormatConfig={formatConfig} />
-            ))}
-          </Stack>
-        </Suspense>
-      </Box>
-    </Paper>
+    <>
+      <MobileTabContentWatcher tabId="legend" />
+      <Paper>
+        <Box p={1} maxWidth={270}>
+          <Suspense fallback={'Loading legend...'}>
+            <Stack gap={0.3} divider={<Divider />}>
+              {rasterLegends}
+              {Object.entries(vectorLegendConfigs).map(
+                ([legendKey, { colorMap, formatConfig }]) => (
+                  <VectorLegend
+                    key={legendKey}
+                    colorMap={colorMap}
+                    legendFormatConfig={formatConfig}
+                  />
+                ),
+              )}
+            </Stack>
+          </Suspense>
+        </Box>
+      </Paper>
+    </>
   ) : null;
 };

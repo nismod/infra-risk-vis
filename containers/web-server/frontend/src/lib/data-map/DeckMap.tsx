@@ -1,9 +1,14 @@
-import { Box } from '@mui/material';
-import DeckGL, { DeckGLContextValue, DeckGLRef, DeckProps, MapView } from 'deck.gl/typed';
-import { FC, Provider, ReactNode, createContext, useRef, useState } from 'react';
-import { MapContext } from 'react-map-gl';
+import DeckGL, {
+  DeckGLContextValue,
+  DeckGLRef,
+  DeckProps,
+  MapView,
+  MapViewState,
+} from 'deck.gl/typed';
+import { FC, Provider, createContext, useRef, useState } from 'react';
 
 import { useTriggerMemo } from '../hooks/use-trigger-memo';
+import { MapContextProviderWithLimits } from './MapContextProviderWithLimits';
 
 interface DeckMapProps {
   initialViewState: any;
@@ -13,12 +18,11 @@ interface DeckMapProps {
   onClick?: any;
   layerRenderFilter: DeckProps['layerFilter'];
   pickingRadius?: number;
-  uiOverlays: ReactNode;
 }
 
 export const ViewStateContext = createContext<{
-  viewState: any;
-  setViewState: (viewState: any) => void;
+  viewState: MapViewState;
+  setViewState: (viewState: MapViewState) => void;
 }>(null);
 
 export const DeckMap: FC<DeckMapProps> = ({
@@ -29,7 +33,6 @@ export const DeckMap: FC<DeckMapProps> = ({
   onClick,
   layerRenderFilter,
   pickingRadius,
-  uiOverlays,
   children,
 }) => {
   const [viewState, setViewState] = useState<any>(initialViewState);
@@ -70,11 +73,19 @@ export const DeckMap: FC<DeckMapProps> = ({
         onViewStateChange={({ viewState }) => setViewState(viewState)}
         layers={layers}
         layerFilter={layerRenderFilter}
-        onHover={(info) => deckRef.current && onHover(info, deckRef.current)}
-        onClick={(info) => deckRef.current && onClick?.(info, deckRef.current)}
+        onHover={(info, event) =>
+          !event.srcEvent.defaultPrevented && // ignore pointer events from HUD: https://github.com/visgl/deck.gl/discussions/6252
+          deckRef.current &&
+          onHover(info, deckRef.current)
+        }
+        onClick={(info, event) =>
+          !event.srcEvent.defaultPrevented && // ignore pointer events from HUD: https://github.com/visgl/deck.gl/discussions/6252
+          deckRef.current &&
+          onClick?.(info, deckRef.current)
+        }
         pickingRadius={pickingRadius}
         ContextProvider={
-          MapContext.Provider as unknown as Provider<DeckGLContextValue> /* unknown because TS doesn't like the cast */
+          MapContextProviderWithLimits as unknown as Provider<DeckGLContextValue> /* unknown because TS doesn't like the cast */
         }
       >
         {/* make sure components like StaticMap are immediate children of DeckGL so that they 
@@ -82,21 +93,6 @@ export const DeckMap: FC<DeckMapProps> = ({
         */}
         {children}
       </DeckGL>
-      {uiOverlays && (
-        <div
-          style={{
-            pointerEvents: 'none',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 1,
-          }}
-        >
-          <Box sx={{ pointerEvents: 'auto' }}>{uiOverlays}</Box>
-        </div>
-      )}
     </ViewStateContext.Provider>
   );
 };

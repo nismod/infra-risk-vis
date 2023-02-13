@@ -21,10 +21,7 @@ import {
 
 import './asset-table.css';
 
-export const hoveredAdaptationFeatureState = atom<ListFeature>({
-  key: 'hoveredAdaptationFeatureState',
-  default: null,
-});
+import { boundedFeatureState } from '@/state/layers/ui-layers/feature-bbox';
 
 export const selectedAdaptationFeatureState = atom<ListFeature>({
   key: 'selectedAdaptationFeatureState',
@@ -38,7 +35,7 @@ export const FeatureAdaptationsTable = () => {
   const fieldSpec = useRecoilValue(adaptationFieldSpecState);
   const colorSpec = useRecoilValue(adaptationColorSpecState);
 
-  const setHoveredFeature = useSetRecoilState(hoveredAdaptationFeatureState);
+  const setHoveredFeature = useSetRecoilState(boundedFeatureState);
   const [selectedFeature, setSelectedFeature] = useRecoilState(selectedAdaptationFeatureState);
   const setMapFitBounds = useSetRecoilState(mapFitBoundsState);
 
@@ -77,7 +74,7 @@ export const FeatureAdaptationsTable = () => {
             key={feature.string_id}
             expanded={feature === selectedFeature}
             onExpandedChange={(expanded) => setSelectedFeature(expanded ? feature : null)}
-            onMouseEnter={() => setHoveredFeature(feature)}
+            onMouseEnter={() => setHoveredFeature({ id: `${feature.id}`, bbox: feature.bbox })}
             onMouseLeave={() => setHoveredFeature(null)}
             expandableContent={
               <Box py={1}>
