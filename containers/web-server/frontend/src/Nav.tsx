@@ -48,17 +48,6 @@ const GrowingDivider = styled(Divider)({
   flexGrow: 1,
 });
 
-const GriiLink = () => (
-  <Link
-    pl={1.5}
-    href="http://www.globalresilienceindex.org/"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <img height="35" src="/logo-grii-white.png" alt="GRII" />
-  </Link>
-);
-
 const navItems = [
   {
     to: '/view/hazard',
@@ -108,7 +97,6 @@ const MobileNavContent = () => {
       </ToolbarNavLink>
 
       <GrowingDivider />
-      <GriiLink />
 
       <MobileDrawer open={drawerOpen} onClose={closeDrawer}>
         <Toolbar /> {/* Prevents app bar from concealing content*/}
@@ -140,7 +128,6 @@ const DesktopNavContent = () => (
     ))}
 
     <GrowingDivider />
-    <GriiLink />
   </>
 );
 

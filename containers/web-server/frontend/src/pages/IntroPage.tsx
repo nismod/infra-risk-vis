@@ -45,7 +45,7 @@ export const IntroPage = () => {
           <Grid item xs={12}>
             <TextBox sx={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
               <p>
-                The research, analysis and development has been led by researchers in the{' '}
+                The research, analysis and development of G-SRAT is led by researchers in the{' '}
                 <a href="https://opsis.eci.ox.ac.uk/" target="_blank" rel="noopener noreferrer">
                   {' '}
                   Oxford Programme for Sustainable Infrastructure Systems
@@ -72,17 +72,7 @@ export const IntroPage = () => {
               <Typography variant="h2">Funding and support</Typography>
 
               <p>
-                This project is led by researchers in the{' '}
-                <a
-                  href="https://opsis.eci.ox.ac.uk/"
-                  target="_blank"
-                  rel="noopener
-            noreferrer"
-                >
-                  Oxford Programme for Sustainable Infrastructure Systems
-                </a>{' '}
-                in the Environmental Change Institute, University of Oxford, with contributions of
-                data from the{' '}
+                This project has contributions of data from the{' '}
                 <a
                   href="https://www.globalquakemodel.org/who-we-are"
                   target="_blank"
@@ -162,10 +152,10 @@ export const IntroPage = () => {
                 </a>
               </Stack>
               <p>
-                This project has been funded by the UK Natural Environment Research Council (NERC)
-                through the UK Centre for Greening Finance and Investment, the World Bank Group,
-                Insurance for Development Forum, the UK Foreign Commonwealth and Development Office
-                (FCDO) through the{' '}
+                This project is funded by the UK Natural Environment Research Council (NERC) through
+                the UK Centre for Greening Finance and Investment, the World Bank Group, Insurance
+                for Development Forum, the UK Foreign Commonwealth and Development Office (FCDO)
+                through the{' '}
                 <a
                   href="https://climatecompatiblegrowth.com/"
                   target="_blank"
