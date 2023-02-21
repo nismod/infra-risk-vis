@@ -80,19 +80,21 @@ services:
       - ./irv-autopkg/redis:/data
 
   irv-autopkg-worker:
-    image: ghcr.io/nismod/irv-autopkg:0.1.0
+    image: ghcr.io/nismod/irv-autopkg:0.2.3
+    user: autopkg
     volumes:
       - ./irv-autopkg/packages:/data/packages
-      - ./irv-autopkg/tmp:/data/tmp
+      - ./irv-autopkg/processing:/data/processing
     env_file:
       - envs/prod/.irv-autopkg.env
-    command: celery --app dataproc.tasks worker --loglevel=info --concurrency=4
+    command: celery --app dataproc.tasks worker
 
   irv-autopkg-api:
-    image: ghcr.io/nismod/irv-autopkg:0.1.0
+    image: ghcr.io/nismod/irv-autopkg:0.2.3
+    user: autopkg
     volumes:
       - ./irv-autopkg/packages:/data/packages
-      - ./irv-autopkg/tmp:/data/tmp
+      - ./irv-autopkg/processing:/data/processing
     env_file:
       - envs/prod/.irv-autopkg.env
     expose:
