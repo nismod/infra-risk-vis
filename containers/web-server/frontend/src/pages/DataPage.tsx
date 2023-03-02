@@ -594,5 +594,19 @@ export const DataPage = () => (
       by Antti Lipponen (<a href="https://twitter.com/anttilip">@anttilip</a>){' '}
       <a href="https://creativecommons.org/licenses/by/2.0/">CC-BY</a>
     </p>
+
+    <Typography variant="h2">Contact</Typography>
+
+    <iframe
+      width="100%"
+      height="1200px"
+      src="https://forms.office.com/e/EukjPi1BVL?embed=true"
+      frameBorder="0"
+      marginWidth={0}
+      marginHeight={0}
+      style={{ border: 'none', maxWidth: '100%' }}
+    >
+      {' '}
+    </iframe>
   </article>
 );
