@@ -16,19 +16,18 @@ import ScrollToTop from '@/lib/react/ScrollToTop';
 export const DataPage = () => (
   <article>
     <ScrollToTop />
-    <Typography variant="h1">About GRII, Data Sources and Access</Typography>
+    <Typography variant="h1">About G-SRAT, Data Sources and Access</Typography>
 
     <Typography variant="h2">Disclaimer</Typography>
 
     <p>
-      {' '}
-      This tool is provided for general information only and is not intended to amount to advice on
-      which you should rely. You must obtain professional or specialist advice before taking, or
-      refraining from, any action on the basis of the content on our site.
+      The Global Systemic Risk Assessment Tool (G-SRAT) is provided for general information only and
+      is not intended to amount to advice on which you should rely. You must obtain professional or
+      specialist advice before taking, or refraining from, any action on the basis of the content on
+      our site.
     </p>
 
     <p>
-      {' '}
       Although we make reasonable efforts to update the information on our site, we make no
       representations, warranties or guarantees, whether express or implied, that the content on our
       site (including this tool) is accurate, complete or up to date. The University of Oxford
@@ -41,29 +40,28 @@ export const DataPage = () => (
     <Typography variant="h2">Acknowledgments</Typography>
 
     <p>
-      In addition to its founding Partners, GRII is supported by a wide range of contributing
-      technical organisations that share data, analytics and expertise, including: the University of
-      Oxford (the{' '}
-      <a href="https://www.smithschool.ox.ac.uk/research/sustainable-finance">
-        Oxford Sustainable Finance Group
-      </a>{' '}
-      and{' '}
+      The development of this site is led by the University of Oxford (the{' '}
       <a href="https://opsis.eci.ox.ac.uk/">
         Oxford Programme for Sustainable Infrastructure Systems
-      </a>{' '}
-      ), the{' '}
+      </a>
+      ). It is supported by a wide range of contributing technical organisations and specialists
+      that share data, analytics and expertise, including: the{' '}
+      <a href="https://www.smithschool.ox.ac.uk/research/sustainable-finance">
+        University of Oxford Sustainable Finance Group
+      </a>
+      , the{' '}
       <a href="https://www.insdevforum.org/working-groups/rmsg/">
         Insurance Development Forum’s Risk Modelling Steering Group
       </a>{' '}
       (RMSG), the{' '}
       <a href="https://www.globalquakemodel.org/who-we-are">Global Earthquake Model Foundation</a>{' '}
       (GEM), the <a href="https://www.disasterprotection.org/">Centre for Disaster Protection</a>,{' '}
-      <a href="https://www.fathom.global/">Fathom</a> , <a href="https://www.jbarisk.com/">JBA</a>,{' '}
+      <a href="https://www.fathom.global/">Fathom</a>, <a href="https://www.jbarisk.com/">JBA</a>,{' '}
       <a href="https://www.nasdaq.com/solutions/nasdaq-risk-platform">NASDAQ</a>,{' '}
       <a href="https://oasislmf.org/">OASIS Loss Modelling Framework</a>,{' '}
       <a href="https://www.wtwco.com/en-US">Willis Towers Watson</a>,{' '}
       <a href="https://www.aon.com/home/index">Aon</a>, and the{' '}
-      <a href="https://www.worldbank.org/en/home">World Bank</a> ({' '}
+      <a href="https://www.worldbank.org/en/home">World Bank</a> (
       <a href="https://www.gfdrr.org/en">GFDRR</a> and{' '}
       <a href="https://www.worldbank.org/en/programs/disaster-risk-financing-and-insurance-program">
         DRFIP
