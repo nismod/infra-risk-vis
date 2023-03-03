@@ -43,7 +43,7 @@ services:
       - "traefik.http.routers.web-server.entrypoints=websecure"
       - "traefik.http.routers.web-server.tls.certresolver=certresolverone"
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
-    cpus: 1.0
+    cpus: 0.25
     mem_reservation: "50M"
     mem_limit: "250M"
 
@@ -64,7 +64,7 @@ services:
       - "traefik.http.routers.backend.middlewares=backend-stripprefix"
       - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
-    cpus: 1.0
+    cpus: 0.5
     mem_reservation: "50M"
     mem_limit: "500M"
 
@@ -83,24 +83,25 @@ services:
       - "traefik.http.routers.vector-tileserver.middlewares=vector-tileserver-stripprefix"
       - "traefik.http.middlewares.vector-tileserver-stripprefix.stripprefix.prefixes=/vector"
       - "traefik.http.services.vector-tileserver.loadbalancer.server.port=8080"
-    cpus: 1.0
+    cpus: 0.5
     mem_reservation: "50M"
     mem_limit: "500M"
 
   # IRV AUTOPACKAGE Services
 
   redis:
-    image: redis:6.2-alpine
+    image: ghcr.io/nismod/irv-autopkg-redis:0.1
+    user: autopkg
     restart: always
     command: redis-server --save 20 1 --loglevel notice
     volumes: 
       - ./irv-autopkg/redis:/data
-    cpus: "0.25"
+    cpus: 0.25
     mem_reservation: "50M"
     mem_limit: "250M"
 
   irv-autopkg-worker:
-    image: ghcr.io/nismod/irv-autopkg:0.2.3
+    image: ghcr.io/nismod/irv-autopkg:0.2.5
     restart: always
     user: autopkg
     volumes:
@@ -109,12 +110,12 @@ services:
     env_file:
       - envs/prod/.irv-autopkg.env
     command: celery --app dataproc.tasks worker
-    cpus: 1.0
-    mem_reservation: "500M"
-    mem_limit: "5G"
+    cpus: 2.0
+    mem_reservation: "1G"
+    mem_limit: "4G"
 
   irv-autopkg-api:
-    image: ghcr.io/nismod/irv-autopkg:0.2.3
+    image: ghcr.io/nismod/irv-autopkg:0.2.5
     restart: always
     user: autopkg
     volumes:
