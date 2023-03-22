@@ -26,10 +26,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.18
-    build:
-      context: ./containers/web-server
-      dockerfile: Dockerfile-prod
+    image: ghcr.io/nismod/irv-frontend:0.20
     expose:
       - "80"
     labels:

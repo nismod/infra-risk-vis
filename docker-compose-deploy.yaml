@@ -31,7 +31,7 @@ services:
 
 
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.17
+    image: ghcr.io/nismod/irv-frontend:0.20
     restart: always
     expose:
       - "80"
@@ -101,7 +101,7 @@ services:
     mem_limit: "250M"
 
   irv-autopkg-worker:
-    image: ghcr.io/nismod/irv-autopkg:0.2.5
+    image: ghcr.io/nismod/irv-autopkg:0.2.7
     restart: always
     user: autopkg
     volumes:
@@ -111,11 +111,11 @@ services:
       - envs/prod/.irv-autopkg.env
     command: celery --app dataproc.tasks worker
     cpus: 2.0
-    mem_reservation: "1G"
-    mem_limit: "4G"
+    mem_reservation: "3G"
+    mem_limit: "6G"
 
   irv-autopkg-api:
-    image: ghcr.io/nismod/irv-autopkg:0.2.5
+    image: ghcr.io/nismod/irv-autopkg:0.2.7
     restart: always
     user: autopkg
     volumes:
