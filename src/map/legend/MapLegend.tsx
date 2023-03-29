@@ -7,6 +7,7 @@ import { viewLayersParamsState } from 'state/layers/view-layers-params';
 import { RasterLegend } from './RasterLegend';
 import { VectorLegend } from './VectorLegend';
 import { Stack, Box, Paper, Divider } from '@mui/material';
+import { MobileTabContentWatcher } from 'pages/map/layouts/mobile/tab-has-content';
 
 export const MapLegend: FC<{}> = () => {
   const viewLayers = useRecoilValue(viewLayersFlatState);
@@ -58,6 +59,7 @@ export const MapLegend: FC<{}> = () => {
 
   return hazardViewLayers.length || Object.keys(dataColorMaps).length ? (
     <Paper>
+      <MobileTabContentWatcher tabId="legend" />
       <Box p={1} maxWidth={270}>
         <Stack gap={0.3} divider={<Divider />}>
           {hazardViewLayers.map((viewLayer) => (

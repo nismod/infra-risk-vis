@@ -1,25 +1,22 @@
-import { FC, useContext } from 'react';
-import { MapContext, FlyToInterpolator } from 'react-map-gl';
-
 import { easeCubic } from 'd3-ease';
+import { FC, useContext } from 'react';
+import { FlyToInterpolator, WebMercatorViewport } from 'react-map-gl';
 
-import { useChangeEffect } from 'lib/hooks/use-change-effect';
+import { BoundingBox, appToDeckBoundingBox } from 'lib/bounding-box';
 import { ViewStateContext } from 'lib/data-map/DeckMap';
-import { appToDeckBoundingBox, BoundingBox } from 'lib/bounding-box';
+import { useChangeEffect } from 'lib/hooks/use-change-effect';
 
 interface MapBoundsFitterProps {
   boundingBox: BoundingBox;
 }
 
 export const MapBoundsFitter: FC<MapBoundsFitterProps> = ({ boundingBox }) => {
-  const { viewport } = useContext(MapContext);
   const { viewState, setViewState } = useContext(ViewStateContext);
 
   useChangeEffect(
     () => {
       if (boundingBox != null) {
-        const deckBbox = appToDeckBoundingBox(boundingBox);
-        const { latitude, longitude, zoom } = viewport.fitBounds(deckBbox, { padding: 20 });
+        const { latitude, longitude, zoom } = getBoundingBoxViewState(boundingBox);
 
         setViewState({
           ...viewState,
@@ -32,9 +29,17 @@ export const MapBoundsFitter: FC<MapBoundsFitterProps> = ({ boundingBox }) => {
         });
       }
     },
-    [boundingBox, viewState, setViewState, viewport],
+    [boundingBox, viewState, setViewState],
     [boundingBox],
   );
 
   return null;
 };
+
+export function getBoundingBoxViewState(boundingBox: BoundingBox, viewportWidth = 800, viewportHeight = 600) {
+  const deckBbox = appToDeckBoundingBox(boundingBox);
+  const viewport = new WebMercatorViewport({ width: viewportWidth, height: viewportHeight });
+  const { latitude, longitude, zoom } = viewport.fitBounds(deckBbox, { padding: 20 });
+
+  return { latitude, longitude, zoom };
+}

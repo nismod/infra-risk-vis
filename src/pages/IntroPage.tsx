@@ -23,14 +23,14 @@ export const IntroPage = () => (
     <article>
       <ScrollToTop />
       <Grid container columnSpacing={8} rowSpacing={4}>
-        <Grid item xs={6}>
+        <Grid item md={6} sx={{ width: '100%' }}>
           <HeadingBox sx={{ mt: -2, pt: 8 }}>
             <Typography variant="h1">
               Climate-related risk analytics for transport, energy &amp; water infrastructure in Jamaica
             </Typography>
           </HeadingBox>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item md={6}>
           <TextBox sx={{ mt: -2, pt: 8 }}>
             <p>
               The Jamaica Systemic Risk Assessment Tool (J&#8209;SRAT) supports climate adaptation decision-making by
@@ -56,7 +56,7 @@ export const IntroPage = () => (
             </p>
             <p>
               <Stack
-                direction="row"
+                direction={{ xs: 'column', md: 'row' }}
                 divider={<Divider orientation="vertical" flexItem />}
                 justifyContent="center"
                 alignItems="center"
@@ -92,7 +92,7 @@ export const IntroPage = () => (
             </p>
 
             <Stack
-              direction="row"
+              direction={{ xs: 'column', md: 'row' }}
               divider={<Divider orientation="vertical" flexItem />}
               spacing={2}
               justifyContent="center"

@@ -6,6 +6,7 @@ import { RegionDetailsContent } from './RegionDetailsContent';
 import { SidePanel } from 'details/SidePanel';
 import { DeselectButton } from 'details/DeselectButton';
 import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+import { MobileTabContentWatcher } from 'pages/map/layouts/mobile/tab-has-content';
 
 export const RegionDetails = () => {
   const selectedRegion = useRecoilValue(selectionState('regions'));
@@ -14,6 +15,7 @@ export const RegionDetails = () => {
 
   return (
     <SidePanel position="relative">
+      <MobileTabContentWatcher tabId="details" />
       <ErrorBoundary message="There was a problem displaying these details.">
         <Box position="absolute" top={0} right={0} p={2}>
           <DeselectButton interactionGroup="regions" title="Deselect region" />

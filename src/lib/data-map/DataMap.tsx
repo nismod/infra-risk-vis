@@ -1,22 +1,19 @@
+import _ from 'lodash';
 import { FC, ReactNode, useCallback, useEffect, useMemo } from 'react';
-import { StaticMap } from 'react-map-gl';
 
-import { ViewLayer, ViewLayerParams } from './view-layers';
+import { usePrevious } from '../hooks/use-previous';
+import { useTrackingRef } from '../hooks/use-tracking-ref';
+import { useTrigger } from '../hooks/use-trigger';
 
 import { DeckMap } from './DeckMap';
 import { useInteractions } from './interactions/use-interactions';
-import { useTrigger } from 'lib/hooks/use-trigger';
-import { usePrevious } from '../hooks/use-previous';
-import { useTrackingRef } from 'lib/hooks/use-tracking-ref';
-import _ from 'lodash';
+import { ViewLayer, ViewLayerParams } from './view-layers';
 
 export interface DataMapProps {
   initialViewState: any;
   viewLayers: ViewLayer[];
   viewLayersParams: Record<string, ViewLayerParams>;
   interactionGroups: any;
-  backgroundStyle: any;
-  uiOverlays?: ReactNode;
 }
 
 // set a convention where the view layer id is either the first part of the deck id before the @ sign, or it's the whole id
@@ -29,8 +26,6 @@ export const DataMap: FC<DataMapProps> = ({
   viewLayers,
   viewLayersParams,
   interactionGroups,
-  backgroundStyle,
-  uiOverlays,
   children,
 }) => {
   const { onHover, onClick, layerFilter, pickingRadius } = useInteractions(
@@ -40,11 +35,8 @@ export const DataMap: FC<DataMapProps> = ({
   );
 
   const dataLoaders = useMemo(
-    () =>
-      viewLayers
-        .map((vl) => vl.dataAccessFn?.(viewLayersParams[vl.id].styleParams?.colorMap?.fieldSpec)?.dataLoader)
-        .filter(Boolean),
-    [viewLayers, viewLayersParams],
+    () => viewLayers.map((vl) => vl.dataAccessFn?.(vl.styleParams?.colorMap?.fieldSpec)?.dataLoader).filter(Boolean),
+    [viewLayers],
   );
 
   const [dataLoadTrigger, triggerDataUpdate] = useTrigger();
@@ -96,9 +88,7 @@ export const DataMap: FC<DataMapProps> = ({
       onClick={onClick}
       layerRenderFilter={layerFilter}
       pickingRadius={pickingRadius}
-      uiOverlays={uiOverlays}
     >
-      <StaticMap mapStyle={backgroundStyle} attributionControl={false} />
       {children}
     </DeckMap>
   );

@@ -7,6 +7,7 @@ import { SidePanel } from 'details/SidePanel';
 import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 import { Box } from '@mui/system';
 import { DeselectButton } from 'details/DeselectButton';
+import { MobileTabContentWatcher } from 'pages/map/layouts/mobile/tab-has-content';
 
 export const FeatureSidebar: FC<{}> = () => {
   const featureSelection = useRecoilValue(selectionState('assets'));
@@ -20,6 +21,7 @@ export const FeatureSidebar: FC<{}> = () => {
 
   return (
     <SidePanel position="relative">
+      <MobileTabContentWatcher tabId="details" />
       <ErrorBoundary message="There was a problem displaying these details.">
         <Box position="absolute" top={15} right={15} zIndex={1000}>
           <DeselectButton interactionGroup="assets" title="Deselect asset" />

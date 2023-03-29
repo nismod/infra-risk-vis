@@ -21,7 +21,7 @@
     "d3-ease": "^3.0.1",
     "d3-scale": "^4.0.2",
     "d3-scale-chromatic": "^3.0.0",
-    "deck.gl": "^8.6.6",
+    "deck.gl": "8.9",
     "http-proxy-middleware": "^2.0.1",
     "immer": "^9.0.12",
     "json-stable-stringify": "^1.0.1",
@@ -32,6 +32,7 @@
     "react-map-gl": "^5.3.16",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0",
+    "react-spring-bottom-sheet": "^3.4.1",
     "react-transition-group": "^4.4.2",
     "react-vega": "^7.4.2",
     "recoil": "^0.6.1",
@@ -42,7 +43,6 @@
     "vega-lite": "^5.0.0"
   },
   "devDependencies": {
-    "@danmarshall/deckgl-typings": "^4.9.13",
     "@types/d3-array": "^3.0.2",
     "@types/d3-color": "^3.0.2",
     "@types/d3-ease": "^3.0.0",

@@ -6,6 +6,7 @@ import { ErrorBoundary } from 'lib/react/ErrorBoundary';
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 import { SolutionsSidebarContent } from './SolutionsSidebarContent';
+import { MobileTabContentWatcher } from 'pages/map/layouts/mobile/tab-has-content';
 
 export const SolutionsSidebar: FC<{}> = () => {
   const featureSelection = useRecoilValue(selectionState('solutions'));
@@ -19,6 +20,7 @@ export const SolutionsSidebar: FC<{}> = () => {
 
   return (
     <SidePanel position="relative">
+      <MobileTabContentWatcher tabId="details" />
       <ErrorBoundary message="There was a problem displaying these details.">
         <Box position="absolute" top={0} right={0} p={2}>
           <DeselectButton interactionGroup="solutions" title="Deselect" />

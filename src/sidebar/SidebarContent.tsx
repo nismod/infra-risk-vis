@@ -11,6 +11,8 @@ import { NetworksSection } from './networks/NetworksSection';
 import { RegionsSection } from './regions/RegionsSection';
 import { MarineSection } from './solutions/MarineSection';
 import { TerrestrialSection } from './solutions/TerrestrialSection';
+import { ErrorBoundary } from 'lib/react/ErrorBoundary';
+import { MobileTabContentWatcher } from 'pages/map/layouts/mobile/tab-has-content';
 
 const viewLabels = {
   exposure: 'Exposure',
@@ -19,7 +21,7 @@ const viewLabels = {
   'nature-based-solutions': 'Nature-based Solutions',
 };
 
-export const SidebarContent: FC<{}> = () => {
+const SidebarContent: FC<{}> = () => {
   const view = useRecoilValue(viewState);
   switch (view) {
     case 'exposure':
@@ -65,4 +67,15 @@ export const SidebarContent: FC<{}> = () => {
       }
     }
   }
+};
+
+export const LayersSidebar = () => {
+  return (
+    <>
+      <MobileTabContentWatcher tabId="layers" />
+      <ErrorBoundary message="There was a problem displaying the sidebar.">
+        <SidebarContent />
+      </ErrorBoundary>
+    </>
+  );
 };
