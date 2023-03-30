@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useEffect } from 'react';
+import { Suspense, useCallback, useContext, useEffect, useLayoutEffect } from 'react';
 import { StaticMap } from 'react-map-gl';
 import { atom, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 
@@ -26,6 +26,9 @@ import { backgroundState } from './layers/layers-state';
 import { MapLegend } from './legend/MapLegend';
 import { TooltipContent } from './tooltip/TooltipContent';
 import { useBackgroundConfig } from './use-background-config';
+import { ViewStateDebug } from 'lib/data-map/ViewStateDebug';
+import { zoomState } from 'state/zoom';
+import { ViewStateContext } from 'lib/data-map/DeckMap';
 
 export const mapFitBoundsState = atom<BoundingBox>({
   key: 'mapFitBoundsState',
@@ -79,6 +82,7 @@ const MapHudDesktopLayout = () => {
         <AppNavigationControl />
       </MapHudRegion>
       <MapHudRegion position="bottom-right" style={{ maxWidth: '40%' }}>
+        {/* <ViewStateDebug /> */}
         <AppScaleControl />
         <AppAttributionControl />
       </MapHudRegion>
@@ -140,6 +144,7 @@ const MapViewContent = () => {
       interactionGroups={interactionGroups}
     >
       <StaticMap mapStyle={backgroundStyle} attributionControl={false} />
+      <ZoomSetter />
       <MapBoundsFitter boundingBox={fitBounds} />
       <DataMapTooltip>
         <TooltipContent />
@@ -149,6 +154,18 @@ const MapViewContent = () => {
   );
 };
 
+function ZoomSetter() {
+  const setZoom = useSetRecoilState(zoomState);
+  const {
+    viewState: { zoom },
+  } = useContext(ViewStateContext);
+
+  useLayoutEffect(() => {
+    setZoom(zoom);
+  }, [zoom, setZoom]);
+
+  return null;
+}
 export const MapView = () => (
   <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">
     <Suspense fallback={null}>

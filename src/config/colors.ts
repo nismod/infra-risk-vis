@@ -3,7 +3,9 @@ import { makeColorConfig } from 'lib/helpers';
 export const COLORS = makeColorConfig({
   electricity_high: '#eca926',
   electricity_low: '#f1d75c',
-  electricity_unknown: '#aaa',
+  electricity_generation: '#bedb00',
+  electricity_demand: '#ff8c00',
+  electricity_unknown: '#aaaaaa',
 
   railway: '#444',
 

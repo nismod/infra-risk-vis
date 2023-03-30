@@ -32,8 +32,12 @@ export const NetworkControl: FC<{}> = () => {
       <CheckboxTree
         nodes={NETWORK_LAYERS_HIERARCHY}
         config={networkTreeConfig}
-        getLabel={(node) =>
-          node.children ? node.label : <LayerLabel {...NETWORKS_METADATA[node.id]} label={node.label} />
+        getLabel={(node, checked) =>
+          node.children ? (
+            node.label
+          ) : (
+            <LayerLabel {...NETWORKS_METADATA[node.id]} label={node.label} visible={checked} />
+          )
         }
         checkboxState={checkboxState}
         onCheckboxState={setCheckboxState}

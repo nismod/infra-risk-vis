@@ -13,11 +13,16 @@ export const TerrestrialLandUseTree = () => {
     <CheckboxTree
       nodes={LANDUSE_HIERARCHY}
       config={landuseTreeConfig}
-      getLabel={(node) =>
+      getLabel={(node, checked) =>
         node.children ? (
           node.label
         ) : (
-          <LayerLabel label={node.label} type="polygon" color={TERRESTRIAL_LANDUSE_COLORS[node.id].css} />
+          <LayerLabel
+            label={node.label}
+            type="polygon"
+            color={TERRESTRIAL_LANDUSE_COLORS[node.id].css}
+            visible={checked}
+          />
         )
       }
       checkboxState={checkboxState}
