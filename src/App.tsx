@@ -13,6 +13,8 @@ import { Nav, NavItemConfig } from './Nav';
 import 'react-spring-bottom-sheet/dist/style.css';
 import './index.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { Notice } from 'Notice';
+import { RecoilLocalStorageSync } from 'lib/recoil/sync-stores/RecoilLocalStorageSync';
 
 const navItems: NavItemConfig[] = [
   {
@@ -45,28 +47,31 @@ const navItems: NavItemConfig[] = [
 export const App = () => {
   return (
     <RecoilRoot>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <Router>
-            <CssBaseline />
-            <Nav height={globalStyleVariables.navbarHeight} navItems={navItems} />
-            <Box position="absolute" top={globalStyleVariables.navbarHeight} bottom={0} left={0} right={0}>
-              <Switch>
-                <Route path="/" exact>
-                  <IntroPage />
-                </Route>
-                <Route
-                  path="/:view(exposure|risk|adaptation|nature-based-solutions)"
-                  render={({ match: { params } }) => <MapPage view={params.view} />}
-                />
-                <Route path="/data" exact>
-                  <DataPage />
-                </Route>
-              </Switch>
-            </Box>
-          </Router>
-        </ThemeProvider>
-      </StyledEngineProvider>
+      <RecoilLocalStorageSync storeKey="local-storage">
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <Router>
+              <CssBaseline />
+              <Nav height={globalStyleVariables.navbarHeight} navItems={navItems} />
+              <Notice />
+              <Box position="absolute" top={globalStyleVariables.navbarHeight} bottom={0} left={0} right={0}>
+                <Switch>
+                  <Route path="/" exact>
+                    <IntroPage />
+                  </Route>
+                  <Route
+                    path="/:view(exposure|risk|adaptation|nature-based-solutions)"
+                    render={({ match: { params } }) => <MapPage view={params.view} />}
+                  />
+                  <Route path="/data" exact>
+                    <DataPage />
+                  </Route>
+                </Switch>
+              </Box>
+            </Router>
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </RecoilLocalStorageSync>
     </RecoilRoot>
   );
 };
