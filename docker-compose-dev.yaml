@@ -22,10 +22,7 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    build:
-      context: ./containers/web-server
-      dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-web-server:0.17
+    image: ghcr.io/nismod/irv-frontend:0.20-dev
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
     labels:

@@ -3,6 +3,7 @@ version: "3.9"
 services:
   traefik:
     image: "traefik:v2.9"
+    restart: always
     container_name: "traefik"
     command:
       - "--log.level=DEBUG"
@@ -24,9 +25,14 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    cpus: 0.25
+    mem_reservation: "50M"
+    mem_limit: "250M"
+
 
   web-server:
-    image: ghcr.io/nismod/gri-web-server:0.17
+    image: ghcr.io/nismod/irv-frontend:0.20
+    restart: always
     expose:
       - "80"
     volumes:
@@ -37,9 +43,13 @@ services:
       - "traefik.http.routers.web-server.entrypoints=websecure"
       - "traefik.http.routers.web-server.tls.certresolver=certresolverone"
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
+    cpus: 0.25
+    mem_reservation: "50M"
+    mem_limit: "250M"
 
   backend:
     image: ghcr.io/nismod/gri-backend:0.9
+    restart: always
     volumes:
       - ./tileserver/raster/data:/data
     env_file:
@@ -54,9 +64,13 @@ services:
       - "traefik.http.routers.backend.middlewares=backend-stripprefix"
       - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
+    cpus: 0.5
+    mem_reservation: "50M"
+    mem_limit: "500M"
 
   vector-tileserver:
     image: ghcr.io/nismod/gri-vector-tileserver:0.10
+    restart: always
     volumes:
       - ./tileserver/vector/data:/data
     expose:
@@ -69,30 +83,44 @@ services:
       - "traefik.http.routers.vector-tileserver.middlewares=vector-tileserver-stripprefix"
       - "traefik.http.middlewares.vector-tileserver-stripprefix.stripprefix.prefixes=/vector"
       - "traefik.http.services.vector-tileserver.loadbalancer.server.port=8080"
+    cpus: 0.5
+    mem_reservation: "50M"
+    mem_limit: "500M"
 
   # IRV AUTOPACKAGE Services
 
   redis:
-    image: redis:6.2-alpine
+    image: ghcr.io/nismod/irv-autopkg-redis:0.1
+    user: autopkg
     restart: always
     command: redis-server --save 20 1 --loglevel notice
     volumes: 
       - ./irv-autopkg/redis:/data
+    cpus: 0.25
+    mem_reservation: "50M"
+    mem_limit: "250M"
 
   irv-autopkg-worker:
-    image: ghcr.io/nismod/irv-autopkg:0.1.0
+    image: ghcr.io/nismod/irv-autopkg:0.2.7
+    restart: always
+    user: autopkg
     volumes:
       - ./irv-autopkg/packages:/data/packages
-      - ./irv-autopkg/tmp:/data/tmp
+      - ./irv-autopkg/processing:/data/processing
     env_file:
       - envs/prod/.irv-autopkg.env
-    command: celery --app dataproc.tasks worker --loglevel=info --concurrency=4
+    command: celery --app dataproc.tasks worker
+    cpus: 2.0
+    mem_reservation: "3G"
+    mem_limit: "6G"
 
   irv-autopkg-api:
-    image: ghcr.io/nismod/irv-autopkg:0.1.0
+    image: ghcr.io/nismod/irv-autopkg:0.2.7
+    restart: always
+    user: autopkg
     volumes:
       - ./irv-autopkg/packages:/data/packages
-      - ./irv-autopkg/tmp:/data/tmp
+      - ./irv-autopkg/processing:/data/processing
     env_file:
       - envs/prod/.irv-autopkg.env
     expose:
@@ -106,3 +134,6 @@ services:
       - "traefik.http.routers.irv-autopkg-api.middlewares=irv-autopkg-api-stripprefix"
       - "traefik.http.middlewares.irv-autopkg-api-stripprefix.stripprefix.prefixes=/extract"
       - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
+    cpus: 0.25
+    mem_reservation: "50M"
+    mem_limit: "250M"
