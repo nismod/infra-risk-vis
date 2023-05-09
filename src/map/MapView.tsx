@@ -26,7 +26,7 @@ import { backgroundState } from './layers/layers-state';
 import { MapLegend } from './legend/MapLegend';
 import { TooltipContent } from './tooltip/TooltipContent';
 import { useBackgroundConfig } from './use-background-config';
-import { ViewStateDebug } from 'lib/data-map/ViewStateDebug';
+// import { ViewStateDebug } from 'lib/data-map/ViewStateDebug';
 import { zoomState } from 'state/zoom';
 import { ViewStateContext } from 'lib/data-map/DeckMap';
 
