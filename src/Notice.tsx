@@ -1,5 +1,5 @@
 import { InfoOutlined } from '@mui/icons-material';
-import { Box, Button, DialogActions, Drawer, Stack, Typography } from '@mui/material';
+import { Box, Button, Container, DialogActions, Drawer, Stack, Typography } from '@mui/material';
 import { date, nullable } from '@recoiljs/refine';
 import { AppLink } from 'lib/nav';
 import { useCallback } from 'react';
@@ -30,22 +30,24 @@ export const Notice = () => {
 
   return (
     <Drawer variant="persistent" anchor="bottom" open={acceptedDate == null}>
-      <Stack direction="row" justifyContent="space-between" mx={1} my={0.5}>
-        <Stack direction="row" alignItems="center" spacing={1}>
+      <Container maxWidth="lg">
+        <Stack direction="row" alignItems="center" spacing={2} my={5}>
           <Box>
             <InfoOutlined color="primary" />
           </Box>
           <Typography paragraph>
-            The systemic risk analysis results shown in this tool contain licensed data that must not be shared outside
-            the Government of Jamaica. By accessing the tool, you acknowledge that you understand this and agree not to
-            download any data or share your access credentials with anyone else.{' '}
-            <AppLink to="/data">Read more about the data</AppLink>
+            The systemic risk analysis data and results shown in this tool contain licensed data that must not be shared
+            outside the Government of Jamaica. By accessing the tool, you acknowledge that you understand this and agree
+            not to download any data or share your access credentials with anyone else.{' '}
+            <AppLink to="/data">Read more about the data</AppLink>.
           </Typography>
+          <DialogActions>
+            <Button variant="contained" onClick={handleAccept}>
+              Accept
+            </Button>
+          </DialogActions>
         </Stack>
-        <DialogActions>
-          <Button onClick={handleAccept}>Accept</Button>
-        </DialogActions>
-      </Stack>
+      </Container>
     </Drawer>
   );
 };
