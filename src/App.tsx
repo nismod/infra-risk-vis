@@ -7,6 +7,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { IntroPage } from './pages/IntroPage';
 import { MapPage } from './pages/map/MapPage';
 import { DataPage } from './pages/DataPage';
+import { GuidePage } from './pages/GuidePage';
 import { globalStyleVariables, theme } from './theme';
 import { Nav, NavItemConfig } from './Nav';
 
@@ -42,6 +43,11 @@ const navItems: NavItemConfig[] = [
     title: 'About',
     tooltip: 'More information about datasets in the tool',
   },
+  {
+    to: '/guide',
+    title: 'Guide',
+    tooltip: 'Help and guidance for use of the tool',
+  },
 ];
 
 export const App = () => {
@@ -65,6 +71,9 @@ export const App = () => {
                   />
                   <Route path="/data" exact>
                     <DataPage />
+                  </Route>
+                  <Route path="/guide" exact>
+                    <GuidePage />
                   </Route>
                 </Switch>
               </Box>

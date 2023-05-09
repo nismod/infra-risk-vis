@@ -32,6 +32,9 @@ article {
 article p {
   margin-top: 0;
 }
+article img {
+  max-width: 100%;
+}
 /**
  * Map and controls
  */

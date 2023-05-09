@@ -115,8 +115,6 @@ const DesktopNavContent: FC<{ navItems: NavItemConfig[] }> = ({ navItems }) => (
         </ToolbarNavLink>
       </NavTooltip>
     ))}
-
-    <GrowingDivider />
   </>
 );
 
