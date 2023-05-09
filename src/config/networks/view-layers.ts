@@ -56,6 +56,7 @@ const roadLineSize: Record<RoadClass, ScaleLevel> = {
 function roadsViewLayer(asset_id) {
   const roadClass = roadClassLookup[asset_id];
   return infrastructureViewLayer(asset_id, ({ zoom, styleParams }) => [
+    { minZoom: NETWORKS_METADATA[asset_id].minZoom ?? 4 },
     strokeColor(infraStyle(asset_id, roadColor[roadClass], styleParams)),
     lineStyle(zoom, roadLineSize[roadClass]),
   ]);
@@ -77,28 +78,43 @@ function wastewaterNodesViewLayer(asset_id) {
   ]);
 }
 
-function electricitySourceViewLayer(asset_id) {
-  return infrastructureViewLayer(asset_id, ({ zoom, styleParams }) => [
-    border(),
-    fillColor(infraStyle(asset_id, COLORS.electricity_generation.deck, styleParams)),
-    pointRadius(zoom, 0),
-  ]);
-}
-
 export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
   infrastructureViewLayer('elec_edges_high', ({ zoom, styleParams }) => [
     strokeColor(infraStyle('elec_edges_high', COLORS.electricity_high.deck, styleParams)),
     lineStyle(zoom, 1),
   ]),
   infrastructureViewLayer('elec_edges_low', ({ zoom, styleParams }) => [
+    { minZoom: NETWORKS_METADATA.elec_edges_low.minZoom },
     strokeColor(infraStyle('elec_edges_low', COLORS.electricity_low.deck, styleParams)),
     lineStyle(zoom, 2),
   ]),
-  electricitySourceViewLayer('elec_nodes_diesel'),
-  electricitySourceViewLayer('elec_nodes_gas'),
-  electricitySourceViewLayer('elec_nodes_hydro'),
-  electricitySourceViewLayer('elec_nodes_solar'),
-  electricitySourceViewLayer('elec_nodes_wind'),
+
+  infrastructureViewLayer('elec_nodes_diesel', ({ zoom, styleParams }) => [
+    iconType('square'),
+    iconColor(infraStyle('elec_nodes_diesel', COLORS.elec_nodes_diesel.deck, styleParams)),
+    iconSize(zoom, 1),
+  ]),
+  infrastructureViewLayer('elec_nodes_gas', ({ zoom, styleParams }) => [
+    iconType('square'),
+    iconColor(infraStyle('elec_nodes_gas', COLORS.elec_nodes_gas.deck, styleParams)),
+    iconSize(zoom, 1),
+  ]),
+  infrastructureViewLayer('elec_nodes_hydro', ({ zoom, styleParams }) => [
+    iconType('square'),
+    iconColor(infraStyle('elec_nodes_hydro', COLORS.elec_nodes_hydro.deck, styleParams)),
+    iconSize(zoom, 1),
+  ]),
+  infrastructureViewLayer('elec_nodes_solar', ({ zoom, styleParams }) => [
+    iconType('square'),
+    iconColor(infraStyle('elec_nodes_solar', COLORS.elec_nodes_solar.deck, styleParams)),
+    iconSize(zoom, 1),
+  ]),
+  infrastructureViewLayer('elec_nodes_wind', ({ zoom, styleParams }) => [
+    iconType('square'),
+    iconColor(infraStyle('elec_nodes_wind', COLORS.elec_nodes_wind.deck, styleParams)),
+    iconSize(zoom, 1),
+  ]),
+
   infrastructureViewLayer('elec_nodes_demand', ({ zoom, styleParams }) => [
     { minZoom: NETWORKS_METADATA.elec_nodes_demand.minZoom },
     fillColor(infraStyle('elec_nodes_demand', COLORS.electricity_demand.deck, styleParams)),
@@ -116,6 +132,7 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     fillColor(infraStyle('elec_nodes_substation', COLORS.electricity_high.deck, styleParams)),
     pointRadius(zoom, 1),
   ]),
+
   infrastructureViewLayer('rail_edges', ({ zoom, styleParams }) => [
     strokeColor(infraStyle('rail_edges', COLORS.railway.deck, styleParams)),
     lineStyle(zoom, 1),
@@ -126,16 +143,18 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
     pointRadius(zoom, 1),
   ]),
   infrastructureViewLayer('rail_junctions', ({ zoom, styleParams }) => [
-    border(),
-    fillColor(infraStyle('rail_junctions', COLORS.railway.deck, styleParams)),
-    pointRadius(zoom, 2),
+    iconType('diamond'),
+    iconColor(infraStyle('rail_junctions', COLORS.railway.deck, styleParams)),
+    iconSize(zoom, 2),
   ]),
+
   roadsViewLayer('road_edges_class_a'),
   roadsViewLayer('road_edges_class_b'),
   roadsViewLayer('road_edges_class_c'),
   roadsViewLayer('road_edges_metro'),
   roadsViewLayer('road_edges_track'),
   roadsViewLayer('road_edges_other'),
+
   infrastructureViewLayer('road_bridges', ({ zoom, styleParams }) => [
     iconType('diamond'),
     iconColor(infraStyle('road_bridges', COLORS.bridges.deck, styleParams)),
@@ -143,27 +162,27 @@ export const INFRASTRUCTURE_VIEW_LAYERS = makeConfig<ViewLayer, string>([
   ]),
   infrastructureViewLayer('airport_runways', ({ zoom, styleParams }) => [
     zoom >= 10 && border(),
-    fillColor(infraStyle('airport_runways', COLORS.airports.deck, styleParams)),
+    fillColor(infraStyle('airport_runways', COLORS.airport_runways.deck, styleParams)),
   ]),
   infrastructureViewLayer('airport_terminals', ({ zoom, styleParams }) => [
     zoom >= 10 && border(),
-    fillColor(infraStyle('airport_terminals', COLORS.airports.deck, styleParams)),
+    fillColor(infraStyle('airport_terminals', COLORS.airport_terminals.deck, styleParams)),
   ]),
   infrastructureViewLayer('port_areas_break', ({ zoom, styleParams }) => [
     zoom >= 10 && border(),
-    fillColor(infraStyle('port_areas_break', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('port_areas_break', COLORS.port_areas_break.deck, styleParams)),
   ]),
   infrastructureViewLayer('port_areas_container', ({ zoom, styleParams }) => [
     zoom >= 10 && border(),
-    fillColor(infraStyle('port_areas_container', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('port_areas_container', COLORS.port_areas_container.deck, styleParams)),
   ]),
   infrastructureViewLayer('port_areas_industry', ({ zoom, styleParams }) => [
     zoom >= 10 && border(),
-    fillColor(infraStyle('port_areas_industry', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('port_areas_industry', COLORS.port_areas_industry.deck, styleParams)),
   ]),
   infrastructureViewLayer('port_areas_silo', ({ zoom, styleParams }) => [
     zoom >= 10 && border(),
-    fillColor(infraStyle('port_areas_silo', COLORS.ports.deck, styleParams)),
+    fillColor(infraStyle('port_areas_silo', COLORS.port_areas_silo.deck, styleParams)),
   ]),
   potableNodesViewLayer('water_potable_nodes_booster'),
   potableNodesViewLayer('water_potable_nodes_catchment'),
