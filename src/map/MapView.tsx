@@ -81,7 +81,7 @@ const MapHudDesktopLayout = () => {
       <MapHudRegion position="top-right">
         <AppNavigationControl />
       </MapHudRegion>
-      <MapHudRegion position="bottom-right" style={{ maxWidth: '40%' }}>
+      <MapHudRegion position="bottom-right">
         {/* <ViewStateDebug /> */}
         <AppScaleControl />
         <AppAttributionControl />
