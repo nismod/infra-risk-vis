@@ -1,42 +1,40 @@
 import React from 'react';
-import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Alert, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import ScrollToTop from 'lib/hooks/scroll-to-top';
+import { ExtLink } from 'lib/nav';
 
 export const DataPage = () => (
   <article>
     <ScrollToTop />
     <p>
-      <Alert severity="info">The systemic risk analysis results shown in this
-        tool contain licensed data that must not be shared outside the Government of
-        Jamaica. By accessing the tool, you acknowledge that you understand this and
-        agree not to download any data or share your access credentials with anyone
-        else.</Alert>
+      <Alert severity="info">
+        The systemic risk analysis results shown in this tool contain licensed data that must not be shared outside the
+        Government of Jamaica. By accessing the tool, you acknowledge that you understand this and agree not to download
+        any data or share your access credentials with anyone else.
+      </Alert>
     </p>
     <p>
       <Alert
         severity="success"
         action={
           <Button color="inherit" size="small">
-            <a href="https://github.com/nismod/infra-risk-vis/issues">
-              REPORT
-            </a>
+            <ExtLink href="https://github.com/nismod/infra-risk-vis/issues">REPORT</ExtLink>
           </Button>
         }
       >
-        The tool has recently been released. Please tell us if anything is not
-        working as it should and suggest potential improvements.
+        The tool has recently been released. Please tell us if anything is not working as it should and suggest
+        potential improvements.
       </Alert>
     </p>
 
-    <p>The modelling and analysis presented here aim to support climate
-      adaptation decision-making by identifying spatial criticalities and risks
-      under current and future climate scenarios.</p>
+    <p>
+      The modelling and analysis presented here aim to support climate adaptation decision-making by identifying spatial
+      criticalities and risks under current and future climate scenarios.
+    </p>
 
     <p>The following table summarises the data and model results presented.</p>
 
-
-    <TableContainer component={Paper} sx={{my:2}}>
+    <TableContainer component={Paper} sx={{ my: 2 }}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -74,24 +72,23 @@ export const DataPage = () => (
     <p>The primary output metrics from the analysis are:</p>
 
     <ul>
-      <li>Expected Annual Damages (EAD) (direct physical risks) estimated as the
-        area under the direct damage vs exceedance probability curve </li>
-      <li>Expected Annual Economic Losses (EAEL) (indirect economic risks)
-        estimated as the area under the economic loss vs exceedance probability
-        curve </li>
+      <li>
+        Expected Annual Damages (EAD) (direct physical risks) estimated as the area under the direct damage vs
+        exceedance probability curve{' '}
+      </li>
+      <li>
+        Expected Annual Economic Losses (EAEL) (indirect economic risks) estimated as the area under the economic loss
+        vs exceedance probability curve{' '}
+      </li>
     </ul>
-
 
     <h2>Open-source code</h2>
 
-    <p>This tool to visualize the model outputs is developed and documented
-      here:</p>
+    <p>This tool to visualize the model outputs is developed and documented here:</p>
 
     <ul>
       <li>
-        <a href="https://github.com/nismod/infra-risk-vis" target="blank">
-          github.com/nismod/infra-risk-vis
-        </a>
+        <ExtLink href="https://github.com/nismod/infra-risk-vis">github.com/nismod/infra-risk-vis</ExtLink>
       </li>
     </ul>
 
@@ -99,21 +96,23 @@ export const DataPage = () => (
 
     <ul>
       <li>
-        <a href="https://github.com/nismod/jamaica-infrastructure" target="blank">
+        <ExtLink href="https://github.com/nismod/jamaica-infrastructure">
           github.com/nismod/jamaica-infrastructure
-        </a>
+        </ExtLink>
       </li>
     </ul>
     <h1>Data Sources and Access</h1>
 
-    <p>Data comes from multiple sources, including Government of Jamaica bodies,
-    private sector entities, and open data sources.</p>
+    <p>
+      Data comes from multiple sources, including Government of Jamaica bodies, private sector entities, and open data
+      sources.
+    </p>
 
-    <Alert severity="info">The systemic risk analysis results shown in this
-    tool contain licensed data that must not be shared outside the Government of
-    Jamaica. By accessing the tool, you acknowledge that you understand this and
-    agree not to download any data or share your access credentials with anyone
-    else.</Alert>
+    <Alert severity="info">
+      The systemic risk analysis results shown in this tool contain licensed data that must not be shared outside the
+      Government of Jamaica. By accessing the tool, you acknowledge that you understand this and agree not to download
+      any data or share your access credentials with anyone else.
+    </Alert>
 
     <h2>Hazard Data</h2>
 
@@ -132,25 +131,49 @@ export const DataPage = () => (
           <TableRow>
             <TableCell>Fluvial (river) and pluvial (surface) flooding</TableCell>
             <TableCell>
-              <img src="/logo-jba.png" alt="JBA Risk Management. The Flood People (R)." width="180" /><br />
-              <a href="https://www.jbarisk.com/flood-services/maps-and-analytics/global-flood-maps/">JBA global flood map product</a></TableCell>
+              <img src="/logo-jba.png" alt="JBA Risk Management. The Flood People (R)." width="180" />
+              <br />
+              <ExtLink href="https://www.jbarisk.com/flood-services/maps-and-analytics/global-flood-maps/">
+                JBA global flood map product
+              </ExtLink>
+            </TableCell>
             <TableCell>1/20, 1/50, 1/100, 1/200, 1/500, and 1/1500</TableCell>
             <TableCell>Flood depths in meters over 30m grid squares</TableCell>
-            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission&nbsp;scenarios.<br/>Current + future maps in 2050 and 2080</TableCell>
+            <TableCell>
+              RCP 2.6, 4.5 &amp; 8.5 emission&nbsp;scenarios.
+              <br />
+              Current + future maps in 2050 and 2080
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Coastal flooding (storm surge)</TableCell>
-            <TableCell><a href="http://web.archive.org/web/20200418050005/https://www.deltares.nl/en/news/regional-study-assess-effects-sea-level-rise-resilience-caribbean/">Deltares NL Caribbean product</a></TableCell>
+            <TableCell>
+              <ExtLink href="http://web.archive.org/web/20200418050005/https://www.deltares.nl/en/news/regional-study-assess-effects-sea-level-rise-resilience-caribbean/">
+                Deltares NL Caribbean product
+              </ExtLink>
+            </TableCell>
             <TableCell>1/1, 1/2, 1/5, 1/10, 1/50, 1/100</TableCell>
             <TableCell>Flood depths in meters over 90m grid squares </TableCell>
-            <TableCell>RCP 2.6, 4.5 &amp; 8.5 emission scenarios.<br/>Current + future maps in 2030, 2050, 2070 and 2100</TableCell>
+            <TableCell>
+              RCP 2.6, 4.5 &amp; 8.5 emission scenarios.
+              <br />
+              Current + future maps in 2030, 2050, 2070 and 2100
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Tropical cyclones (winds)</TableCell>
-            <TableCell><a href="https://data.4tu.nl/articles/dataset/STORM_IBTrACS_present_climate_synthetic_tropical_cyclone_tracks/12706085/2">STORM IBTrACS model</a></TableCell>
+            <TableCell>
+              <ExtLink href="https://data.4tu.nl/articles/dataset/STORM_IBTrACS_present_climate_synthetic_tropical_cyclone_tracks/12706085/2">
+                STORM IBTrACS model
+              </ExtLink>
+            </TableCell>
             <TableCell>26 different exceedance probabilities from 1/1 to 1/10000</TableCell>
             <TableCell>10 minute sustained maximum wind speeds in m/s at 10km grid squares</TableCell>
-            <TableCell>RCP 4.5 &amp; 8.5 emission scenarios.<br/>Current + future maps in 2050 and 2100</TableCell>
+            <TableCell>
+              RCP 4.5 &amp; 8.5 emission scenarios.
+              <br />
+              Current + future maps in 2050 and 2100
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>Droughts</TableCell>
@@ -162,7 +185,6 @@ export const DataPage = () => (
         </TableBody>
       </Table>
     </TableContainer>
-
 
     <h2>Infrastructure Network Data</h2>
 
@@ -210,7 +232,10 @@ export const DataPage = () => (
           <TableRow>
             <TableCell>Roads</TableCell>
             <TableCell>572 bridges, 23,200 kms of roads</TableCell>
-            <TableCell>Damage costs (J$ or J$/m), Reopening costs (J$ or J$/m), Road traffic counts, Trade flow disruptions (J$/day)</TableCell>
+            <TableCell>
+              Damage costs (J$ or J$/m), Reopening costs (J$ or J$/m), Road traffic counts, Trade flow disruptions
+              (J$/day)
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell rowSpan={3}>Water</TableCell>
@@ -231,7 +256,9 @@ export const DataPage = () => (
           </TableRow>
           <TableRow>
             <TableCell>Buildings</TableCell>
-            <TableCell>Commercial, Industrial, Institutional, Mixed Use, Other, Recreation, Residential, Resort</TableCell>
+            <TableCell>
+              Commercial, Industrial, Institutional, Mixed Use, Other, Recreation, Residential, Resort
+            </TableCell>
             <TableCell>996,682 buildings</TableCell>
             <TableCell>Damage costs (J$/m2), GDP disrupted (J$/day)</TableCell>
             <TableCell>OpenStreetMap, NLA, STATIN</TableCell>
@@ -242,8 +269,15 @@ export const DataPage = () => (
 
     <h2>Contextual Map Data</h2>
 
-    <p>Background map data is &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, style &copy; <a href="https://carto.com/attributions">CARTO</a>.</p>
+    <p>
+      Background map data is &copy; <ExtLink href="https://www.openstreetmap.org/copyright">OpenStreetMap</ExtLink>{' '}
+      contributors, style &copy; <ExtLink href="https://carto.com/attributions">CARTO</ExtLink>.
+    </p>
 
-    <p>Satellite imagery background is derived from <a href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</a> by <a href="https://eox.at">EOX IT Services GmbH</a> (Contains modified Copernicus Sentinel data 2020).</p>
+    <p>
+      Satellite imagery background is derived from{' '}
+      <ExtLink href="https://s2maps.eu">Sentinel-2 cloudless - https://s2maps.eu</ExtLink> by{' '}
+      <ExtLink href="https://eox.at">EOX IT Services GmbH</ExtLink> (Contains modified Copernicus Sentinel data 2020).
+    </p>
   </article>
 );

@@ -13,12 +13,14 @@ etl/*_test.csv
 etl/logs
 etl/vector
 etl/regions
+etl/raw_data
 etl/config_local.yml
 public/*.csv
 public/**/*.csv
 .snakemake
 
 # local config
+envs
 .env*
 !.env.example
 TODO

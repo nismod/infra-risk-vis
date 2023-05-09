@@ -30,26 +30,26 @@ export const theme = createTheme({
           src: url('/fonts/static/catamaran-bold.ttf');
           font-weight: bold;
         }
-      `
-    }
+      `,
+    },
   },
   typography: {
     h1: {
       fontWeight: 600,
       fontFamily: 'Catamaran, Roboto, sans-serif',
-      fontSize: '2.75rem'
+      fontSize: '2.75rem',
     },
     h2: {
       fontWeight: 600,
       fontFamily: 'Catamaran, Roboto, sans-serif',
-      fontSize: '1.6rem'
+      fontSize: '1.6rem',
     },
     h6: {
       fontWeight: 600,
       fontFamily: 'Catamaran, Roboto, sans-serif',
-      fontSize: '1.6rem'
-    }
-  }
+      fontSize: '1.6rem',
+    },
+  },
 });
 
 export const globalStyleVariables = {
@@ -57,4 +57,5 @@ export const globalStyleVariables = {
   detailSidebarWidth: 500,
   navbarHeight: 64,
   detailsSidebarWidth: 400,
+  mobileDrawerWidth: 240,
 };

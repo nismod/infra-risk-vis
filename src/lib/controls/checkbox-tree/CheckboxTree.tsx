@@ -75,7 +75,7 @@ export function CheckboxTree<T>({
 }: {
   config: CheckboxTreeConfig<T>;
   nodes: TreeNode<T>[];
-  getLabel: (node: TreeNode<T>) => any;
+  getLabel: (node: TreeNode<T>, checked: boolean) => any;
   checkboxState: CheckboxTreeState;
   onCheckboxState: (state: CheckboxTreeState) => void;
   expanded: string[];

@@ -3,7 +3,15 @@ import { makeColorConfig } from 'lib/helpers';
 export const COLORS = makeColorConfig({
   electricity_high: '#eca926',
   electricity_low: '#f1d75c',
-  electricity_unknown: '#aaa',
+
+  elec_nodes_diesel: '#fdb1ab',
+  elec_nodes_gas: '#e0c8e1',
+  elec_nodes_hydro: '#b5cae0',
+  elec_nodes_solar: '#ffd6a3',
+  elec_nodes_wind: '#cee8c2',
+
+  electricity_demand: '#ff8c00',
+  electricity_unknown: '#aaaaaa',
 
   railway: '#444',
 
@@ -15,8 +23,13 @@ export const COLORS = makeColorConfig({
 
   bridges: '#941339',
 
-  airports: '#d393d3',
-  ports: '#b46666',
+  airport_runways: '#d393d3',
+  airport_terminals: '#b393d3',
+
+  port_areas_break: '#b46666',
+  port_areas_container: '#b4667a',
+  port_areas_industry: '#b47a66',
+  port_areas_silo: '#b48e66',
 
   water_supply: '#83B4FF',
   water_irrigation: '#0091C1',

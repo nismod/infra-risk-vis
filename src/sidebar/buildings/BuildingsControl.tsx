@@ -13,7 +13,7 @@ export const BuildingsControl = () => {
       options={Object.keys(checkboxState)}
       checklistState={checkboxState}
       onChecklistState={setCheckboxState}
-      renderLabel={(key) => <LayerLabel {...NETWORKS_METADATA[key]} />}
+      renderLabel={(key) => <LayerLabel {...NETWORKS_METADATA[key]} visible={checkboxState[key]} />}
     />
   );
 };

@@ -7,10 +7,10 @@ name = "pypi"
 fastapi = "*"
 geoalchemy2 = "*"
 uvicorn = "*"
-psycopg2 = "*"
 fastapi-pagination = "*"
 setuptools = "*"
 backend = {editable = true, path = "."}
+psycopg2-binary = "*"
 
 [dev-packages]
 black = "*"

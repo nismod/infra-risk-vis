@@ -1,39 +1,145 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography } from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { Menu } from '@mui/icons-material';
+import {
+  AppBar,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  Link as MuiLink,
+  Toolbar,
+  Tooltip,
+  styled,
+} from '@mui/material';
+import { Box } from '@mui/system';
+import { FC, forwardRef, useCallback, useState } from 'react';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 
-export const Nav = () => {
+import { useIsMobile } from '../src/use-is-mobile';
+import { withProps } from 'lib/react/with-props';
+import { globalStyleVariables } from 'theme';
+
+const Link = styled(MuiLink)({
+  color: 'inherit',
+  textDecoration: 'none',
+});
+
+const DrawerLink = styled(Link)({
+  '&.active': {
+    backgroundColor: '#eeeeee',
+  },
+});
+
+const ToolbarLink = styled(Link)({
+  padding: '0 3px 1px 3px',
+  margin: '0 9px -10px 9px',
+  borderBottom: '6px solid transparent',
+  '&:hover,&:focus': {
+    borderBottomColor: '#ffffffbc',
+  },
+  '&:active,&.active': {
+    borderBottomColor: '#ffffff',
+  },
+});
+
+const ToolbarNavLink = forwardRef<any, any>(({ ...others }, ref) => (
+  <ToolbarLink variant="h6" component={RouterNavLink} ref={ref} {...others} />
+));
+
+const DrawerNavLink = forwardRef<any, any>(({ ...others }, ref) => (
+  <DrawerLink component={RouterNavLink} ref={ref} {...others} />
+));
+
+const GrowingDivider = styled(Divider)({
+  flexGrow: 1,
+});
+
+const drawerWidth = globalStyleVariables.mobileDrawerWidth;
+const MobileDrawer = styled(Drawer)({
+  width: drawerWidth,
+  flexShrink: 0,
+  [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+});
+
+const NavTooltip = withProps(Tooltip, {
+  enterDelay: 500,
+  disableInteractive: true,
+});
+
+const MobileNavContent: FC<{ navItems: NavItemConfig[] }> = ({ navItems }) => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
+
   return (
-    <AppBar position="fixed">
+    <>
+      <IconButton color="inherit" onClick={() => setDrawerOpen((open) => !open)} title="Menu">
+        <Menu />
+      </IconButton>
+
+      <ToolbarNavLink to="/" onClick={closeDrawer}>
+        J-SRAT
+      </ToolbarNavLink>
+
+      <GrowingDivider />
+
+      <MobileDrawer open={drawerOpen} onClose={closeDrawer}>
+        <Toolbar /> {/* Prevents app bar from concealing content*/}
+        <List>
+          <ListItem component={DrawerNavLink} to="/" exact onClick={closeDrawer}>
+            Home
+          </ListItem>
+          {navItems.map(({ to, title, tooltip }) => (
+            <NavTooltip key={to} title={tooltip} placement="right">
+              <ListItem component={DrawerNavLink} to={to} onClick={closeDrawer}>
+                {title}
+              </ListItem>
+            </NavTooltip>
+          ))}
+        </List>
+      </MobileDrawer>
+    </>
+  );
+};
+
+const DesktopNavContent: FC<{ navItems: NavItemConfig[] }> = ({ navItems }) => (
+  <>
+    <ToolbarNavLink to="/">J-SRAT</ToolbarNavLink>
+
+    {navItems.map(({ to, title, tooltip }) => (
+      <NavTooltip title={tooltip} placement="bottom">
+        <ToolbarNavLink key={to} to={to}>
+          {title}
+        </ToolbarNavLink>
+      </NavTooltip>
+    ))}
+  </>
+);
+
+const topStripeHeight = 6;
+
+export interface NavItemConfig {
+  to: string;
+  title: string;
+  tooltip?: string;
+}
+
+export const Nav: FC<{ height: number; navItems: NavItemConfig[] }> = ({ height, navItems }) => {
+  const isMobile = useIsMobile();
+
+  return (
+    <AppBar position="fixed" sx={{ color: 'white' }}>
+      <Box height={topStripeHeight} width="100%" bgcolor="rgb(197,206,0)" />
       <Toolbar
+        variant="dense"
         sx={{
-          background:
-            'linear-gradient(180deg, rgba(197,206,0,1) 0%, rgba(197,206,0,1) 10%, rgba(0,126,133,1) 10%, rgba(0,126,133,1) 100%);',
-          '& a.nav-link': {
-            '&:hover,&:focus,&:active,&.active': {
-              borderBottomColor: '#ffffff',
-            },
-          },
+          backgroundColor: 'rgb(0,126,133)',
+          height: height - topStripeHeight,
         }}
       >
-        <NavLink exact className="nav-link" to="/">
-          <Typography variant="h6">J-SRAT</Typography>
-        </NavLink>
-        <NavLink className="nav-link" to="/exposure">
-          <Typography variant="h6">Exposure</Typography>
-        </NavLink>
-        <NavLink className="nav-link" to="/risk">
-          <Typography variant="h6">Risk</Typography>
-        </NavLink>
-        <NavLink className="nav-link" to="/adaptation">
-          <Typography variant="h6">Adaptation</Typography>
-        </NavLink>
-        <NavLink className="nav-link" to="/nature-based-solutions">
-          <Typography variant="h6">Nature-based Solutions</Typography>
-        </NavLink>
-        <NavLink className="nav-link" to="/data">
-          <Typography variant="h6">Data</Typography>
-        </NavLink>
+        {isMobile ? <MobileNavContent navItems={navItems} /> : <DesktopNavContent navItems={navItems} />}
       </Toolbar>
     </AppBar>
   );
