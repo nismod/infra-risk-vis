@@ -9,6 +9,7 @@ intermediate_data/
 *.aux.xml
 *.tar.xz
 *.bak
+*.dump
 etl/*_test.csv
 etl/logs
 etl/vector

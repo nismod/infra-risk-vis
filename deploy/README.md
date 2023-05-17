@@ -1,14 +1,16 @@
 # Deploy
 
-The site can run on a single Linux virtual machine.
+The site can run on a single Linux virtual machine, with a separate database server.
 
-The virtual machine runs several processes:
-- Nginx reverse proxy and static file server, receives requests from the web,
-  terminates SSL connections and handles basic authentication.
-- Frontend React application, built using node and npm. On the server this is
-  built into static files (HTML/JS/CSS).
-- Vector tileserver, tileserver-gl-light, depends on nodejs
-- Raster tileserver, terracotta, depends on gunicorn and Python
+The virtual machine runs several services, coordinated by docker-compose:
+
+- Traefik proxy receives requests from the web, terminates SSL connections and
+  handles basic authentication.
+- Frontend React application, built using node and npm. In production this is
+  stored and served as static files (HTML/JS/CSS).
+- Vector tileserver, tileserver-gl-light, depends on node
+- Raster tileserver, terracotta, depends on gunicorn and Python 3.10
+- Backend Python application, depends on uvicorn, fastapi and Python 3.10
 
 The frontend application source code is held in
 [this repository](https://github.com/nismod/infra-risk-vis/) and this guide
@@ -19,7 +21,14 @@ To build and deploy the site:
 
 - provision a server
 - configure the server
-- build and upload frontend, data and config
+- build and push docker images
+- upload data and configuration
+- load or restore data to the database
+- pull and run the services
+
+## AWS (optional)
+
+This is optional, and only relevant if setting up on Amazon Web Services.
 
 Server provision (and related DNS/access configuration) for AWS can be run using
 [terraform](https://www.terraform.io/).
@@ -44,101 +53,52 @@ terraform plan  # to see what actions will be taken in detail
 terraform apply # rerun after any change to main.tf
 ```
 
-`provision.sh` contains installation instructions for an Ubuntu 20.04 server to
-install NGINX, setup SSL using CertBot, install node and tileserver-gl-light
+## On-premises (optional)
 
-Create a password file for HTTP Basic Authentication:
+This is optional, and only relevant if setting up servers on-premises.
+
+The service requires two virtual machines with similar specifications:
+
+1. Application server
+   - exposed to internal or public network to serve the app (ports 80 and 443)
+   - running Ubuntu 20.04
+   - minimum resources of ~20GB disk, ~1GB RAM, 2 cores
+2. Database server
+   - exposed to the application server
+   - running Ubuntu 20.04
+   - minimum resources of ~80GB disk, ~1GB RAM, 2 cores
+
+## VM provisioning
+
+`provision.sh` contains installation instructions for an Ubuntu 20.04 server to
+install docker and docker-compose.
+
+> This is relevant in either AWS or on-premises setup.
+
+## Database provisioning
+
+`provision-database-server.sh` contains installation instructions for an Ubuntu
+20.04 server to install a PostgreSQL database server with the PostGIS extension.
+
+> If running on AWS, this should be handled by terraform as an RDS database.
+
+## Basic authentication
+
+Create a password file for HTTP Basic Authentication if it doesn't already exist:
 
 ```bash
-sudo touch /etc/nginx/.htpasswd
+sudo touch /var/www/auth/.htpasswd
 ```
 
 Add a user to the password file (will prompt for password):
 
 ```bash
-sudo htpasswd -B /etc/nginx/.htpasswd new-username
+sudo htpasswd -B /var/www/auth/.htpasswd new-username
 ```
 
-Configure terracotta to run under gunicorn:
+## Database connection
 
-```bash
-sudo chown :www-data /var/www/tileserver/raster/terracotta.sock
-sudo -u www-data curl --unix-socket /var/www/tileserver/raster/terracotta.sock http
-```
-
-Transfer tileserver raster data to the server, then ingest to terracotta:
-
-```bash
-terracotta ingest \
-    "/var/www/tileserver/raster/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif" \
-    -o "/var/www/tileserver/raster/terracotta.sqlite"
-```
-
-`config/` directory contains:
-
-- nginx config to serve frontend assets directly and proxy tile requests to the
-  tileserver
-- systemd service config to run the vector and raster tileservers as services
-
-`deploy.sh` builds the frontend for deployment, uploads the build directory,
-data and tileserver config to a server, and restarts the tileservers. It assumes
-that whoever runs the script has ssh/public key access to the server.
-
-## Deploy update
-
-Usually this involves running `deploy.sh` and that will be sufficient.
-
-If you need to restart the raster tileserver:
-
-```bash
-# restart the service
-sudo systemctl restart terracotta
-# check nginx can access the socket
-sudo chown :www-data /var/www/tileserver/raster/terracotta.sock
-```
-
-
-## Deploy backend
-
-Initial setup
-
-```bash
-# Python 3.10 on Ubuntu 20.04 needs to use PPA
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt install python3.10  python3.10-distutils
-curl https://bootstrap.pypa.io/get-pip.py | sudo python3.10
-# Install/upgrade Terracotta app requirements
-sudo python3.10 -m pip install --upgrade cython
-sudo python3.10 -m pip install --upgrade numpy
-sudo python3.10 -m pip install --upgrade --no-binary rasterio rasterio==1.3a4
-sudo python3.10 -m pip install --upgrade gunicorn terracotta[recommended]
-sudo python3.10 -m pip install testresources
-
-# Create backend working directory
-sudo mkdir /var/www/backend
-sudo chown -R :ubuntu /var/www/backend/
-sudo chmod -R 775 /var/www/backend/
-```
-
-Run `deploy.sh` locally to copy over the backend package, including Python
-package `requirements.txt`
-
-```bash
-# Install Python requirements
-cd /var/www/backend
-sudo python3.10 -m pip install -r requirements.txt
-
-# Create backend service
-sudo touch /etc/systemd/system/backend.service
-# edit or copy from ./config/etc/systemd/system/backend.service
-sudo systemctl start backend.service
-# Check status
-systemctl status backend
-journalctl -u backend
-```
-
-Copy secret `PG*` variables for connection to database in EnvironmentFile as
-configured in backend.service, something like:
+The `PG*` variables for connection to database, to be replaced with actual details:
 
 ```conf
 PGDATABASE=jamaica
@@ -147,20 +107,80 @@ PGPASSWORD=docker
 PGHOST=localhost
 ```
 
-To restart:
+Testing database connection:
 
 ```bash
-# restart the service
-sudo systemctl restart backend
-# check nginx can access the socket
-sudo chown :www-data /var/www/backend/backend.sock
+cd /var/www/
+set -a
+source ./envs/prod/.backend.env  # to use app connection details
+# source ./envs/prod/.dbrestore.env  # to use admin connection details
+set +a
+# if needed:
+# sudo apt install postgresql-client
+psql
 ```
 
-Testing database connection
+Restore a database dump:
 
-cd /var/www/backend/
-set -a
-source .env.prod
-set +a
-sudo apt install postgresql-client
-psql
+```bash
+pg_restore -cC -d postgres /path/to/backup.dump
+```
+
+## Deployment
+
+Run `deploy.sh` to upload data and docker-compose config.
+
+### Manage production
+
+On remote, to first start the application:
+
+```bash
+cd /var/www
+docker compose -f docker-compose.prod.yml up -d
+```
+
+### Publishing docker images
+
+For pushing to the GitHub container registry, you will need to follow these
+[instructions for authentication](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+
+Build and publish all images:
+
+```bash
+# Build images locally
+docker compose -f docker-compose-prod.yaml build
+
+# Push to GitHub container registry
+docker push ghcr.io/nismod/jsrat-frontend:0.1
+docker push ghcr.io/nismod/jsrat-backend:0.1
+docker push ghcr.io/nismod/jsrat-vector-tileserver:0.1
+docker push ghcr.io/nismod/jsrat-raster-tileserver:0.1
+```
+
+### Updating a service
+
+Update a specific image, then build and push:
+
+```bash
+# Edit the image version in `docker-compose.prod.yaml`
+# in this example it's on line 33:
+#     image: ghcr.io/nismod/jsrat-frontend:0.1
+
+# Build
+docker compose -f docker-compose.prod.yaml build frontend
+
+# Push
+docker push ghcr.io/nismod/jsrat-frontend:0.1
+```
+
+Run `deploy.sh` to update the docker-compose config on the server.
+
+On the remote server, pull the image, then restart the specific service:
+
+```bash
+# Pull image
+docker pull ghcr.io/nismod/jsrat-frontend:0.1
+
+# Restart service
+docker compose up -d frontend
+```

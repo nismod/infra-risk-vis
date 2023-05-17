@@ -12,9 +12,8 @@ See an overview of infrastructure networks:
 
 ![Networks](images/screenshot-overview.png)
 
-Other functionality planned (and incorporated in some way in previous versions):
+Other functionality:
 
-- Summarise risk analysis at an administrative regional scale.
 - Zoom in to see networks in detail.
 - See an overview of hazard data.
 - Inspect details of hazard layers.
@@ -22,23 +21,23 @@ Other functionality planned (and incorporated in some way in previous versions):
 - Range of potential economic impacts of failure, consisting of direct damages
   to infrastructure assets and indirect economic losses resulting from
   infrastructure service disruption (loss of power, loss of access).
-- Explore a cost-benefit analysis (under uncertainty, with options to explore
-  some parameters) of adaptation measures.
+- Explore a cost-benefit analysis of adaptation measures.
 
 This README covers requirements and steps through how to prepare data for
 visualisation and how to run the tool.
 
 1. Data preparation
-3. Build and run
-4. Deployment
+2. Build and run
+3. Deployment
 
 ## Data preparation
 
-The visualisation tool runs using prepared versions of analysis data and results
-- Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
-  a terracotta SQLite database
-- Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
-  Vector Tiles
+The visualisation tool runs using prepared versions of analysis data and results:
+
+- Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into a
+  SQLite database
+- Vector (asset or feature) data stored in a PostgreSQL database
+- Vector data preprocessed into Mapbox Vector Tiles
 
 See `./etl` directory for details.
 
@@ -82,6 +81,16 @@ Run the raster tileserver:
 
     npm run raster
 
+```bash
+docker run \
+  --rm \
+  -it \
+  --workdir / \
+  --mount type=bind,source="$(pwd)"/tileserver/raster/data,target=/data \
+  jamaica-raster-tileserver:latest \
+  terracotta ingest "/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif" -o /data/terracotta.sqlite
+```
+
 ### Run the backend API server and database
 
 Two options here.
@@ -99,6 +108,17 @@ Run the api server:
 Alternatively, run `docker-compose` to run the API server in one container and
 postgres in another.
 
+```bash
+docker compose -f docker-compose.dev.yml up db -d
+
+PGPORT=25432 \
+PGHOST=localhost \
+PGUSER=docker \
+PGPASSWORD=docker \
+PGDATABASE=jamaica \
+pg_restore -cC -j 8 -d jamaica ./archive/jamaicadev_2023-05-16.dump
+```
+
 ### Run the frontend app in development mode
 
 Start the app server:
@@ -108,12 +128,6 @@ Start the app server:
 This should automatically open a browser tab. If not, open:
 
     firefox http://localhost:3000/
-
-## Deployment
-
-The site can run on a single Linux machine or virtual machine, with a suggested
-configuration that deploys the server processes behind an Nginx reverse proxy
-in production modes.
 
 See `./deploy` directory for details.
 

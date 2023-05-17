@@ -1,5 +1,6 @@
 Authors
 
 - Tom Russell
+- Maciej Ziarkowski
 - Roald Schoenmakers
 - Raghav Pant

@@ -3,60 +3,35 @@
 #
 # Provision virtual machine
 # - assuming OS is Ubuntu 20.04 LTS
+# - assuming this script is run as a user in groups sudo and jsrat_admin
 #
 
-# Install apt packages (NGINX, build requirements, GDAL)
+# Install helper apt packages
 sudo apt-get update
 sudo apt-get install -y \
-  nginx \
-  software-properties-common \
-  build-essential \
-  gdal-bin \
-  libgdal-dev \
-  python3-pip \
+  ca-certificates curl gnupg \
   apache2-utils
 
-# Set up SSL
-sudo snap install core
-sudo snap refresh core
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
+# Install docker
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
-# TODO - this is interactive, prompts for email, agreement, domain
-sudo certbot certonly --nginx
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-# Install node
-NODE_VERSION=v14.18.1
-DISTRO=linux-x64
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-wget -nc https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-$DISTRO.tar.xz
+# Set up current user with docker
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
 
-sudo mkdir /usr/local/lib/node
-sudo tar xf node-$NODE_VERSION-$DISTRO.tar.xz -C /usr/local/lib/node
-rm node-$NODE_VERSION-$DISTRO.tar.xz
-
-sudo mv /usr/local/lib/node/node-$NODE_VERSION-$DISTRO /usr/local/lib/node/node-$NODE_VERSION
-sudo ln -s /usr/local/lib/node/node-$NODE_VERSION/bin/node /usr/bin/node
-sudo ln -s /usr/local/lib/node/node-$NODE_VERSION/bin/npm /usr/bin/npm
-sudo ln -s /usr/local/lib/node/node-$NODE_VERSION/bin/npx /usr/bin/npx
-
-sudo chown :ubuntu /usr/local/lib/node/node-$NODE_VERSION/lib/node_modules/
-sudo chmod 775 /usr/local/lib/node/node-$NODE_VERSION/lib/node_modules/
-sudo chown :ubuntu /usr/local/lib/node/node-$NODE_VERSION/bin/
-sudo chmod 775 /usr/local/lib/node/node-$NODE_VERSION/bin/
-
-npm config set python /usr/bin/python3
-
-# Install vector tileserver
-npm i -g tileserver-gl-light
-
-# Install raster tileserver
-sudo pip install cython # must be available first to build dependencies
-sudo pip install gunicorn terracotta[recommended]
-
+# Set up data directories
 sudo mkdir -p /var/www/tileserver/raster/data
 sudo mkdir -p /var/www/tileserver/vector/data
-sudo chown -R :ubuntu /var/www/
-sudo chmod 775 /var/www/html/
-sudo chmod 664 /var/www/html/*.html
+sudo chown -R :jsrat_admin /var/www/
 sudo chmod -R  775 /var/www/tileserver/
