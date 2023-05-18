@@ -12,14 +12,14 @@ pushd $BASEDIR/..
 
 echo "Running in ${pwd}"
 
-# # vector data
-# rsync -ravz tileserver/vector/data/ jsrat1:/var/www/tileserver/vector/data
-# rsync -ravz tileserver/vector/fonts/ jsrat1:/var/www/tileserver/vector/fonts
-# rsync -ravz tileserver/vector/config.json jsrat1:/var/www/tileserver/vector
+# vector data
+rsync -ravz tileserver/vector/data/ jsrat1:/var/www/tileserver/vector/data
+rsync -ravz tileserver/vector/fonts/ jsrat1:/var/www/tileserver/vector/fonts
+rsync -ravz tileserver/vector/config.json jsrat1:/var/www/tileserver/vector
 
-# # raster data
-# rsync -ravz tileserver/raster/data/ jsrat1:/var/www/tileserver/raster/data
-# rsync -ravz tileserver/raster/config.toml jsrat1:/var/www/tileserver/raster
+# raster data
+rsync -ravz tileserver/raster/data/ jsrat1:/var/www/tileserver/raster/data
+rsync -ravz tileserver/raster/config.toml jsrat1:/var/www/tileserver/raster
 
 # docker compose configuration
 rsync -avz docker-compose.prod.yml jsrat1:/var/www/

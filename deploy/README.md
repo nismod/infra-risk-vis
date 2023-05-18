@@ -157,6 +157,13 @@ docker push ghcr.io/nismod/jsrat-vector-tileserver:0.1
 docker push ghcr.io/nismod/jsrat-raster-tileserver:0.1
 ```
 
+```bash
+docker push ghcr.io/nismod/jsrat-frontend:0.1
+docker push ghcr.io/nismod/jsrat-backend:0.1
+docker push ghcr.io/nismod/jsrat-vector-tileserver:0.1
+docker push ghcr.io/nismod/jsrat-raster-tileserver:0.1
+```
+
 ### Updating a service
 
 Update a specific image, then build and push:
