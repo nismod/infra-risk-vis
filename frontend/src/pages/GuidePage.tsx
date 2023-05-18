@@ -6,6 +6,9 @@ import { ExtLink } from 'lib/nav';
 export const GuidePage = () => (
   <article>
     <h1>User Guide for the Jamaica Systemic Risk Assessment Tool (J-SRAT)</h1>
+    <p>
+      <ExtLink href="/guide_media/J-SRAT User Guide_2022-05.pdf">Download PDF</ExtLink>
+    </p>
     <h2 id="table-of-contents">Table of Contents</h2>
     <p>
       <a href="#how-to-use-this-guide">How to use this guide</a>
@@ -120,12 +123,12 @@ export const GuidePage = () => (
     <p>“Nature-based Solutions” includes information about land-use and nature-based solutions.</p>
     <p>“Data” includes a summary of data used in the tool.</p>
     <p>
-      <img src="/guide/image2.png" />
+      <img src="/guide_media_media/image2.png" />
     </p>
     <p>Click on “Exposure” to show the map view. The main controls on this screen are used throughout.</p>
     <p>The left sidebar has various sections which control the data that is shown on the map.</p>
     <p>
-      <img src="/guide/image3.png" />
+      <img src="/guide_media/image3.png" />
     </p>
     <p>
       Click the search icon which is just to the right of the sidebar sections to search for places. This uses the
@@ -133,11 +136,11 @@ export const GuidePage = () => (
       example, search for “Norman Manley International”.
     </p>
     <p>
-      <img src="/guide/image4.png" />
+      <img src="/guide_media/image4.png" />
     </p>
     <p>Click the first result to zoom to the airport.</p>
     <p>
-      <img src="/guide/image5.png" />
+      <img src="/guide_media/image5.png" />
     </p>
     <p>Below the search box, there is a map layer control. Hover over the layers icon to show it.</p>
     <p>
@@ -146,7 +149,7 @@ export const GuidePage = () => (
     </p>
     <p>Check or uncheck the box to hide or “Show labels”</p>
     <p>
-      <img src="/guide/image6.png" />
+      <img src="/guide_media/image6.png" />
     </p>
     <p>
       In the top-right corner of the map, the plus and minus buttons control the map zoom. You can also scroll to zoom
@@ -175,15 +178,15 @@ export const GuidePage = () => (
       system layers to see the elements of the network as they are included in the analysis.
     </p>
     <p>
-      <img src="/guide/image7.png" />
+      <img src="/guide_media/image7.png" />
     </p>
     <p>Use the top “Power” checkbox to deselect all power assets, and expand “Transport” to bring in roads layers.</p>
     <p>
-      <img src="/guide/image8.png" />
+      <img src="/guide_media/image8.png" />
     </p>
     <p>Similarly, under “Water”, bring in the water supply, irrigation and wastewater systems.</p>
     <p>
-      <img src="/guide/image9.png" />
+      <img src="/guide_media/image9.png" />
     </p>
     <h2 id="how-are-flooding-and-hurricanes-represented">How are flooding and hurricanes represented?</h2>
     <p>
@@ -193,25 +196,25 @@ export const GuidePage = () => (
       in metres.
     </p>
     <p>
-      <img src="/guide/image10.png" />
+      <img src="/guide_media/image10.png" />
     </p>
     <p>
       In the sidebar, move the slider to show flooding for different return periods. A 500-year return period flood is
       much less likely and more intense, with deeper water levels and more area covered by the flood.
     </p>
     <p>
-      <img src="/guide/image11.png" />
+      <img src="/guide_media/image11.png" />
     </p>
     <p>While looking at the hazards, we can overlay infrastructure networks to see where they might be affected.</p>
     <p>
-      <img src="/guide/image12.png" />
+      <img src="/guide_media/image12.png" />
     </p>
     <p>
       Click on a road, for example, to see details of the asset damage calculated from the length of road exposed to
       different depths of flooding at each return period.
     </p>
     <p>
-      <img src="/guide/image13.png" />
+      <img src="/guide_media/image13.png" />
     </p>
     <h2 id="how-are-people-and-economic-activities-represented">How are people and economic activities represented?</h2>
     <p>Population is mapped to administrative boundaries, and economic activity is assigned to buildings.</p>
@@ -219,25 +222,25 @@ export const GuidePage = () => (
       In the left sidebar, open the “Regions” tab to hide or show boundaries. “Parishes” shows the top-level regions.
     </p>
     <p>
-      <img src="/guide/image14.png" />
+      <img src="/guide_media/image14.png" />
     </p>
     <p>Select “Enumeration Districts” to see the small areas.</p>
     <p>
-      <img src="/guide/image15.png" />
+      <img src="/guide_media/image15.png" />
     </p>
     <p>
       Change the “Layer Style” to “Population” to show population density on the map. Hover over areas to see population
       counts, and click on an area for a small detail sidebar to appear on the right of the screen.
     </p>
     <p>
-      <img src="/guide/image16.png" />
+      <img src="/guide_media/image16.png" />
     </p>
     <p>
       Expand the “Buildings” section in the left sidebar and check that the eye icon is toggled on, then zoom in to see
       buildings. The buildings are not shown at all until quite high zoom levels.
     </p>
     <p>
-      <img src="/guide/image17.png" />
+      <img src="/guide_media/image17.png" />
     </p>
     <p>
       Click on a building to see details, including the total assigned GDP and estimated rehabilitation cost. Risk and
@@ -245,11 +248,11 @@ export const GuidePage = () => (
       indirect effects are estimated beyond the disruption to the activity in the building itself.
     </p>
     <p>
-      <img src="/guide/image18.png" />
+      <img src="/guide_media/image18.png" />
     </p>
     <p>Toggle the “Hazards” section visibility to show flood maps under buildings.</p>
     <p>
-      <img src="/guide/image19.png" />
+      <img src="/guide_media/image19.png" />
     </p>
     <h2 id="how-is-climate-risk-from-flooding-or-cyclones-represented">
       How is climate risk from flooding or cyclones represented?
@@ -260,7 +263,7 @@ export const GuidePage = () => (
       for all of the substations across the island.
     </p>
     <p>
-      <img src="/guide/image20.png" />
+      <img src="/guide_media/image20.png" />
     </p>
     <p>
       From the controls in the sidebar, explore the contribution of individual hazards, and select the epoch (year) and
@@ -275,7 +278,7 @@ export const GuidePage = () => (
       protected" to see points representing approximate locations of options to reduce the impacts of drought.
     </p>
     <p>
-      <img src="/guide/image21.png" />
+      <img src="/guide_media/image21.png" />
     </p>
     <h2 id="how-are-adaptation-options-presented">How are adaptation options presented?</h2>
     <p>
@@ -284,7 +287,7 @@ export const GuidePage = () => (
       “Road”, “Class A”, you can look at “Elevate the roads” or a combined upgrade option.
     </p>
     <p>
-      <img src="/guide/image22.png" />
+      <img src="/guide_media/image22.png" />
     </p>
     <p>
       From here, the assets are shown on the map and ranked in the table on the right, according to the choice of
@@ -302,13 +305,13 @@ export const GuidePage = () => (
       the full details on Adaptation Options for this particular asset.
     </p>
     <p>
-      <img src="/guide/image23.png" />
+      <img src="/guide_media/image23.png" />
     </p>
     <h2 id="how-are-nature-based-solutions-represented">How are nature-based solutions represented?</h2>
     <p>The “Nature-based solutions” tab enables analysis and exploration of various aspects of the land and sea.</p>
     <p>Expand the “Terrestrial” section to show a long list of Land Use/Land Cover classes.</p>
     <p>
-      <img src="/guide/image24.png" />
+      <img src="/guide_media/image24.png" />
     </p>
     <p>
       Change the maximum or minimum values for elevation or slope to constrain the areas displayed – for example, look
@@ -319,7 +322,7 @@ export const GuidePage = () => (
       Expand the “Marine” section to show coral, mangrove and seagrass, with 500m buffer zones around each habitat area.
     </p>
     <p>
-      <img src="/guide/image25.png" />
+      <img src="/guide_media/image25.png" />
     </p>
     <h2 id="trace-the-climate-risk-and-adaptation-analysis-for-a-single-asset">
       Trace the climate risk and adaptation analysis for a single asset
@@ -342,7 +345,7 @@ export const GuidePage = () => (
     <p>Under “Hazards” in the left sidebar, select “River flooding” to add a flood outline to the map.</p>
     <p>Hover over the asset to see its ID and depth of flooding.</p>
     <p>
-      <img src="/guide/image26.png" />
+      <img src="/guide_media/image26.png" />
     </p>
     <p>
       The substation intersects with different fluvial (river) flood outlines under baseline and future climate
@@ -358,7 +361,7 @@ export const GuidePage = () => (
       losses which would result from a flood of a particular return period (or probability).
     </p>
     <p>
-      <img src="/guide/image27.png" />
+      <img src="/guide_media/image27.png" />
     </p>
     <p>
       In the “Return Period Damages” section, change the “Epoch” dropdown from 2010 to 2080 to see the change in damages
@@ -366,7 +369,7 @@ export const GuidePage = () => (
       8.5).
     </p>
     <p>
-      <img src="/guide/image28.png" />
+      <img src="/guide_media/image28.png" />
     </p>
     <p>
       In the top menu, click on the “Risk” tab. This may change the background flood map but should leave the map
@@ -374,7 +377,7 @@ export const GuidePage = () => (
     </p>
     <p>Scroll back up to the “Risk” section in the right-hand sidebar.</p>
     <p>
-      <img src="/guide/image29.png" />
+      <img src="/guide_media/image29.png" />
     </p>
     <p>
       One important thing to note is that (so far) only the flood hazard part of the equation has been changing in the
@@ -396,7 +399,7 @@ export const GuidePage = () => (
     </p>
     <p>Scroll down to the “Adaptation Options” section.</p>
     <p>
-      <img src="/guide/image30.png" />
+      <img src="/guide_media/image30.png" />
     </p>
     <p>
       Here we see that building a protective wall that is 1-meter high would incur an NPV cost of J$ 110 million over
@@ -432,7 +435,7 @@ export const GuidePage = () => (
       assets, sorted in descending order with the most cost-beneficial at the top.
     </p>
     <p>
-      <img src="/guide/image31.png" />
+      <img src="/guide_media/image31.png" />
     </p>
     <p>Hover over a row to indicate the asset on the map, drawing a dashed bright blue line around its location.</p>
     <p>
@@ -445,7 +448,7 @@ export const GuidePage = () => (
       top-right corner of the sidebar.
     </p>
     <p>
-      <img src="/guide/image32.png" />
+      <img src="/guide_media/image32.png" />
     </p>
     <p>
       Once you have identified a candidate for prioritisation, zoom to its location so that it is clearly in view. You
@@ -458,14 +461,14 @@ export const GuidePage = () => (
       climate scenarios, both direct damages and indirect economic losses.
     </p>
     <p>
-      <img src="/guide/image33.png" />
+      <img src="/guide_media/image33.png" />
     </p>
     <p>
       Scroll down to the “Adaptation Options” section to find the evaluated Net Present Value costs and benefits of
       different adaptation interventions under different hazards and climate scenarios.
     </p>
     <p>
-      <img src="/guide/image34.png" />
+      <img src="/guide_media/image34.png" />
     </p>
     <p>
       From any of the asset details sections (e.g. Adaptation Options as shown above), click on the download icon (⤓) to
