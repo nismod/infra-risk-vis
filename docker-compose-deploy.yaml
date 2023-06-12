@@ -94,7 +94,7 @@ services:
     user: autopkg
     restart: always
     command: redis-server --save 20 1 --loglevel notice
-    volumes: 
+    volumes:
       - ./irv-autopkg/redis:/data
     cpus: 0.25
     mem_reservation: "50M"

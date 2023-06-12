@@ -22,7 +22,7 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.20-dev
+    image: ghcr.io/nismod/irv-frontend:0.20
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
     labels:
@@ -124,7 +124,7 @@ services:
     image: redis:6.2-alpine
     restart: always
     command: redis-server --save 20 1 --loglevel debug
-    volumes: 
+    volumes:
       - ./irv-autopkg/redis:/data
 
   irv-autopkg-worker:
