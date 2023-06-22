@@ -175,7 +175,22 @@ More details can be found in the [ETL](etl/README.md) folder and underlying [pip
 docker run -it -v ${PWD}/etl:/opt/etl gri-snakemake:latest --cores 1 -s /opt/etl/Snakefile
 ```
 
-or using Docker Compose `snakemake` service:
+or using Docker Compose `snakemake` service, first edit the `snakemake` command to point
+to the relevant `Snakefile` for a pipeline:
+
+```
+snakemake:
+    image: ghcr.io/nismod/gri-snakemake:0.1
+    ...
+    command:
+      [
+        ...
+        "-s",
+        "/opt/etl/pipelines/iris/Snakefile"
+      ]
+```
+
+then run:
 
 ```bash
 docker-compose -f docker-compose-dev.yaml run snakemake

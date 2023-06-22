@@ -73,14 +73,14 @@ services:
     command:
       [
         "--cores",
-        "1",
+        "32",
         "--latency-wait",
         "20",
         "--resources",
-        "disk_mb=60",
+        "disk_mb=6000000",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/osm_roads/Snakefile"
+        "/opt/etl/pipelines/iris/Snakefile"
       ]
 
   backend:
