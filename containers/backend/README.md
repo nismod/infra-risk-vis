@@ -127,6 +127,25 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
 }
 ```
 
+##### IRIS:
+
+```json
+{
+	"source_db": "iris",
+	"global_type": "Hazard",
+	"domain": "cyclone",
+	"full_name": "IRIS tropical cyclones",
+	"description": "description",
+	"license": "license",
+	"variables": {
+		"ssp": "ssp",
+		"rp": "rp",
+		"epoch": "epoch",
+		"type": "hazard"
+    }
+}
+```
+
 ##### Aqueduct:
 
 ```json
@@ -159,11 +178,11 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
 ```json
 {
 	"source_db": "extreme_heat",
-	"global_type": "Hazard", 
-	"domain": "extreme_heat", 
-	"full_name": "Hazard Extreme Heat", 
-	"description": "description", 
-	"license": "license", 
+	"global_type": "Hazard",
+	"domain": "extreme_heat",
+	"full_name": "Hazard Extreme Heat",
+	"description": "description",
+	"license": "license",
 	"variables": {
 		"gcm": "gcm",
 		"rcp": "rcp",
@@ -179,11 +198,11 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
 ```json
 {
 	"source_db": "storm",
-	"global_type": "Hazard", 
-	"domain": "cyclone", 
-	"full_name": "Hazard Tropical Storm", 
-	"description": "description", 
-	"license": "license", 
+	"global_type": "Hazard",
+	"domain": "cyclone",
+	"full_name": "Hazard Tropical Storm",
+	"description": "description",
+	"license": "license",
 	"variables": {
 		"type": "hazard",
 		"rp": "rp",

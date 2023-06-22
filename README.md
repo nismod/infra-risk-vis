@@ -193,7 +193,7 @@ snakemake:
 then run:
 
 ```bash
-docker-compose -f docker-compose-dev.yaml run snakemake
+docker compose -f docker-compose-dev.yaml run snakemake
 ```
 
 #### Raster Tileserver Ingester
@@ -258,6 +258,19 @@ changes, use the following invocation:
 To stop a foregrounded compose stack, issue SIGTERM with Ctrl-C. If services
 haven't stopped in 10 seconds they will be brutally terminated. To bring a
 daemonised stack down, use `docker compose down`.
+
+## Example adding data layer
+
+To add a raster data layer (for example, the `iris` set of tropical cyclone
+return period maps):
+
+1. Write an `etl` pipeline, run using `snakemake` container
+1. Bring up the tiles database container, `tiles-db`
+1. Run `raster-tile-ingester`
+1. Bring up the postgres database container, `db`
+1. Bring up the backend API container, `backend`
+1. Post the raster metadata to the backend - see [docs](containers/backend/README.md)
+   on adding data to the tileserver metadata store.
 
 ## Example service update
 
