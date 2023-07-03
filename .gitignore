@@ -57,6 +57,7 @@ envs
 *.nc4
 *.tiff
 tileserver/raster/db
+tileserver/vector/data
 deploy.sh
 main.tf
 provision.sh
