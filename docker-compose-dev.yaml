@@ -9,12 +9,12 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker=true"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - --entryPoints.websecure.address=:443
-      - --providers.file.directory=/configuration/
-      - --providers.file.watch=true
+      - "--entryPoints.web.address=:80"
+      - "--providers.file.directory=/configuration/"
+      - "--providers.file.watch=true"
+      - "--api.insecure=true"
     ports:
       - "80:80"
-      - "443:443"
       - "8080:8080"
     volumes:
       - "./containers/traefik/dev/configuration:/configuration"
@@ -22,14 +22,13 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.20
+    image: ghcr.io/nismod/irv-frontend:0.20-dev
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web-server.rule=Host(`localhost`)"
-      - "traefik.http.routers.web-server.entrypoints=websecure"
-      - "traefik.http.routers.web-server.tls=false"
+      - "traefik.http.routers.web-server.entrypoints=web"
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
 
   db:
@@ -95,8 +94,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.routers.backend.middlewares=backend-stripprefix"
       - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
@@ -114,8 +112,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.vector-tileserver.rule=Host(`localhost`) && PathPrefix(`/vector`)"
-      - "traefik.http.routers.vector-tileserver.entrypoints=websecure"
-      - "traefik.http.routers.vector-tileserver.tls=true"
+      - "traefik.http.routers.vector-tileserver.entrypoints=web"
       - "traefik.http.routers.vector-tileserver.middlewares=vector-tileserver-stripprefix"
       - "traefik.http.middlewares.vector-tileserver-stripprefix.stripprefix.prefixes=/vector"
       - "traefik.http.services.vector-tileserver.loadbalancer.server.port=8080"
@@ -149,8 +146,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.irv-autopkg-api.rule=Host(`localhost`) && PathPrefix(`/extract`)"
-      - "traefik.http.routers.irv-autopkg-api.entrypoints=websecure"
-      - "traefik.http.routers.irv-autopkg-api.tls=false"
+      - "traefik.http.routers.irv-autopkg-api.entrypoints=web"
       - "traefik.http.routers.irv-autopkg-api.middlewares=irv-autopkg-api-stripprefix"
       - "traefik.http.middlewares.irv-autopkg-api-stripprefix.stripprefix.prefixes=/extract"
       - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
