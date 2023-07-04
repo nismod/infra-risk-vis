@@ -5,7 +5,8 @@ services:
     image: "traefik:v2.9"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=INFO"
+      - "--accessLog=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker=true"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
@@ -120,7 +121,7 @@ services:
   redis:
     image: redis:6.2-alpine
     restart: always
-    command: redis-server --save 20 1 --loglevel debug
+    command: redis-server --save 20 1 --loglevel warning
     volumes:
       - ./irv-autopkg/redis:/data
 
