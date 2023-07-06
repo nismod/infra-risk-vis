@@ -1,6 +1,7 @@
 """
 Tile Service wrapping Terracotta Python API
 """
+from collections import OrderedDict
 from sys import getsizeof
 from typing import Any, BinaryIO, List, Tuple, Union
 import ast
@@ -129,15 +130,29 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
     ('fluvial', '500', '4x5', '2030', 'HadGEM2-ES'):
         '/data/aqueduct/inunriver_rcp4p5_0000HadGEM2-ES_2030_rp00500.tif'
     """
-    # Query terracotta for all datasets in the source
+
     driver_path = build_driver_path(source_db)
-    datasets = all_datasets(driver_path)
-    keys = database_keys(driver_path)
-    # Generate the output mapping
-    source_options = [dict(zip(keys, _values)) for _values in datasets.keys()]
-    # Optionally filter to a domain (type)
-    if domain:
+
+    # query terracotta for all datasets in the source
+    # dict of tuples of variable values
+    # e.g. ("2020", "10", "constant") pointing to raster path strs
+    datasets: dict[tuple, str] = all_datasets(driver_path)
+
+    # get the key names for these data
+    # e.g. {'epoch': '', 'rp': '', 'ssp': ''}
+    keys: OrderedDict[str, str] = database_keys(driver_path)
+
+    # now generate the output mapping
+    # take the variable values from datasets and create dicts naming them as such
+    # e.g. [{"epoch": "2020", "rp": "10", "ssp": "constant"}, ...]
+    source_options: list[dict[str, str]] = [
+        dict(zip(keys, _values)) for _values in datasets.keys()
+    ]
+
+    # optionally filter to a domain (type)
+    if domain is not None:
         source_options = [item for item in source_options if item["type"] == domain]
+
     return source_options
 
 

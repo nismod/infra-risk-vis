@@ -1,0 +1,109 @@
+import os
+import subprocess
+import shutil
+from typing import List
+import shutil
+
+import geopandas
+import pandas
+import xarray
+
+
+# Load Config
+configfile: "/opt/etl/pipelines/iris/config.yml"
+
+
+# Read further configuration data from CSV
+hazard_layers = pandas.read_csv(config["hazard_layers"])
+
+
+wildcard_constraints:
+    layer="[^/]+",
+
+# Run all file-base jobs, after load_to_database
+rule all:
+    input:
+        expand("/opt/tileserver/raster/data/iris/{layer}.tif", layer=hazard_layers.key),
+
+def get_hazard_layer(layer_name, hazard_layers):
+    try:
+        print ("getting hazard layer: ", layer_name)
+        return hazard_layers[hazard_layers.key == layer_name].iloc[0]
+    except IndexError as e:
+        print(f"Could not find {layer_name} in hazard layers.")
+        raise e
+    finally:
+        print ("got hazard layer")
+
+
+rule extract_netcdf_to_tiff:
+    output:
+        tiff="/opt/etl/raster/extract/{layer}.tif"
+    run:
+        layer = get_hazard_layer(wildcards.layer, hazard_layers)
+        fname = layer.path
+        rp = layer.rp
+        with xarray.open_dataset(fname) as ds:
+            ds.coords["longitude"].attrs = {
+                "standard_name": "longitude",
+                "long_name": "longitude",
+                "units": "degrees_east",
+                "axis": "X",
+            }
+            ds.coords["latitude"].attrs = {
+                "standard_name": "latitude",
+                "long_name": "latitude",
+                "units": "degrees_north",
+                "axis": "Y",
+            }
+            ds.rio.write_crs("epsg:4326", inplace=True)
+            ds["vmax"].sel(rp=rp).rio.to_raster(output.tiff)
+
+
+rule raster_to_cog:
+    input:
+        rules.extract_netcdf_to_tiff.output,
+    output:
+        "/opt/etl/raster/cog/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        90,
+    shell:
+        """
+        # translate to Cloud-Optimised GeoTIFF
+        #
+        # could use gdalwarp directly - options chosen to match (reasonably
+        # closely) the output of `terracotta optimize-rasters`:
+        #
+        # gdalwarp "{input}" "{output}" \
+        #     -t_srs "EPSG:3857" \
+        #     -r near \
+        #     -of COG \
+        #     -co COMPRESS=DEFLATE \
+        #     -co BLOCKSIZE=256
+        #
+        terracotta optimize-rasters \
+            -o /opt/etl/raster/cog \
+            --overwrite \
+            --reproject \
+            --nproc -1 \
+            --resampling-method nearest \
+            {input} && \
+        rm {input}
+        """
+
+rule raster_cleanup:
+    input:
+        rules.raster_to_cog.output,
+    output:
+        "/opt/tileserver/raster/data/iris/{layer}.tif",
+    resources:
+        disk_mb=100
+    priority:
+        100,
+    shell:
+        """
+        mkdir -p $(dirname {output})
+        mv {input} {output}
+        """

@@ -5,16 +5,17 @@ services:
     image: "traefik:v2.9"
     container_name: "traefik"
     command:
-      - "--log.level=DEBUG"
+      - "--log.level=INFO"
+      - "--accessLog=true"
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker=true"
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
-      - --entryPoints.websecure.address=:443
-      - --providers.file.directory=/configuration/
-      - --providers.file.watch=true
+      - "--entryPoints.web.address=:80"
+      - "--providers.file.directory=/configuration/"
+      - "--providers.file.watch=true"
+      - "--api.insecure=true"
     ports:
       - "80:80"
-      - "443:443"
       - "8080:8080"
     volumes:
       - "./containers/traefik/dev/configuration:/configuration"
@@ -22,14 +23,13 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.20
+    image: ghcr.io/nismod/irv-frontend:0.20-dev
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web-server.rule=Host(`localhost`)"
-      - "traefik.http.routers.web-server.entrypoints=websecure"
-      - "traefik.http.routers.web-server.tls=false"
+      - "traefik.http.routers.web-server.entrypoints=web"
       - "traefik.http.services.web-server.loadbalancer.server.port=80"
 
   db:
@@ -73,14 +73,14 @@ services:
     command:
       [
         "--cores",
-        "1",
+        "32",
         "--latency-wait",
         "20",
         "--resources",
-        "disk_mb=60",
+        "disk_mb=6000000",
         "--rerun-incomplete",
         "-s",
-        "/opt/etl/pipelines/osm_roads/Snakefile"
+        "/opt/etl/pipelines/iris/Snakefile"
       ]
 
   backend:
@@ -95,8 +95,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`localhost`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls=true"
+      - "traefik.http.routers.backend.entrypoints=web"
       - "traefik.http.routers.backend.middlewares=backend-stripprefix"
       - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
@@ -114,8 +113,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.vector-tileserver.rule=Host(`localhost`) && PathPrefix(`/vector`)"
-      - "traefik.http.routers.vector-tileserver.entrypoints=websecure"
-      - "traefik.http.routers.vector-tileserver.tls=true"
+      - "traefik.http.routers.vector-tileserver.entrypoints=web"
       - "traefik.http.routers.vector-tileserver.middlewares=vector-tileserver-stripprefix"
       - "traefik.http.middlewares.vector-tileserver-stripprefix.stripprefix.prefixes=/vector"
       - "traefik.http.services.vector-tileserver.loadbalancer.server.port=8080"
@@ -123,7 +121,7 @@ services:
   redis:
     image: redis:6.2-alpine
     restart: always
-    command: redis-server --save 20 1 --loglevel debug
+    command: redis-server --save 20 1 --loglevel warning
     volumes:
       - ./irv-autopkg/redis:/data
 
@@ -149,8 +147,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.irv-autopkg-api.rule=Host(`localhost`) && PathPrefix(`/extract`)"
-      - "traefik.http.routers.irv-autopkg-api.entrypoints=websecure"
-      - "traefik.http.routers.irv-autopkg-api.tls=false"
+      - "traefik.http.routers.irv-autopkg-api.entrypoints=web"
       - "traefik.http.routers.irv-autopkg-api.middlewares=irv-autopkg-api-stripprefix"
       - "traefik.http.middlewares.irv-autopkg-api-stripprefix.stripprefix.prefixes=/extract"
       - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
@@ -164,20 +161,20 @@ services:
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
       - ./tileserver/raster/data:/data # Must match path in Backend
-      - ./etl/pipelines/traveltime_to_healthcare/inputs.csv:/opt/hazard_layers.csv # If loading a CSV
+      - ./etl/pipelines/iris/hazard_iris.csv:/opt/hazard_layers.csv # If loading a CSV
     command:
       [
         "load_csv",
         "--internal_raster_base_path",
-        "/data/traveltime_to_healthcare",
+        "/data/iris",
         "--input_csv_filepath",
         "/opt/hazard_layers.csv",
         "--tile_keys",
-        "type,subtype",
+        "type,epoch,rp,ssp",
         "--csv_key_column_map",
-        "{\"file_basename\": \"key\", \"type\": \"exposure\", \"subtype\": \"subtype\"}",
+        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"rp\": \"rp\", \"ssp\": \"ssp\", \"epoch\": \"epoch\"}",
         "--database_name",
-        "traveltime_to_healthcare"
+        "iris"
       ]
 
   ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
@@ -192,7 +189,7 @@ services:
       [
         "delete_database_entries",
         "--database_name",
-        "traveltime_to_healthcare"
+        "iris"
       ]
 
   ## WARNING - Drop the MySQL Terracotta Db with the given DB name
@@ -203,7 +200,7 @@ services:
       - ./envs/dev/.raster-tile-ingester.env
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-    command: [ "drop_database", "--database_name", "exposure_nature" ]
+    command: [ "drop_database", "--database_name", "iris" ]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   backend-schema-regen:

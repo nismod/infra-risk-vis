@@ -68,7 +68,7 @@ options:
   --tile_keys TILE_KEYS
                         A comma-seperated list of tile keys and ordering, e.g. hazard,rp,rcp,gcm
   --csv_key_column_map CSV_KEY_COLUMN_MAP
-                        Map of DB Keys to column names for input CSV (must be valid JSON str and contain key: file_basename), e.g.
+                        Map of DB Keys to column names for input CSV (must be valid JSON str and contain keys: "file_basename" and "type"), e.g.
                         '{"file_basename": "key", "type": "hazard", "rp": "rp", "rcp": "rcp", "epoch": "epoch", "gcm": "gcm"}'
   --database_name DATABASE_NAME
                         Name of the output database (will be created if it doesnt exist)

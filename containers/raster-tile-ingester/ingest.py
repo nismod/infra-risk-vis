@@ -72,7 +72,10 @@ parser.add_argument(
 parser.add_argument(
     "--csv_key_column_map",
     type=str,
-    help='Map of DB Keys to column names for input CSV (must be valid JSON str and contain key: file_basename), e.g. \'{"file_basename": "key", "type": "hazard", "rp": "rp", "rcp": "rcp", "epoch": "epoch", "gcm": "gcm"}\'',
+    help=(
+        'Map of DB Keys to column names for input CSV (must be valid JSON str and contain keys: "file_basename" and "type"), e.g. '
+        '{"file_basename": "key", "type": "hazard", "rp": "rp", "rcp": "rcp", "epoch": "epoch", "gcm": "gcm"} '
+    )
 )
 parser.add_argument(
     "--database_name",
@@ -362,11 +365,13 @@ def _parse_ordered_key_values(key_values: str) -> OrderedDict:
 
 def _validate_keys_and_map(tile_keys: List[str], csv_key_column_map: dict):
     if not "file_basename" in csv_key_column_map.keys():
-        raise Exception("csv_key_column_map must contain mapping for: 'file_basename'")
+        raise Exception("DB field to CSV column name mapping requires 'file_basename' key")
+    if not "type" in csv_key_column_map.keys():
+        raise Exception("DB field to CSV column name mapping requires 'type' key")
     _map = copy(csv_key_column_map)
     _map.pop("file_basename")
     if not sorted(tuple(tile_keys)) == sorted(_map.keys()):
-        raise Exception("tile_keys do not match csv_key_column_map keys")
+        raise Exception("tile keys do not match DB field to CSV column keys")
 
 
 if __name__ == "__main__":

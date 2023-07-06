@@ -114,6 +114,15 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
 
 2. `POST` metadata about the raster to: `http://backend-host:8080/tiles/sources`.  Examples of the payload are show below.
 
+You may find the utility [httpie](https://httpie.io/) useful for this.
+
+Using httpie:
+
+```bash
+http POST http://localhost:8888/tiles/sources x-token:<API_TOKEN> < metadata.json
+```
+
+Where metadata.json is a file containing JSON like so:
 
 ```json
 {
@@ -124,6 +133,25 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
   "description": "description", # Currently for internal description only
   "license": "license", # Currently for internal description only
   "variables": {} # Currently for internal description only
+}
+```
+
+##### IRIS:
+
+```json
+{
+    "source_db": "iris",
+    "global_type": "Hazard",
+    "domain": "cyclone",
+    "full_name": "IRIS tropical cyclones",
+    "description": "description",
+    "license": "license",
+    "variables": {
+        "rp": "rp",
+        "ssp": "ssp",
+        "epoch": "epoch",
+        "type": "hazard"
+    }
 }
 ```
 
@@ -159,11 +187,11 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
 ```json
 {
 	"source_db": "extreme_heat",
-	"global_type": "Hazard", 
-	"domain": "extreme_heat", 
-	"full_name": "Hazard Extreme Heat", 
-	"description": "description", 
-	"license": "license", 
+	"global_type": "Hazard",
+	"domain": "extreme_heat",
+	"full_name": "Hazard Extreme Heat",
+	"description": "description",
+	"license": "license",
 	"variables": {
 		"gcm": "gcm",
 		"rcp": "rcp",
@@ -179,11 +207,11 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
 ```json
 {
 	"source_db": "storm",
-	"global_type": "Hazard", 
-	"domain": "cyclone", 
-	"full_name": "Hazard Tropical Storm", 
-	"description": "description", 
-	"license": "license", 
+	"global_type": "Hazard",
+	"domain": "cyclone",
+	"full_name": "Hazard Tropical Storm",
+	"description": "description",
+	"license": "license",
 	"variables": {
 		"type": "hazard",
 		"rp": "rp",
@@ -274,4 +302,20 @@ DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
   "license": "license",
   "variables": {}
 }
+```
+
+#### Removing a source from the tileserver metastore
+
+Again using [httpie](https://httpie.io/), the following bash script may be
+useful for deleting metadata entries.
+
+```bash
+if [ -z "$2" ]; then
+    echo "Require API key and source integer ID to delete as arguments"
+    echo "Check http://localhost:8888/tiles/sources for ID"
+    echo "Example usage:"
+    echo "$0 ck5iswmvdcm4cmnee 2"
+    exit 1
+fi
+http DELETE http://localhost:8888/tiles/sources/$2 x-token:$1
 ```
