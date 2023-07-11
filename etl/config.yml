@@ -1,2 +1,5 @@
-environment: "dev"  # {dev | prod}, picks which env files to use
-raster_bounds: "-180 -84 180 84"
+# selects which env files to source prior to operations
+environment: "dev"  # {dev | prod}
+
+# clip rasters to this window (decimal degrees)
+raster_bounds: "-180 -84 180 84"  # minx, miny, maxx, maxy

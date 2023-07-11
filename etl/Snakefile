@@ -1,9 +1,8 @@
-import shutil
-
 import pandas as pd
 
 configfile: "config.yml"
 
+# import our dataset specific rules
 module aqueduct:
     snakefile: "pipelines/aqueduct/rules.smk"
     config: config
@@ -21,13 +20,16 @@ ruleorder: jrc_pop_clip_and_reproject_raster > clip_raster
 # print commands to stdout prior to execution
 shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set +a; set -x ;")
 
+# wildcards must not contain slashes
 wildcard_constraints:
     LAYER="[^/]+",
     DATASET="[^/]+",
 
-
-def get_hazard_layer(layer_name: str, hazard_layers: pd.DataFrame) -> pd.Series:
-    return hazard_layers[hazard_layers.key == layer_name].squeeze()
+# datasets the `all` target rule will expand to
+ALL_DATASETS = [
+    "aqueduct",
+    "jrc_pop"
+]
 
 
 rule set_zero_to_no_data:
@@ -70,10 +72,15 @@ rule set_zero_to_no_data:
 
 
 rule clip_raster:
+    """
+    Clip raster extent to window defined by `raster_bounds` in config.
+    """
     input:
         "raster/no_data/{DATASET}/{KEY}.tif"
     output:
         temp("raster/clip/{DATASET}/{KEY}.tif")
+    params:
+        bounds = config["raster_bounds"]
     resources:
         disk_mb=3000,
         mem_mb=10000,
@@ -83,7 +90,7 @@ rule clip_raster:
         """
         gdal_translate \
             -co "COMPRESS=LZW" \
-            -projwin -180 84.039535351 180 -84.78788384 \
+            -projwin {params.bounds} \
             -of GTiff \
             {input} \
             {output}
@@ -91,6 +98,9 @@ rule clip_raster:
 
 
 rule cloud_optimise_raster:
+    """
+    Use terracotta to cloud optimise rasters.
+    """
     input:
         "raster/clip/{DATASET}/{KEY}.tif"
     output:
@@ -129,3 +139,11 @@ rule POST_metadata_to_backend:
 
         touch {output.flag}
         """
+
+
+rule all:
+    """
+    Target rule to fetch, process and ingest all registered datasets.
+    """
+    input:
+        lambda x: expand("pipelines/{dataset}/posted_to_backend.flag", dataset=ALL_DATASETS)
