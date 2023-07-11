@@ -56,7 +56,7 @@ def all_cog_file_paths(wildcards):
     Generate list of Aqueduct output file paths.
     """
     df: pd.DataFrame = pd.read_csv(checkpoints.create_hazard_csv_file.get(**wildcards).output.csv)
-    return expand("raster/cog/aqueduct/{key}.tif", key=df.key)
+    return expand("raster/cog/{{DATASET}}/{key}.tif", key=df.key)
 
 
 rule ingest_rasters:
@@ -65,27 +65,25 @@ rule ingest_rasters:
     rasters to Terracotta.
 
     Requires the `tiles-db` MySQL service to be running.
+
+    TODO: Can this rule be factored out into main Snakefile? Currently, it
+    depends too tightly on the create_hazard_csv_file checkpoint to do so.
     """
     input:
         all_cog_file_paths,
         script = "scripts/ingest.py",
-        metadata = lambda wildcards: checkpoints.create_hazard_csv_file.get().output,
+        metadata = "pipelines/{DATASET}/metadata.csv",
         db_field_to_csv_header_map = "pipelines/{DATASET}/db_field_to_csv_header_map.json",
         tile_keys = "pipelines/{DATASET}/tile_keys.json",
-    params:
-        environment = config["environment"]
     output:
         flag = "pipelines/{DATASET}/ingested_to_mysql.flag"
     shell:
         """
-        # create variables from env file and export to current shell
-        set -a && source ../envs/{params.environment}/.etl.env && set +a
-
         python {input.script} load_csv \
             --internal_raster_base_path raster/cog/{wildcards.DATASET} \
             --input_csv_filepath {input.metadata} \
-            --csv_key_column_map $(jq '.|tostring' < {input.db_field_to_csv_header_map}) \
-            --tile_keys $(jq '.|tostring' < {input.tile_keys}) \
+            --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
+            --tile_keys_path {input.tile_keys} \
             --database_name {wildcards.DATASET}
 
         touch {output.flag}
@@ -102,15 +100,10 @@ rule POST_metadata_to_backend:
         ingest_flag = "pipelines/aqueduct/ingested_to_mysql.flag",
         fluvial_metadata = "pipelines/aqueduct/metadata_fluvial.json",
         coastal_metadata = "pipelines/aqueduct/metadata_coastal.json",
-    params:
-        environment = config["environment"]
     output:
         flag = "pipelines/aqueduct/posted_to_backend.flag"
     shell:
         """
-        # create variables from env file and export to current shell
-        set -a && source ../envs/{params.environment}/.etl.env && set +a
-
         # N.B. 4XX responses result in a zero-valued httpie exit status
         http POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.fluvial_metadata}
         http POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.coastal_metadata}

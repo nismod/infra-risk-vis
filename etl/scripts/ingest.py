@@ -65,15 +65,15 @@ parser.add_argument(
     help='Valid JSON string containing key:value mapping for the categorical raster.  NOTE: this will be loaded as an OrderedDict - so the key ordering will be maintained for DB usage.  e.g. {"type":"exposure","sensor":"S2","data":"20181010","band":"cloudmask"}',
 )
 parser.add_argument(
-    "--tile_keys",
+    "--tile_keys_path",
     type=str,
-    help="A comma-seperated list of tile keys and ordering, e.g. hazard,rp,rcp,gcm",
+    help='Path to JSON file containing list of tile keys and ordering, e.g. ["hazard", "rp", "rcp", gcm"]',
 )
 parser.add_argument(
-    "--csv_key_column_map",
+    "--csv_to_db_field_map_path",
     type=str,
     help=(
-        'Map of DB Keys to column names for input CSV (must be valid JSON str and contain keys: "file_basename" and "type"), e.g. '
+        'Path to JSON file with map of DB Keys to metadata.CSV column names (must contain keys: "file_basename" and "type"), e.g. '
         '{"file_basename": "key", "type": "hazard", "rp": "rp", "rcp": "rcp", "epoch": "epoch", "gcm": "gcm"} '
     )
 )
@@ -332,9 +332,9 @@ def _delete_database_entries(db_name: str) -> bool:
     print(f"Deleted {count_before - count_after} entries from db {db_name}")
 
 
-def _parse_csv_key_column_map(csv_key_column_map: str) -> dict:
+def _parse_csv_key_column_map(csv_key_column_map_path: str) -> dict:
     """
-    Parse the key column map from args into a dict
+    Parse the key column map file from args into a dict
     ::returns dict column_name_map e.g.:
         {
             "file_basename": "key",
@@ -345,11 +345,15 @@ def _parse_csv_key_column_map(csv_key_column_map: str) -> dict:
             "gcm": "gcm",
         }
     """
-    return json.loads(csv_key_column_map)
+    with open(csv_key_column_map_path) as fp:
+        data = json.load(fp)
+    return data
 
 
-def _parse_tile_keys(tile_keys: str) -> List[str]:
-    return tile_keys.split(",")
+def _parse_tile_keys(tile_key_path: str) -> List[str]:
+    with open(tile_key_path) as fp:
+        data = json.load(fp)
+    return data
 
 
 def _parse_ordered_key_values(key_values: str) -> OrderedDict:
@@ -377,9 +381,9 @@ def _validate_keys_and_map(tile_keys: List[str], csv_key_column_map: dict):
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.operation == "load_csv":
-        csv_key_column_map = _parse_csv_key_column_map(args.csv_key_column_map)
+        csv_key_column_map: dict[str, str] = _parse_csv_key_column_map(args.csv_to_db_field_map_path)
         # Ensure keys in map match tile_keys
-        tile_keys = _parse_tile_keys(args.tile_keys)
+        tile_keys: list[str] = _parse_tile_keys(args.tile_keys_path)
         _validate_keys_and_map(tile_keys, csv_key_column_map)
         print(f"parsed csv_key_column_map successfully as {csv_key_column_map}")
         raster_files = load_csv(

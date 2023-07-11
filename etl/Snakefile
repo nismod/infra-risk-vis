@@ -8,10 +8,13 @@ module aqueduct:
     snakefile: "pipelines/aqueduct/rules.smk"
     config: config
 use rule * from aqueduct as aqueduct_*
-# prefer dataset specific rule, where choice is ambiguous
+# where choice is ambiguous, prefer dataset specific rule
 ruleorder: aqueduct_POST_metadata_to_backend > POST_metadata_to_backend
 
-
+# prefix any shell blocks with these statements
+# create variables from env file and export
+# print commands to stdout prior to execution
+shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set +a; set -x ;")
 
 wildcard_constraints:
     LAYER="[^/]+",
