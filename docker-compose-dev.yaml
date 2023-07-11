@@ -157,7 +157,7 @@ services:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
     env_file:
-      - ./envs/dev/.raster-tile-ingester.env
+      - ./envs/dev/.etl.env
     volumes:
       - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
       - ./tileserver/raster/data:/data # Must match path in Backend
@@ -182,9 +182,9 @@ services:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
     env_file:
-      - ./envs/dev/.raster-tile-ingester.env
+      - ./envs/dev/.etl.env
     volumes:
-      - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
+      - ./etl/scripts/ingest.py:/ingest.py # Mounted only for Dev
     command:
       [
         "delete_database_entries",
@@ -197,10 +197,10 @@ services:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
     env_file:
-      - ./envs/dev/.raster-tile-ingester.env
+      - ./envs/dev/.etl.env
     volumes:
-      - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-    command: [ "drop_database", "--database_name", "iris" ]
+      - ./etl/scripts/ingest.py:/ingest.py # Mounted only for Dev
+    command: [ "drop_database", "--database_name", "aqueduct" ]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   backend-schema-regen:

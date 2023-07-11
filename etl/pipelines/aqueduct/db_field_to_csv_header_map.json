@@ -1,0 +1,8 @@
+{
+    "file_basename": "key",
+    "type": "hazard",
+    "rp": "rp",
+    "rcp": "rcp",
+    "epoch": "epoch",
+    "gcm": "gcm"
+}

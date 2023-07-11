@@ -81,7 +81,8 @@ create records but not files, produce a dummy output to indicate when a DB was
 last touched.
 
 The default, `all` rule in this `snakemake` workflow would aim to create files
-and DB records for all datasets.
+and DB records for all datasets. The container could take a dataset as an
+optional argument (via `docker run`?) to process a single, or set of datasets.
 
 ### Vector
 

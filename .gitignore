@@ -6,6 +6,7 @@ mounts/vector/
 incoming_data/
 intermediate_data/
 raw_data
+*.flag
 *.zip
 *.tif
 *.aux.xml

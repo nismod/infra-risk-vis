@@ -1,0 +1,133 @@
+import shutil
+
+import pandas as pd
+
+configfile: "config.yml"
+
+module aqueduct:
+    snakefile: "pipelines/aqueduct/rules.smk"
+    config: config
+use rule * from aqueduct as aqueduct_*
+# prefer dataset specific rule, where choice is ambiguous
+ruleorder: aqueduct_POST_metadata_to_backend > POST_metadata_to_backend
+
+
+
+wildcard_constraints:
+    LAYER="[^/]+",
+    DATASET="[^/]+",
+
+
+def disk_free_mb(wildcards, attempt):
+    _, _, free = shutil.disk_usage("/")
+    return int(free / 1000000)
+
+
+def get_hazard_layer(layer_name: str, hazard_layers: pd.DataFrame) -> pd.Series:
+    return hazard_layers[hazard_layers.key == layer_name].squeeze()
+
+
+rule set_zero_to_no_data:
+    input:
+        "raster/raw/{DATASET}/{KEY}.tif"
+    output:
+        temp("raster/no_data/{DATASET}/{KEY}.tif")
+    resources:
+        disk_mb=3000,
+        mem_mb=10000,
+    priority:
+        70,
+    shell:
+        """
+        NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
+
+        # handle case of NODATA == nan - the JSON output of gdalinfo will change
+        # nan to "NaN" so we need to reverse that for gdal_calc.py
+        if [ "$NODATA" == '"NaN"' ]
+        then
+          NODATA=nan
+        fi
+
+        if [ "$NODATA" == 'null' ]
+        then
+          NODATA=nan
+        fi
+
+        # replace zeros with NoData value
+        gdal_calc.py \
+          --quiet \
+          -A "{input}" \
+          --co="COMPRESS=LZW" \
+          --outfile="{output}" \
+          --overwrite \
+          --calc="numpy.where(A<=0,$NODATA,A)" \
+          --NoDataValue=$NODATA \
+          --hideNoData
+        """
+
+
+rule clip_raster:
+    input:
+        "raster/no_data/{DATASET}/{KEY}.tif"
+    output:
+        temp("raster/clip/{DATASET}/{KEY}.tif")
+    resources:
+        disk_mb=3000,
+        mem_mb=10000,
+    priority:
+        80,
+    shell:
+        """
+        gdal_translate \
+            -co "COMPRESS=LZW" \
+            -projwin -180 84.039535351 180 -84.78788384 \
+            -of GTiff \
+            {input} \
+            {output}
+        """
+
+
+rule cloud_optimise_raster:
+    input:
+        "raster/clip/{DATASET}/{KEY}.tif"
+    output:
+        "raster/cog/{DATASET}/{KEY}.tif",
+    resources:
+        disk_mb=100,
+        mem_mb=2000,
+    threads: 2
+    priority:
+        90,
+    shell:
+        """
+        terracotta optimize-rasters \
+            -o $(dirname {output}) \
+            --overwrite \
+            --reproject \
+            --nproc {threads} \
+            --resampling-method nearest \
+            {input}
+        """
+
+
+rule POST_metadata_to_backend:
+    """
+    Requires the `backend` and postgreSQL `db` services to be running.
+    """
+    input:
+        ingest_flag = "pipelines/{DATASET}/ingested_to_mysql.flag",
+        metadata = "pipelines/{DATASET}/metadata.json",
+    params:
+        environment = config["environment"]
+    output:
+        flag = "pipelines/{DATASET}/posted_to_backend.flag"
+    shell:
+        """
+        # create variables from env file and export to current shell
+        set -a && source ../envs/{params.environment}/.etl.env && set +a
+
+        # N.B. 4XX responses result in a zero-valued httpie exit status
+        http POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.metadata}
+
+        touch {output.flag}
+        """

@@ -1,8 +1,8 @@
 """
-Data Set Downloaders
+Aqueduct dataset parser, takes remote listing and creates CSV file with rows of
+rasters and their metadata.
 """
 
-from ast import Assert
 import sys
 import os
 import pprint
@@ -16,35 +16,20 @@ sys.path.append(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 )
 
-from pipelines.helpers import download_file, get_logger
+from pipelines.helpers import get_logger
 
 LOG = get_logger(__name__)
 
 
 parser = argparse.ArgumentParser(description="Aqueduct Downloader")
 parser.add_argument(
-    "--download_path", type=str, help="Download directory for image files"
-)
-parser.add_argument(
     "--source_url", type=str, help="Base URL to use for Image file source"
 )
 parser.add_argument("--list_url", type=str, help="URL Listing files")
 parser.add_argument(
-    "--limit_files",
-    type=int,
-    default=None,
-    help="Limit the number of files processed arbitrarily (for testing) - True / False",
-)
-parser.add_argument(
-    "--download",
-    default="True",
-    type=str,
-    help="Download the files (dry-run if False) - True / False",
-)
-parser.add_argument(
     "--log_meta",
-    type=str,
-    default="False",
+    type=bool,
+    default=False,
     help="Logout metadata associated with files",
 )
 parser.add_argument(
@@ -97,6 +82,7 @@ class HazardAqueduct:
             "epoch",
             "gcm",
             "key",
+            "url",
         ]
         # If these patterns are in the filenames they will be removed from processing
         self.skip_fname_patterns = skip_fname_patterns
@@ -271,7 +257,12 @@ class HazardAqueduct:
             }
         """
         data_mapper = self.map_selector(fname)
-        output = {"filename": fname, "url": self.build_tiff_link(fname), "meta": {}}
+        output = {
+            "filename": fname,
+            "meta": {
+                "url": self.build_tiff_link(fname),
+            }
+        }
         try:
             for idx, item in enumerate(os.path.splitext(fname)[0].split("_")):
                 if idx == 2 and data_mapper["hazard"] == "coastal":
@@ -333,44 +324,6 @@ class HazardAqueduct:
         files_meta = self.parse_fnames(fnames)
         return files_meta
 
-    def download(self, url: str, filename: str, download_dir: str) -> Tuple[str, str]:
-        """
-        Download single file and update meta to reflect resulting path
-        """
-        target_fpath = os.path.join(download_dir, filename)
-        LOG.info("target fpath: %s", target_fpath)
-        if os.path.exists(target_fpath):
-            print(f"skip download {filename} - already exists")
-            filesize = os.path.getsize(target_fpath)
-        else:
-            filesize = download_file(
-                url,
-                target_fpath,
-            )
-        return filesize, target_fpath
-
-    def download_files(self, files_meta: List[dict], download_dir: str) -> List[dict]:
-        """
-        Download the files in the given files_meta
-
-        ::return files_meta List[dict]
-        """
-        for idx, file_meta in enumerate(files_meta):
-            try:
-                filesize, target_fpath = self.download(
-                    file_meta["url"], file_meta["filename"], download_dir
-                )
-                file_meta["filesize"] = filesize
-                file_meta["path"] = target_fpath
-                print(
-                    "Downloaded {} of {}, filesize (mb): {}".format(
-                        idx + 1, len(files_meta), file_meta["filesize"] / 1000000
-                    )
-                )
-            except Exception as err:
-                print("failed to download", file_meta["filename"], err)
-        return files_meta
-
     def hazard_csv_exists(self) -> bool:
         """
         Check the provided hazard csv exists
@@ -397,45 +350,38 @@ class HazardAqueduct:
         """
         return sum(1 for _ in open(self.hazard_csv_fpath))
 
-    def append_hazard_csv(self, files_meta: List[dict]) -> None:
+    def write_hazard_csv(self, files_meta: List[dict]) -> None:
         """
-        Append the meta from parsed files to the hazard csv
+        Write the meta from parsed raster list to the hazard CSV table
         """
-        # Generate file if req
-        if not self.hazard_csv_exists():
-            with open(self.hazard_csv_fpath, "w") as csvfile:
-                print(" No hazard csv found writing new at: ", self.hazard_csv_fpath)
-                # Generate a new file
-                writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
-                writer.writeheader()
-        # Check CSV is valid (headers etc)
-        _ = self.hazard_csv_valid()
-        # Dump meta
-        count_before = self.count_hazard_csv_rows()
-        with open(self.hazard_csv_fpath, "a") as csvfile:
-            # Setup the writer
+        # overwrite/create file if req
+        with open(self.hazard_csv_fpath, "w") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=self.hazard_csv_fieldnames)
+            writer.writeheader()
+
             # Dump meta
             for file in files_meta:
                 row = file["meta"]
-                row["path"] = file["path"]
+                row["path"] = file["filename"]
                 writer.writerow(row)
-        count_after = self.count_hazard_csv_rows()
+
+        # Check CSV is valid (headers etc)
+        _ = self.hazard_csv_valid()
+
+        csv_count = self.count_hazard_csv_rows()
         print(
-            "Count before:",
-            count_before - 1,
-            "Count after:",
-            count_after - 1,
-            "number files processed:",
+            "CSV length:",
+            csv_count,
+            "Number files processed:",
             len(files_meta),
         )
 
     def run(
         self,
         download_path: str = None,
-        limit_files: int = None,
         log_meta: bool = False,
         csv_path: str = None,
+        **kwargs
     ) -> None:
         """
         Main runner - download files and process meta into CSV
@@ -445,9 +391,6 @@ class HazardAqueduct:
         fnames = self.fetch_tiff_fnames()
         print("parse file meta")
         files_meta = self.parse_fnames(fnames)
-        if limit_files:
-            print("files to process limited to", limit_files)
-            files_meta = files_meta[:limit_files]
         if log_meta:
             pp = pprint.PrettyPrinter(indent=4)
             pp.pprint(files_meta)
@@ -456,37 +399,15 @@ class HazardAqueduct:
             files_meta = self.download_files(files_meta)
         if csv_path:
             print("generating hazard csv")
-            self.append_hazard_csv(files_meta)
+            self.write_hazard_csv(files_meta)
         print("Complete")
 
 
 if __name__ == "__main__":
-    # Example Usage for Main:
-    # args = parser.parse_args()
-    # processor = HazardAqueduct()
-    # processor.run(
-    #     download_path=None,
-    #     limit_files=3,
-    #     log_meta=args.log_meta == "True",
-    #     csv_path=None,
-    # )
-    # logging.info("Complete")
-
-    # # Example Usage for Metadata:
-    # args = parser.parse_args()
-    # processor = HazardAqueduct()
-    # metadata = processor.file_metadata()
-    # LOG.debug(metadata)
-    # LOG.info("Complete")
-
-    # # Example Usage for CSV Only:
-    args = parser.parse_args()
-    processor = HazardAqueduct(hazard_csv_fpath="./hazard_layers.csv")
-    metadata = processor.file_metadata()
-    # Generate path info by downloading (will skip if files exist)
-    metadata = processor.download_files(
-        metadata,
-        "/home/dusted/code/oxford/infra-risk-vis/tileserver/raster/data/aqueduct",
+    parsed_args = vars(parser.parse_args())
+    processor = HazardAqueduct(
+        hazard_csv_fpath=parsed_args["csv_path"],
+        source_url=parsed_args["source_url"],
+        list_url=parsed_args["list_url"]     
     )
-    processor.append_hazard_csv(metadata)
-    LOG.info("Complete")
+    processor.run(**parsed_args)
