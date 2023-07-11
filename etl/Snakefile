@@ -8,8 +8,13 @@ module aqueduct:
     snakefile: "pipelines/aqueduct/rules.smk"
     config: config
 use rule * from aqueduct as aqueduct_*
-# where choice is ambiguous, prefer dataset specific rule
 ruleorder: aqueduct_POST_metadata_to_backend > POST_metadata_to_backend
+
+module jrc_pop:
+    snakefile: "pipelines/jrc_pop/rules.smk"
+    config: config
+use rule * from jrc_pop as jrc_pop_*
+ruleorder: jrc_pop_clip_and_reproject_raster > clip_raster
 
 # prefix any shell blocks with these statements
 # create variables from env file and export
@@ -19,11 +24,6 @@ shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set 
 wildcard_constraints:
     LAYER="[^/]+",
     DATASET="[^/]+",
-
-
-def disk_free_mb(wildcards, attempt):
-    _, _, free = shutil.disk_usage("/")
-    return int(free / 1000000)
 
 
 def get_hazard_layer(layer_name: str, hazard_layers: pd.DataFrame) -> pd.Series:
@@ -120,15 +120,10 @@ rule POST_metadata_to_backend:
     input:
         ingest_flag = "pipelines/{DATASET}/ingested_to_mysql.flag",
         metadata = "pipelines/{DATASET}/metadata.json",
-    params:
-        environment = config["environment"]
     output:
         flag = "pipelines/{DATASET}/posted_to_backend.flag"
     shell:
         """
-        # create variables from env file and export to current shell
-        set -a && source ../envs/{params.environment}/.etl.env && set +a
-
         # N.B. 4XX responses result in a zero-valued httpie exit status
         http POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.metadata}
 

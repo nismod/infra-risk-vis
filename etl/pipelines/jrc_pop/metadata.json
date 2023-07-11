@@ -1,0 +1,9 @@
+{
+  "source_db": "jrc_pop",
+  "global_type": "Exposure",
+  "domain": "population",
+  "full_name": "JRC Population",
+  "description": "description",
+  "license": "license",
+  "variables": {}
+}

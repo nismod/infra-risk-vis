@@ -1,1 +1,2 @@
 environment: "dev"  # {dev | prod}, picks which env files to use
+raster_bounds: "-180 -84 180 84"

@@ -1,7 +1,7 @@
-configfile: "../../config.yml"
-
-
 import pandas as pd
+
+
+configfile: "../../config.yml"
 
 
 checkpoint create_hazard_csv_file:
@@ -44,7 +44,7 @@ rule download_raw_data:
     params:
         url = url_from_key
     output:
-        "raster/raw/{DATASET}/{KEY}.tif"
+        "raster/raw/aqueduct/{KEY}.tif"
     shell:
         """
         wget {params.url} --output-document={output}

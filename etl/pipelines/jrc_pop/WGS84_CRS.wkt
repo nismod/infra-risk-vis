@@ -1,4 +1,3 @@
-
 GEOGCRS["WGS 84",
     ENSEMBLE["World Geodetic System 1984 ensemble",
         MEMBER["World Geodetic System 1984 (Transit)"],
@@ -24,5 +23,6 @@ GEOGCRS["WGS 84",
         SCOPE["Horizontal component of 3D system."],
         AREA["World."],
         BBOX[-90,-180,90,180]],
-    ID["EPSG",4326]]
+    ID["EPSG",4326]
+]
 
