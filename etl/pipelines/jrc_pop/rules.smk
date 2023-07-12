@@ -6,11 +6,11 @@ configfile: "../../config.yml"
 
 def url_from_key(wildcards):
     """
-    Lookup a JRC population URL from our metadata file by KEY wildcard.
+    Lookup a JRC population URL from our layers file by KEY wildcard.
     """
-    df: pd.DataFrame = pd.read_csv("pipelines/jrc_pop/metadata.csv")
-    metadata = df[df.key == wildcards.KEY].squeeze()
-    return metadata.url
+    df: pd.DataFrame = pd.read_csv("pipelines/jrc_pop/layers.csv")
+    layer = df[df.key == wildcards.KEY].squeeze()
+    return layer.url
 
 
 rule download_and_unzip_raw_data:
@@ -18,7 +18,7 @@ rule download_and_unzip_raw_data:
     Download JRC population data from remote location and unzip it.
     """
     input:
-        "pipelines/jrc_pop/metadata.csv"
+        "pipelines/jrc_pop/layers.csv"
     params:
         url = url_from_key
     output:
@@ -73,7 +73,7 @@ def all_cog_file_paths(wildcards):
     """
     Generate list of JRC population output file paths.
     """
-    df: pd.DataFrame = pd.read_csv("pipelines/jrc_pop/metadata.csv")
+    df: pd.DataFrame = pd.read_csv("pipelines/jrc_pop/layers.csv")
     return expand("raster/cog/jrc_pop/{key}.tif", key=df.key)
 
 
@@ -87,7 +87,7 @@ rule ingest_rasters:
     input:
         all_cog_file_paths,
         script = "scripts/ingest.py",
-        metadata = "pipelines/jrc_pop/metadata.csv",
+        layers = "pipelines/jrc_pop/layers.csv",
         db_field_to_csv_header_map = "pipelines/jrc_pop/db_field_to_csv_header_map.json",
         tile_keys = "pipelines/jrc_pop/tile_keys.json",
     output:
@@ -96,7 +96,7 @@ rule ingest_rasters:
         """
         python {input.script} load_csv \
             --internal_raster_base_path raster/cog/jrc_pop \
-            --input_csv_filepath {input.metadata} \
+            --input_csv_filepath {input.layers} \
             --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
             --tile_keys_path {input.tile_keys} \
             --database_name jrc_pop

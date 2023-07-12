@@ -19,7 +19,7 @@ checkpoint create_hazard_csv_file:
         source_url = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2",
         list_url = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2/index.html"
     output:
-        csv = "pipelines/aqueduct/metadata.csv"
+        csv = "pipelines/aqueduct/layers.csv"
     shell:
         """
         python {input.script} --list_url {params.list_url} --source_url {params.source_url} --csv_path {output.csv}
@@ -28,11 +28,11 @@ checkpoint create_hazard_csv_file:
 
 def url_from_key(wildcards):
     """
-    Lookup an Aqueduct TIFF URL from our metadata file by KEY wildcard.
+    Lookup an Aqueduct TIFF URL from our layers file by KEY wildcard.
     """
     df: pd.DataFrame = pd.read_csv(checkpoints.create_hazard_csv_file.get(**wildcards).output.csv)
-    metadata = df[df.key == wildcards.KEY].squeeze()
-    return metadata.url
+    layer = df[df.key == wildcards.KEY].squeeze()
+    return layer.url
 
 
 rule download_raw_data:
@@ -40,7 +40,7 @@ rule download_raw_data:
     Download files from remote location.
     """
     input:
-        metadata = lambda wildcards: checkpoints.create_hazard_csv_file.get().output,
+        layers = lambda wildcards: checkpoints.create_hazard_csv_file.get().output,
     params:
         url = url_from_key
     output:
@@ -72,16 +72,16 @@ rule ingest_rasters:
     input:
         all_cog_file_paths,
         script = "scripts/ingest.py",
-        metadata = "pipelines/{DATASET}/metadata.csv",
-        db_field_to_csv_header_map = "pipelines/{DATASET}/db_field_to_csv_header_map.json",
-        tile_keys = "pipelines/{DATASET}/tile_keys.json",
+        layers = "pipelines/aqueduct/layers.csv",
+        db_field_to_csv_header_map = "pipelines/aqueduct/db_field_to_csv_header_map.json",
+        tile_keys = "pipelines/aqueduct/tile_keys.json",
     output:
-        flag = "pipelines/{DATASET}/ingested_to_mysql.flag"
+        flag = "pipelines/aqueduct/ingested_to_mysql.flag"
     shell:
         """
         python {input.script} load_csv \
             --internal_raster_base_path raster/cog/{wildcards.DATASET} \
-            --input_csv_filepath {input.metadata} \
+            --input_csv_filepath {input.layers} \
             --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
             --tile_keys_path {input.tile_keys} \
             --database_name {wildcards.DATASET}
