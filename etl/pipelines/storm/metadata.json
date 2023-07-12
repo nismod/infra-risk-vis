@@ -1,0 +1,13 @@
+{
+	"source_db": "storm",
+	"global_type": "Hazard",
+	"domain": "cyclone",
+	"full_name": "Hazard Tropical Storm",
+	"description": "description",
+	"license": "license",
+	"variables": {
+		"type": "hazard",
+		"rp": "rp",
+		"gcm": "gcm"
+	}
+}

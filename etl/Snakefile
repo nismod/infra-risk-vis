@@ -15,6 +15,18 @@ module jrc_pop:
 use rule * from jrc_pop as jrc_pop_*
 ruleorder: jrc_pop_clip_and_reproject_raster > clip_raster
 
+module storm:
+    snakefile: "pipelines/storm/rules.smk"
+    config: config
+use rule * from storm as storm_*
+
+# datasets the `all` target rule will expand to
+ALL_DATASETS = (
+    "aqueduct",
+    "jrc_pop",
+    "storm",
+)
+
 # prefix any shell blocks with these statements
 # create variables from env file and export
 # print commands to stdout prior to execution
@@ -22,14 +34,8 @@ shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set 
 
 # wildcards must not contain slashes
 wildcard_constraints:
-    LAYER="[^/]+",
+    KEY="[^/]+",
     DATASET="[^/]+",
-
-# datasets the `all` target rule will expand to
-ALL_DATASETS = [
-    "aqueduct",
-    "jrc_pop"
-]
 
 
 rule set_zero_to_no_data:
