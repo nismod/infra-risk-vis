@@ -17,7 +17,8 @@ dependencies:
   - numpy<=1.23.5  # n-d arrays
   - pip  # python package management
   - pip:
-      - terracotta==0.8.0  # this version not available on conda-forge
+      # this version not available on conda-forge
+      - terracotta==0.8.0  # raster tile server and processing utilities
   - pyarrow  # performant tabular data
   - pymysql  # mysql python client, for raster ingestion
   - psycopg2-binary  # postgreSQL python client, for raster metadata
@@ -25,7 +26,6 @@ dependencies:
   - rioxarray  # extend xarray for rasters
   - sqlalchemy~=1.4  # SQL object relational mapper (ORM)
   - snakemake==7.15.2  # workflow orchestration
-  - terracotta  # raster tileserver and data processing
   - tippecanoe  # vector tileset creation
   - ujson  # fast JSON encoder
   - xarray  # named n-dimensional numpy matricies
