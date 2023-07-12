@@ -71,6 +71,15 @@ rule set_zero_to_no_data:
         """
 
 
+def projwin_bounds(bbox: dict[str, float]) -> str:
+    """
+    Given dict of `minx`, `miny`, `maxx` and `maxy`, return coordinates as
+    concatentated string in correct order for gdal_translate -projwin argument.
+    """
+    extents = (bbox["minx"], bbox["maxy"], bbox["maxx"], bbox["miny"])
+    return " ".join(map(lambda extent: f"{extent:.3f}", extents))
+
+
 rule clip_raster:
     """
     Clip raster extent to window defined by `raster_bounds` in config.
@@ -80,7 +89,7 @@ rule clip_raster:
     output:
         temp("raster/clip/{DATASET}/{KEY}.tif")
     params:
-        bounds = config["raster_bounds"]
+        bounds = projwin_bounds(config["raster_bounds"])
     resources:
         disk_mb=3000,
         mem_mb=10000,

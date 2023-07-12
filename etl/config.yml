@@ -2,4 +2,10 @@
 environment: "dev"  # {dev | prod}
 
 # clip rasters to this window (decimal degrees)
-raster_bounds: "-180 -84 180 84"  # minx, miny, maxx, maxy
+# TODO: check terracotta is happy with rasters touching the antimeridian
+# previously, some clip rules left a buffer around the antimeridian
+raster_bounds:
+  minx: -180
+  miny: -84.0395
+  maxx: 180
+  maxy: 84.7879

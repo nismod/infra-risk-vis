@@ -33,6 +33,15 @@ rule download_and_unzip_raw_data:
         """
 
 
+def gdalwarp_bounds(bbox: dict[str, float]) -> str:
+    """
+    Given dict of `minx`, `miny`, `maxx` and `maxy`, return coordinates as
+    concatentated string in correct order for gdalwarp -te argument.
+    """
+    extents = (bbox["minx"], bbox["miny"], bbox["maxx"], bbox["maxy"])
+    return " ".join(map(lambda extent: f"{extent:.3f}", extents))
+
+
 rule clip_and_reproject_raster:
     """
     Reproject from Mollweide to WGS84 and clip to bounds.
@@ -41,7 +50,7 @@ rule clip_and_reproject_raster:
         raster = "raster/no_data/jrc_pop/{KEY}.tif",
         target_CRS = "pipelines/jrc_pop/WGS84_CRS.wkt",
     params:
-        bounds = config["raster_bounds"]
+        bounds = gdalwarp_bounds(config["raster_bounds"])
     output:
         "raster/clip/jrc_pop/{KEY}.tif"
     resources:
