@@ -13,6 +13,8 @@ dependencies:
   - httpie  # friendly CLI HTTP client
   - jq  # JSON filtering
   - netcdf4  # netCDF file support
+  # pin numpy to prevent np.object deprecation bug triggered in crick 0.3.0
+  - numpy<=1.23.5  # n-d arrays
   - pip  # python package management
   - pip:
       - terracotta==0.8.0  # this version not available on conda-forge
