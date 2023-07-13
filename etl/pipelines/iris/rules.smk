@@ -4,9 +4,6 @@ import pandas as pd
 import xarray as xr
 
 
-configfile: "../../config.yml"
-
-
 def netcdf_path_from_key(wildcards) -> pd.Series:
     """
     Lookup an IRIS source netCDF from our layers file by raster key.
