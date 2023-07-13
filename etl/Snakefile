@@ -1,5 +1,7 @@
 import pandas as pd
 
+from pipelines.helpers import gdalwarp_bounds
+
 configfile: "config.yml"
 
 # import our dataset specific rules
@@ -48,8 +50,8 @@ ALL_DATASETS = (
 )
 
 # prefix any shell blocks with these statements
-# create variables from env file and export
-# print commands to stdout prior to execution
+# - create variables from env file and export
+# - print commands to stdout during execution
 shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set +a; set -x ;")
 
 wildcard_constraints:
@@ -99,15 +101,6 @@ rule set_zero_to_no_data:
         """
 
 
-def projwin_bounds(bbox: dict[str, float]) -> str:
-    """
-    Given dict of `minx`, `miny`, `maxx` and `maxy`, return coordinates as
-    concatentated string in correct order for gdal_translate -projwin argument.
-    """
-    extents = (bbox["minx"], bbox["maxy"], bbox["maxx"], bbox["miny"])
-    return " ".join(map(lambda extent: f"{extent:.3f}", extents))
-
-
 rule clip_raster:
     """
     Clip raster extent to window defined by `raster_bounds` in config.
@@ -117,7 +110,7 @@ rule clip_raster:
     output:
         temp("raster/clip/{DATASET}/{KEY}.tif")
     params:
-        bounds = projwin_bounds(config["raster_bounds"])
+        bounds = gdalwarp_bounds(config["raster_bounds"])
     resources:
         disk_mb=3000,
         mem_mb=10000,
@@ -125,9 +118,9 @@ rule clip_raster:
         80,
     shell:
         """
-        gdal_translate \
+        gdalwarp \
             -co "COMPRESS=LZW" \
-            -projwin {params.bounds} \
+            -te {params.bounds} \
             -of GTiff \
             {input} \
             {output}

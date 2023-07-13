@@ -1,5 +1,6 @@
 import pandas as pd
 
+from pipelines.helpers import gdalwarp_bounds
 
 configfile: "../../config.yml"
 
@@ -31,15 +32,6 @@ rule download_and_unzip_raw_data:
         wget {params.url} --output-document={output.zip_file}
         unzip {output.zip_file} $(basename {output.raster}) -d $(dirname {output.raster})
         """
-
-
-def gdalwarp_bounds(bbox: dict[str, float]) -> str:
-    """
-    Given dict of `minx`, `miny`, `maxx` and `maxy`, return coordinates as
-    concatentated string in correct order for gdalwarp -te argument.
-    """
-    extents = (bbox["minx"], bbox["miny"], bbox["maxx"], bbox["maxy"])
-    return " ".join(map(lambda extent: f"{extent:.3f}", extents))
 
 
 rule clip_and_reproject_raster:
