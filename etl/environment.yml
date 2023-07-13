@@ -30,3 +30,4 @@ dependencies:
   - tippecanoe  # vector tileset creation
   - ujson  # fast JSON encoder
   - xarray  # named n-dimensional numpy matricies
+  - zenodo_get  # downloader for zenodo data
