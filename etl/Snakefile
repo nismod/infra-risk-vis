@@ -9,6 +9,17 @@ module aqueduct:
 use rule * from aqueduct as aqueduct_*
 ruleorder: aqueduct_POST_metadata_to_backend > POST_metadata_to_backend
 
+module esa_land_cover:
+    snakefile: "pipelines/esa_land_cover/rules.smk"
+    config: config
+use rule * from esa_land_cover as esa_land_cover_*
+ruleorder: esa_land_cover_download_300m_2020_from_CDS > clip_raster
+
+module iris:
+    snakefile: "pipelines/iris/rules.smk"
+    config: config
+use rule * from iris as iris_*
+
 module jrc_pop:
     snakefile: "pipelines/jrc_pop/rules.smk"
     config: config
@@ -23,8 +34,17 @@ use rule * from storm as storm_*
 # datasets the `all` target rule will expand to
 ALL_DATASETS = (
     "aqueduct",
+    "esa_land_cover",
+    #"exposure_nature",
+    #"gem_exposure",
+    #"gem_earthquake",
+    #"ghsl_buildings",
+    "iris",
+    #"isimp_drought",
+    #"isimp_extreme_heat",
     "jrc_pop",
     "storm",
+    #"traveltime_to_healthcare",
 )
 
 # prefix any shell blocks with these statements
@@ -32,10 +52,12 @@ ALL_DATASETS = (
 # print commands to stdout prior to execution
 shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set +a; set -x ;")
 
-# wildcards must not contain slashes
 wildcard_constraints:
     KEY="[^/]+",
     DATASET="[^/]+",
+    EPOCH="\d+",
+    RP="\d+",
+    SSP="constant|ssp\d",
 
 
 rule set_zero_to_no_data:
