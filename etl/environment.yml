@@ -5,6 +5,7 @@ channels:
   - bioconda  # for snakemake
 dependencies:
   - python=3.10
+  - cdsapi  # Copernicus CDS API client
   - crick  # streaming algorithms for raster ingestion
   - gdal  # geospatial data transformation
   - geoalchemy2  # spatial database extensions for sqlalchemy
