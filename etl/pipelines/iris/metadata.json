@@ -1,0 +1,14 @@
+{
+    "source_db": "iris",
+    "global_type": "Hazard",
+    "domain": "cyclone",
+    "full_name": "Hazard Tropical Storm",
+    "description": "description",
+    "license": "license",
+    "variables": {
+        "epoch": "epoch",
+        "rp": "rp",
+        "ssp": "ssp",
+        "key": "key"
+    }
+}

@@ -1,2 +1,0 @@
-hazard_layers: /opt/etl/pipelines/iris/hazard_iris.csv
-raster_output_dir: /opt/tileserver/raster/data/iris
