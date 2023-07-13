@@ -12,7 +12,7 @@ def netcdf_path_from_key(wildcards) -> pd.Series:
     Lookup an IRIS source netCDF from our layers file by raster key.
     """
     df: pd.DataFrame = pd.read_csv("pipelines/iris/layers.csv")
-    layer = df[df.key == wildcards.key].squeeze()
+    layer = df[df.key == wildcards.KEY].squeeze()
     return f"raster/raw/iris/{layer.path}"
 
 
@@ -26,7 +26,7 @@ rule extract_netcdf_to_tiff:
         tiff = "raster/raw/iris/{KEY}.tif"
     run:
         # extract return period (sub-string) from key wildcard
-        rp, = re.search(r"rp_(\d+)", wildcards.key).groups()
+        rp, = re.search(r"rp_(\d+)", wildcards.KEY).groups()
         with xr.open_dataset(input.netcdf) as ds:
             ds.coords["longitude"].attrs = {
                 "standard_name": "longitude",
