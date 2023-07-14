@@ -1,0 +1,15 @@
+{
+  "source_db": "extreme_heat",
+  "global_type": "Hazard", 
+  "domain": "extreme_heat", 
+  "full_name": "Hazard Extreme Heat", 
+  "description": "description", 
+  "license": "license", 
+  "variables": {
+    "type": "type",
+    "metric": "metric",
+    "rcp": "rcp",
+    "epoch": "epoch",
+    "gcm": "gcm"
+  }
+}
