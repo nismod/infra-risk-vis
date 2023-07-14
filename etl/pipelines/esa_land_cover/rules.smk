@@ -72,4 +72,3 @@ rule ingest_rasters:
 
         touch {output.flag}
         """
-

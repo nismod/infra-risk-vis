@@ -17,6 +17,11 @@ module esa_land_cover:
 use rule * from esa_land_cover as esa_land_cover_*
 ruleorder: esa_land_cover_download_300m_2020_from_CDS > clip_raster
 
+module exposure_nature:
+    snakefile: "pipelines/exposure_nature/rules.smk"
+    config: config
+use rule * from exposure_nature as exposure_nature_*
+
 module iris:
     snakefile: "pipelines/iris/rules.smk"
     config: config
@@ -37,7 +42,7 @@ use rule * from storm as storm_*
 ALL_DATASETS = (
     "aqueduct",
     "esa_land_cover",
-    #"exposure_nature",
+    "exposure_nature",
     #"gem_exposure",
     #"gem_earthquake",
     #"ghsl_buildings",
