@@ -69,11 +69,11 @@ rule download_300m_forest_integrity_index:
         """
         gdown --output {output.raw_integer} 1Bd3LxqPTSMuFRb-24Z7UMWCiPnhlTvg_ 
 
-        gdal_calc.py \
-            --creation-option "COMPRESS=LZW" \
-            -A {output.raw_integer} \
-            --calc="A.astype(numpy.float64) / 1000" \
-            --outfile={output.rescaled}
+        gdal_translate \
+            -scale 0 10000 0 10 \
+            -ot Float32 \
+            {output.raw_integer} \
+            {output.rescaled}
         """
 
 
