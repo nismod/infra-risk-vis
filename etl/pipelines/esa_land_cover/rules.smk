@@ -52,6 +52,8 @@ rule ingest_rasters:
     rasters to Terracotta.
 
     Requires the `tiles-db` MySQL service to be running.
+
+    TODO: Ingest with a categorical colourmap as defined by legend.csv.
     """
     input:
         all_cog_file_paths,
