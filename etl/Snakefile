@@ -27,6 +27,11 @@ module iris:
     config: config
 use rule * from iris as iris_*
 
+module isimip:
+    snakefile: "pipelines/isimip/rules.smk"
+    config: config
+use rule * from isimip as isimip_*
+
 module jrc_pop:
     snakefile: "pipelines/jrc_pop/rules.smk"
     config: config
