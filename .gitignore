@@ -16,9 +16,9 @@ raw_data
 etl/*_test.csv
 etl/logs
 etl/vector
+etl/raster
 etl/regions
 etl/config_local.yml
-etl/pipelines/*/metadata.csv
 public/*.csv
 public/**/*.csv
 .snakemake
