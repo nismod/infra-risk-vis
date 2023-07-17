@@ -40,7 +40,6 @@ rule clip_and_reproject_raster:
     """
     input:
         raster = "raster/no_data/jrc_pop/{KEY}.tif",
-        target_CRS = "pipelines/jrc_pop/WGS84_CRS.wkt",
     params:
         bounds = gdalwarp_bounds(config["raster_bounds"])
     output:
@@ -52,7 +51,7 @@ rule clip_and_reproject_raster:
     shell:
         """
         gdalwarp \
-            -t_srs {input.target_CRS} \
+            -t_srs EPSG:4326 \
             -of GTiff \
             -co COMPRESS=LZW \
             -te {params.bounds} \
