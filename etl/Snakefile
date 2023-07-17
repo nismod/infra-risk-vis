@@ -32,6 +32,12 @@ module isimip:
     config: config
 use rule * from isimip as isimip_*
 
+module ghsl_buildings:
+    snakefile: "pipelines/ghsl_buildings/rules.smk"
+    config: config
+use rule * from ghsl_buildings as ghsl_buildings_*
+ruleorder: ghsl_buildings_clip_and_reproject_raster > clip_raster
+
 module jrc_pop:
     snakefile: "pipelines/jrc_pop/rules.smk"
     config: config
@@ -48,9 +54,8 @@ ALL_DATASETS = (
     "aqueduct",
     "esa_land_cover",
     "exposure_nature",
-    #"gem_exposure",
     #"gem_earthquake",
-    #"ghsl_buildings",
+    "ghsl_buildings",
     "iris",
     "isimip",
     "jrc_pop",
@@ -67,6 +72,7 @@ wildcard_constraints:
     KEY="[^/]+",
     DATASET="[^/]+",
     EPOCH="\d+",
+    RELEASE="\d{4}[A-Z]",
     RP="\d+",
     SSP="constant|ssp\d",
 
