@@ -22,6 +22,10 @@ module exposure_nature:
     config: config
 use rule * from exposure_nature as exposure_nature_*
 
+module gem_earthquake:
+    snakefile: "pipelines/gem_earthquake/rules.smk"
+use rule * from gem_earthquake as gem_earthquake_*
+
 module iris:
     snakefile: "pipelines/iris/rules.smk"
     config: config
@@ -59,7 +63,7 @@ ALL_DATASETS = (
     "aqueduct",
     "esa_land_cover",
     "exposure_nature",
-    #"gem_earthquake",
+    "gem_earthquake",
     "ghsl_buildings",
     "iris",
     "isimip",

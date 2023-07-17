@@ -1,0 +1,13 @@
+{
+  "source_db": "gem_earthquake",
+  "global_type": "Hazard",
+  "domain": "earthquake",
+  "full_name": "GEM Earthquake",
+  "description": "description",
+  "license": "license",
+  "variables": {
+    "type": "hazard",
+    "rp": "rp",
+    "medium": "medium"
+  }
+}
