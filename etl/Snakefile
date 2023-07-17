@@ -49,6 +49,11 @@ module storm:
     config: config
 use rule * from storm as storm_*
 
+module traveltime_to_healthcare:
+    snakefile: "pipelines/traveltime_to_healthcare/rules.smk"
+    config: config
+use rule * from traveltime_to_healthcare as traveltime_to_healthcare_*
+
 # datasets the `all` target rule will expand to
 ALL_DATASETS = (
     "aqueduct",
@@ -60,7 +65,7 @@ ALL_DATASETS = (
     "isimip",
     "jrc_pop",
     "storm",
-    #"traveltime_to_healthcare",
+    "traveltime_to_healthcare",
 )
 
 # prefix any shell blocks with these statements
