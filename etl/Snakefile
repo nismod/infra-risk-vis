@@ -71,7 +71,8 @@ ALL_DATASETS = (
 # prefix any shell blocks with these statements
 # - create variables from env file and export
 # - print commands to stdout during execution
-shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set +a; set -x ;")
+# - exit if any command has non-zero exit status, not just the last in a rule
+shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set +a; set -x; set -e; ")
 
 wildcard_constraints:
     KEY="[^/]+",
