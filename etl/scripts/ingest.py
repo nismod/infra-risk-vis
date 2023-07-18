@@ -140,12 +140,19 @@ def _drop_db(db_name: str) -> None:
         cursorclass=pymysql.cursors.DictCursor,
     )
 
-    with connection:
-        with connection.cursor() as cursor:
-            # Create a new record
-            sql = f"DROP DATABASE {db_name}"
-            cursor.execute(sql)
-        connection.commit()
+    try:
+        with connection:
+            with connection.cursor() as cursor:
+                # Create a new record
+                sql = f"DROP DATABASE {db_name}"
+                cursor.execute(sql)
+            connection.commit()
+            print(f"{db_name=} deleted.")
+    except pymysql.err.OperationalError as e:
+        if str(pymysql.constants.ER.DB_DROP_EXISTS) in repr(e):
+            print(f"{db_name=} did not exist, couldn\'t delete.")
+        else:
+            raise e
 
 
 def _create_db(db_name: str, driver: terracotta, keys: str) -> Any:
