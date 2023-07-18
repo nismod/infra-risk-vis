@@ -3,14 +3,14 @@
 ## Introduction
 
 This directory contains the logic, configuration and hopefully documentation for
-aquiring, processing and ingesting data such that a running IRV stack may host
+acquiring, processing and ingesting data such that a running IRV stack may host
 as tilesets.
 
 The data processing steps are broadly as follows:
 
 ### Raster
 
-- Download data
+- Download data if possible
 - Reproject to WGS84 if necessary
 - Set zeros to no data value
 - Clip to remove polar regions
@@ -58,6 +58,7 @@ the `db` and `tiles-db` services respectively.
 
 To bring up these services, refer to the [readme](../README.md) in the parent
 directory for a full explanation of their required env files, etc., but briefly:
+
 ```bash
 docker compose -f docker-compose-dev.yaml up db tiles-db backend
 ```
@@ -67,6 +68,8 @@ docker compose -f docker-compose-dev.yaml up db tiles-db backend
 The ETL pipeline is primarily configured with an environment file, located at
 `../envs/{dev|prod}/.etl.env`. This contains details for connections to services
 and authentication information for pipelines which require it.
+
+Here is an example environment file to use as a template:
 
 ```bash
 # connecting to `tiles-db`, MySQL
@@ -90,7 +93,7 @@ BE_API_TOKEN=test  # required for mutation operations on tile metadata (`/tiles/
 # data downloading
 # https://cds.climate.copernicus.eu/api-how-to
 COPERNICUS_CDS_URL="https://cds.climate.copernicus.eu/api/v2"
-COPERNICUS_CDS_API_KEY=  # User ID:Token
+COPERNICUS_CDS_API_KEY=  # "<uid>:<token>"
 ```
 
 ## Usage
@@ -108,6 +111,7 @@ A list of datasets currently implemented in the unified workflow is kept as
 The full processing pipeline for a single raster dataset will acquire and
 process the rasters, ingest them and create a metadata record. Invoke it as
 follows:
+
 ```bash
 snakemake --cores <n_cores> -- pipelines/<dataset_name>/metadata_created.flag
 ```
