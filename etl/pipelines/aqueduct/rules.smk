@@ -56,7 +56,7 @@ def all_cog_file_paths(wildcards):
     Generate list of Aqueduct output file paths.
     """
     df: pd.DataFrame = pd.read_csv(checkpoints.create_hazard_csv_file.get(**wildcards).output.csv)
-    return expand("raster/cog/{{DATASET}}/{key}.tif", key=df.key)
+    return expand("raster/cog/aqueduct/{key}.tif", key=df.key)
 
 
 rule ingest_rasters:
@@ -80,11 +80,11 @@ rule ingest_rasters:
     shell:
         """
         python {input.script} load_csv \
-            --internal_raster_base_path raster/cog/{wildcards.DATASET} \
+            --internal_raster_base_path raster/cog/aqueduct \
             --input_csv_filepath {input.layers} \
             --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
             --tile_keys_path {input.tile_keys} \
-            --database_name {wildcards.DATASET}
+            --database_name aqueduct
 
         touch {output.flag}
         """

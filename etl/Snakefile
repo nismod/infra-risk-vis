@@ -1,7 +1,3 @@
-import pandas as pd
-
-from pipelines.helpers import gdalwarp_bounds
-
 configfile: "config.yml"
 
 # import our dataset specific rules
@@ -10,6 +6,7 @@ module aqueduct:
     config: config
 use rule * from aqueduct as aqueduct_*
 ruleorder: aqueduct_POST_metadata_to_backend > POST_metadata_to_backend
+ruleorder: aqueduct_ingest_rasters > ingest_rasters
 
 module esa_land_cover:
     snakefile: "pipelines/esa_land_cover/rules.smk"
@@ -22,9 +19,7 @@ module exposure_nature:
     config: config
 use rule * from exposure_nature as exposure_nature_*
 
-module gem_earthquake:
-    snakefile: "pipelines/gem_earthquake/rules.smk"
-use rule * from gem_earthquake as gem_earthquake_*
+# gem_earthquake has no dataset specific rules defined
 
 module iris:
     snakefile: "pipelines/iris/rules.smk"
@@ -86,115 +81,9 @@ wildcard_constraints:
     RP="\d+",
     SSP="constant|ssp\d",
 
-
-rule set_zero_to_no_data:
-    input:
-        "raster/raw/{DATASET}/{KEY}.tif"
-    output:
-        temp("raster/no_data/{DATASET}/{KEY}.tif")
-    resources:
-        disk_mb=3000,
-        mem_mb=10000,
-    priority:
-        70,
-    shell:
-        """
-        NODATA=$(gdalinfo "{input}" -json | jq .bands[0].noDataValue)
-
-        # handle case of NODATA == nan - the JSON output of gdalinfo will change
-        # nan to "NaN" so we need to reverse that for gdal_calc.py
-        if [ "$NODATA" == '"NaN"' ]
-        then
-          NODATA=nan
-        fi
-
-        if [ "$NODATA" == 'null' ]
-        then
-          NODATA=nan
-        fi
-
-        # replace zeros with NoData value
-        gdal_calc.py \
-          --quiet \
-          -A "{input}" \
-          --co="COMPRESS=LZW" \
-          --outfile="{output}" \
-          --overwrite \
-          --calc="numpy.where(A<=0,$NODATA,A)" \
-          --NoDataValue=$NODATA \
-          --hideNoData
-        """
-
-
-rule clip_raster:
-    """
-    Clip raster extent to window defined by `raster_bounds` in config.
-    """
-    input:
-        "raster/no_data/{DATASET}/{KEY}.tif"
-    output:
-        temp("raster/clip/{DATASET}/{KEY}.tif")
-    params:
-        bounds = gdalwarp_bounds(config["raster_bounds"])
-    resources:
-        disk_mb=3000,
-        mem_mb=10000,
-    priority:
-        80,
-    shell:
-        """
-        gdalwarp \
-            -co "COMPRESS=LZW" \
-            -te {params.bounds} \
-            -of GTiff \
-            {input} \
-            {output}
-        """
-
-
-rule cloud_optimise_raster:
-    """
-    Use terracotta to cloud optimise rasters.
-    """
-    input:
-        "raster/clip/{DATASET}/{KEY}.tif"
-    output:
-        "raster/cog/{DATASET}/{KEY}.tif",
-    resources:
-        disk_mb=100,
-        mem_mb=2000,
-    threads: 2
-    priority:
-        90,
-    shell:
-        """
-        terracotta optimize-rasters \
-            -o $(dirname {output}) \
-            --overwrite \
-            --reproject \
-            --nproc {threads} \
-            --resampling-method nearest \
-            {input}
-        """
-
-
-rule POST_metadata_to_backend:
-    """
-    Requires the `backend` and postgreSQL `db` services to be running.
-    """
-    input:
-        ingest_flag = "pipelines/{DATASET}/ingested_to_mysql.flag",
-        metadata = "pipelines/{DATASET}/metadata.json",
-    output:
-        flag = "pipelines/{DATASET}/posted_to_backend.flag"
-    shell:
-        """
-        # N.B. 4XX responses result in a zero-valued httpie exit status
-        http POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.metadata}
-
-        touch {output.flag}
-        """
-
+# import rule definitions common to many datasets
+include: "raster_processing.smk"
+include: "database.smk"
 
 rule all:
     """

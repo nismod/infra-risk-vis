@@ -1,6 +1,3 @@
-import pandas as pd
-
-
 rule download_motorised:
     """
     Download motorised travel time to nearest healthcare facility.
@@ -36,40 +33,4 @@ rule download_walking:
             --output {output.archive}
 
         unzip {output.archive} $(basename {output.raster}) -d $(dirname {output.raster})
-        """
-
-
-def all_cog_file_paths(wildcards):
-    """
-    Generate list of travel time to healthcare facility output file paths.
-    """
-    df: pd.DataFrame = pd.read_csv("pipelines/traveltime_to_healthcare/layers.csv")
-    return expand("raster/cog/traveltime_to_healthcare/{key}.tif", key=df.key)
-
-
-rule ingest_rasters:
-    """
-    Create a dataset table in the MySQL database and ingest the cloud-optimised
-    rasters to Terracotta.
-
-    Requires the `tiles-db` MySQL service to be running.
-    """
-    input:
-        all_cog_file_paths,
-        script = "scripts/ingest.py",
-        layers = "pipelines/traveltime_to_healthcare/layers.csv",
-        db_field_to_csv_header_map = "pipelines/traveltime_to_healthcare/db_field_to_csv_header_map.json",
-        tile_keys = "pipelines/traveltime_to_healthcare/tile_keys.json",
-    output:
-        flag = "pipelines/traveltime_to_healthcare/ingested_to_mysql.flag"
-    shell:
-        """
-        python {input.script} load_csv \
-            --internal_raster_base_path raster/cog/traveltime_to_healthcare \
-            --input_csv_filepath {input.layers} \
-            --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
-            --tile_keys_path {input.tile_keys} \
-            --database_name traveltime_to_healthcare
-
-        touch {output.flag}
         """
