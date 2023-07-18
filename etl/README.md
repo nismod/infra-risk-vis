@@ -31,9 +31,9 @@ effort underway to move _all_ processing logic into snakemake rules.
 
 The `Snakefile` and `.smk` files contain the rule definitions for deciding how
 to transform some input file into an output. Many datasets have some of their
-own specific rules, typically for downloading. 
+own specific rules, typically for downloading.
 
-## Setup 
+## Setup
 
 ### Software environment
 
@@ -62,6 +62,21 @@ directory for a full explanation of their required env files, etc., but briefly:
 ```bash
 docker compose -f docker-compose-dev.yaml up db tiles-db backend
 ```
+
+### Awkward files
+
+Unfortunately, not all the source data is openly available on the internet.
+Some files must be manually copied into the appropriate location prior to
+running the ETL process.
+
+The affected datasets include:
+- gem_earthquake
+- iris
+
+Check the `snakemake` rules for more information, but source raster data should
+typically reside in `raster/raw/<dataset>/`.
+
+You may wish to remove write permissions to these files once they have been installed.
 
 ### Configuration
 
@@ -103,7 +118,27 @@ With the software environment activated (see above), one can request files via
 database operations, dummy files with the extension `.flag`. Requesting any
 missing output implies its ancestors are also required.
 
-### Running a single pipeline
+### Running a single raster
+
+To request a cloud optimised raster, invoke `snakemake` as follows:
+
+```bash
+snakemake --cores <n_cores> -- rasters/cog/<dataset>/<key>.tif
+```
+
+For example:
+
+```bash
+snakemake --cores <n_cores> -- rasters/cog/exposure_nature/ocs_0-30cm_mean_1000.tif
+```
+
+N.B. The `--dry-run` or `-n` option can be used to preview which jobs
+`snakemake` has determined are necessary prior to executing.
+
+To request a raster processed to another stage in the pipeline, substitute
+`raw`, `no_data` or `clip` for `cog` in the above paths.
+
+### Running all rasters in a single pipeline
 
 A list of datasets currently implemented in the unified workflow is kept as
 `ALL_DATASETS` in the `Snakefile`.
@@ -116,9 +151,6 @@ follows:
 snakemake --cores <n_cores> -- pipelines/<dataset_name>/metadata_created.flag
 ```
 
-N.B. The `--dry-run` or `-n` option can be used to preview which jobs
-`snakemake` has determined are necessary prior to executing.
-
 ### Running every pipeline
 
 To run every pipeline, we do not request a file, but rather a target rule called `all`.
@@ -126,3 +158,5 @@ To run every pipeline, we do not request a file, but rather a target rule called
 ```bash
 snakemake --cores <n_cores> -R all
 ```
+
+This will create and ingest all the pertinent rasters and create metadata records for them.
