@@ -1,77 +1,124 @@
-# Extract-transform-load
+# Extract Transform Load (ETL) for infra-risk-vis (IRV)
 
-ETL is conducted using a combination of pre-processing scripts and Snakemake configurations to generate raster and vector tiles for hosting.
+## Introduction
 
-These pipelines broken-out into subdirectories under `./pipelines`
+This directory contains the logic, configuration and hopefully documentation for
+aquiring, processing and ingesting data such that a running IRV stack may host
+as tilesets.
 
-## Pipelines
+The data processing steps are broadly as follows:
 
-[ISIMP Aqueduct (Coastal and Riverine Flooding)](pipelines/aqueduct/README.md)
+### Raster
 
-[ESA Land Cover (Categorical Data on Global Land Cover)](pipelines/esa_land_cover/README.md)
+- Download data
+- Reproject to WGS84 if necessary
+- Set zeros to no data value
+- Clip to remove polar regions
+- Cloud optimise
+- Ingest into `terracotta`, creating `mysql` database for dataset
+- Create dataset metadata in `postgreSQL` database
 
-[Natural Asset Exposure (Organic Carbon, Forest Integrity and Biodiversity Intactness)](pipelines/exposure_nature/README.md)
+### Vector
 
-[GEM Earthquake  (Siesmic hazard data from GEM)](pipelines/gem_earthquake/README.md)
+Vector data are yet to be incorporated in the unified ETL workflow. See the
+relevant pipeline readme files for more information.
 
-[GEM Exposure (Seismic and Flooding Exposure data from GEM)](pipelines/gem_exposure/README.md)
+## Architecture
 
-[GHSL Buildings (Single raster containing information about residential and non-residential buildings globally)](pipelines/ghsl_buildings/README.md)
+The ETL process is currently implemented with a combination of scripts and
+[snakemake](https://snakemake.readthedocs.io/en/stable/) rules. There is currently an
+effort underway to move _all_ processing logic into snakemake rules.
 
-[ISIMP Drought (ISIMP Drought hazard)](pipelines/isimp_drought/README.md)
+The `Snakefile` and `.smk` files contain the rule definitions for deciding how
+to transform some input file into an output. Many datasets have some of their
+own specific rules, typically for downloading. 
 
-[ISIMP Extreme Heat (ISIMP Extreme Heat)](pipelines/isimp_extreme_heat/README.md)
+## Setup 
 
-[JRC Population (Single raster containing information about global population)](pipelines/jrc_pop/README.md)
+### Software environment
 
-[OSM Rail (Open Streetmap vector data on rail edges and stations)](pipelines/osm_rail/README.md)
+Install the necessary dependencies using conda/mamba/micromamba.
 
-[OSM Roads (Open Streetmap vector data on road edges)](pipelines/osm_roads/README.md)
+```bash
+micromamba create -f environment.yml -y
+```
 
-[STORM (Global cyclone rasters)](pipelines/storm/README.md)
+To activate the environment:
 
-[Traveltime to Healthcare (Shows amount of time to travel to healthcare globally)](pipelines/traveltime_to_healthcare/README.md)
+```bash
+micromamba activate irv-etl
+```
 
-## Setup - Docker
+### Required services
 
-A Docker image can be built and used for running Snakemake workflows using `Dockerfile`.
+The later stages of the ETL pipeline involve interacting with services
+defined in the parent directory to this one. The `backend` service acts as an
+intermediary to two databases, a `postgreSQL` and a `mysql` instance, known as
+the `db` and `tiles-db` services respectively.
 
-This file also gives information about installing the required dependencies locally.
+To bring up these services, refer to the [readme](../README.md) in the parent
+directory for a full explanation of their required env files, etc., but briefly:
+```bash
+docker compose -f docker-compose-dev.yaml up db tiles-db backend
+```
 
-## Setup - Local Install
+### Configuration
 
-A large number of dependencies are required - see Dockerfile for more information.
+The ETL pipeline is primarily configured with an environment file, located at
+`../envs/{dev|prod}/.etl.env`. This contains details for connections to services
+and authentication information for pipelines which require it.
 
-### Requirements
-- Postgres database
-  - schema defined in `../backend/backend/db/models.py`
-- Python, snakemake and other packages
-  - requirements in `../backend/Pipfile`
-- [`jq`](https://stedolan.github.io/jq/)
-- [`geojson-polygon-labels`](https://github.com/andrewharvey/geojson-polygon-labels)
-- [`tippecanoe`](https://github.com/mapbox/tippecanoe)
+```bash
+# connecting to `tiles-db`, MySQL
+TC_DRIVER_PATH=mysql://root:password@tiles-db
+TC_DRIVER_PROVIDER=mysql
+TC_PNG_COMPRESS_LEVEL=0
+TC_RESAMPLING_METHOD=nearest
+TC_REPROJECTION_METHOD=nearest
 
-#### GDAL tools
+# connecting to `db`, postgreSQL
+PGHOST=db
+PGDATABASE=global
+PGUSER=docker
+PGPASSWORD=docker
 
-[ogr2ogr](https://www.gdal.org/ogr2ogr.html) and other GDAL programs are used
-for spatial data processing. On Ubuntu, run:
+# connecting to `backend`
+BE_HOST=localhost
+BE_PORT=8888
+BE_API_TOKEN=test  # required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
 
-    sudo apt-get install gdal-bin
+# data downloading
+# https://cds.climate.copernicus.eu/api-how-to
+COPERNICUS_CDS_URL="https://cds.climate.copernicus.eu/api/v2"
+COPERNICUS_CDS_API_KEY=  # User ID:Token
+```
 
-#### Tippecanoe
+## Usage
 
-The data preparation steps use
-[Mapbox tippecanoe](https://github.com/mapbox/tippecanoe) to build vector tiles
-from large feature sets.
+With the software environment activated (see above), one can request files via
+`snakemake` to invoke jobs. These may be processed rasters, or in the case of
+database operations, dummy files with the extension `.flag`. Requesting any
+missing output implies its ancestors are also required.
 
-The easiest way to install tippecanoe on OSX is with Homebrew:
+### Running a single pipeline
 
-    brew install tippecanoe
+A list of datasets currently implemented in the unified workflow is kept as
+`ALL_DATASETS` in the `Snakefile`.
 
-On Ubuntu it will usually be easiest to build from the source repository:
+The full processing pipeline for a single raster dataset will acquire and
+process the rasters, ingest them and create a metadata record. Invoke it as
+follows:
+```bash
+snakemake --cores <n_cores> -- pipelines/<dataset_name>/metadata_created.flag
+```
 
-    sudo apt-get install build-essential g++ libsqlite3-dev zlib1g-dev
-    git clone https://github.com/mapbox/tippecanoe
-    cd tippecanoe
-    make -j
-    make
+N.B. The `--dry-run` or `-n` option can be used to preview which jobs
+`snakemake` has determined are necessary prior to executing.
+
+### Running every pipeline
+
+To run every pipeline, we do not request a file, but rather a target rule called `all`.
+
+```bash
+snakemake --cores <n_cores> -R all
+```
