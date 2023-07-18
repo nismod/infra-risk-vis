@@ -13,7 +13,7 @@ rule download:
 
         zenodo_get --record=8147088 --output-dir=$OUTPUT_DIR
 
-        unzip -d $OUTPUT_DIR
+        unzip $ARCHIVE -d $OUTPUT_DIR
 
         mv $OUTPUT_DIR/data/* $OUTPUT_DIR
         rm -r $OUTPUT_DIR/data
