@@ -1,4 +1,4 @@
-rule download_isimip:
+rule download:
     """
     Fetch our preprocessed data from zenodo.
 
