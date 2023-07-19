@@ -160,3 +160,35 @@ snakemake --cores <n_cores> -R all
 ```
 
 This will create and ingest all the pertinent rasters and create metadata records for them.
+
+## Extension - adding a new dataset
+
+### Raster
+
+To add additional raster datasets to the ETL pipeline you will need several new
+files in `pipelines/<new_dataset_name>`:
+
+- A `README.md` containing describing what the dataset is and where it was
+sourced from.
+- A `layers.csv` file containing CSV table of layers.  This should include a
+header with the `path` of the layer, the `type` and any variables you wish to be
+able to filter by.
+- A `metadata.json` file containing metadata to be written to the `postgreSQL`
+database. The mapping referenced by the `variable` key will be used to configure
+`terracotta`'s `mysql` database, including which keys are available to filter
+rasters by.
+- A `rules.smk` rules file containing rules to acquire and process the data into
+a WGS84 raster. The rule(s) should write output files to
+`raster/raw/<new_dataset>/`.
+
+The `Snakefile` will also require modification:
+- If you have written new rules, you will need to import them as a module here.
+See existing datasets for more information.
+- If you wish to overwrite the behaviour of a common rule, e.g. clipping, cloud
+optimsation, etc, you can override rules when importing.
+- You should also add your dataset to `ALL_DATASETS` so that the `all` target
+rule will work as expected.
+
+### Vector
+
+To be implemented and then documented!
