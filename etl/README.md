@@ -15,7 +15,7 @@ The data processing steps are broadly as follows:
 - Set zeros to no data value
 - Clip to remove polar regions
 - Cloud optimise
-- Ingest into `terracotta`, creating `mysql` database for dataset
+- Ingest into `terracotta`, creating `mysql` database for dataset if necessary
 - Create dataset metadata in `postgreSQL` database
 
 ### Vector
@@ -31,7 +31,8 @@ effort underway to move _all_ processing logic into snakemake rules.
 
 The `Snakefile` and `.smk` files contain the rule definitions for deciding how
 to transform some input file into an output. Many datasets have some of their
-own specific rules, typically for downloading.
+own specific rules, typically for downloading and initial processing, for
+instance, reprojection.
 
 ## Setup
 
@@ -76,7 +77,9 @@ The affected datasets include:
 Check the `snakemake` rules for more information, but source raster data should
 typically reside in `raster/raw/<dataset>/`.
 
-You may wish to remove write permissions to these files once they have been installed.
+You may wish to remove write permissions to these files once they have been
+installed, e.g. `chmod ug-w raster/raw/gem_earthquake/*.tif`. This means `rm -r raster`
+will remove files than can be replaced automatically, but not the awkward files.
 
 ### Configuration
 
@@ -161,7 +164,7 @@ snakemake --cores <n_cores> -R all
 
 This will create and ingest all the pertinent rasters and create metadata records for them.
 
-## Extension - adding a new dataset
+## Extension - adding new datasets
 
 ### Raster
 
@@ -179,13 +182,15 @@ database. The mapping referenced by the `variable` key will be used to configure
 rasters by.
 - A `rules.smk` rules file containing rules to acquire and process the data into
 a WGS84 raster. The rule(s) should write output files to
-`raster/raw/<new_dataset>/`.
+`raster/raw/<new_dataset>/`. The shared rules will then clip, set zero to no data
+and cloud optimise unless displaced by custom rules.
 
 The `Snakefile` will also require modification:
-- If you have written new rules, you will need to import them as a module here.
+- If you have written a new `rules.smk`, you will need to import it as a module here.
 See existing datasets for more information.
 - If you wish to overwrite the behaviour of a common rule, e.g. clipping, cloud
-optimsation, etc, you can override rules when importing.
+optimsation, etc, you can override rules when importing using `snakemake`'s
+`ruleorder` directive.
 - You should also add your dataset to `ALL_DATASETS` so that the `all` target
 rule will work as expected.
 
