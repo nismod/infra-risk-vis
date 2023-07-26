@@ -13,6 +13,7 @@ module esa_land_cover:
     config: config
 use rule * from esa_land_cover as esa_land_cover_*
 ruleorder: esa_land_cover_download_300m_2020_from_CDS > clip_raster
+ruleorder: esa_land_cover_ingest_categorical_raster > ingest_rasters
 
 module exposure_nature:
     snakefile: "pipelines/exposure_nature/rules.smk"

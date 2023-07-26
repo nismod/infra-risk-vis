@@ -8,7 +8,7 @@ import csv
 import json
 import os
 import sys
-from typing import Any, Dict, List, OrderedDict
+from typing import Any, Dict, List, OrderedDict, Sequence
 import argparse
 import traceback
 import pymysql
@@ -60,9 +60,9 @@ parser.add_argument(
     help="Name of the value column in CSV",
 )
 parser.add_argument(
-    "--categorical_key_values",
+    "--categorical_key_values_json_path",
     type=str,
-    help='Valid JSON string containing key:value mapping for the categorical raster.  NOTE: this will be loaded as an OrderedDict - so the key ordering will be maintained for DB usage.  e.g. {"type":"exposure","sensor":"S2","data":"20181010","band":"cloudmask"}',
+    help='Path to valid JSON file containing key:value mapping for the categorical raster.  NOTE: this will be loaded as an OrderedDict - so the key ordering will be maintained for DB usage.',
 )
 parser.add_argument(
     "--tile_keys_path",
@@ -155,7 +155,7 @@ def _drop_db(db_name: str) -> None:
             raise e
 
 
-def _create_db(db_name: str, driver: terracotta, keys: str) -> Any:
+def _create_db(db_name: str, driver: terracotta, keys: Sequence[str]) -> Any:
     """
     Create the Terracotta DB
     """
@@ -363,15 +363,16 @@ def _parse_tile_keys(tile_key_path: str) -> List[str]:
     return data
 
 
-def _parse_ordered_key_values(key_values: str) -> OrderedDict:
+def _parse_ordered_key_values(json_filepath: str) -> OrderedDict:
     """
-    Parse JSON string into Ordered Dict
+    Parse JSON file into Ordered Dict
     """
     import collections
 
-    return json.JSONDecoder(object_pairs_hook=collections.OrderedDict).decode(
-        key_values
-    )
+    with open(json_filepath, "r") as fp:
+        data = json.load(fp, object_pairs_hook=collections.OrderedDict)
+
+    return data
 
 
 def _validate_keys_and_map(tile_keys: List[str], csv_key_column_map: dict):
@@ -409,7 +410,7 @@ if __name__ == "__main__":
             args.database_name,
             args.input_raster_filepath,
             args.internal_raster_base_path,
-            args.categorical_key_values,
+            args.categorical_key_values_json_path,
         ]
         if None in args_required:
             print(
@@ -420,7 +421,7 @@ if __name__ == "__main__":
                 --database_name,
                 --input_raster_filepath,
                 --internal_raster_base_path,
-                --categorical_key_values"""
+                --categorical_key_values_json_path"""
             )
         else:
             # Load and Parse the categorical CSV data
@@ -429,7 +430,7 @@ if __name__ == "__main__":
                 args.categorical_csv_label_column,
                 args.categorical_csv_value_column,
             )
-            ordered_key_values = _parse_ordered_key_values(args.categorical_key_values)
+            ordered_key_values = _parse_ordered_key_values(args.categorical_key_values_json_path)
             _load_single_categorical(
                 args.database_name,
                 args.input_raster_filepath,

@@ -10,7 +10,12 @@ parser = argparse.ArgumentParser(description="Explicit ColorMap Generator")
 parser.add_argument(
     "csv_fpath",
     type=str,
-    help="Path to legend csv file",
+    help="Path to input (legend CSV file)",
+)
+parser.add_argument(
+    "json_fpath",
+    type=str,
+    help="Path to output (legend JSON file)",
 )
 
 
@@ -52,6 +57,6 @@ def main(
 if __name__ == "__main__":
     args = parser.parse_args()
     output = main(args.csv_fpath)
-    with open("landcover.json", "w") as fptr:
-        json.dump(output, fptr)
-    print(json.dumps(output))
+
+    with open(args.json_fpath, "w") as fptr:
+        json.dump(output, fptr, indent=4)
