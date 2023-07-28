@@ -1,5 +1,5 @@
 {
-  "source_db": "buildings",
+  "source_db": "ghsl_buildings",
   "global_type": "Exposure",
   "domain": "buildings",
   "full_name": "Building Exposure",
