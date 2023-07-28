@@ -6,6 +6,6 @@
   "description": "description",
   "license": "license",
   "variables": {
-    "type": "exposure"
+    "type": "land_cover"
   }
 }
