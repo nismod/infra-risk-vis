@@ -5,5 +5,11 @@
 	"full_name": "Hazard Aqueduct - Coastal",
 	"description": "description",
 	"license": "license",
-	"variables": {}
+	"variables": {
+    	"type": "hazard",
+		"rp": "rp",
+		"rcp": "rcp",
+		"epoch": "epoch",
+		"gcm": "gcm"
+	}
 }
