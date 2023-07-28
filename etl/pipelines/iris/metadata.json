@@ -1,14 +1,14 @@
 {
     "source_db": "iris",
     "global_type": "Hazard",
-    "domain": "cyclone",
+    "domain": "cyclone_iris",
     "full_name": "Hazard Tropical Storm",
     "description": "description",
     "license": "license",
     "variables": {
+        "type": "hazard",
         "epoch": "epoch",
         "rp": "rp",
-        "ssp": "ssp",
-        "key": "key"
+        "ssp": "ssp"
     }
 }
