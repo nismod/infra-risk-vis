@@ -1,5 +1,5 @@
 {
-  "source_db": "land_cover",
+  "source_db": "esa_land_cover",
   "global_type": "Exposure",
   "domain": "land_cover",
   "full_name": "ESA Land Cover",
