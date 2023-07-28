@@ -5,5 +5,7 @@
   "full_name": "JRC Population",
   "description": "description",
   "license": "license",
-  "variables": {}
+  "variables": {
+    "type": "exposure"
+  }
 }
