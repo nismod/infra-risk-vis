@@ -6,7 +6,7 @@ from os import getenv
 import logging
 import json
 
-LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO"))
+LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper())
 RASTER_BASE_PATH = getenv("RASTER_BASE_PATH", "/data")
 MYSQL_URI = getenv("MYSQL_URI")
 API_TOKEN = getenv("API_TOKEN")
