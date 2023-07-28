@@ -149,6 +149,8 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
         dict(zip(keys, _values)) for _values in datasets.keys()
     ]
 
+    logger.debug(f"{source_db=} {domain=} {driver_path=} {datasets=} {keys=} {source_options=}")
+
     # optionally filter to a domain (type)
     if domain is not None:
         source_options = [item for item in source_options if item["type"] == domain]
@@ -237,7 +239,7 @@ async def get_tile_source_domains(
             res.source_db, domain=res.domain if res.domain else None
         )
         meta = schemas.TileSourceDomains(domains=domains)
-        logger.debug("%s", meta)
+        logger.debug(f"{source_id=} {res.source_db=} {res.domain=} {domains=} {meta=}")
         return meta
     except NoResultFound:
         raise HTTPException(status_code=404)
