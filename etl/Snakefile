@@ -17,19 +17,16 @@ ruleorder: esa_land_cover_ingest_categorical_raster > ingest_rasters
 
 module exposure_nature:
     snakefile: "pipelines/exposure_nature/rules.smk"
-    config: config
 use rule * from exposure_nature as exposure_nature_*
 
 # gem_earthquake has no dataset specific rules defined
 
 module iris:
     snakefile: "pipelines/iris/rules.smk"
-    config: config
 use rule * from iris as iris_*
 
 module isimip:
     snakefile: "pipelines/isimip/rules.smk"
-    config: config
 use rule * from isimip as isimip_*
 ruleorder: isimip_POST_metadata_to_backend > POST_metadata_to_backend
 
@@ -47,13 +44,15 @@ ruleorder: jrc_pop_clip_and_reproject_raster > clip_raster
 
 module storm:
     snakefile: "pipelines/storm/rules.smk"
-    config: config
 use rule * from storm as storm_*
 
 module traveltime_to_healthcare:
     snakefile: "pipelines/traveltime_to_healthcare/rules.smk"
-    config: config
 use rule * from traveltime_to_healthcare as traveltime_to_healthcare_*
+
+# import rule definitions common to many datasets
+include: "raster_processing.smk"
+include: "database.smk"
 
 # datasets the `all` target rule will expand to
 ALL_DATASETS = (
@@ -82,10 +81,6 @@ wildcard_constraints:
     RELEASE="\d{4}[A-Z]",
     RP="\d+",
     SSP="constant|ssp\d",
-
-# import rule definitions common to many datasets
-include: "raster_processing.smk"
-include: "database.smk"
 
 rule all:
     """

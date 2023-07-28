@@ -1,3 +1,6 @@
+configfile: "../../config.yml"
+
+
 rule download_300m_2020_from_CDS:
     """
     Download ESA land cover classification data from Copernicus CDS.
@@ -57,6 +60,8 @@ rule ingest_categorical_raster:
         script = "scripts/ingest.py",
         csv_colourmap = "pipelines/esa_land_cover/colourmap.csv",
         tile_key_mapping = "pipelines/esa_land_cover/tile_key_mapping.json",
+    params:
+        data_dir = config["raster_tileserver_data_directory"]
     output:
         flag = "pipelines/esa_land_cover/rasters_ingested.flag"
     shell:
@@ -67,7 +72,7 @@ rule ingest_categorical_raster:
             --categorical_csv_value_column Value \
             --database_name esa_land_cover \
             --input_raster_filepath {input.raster} \
-            --internal_raster_base_path raster/esa_land_cover \
+            --internal_raster_base_path {params.data_dir}/esa_land_cover \
             --categorical_key_values_json_path {input.tile_key_mapping}
 
         touch {output.flag}

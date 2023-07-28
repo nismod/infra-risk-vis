@@ -25,12 +25,14 @@ rule ingest_rasters:
         layers = "pipelines/{DATASET}/layers.csv",
         db_field_to_csv_header_map = "pipelines/{DATASET}/db_field_to_csv_header_map.json",
         tile_keys = "pipelines/{DATASET}/tile_keys.json",
+    params:
+        data_dir = config["raster_tileserver_data_directory"]
     output:
         flag = "pipelines/{DATASET}/rasters_ingested.flag"
     shell:
         """
         python {input.script} load_csv \
-            --internal_raster_base_path raster/cog/{wildcards.DATASET} \
+            --internal_raster_base_path {params.data_dir}/{wildcards.DATASET} \
             --input_csv_filepath {input.layers} \
             --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
             --tile_keys_path {input.tile_keys} \
