@@ -31,6 +31,7 @@ module isimip:
     snakefile: "pipelines/isimip/rules.smk"
     config: config
 use rule * from isimip as isimip_*
+ruleorder: isimip_POST_metadata_to_backend > POST_metadata_to_backend
 
 module ghsl_buildings:
     snakefile: "pipelines/ghsl_buildings/rules.smk"

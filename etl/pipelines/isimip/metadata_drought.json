@@ -1,12 +1,12 @@
 {
-  "source_db": "extreme_heat",
+  "source_db": "isimip",
   "global_type": "Hazard", 
-  "domain": "extreme_heat", 
-  "full_name": "Hazard Extreme Heat", 
+  "domain": "drought", 
+  "full_name": "Hazard Drought", 
   "description": "description", 
   "license": "license", 
   "variables": {
-    "type": "type",
+    "type": "hazard",
     "metric": "metric",
     "rcp": "rcp",
     "epoch": "epoch",
