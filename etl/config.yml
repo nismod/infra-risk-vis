@@ -9,14 +9,3 @@ raster_bounds:
   miny: -84.0395
   maxx: 180
   maxy: 84.7879
-
-# location `backend` container will expect to find rasters
-# this is set at raster ingestion time
-# under this folder path should be folders named by pipeline
-# these subfolders should contain cloud optimised geotiffs produced by the ETL
-# e.g. for backend_raster_directory: /data
-# we should expect to see files mounted inside the backend container like so:
-# /data/aqueduct/inuncoast_historical_wtsub_hist_rp00002_0.tif
-# /data/gem_earthquake/v2022_1_pga_475_vs30.tif
-# /data/<another_pipeline>/<layer_key>.tif
-raster_tileserver_data_directory: "/data"

@@ -1,9 +1,6 @@
 import pandas as pd
 
 
-configfile: "../../config.yml"
-
-
 checkpoint create_hazard_csv_file:
     """
     Create table of Aqueduct hazard layers.
@@ -75,14 +72,12 @@ rule ingest_rasters:
         layers = "pipelines/aqueduct/layers.csv",
         db_field_to_csv_header_map = "pipelines/aqueduct/db_field_to_csv_header_map.json",
         tile_keys = "pipelines/aqueduct/tile_keys.json",
-    params:
-        data_dir = config["raster_tileserver_data_directory"]
     output:
         flag = "pipelines/aqueduct/rasters_ingested.flag"
     shell:
         """
         python {input.script} load_csv \
-            --internal_raster_base_path {params.data_dir}/aqueduct \
+            --internal_raster_base_path raster/cog/aqueduct \
             --input_csv_filepath {input.layers} \
             --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
             --tile_keys_path {input.tile_keys} \
