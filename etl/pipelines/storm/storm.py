@@ -59,11 +59,6 @@ class StormFile:
     def _parse_fname(self, fname: str) -> StormMeta:
         """
         Parse the filepath for hazard.csv keys
-
-        ::param fname st e.g. lange2020_hwmid-humidex_gfdl-esm2m_ewembi_historical_nosoc_co2_leh_global_annual_1861_2005.nc4
-            {MAINTAINER}_{MODEL}_{CLIMATE_FORCING}_{BIAS_ADJ}_{CLIMATE_SCENARIO(RCP)}_{SCO_ECO_SCENARIO}_{SENS_SCENARIO}_{VARIABLE}_{REGION}_{TIME_STEP}_{YEAR_START}_{YEAR_END}.nc4
-
-        ::returns meta ISIMPExtremeHeatMeta
         """
         _key = file_key_from_fname(fname)
         parts = _key.split("_")

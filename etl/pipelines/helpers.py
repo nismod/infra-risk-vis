@@ -85,3 +85,12 @@ def count_hazard_csv_rows(hazard_csv_fpath: str) -> int:
     Count number of rows in the Hazard CSV
     """
     return sum(1 for _ in open(hazard_csv_fpath))
+
+
+def gdalwarp_bounds(bbox: dict[str, float]) -> str:
+    """
+    Given dict of `minx`, `miny`, `maxx` and `maxy`, return coordinates as
+    concatentated string in correct order for gdalwarp -te argument.
+    """
+    extents = (bbox["minx"], bbox["miny"], bbox["maxx"], bbox["maxy"])
+    return " ".join(map(lambda extent: f"{extent:.3f}", extents))

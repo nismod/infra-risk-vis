@@ -1,2 +1,0 @@
-exposure_layers: /opt/etl/pipelines/exposure_nature/inputs.csv
-raster_output_dir: /opt/tileserver/raster/data/exposure_nature

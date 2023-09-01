@@ -1,29 +1,18 @@
 # Hazard - IRIS
 
-Source notes - sby Nathan Sparks and Ralf Toumi, Imperial
+Authored by Nathan Sparks and Ralf Toumi, Imperial College London.
 
 ## Pipeline
 
-Data files stored locally within `/ouce-home/projects/mistral/iris`
+Data files stored locally within `/ouce-home/projects/mistral/iris`.
 
--   Source Tiff Directories
--   Generate File Metadata from filenames & data dictionary
--   Snakemake
-    -   extract from NetCDF to COG
-    -   set zeros to nodata
-    -   Move to output
--   Ingest to Terracotta DB
+Expect source netCDF files to be within `raster/raw/iris/`, unfortunately not yet publically available.
 
-### API Metadata
-
-```json
-{
-    "source_db": "iris",
-    "global_type": "Hazard",
-    "domain": "cyclone",
-    "full_name": "Hazard Tropical Storm",
-    "description": "description",
-    "license": "license",
-    "variables": {}
-}
-```
+- Generate file metadata from filenames & data dictionary (included as layers.csv)
+- Snakemake
+    - Extract tiffs from NetCDF
+    - Set zeros to nodata
+    - Clip extent
+    - Cloud optimise
+    - Ingest to Terracotta MySQL DB
+    - Create table metadata in PostgreSQL DB  

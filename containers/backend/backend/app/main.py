@@ -1,13 +1,13 @@
 import logging
+
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.logger import logger
 
 from db import models
 from db.database import engine
-
 from .routers import attributes, features, tiles, colormap
-from config import LOG_LEVEL
+from config import LOG_LEVEL, DOMAIN_TO_DB_MAP
 
 formatter = logging.Formatter(
     "[%(asctime)s.%(msecs)03d] %(levelname)s %(filename)s - %(funcName)s - %(message)s",
@@ -39,6 +39,10 @@ app = FastAPI(
         "url": "https://raw.githubusercontent.com/nismod/infra-risk-vis/master/LICENSE",
     },
 )
+
+@app.on_event("startup")
+async def log_domain_to_db_mapping():
+    logging.info(f"Using frontend 'domain' to tiles-db database name mapping:\n{DOMAIN_TO_DB_MAP}")
 
 app.include_router(features.router, prefix="/features")
 app.include_router(attributes.router, prefix="/attributes")

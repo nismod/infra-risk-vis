@@ -1,4 +1,4 @@
-# data folders
+# data files and folders
 containers/web-server/node_modules/
 containers/vector/config-dev.json
 mounts/raster/
@@ -6,6 +6,7 @@ mounts/vector/
 incoming_data/
 intermediate_data/
 raw_data
+*.flag
 *.zip
 *.tif
 *.aux.xml
@@ -15,6 +16,7 @@ raw_data
 etl/*_test.csv
 etl/logs
 etl/vector
+etl/raster
 etl/regions
 etl/config_local.yml
 public/*.csv

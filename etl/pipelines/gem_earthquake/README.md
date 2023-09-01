@@ -1,23 +1,7 @@
-# GEM Earthquakes
+# Global Earthquake Model (GEM) Earthquakes
 
-Supplied by GEM
+Maps of peak ground acceleration, supplied by the GEM project.
 
-## Pipeline
-
-All Snakefile:
-
-tif -> clip north south -> COG
-
-### API Metadata
-
-```json
-{
-  "source_db": "gem_earthquake",
-  "global_type": "Hazard",
-  "domain": "earthquake",
-  "full_name": "GEM Earthquake",
-  "description": "description",
-  "license": "license",
-  "variables": {}
-}
-```
+Unfortunately these files are not available publically on the internet, and so
+must be sourced directly from GEM and placed into the appropriate location, i.e.
+`raster/raw/gem_earthquake/` prior to processing.

@@ -6,20 +6,18 @@ from os import getenv
 import logging
 import json
 
-LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO"))
+LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper())
 RASTER_BASE_PATH = getenv("RASTER_BASE_PATH", "/data")
 MYSQL_URI = getenv("MYSQL_URI")
 API_TOKEN = getenv("API_TOKEN")
 
 # Temporarily here until we can re-eng the UI for domain / DB switching from API
-# '{"fluvial": "aqueduct", "coastal": "aqueduct", "extreme_heat": "extreme_heat", "cyclone": "cyclone", "population": "jrc_pop"}'
+# for examples check ./README.md
 DOMAIN_TO_DB_MAP = json.loads(getenv("DOMAIN_TO_DB_MAP", "{}"))
 
-
 # Pre-prepared ColorMaps (which map to rasters in a single database)
-
 CATEGORICAL_COLOR_MAPS = {
-    "land_cover": {
+    "esa_land_cover": {
         0: (0, 0, 0, 255),
         10: (255, 255, 100, 255),
         11: (255, 255, 100, 255),

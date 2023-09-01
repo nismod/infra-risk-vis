@@ -1,23 +1,7 @@
-# Exposure - GHSL Buildings
+# Exposure - Global Human Settlement Layer (GHSL) Buildings
 
-All and non-residential
+For more information see: http://data.europa.eu/89h/d07d81b4-7680-4d28-b896-583745c27085
 
-## Pipeline
+Layers for both all and non-residential only buildings.
 
-All Snakefile:
-
-tif -> reproject -> clip north south -> COG
-
-### API Metadata
-
-```json
-{
-  "source_db": "buildings",
-  "global_type": "Exposure",
-  "domain": "buildings",
-  "full_name": "Building Exposure",
-  "description": "description",
-  "license": "license",
-  "variables": {}
-}
-```
+Data located here: https://ghsl.jrc.ec.europa.eu/download.php?ds=bu

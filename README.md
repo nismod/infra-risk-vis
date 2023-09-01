@@ -95,7 +95,7 @@ TC_RESAMPLING_METHOD="nearest"
 TC_REPROJECTION_METHOD="nearest"
 
 API_TOKEN= # API token is only required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
-DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\"}' # Valid JSON of a mapping between front-end DOMAIN values and the database in-which the data is stored.
+DOMAIN_TO_DB_MAP="{\"cyclone_iris\":\"iris\",\"extreme_heat\":\"isimip\",\"drought\":\"isimip\",\"buildings\":\"ghsl_buildings\",\"land_cover\":\"esa_land_cover\",\"traveltime_to_healthcare\": \"traveltime_to_healthcare\",\"nature\": \"exposure_nature\",\"population\": \"jrc_pop\",\"fluvial\": \"aqueduct\",\"coastal\": \"aqueduct\",\"cyclone\": \"storm\",\"earthquake\": \"gem_earthquake\"}"
 ```
 
 ##### .db.env
@@ -134,17 +134,37 @@ PGADMIN_DEFAULT_PASSWORD=
 WORKERS=1
 ```
 
-##### .raster-tile-ingester.env
+##### .etl.env
 
-Utility container for managing (ingestion, deletion) of raster tiles.
+Container for running ETL process, i.e. processing and ingestion of raster data.
 
 ```
-# Terracotta Env
-TC_DRIVER_PATH=mysql://
+# connecting to `tiles-db`, MySQL
+# from localhost
+TC_DRIVER_PATH=mysql://root:password@localhost:3306
+# from within docker network
+#TC_DRIVER_PATH=mysql://root:password@tiles-db
 TC_DRIVER_PROVIDER=mysql
 TC_PNG_COMPRESS_LEVEL=0
-TC_RESAMPLING_METHOD="nearest"
-TC_REPROJECTION_METHOD="nearest"
+TC_RESAMPLING_METHOD=nearest
+TC_REPROJECTION_METHOD=nearest
+
+# connecting to `db`, postgreSQL
+PGHOST=db
+PGDATABASE=global
+PGUSER=docker
+PGPASSWORD=docker
+
+# connecting to `backend`
+BE_HOST=localhost
+BE_PORT=8888
+# required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
+BE_API_TOKEN=test
+
+# data downloading
+# https://cds.climate.copernicus.eu/api-how-to
+COPERNICUS_CDS_URL="https://cds.climate.copernicus.eu/api/v2"
+COPERNICUS_CDS_API_KEY=<uid:token>  # User ID:Token
 ```
 
 ##### .snakemake.env

@@ -1,0 +1,15 @@
+{
+	"source_db": "aqueduct",
+	"global_type": "Hazard",
+	"domain": "coastal",
+	"full_name": "Hazard Aqueduct - Coastal",
+	"description": "description",
+	"license": "license",
+	"variables": {
+    	"type": "hazard",
+		"rp": "rp",
+		"rcp": "rcp",
+		"epoch": "epoch",
+		"gcm": "gcm"
+	}
+}
