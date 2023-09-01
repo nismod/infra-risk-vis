@@ -77,6 +77,8 @@ rule ingest_rasters:
     shell:
         """
         python {input.script} load_csv \
+            --local_raster_base_path raster/cog/aqueduct \
+            --db_raster_base_path /data/aqueduct \
             --internal_raster_base_path raster/cog/aqueduct \
             --input_csv_filepath {input.layers} \
             --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
