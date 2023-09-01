@@ -27,9 +27,9 @@ parser.add_argument(
         "delete_database_entries",
         "drop_database",
     ],
-    help="""Type of load operation - 
+    help="""Type of load operation -
         - `load_csv` Loads all rasters in a CSV file generated from an ETL pipeline, e.g. with the header:  `hazard,metric,path,rcp,epoch,gcm,key`
-        - `load_single_categorical` Loads a single categorical raster (using provided category_map).  Requires: `input_raster_filepath`, `categorical_legend_csv_filepath`, `categorical_csv_label_column`, `categorical_csv_value_column`
+        - `load_single_categorical` Loads a single categorical raster (using provided category_map).  Requires: `categorical_input_raster_filepath`, `categorical_legend_csv_filepath`, `categorical_csv_label_column`, `categorical_csv_value_column`
         - `delete_database_entries` Delete all raster entries from a given database (leaving the database empty).  Requires `database_name`
         - `drop_database` Drop a database and all raster entries contained-within.  Requires `database_name`
     """,
@@ -40,7 +40,7 @@ parser.add_argument(
     help="Absolute path to the CSV file containing information for each raster",
 )
 parser.add_argument(
-    "--input_raster_filepath",
+    "--categorical_input_raster_filepath",
     type=str,
     help="Absolute path to a categorical raster file being loaded",
 )
@@ -83,13 +83,17 @@ parser.add_argument(
     help="Name of the output database (will be created if it doesnt exist)",
 )
 parser.add_argument(
-    "--internal_raster_base_path", type=str, help="Internal path to the raster file"
+    "--local_raster_base_path", type=str, help="Path to the raster file as far as this script is concerned"
+)
+parser.add_argument(
+    "--db_raster_base_path", type=str, help="Path to the raster file as the tileserver sees it, stored in terracotta database"
 )
 
 
 def load_csv(
     csv_filepath: str,
-    internal_raster_base_path: str,
+    local_raster_base_path: str,
+    db_raster_base_path: str,
     csv_key_column_map: dict,
 ) -> List[dict]:
     """
@@ -111,7 +115,8 @@ def load_csv(
                         for _k, _v in csv_key_column_map.items()
                         if _k != "file_basename"
                     },
-                    "path": f"{internal_raster_base_path}/{row[csv_key_column_map['file_basename']]}.tif",
+                    "path": f"{local_raster_base_path}/{row[csv_key_column_map['file_basename']]}.tif",
+                    "db_path": f"{db_raster_base_path}/{row[csv_key_column_map['file_basename']]}.tif",
                 }
             )
     return raster_files
@@ -222,7 +227,7 @@ def _check_driver_keys(driver: Any, keys: List[str]) -> None:
 def _load_single_categorical(
     db_name: str,
     input_raster_fpath: str,
-    internal_raster_base_path: str,
+    db_raster_base_path: str,
     ordered_key_values: OrderedDict,
     category_map: dict,
 ) -> None:
@@ -256,18 +261,16 @@ def _load_single_categorical(
             input_raster_fpath, extra_metadata={"categories": category_map}
         )
     with driver.connect():
-        internal_raster_fpath = (
-            f"{internal_raster_base_path}/{os.path.basename(input_raster_fpath)}",
-        )
         print(f"Inserting categorical raster: {os.path.basename(input_raster_fpath)}")
+        db_filepath = f"{db_raster_base_path}/{os.path.basename(input_raster_fpath)}"
         driver.insert(
-            dict(ordered_key_values), internal_raster_fpath, metadata=metadata
+            dict(ordered_key_values), input_raster_fpath, metadata=metadata, override_path=db_filepath
         )
         print(f"Inserted: {os.path.basename(input_raster_fpath)}")
     print("Completed categorical single ingest")
 
 
-def _parse_categorical_csv(
+def _parse_categorical_colormap_csv(
     cat_csv_fpath: str,
     label_column: str,
     value_column: str,
@@ -317,7 +320,7 @@ def ingest_from_csv(
                     )
                     continue
                 else:
-                    driver.insert(raster["key_values"], raster["path"])
+                    driver.insert(raster["key_values"], raster["path"], override_path=raster["db_path"])
             except Exception as err:
                 print(
                     "raster {} failed ingest (skipping) due to {}".format(
@@ -395,7 +398,7 @@ if __name__ == "__main__":
         _validate_keys_and_map(tile_keys, csv_key_column_map)
         print(f"parsed csv_key_column_map successfully as {csv_key_column_map}")
         raster_files = load_csv(
-            args.input_csv_filepath, args.internal_raster_base_path, csv_key_column_map
+            args.input_csv_filepath, args.local_raster_base_path, args.db_raster_base_path, csv_key_column_map
         )
         ingest_from_csv(args.database_name, tile_keys, raster_files)
     elif args.operation == "delete_database_entries":
@@ -408,24 +411,24 @@ if __name__ == "__main__":
             args.categorical_csv_label_column,
             args.categorical_csv_value_column,
             args.database_name,
-            args.input_raster_filepath,
-            args.internal_raster_base_path,
+            args.categorical_input_raster_filepath,
+            args.db_raster_base_path,
             args.categorical_key_values_json_path,
         ]
         if None in args_required:
             print(
-                """Following args must all be set for categorical load: 
+                """Following args must all be set for categorical load:
                 --categorical_legend_csv_filepath,
                 --categorical_csv_label_column,
                 --categorical_csv_value_column,
                 --database_name,
-                --input_raster_filepath,
-                --internal_raster_base_path,
+                --categorical_input_raster_filepath,
+                --db_raster_base_path,
                 --categorical_key_values_json_path"""
             )
         else:
             # Load and Parse the categorical CSV data
-            categorical_map = _parse_categorical_csv(
+            categorical_map = _parse_categorical_colormap_csv(
                 args.categorical_legend_csv_filepath,
                 args.categorical_csv_label_column,
                 args.categorical_csv_value_column,
@@ -433,8 +436,8 @@ if __name__ == "__main__":
             ordered_key_values = _parse_ordered_key_values(args.categorical_key_values_json_path)
             _load_single_categorical(
                 args.database_name,
-                args.input_raster_filepath,
-                args.internal_raster_base_path,
+                args.categorical_input_raster_filepath,
+                args.db_raster_base_path,
                 ordered_key_values,
                 categorical_map,
             )
