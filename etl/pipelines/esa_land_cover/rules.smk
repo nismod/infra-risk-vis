@@ -65,10 +65,10 @@ rule ingest_categorical_raster:
             --categorical_legend_csv_filepath {input.csv_colourmap} \
             --categorical_csv_label_column Label \
             --categorical_csv_value_column Value \
+            --categorical_input_raster_filepath {input.raster} \
+            --categorical_key_values_json_path {input.tile_key_mapping} \
             --database_name esa_land_cover \
-            --input_raster_filepath {input.raster} \
-            --internal_raster_base_path raster/cog/esa_land_cover \
-            --categorical_key_values_json_path {input.tile_key_mapping}
+            --db_raster_base_path /data/esa_land_cover
 
         touch {output.flag}
         """

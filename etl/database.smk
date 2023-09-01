@@ -30,7 +30,8 @@ rule ingest_rasters:
     shell:
         """
         python {input.script} load_csv \
-            --internal_raster_base_path raster/cog/{wildcards.DATASET} \
+            --local_raster_base_path raster/cog/{wildcards.DATASET} \
+            --db_raster_base_path /data/{wildcards.DATASET} \
             --input_csv_filepath {input.layers} \
             --csv_to_db_field_map_path {input.db_field_to_csv_header_map} \
             --tile_keys_path {input.tile_keys} \

@@ -87,7 +87,7 @@ services:
     build: ./containers/backend
     image: ghcr.io/nismod/gri-backend:0.9
     volumes:
-      - ./etl/raster/cog/:/code/raster/cog/
+      - ./etl/raster/cog/:/data/
       - ./containers/backend/backend/:/code/backend/
     env_file:
       - ./envs/dev/.backend.env
