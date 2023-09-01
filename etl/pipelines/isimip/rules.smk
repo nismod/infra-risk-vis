@@ -29,11 +29,11 @@ rule POST_metadata_to_backend:
     instance, but require their own metadata store in postgreSQL.
     """
     input:
-        ingest_flag = "pipelines/isimip/rasters_ingested.flag",
+        ingest_flag = "raster/ingest/isimip.flag",
         heat_metadata = "pipelines/isimip/metadata_extreme_heat.json",
         drought_metadata = "pipelines/isimip/metadata_drought.json",
     output:
-        flag = "pipelines/isimip/metadata_created.flag"
+        flag = "raster/metadata/isimip.flag"
     shell:
         """
         # N.B. 4XX responses result in a zero-valued httpie exit status

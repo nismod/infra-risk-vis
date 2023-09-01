@@ -126,13 +126,13 @@ missing output implies its ancestors are also required.
 To request a cloud optimised raster, invoke `snakemake` as follows:
 
 ```bash
-snakemake --cores <n_cores> -- rasters/cog/<dataset>/<key>.tif
+snakemake --cores <n_cores> -- raster/cog/<dataset>/<key>.tif
 ```
 
 For example:
 
 ```bash
-snakemake --cores <n_cores> -- rasters/cog/exposure_nature/ocs_0-30cm_mean_1000.tif
+snakemake --cores <n_cores> -- raster/cog/exposure_nature/ocs_0-30cm_mean_1000.tif
 ```
 
 N.B. The `--dry-run` or `-n` option can be used to preview which jobs
@@ -151,7 +151,7 @@ process the rasters, ingest them and create a metadata record. Invoke it as
 follows:
 
 ```bash
-snakemake --cores <n_cores> -- pipelines/<dataset_name>/metadata_created.flag
+snakemake --cores <n_cores> -- raster/metadata/<dataset_name>.flag
 ```
 
 ### Running every pipeline

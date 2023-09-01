@@ -26,7 +26,7 @@ rule ingest_rasters:
         db_field_to_csv_header_map = "pipelines/{DATASET}/db_field_to_csv_header_map.json",
         tile_keys = "pipelines/{DATASET}/tile_keys.json",
     output:
-        flag = "pipelines/{DATASET}/rasters_ingested.flag"
+        flag = "raster/ingest/{DATASET}.flag"
     shell:
         """
         python {input.script} load_csv \
@@ -46,10 +46,10 @@ rule POST_metadata_to_backend:
     Requires the `backend` and postgreSQL `db` services to be running.
     """
     input:
-        ingest_flag = "pipelines/{DATASET}/rasters_ingested.flag",
+        ingest_flag = "raster/ingest/{DATASET}.flag",
         metadata = "pipelines/{DATASET}/metadata.json",
     output:
-        flag = "pipelines/{DATASET}/metadata_created.flag"
+        flag = "raster/metadata/{DATASET}.flag"
     shell:
         """
         # N.B. 4XX responses result in a zero-valued httpie exit status

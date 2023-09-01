@@ -58,7 +58,7 @@ rule ingest_categorical_raster:
         csv_colourmap = "pipelines/esa_land_cover/colourmap.csv",
         tile_key_mapping = "pipelines/esa_land_cover/tile_key_mapping.json",
     output:
-        flag = "pipelines/esa_land_cover/rasters_ingested.flag"
+        flag = "raster/ingest/esa_land_cover.flag"
     shell:
         """
         python {input.script} load_single_categorical \

@@ -73,7 +73,7 @@ rule ingest_rasters:
         db_field_to_csv_header_map = "pipelines/aqueduct/db_field_to_csv_header_map.json",
         tile_keys = "pipelines/aqueduct/tile_keys.json",
     output:
-        flag = "pipelines/aqueduct/rasters_ingested.flag"
+        flag = "raster/ingest/aqueduct.flag"
     shell:
         """
         python {input.script} load_csv \
@@ -96,11 +96,11 @@ rule POST_metadata_to_backend:
     This rule is a special case as we have two objects to create, one for fluvial and one for coastal.
     """
     input:
-        ingest_flag = "pipelines/aqueduct/rasters_ingested.flag",
+        ingest_flag = "raster/ingest/aqueduct.flag",
         fluvial_metadata = "pipelines/aqueduct/metadata_fluvial.json",
         coastal_metadata = "pipelines/aqueduct/metadata_coastal.json",
     output:
-        flag = "pipelines/aqueduct/metadata_created.flag"
+        flag = "raster/metadata/aqueduct.flag"
     shell:
         """
         # N.B. 4XX responses result in a zero-valued httpie exit status

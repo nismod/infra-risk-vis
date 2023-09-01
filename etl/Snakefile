@@ -85,4 +85,4 @@ rule all:
     Target rule to fetch, process and ingest all registered datasets.
     """
     input:
-        lambda x: expand("pipelines/{dataset}/metadata_created.flag", dataset=ALL_DATASETS)
+        lambda x: expand("raster/metadata/{dataset}.flag", dataset=ALL_DATASETS)
