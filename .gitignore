@@ -61,9 +61,7 @@ envs
 *.tiff
 tileserver/raster/db
 tileserver/vector/data
-deploy.sh
 main.tf
-provision.sh
 *.geoparquet
 *.gpkg
 *.mbtiles
@@ -73,5 +71,6 @@ provision.sh
 *.parquet
 etl/raw_data/*
 .vscode/
+.editorconfig
 .DS_Store
 irv-autopkg/*
