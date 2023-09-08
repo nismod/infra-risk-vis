@@ -34,7 +34,7 @@ services:
     build: ./frontend
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`jamaica.infrastructureresilience.org`)"
+      - "traefik.http.routers.frontend.rule=Host(`jsrat.licj.org.jm`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=certresolverone"
       - "traefik.http.routers.frontend.middlewares=auth"
@@ -47,7 +47,7 @@ services:
       - ./envs/prod/.backend.env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`jamaica.infrastructureresilience.org`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.rule=Host(`jsrat.licj.org.jm`) && PathPrefix(`/api`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=certresolverone"
       - "traefik.http.routers.backend.middlewares=auth,backend-stripprefix"
@@ -64,7 +64,7 @@ services:
       - ./tileserver/vector/config.json:/config.json
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vector-tileserver.rule=Host(`jamaica.infrastructureresilience.org`) && PathPrefix(`/vector`)"
+      - "traefik.http.routers.vector-tileserver.rule=Host(`jsrat.licj.org.jm`) && PathPrefix(`/vector`)"
       - "traefik.http.routers.vector-tileserver.entrypoints=websecure"
       - "traefik.http.routers.vector-tileserver.tls.certresolver=certresolverone"
       - "traefik.http.routers.vector-tileserver.middlewares=auth,vector-tileserver-stripprefix"
@@ -84,7 +84,7 @@ services:
       - TC_PNG_COMPRESS_LEVEL=1
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.raster-tileserver.rule=Host(`jamaica.infrastructureresilience.org`) && PathPrefix(`/raster`)"
+      - "traefik.http.routers.raster-tileserver.rule=Host(`jsrat.licj.org.jm`) && PathPrefix(`/raster`)"
       - "traefik.http.routers.raster-tileserver.entrypoints=websecure"
       - "traefik.http.routers.raster-tileserver.tls.certresolver=certresolver"
       - "traefik.http.routers.raster-tileserver.middlewares=auth,raster-tileserver-stripprefix"
