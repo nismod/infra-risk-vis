@@ -2,78 +2,36 @@
 version: "3.9"
 
 services:
-  traefik:
-    image: "traefik:v2.9"
-    container_name: "traefik"
-    command:
-      - "--log.level=DEBUG"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--api.insecure=false"
-      - "--api.dashboard=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entryPoint.permanent=true"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.certresolverone.acme.tlschallenge=true"
-      - "--certificatesresolvers.certresolverone.acme.email=tom.russell@ouce.ox.ac.uk"
-      - "--certificatesresolvers.certresolverone.acme.storage=/letsencrypt/acme.json"
-    # labels:
-    #   - "traefik.http.middlewares.auth.basicauth.usersfile=/auth/.htpasswd"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - "./letsencrypt:/letsencrypt"
-      - "./auth:/auth"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-
   frontend:
     image: ghcr.io/nismod/jsrat-frontend:0.1
     build: ./frontend
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`jsrat.licj.org.jm`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=certresolverone"
-      - "traefik.http.routers.frontend.middlewares=auth"
-      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+    ports:
+      - "3000:80"
 
   backend:
     image: ghcr.io/nismod/jsrat-backend:0.1
     build: ./backend
+    ports:
+      - "3001:80"
     env_file:
       - ./envs/prod/.backend.env
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`jsrat.licj.org.jm`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls.certresolver=certresolverone"
-      - "traefik.http.routers.backend.middlewares=auth,backend-stripprefix"
-      - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
-      - "traefik.http.services.backend.loadbalancer.server.port=80"
 
   vector-tileserver:
     image: ghcr.io/nismod/jsrat-vector-tileserver:0.1
     build:
       context: ./tileserver/vector
       dockerfile: prod.Dockerfile
+    ports:
+      - "3002:8080"
     volumes:
       - ./tileserver/vector/data:/data
       - ./tileserver/vector/config.json:/config.json
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.vector-tileserver.rule=Host(`jsrat.licj.org.jm`) && PathPrefix(`/vector`)"
-      - "traefik.http.routers.vector-tileserver.entrypoints=websecure"
-      - "traefik.http.routers.vector-tileserver.tls.certresolver=certresolverone"
-      - "traefik.http.routers.vector-tileserver.middlewares=auth,vector-tileserver-stripprefix"
-      - "traefik.http.middlewares.vector-tileserver-stripprefix.stripprefix.prefixes=/vector"
-      - "traefik.http.services.vector-tileserver.loadbalancer.server.port=8080"
 
   raster-tileserver:
     image: ghcr.io/nismod/jsrat-raster-tileserver:0.1
     build: ./tileserver/raster
+    ports:
+      - "3003:5000"
     volumes:
       - ./tileserver/raster/data:/data
       - ./tileserver/raster/config.toml:/config.toml
@@ -82,26 +40,3 @@ services:
       - TC_RESAMPLING_METHOD=nearest
       - TC_REPROJECTION_METHOD=nearest
       - TC_PNG_COMPRESS_LEVEL=1
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.raster-tileserver.rule=Host(`jsrat.licj.org.jm`) && PathPrefix(`/raster`)"
-      - "traefik.http.routers.raster-tileserver.entrypoints=websecure"
-      - "traefik.http.routers.raster-tileserver.tls.certresolver=certresolver"
-      - "traefik.http.routers.raster-tileserver.middlewares=auth,raster-tileserver-stripprefix"
-      - "traefik.http.middlewares.raster-tileserver-stripprefix.stripprefix.prefixes=/raster"
-      - "traefik.http.services.raster-tileserver.loadbalancer.server.port=5000"
-
-  raster-tile-ingester:
-    image: ghcr.io/nismod/jsrat-raster-tileserver:0.1
-    build: ./tileserver/raster
-    volumes:
-      - ./tileserver/raster/data:/data
-      - ./tileserver/raster/config.toml:/config.toml
-    command:
-      [
-        "terracotta",
-        "ingest",
-        "/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif",
-        "-o",
-        "/data/terracotta.sqlite"
-      ]
