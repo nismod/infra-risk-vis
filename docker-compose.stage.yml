@@ -58,7 +58,18 @@ services:
     image: ghcr.io/nismod/jsrat-vector-tileserver:0.1
     build:
       context: ./tileserver/vector
-      dockerfile: prod.Dockerfile
+      dockerfile: Dockerfile
+    command:
+      [
+        "tileserver-gl-light",
+        "-c",
+        "config.json",
+        "-p",
+        "8080",
+        "--verbose",
+        "-u",
+        "https://jamaica.infrastructureresilience.org/vector",
+      ]
     volumes:
       - ./tileserver/vector/data:/data
       - ./tileserver/vector/config.json:/config.json
@@ -103,5 +114,5 @@ services:
         "ingest",
         "/data/{type}__rp_{rp}__rcp_{rcp}__epoch_{epoch}__conf_{confidence}.tif",
         "-o",
-        "/data/terracotta.sqlite"
+        "/data/terracotta.sqlite",
       ]

@@ -21,6 +21,17 @@ services:
     build:
       context: ./tileserver/vector
       dockerfile: prod.Dockerfile
+    command:
+      [
+        "tileserver-gl-light",
+        "-c",
+        "config.json",
+        "-p",
+        "8080",
+        "--verbose",
+        "-u",
+        "https://jsrat.licj.org.jm:9443/vector",
+      ]
     ports:
       - "3002:8080"
     volumes:
