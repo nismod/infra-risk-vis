@@ -15,4 +15,4 @@ Expect source netCDF files to be within `raster/raw/iris/`, unfortunately not ye
     - Clip extent
     - Cloud optimise
     - Ingest to Terracotta MySQL DB
-    - Create table metadata in PostgreSQL DB  
+    - Create table metadata in PostgreSQL DB
