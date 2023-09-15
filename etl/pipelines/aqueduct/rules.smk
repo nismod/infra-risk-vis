@@ -102,9 +102,8 @@ rule POST_metadata_to_backend:
         flag = "raster/metadata/aqueduct.flag"
     shell:
         """
-        # N.B. 4XX responses result in a zero-valued httpie exit status
-        http POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.fluvial_metadata}
-        http POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.coastal_metadata}
+        http --check-status --follow POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.fluvial_metadata}
+        http --check-status --follow POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.coastal_metadata}
 
         touch {output.flag}
         """
