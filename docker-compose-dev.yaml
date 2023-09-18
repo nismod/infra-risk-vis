@@ -53,15 +53,6 @@ services:
       - ./tileserver/raster/db:/var/lib/mysql
       - ./backup:/backup
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    env_file:
-      - ./envs/dev/.pgadmin.env
-    ports:
-      - 5050:80
-
   backend:
     build: ./containers/backend
     image: ghcr.io/nismod/gri-backend:0.9
