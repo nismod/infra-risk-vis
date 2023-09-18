@@ -30,7 +30,7 @@ services:
     mem_limit: "250M"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.20
+    image: ghcr.io/nismod/irv-frontend:0.21
     restart: always
     expose:
       - "80"
@@ -111,7 +111,6 @@ services:
     cpus: 1.0
     mem_reservation: "500M"
     mem_limit: "2G"
-    mem_swappiness: 30
 
   irv-autopkg-api:
     image: ghcr.io/nismod/irv-autopkg:0.2.7
