@@ -106,19 +106,19 @@ For example, when running a FE development server to add a new raster layer the
 following should suffice:
 `docker compose -f docker-compose-dev.yaml up tiles-db db backend`
 
-N.B. If you find that the `backend` service is complaining that the
-`raster_tile_sources` database table is not available, you may need to create
-the appropriate tables in the `db` service first. To do that, bring the `db`
-service up as described above, and then run: `docker-compose -f docker-compose-dev.yaml up backend-schema-regen`
-to (re)create the tables.
+There are also a few 'utility containers', which can be run to perform particular tasks.
+- backend-schema-regen:
+- raster-tile-delete-entries:
+- raster-tile-drop-database:
 
-### Development (like-production)
-
-To run local builds of production containers:
-`docker compose -f docker-compose-prod.yaml up`
-
-We don't specify services as we use every service defined in the
-`docker-compose-deploy.yaml` file.
+When starting from afresh, the `backend-schema-regen` service must be run to
+create the tables in `db` that `backend` relies upon. If you find that the
+`backend` service is complaining that the `raster_tile_sources` database table
+is not available, you may need to create the appropriate tables in the `db`
+service first. To do that, bring the `db` service up as described above, and
+then run: `docker-compose -f docker-compose-dev.yaml up backend-schema-regen`
+to (re)create the tables. Note that this will drop any data currently in
+database.
 
 ### Production
 
