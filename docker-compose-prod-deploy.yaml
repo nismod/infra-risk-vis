@@ -29,7 +29,6 @@ services:
     mem_reservation: "50M"
     mem_limit: "250M"
 
-
   web-server:
     image: ghcr.io/nismod/irv-frontend:0.20
     restart: always
@@ -73,6 +72,7 @@ services:
     restart: always
     volumes:
       - ./tileserver/vector/data:/data
+      - ./vector-tileserver/config.json:/config.json
     expose:
       - "8080"
     labels:
@@ -87,8 +87,6 @@ services:
     mem_reservation: "50M"
     mem_limit: "500M"
 
-  # IRV AUTOPACKAGE Services
-
   redis:
     image: ghcr.io/nismod/irv-autopkg-redis:0.1
     user: autopkg
@@ -96,9 +94,9 @@ services:
     command: redis-server --save 20 1 --loglevel notice
     volumes:
       - ./irv-autopkg/redis:/data
-    cpus: 0.25
-    mem_reservation: "50M"
-    mem_limit: "250M"
+    cpus: 1.0
+    mem_reservation: "250M"
+    mem_limit: "1G"
 
   irv-autopkg-worker:
     image: ghcr.io/nismod/irv-autopkg:0.2.7
@@ -110,9 +108,10 @@ services:
     env_file:
       - envs/prod/.irv-autopkg.env
     command: celery --app dataproc.tasks worker
-    cpus: 2.0
-    mem_reservation: "3G"
-    mem_limit: "6G"
+    cpus: 1.0
+    mem_reservation: "500M"
+    mem_limit: "2G"
+    mem_swappiness: 30
 
   irv-autopkg-api:
     image: ghcr.io/nismod/irv-autopkg:0.2.7
@@ -123,9 +122,9 @@ services:
       - ./irv-autopkg/processing:/data/processing
     env_file:
       - envs/prod/.irv-autopkg.env
-    expose:
-      - "8000"
-    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --root-path /extract
+    ports:
+      - 8000:8000
+    command: uvicorn api.main:app --workers 2 --host 0.0.0.0 --port 8000 --root-path /extract
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.irv-autopkg-api.rule=Host(`global.infrastructureresilience.org`) && PathPrefix(`/extract`)"
@@ -134,6 +133,6 @@ services:
       - "traefik.http.routers.irv-autopkg-api.middlewares=irv-autopkg-api-stripprefix"
       - "traefik.http.middlewares.irv-autopkg-api-stripprefix.stripprefix.prefixes=/extract"
       - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
-    cpus: 0.25
-    mem_reservation: "50M"
-    mem_limit: "250M"
+    cpus: 0.5
+    mem_reservation: "250M"
+    mem_limit: "500M"

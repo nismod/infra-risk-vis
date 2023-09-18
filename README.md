@@ -122,41 +122,52 @@ We don't specify services as we use every service defined in the
 
 ### Production
 
+To run __local builds__ of production containers we use the
+`docker-compose-prod-build.yaml` file. See [below](#Updating a service) for more
+details.
+
 To deploy containers into a production environment:
-`docker compose -f docker-compose-deploy.yaml up -d`
+`docker compose -f docker-compose-prod-deploy.yaml up -d`
 
 We don't specify services as we use every service defined in the
-`docker-compose-deploy.yaml` file.
+`docker-compose-prod-deploy.yaml` file.
 
-## Example service update
+## Updating a service
 
-Locally, build the frontend, push to the container registry:
+To update a service:
+- We make the necessary changes to the container
+- Build a new container
+- Push it to the container repository
+- Pull it on the production machine
+- Deploy it
+
+As an example, below we update the backend on a development machine:
 
 ```bash
-# Edit docker-compose.yaml image version, in this example line 28:
-#     image: ghcr.io/nismod/gri-web-server:0.16
+# Edit docker-compose-prod-build.yaml image version:
+#     image: ghcr.io/nismod/gri-backend:1.0
 
 # Build
-docker compose -f docker-compose-prod.yaml build web-server
+docker compose -f docker-compose-prod-build.yaml build backend
 
 # Log in to the container registry
 # see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
 
 # Push
-docker push ghcr.io/nismod/gri-web-server:0.16
+docker push ghcr.io/nismod/gri-backend:1.0
 ```
 
-On remote, pull the image and reload service:
+On the production remote, pull the image and restart the service:
 
 ```bash
 # Pull image
-docker pull ghcr.io/nismod/gri-web-server:0.16
+docker pull ghcr.io/nismod/gri-backend:1.0
 
-# Edit docker-compose.yaml image version (or sync up), in this example line 28:
-#     image: ghcr.io/nismod/gri-web-server:0.16
+# Edit docker-compose-prod-deploy.yaml image version (or sync up):
+#     image: ghcr.io/nismod/gri-backend:1.0
 
 # Restart service
-docker compose up -d web-server
+docker compose up -d backend
 ```
 
 ## Adding new data layers
