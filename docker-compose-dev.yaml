@@ -24,7 +24,7 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    # TODO: update tag to latest when irv-frontend publication workflow is updated
+    # TODO: update tag to 'latest' when irv-frontend publication workflow is updated
     image: ghcr.io/nismod/irv-frontend:0.21
     profiles: ["web-server"]
     volumes:
