@@ -171,4 +171,3 @@ services:
 
 volumes:
   postgis-data:
-  pgadmin:
