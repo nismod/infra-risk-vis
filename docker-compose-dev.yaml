@@ -4,6 +4,7 @@ services:
   traefik:
     image: "traefik:v2.9"
     container_name: "traefik"
+    profiles: ["traefik"]
     command:
       - "--log.level=INFO"
       - "--accessLog=true"
@@ -24,6 +25,7 @@ services:
 
   web-server:
     image: ghcr.io/nismod/irv-frontend:0.20-dev
+    profiles: ["web-server"]
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
     labels:
@@ -92,12 +94,14 @@ services:
   redis:
     image: redis:6.2-alpine
     restart: always
+    profiles: ["autopkg"]
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - ./irv-autopkg/redis:/data
 
   irv-autopkg-worker:
     image: ghcr.io/nismod/irv-autopkg:0.1.0-dev
+    profiles: ["autopkg"]
     volumes:
       - ./irv-autopkg/packages:/data/packages
       - ./irv-autopkg/tmp:/data/tmp
@@ -107,6 +111,7 @@ services:
 
   irv-autopkg-api:
     image: ghcr.io/nismod/irv-autopkg:0.1.0-dev
+    profiles: ["autopkg"]
     volumes:
       - ./irv-autopkg/packages:/data/packages
       - ./irv-autopkg/tmp:/data/tmp
@@ -128,6 +133,7 @@ services:
   raster-tile-delete-entries:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
+    profiles: ["raster-tile-delete-entries"]
     env_file:
       - ./envs/dev/.etl.env
     volumes:
@@ -143,6 +149,7 @@ services:
   raster-tile-drop-database:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
+    profiles: ["raster-tile-drop-database"]
     env_file:
       - ./envs/dev/.etl.env
     volumes:
@@ -150,9 +157,10 @@ services:
     command: [ "drop_database", "--database_name", "aqueduct" ]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
-  backend-schema-regen:
+  recreate-metadata-schema:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.2
+    image: ghcr.io/nismod/gri-backend:0.9
+    profiles: ["recreate-metadata-schema"]
     volumes:
       - ./containers/backend/backend/db/models.py:/code/backend/db/models.py
     env_file:

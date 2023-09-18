@@ -86,51 +86,64 @@ To deploy the stack we use the `docker compose` tool.
 
 ### Development
 
-To deploy locally, `docker compose -f docker-compose-dev.yaml up <desired services>`.
-The set of services can include:
-- tiles-db
-- db
-- backend
-- web-server
-- vector-tileserver
-- redis
-- irv-autopkg-work
-- irv-autopkg-api
-- traefik
+The set of long-running services can include:
+- traefik: Reverse proxy for other services, handles TLS
+- web-server: Nginx server for the frontend code and static files
+- db: PostgreSQL database holding vector data and raster metadata
+- tiles-db: MySQL database holding raster metadata for terracotta
+- backend: API for available datasets and raster tileserver (terracotta)
+- vector-tileserver: TileServer-GL for serving .mbtiles files
+- redis: In-memory database for autopackage job queueing
+- irv-autopkg-worker: Autopackage data processing (clipping, serialisation, etc.)
+- irv-autopkg-api: Autopackage service coordination
 
-If you're running your own FE development server, or connecting to a remotely
-hosted database, or not using the autopackage API, you may not need all these
-services.
+If you're running [your own FE](https://github.com/nismod/irv-frontend/)
+development server, or connecting to a remotely hosted database, or not using
+the [autopackage API](https://github.com/nismod/irv-autopkg), you may not need
+all these services.
 
-For example, when running a FE development server to add a new raster layer the
-following should suffice:
-`docker compose -f docker-compose-dev.yaml up tiles-db db backend`
+To this end, we use [profiles](https://docs.docker.com/compose/profiles/) to
+define 'core' services which always run, and optional services. A bare `docker
+compose -f docker-compose-dev.yaml up` will run only the core services (those
+without a `profiles` attribute).
 
-There are also a few 'utility containers', which can be run to perform particular tasks.
-- backend-schema-regen:
-- raster-tile-delete-entries:
-- raster-tile-drop-database:
+For example, when running your own FE development server to add a new raster
+layer the following should suffice: `docker compose -f docker-compose-dev.yaml
+up`. This will bring up `db`, `tiles-db`, `backend` and `vector-tileserver`.
 
-When starting from afresh, the `backend-schema-regen` service must be run to
-create the tables in `db` that `backend` relies upon. If you find that the
-`backend` service is complaining that the `raster_tile_sources` database table
-is not available, you may need to create the appropriate tables in the `db`
-service first. To do that, bring the `db` service up as described above, and
-then run: `docker-compose -f docker-compose-dev.yaml up backend-schema-regen`
-to (re)create the tables. Note that this will drop any data currently in
-database.
+To run the core services with a standard frontend: `docker compose -f
+docker-compose-dev.yaml --profile web-server up`.
+
+To run the core services alongside the autopackage services: `docker compose -f
+docker-compose-dev.yaml --profile autopkg up`.
+
+To run all of these behind traefik (every long-running service): `docker
+compose -f docker-compose-dev.yaml --profile traefik --profile web-server
+--profile autopkg up`.
+
+There are also a few short-lived 'utility containers', which can be run to
+perform particular tasks:
+- recreate-metadata-schema: Drop the contents of the `db` database, recreate with empty tables
+- raster-tile-delete-entries: Delete raster entries of specified dataset in `tiles-db`
+- raster-tile-drop-database: Drop whole database for specified dataset from `tiles-db`
+
+When starting from a clean slate, the `recreate-metadata-schema` service must
+be run to create the tables in `db` that `backend` relies upon. If you find
+that the `backend` service is complaining that the `raster_tile_sources`
+database table is not available, you may need to create the appropriate tables
+in the `db` service first. To do that, bring the `db` service up as described
+above, and then run: `docker-compose -f docker-compose-dev.yaml up
+recreate-metadata-schema` to (re)create the tables. Note that this will drop
+any data currently in database.
 
 ### Production
 
-To run __local builds__ of production containers we use the
-`docker-compose-prod-build.yaml` file. See [below](#Updating a service) for more
-details.
+To run local builds of production containers we use the
+`docker-compose-prod-build.yaml` file. See [below](#Updating a service) for
+more details.
 
 To deploy containers into a production environment:
 `docker compose -f docker-compose-prod-deploy.yaml up -d`
-
-We don't specify services as we use every service defined in the
-`docker-compose-prod-deploy.yaml` file.
 
 ## Updating a service
 
