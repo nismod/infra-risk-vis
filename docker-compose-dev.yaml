@@ -4,6 +4,7 @@ services:
   traefik:
     image: "traefik:v2.9"
     container_name: "traefik"
+    profiles: ["traefik"]
     command:
       - "--log.level=INFO"
       - "--accessLog=true"
@@ -23,7 +24,9 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.20-dev
+    # TODO: update tag to 'latest' when irv-frontend publication workflow is updated
+    image: ghcr.io/nismod/irv-frontend:0.21
+    profiles: ["web-server"]
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
     labels:
@@ -53,39 +56,9 @@ services:
       - ./tileserver/raster/db:/var/lib/mysql
       - ./backup:/backup
 
-  pgadmin:
-    image: dpage/pgadmin4:latest
-    volumes:
-      - pgadmin:/var/lib/pgadmin
-    env_file:
-      - ./envs/dev/.pgadmin.env
-    ports:
-      - 5050:80
-
-  snakemake:
-    image: ghcr.io/nismod/gri-snakemake:0.1
-    build: ./etl
-    volumes:
-      - ./etl:/opt/etl
-      - ./tileserver:/opt/tileserver
-    env_file:
-      - ./envs/dev/.snakemake.env
-    command:
-      [
-        "--cores",
-        "32",
-        "--latency-wait",
-        "20",
-        "--resources",
-        "disk_mb=6000000",
-        "--rerun-incomplete",
-        "-s",
-        "/opt/etl/pipelines/iris/Snakefile"
-      ]
-
   backend:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.9
+    image: ghcr.io/nismod/gri-backend:1.0
     volumes:
       - ./etl/raster/cog/:/data/
       - ./containers/backend/backend/:/code/backend/
@@ -122,12 +95,14 @@ services:
   redis:
     image: redis:6.2-alpine
     restart: always
+    profiles: ["autopkg"]
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - ./irv-autopkg/redis:/data
 
   irv-autopkg-worker:
     image: ghcr.io/nismod/irv-autopkg:0.1.0-dev
+    profiles: ["autopkg"]
     volumes:
       - ./irv-autopkg/packages:/data/packages
       - ./irv-autopkg/tmp:/data/tmp
@@ -137,6 +112,7 @@ services:
 
   irv-autopkg-api:
     image: ghcr.io/nismod/irv-autopkg:0.1.0-dev
+    profiles: ["autopkg"]
     volumes:
       - ./irv-autopkg/packages:/data/packages
       - ./irv-autopkg/tmp:/data/tmp
@@ -154,34 +130,11 @@ services:
       - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
 
   #### Utility Containers
-  raster-tile-ingester:
-    build: ./containers/raster-tile-ingester
-    image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
-    env_file:
-      - ./envs/dev/.etl.env
-    volumes:
-      - ./containers/raster-tile-ingester/ingest.py:/ingest.py # Mounted only for Dev
-      - ./tileserver/raster/data:/data # Must match path in Backend
-      - ./etl/pipelines/iris/hazard_iris.csv:/opt/hazard_layers.csv # If loading a CSV
-    command:
-      [
-        "load_csv",
-        "--internal_raster_base_path",
-        "/data/iris",
-        "--input_csv_filepath",
-        "/opt/hazard_layers.csv",
-        "--tile_keys",
-        "type,epoch,rp,ssp",
-        "--csv_key_column_map",
-        "{\"file_basename\": \"key\", \"type\": \"hazard\", \"rp\": \"rp\", \"ssp\": \"ssp\", \"epoch\": \"epoch\"}",
-        "--database_name",
-        "iris"
-      ]
-
   ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
   raster-tile-delete-entries:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
+    profiles: ["raster-tile-delete-entries"]
     env_file:
       - ./envs/dev/.etl.env
     volumes:
@@ -197,6 +150,7 @@ services:
   raster-tile-drop-database:
     build: ./containers/raster-tile-ingester
     image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
+    profiles: ["raster-tile-drop-database"]
     env_file:
       - ./envs/dev/.etl.env
     volumes:
@@ -204,9 +158,10 @@ services:
     command: [ "drop_database", "--database_name", "aqueduct" ]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
-  backend-schema-regen:
+  recreate-metadata-schema:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:0.2
+    image: ghcr.io/nismod/gri-backend:1.0
+    profiles: ["recreate-metadata-schema"]
     volumes:
       - ./containers/backend/backend/db/models.py:/code/backend/db/models.py
     env_file:
@@ -216,4 +171,3 @@ services:
 
 volumes:
   postgis-data:
-  pgadmin:

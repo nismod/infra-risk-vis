@@ -24,16 +24,29 @@ Other functionality:
 This README covers requirements and steps through how to prepare data for
 visualisation and how to run the tool.
 
+# Architecture
+
+The tool runs as a set of containerised services:
+- Traefik reverse proxy to direct requests to the other services
+- Web server (nginx) `ghcr.io/nismod/gri-web-server`
+- Vector tileserver (tileserver-gl) `ghcr.io/nismod/gri-vector-tileserver`
+- Backend / API (bespoke Python app for vector data and raster tiles (+meta)) `ghcr.io/nismod/gri-backend`
+- API Database (PostgreSQL with PostGIS serves backend) (Dev only)
+- Tiles Database (MySQL serves tile ingester and backend /tiles endpoints) (Dev only)
+
+The services are orchestrated using `docker compose`.
+
+N.B. The app was built with docker engine version 20.10.16 and compose version
+2.5.0. It may not work with other versions.
+
 # Usage
 
 ## Data preparation
 
 The visualisation tool runs using prepared versions of analysis data and
-results
-
+results:
 - Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
   a terracotta MySQL database, hosted within the backend API.
-
 - Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
   Vector Tiles
 
@@ -43,8 +56,7 @@ Data to be served from the vector and raster tileservers should be placed on
 the host within `tileserver/<data_type>`. These folders are made available to the
 running tileservers as docker bind mounts.
 
-For example, in `tileserver/raster/data/<flooding>` there might live TIF files like these:
-
+For example, in `tileserver/raster/data/aqueduct` there might live TIF files like these:
 ```
 coastal_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
 coastal_mangrove__rp_25__rcp_baseline__epoch_2010__conf_None.tif
@@ -53,7 +65,6 @@ coastal_nomangrove_minus_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.t
 ```
 
 And in `tileserver/vector/`, mbtiles files like these:
-
 ```
 airport_runways.mbtiles
 airport_terminals.mbtiles
@@ -61,275 +72,130 @@ buildings_commercial.mbtiles
 buildings_industrial.mbtiles
 ```
 
-### Docker Development Environment
+## Environment
 
-`docker-compose-dev.yaml` includes a set of services for use in the data processing and development process.
+Environment variables for the various services (and the ETL workflow) are
+stored in env files. Example files are given in `envs/dev-example`. These can
+be placed in `envs/dev` to get started.
 
-The following environment files are required:
-
-#### Environment
-
-The following env files are required (in `envs/dev/.*`):
-
-##### .backend.env
-
-Backend API Environment variables (only required in Dev)
-
-```
-PYTHONPATH=/code/backend
-# Features API
-PGDATABASE= # Used to store feature data
-PGUSER=
-PGPASSWORD=
-PGHOST=
-
-# Tiles API
-RASTER_BASE_PATH=/data # Path at-which raster tiles can be found (must match the MySQL Tiles-db loaded path)
-TC_DRIVER_PATH=mysql://foo:bar@tiles-db # Tiles-db MySQL Host (__NOTE__: Does not require database in the URL - this is parsed internally.)
-TC_SQL_USER=
-TC_SQL_PASSWORD=
-TC_ALLOWED_ORIGINS_METADATA='["*"]'
-TC_ALLOWED_ORIGINS_TILES='["*"]'
-TC_PNG_COMPRESS_LEVEL=0
-TC_RESAMPLING_METHOD="nearest"
-TC_REPROJECTION_METHOD="nearest"
-
-API_TOKEN= # API token is only required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
-DOMAIN_TO_DB_MAP="{\"cyclone_iris\":\"iris\",\"extreme_heat\":\"isimip\",\"drought\":\"isimip\",\"buildings\":\"ghsl_buildings\",\"land_cover\":\"esa_land_cover\",\"traveltime_to_healthcare\": \"traveltime_to_healthcare\",\"nature\": \"exposure_nature\",\"population\": \"jrc_pop\",\"fluvial\": \"aqueduct\",\"coastal\": \"aqueduct\",\"cyclone\": \"storm\",\"earthquake\": \"gem_earthquake\"}"
-```
-
-##### .db.env
-
-Postgres container environment variables (only required in Dev)
-
-Postgres is used to store feature data. (OSM etc)
-
-```
-POSTGRES_DB=
-POSTGRES_USER=
-POSTGRES_PASS=
-ALLOW_IP_RANGE=0.0.0.0/0
-POSTGRES_MULTIPLE_EXTENSIONS=postgis
-```
-
-##### .mysql.env
-
-MySQL container environment variables (only required in Dev).
-
-MySQL is used by Terracotta to store raster-tile data
-
-```
-MYSQL_USER=
-MYSQL_PASSWORD=
-MYSQL_ROOT_PASSWORD=
-```
-
-##### .pgadmin.env
-
-PGAdmin for administration of Postgres
-
-```
-PGADMIN_DEFAULT_EMAIL=
-PGADMIN_DEFAULT_PASSWORD=
-WORKERS=1
-```
-
-##### .etl.env
-
-Container for running ETL process, i.e. processing and ingestion of raster data.
-
-```
-# connecting to `tiles-db`, MySQL
-# from localhost
-TC_DRIVER_PATH=mysql://root:password@localhost:3306
-# from within docker network
-#TC_DRIVER_PATH=mysql://root:password@tiles-db
-TC_DRIVER_PROVIDER=mysql
-TC_PNG_COMPRESS_LEVEL=0
-TC_RESAMPLING_METHOD=nearest
-TC_REPROJECTION_METHOD=nearest
-
-# connecting to `db`, postgreSQL
-PGHOST=db
-PGDATABASE=global
-PGUSER=docker
-PGPASSWORD=docker
-
-# connecting to `backend`
-BE_HOST=localhost
-BE_PORT=8888
-# required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
-BE_API_TOKEN=test
-
-# data downloading
-# https://cds.climate.copernicus.eu/api-how-to
-COPERNICUS_CDS_URL="https://cds.climate.copernicus.eu/api/v2"
-COPERNICUS_CDS_API_KEY=<uid:token>  # User ID:Token
-```
-
-##### .snakemake.env
-
-Utility container for running Snakemake workflows.
-
-```
-# Postgres
-PGHOST=db
-PGDATABASE=global
-PGUSER=docker
-PGPASSWORD=docker
-```
-
-### Data preparation within Docker
-
-Data preparation can be run within Docker, end to end.
-
-More details can be found in the [ETL](etl/README.md) folder and underlying [pipeline](etl/pipelines/) folders
-
-`pipelines/{workflow}/{workflow_preprocessor.py}` (pre-processing and generation of csv for snakemake) -> `pipelines/{workflow}/Snakemake` (generated COG Files) -> `docker`
-
-`raster-tile-ingester` (ingests to tile server DB) -> MySQL Terracotta tiles Database
-
-#### Snakemake
-
-```bash
-docker run -it -v ${PWD}/etl:/opt/etl gri-snakemake:latest --cores 1 -s /opt/etl/Snakefile
-```
-
-or using Docker Compose `snakemake` service, first edit the `snakemake` command to point
-to the relevant `Snakefile` for a pipeline:
-
-```
-snakemake:
-    image: ghcr.io/nismod/gri-snakemake:0.1
-    ...
-    command:
-      [
-        ...
-        "-s",
-        "/opt/etl/pipelines/iris/Snakefile"
-      ]
-```
-
-then run:
-
-```bash
-docker compose -f docker-compose-dev.yaml run snakemake
-```
-
-#### Raster Tileserver Ingester
-
-Update `docker-compose-dev.yaml` `raster-tile-ingester` block as required for a
-dataset (after running its pre-processing and Snakemake pipeline)
-
-For more information see [raster-tile-ingester](containers/raster-tile-ingester/README.md)
-
-```bash
-docker-compose -f docker-compose-dev.yaml run raster-tile-ingester
-```
-
-## Build - Docker
-
-Repository: `ghcr.io/nismod`
-
-The application is built with several 'services', each facilitated by a running
-docker container.
-
-Services:
-
-- Web server (nginx) `ghcr.io/nismod/gri-web-server`
-- Vector tileserver (tileserver-gl) `ghcr.io/nismod/gri-vector-tileserver`
-- Backend / API (bespoke Python app for vector data and raster tiles (+meta)) `ghcr.io/nismod/gri-backend`
-- API Database (PostgreSQL with PostGIS serves backend) (Dev only)
-- Tiles Database (MySQL serves tile ingester and backend /tiles endpoints) (Dev only)
-
-The services are orchestrated using `docker compose`. N.B. The app was built
-with docker engine version 20.10.16 and compose version 2.5.0. It may not work
-with other versions.
-
-The `compose.yml` files contain service names and definitions, and paths to
-build contexts (all located within `containers/`).
-
-### docker-compose-dev.yaml
-
-Containers used for local development of the entire stack, including ETL.
-
-### docker-compose-prod.yaml
-
-Used to run local builds of Production containers.
-
-### docker-compose-deploy.prod
-
-Used for deployment of containers into a production environment.
+Production env files should be placed in `envs/prod`.
 
 ## Deploy
 
-To deploy the stack, use `docker compose up`. Again, this will default to using
-the `compose.yml` file. The current process will show the interleaved log
-output of the various services. To bring up the stack in the background (e.g.
-for production), use `docker compose up -d` to daemonise the process.
+To deploy the stack we use the `docker compose` tool.
 
-The default service configuration can be modified by means of 'overlaying'
-compose files. For development purposes it can be useful to 'bind mount' source
-code files into running containers. Similarly, direct access to the containers'
-various open ports can help debugging. To deploy the stack locally with such
-changes, use the following invocation:
-`docker compose -f compose.yml -f compose-local.yml up`
+### Development
 
-To stop a foregrounded compose stack, issue SIGTERM with Ctrl-C. If services
-haven't stopped in 10 seconds they will be brutally terminated. To bring a
-daemonised stack down, use `docker compose down`.
+The set of long-running services can include:
+- traefik: Reverse proxy for other services, handles TLS
+- web-server: Nginx server for the frontend code and static files
+- db: PostgreSQL database holding vector data and raster metadata
+- tiles-db: MySQL database holding raster metadata for terracotta
+- backend: API for available datasets and raster tileserver (terracotta)
+- vector-tileserver: TileServer-GL for serving .mbtiles files
+- redis: In-memory database for autopackage job queueing
+- irv-autopkg-worker: Autopackage data processing (clipping, serialisation, etc.)
+- irv-autopkg-api: Autopackage service coordination
 
-## Example adding data layer
+If you're running [your own FE](https://github.com/nismod/irv-frontend/)
+development server, or connecting to a remotely hosted database, or not using
+the [autopackage API](https://github.com/nismod/irv-autopkg), you may not need
+all these services.
 
-To add a raster data layer (for example, the `iris` set of tropical cyclone
-return period maps):
+To this end, we use [profiles](https://docs.docker.com/compose/profiles/) to
+define 'core' services which always run, and optional services. A bare `docker
+compose -f docker-compose-dev.yaml up` will run only the core services (those
+without a `profiles` attribute).
 
-1. Write an `etl` pipeline, run using `snakemake` container
-1. Bring up the tiles database container, `tiles-db`
-1. Run `raster-tile-ingester`
-1. Bring up the postgres database container, `db`
-1. Bring up the backend API container, `backend`
-1. Post the raster metadata to the backend - see [docs](containers/backend/README.md)
-   on adding data to the tileserver metadata store.
+For example, when running your own FE development server to add a new raster
+layer the following should suffice: `docker compose -f docker-compose-dev.yaml
+up`. This will bring up `db`, `tiles-db`, `backend` and `vector-tileserver`.
 
-## Example service update
+To run the core services with a standard frontend: `docker compose -f
+docker-compose-dev.yaml --profile web-server up`.
 
-Locally, build the frontend, push to the container registry:
+To run the core services alongside the autopackage services: `docker compose -f
+docker-compose-dev.yaml --profile autopkg up`.
+
+To run all of these behind traefik (every long-running service): `docker
+compose -f docker-compose-dev.yaml --profile traefik --profile web-server
+--profile autopkg up`.
+
+There are also a few short-lived 'utility containers', which can be run to
+perform particular tasks:
+- recreate-metadata-schema: Drop the contents of the `db` database, recreate with empty tables
+- raster-tile-delete-entries: Delete raster entries of specified dataset in `tiles-db`
+- raster-tile-drop-database: Drop whole database for specified dataset from `tiles-db`
+
+When starting from a clean slate, the `recreate-metadata-schema` service must
+be run to create the tables in `db` that `backend` relies upon. If you find
+that the `backend` service is complaining that the `raster_tile_sources`
+database table is not available, you may need to create the appropriate tables
+in the `db` service first. To do that, bring the `db` service up as described
+above, and then run: `docker-compose -f docker-compose-dev.yaml up
+recreate-metadata-schema` to (re)create the tables. Note that this will drop
+any data currently in database.
+
+### Production
+
+To run local builds of production containers we use the
+`docker-compose-prod-build.yaml` file. See [below](#Updating a service) for
+more details.
+
+To deploy containers into a production environment:
+`docker compose -f docker-compose-prod-deploy.yaml up -d`
+
+## Updating a service
+
+To update a service:
+- We make the necessary changes to the container
+- Build a new container
+- Push it to the container repository
+- Pull it on the production machine
+- Deploy it
+
+As an example, below we update the backend on a development machine:
 
 ```bash
-# Edit docker-compose.yaml image version, in this example line 28:
-#     image: ghcr.io/nismod/gri-web-server:0.16
+# Edit docker-compose-prod-build.yaml image version:
+#     image: ghcr.io/nismod/gri-backend:1.0
 
 # Build
-docker compose -f docker-compose-prod.yaml build web-server
+docker compose -f docker-compose-prod-build.yaml build backend
 
 # Log in to the container registry
 # see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
 
 # Push
-docker push ghcr.io/nismod/gri-web-server:0.16
+docker push ghcr.io/nismod/gri-backend:1.0
 ```
 
-On remote, pull the image and reload service:
+On the production remote, pull the image and restart the service:
 
 ```bash
 # Pull image
-docker pull ghcr.io/nismod/gri-web-server:0.16
+docker pull ghcr.io/nismod/gri-backend:1.0
 
-# Edit docker-compose.yaml image version (or sync up), in this example line 28:
-#     image: ghcr.io/nismod/gri-web-server:0.16
+# Edit docker-compose-prod-deploy.yaml image version (or sync up):
+#     image: ghcr.io/nismod/gri-backend:1.0
 
 # Restart service
-docker compose up -d web-server
+docker compose up -d backend
 ```
+
+## Adding new data layers
+
+To add a raster data layer (for example, the `iris` set of tropical cyclone
+return period maps) see the [ETL](etl/README.md) directory.
 
 ## IRV AutoPackage Service
 
-Provides API for extraction of data (and hosting of results) from various layers using pre-defined boundaries.
+Provides API for extraction of data (and hosting of results) from various
+layers using pre-defined boundaries.
 
 See [`irv-autopkg`](http://github.com/nismod/irv-autopkg) for more information.
 
-## Acknowledgements
+# Acknowledgements
 
 This tool has been developed through several projects.
 
