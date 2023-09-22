@@ -52,10 +52,11 @@ micromamba activate irv-etl
 
 ### Required services
 
-The later stages of the ETL pipeline involve interacting with services
-defined in the parent directory to this one. The `backend` service acts as an
-intermediary to two databases, a `postgreSQL` and a `mysql` instance, known as
-the `db` and `tiles-db` services respectively.
+The last two stages of the ETL pipeline (ingestion and metadata creation)
+involve interacting with services defined in the parent directory to this one.
+
+The `backend` service acts as an intermediary to two databases, a `postgreSQL`
+and a `mysql` instance, known as the `db` and `tiles-db` services respectively.
 
 To bring up these services, refer to the [readme](../README.md) in the parent
 directory for a full explanation of their required env files, etc., but briefly:
@@ -63,6 +64,11 @@ directory for a full explanation of their required env files, etc., but briefly:
 ```bash
 docker compose -f docker-compose-dev.yaml up db tiles-db backend
 ```
+
+If you are creating metadata records (the final step) you will also need a
+[frontend development server](https://github.com/nismod/irv-frontend) or
+traefik to act as a reverse proxy to redirect requests for
+`GATEWAY_HOST:GATEWAY_PORT/api/<path>` to `backend:8888/<path>`.
 
 ### Awkward files
 
@@ -103,9 +109,9 @@ PGDATABASE=global
 PGUSER=docker
 PGPASSWORD=docker
 
-# connecting to `backend`
-BE_HOST=localhost
-BE_PORT=8888
+# ultimately connecting to `backend`, but via frontend dev proxy server or `traefik`
+GATEWAY_HOST=localhost
+GATEWAY_PORT=5173
 BE_API_TOKEN=test  # required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
 
 # data downloading
