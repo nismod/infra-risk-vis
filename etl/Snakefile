@@ -7,11 +7,11 @@ use rule * from aqueduct as aqueduct_*
 ruleorder: aqueduct_POST_metadata_to_backend > POST_metadata_to_backend
 ruleorder: aqueduct_ingest_rasters > ingest_rasters
 
-module esa_land_cover:
-    snakefile: "pipelines/esa_land_cover/rules.smk"
-use rule * from esa_land_cover as esa_land_cover_*
-ruleorder: esa_land_cover_download_300m_2020_from_CDS > clip_raster
-ruleorder: esa_land_cover_ingest_categorical_raster > ingest_rasters
+module land_cover:
+    snakefile: "pipelines/land_cover/rules.smk"
+use rule * from land_cover as land_cover_*
+ruleorder: land_cover_download_300m_2020_from_CDS > clip_raster
+ruleorder: land_cover_ingest_categorical_raster > ingest_rasters
 
 module exposure_nature:
     snakefile: "pipelines/exposure_nature/rules.smk"
@@ -55,7 +55,7 @@ include: "database.smk"
 # datasets the `all` target rule will expand to
 ALL_DATASETS = (
     "aqueduct",
-    "esa_land_cover",
+    "land_cover",
     "exposure_nature",
     "gem_earthquake",
     "ghsl_buildings",
