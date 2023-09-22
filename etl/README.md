@@ -103,9 +103,9 @@ PGDATABASE=global
 PGUSER=docker
 PGPASSWORD=docker
 
-# connecting to `backend`
-BE_HOST=localhost
-BE_PORT=8888
+# ultimately connecting to `backend`, but via frontend dev proxy server or `traefik`
+GATEWAY_HOST=localhost
+GATEWAY_PORT=5173
 BE_API_TOKEN=test  # required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
 
 # data downloading

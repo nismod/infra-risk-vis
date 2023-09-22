@@ -36,8 +36,8 @@ rule POST_metadata_to_backend:
         flag = "raster/metadata/isimip.flag"
     shell:
         """
-        http --check-status --follow POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.heat_metadata}
-        http --check-status --follow POST http://$BE_HOST:$BE_PORT/tiles/sources x-token:$BE_API_TOKEN < {input.drought_metadata}
+        http --check-status --follow POST http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources x-token:$BE_API_TOKEN < {input.heat_metadata}
+        http --check-status --follow POST http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources x-token:$BE_API_TOKEN < {input.drought_metadata}
 
         touch {output.flag}
         """
