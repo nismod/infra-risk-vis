@@ -15,9 +15,9 @@ API_TOKEN = getenv("API_TOKEN")
 # for examples check ./README.md
 DOMAIN_TO_DB_MAP = json.loads(getenv("DOMAIN_TO_DB_MAP", "{}"))
 
-# Pre-prepared ColorMaps (which map to rasters in a single database)
+# mysql_database_name: dict[raster_value: tuple[R, G, B, A]]
 CATEGORICAL_COLOR_MAPS = {
-    "esa_land_cover": {
+    "land_cover": {
         0: (0, 0, 0, 255),
         10: (255, 255, 100, 255),
         11: (255, 255, 100, 255),
