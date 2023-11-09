@@ -50,7 +50,7 @@ __pycache__
 
 # Docker and deployment
 envs/dev
-envs/prod
+envs/prod*
 
 # Terraform
 *.tfstate*
