@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 
 import { Assessment } from 'config/assessment/assessment';
 import { assessmentList, findIndexByID } from 'state/assessment';
-import { Alert } from '@mui/material';
+import { Alert, Typography } from '@mui/material';
 
 const baseStyle = {
   flex: 1,
@@ -88,10 +88,10 @@ export function AssessmentUpload() {
 
   return (
     <section className="container">
-      <h3>Import from file</h3>
+      <Typography variant="h2">Import from file</Typography>
       <div {...getRootProps({ className: 'dropzone', style })}>
         <input {...getInputProps()} />
-        <p style={{ margin: 0 }}>Drag an assessment file over this area, or click to select files</p>
+        <Typography variant="body2">Drag an assessment file over this area, or click to select files</Typography>
       </div>
       {error ? (
         <Alert

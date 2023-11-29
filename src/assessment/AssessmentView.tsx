@@ -44,14 +44,14 @@ export const AssessmentView = () => {
   );
   const createdAt = new Date(assessment.createdAt);
   return (
-    <>
+    <div className="centred">
       <Typography variant="caption" component="p">
         ID: {assessment.id}
       </Typography>
       <Typography variant="caption" component="p" sx={{ mb: 2 }}>
         Created: {createdAt.toLocaleString()}
       </Typography>
-      <h2>Sustainability Assessment</h2>
+      <Typography variant="h1">Sustainability Assessment</Typography>
 
       <form>
         <TextField
@@ -80,7 +80,7 @@ export const AssessmentView = () => {
             });
           }}
         />
-        <h3>Select Interventions</h3>
+        <Typography variant="h2">Select Interventions</Typography>
         <HelpNote>
           <p>
             Select one or more interventions for assessment. This will provide a template with some preset values for
@@ -128,7 +128,7 @@ export const AssessmentView = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        <h3>Intervention Options</h3>
+        <Typography variant="h2">Intervention Options</Typography>
         <HelpNote>
           <p>The table below shows the interventions that have been selected for evaluation.</p>
           <p>
@@ -200,7 +200,7 @@ export const AssessmentView = () => {
           </Table>
         </TableContainer>
 
-        <h3>Scenarios</h3>
+        <Typography variant="h2">Scenarios</Typography>
         <HelpNote>
           <p>The table below shows the scenarios that have been selected for evaluation.</p>
           <p>
@@ -273,7 +273,7 @@ export const AssessmentView = () => {
           </Table>
         </TableContainer>
 
-        <h3>Impacts</h3>
+        <Typography variant="h2">Impacts</Typography>
         <HelpNote>
           <p>
             The table below gives a summary of the indicator values chosen, averaging the effects of interventions and
@@ -339,6 +339,6 @@ export const AssessmentView = () => {
           Discard
         </Button>
       </Stack>
-    </>
+    </div>
   );
 };

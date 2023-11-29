@@ -22,7 +22,7 @@ interface MapViewProps {
 const SidebarLayout = ({ top, bottom, left, right, width, children }) => (
   <Box
     position="absolute"
-    top={globalStyleVariables.navbarHeight + top}
+    top={top}
     bottom={bottom}
     left={left}
     right={right}
@@ -65,7 +65,7 @@ export const MapPage: FC<MapViewProps> = ({ view }) => {
           <SidebarContent />
         </ErrorBoundary>
       </SidebarLayout>
-      <Box position="absolute" overflow="clip" top={globalStyleVariables.navbarHeight} left={0} right={0} bottom={0}>
+      <Box position="absolute" overflow="clip" top={0} left={0} right={0} bottom={0}>
         <ErrorBoundary message="There was a problem displaying the map." justifyErrorContent="center">
           <MapView />
         </ErrorBoundary>
