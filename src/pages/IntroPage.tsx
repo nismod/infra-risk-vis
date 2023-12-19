@@ -60,6 +60,71 @@ export const IntroPage = () => (
         government bodies.
       </p>
 
+      <Typography variant="h2">Technical Reports</Typography>
+
+      <p>
+        This is the decision support tool produced as part of project HVT043, “Decision Support Systems for Resilient
+        Strategic Transport Networks in Low Income Countries”. It is built around an interactive web platform and aims
+        to support investment decisions and options selection for long distance strategic land transport networks
+        exposed to climate risks. It is the first multi-state transport infrastructure decision support system in a
+        low-income country context, based on a case study region covering Uganda, Zambia, Kenya and Tanzania.
+      </p>
+      <p>
+        The summary and final reports provide an overview of the research findings underpinning the decision support
+        tool which has been developed during the project. The underlying research has focused on developing a range of
+        future background scenarios for transport development in the case study region, identifying and assembling
+        datasets which form the basis for an assessment of transport resilience and sustainability.
+      </p>
+      <p>
+        Data requirements, methodologies, related frameworks and example results for the underlying research are
+        presented throughout the report, which also summarises the development of the decision support tool and provides
+        a case study example based on a road enhancement project in Kenya. The case study was one of five identified in
+        discussions during stakeholder workshops. Details of the three sets of online workshops are provided, as well as
+        an overview of the four in-country demonstration workshops carried out in September 2022.
+      </p>
+      <ul>
+        <li>
+          Summary report{' '}
+          <a
+            href="https://transport-links.com/hvt-publications/summary-report-decision-support-systems-for-resilient-strategic-transport-networks-in-low-income-countries"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            [external]
+          </a>
+          ,{' '}
+          <a href="/summary-report-decision-support-systems-for-resilient-strategic-transport-networks-in-low-income-countries.pdf">
+            [pdf]
+          </a>
+        </li>
+
+        <li>
+          Final report{' '}
+          <a
+            href="https://transport-links.com/hvt-publications/final-report-decision-support-systems-for-resilient-strategic-transport-networks-in-low-income-countries"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            [external]
+          </a>
+          ,{' '}
+          <a href="/final-report-decision-support-systems-for-resilient-strategic-transport-networks-in-low-income-countries.pdf">
+            [pdf]
+          </a>
+        </li>
+        <li>
+          User guide{' '}
+          <a
+            href="https://transport-links.com/hvt-publications/sustainability-and-risk-analysis-tool-user-guide"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            [external]
+          </a>
+          , <a href="sustainability-and-risk-analysis-tool-user-guide.pdf">[pdf]</a>
+        </li>
+      </ul>
+
       <Typography variant="h2">Funding and support</Typography>
 
       <p>
