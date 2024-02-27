@@ -25,7 +25,7 @@ services:
 
   web-server:
     # TODO: update tag to 'latest' when irv-frontend publication workflow is updated
-    image: ghcr.io/nismod/irv-frontend:0.21
+    image: ghcr.io/nismod/irv-frontend:0.24
     profiles: ["web-server"]
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages

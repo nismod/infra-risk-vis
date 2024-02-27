@@ -30,7 +30,7 @@ services:
     mem_limit: "250M"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.21
+    image: ghcr.io/nismod/irv-frontend:0.24
     restart: always
     expose:
       - "80"
