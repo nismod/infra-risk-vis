@@ -19,6 +19,13 @@ use rule * from exposure_nature as exposure_nature_*
 
 # gem_earthquake has no dataset specific rules defined
 
+module dem:
+    snakefile: "pipelines/dem/rules.smk"
+    config: config
+use rule * from dem as dem_*
+ruleorder: dem_set_zero_to_no_data > set_zero_to_no_data
+ruleorder: dem_clip_raster > clip_raster
+
 module iris:
     snakefile: "pipelines/iris/rules.smk"
 use rule * from iris as iris_*
@@ -64,6 +71,7 @@ ALL_DATASETS = (
     "jrc_pop",
     "storm",
     "traveltime_to_healthcare",
+    "dem",
 )
 
 # prefix any shell blocks with these statements
