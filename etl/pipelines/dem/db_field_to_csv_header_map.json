@@ -1,4 +1,5 @@
 {
   "type": "type",
-  "derivative": "derivative"
+  "derivative": "derivative",
+  "file_basename": "key"
 }
