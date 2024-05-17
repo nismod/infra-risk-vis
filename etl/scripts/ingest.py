@@ -7,12 +7,12 @@ from copy import copy
 import csv
 import json
 import os
-import sys
-from typing import Any, Dict, List, OrderedDict, Sequence
+from typing import Any, List, OrderedDict, Sequence
 import argparse
 import traceback
-import pymysql
 
+import psycopg2 as psycopg
+from psycopg2 import sql
 import tqdm
 import terracotta
 from terracotta.exceptions import InvalidDatabaseError
@@ -62,7 +62,7 @@ parser.add_argument(
 parser.add_argument(
     "--categorical_key_values_json_path",
     type=str,
-    help='Path to valid JSON file containing key:value mapping for the categorical raster.  NOTE: this will be loaded as an OrderedDict - so the key ordering will be maintained for DB usage.',
+    help="Path to valid JSON file containing key:value mapping for the categorical raster.  NOTE: this will be loaded as an OrderedDict - so the key ordering will be maintained for DB usage.",
 )
 parser.add_argument(
     "--tile_keys_path",
@@ -75,7 +75,7 @@ parser.add_argument(
     help=(
         'Path to JSON file with map of DB Keys to metadata.CSV column names (must contain keys: "file_basename" and "type"), e.g. '
         '{"file_basename": "key", "type": "hazard", "rp": "rp", "rcp": "rcp", "epoch": "epoch", "gcm": "gcm"} '
-    )
+    ),
 )
 parser.add_argument(
     "--database_name",
@@ -83,10 +83,14 @@ parser.add_argument(
     help="Name of the output database (will be created if it doesnt exist)",
 )
 parser.add_argument(
-    "--local_raster_base_path", type=str, help="Path to the raster file as far as this script is concerned"
+    "--local_raster_base_path",
+    type=str,
+    help="Path to the raster file as far as this script is concerned",
 )
 parser.add_argument(
-    "--db_raster_base_path", type=str, help="Path to the raster file as the tileserver sees it, stored in terracotta database"
+    "--db_raster_base_path",
+    type=str,
+    help="Path to the raster file as the tileserver sees it, stored in terracotta database",
 )
 
 
@@ -126,38 +130,11 @@ def _drop_db(db_name: str) -> None:
     """
     Drop the given database - must have root perms
     """
-    import pymysql
-
     tc_settings = terracotta.get_settings()
-    mysql_uri = tc_settings.DRIVER_PATH
-    if not "mysql://" in mysql_uri:
-        raise Exception("can only drop databaess from mysql")
-    parts = mysql_uri.replace("mysql://", "").split("@")
-    host = parts[1]
-    username, password = parts[0].split(":")
-    # Connect to the database
-    connection = pymysql.connect(
-        host=host,
-        user=username,
-        password=password,
-        database="mysql",
-        charset="utf8mb4",
-        cursorclass=pymysql.cursors.DictCursor,
-    )
-
-    try:
-        with connection:
-            with connection.cursor() as cursor:
-                # Create a new record
-                sql = f"DROP DATABASE {db_name}"
-                cursor.execute(sql)
-            connection.commit()
-            print(f"{db_name=} deleted.")
-    except pymysql.err.OperationalError as e:
-        if str(pymysql.constants.ER.DB_DROP_EXISTS) in repr(e):
-            print(f"{db_name=} did not exist, couldn\'t delete.")
-        else:
-            raise e
+    db_uri = tc_settings.DRIVER_PATH
+    with psycopg.connect(db_uri) as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql.SQL("DROP DATABASE {}").format(sql.Identifier(db_name)))
 
 
 def _create_db(db_name: str, driver: terracotta, keys: Sequence[str]) -> Any:
@@ -167,26 +144,12 @@ def _create_db(db_name: str, driver: terracotta, keys: Sequence[str]) -> Any:
     try:
         print(f"Creating DB at path with keys {keys}")
         driver.create(keys)
-        print(f"Create DB success")
+        print("Create DB success")
     except InvalidDatabaseError as err:
         if "database exists" in traceback.format_exc():
             print(f"Database {db_name} already exists - skipped create")
         else:
-            raise
-
-
-def _build_mysql_driver_path(database: str, mysql_uri: str) -> str:
-    """
-    Build the full MySQL driver path for Terracotta using URI and database
-    """
-    return mysql_uri + "/" + database
-
-
-def _build_sqlite_driver_path(database: str, path: str) -> str:
-    """
-    Build the full MySQL driver path for Terracotta using URI and database
-    """
-    return os.path.join(path, database + ".sqlite")
+            raise err
 
 
 def _setup_driver(db_name: str) -> Any:
@@ -195,10 +158,10 @@ def _setup_driver(db_name: str) -> Any:
     """
     tc_settings = terracotta.get_settings()
     print(f"Using TC Settings: {tc_settings}")
-    if tc_settings.DRIVER_PROVIDER == "mysql":
-        tc_driver_path = _build_mysql_driver_path(db_name, tc_settings.DRIVER_PATH)
-    else:
-        tc_driver_path = _build_sqlite_driver_path(db_name, "/data/aqueduct")
+    assert (
+        tc_settings.DRIVER_PROVIDER == "postgresql"
+    ), "Expect terracotta to use postgres driver"
+    tc_driver_path = f"{tc_settings.DRIVER_PATH}/{db_name}"
     print(f"TC Driver Path: {tc_driver_path}")
     driver = terracotta.get_driver(tc_driver_path, provider=tc_settings.DRIVER_PROVIDER)
     return driver
@@ -264,7 +227,10 @@ def _load_single_categorical(
         print(f"Inserting categorical raster: {os.path.basename(input_raster_fpath)}")
         db_filepath = f"{db_raster_base_path}/{os.path.basename(input_raster_fpath)}"
         driver.insert(
-            dict(ordered_key_values), input_raster_fpath, metadata=metadata, override_path=db_filepath
+            dict(ordered_key_values),
+            input_raster_fpath,
+            metadata=metadata,
+            override_path=db_filepath,
         )
         print(f"Inserted: {os.path.basename(input_raster_fpath)}")
     print("Completed categorical single ingest")
@@ -320,7 +286,11 @@ def ingest_from_csv(
                     )
                     continue
                 else:
-                    driver.insert(raster["key_values"], raster["path"], override_path=raster["db_path"])
+                    driver.insert(
+                        raster["key_values"],
+                        raster["path"],
+                        override_path=raster["db_path"],
+                    )
             except Exception as err:
                 print(
                     "raster {} failed ingest (skipping) due to {}".format(
@@ -368,7 +338,7 @@ def _parse_tile_keys(tile_key_path: str) -> List[str]:
 
 def _parse_ordered_key_values(json_filepath: str) -> OrderedDict:
     """
-    Parse JSON file into Ordered Dict
+    Parse JSON file into OrderedDict
     """
     import collections
 
@@ -379,9 +349,11 @@ def _parse_ordered_key_values(json_filepath: str) -> OrderedDict:
 
 
 def _validate_keys_and_map(tile_keys: List[str], csv_key_column_map: dict):
-    if not "file_basename" in csv_key_column_map.keys():
-        raise Exception("DB field to CSV column name mapping requires 'file_basename' key")
-    if not "type" in csv_key_column_map.keys():
+    if "file_basename" not in csv_key_column_map.keys():
+        raise Exception(
+            "DB field to CSV column name mapping requires 'file_basename' key"
+        )
+    if "type" not in csv_key_column_map.keys():
         raise Exception("DB field to CSV column name mapping requires 'type' key")
     _map = copy(csv_key_column_map)
     _map.pop("file_basename")
@@ -392,13 +364,18 @@ def _validate_keys_and_map(tile_keys: List[str], csv_key_column_map: dict):
 if __name__ == "__main__":
     args = parser.parse_args()
     if args.operation == "load_csv":
-        csv_key_column_map: dict[str, str] = _parse_csv_key_column_map(args.csv_to_db_field_map_path)
+        csv_key_column_map: dict[str, str] = _parse_csv_key_column_map(
+            args.csv_to_db_field_map_path
+        )
         # Ensure keys in map match tile_keys
         tile_keys: list[str] = _parse_tile_keys(args.tile_keys_path)
         _validate_keys_and_map(tile_keys, csv_key_column_map)
         print(f"parsed csv_key_column_map successfully as {csv_key_column_map}")
         raster_files = load_csv(
-            args.input_csv_filepath, args.local_raster_base_path, args.db_raster_base_path, csv_key_column_map
+            args.input_csv_filepath,
+            args.local_raster_base_path,
+            args.db_raster_base_path,
+            csv_key_column_map,
         )
         ingest_from_csv(args.database_name, tile_keys, raster_files)
     elif args.operation == "delete_database_entries":
@@ -433,7 +410,9 @@ if __name__ == "__main__":
                 args.categorical_csv_label_column,
                 args.categorical_csv_value_column,
             )
-            ordered_key_values = _parse_ordered_key_values(args.categorical_key_values_json_path)
+            ordered_key_values = _parse_ordered_key_values(
+                args.categorical_key_values_json_path
+            )
             _load_single_categorical(
                 args.database_name,
                 args.categorical_input_raster_filepath,
