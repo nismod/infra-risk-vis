@@ -7,5 +7,11 @@ rule download_raw_data:
         requested_raster = "raster/raw/storm/{KEY}.tif",
     shell:
         """
-        zenodo_get --record=7438145 --output-dir=$(dirname {output.requested_raster})
+        OUTPUT_DIR=$(dirname {output.requested_raster})
+
+        pushd $OUTPUT_DIR
+            zenodo_get -w links.txt --record=7438145
+            wget -nc -i links.txt
+            md5sum -c md5sums.txt
+        popd
         """
