@@ -84,7 +84,6 @@ rule cloud_optimise_raster:
     resources:
         disk_mb=100,
         mem_mb=2000,
-    threads: 2
     priority:
         90,
     shell:
@@ -93,7 +92,7 @@ rule cloud_optimise_raster:
             -o $(dirname {output}) \
             --overwrite \
             --reproject \
-            --nproc {threads} \
+            --nproc -1 \
             --resampling-method nearest \
             {input}
         """
