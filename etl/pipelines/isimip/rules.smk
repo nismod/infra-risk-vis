@@ -1,22 +1,26 @@
 rule download:
     """
     Fetch our preprocessed data from zenodo.
-
-    N.B. Requesting any file will trigger a download of the whole archive
     """
     output:
-        "raster/raw/isimip/{KEY}.tif",
+        zip="raster/raw/isimip/lange2020_expected_occurrence.zip",
     shell:
         """
-        OUTPUT_DIR=$(dirname {output})
-        ARCHIVE=$OUTPUT_DIR/lange2020_expected_occurrence.zip
+        pushd $(dirname {output.zip})
+            zenodo_get -w links.txt --record=8147088
+            wget -nc -i links.txt
+            md5sum -c md5sums.txt
+        popd
+        """
 
-        zenodo_get --record=8147088 --output-dir=$OUTPUT_DIR
-
-        unzip $ARCHIVE -d $OUTPUT_DIR
-
-        mv $OUTPUT_DIR/data/* $OUTPUT_DIR
-        rm -r $OUTPUT_DIR/data
+rule unpack:
+    input:
+        zip=rules.download.output.zip,
+    output:
+        tiff="raster/raw/isimip/{KEY}.tif",
+    shell:
+        """
+        unzip -n {input.zip} $(basename {output.tiff}) -d $(dirname {output.tiff})
         """
 
 
