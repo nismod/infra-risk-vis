@@ -99,11 +99,20 @@ rule POST_metadata_to_backend:
         fluvial_metadata = "pipelines/aqueduct/metadata_fluvial.json",
         coastal_metadata = "pipelines/aqueduct/metadata_coastal.json",
     output:
-        flag = "raster/metadata/aqueduct.flag"
+        flag = touch("raster/metadata/aqueduct.flag")
     shell:
         """
-        http --check-status --follow POST http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources x-token:$BE_API_TOKEN < {input.fluvial_metadata}
-        http --check-status --follow POST http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources x-token:$BE_API_TOKEN < {input.coastal_metadata}
+        curl -X POST \
+            -H 'Content-Type: application/json' \
+            -H 'X-Token: $BE_API_TOKEN' \
+            -d @{input.fluvial_metadata} \
+            http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources
 
-        touch {output.flag}
+        curl -X POST \
+            -H 'Content-Type: application/json' \
+            -H 'X-Token: $BE_API_TOKEN' \
+            -d @{input.coastal_metadata} \
+            http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources
+
+        touch raster/metadata/aqueduct.flag
         """
