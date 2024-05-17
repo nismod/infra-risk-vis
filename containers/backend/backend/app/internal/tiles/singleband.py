@@ -27,7 +27,6 @@ SOFTWARE.
 """
 
 from typing import (
-    List,
     OrderedDict,
     Sequence,
     Mapping,
@@ -42,7 +41,6 @@ from typing import (
 import collections
 
 from terracotta import get_settings, get_driver, image, xyz
-from terracotta.profile import trace
 
 Number = TypeVar("Number", int, float)
 RGBA = Tuple[Number, Number, Number, Number]
@@ -54,11 +52,6 @@ def database_keys(tc_driver_path: str) -> OrderedDict:
     driver = get_driver(tc_driver_path, provider=settings.DRIVER_PROVIDER)
     return driver.get_keys()
 
-def all_datasets(tc_driver_path: str) -> dict:
-    """All datasets in the given database"""
-    settings = get_settings()
-    driver = get_driver(tc_driver_path, provider=settings.DRIVER_PROVIDER)
-    return driver.get_datasets()
 
 def all_datasets(tc_driver_path: str) -> dict:
     """All datasets in the given database"""

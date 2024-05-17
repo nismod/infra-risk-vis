@@ -1,6 +1,7 @@
 """
 Tile Service wrapping Terracotta Python API
 """
+
 from collections import OrderedDict
 from sys import getsizeof
 from typing import Any, BinaryIO, List, Tuple, Union
@@ -57,7 +58,6 @@ def _get_tiledb_keys(database: str) -> List[str]:
 def _get_singleband_image(
     database: str, keys: str, tile_xyz: Tuple[int, int, int] = None, options: dict = {}
 ) -> BinaryIO:
-
     """
     Generate a Singleband Tile
 
@@ -67,7 +67,7 @@ def _get_singleband_image(
 
     parsed_keys = _parse_keys(keys)
 
-    # Collect TC Driver path for MySQL
+    # Collect TC Driver path for terracotta db
     driver_path = build_driver_path(database)
 
     logger.debug(
@@ -149,7 +149,9 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
         dict(zip(keys, _values)) for _values in datasets.keys()
     ]
 
-    logger.debug(f"{source_db=} {domain=} {driver_path=} {datasets=} {keys=} {source_options=}")
+    logger.debug(
+        f"{source_db=} {domain=} {driver_path=} {datasets=} {keys=} {source_options=}"
+    )
 
     # optionally filter to a domain (type)
     if domain is not None:
@@ -260,7 +262,7 @@ async def insert_source_meta(
         # Check if the domain already exists
         if _domain_exists(db, source_meta.domain):
             raise DomainAlreadyExistsException()
-        values = source_meta.dict()
+        values = source_meta.model_dump()
         values.pop("id")
         values.pop("url_keys")
         stmt = sqlalchemy.insert(models.RasterTileSource).values(values)

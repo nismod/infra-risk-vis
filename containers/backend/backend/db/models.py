@@ -2,7 +2,7 @@
 SQL Alchemy Models for Backend
 """
 
-from sqlalchemy import ARRAY, ForeignKey, Integer, Column, String, JSON, Float
+from sqlalchemy import ForeignKey, Integer, Column, String, JSON, Float
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
