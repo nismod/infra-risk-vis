@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   traefik:
     image: "traefik:v2.9"
@@ -16,8 +14,8 @@ services:
       - "--providers.file.watch=true"
       - "--api.insecure=true"
     ports:
-      - "80:80"
-      - "8080:8080"
+      - "80"
+      - "8080"
     volumes:
       - "./containers/traefik/dev/configuration:/configuration"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -46,19 +44,9 @@ services:
     healthcheck:
       test: "exit 0"
 
-  tiles-db:
-    image: mysql:5.7.39
-    env_file:
-      - ./envs/dev/.mysql.env
-    ports:
-      - 3306:3306
-    volumes:
-      - ./tileserver/raster/db:/var/lib/mysql
-      - ./backup:/backup
-
   backend:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:1.1
+    image: ghcr.io/nismod/gri-backend:1.3
     volumes:
       - ./etl/raster/cog/:/data/
       - ./containers/backend/backend/:/code/backend/
@@ -155,7 +143,7 @@ services:
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   recreate-metadata-schema:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:1.1
+    image: ghcr.io/nismod/gri-backend:1.3
     profiles: ["recreate-metadata-schema"]
     volumes:
       - ./containers/backend/backend/db/models.py:/code/backend/db/models.py

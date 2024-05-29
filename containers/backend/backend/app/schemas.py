@@ -1,7 +1,6 @@
 from enum import Enum
-from typing import Any, Generic, List, Literal, Optional, TypeVar
-from pydantic import BaseModel, conint, root_validator, validator
-from pydantic.generics import GenericModel
+from typing import Generic, List, Optional, TypeVar
+from pydantic import BaseModel, ConfigDict, conint, validator
 
 
 class FeatureBase(BaseModel):
@@ -48,8 +47,7 @@ class ExpectedDamagesVariables(DataVariables):
 
 
 class ExpectedDamage(ExpectedDamagesDimensions, ExpectedDamagesVariables):
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Return Period Damages
@@ -71,8 +69,7 @@ class ReturnPeriodDamagesVariables(DataVariables):
 
 
 class ReturnPeriodDamage(ReturnPeriodDamagesDimensions, ReturnPeriodDamagesVariables):
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # NPV Damages
@@ -91,8 +88,7 @@ class NPVDamagesVariables(DataVariables):
 
 
 class NPVDamage(NPVDamagesDimensions, NPVDamagesVariables):
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Adaptation Options
@@ -132,14 +128,12 @@ class AdaptationCostBenefitRatioParameters(DataParameters):
 
 
 class Adaptation(AdaptationDimensions, AdaptationVariables):
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Features
 class FeatureOutBase(FeatureBase):
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class FeatureOut(FeatureOutBase):
@@ -162,15 +156,14 @@ class LayerSpec(BaseModel):
 SortFieldT = TypeVar("SortFieldT")
 
 
-class FeatureListItemOut(GenericModel, Generic[SortFieldT]):
+class FeatureListItemOut(BaseModel, Generic[SortFieldT]):
     id: int
     string_id: str
     layer: str
     bbox_wkt: str
     value: SortFieldT
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Feature Attributes Lookups
@@ -178,6 +171,7 @@ class FeatureListItemOut(GenericModel, Generic[SortFieldT]):
 AttributeT = TypeVar("AttributeT")
 
 AttributeLookup = dict[int, AttributeT]
+
 
 # Tile Server metadata
 class TileSourceMeta(BaseModel):
@@ -191,8 +185,7 @@ class TileSourceMeta(BaseModel):
     license: str
     variables: dict
 
-    class Config:
-        orm_mode = True  #
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TileSourceDomains(BaseModel):

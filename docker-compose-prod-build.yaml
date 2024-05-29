@@ -1,9 +1,6 @@
-version: "3.9"
-
 services:
-
   backend:
-    image: ghcr.io/nismod/gri-backend:1.1
+    image: ghcr.io/nismod/gri-backend:1.3
     build: ./containers/backend
 
   vector-tileserver:

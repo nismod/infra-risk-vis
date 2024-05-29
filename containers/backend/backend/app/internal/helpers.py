@@ -1,16 +1,17 @@
 """
 Singleton Helpers
 """
+
 import traceback
 
-from config import MYSQL_URI
+from config import TILEDB_URI
 
 
-def build_driver_path(database: str, mysql_uri: str = MYSQL_URI) -> str:
+def build_driver_path(database: str, tiledb_uri: str = TILEDB_URI) -> str:
     """
     Build the full MySQL driver path for Terracotta using URI and database
     """
-    return mysql_uri + "/" + database
+    return tiledb_uri + "/" + database
 
 
 def handle_exception(logger, err: Exception):

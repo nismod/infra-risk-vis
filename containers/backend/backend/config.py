@@ -4,18 +4,13 @@ Global Configuration
 
 from os import getenv
 import logging
-import json
 
 LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper())
 RASTER_BASE_PATH = getenv("RASTER_BASE_PATH", "/data")
-MYSQL_URI = getenv("MYSQL_URI")
+TILEDB_URI = getenv("TILEDB_URI")
 API_TOKEN = getenv("API_TOKEN")
 
-# Temporarily here until we can re-eng the UI for domain / DB switching from API
-# for examples check ./README.md
-DOMAIN_TO_DB_MAP = json.loads(getenv("DOMAIN_TO_DB_MAP", "{}"))
-
-# mysql_database_name: dict[raster_value: tuple[R, G, B, A]]
+# terracotta_database_name: dict[raster_value: tuple[R, G, B, A]]
 CATEGORICAL_COLOR_MAPS = {
     "land_cover": {
         0: (0, 0, 0, 255),

@@ -4,22 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gri-backend"
-version = "0.2.0"
+version = "0.3.0"
 description = "GRI API Backend"
 readme = "README.md"
 requires-python = ">=3.7"
-license = {text = "MIT"}
-classifiers = [
-    "Framework :: FastAPI",
-    "Programming Language :: Python :: 3",
-]
+license = { text = "MIT" }
+classifiers = ["Framework :: FastAPI", "Programming Language :: Python :: 3"]
 dependencies = [
     "fastapi==0.109.1",
     "geoalchemy2==0.12.5",
     "uvicorn==0.18.3",
     "psycopg2-binary==2.9.3",
     "fastapi-pagination==0.10.0",
-    "terracotta==0.7.5",
+    "terracotta==0.8.3",
     "sqlalchemy==1.4.41",
-    "pymysql==1.0.2"
 ]

@@ -1,0 +1,12 @@
+{
+  "source_db": "dem",
+  "global_type": "Exposure",
+  "domain": "dem",
+  "full_name": "DEM Slope and Elevation",
+  "description": "description",
+  "license": "license",
+  "variables": {
+    "type": "type",
+    "derivative": "derivative"
+  }
+}

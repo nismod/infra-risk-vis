@@ -1,14 +1,14 @@
 # Deploy
 
-The site runs on a single Linux virtual machine using docker compose.
+The site can run on a single Linux virtual machine using docker compose.
 
-The stack consists of five services:
+The stack consists of these services:
 
 - Web server (nginx)
 - Vector tileserver (tileserver-gl)
 - Backend / API (bespoke Python app inc. raster tileserver via Terracotta Python API)
-- Database (PostgreSQL with PostGIS)
-- Tiles Database (MySQL)
+- Database (PostgreSQL with PostGIS), which can be separately deployed on e.g.
+  AWS RDS.
 
 To build and deploy the site:
 
@@ -39,11 +39,11 @@ terraform plan  # to see what actions will be taken in detail
 terraform apply # rerun after any change to main.tf
 ```
 
+For reference, a terraform system description is kept in git history
+[here](https://github.com/nismod/infra-risk-vis/blob/5324ffe99a7ccc434566a5924c7a42e805d3ed1b/deploy/main.tf).
+
 `provision.sh` contains installation instructions for an Ubuntu 22.04 server to
 install docker and docker compose.
-
-`deploy.sh` uploads data to the server. It assumes that whoever runs the script
-has ssh/public key access to the server.
 
 ## Environment
 

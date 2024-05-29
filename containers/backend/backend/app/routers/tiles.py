@@ -1,17 +1,18 @@
 """
 Tile Service wrapping Terracotta Python API
 """
+
 from collections import OrderedDict
 from sys import getsizeof
 from typing import Any, BinaryIO, List, Tuple, Union
 import ast
 import inspect
-import itertools
 
 from fastapi import APIRouter, Depends, HTTPException, Response, Header
 from fastapi.logger import logger
 import sqlalchemy
 from starlette.responses import StreamingResponse
+from sqlalchemy import select, func
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from geoalchemy2 import functions
@@ -27,7 +28,7 @@ from app.exceptions import (
     DomainAlreadyExistsException,
     MissingExplicitColourMapException,
 )
-from config import API_TOKEN, DOMAIN_TO_DB_MAP, CATEGORICAL_COLOR_MAPS
+from config import API_TOKEN, CATEGORICAL_COLOR_MAPS
 
 
 router = APIRouter(tags=["tiles"])
@@ -40,11 +41,11 @@ def _parse_keys(keys: str) -> List:
     return [key for key in keys.split("/") if key]
 
 
-def _domain_from_keys(keys: str) -> str:
+def _domain_from_keys(keys: List[str]) -> str:
     """
     Retrieve domain from keys path
     """
-    return _parse_keys(keys)[0]
+    return keys[0]
 
 
 def _get_tiledb_keys(database: str) -> List[str]:
@@ -55,9 +56,11 @@ def _get_tiledb_keys(database: str) -> List[str]:
 
 
 def _get_singleband_image(
-    database: str, keys: str, tile_xyz: Tuple[int, int, int] = None, options: dict = {}
+    database: str,
+    keys: List[str],
+    tile_xyz: Tuple[int, int, int] = None,
+    options: dict = {},
 ) -> BinaryIO:
-
     """
     Generate a Singleband Tile
 
@@ -65,51 +68,44 @@ def _get_singleband_image(
     """
     from app.internal.tiles.singleband import singleband
 
-    parsed_keys = _parse_keys(keys)
-
-    # Collect TC Driver path for MySQL
+    # Collect TC Driver path for terracotta db
     driver_path = build_driver_path(database)
 
     logger.debug(
         "parsed_keys: %s, tile_xyz: %s, options: %s",
-        parsed_keys,
+        keys,
         tile_xyz,
         options,
     )
 
-    return singleband(driver_path, parsed_keys, tile_xyz=tile_xyz, **options)
-
-
-def _source_db_exists(source_db: str) -> bool:
-    """
-    Check whether the given source_db exists in the meta store
-    """
-    return source_db in DOMAIN_TO_DB_MAP.values()
+    return singleband(driver_path, keys, tile_xyz=tile_xyz, **options)
 
 
 def _domain_exists(db: Session, domain: str) -> bool:
     """
     Check whether the given domain exists in the meta store
     """
-    res = (
-        db.query(models.RasterTileSource)
-        .filter(models.RasterTileSource.domain == domain)
-        .all()
-    )
-    if res:
-        return True
-    return False
+    res = db.execute(
+        select(func.count("*"))
+        .select_from(models.RasterTileSource)
+        .where(models.RasterTileSource.domain == domain)
+    ).scalar_one()
+    return res == 1
 
 
-def _tile_db_from_keys(keys: List) -> str:
+def _tile_db_from_domain(db: Session, domain: str) -> str:
     """
     Query the name of the mysql database within-which the tiles reside
         using the first value of the path keys (which links to hazard-type in the UI)
         See: frontend/src/config/hazards/domains.ts
     """
-    domain = _domain_from_keys(keys)
-    # Should only return one entry
-    return DOMAIN_TO_DB_MAP[domain]
+    source_db = db.execute(
+        # Should only return one entry
+        select(models.RasterTileSource.source_db).where(
+            models.RasterTileSource.domain == domain
+        )
+    ).scalar_one()
+    return source_db
 
 
 def _source_options(source_db: str, domain: str = None) -> List[dict]:
@@ -149,7 +145,9 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
         dict(zip(keys, _values)) for _values in datasets.keys()
     ]
 
-    logger.debug(f"{source_db=} {domain=} {driver_path=} {datasets=} {keys=} {source_options=}")
+    logger.debug(
+        f"{source_db=} {domain=} {driver_path=} {datasets=} {keys=} {source_options=}"
+    )
 
     # optionally filter to a domain (type)
     if domain is not None:
@@ -179,7 +177,7 @@ async def get_all_tile_source_meta(
         all_meta = []
         for row in res:
             url_keys = _get_tiledb_keys(row.source_db)
-            meta = schemas.TileSourceMeta.from_orm(row)
+            meta = schemas.TileSourceMeta.model_validate(row)
             meta.url_keys = url_keys
             all_meta.append(meta)
         return all_meta
@@ -207,7 +205,7 @@ async def get_tile_source_meta(
             .one()
         )
         url_keys = _get_tiledb_keys(res.source_db)
-        meta = schemas.TileSourceMeta.from_orm(res)
+        meta = schemas.TileSourceMeta.model_validate(res)
         meta.url_keys = url_keys
         return meta
     except NoResultFound:
@@ -260,7 +258,7 @@ async def insert_source_meta(
         # Check if the domain already exists
         if _domain_exists(db, source_meta.domain):
             raise DomainAlreadyExistsException()
-        values = source_meta.dict()
+        values = source_meta.model_dump()
         values.pop("id")
         values.pop("url_keys")
         stmt = sqlalchemy.insert(models.RasterTileSource).values(values)
@@ -345,14 +343,15 @@ async def get_tile(
         ast.literal_eval(stretch_range) if stretch_range else "",
         explicit_color_map,
     )
+    parsed_keys = _parse_keys(keys)
+    domain = _domain_from_keys(parsed_keys)
     try:
-        source_db = _tile_db_from_keys(keys)
+        source_db = _tile_db_from_domain(db, domain)
         logger.debug("source DB for tile path: %s", source_db)
     except NoResultFound:
-        domain = _domain_from_keys(keys)
         raise HTTPException(
             status_code=404,
-            detail=f"no source database for the given domain {domain} could be found - was the source metadata loaded to PG?",
+            detail=f"No source database for the given domain {domain} could be found",
         )
     try:
         # Check the keys are appropriate for the given type
@@ -360,8 +359,8 @@ async def get_tile(
         if colormap:
             if colormap == "explicit":
                 # Check if we have an internal categorical colormap for this DB
-                if source_db in CATEGORICAL_COLOR_MAPS.keys():
-                    options["colormap"] = CATEGORICAL_COLOR_MAPS[source_db]
+                if domain in CATEGORICAL_COLOR_MAPS.keys():
+                    options["colormap"] = CATEGORICAL_COLOR_MAPS[domain]
                 elif not explicit_color_map:
                     raise MissingExplicitColourMapException()
                 else:
@@ -372,13 +371,9 @@ async def get_tile(
         if stretch_range:
             options["stretch_range"] = ast.literal_eval(stretch_range)
 
-        # Check the database exists
-        if not _source_db_exists(source_db):
-            raise SourceDBDoesNotExistException()
-
         # Generate the tile
         image = _get_singleband_image(
-            source_db, keys, [tile_x, tile_y, tile_z], options
+            source_db, parsed_keys, [tile_x, tile_y, tile_z], options
         )
         logger.debug(
             "tile image of size returned: %s, %s", getsizeof(image), type(image)
@@ -390,7 +385,7 @@ async def get_tile(
         handle_exception(logger, err)
         raise HTTPException(
             status_code=400,
-            detail=f"colormap=explicit requires explicit_color_map to be included",
+            detail="colormap=explicit requires explicit_color_map to be included",
         )
     except SourceDBDoesNotExistException as err:
         handle_exception(logger, err)

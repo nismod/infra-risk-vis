@@ -20,7 +20,7 @@ dependencies:
   - pip  # python package management
   - pip:
       # this version not available on conda-forge
-      - terracotta==0.7.5  # raster tile server and processing utilities
+      - terracotta==0.8.3  # raster tile server and processing utilities
   - pyarrow  # performant tabular data
   - pymysql  # mysql python client, for raster ingestion
   - psycopg2-binary  # postgreSQL python client, for raster metadata

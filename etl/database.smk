@@ -1,5 +1,4 @@
-"""
-These rules define interactions with the MySQL and postgreSQL databases that
+"""These rules define interactions with the terracotta metadata databases that
 store raster / tileset state.
 
 N.B. Dataset specific rules are located in pipelines/<dataset>.
@@ -9,11 +8,8 @@ import pandas as pd
 
 
 rule ingest_rasters:
-    """
-    Create a dataset table in the MySQL database and ingest the cloud-optimised
-    rasters to Terracotta.
-
-    Requires the `tiles-db` MySQL service to be running.
+    """Create a dataset table in the terracotta metadata database and ingest the
+    cloud-optimised rasters.
     """
     input:
         lambda wildcards: expand(
@@ -42,17 +38,20 @@ rule ingest_rasters:
 
 
 rule POST_metadata_to_backend:
-    """
-    Requires the `backend` and postgreSQL `db` services to be running.
+    """Requires the `backend` and `db` services to be running.
     """
     input:
         ingest_flag = "raster/ingest/{DATASET}.flag",
         metadata = "pipelines/{DATASET}/metadata.json",
     output:
-        flag = "raster/metadata/{DATASET}.flag"
+        touch("raster/metadata/{DATASET}.flag")
     shell:
         """
-        http --check-status --follow POST http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources x-token:$BE_API_TOKEN < {input.metadata}
+        curl -X POST \
+            -H 'Content-Type: application/json' \
+            -H "X-Token: $BE_API_TOKEN" \
+            -d @{input.metadata} \
+            http://$GATEWAY_HOST:$GATEWAY_PORT/api/tiles/sources
 
-        touch {output.flag}
+        touch raster/metadata/{wildcards.DATASET}.flag
         """
