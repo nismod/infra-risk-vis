@@ -359,8 +359,8 @@ async def get_tile(
         if colormap:
             if colormap == "explicit":
                 # Check if we have an internal categorical colormap for this DB
-                if source_db in CATEGORICAL_COLOR_MAPS.keys():
-                    options["colormap"] = CATEGORICAL_COLOR_MAPS[source_db]
+                if domain in CATEGORICAL_COLOR_MAPS.keys():
+                    options["colormap"] = CATEGORICAL_COLOR_MAPS[domain]
                 elif not explicit_color_map:
                     raise MissingExplicitColourMapException()
                 else:
