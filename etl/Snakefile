@@ -23,7 +23,6 @@ module dem:
     snakefile: "pipelines/dem/rules.smk"
     config: config
 use rule * from dem as dem_*
-ruleorder: dem_set_zero_to_no_data > set_zero_to_no_data
 ruleorder: dem_clip_raster > clip_raster
 
 module iris:
