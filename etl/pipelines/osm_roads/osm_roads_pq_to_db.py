@@ -1,26 +1,18 @@
 """Load network features from a single source file-layer to database.
 """
+
 import os
-import sys
-from typing import List
-import warnings
 from datetime import datetime
 
-warnings.filterwarnings("error")
-
 import pandas as pd
-from sqlalchemy import delete, insert
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import exists
-import geopandas
 from pyarrow import dataset
 import pyarrow.dataset as ds
 from shapely import wkb
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from common.db.database import SessionLocal
-from common.db.models import Feature, FeatureLayer, ReturnPeriodDamage, ExpectedDamage
+from backend.db.database import SessionLocal
+from backend.db.models import Feature, FeatureLayer, ReturnPeriodDamage, ExpectedDamage
 
 
 def load_pq(pq_fpath: str) -> dataset:

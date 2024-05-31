@@ -1,7 +1,5 @@
 """Load network features from a single source file-layer to database.
 """
-import os
-import sys
 
 import pandas
 from sqlalchemy import delete
@@ -9,10 +7,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import exists
 import geopandas
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from common.db.database import SessionLocal
-from common.db.models import Feature, FeatureLayer
+from backend.db.database import SessionLocal
+from backend.db.models import Feature, FeatureLayer
 
 
 def yield_features(layer, network_tile_layer):
