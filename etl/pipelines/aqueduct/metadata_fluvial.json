@@ -1,15 +1,9 @@
 {
-	"source_db": "aqueduct",
-	"global_type": "Hazard",
-	"domain": "fluvial",
-	"full_name": "Hazard Aqueduct - Fluvial",
-	"description": "description",
-	"license": "license",
-	"variables": {
-    	"type": "hazard",
-		"rp": "rp",
-		"rcp": "rcp",
-		"epoch": "epoch",
-		"gcm": "gcm"
-	}
+  "source_db": "aqueduct",
+  "global_type": "Hazard",
+  "domain": "fluvial",
+  "full_name": "Hazard Aqueduct - Fluvial",
+  "description": "description",
+  "license": "license",
+  "keys": ["hazard", "rp", "rcp", "epoch", "gcm"]
 }

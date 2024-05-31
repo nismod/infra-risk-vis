@@ -5,8 +5,5 @@
   "full_name": "DEM Slope and Elevation",
   "description": "description",
   "license": "license",
-  "variables": {
-    "type": "type",
-    "derivative": "derivative"
-  }
+  "keys": ["derivative"]
 }

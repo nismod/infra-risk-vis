@@ -5,7 +5,5 @@
   "full_name": "ESA Land Cover",
   "description": "description",
   "license": "license",
-  "variables": {
-    "type": "land_cover"
-  }
+  "variables": ["land_cover"]
 }

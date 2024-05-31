@@ -5,8 +5,5 @@
   "full_name": "Building Exposure",
   "description": "description",
   "license": "license",
-  "variables": {
-    "type": "type",
-    "subtype": "subtype"
-  }
+  "keys": ["subtype"]
 }

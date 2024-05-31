@@ -1,15 +1,9 @@
 {
   "source_db": "isimip",
-  "global_type": "Hazard", 
-  "domain": "drought", 
-  "full_name": "Hazard Drought", 
-  "description": "description", 
-  "license": "license", 
-  "variables": {
-    "type": "hazard",
-    "metric": "metric",
-    "rcp": "rcp",
-    "epoch": "epoch",
-    "gcm": "gcm"
-  }
+  "global_type": "Hazard",
+  "domain": "drought",
+  "full_name": "Hazard Drought",
+  "description": "description",
+  "license": "license",
+  "keys": ["hazard", "metric", "rcp", "epoch", "gcm"]
 }
