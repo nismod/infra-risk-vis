@@ -4,8 +4,8 @@ Tile Service wrapping Terracotta Python API
 
 from collections import OrderedDict
 from sys import getsizeof
-from typing import Any, BinaryIO, List, Tuple, Union
-import ast
+from typing import BinaryIO, List, Tuple, Union
+import json
 import inspect
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -270,7 +270,7 @@ async def get_tile(
         "tile path %s, colormap: %s, stretch_range: %s, explicit_color_map: %s",
         keys,
         colormap,
-        ast.literal_eval(stretch_range) if stretch_range else "",
+        json.loads(stretch_range) if stretch_range else "",
         explicit_color_map,
     )
     parsed_keys = _parse_keys(keys)
@@ -295,11 +295,11 @@ async def get_tile(
                     raise MissingExplicitColourMapException()
                 else:
                     # Use the provided categorical colormap
-                    options["colormap"] = ast.literal_eval(explicit_color_map)
+                    options["colormap"] = json.loads(explicit_color_map)
             else:
                 options["colormap"] = colormap
         if stretch_range:
-            options["stretch_range"] = ast.literal_eval(stretch_range)
+            options["stretch_range"] = json.loads(stretch_range)
 
         # Generate the tile
         image = _get_singleband_image(

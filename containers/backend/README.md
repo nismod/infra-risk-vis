@@ -1,19 +1,21 @@
 # GRI Infra-Risk-Vis API
 
-REST API, written in Python, includes database definition, etl and Tileserver.
+REST API, written in Python, includes database definition and Tileserver.
 
-Features API leverages PostGres (+PostGIS)
+The features API is a light wrapper over tables stored in Postgres, using the
+PostGIS extension for spatial data types.
 
-Tiles API leverages Terracotta Python API and MySQL.
+The tiles API calls into Terracotta to read cloud-optimised geotiffs and serve
+PNG tiles.
 
-Tiles must be loaded separately - there are no endpoints for ingesting data at present.
+Tiles must be loaded separately - there are no endpoints for ingesting data.
 
 ## Installation / Build
 
 ### Docker
 
 ```bash
-docker-compose -f docker-compose-[dev / prod / deploy].yaml build backend
+docker-compose -f docker-compose-prod-build.yaml build backend
 ```
 
 ### Running Locally
@@ -26,7 +28,6 @@ uvicorn app.main:app --port 8888 --reload
 ## Configuration
 
 Environment variables:
-
 
 - use `.env` to define environment variables
 - use [`PG*`](https://www.postgresql.org/docs/current/libpq-envars.html) to
@@ -41,10 +42,8 @@ PGPASSWORD=
 PGHOST=
 
 # Tiles API
-RASTER_BASE_PATH=/data # Path at-which raster tiles can be found (must match the MySQL Tiles-db loaded path)
-TC_DRIVER_PATH=mysql://foo:bar@tiles-db # Tiles-db MySQL Host (__NOTE__: Does not require database in the URL - this is parsed internally.)
-TC_SQL_USER=foo
-TC_SQL_PASSWORD=bar
+RASTER_BASE_PATH=/data # Path at-which raster tiles can be found (must match the Tiles-db loaded path)
+TC_DRIVER_PATH=postgresql://foo:bar@tiles-db # Tiles-db MySQL Host (__NOTE__: Does not require database in the URL - this is parsed internally.)
 TC_ALLOWED_ORIGINS_METADATA='["*"]'
 TC_ALLOWED_ORIGINS_TILES='["*"]'
 TC_PNG_COMPRESS_LEVEL=0
@@ -54,27 +53,38 @@ TC_REPROJECTION_METHOD="nearest"
 
 ### Tileserver
 
-Tileserver endpoints `/tiles/*` require Cloud-Optimised Tiffs to be mounted at the same path as they have been ingested into the MySQL database.
+Tileserver endpoints `/tiles/*` require Cloud-Optimised GeoTIFFs to be mounted
+at the same path as they have been ingested into the database. The tileserver
+endpoints require raster data (tiffs) to have been pre-loaded using the `etl`
+pipelines.
 
-(Tileserver endpoints require Tiffs to have been pre-loaded into the given MySQL DB)
+The base path for rasters must be set using the environment variable
+`RASTER_BASE_PATH`
 
-The base-path for rasters must be set using the environment variable `RASTER_BASE_PATH`
+**NOTE**: TC_DRIVER_PATH is not used internally - for Terracotta the path is
+built programatically based on the URL
 
-__NOTE__: TC_DRIVER_PATH is not used internally - for Terracotta the path is built programatically based on the URL
-
-Tileserver also provides a meta store for information about each tile database, with associated CRUD operations for metadata management.
+Tileserver also provides information about each tile database. This metadata is
+stored in the `raster_tile_sources` table in the main `global_prod`/`global_dev`
+database.
 
 #### Colormaps
 
-Colormaps for use with Terracotta can be generated using the `/colormap` endpoint.
+Colormaps for use with Terracotta can be generated using the `/colormap`
+endpoint.
 
 #### Categorical Data
 
-Categorical rasters are supported.  Categorical colormaps can either be included in the `config.py`, or passed with each tile request, as per the Terracotta documentation:  https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
+Categorical rasters are supported. Categorical colormaps can either be included
+in the `config.py`, or passed with each tile request, as per the Terracotta
+documentation:
+https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
 
-__NOTE__: Only `{pixel :(RGBA)}` explicit color maps are supported in either the request or `config,py`
+**NOTE**: Only `{pixel :(RGBA)}` explicit color maps are supported in either the
+request or `config,py`
 
-If included in `config.py` the key must match an existing MySQL database, with pre-loaded categorical raster(s).
+If included in `config.py` the key must match an existing MySQL database, with
+pre-loaded categorical raster(s).
 
 e.g. for a `land_cover` database the entries would be similar to the following:
 
@@ -88,7 +98,10 @@ CATEGORICAL_COLOR_MAPS = {
 }
 ```
 
-__NOTE__: Large rasters can fail to load due to dropped MySQL connections to Cloud-hosts after metadata creation.  This appears to be a bug with the underlying library.  The fix to-date has been to load them locally and subsequently push the MySQL database to the Cloud host.
+**NOTE**: Large rasters can fail to load due to dropped MySQL connections to
+Cloud-hosts after metadata creation. This appears to be a bug with the
+underlying library. The fix to-date has been to load them locally and
+subsequently push the MySQL database to the Cloud host.
 
 #### Adding a Source to the Tileserver metastore
 

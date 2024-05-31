@@ -4,8 +4,6 @@ Backend Exceptions
 
 
 class GriException(Exception):
-    """Base"""
-
     pass
 
 

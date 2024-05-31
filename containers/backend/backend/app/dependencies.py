@@ -1,5 +1,3 @@
-from fastapi import Query
-from app import schemas
 from db.database import SessionLocal
 
 
