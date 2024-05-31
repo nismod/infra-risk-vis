@@ -54,7 +54,7 @@ rule ingest_categorical_raster:
     """
     input:
         raster = "raster/cog/land_cover/C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.tif",
-        script = "scripts/ingest.py",
+        script = "scripts/ingest_categorical.py",
         csv_colourmap = "pipelines/land_cover/colourmap.csv",
         tile_key_mapping = "pipelines/land_cover/tile_key_mapping.json",
     output:
