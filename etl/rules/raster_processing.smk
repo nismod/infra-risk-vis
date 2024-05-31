@@ -5,8 +5,6 @@ core of the raster processing pipeline.
 N.B. Dataset specific rules are located in pipelines/<dataset>.
 """
 
-from pipelines.helpers import gdalwarp_bounds
-
 
 rule set_zero_to_no_data:
     input:
@@ -66,6 +64,7 @@ rule clip_raster:
         """
         gdalwarp \
             -co "COMPRESS=LZW" \
+            -t_srs EPSG:4326 \
             -te {params.bounds} \
             -of GTiff \
             {input} \
@@ -92,7 +91,7 @@ rule cloud_optimise_raster:
             -o $(dirname {output}) \
             --overwrite \
             --reproject \
-            --nproc -1 \
+            --nproc 1 \
             --resampling-method nearest \
             {input}
         """
