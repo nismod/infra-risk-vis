@@ -4,32 +4,9 @@
 import csv
 import json
 from typing import Any, List
-import argparse
 
 import terracotta
 import tqdm
-
-parser = argparse.ArgumentParser(description="Terracotta Ingester")
-parser.add_argument(
-    "--csv",
-    type=str,
-    help="Path to the CSV file containing information for each raster",
-)
-parser.add_argument(
-    "--metadata",
-    type=str,
-    help="Path to JSON file containing metadata",
-)
-parser.add_argument(
-    "--local_path",
-    type=str,
-    help="Path to the raster file as far as this script is concerned",
-)
-parser.add_argument(
-    "--db_path",
-    type=str,
-    help="Path to the raster file as the tileserver sees it, stored in terracotta database",
-)
 
 
 def read_csv(
@@ -101,14 +78,23 @@ def ingest_files(db_name: str, keys: List[str], raster_files: List[dict]):
 
 
 if __name__ == "__main__":
-    args = parser.parse_args()
-    with open(args.metadata) as fh:
+    try:
+        metadata_path = snakemake.input.metadata
+        layers_path = snakemake.input.layers
+        flag = snakemake.output.flag
+    except NameError:
+        assert False, "Must be run from snakemake"
+
+    with open(metadata_path) as fh:
         metadata = json.load(fh)
 
     tile_keys: list[str] = metadata["keys"]
     raster_files = read_csv(
-        args.input_csv_filepath,
-        args.local_path,
-        args.db_path,
+        layers_path,
+        f"raster/cog/{metadata["domain"]}",
+        f"/data/{metadata["domain"]}",
     )
     ingest_files(metadata["source_db"], tile_keys, raster_files)
+
+    with open(flag, "w") as fh:
+        fh.write("Done")

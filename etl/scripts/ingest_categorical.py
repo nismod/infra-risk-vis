@@ -4,33 +4,9 @@
 import csv
 import json
 import os
-from typing import Any, List, OrderedDict
-import argparse
+from typing import OrderedDict
 
 import terracotta
-
-parser = argparse.ArgumentParser(description="Terracotta Ingester")
-
-parser.add_argument(
-    "--raster",
-    type=str,
-    help="Path to a categorical raster file being loaded",
-)
-parser.add_argument(
-    "--legend_csv",
-    type=str,
-    help="Absolute path to the CSV file containing legend information about a categorical raster being loaded",
-)
-parser.add_argument(
-    "--metadata",
-    type=str,
-    help="Path to valid JSON file containing key:value mapping for the categorical raster.",
-)
-parser.add_argument(
-    "--db_path",
-    type=str,
-    help="Path to the raster file as the tileserver sees it, stored in terracotta database",
-)
 
 
 def load_single_categorical(
@@ -97,18 +73,27 @@ def read_legend_csv(fpath: str) -> dict:
 
 
 if __name__ == "__main__":
-    args = parser.parse_args()
+    try:
+        metadata_path = snakemake.input.metadata
+        legend = snakemake.input.legend
+        raster = snakemake.input.raster
+        flag = snakemake.output.flag
+    except NameError:
+        assert False, "Must be run from snakemake"
 
     # Load and Parse the categorical CSV data
     categorical_map = read_legend_csv(
-        args.legend_csv,
+        legend,
     )
-    with open(args.metadata) as fh:
+    with open(metadata_path) as fh:
         metadata = json.load(fh)
 
     load_single_categorical(
-        args.raster,
-        args.db_path,
+        raster,
+        f"/data/{metadata["domain"]}",
         metadata["keys"],
         categorical_map,
     )
+
+    with open(flag, "w") as fh:
+        fh.write("Done")

@@ -134,7 +134,7 @@ if __name__ == "__main__":
         db.commit()
 
     with open(str(output), "w") as fh:
-        fh.write(f"Loaded to database.\n\n")
+        fh.write("Loaded to database.\n\n")
         fh.write(
             f"From:\n{get_network_layer_path(layer, analysis_data_dir)}|{layer.gpkg_layer}\n\n"
         )
