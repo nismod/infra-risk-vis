@@ -1,9 +1,0 @@
-{
-  "source_db": "isimip",
-  "global_type": "Hazard",
-  "domain": "extreme_heat",
-  "full_name": "Hazard Extreme Heat",
-  "description": "description",
-  "license": "license",
-  "keys": ["hazard", "metric", "rcp", "epoch", "gcm"]
-}

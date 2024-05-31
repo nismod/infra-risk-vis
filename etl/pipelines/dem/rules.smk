@@ -3,8 +3,6 @@
 Overrides generic raster processing rules to handle large DEM TIFFs.
 """
 
-from pipelines.helpers import gdalwarp_bounds
-
 rule download:
     output:
         "raster/raw/dem/dtm_elevation_merit.dem_m_250m_s0..0cm_2017_v1.0.tif",

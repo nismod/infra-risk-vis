@@ -1,9 +1,8 @@
 {
-  "source_db": "traveltime_to_healthcare",
-  "global_type": "Exposure",
   "domain": "traveltime_to_healthcare",
-  "full_name": "Travel Time to Healthcare",
-  "description": "description",
-  "license": "license",
-  "variables": ["subtype"]
+  "name": "Global maps of travel time to healthcare facilities",
+  "group": "Exposure",
+  "description": "Weiss, D.J., Nelson, A., Vargas-Ruiz, C.A. et al. Global maps of travel time to healthcare facilities. Nat Med 26, 1835–1838 (2020). https://doi.org/10.1038/s41591-020-1059-1",
+  "license": "CC-BY 4.0",
+  "keys": ["subtype"]
 }

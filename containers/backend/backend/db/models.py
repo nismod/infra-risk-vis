@@ -123,12 +123,11 @@ class RasterTileSource(Base):
 
     __tablename__ = "raster_tile_sources"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    source_db = Column(String, nullable=False)
-    global_type = Column(String, nullable=False)  # Hazard, Risk, Exposure, Adaptation
     # Domain of the TileSource (this is used to check which database a front-end call goes to)
     # Domains can only reside in a single database - we dont allow duplicates even between databases
     domain = Column(String, nullable=False, unique=True)
-    full_name = Column(String, nullable=False)
+    name = Column(String, nullable=False)
+    group = Column(String, nullable=False)  # Hazard, Risk, Exposure, Adaptation
     description = Column(String, nullable=True)
     license = Column(String, nullable=True)
-    variables = Column(JSONB)  # JSON of variables, their dimensions and defaults
+    keys = Column(JSONB)  # JSON list of terracotta/URL keys

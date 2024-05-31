@@ -54,21 +54,9 @@ rule ingest_categorical_raster:
     """
     input:
         raster = "raster/cog/land_cover/C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.tif",
-        script = "scripts/ingest_categorical.py",
-        csv_colourmap = "pipelines/land_cover/colourmap.csv",
-        tile_key_mapping = "pipelines/land_cover/tile_key_mapping.json",
+        legend = "pipelines/land_cover/colourmap.csv",
+        metadata = "pipelines/land_cover/metadata.json",
     output:
         flag = "raster/ingest/land_cover.flag"
-    shell:
-        """
-        python {input.script} load_single_categorical \
-            --categorical_legend_csv_filepath {input.csv_colourmap} \
-            --categorical_csv_label_column Label \
-            --categorical_csv_value_column Value \
-            --categorical_input_raster_filepath {input.raster} \
-            --categorical_key_values_json_path {input.tile_key_mapping} \
-            --database_name land_cover \
-            --db_raster_base_path /data/land_cover
-
-        touch {output.flag}
-        """
+    script:
+        "../../scripts/ingest_categorical.py"

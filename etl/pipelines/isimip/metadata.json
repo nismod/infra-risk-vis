@@ -1,0 +1,8 @@
+{
+  "domain": "isimip",
+  "name": "ISIMIP Extreme Heat and Drought",
+  "group": "Hazard",
+  "description": "Lange, S., Volkholz, J., Geiger, T., Zhao, F., Vega, I., Veldkamp, T., et al. (2020). Projecting exposure to extreme climate impact events across six event categories and three spatial scales. Earth's Future, 8, e2020EF001616. DOI 10.1029/2020EF001616",
+  "license": "CC0 1.0",
+  "keys": ["hazard", "metric", "rcp", "epoch", "gcm"]
+}

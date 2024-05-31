@@ -1,9 +1,8 @@
 {
-  "source_db": "ghsl_buildings",
-  "global_type": "Exposure",
   "domain": "buildings",
-  "full_name": "Building Exposure",
-  "description": "description",
-  "license": "license",
+  "name": "Global Human Settlement Layer Built-up Area",
+  "group": "Exposure",
+  "description": "Pesaresi M., Politis P. (2022): GHS built-up surface grid, derived from Sentinel2 composite and Landsat, multitemporal (1975-2030)European Commission, Joint Research Centre (JRC) PID: http://data.europa.eu/89h/d07d81b4-7680-4d28-b896-583745c27085, doi:10.2905/D07D81B4-7680-4D28-B896-583745C27085",
+  "license": "CC-BY 4.0",
   "keys": ["subtype"]
 }

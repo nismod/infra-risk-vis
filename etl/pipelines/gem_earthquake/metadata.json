@@ -1,9 +1,8 @@
 {
-  "source_db": "gem_earthquake",
-  "global_type": "Hazard",
   "domain": "earthquake",
-  "full_name": "GEM Earthquake",
-  "description": "description",
-  "license": "license",
+  "name": "Seismic Risk",
+  "group": "Hazard",
+  "description": "Pagani M, Garcia-Pelaez J, Gee R, Johnson K, Silva V, Simionato M, Styron R, Vigano D, Danciu L, Monelli D, Poggi V, Weatherill G. (2019). The 2018 version of the Global Earthquake Model: Hazard component. Earthquake Spectra, 36(1), DOI: 10.1177/8755293020931866.",
+  "license": "Visualisation: CC BY-NC-SA. Data: copyright GEM",
   "keys": ["rp", "medium"]
 }

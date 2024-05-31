@@ -1,9 +1,8 @@
 {
-  "source_db": "exposure_nature",
-  "global_type": "Exposure",
   "domain": "nature",
-  "full_name": "Nature Exposure",
-  "description": "description",
-  "license": "license",
+  "name": "Nature-related indices and metrics",
+  "group": "Exposure",
+  "description": "Soil Organic Carbon, Forest Landscape Integrity Index, Biodiversity Intactness Index",
+  "license": "CC-BY 4.0, various",
   "keys": ["subtype"]
 }

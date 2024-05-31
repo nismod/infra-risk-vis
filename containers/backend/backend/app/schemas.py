@@ -176,14 +176,12 @@ AttributeLookup = dict[int, AttributeT]
 # Tile Server metadata
 class TileSourceMeta(BaseModel):
     id: int = None
-    url_keys: tuple = None
-    source_db: str
-    global_type: str
     domain: str
-    full_name: str
+    name: str
+    group: str
     description: str
     license: str
-    variables: dict
+    keys: list
 
     model_config = ConfigDict(from_attributes=True)
 

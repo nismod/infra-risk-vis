@@ -1,9 +1,8 @@
 {
-  "source_db": "dem",
-  "global_type": "Exposure",
   "domain": "dem",
-  "full_name": "DEM Slope and Elevation",
-  "description": "description",
-  "license": "license",
+  "name": "Topography - Global DEM derivatives based on MERIT DEM",
+  "group": "Exposure",
+  "description": "Tomislav Hengl. (2018). Global DEM derivatives at 250m, 1 km and 2 km based on the MERIT DEM (1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.1447210",
+  "license": "CC-BY-SA 4.0",
   "keys": ["derivative"]
 }

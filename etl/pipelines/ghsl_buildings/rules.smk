@@ -1,5 +1,3 @@
-from pipelines.helpers import gdalwarp_bounds
-
 configfile: "../../config.yml"
 
 
@@ -34,30 +32,4 @@ rule download_non_residential_type:
             --output-document={output.archive}
 
         unzip {output.archive} $(basename {output.raster}) -d $(dirname {output.raster})
-        """
-
-
-rule clip_and_reproject_raster:
-    """
-    Reproject from Mollweide to WGS84 and clip to bounds.
-    """
-    input:
-        raster = "raster/no_data/ghsl_buildings/{KEY}.tif",
-    params:
-        bounds = config["raster_bounds"]
-    output:
-        "raster/clip/ghsl_buildings/{KEY}.tif"
-    resources:
-        mem_mb=10000
-    priority:
-        80,
-    shell:
-        """
-        gdalwarp \
-            -t_srs EPSG:4326 \
-            -of GTiff \
-            -co COMPRESS=LZW \
-            -te {params.bounds} \
-            {input.raster} \
-            {output}
         """
