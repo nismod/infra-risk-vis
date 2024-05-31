@@ -22,7 +22,6 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    # TODO: update tag to 'latest' when irv-frontend publication workflow is updated
     image: ghcr.io/nismod/irv-frontend:0.25
     profiles: ["web-server"]
     volumes:
@@ -63,10 +62,9 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
 
   vector-tileserver:
-    build:
-      context: ./containers/vector
-      dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-vector-tileserver-dev:0.10
+    build: ./containers/vector
+    image: ghcr.io/nismod/gri-vector-tileserver:0.10
+    restart: always
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config-dev.json:/config.json
