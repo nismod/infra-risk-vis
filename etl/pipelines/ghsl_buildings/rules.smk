@@ -15,7 +15,7 @@ rule download_all_building_types:
         wget \
             https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_S_GLOBE_R{wildcards.RELEASE}/GHS_BUILT_S_E{wildcards.EPOCH}_GLOBE_R{wildcards.RELEASE}_54009_1000/V1-0/GHS_BUILT_S_E{wildcards.EPOCH}_GLOBE_R{wildcards.RELEASE}_54009_1000_V1_0.zip \
             --output-document={output.archive}
-        
+
         unzip {output.archive} $(basename {output.raster}) -d $(dirname {output.raster})
         """
 
@@ -32,7 +32,7 @@ rule download_non_residential_type:
         wget \
             https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_BUILT_S_GLOBE_R{wildcards.RELEASE}/GHS_BUILT_S_NRES_E{wildcards.EPOCH}_GLOBE_R{wildcards.RELEASE}_54009_1000/V1-0/GHS_BUILT_S_NRES_E{wildcards.EPOCH}_GLOBE_R{wildcards.RELEASE}_54009_1000_V1_0.zip \
             --output-document={output.archive}
-        
+
         unzip {output.archive} $(basename {output.raster}) -d $(dirname {output.raster})
         """
 
@@ -44,7 +44,7 @@ rule clip_and_reproject_raster:
     input:
         raster = "raster/no_data/ghsl_buildings/{KEY}.tif",
     params:
-        bounds = gdalwarp_bounds(config["raster_bounds"])
+        bounds = config["raster_bounds"]
     output:
         "raster/clip/ghsl_buildings/{KEY}.tif"
     resources:

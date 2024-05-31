@@ -41,7 +41,7 @@ rule clip_and_reproject_raster:
     input:
         raster = "raster/no_data/jrc_pop/{KEY}.tif",
     params:
-        bounds = gdalwarp_bounds(config["raster_bounds"])
+        bounds = config["raster_bounds"]
     output:
         "raster/clip/jrc_pop/{KEY}.tif"
     resources:

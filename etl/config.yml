@@ -1,11 +1,11 @@
 # selects which env files to source prior to operations
-environment: "dev"  # {dev | prod}
+environment: "dev" # {dev | prod}
 
 # clip rasters to this window (decimal degrees)
-# TODO: check terracotta is happy with rasters touching the antimeridian
-# previously, some clip rules left a buffer around the antimeridian
-raster_bounds:
-  minx: -180
-  miny: -84.0395
-  maxx: 180
-  maxy: 84.7879
+#
+# def gdalwarp_bounds(bbox):
+#     extents = (bbox["minx"], bbox["miny"], bbox["maxx"], bbox["maxy"])
+#     return " ".join(map(lambda extent: f"{extent:.3f}", extents))
+#
+#                minx   miny    maxx  maxy
+raster_bounds: "-180.0 -84.0395 180.0 84.7879"

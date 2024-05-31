@@ -56,7 +56,7 @@ rule clip_raster:
     output:
         temp("raster/clip/{DATASET}/{KEY}.tif")
     params:
-        bounds = gdalwarp_bounds(config["raster_bounds"])
+        bounds = config["raster_bounds"]
     resources:
         disk_mb=3000,
         mem_mb=10000,
