@@ -1,33 +1,12 @@
 import pandas as pd
 
 
-checkpoint create_hazard_csv_file:
-    """
-    Create table of Aqueduct hazard layers.
-
-    N.B. We use `shell` rather than `script` to allow for command line
-    arguments.  However, using `shell` with the script path hard coded would not
-    trigger a re-run on the modification of the script. Instead treat the script
-    as an input to retain this behaviour.
-    """
-    input:
-        script = "pipelines/aqueduct/parser.py"
-    params:
-        source_url = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2",
-        list_url = "http://wri-projects.s3.amazonaws.com/AqueductFloodTool/download/v2/index.html"
-    output:
-        csv = "pipelines/aqueduct/layers.csv"
-    shell:
-        """
-        python {input.script} --list_url {params.list_url} --source_url {params.source_url} --csv_path {output.csv}
-        """
-
 
 def url_from_key(wildcards):
     """
     Lookup an Aqueduct TIFF URL from our layers file by KEY wildcard.
     """
-    df: pd.DataFrame = pd.read_csv(checkpoints.create_hazard_csv_file.get(**wildcards).output.csv)
+    df: pd.DataFrame = pd.read_csv("pipelines/aqueduct/layers.csv")
     layer = df[df.key == wildcards.KEY].squeeze()
     return layer.url
 
@@ -37,7 +16,7 @@ rule download_raw_data:
     Download files from remote location.
     """
     input:
-        layers = lambda wildcards: checkpoints.create_hazard_csv_file.get().output,
+        layers = "pipelines/aqueduct/layers.csv",
     params:
         url = url_from_key
     output:
@@ -52,7 +31,7 @@ def all_cog_file_paths(wildcards):
     """
     Generate list of Aqueduct output file paths.
     """
-    df: pd.DataFrame = pd.read_csv(checkpoints.create_hazard_csv_file.get(**wildcards).output.csv)
+    df: pd.DataFrame = pd.read_csv("pipelines/aqueduct/layers.csv")
     return expand("raster/cog/aqueduct/{key}.tif", key=df.key)
 
 
