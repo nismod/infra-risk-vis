@@ -19,6 +19,7 @@ dependencies:
   - numpy<=1.23.5 # n-d arrays
   - pip # python package management
   - pip:
+      - ../containers/backend # gri-backend package provides "backend.*"
       # this version not available on conda-forge
       - terracotta==0.8.3 # raster tile server and processing utilities
   - pyarrow # performant tabular data
