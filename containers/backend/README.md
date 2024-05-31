@@ -50,9 +50,6 @@ TC_ALLOWED_ORIGINS_TILES='["*"]'
 TC_PNG_COMPRESS_LEVEL=0
 TC_RESAMPLING_METHOD="nearest"
 TC_REPROJECTION_METHOD="nearest"
-
-API_TOKEN= # API token is only required for mutation operations on tile metadata (`/tiles/sources POST & DELETE`).
-DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\"}' # Valid JSON of a mapping between front-end DOMAIN values and the database in-which the data is stored.
 ```
 
 ### Tileserver
@@ -95,32 +92,7 @@ __NOTE__: Large rasters can fail to load due to dropped MySQL connections to Clo
 
 #### Adding a Source to the Tileserver metastore
 
-1. Add the source to the domain:mysqldatabase mapping in the config (which is loaded from the environment as json):
-
-```json
-{
-    "fluvial": "aqueduct",
-    "coastal": "aqueduct",
-    "extreme_heat": "extreme_heat",
-    "cyclone": "cyclone",
-}
-```
-
-E.g. in the environment one would add the following:
-
-```
-DOMAIN_TO_DB_MAP='{\"land_cover\":\"land_cover\",...}'
-```
-
-2. `POST` metadata about the raster to: `http://backend-host:8080/tiles/sources`.  Examples of the payload are show below.
-
-You may find the utility [httpie](https://httpie.io/) useful for this.
-
-Using httpie:
-
-```bash
-http POST http://localhost:8888/tiles/sources x-token:<API_TOKEN> < metadata.json
-```
+Insert metadata about the raster to the database.
 
 Where metadata.json is a file containing JSON like so:
 
@@ -132,190 +104,10 @@ Where metadata.json is a file containing JSON like so:
   "full_name": "Hazard Aqueduct - Fluvial", # Currently for internal description only
   "description": "description", # Currently for internal description only
   "license": "license", # Currently for internal description only
-  "variables": {} # Currently for internal description only
-}
-```
-
-##### IRIS:
-
-```json
-{
-    "source_db": "iris",
-    "global_type": "Hazard",
-    "domain": "cyclone",
-    "full_name": "IRIS tropical cyclones",
-    "description": "description",
-    "license": "license",
-    "variables": {
-        "rp": "rp",
-        "ssp": "ssp",
-        "epoch": "epoch",
-        "type": "hazard"
-    }
-}
-```
-
-##### Aqueduct:
-
-```json
-[
-	{
-		"source_db": "aqueduct",
-		"global_type": "Hazard",
-		"domain": "fluvial",
-		"full_name": "Hazard Aqueduct - Fluvial",
-		"description": "description",
-		"license": "license",
-		"variables": {}
-	},
-	{
-		"source_db": "aqueduct",
-		"global_type": "Hazard",
-		"domain": "coastal",
-		"full_name": "Hazard Aqueduct - Coastal",
-		"description": "description",
-		"license": "license",
-		"variables": {
-			"some": "vars"
-		}
-	}
-]
-```
-
-##### ISIMP Extreme Heat:
-
-```json
-{
-	"source_db": "extreme_heat",
-	"global_type": "Hazard",
-	"domain": "extreme_heat",
-	"full_name": "Hazard Extreme Heat",
-	"description": "description",
-	"license": "license",
-	"variables": {
-		"gcm": "gcm",
-		"rcp": "rcp",
-		"type": "hazard",
-		"epoch": "epoch",
-		"metric": "metric"
-	}
-}
-```
-
-##### STORM
-
-```json
-{
-	"source_db": "storm",
-	"global_type": "Hazard",
-	"domain": "cyclone",
-	"full_name": "Hazard Tropical Storm",
-	"description": "description",
-	"license": "license",
-	"variables": {
-		"type": "hazard",
-		"rp": "rp",
-		"gcm": "gcm"
-	}
-}
-```
-
-##### JRC Population
-
-```json
-{
-  "source_db": "jrc_pop",
-  "global_type": "Exposure",
-  "domain": "population",
-  "full_name": "JRC Population",
-  "description": "description",
-  "license": "license",
-  "variables": {}
-}
-```
-
-##### ISIMP Drought
-
-```json
-{
-  "source_db": "drought",
-  "global_type": "Hazard",
-  "domain": "drought",
-  "full_name": "ISIMP Drought",
-  "description": "description",
-  "license": "license",
-  "variables": {}
-}
-```
-
-##### Exposure Nature
-
-```json
-{
-  "source_db": "exposure_nature",
-  "global_type": "Exposure",
-  "domain": "nature",
-  "full_name": "Nature Exposure",
-  "description": "description",
-  "license": "license",
-  "variables": {}
-}
-```
-
-##### GDSL Buildings
-
-```json
-{
-  "source_db": "buildings",
-  "global_type": "Exposure",
-  "domain": "buildings",
-  "full_name": "Building Exposure",
-  "description": "description",
-  "license": "license",
-  "variables": {}
-}
-```
-
-##### Traveltime To Healthcare
-
-```json
-{
-  "source_db": "traveltime_to_healthcare",
-  "global_type": "Exposure",
-  "domain": "traveltime_to_healthcare",
-  "full_name": "Travel Time to Healthcare",
-  "description": "description",
-  "license": "license",
-  "variables": {}
-}
-```
-
-##### ESA Land Cover
-
-```json
-{
-  "source_db": "land_cover",
-  "global_type": "Exposure",
-  "domain": "land_cover",
-  "full_name": "ESA Land Cover",
-  "description": "description",
-  "license": "license",
-  "variables": {}
+  "keys": [] # Currently for internal description only
 }
 ```
 
 #### Removing a source from the tileserver metastore
 
-Again using [httpie](https://httpie.io/), the following bash script may be
-useful for deleting metadata entries.
-
-```bash
-if [ -z "$2" ]; then
-    echo "Require API key and source integer ID to delete as arguments"
-    echo "Check http://localhost:8888/tiles/sources for ID"
-    echo "Example usage:"
-    echo "$0 ck5iswmvdcm4cmnee 2"
-    exit 1
-fi
-http DELETE http://localhost:8888/tiles/sources/$2 x-token:$1
-```
+Connect to the database and delete the relevant row.

@@ -8,28 +8,24 @@ from typing import Any, BinaryIO, List, Tuple, Union
 import ast
 import inspect
 
-from fastapi import APIRouter, Depends, HTTPException, Response, Header
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.logger import logger
-import sqlalchemy
 from starlette.responses import StreamingResponse
-from sqlalchemy import select, func
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
-from geoalchemy2 import functions
 from terracotta.exceptions import DatasetNotFoundError
+from terracotta import get_driver
 
 
 from app import schemas
 from app.dependencies import get_db
 from db import models
-from app.internal.tiles.singleband import all_datasets, database_keys
 from app.internal.helpers import build_driver_path, handle_exception
 from app.exceptions import (
     SourceDBDoesNotExistException,
-    DomainAlreadyExistsException,
     MissingExplicitColourMapException,
 )
-from config import API_TOKEN, CATEGORICAL_COLOR_MAPS
+from config import CATEGORICAL_COLOR_MAPS
 
 
 router = APIRouter(tags=["tiles"])
@@ -47,13 +43,6 @@ def _domain_from_keys(keys: List[str]) -> str:
     Retrieve domain from keys path
     """
     return keys[0]
-
-
-def _get_tiledb_keys(database: str) -> List[str]:
-    """Retrieve keys and ordering for given DB"""
-    driver_path = build_driver_path(database)
-    db_keys = database_keys(driver_path)
-    return list(db_keys.keys())
 
 
 def _get_singleband_image(
@@ -80,18 +69,6 @@ def _get_singleband_image(
     )
 
     return singleband(driver_path, keys, tile_xyz=tile_xyz, **options)
-
-
-def _domain_exists(db: Session, domain: str) -> bool:
-    """
-    Check whether the given domain exists in the meta store
-    """
-    res = db.execute(
-        select(func.count("*"))
-        .select_from(models.RasterTileSource)
-        .where(models.RasterTileSource.domain == domain)
-    ).scalar_one()
-    return res == 1
 
 
 def _tile_db_from_domain(domain: str) -> str:
@@ -139,15 +116,16 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
     """
 
     driver_path = build_driver_path(source_db)
+    driver = get_driver(driver_path, provider="postgresql")
 
     # query terracotta for all datasets in the source
     # dict of tuples of variable values
     # e.g. ("2020", "10", "constant") pointing to raster path strs
-    datasets: dict[tuple, str] = all_datasets(driver_path)
+    datasets: dict[tuple, str] = driver.get_datasets()
 
     # get the key names for these data
     # e.g. {'epoch': '', 'rp': '', 'ssp': ''}
-    keys: OrderedDict[str, str] = database_keys(driver_path)
+    keys: OrderedDict[str, str] = driver.get_keys()
 
     # now generate the output mapping
     # take the variable values from datasets and create dicts naming them as such
@@ -167,11 +145,6 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
     return source_options
 
 
-async def verify_token(x_token: str = Header()):
-    if x_token != API_TOKEN:
-        raise HTTPException(status_code=401, detail="")
-
-
 @router.get("/sources", response_model=List[schemas.TileSourceMeta])
 async def get_all_tile_source_meta(
     db: Session = Depends(get_db),
@@ -187,9 +160,7 @@ async def get_all_tile_source_meta(
         res = db.query(models.RasterTileSource).all()
         all_meta = []
         for row in res:
-            url_keys = _get_tiledb_keys(row.source_db)
             meta = schemas.TileSourceMeta.model_validate(row)
-            meta.url_keys = url_keys
             all_meta.append(meta)
         return all_meta
     except Exception as err:
@@ -215,9 +186,7 @@ async def get_tile_source_meta(
             .filter(models.RasterTileSource.id == source_id)
             .one()
         )
-        url_keys = _get_tiledb_keys(res.source_db)
         meta = schemas.TileSourceMeta.model_validate(res)
-        meta.url_keys = url_keys
         return meta
     except NoResultFound:
         raise HTTPException(status_code=404)
@@ -252,55 +221,6 @@ async def get_tile_source_domains(
         return meta
     except NoResultFound:
         raise HTTPException(status_code=404)
-    except Exception as err:
-        handle_exception(logger, err)
-        raise HTTPException(status_code=500)
-
-
-@router.post("/sources", dependencies=[Depends(verify_token)])
-async def insert_source_meta(
-    source_meta: schemas.TileSourceMeta, db: Session = Depends(get_db)
-) -> Any:
-    """
-    Ingest Tile Source Meta
-    """
-    logger.debug("performing %s, with %s", inspect.stack()[0][3], source_meta)
-    try:
-        # Check if the domain already exists
-        if _domain_exists(db, source_meta.domain):
-            raise DomainAlreadyExistsException()
-        values = source_meta.model_dump()
-        values.pop("id")
-        values.pop("url_keys")
-        stmt = sqlalchemy.insert(models.RasterTileSource).values(values)
-        res = db.execute(stmt)
-        db.commit()
-        logger.debug("Insert Meta result: %s", res)
-        return Response(status_code=200)
-    except DomainAlreadyExistsException as err:
-        handle_exception(logger, err)
-        raise HTTPException(
-            status_code=400, detail="domain already exists in another database"
-        )
-    except Exception as err:
-        handle_exception(logger, err)
-        raise HTTPException(status_code=500)
-
-
-@router.delete("/sources/{source_id:int}", dependencies=[Depends(verify_token)])
-async def delete_source_meta(source_id: int, db: Session = Depends(get_db)) -> Any:
-    """
-    Delete Tile Source Meta
-    """
-    logger.debug("performing %s, with %s", inspect.stack()[0][3], source_id)
-    try:
-        stmt = sqlalchemy.delete(models.RasterTileSource).filter(
-            models.RasterTileSource.id == source_id
-        )
-        res = db.execute(stmt)
-        db.commit()
-        logger.debug("Delete Meta result: %s", res)
-        return Response(status_code=200)
     except Exception as err:
         handle_exception(logger, err)
         raise HTTPException(status_code=500)

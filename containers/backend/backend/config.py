@@ -8,7 +8,6 @@ import logging
 LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper())
 RASTER_BASE_PATH = getenv("RASTER_BASE_PATH", "/data")
 TILEDB_URI = getenv("TILEDB_URI")
-API_TOKEN = getenv("API_TOKEN")
 
 # terracotta_database_name: dict[raster_value: tuple[R, G, B, A]]
 CATEGORICAL_COLOR_MAPS = {
