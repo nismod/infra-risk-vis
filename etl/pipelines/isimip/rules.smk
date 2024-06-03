@@ -20,5 +20,5 @@ rule unpack:
         tiff="raster/raw/isimip/{KEY}.tif",
     shell:
         """
-        unzip -n {input.zip} $(basename {output.tiff}) -d $(dirname {output.tiff})
+        unzip -j -n {input.zip} data/$(basename {output.tiff}) -d $(dirname {output.tiff})
         """
