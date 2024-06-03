@@ -11,9 +11,9 @@ import tqdm
 
 def read_csv(
     csv_filepath: str,
+    tile_keys: list[str],
     local_path: str,
     db_path: str,
-    metadata: dict,
 ) -> List[dict]:
     """
     Define a list of raster files to import
@@ -27,7 +27,7 @@ def read_csv(
         for row in reader:
             raster_files.append(
                 {
-                    "key_values": {_k: row[_k] for _k in metadata["variables"]},
+                    "key_values": {_k: row[_k] for _k in tile_keys},
                     "local_path": f"{local_path}/{row['filename']}",
                     "db_path": f"{db_path}/{row['filename']}",
                 }
@@ -66,7 +66,7 @@ def ingest_files(db_name: str, keys: List[str], raster_files: List[dict]):
             dup_path = _check_duplicate_entry(raster, driver)
             if dup_path:
                 print(
-                    f"Skipping {raster['path']} duplicate of existing dataset {dup_path}"
+                    f"Skipping {raster['local_path']} duplicate of existing dataset {dup_path}"
                 )
                 continue
             else:
@@ -91,8 +91,9 @@ if __name__ == "__main__":
     tile_keys: list[str] = metadata["keys"]
     raster_files = read_csv(
         layers_path,
-        f"raster/cog/{metadata["domain"]}",
-        f"/data/{metadata["domain"]}",
+        tile_keys,
+        f"raster/cog/{metadata['domain']}",
+        f"/data/{metadata['domain']}",
     )
     ingest_files(metadata["source_db"], tile_keys, raster_files)
 
