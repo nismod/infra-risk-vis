@@ -90,6 +90,7 @@ rule cloud_optimise_raster:
         terracotta optimize-rasters \
             -o $(dirname {output}) \
             --overwrite \
+            --in-memory \
             --reproject \
             --nproc 1 \
             --resampling-method nearest \
