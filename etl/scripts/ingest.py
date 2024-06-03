@@ -1,11 +1,13 @@
 """Script to ingest generic rasters into terracotta.
 """
 
+import concurrent.futures
 import csv
 import json
 from typing import Any, List
 
 import terracotta
+import terracotta.exceptions
 import tqdm
 
 
@@ -48,7 +50,9 @@ def _check_duplicate_entry(raster_file: dict, driver: Any) -> str:
     return None
 
 
-def ingest_files(db_name: str, keys: List[str], raster_files: List[dict]):
+def ingest_files(
+    db_name: str, keys: List[str], raster_files: List[dict], nproc: int = -1
+):
     # Setup Driver
     tc_settings = terracotta.get_settings()
     tc_driver_path = f"{tc_settings.DRIVER_PATH}/{db_name}"
@@ -64,6 +68,7 @@ def ingest_files(db_name: str, keys: List[str], raster_files: List[dict]):
             raise ex
 
     progress_bar = tqdm.tqdm(raster_files)
+    to_ingest = []
     with driver.connect():
         for raster in progress_bar:
             progress_bar.set_postfix(file=raster["local_path"])
@@ -76,11 +81,46 @@ def ingest_files(db_name: str, keys: List[str], raster_files: List[dict]):
                 )
                 continue
             else:
-                driver.insert(
-                    raster["key_values"],
-                    raster["local_path"],
-                    override_path=raster["db_path"],
-                )
+                to_ingest.append(raster)
+
+    if nproc == -1:
+        nproc = 16
+
+    if nproc > 1:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=nproc) as executor:
+            futures = {
+                executor.submit(
+                    _ingest_single_raster,
+                    db_name,
+                    raster,
+                    f"({i}/{len(to_ingest)})",
+                ): raster
+                for i, raster in enumerate(to_ingest, start=1)
+            }
+
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    future.result()
+                except Exception as exc:
+                    raise RuntimeError(
+                        f"Error while ingesting {futures[future]}"
+                    ) from exc
+    else:  # Single-core; run in the current process
+        for i, raster in enumerate(to_ingest, start=1):
+            _ingest_single_raster(db_name, raster, f"({i}/{len(to_ingest)})")
+
+
+def _ingest_single_raster(db_name, raster, progress):
+    tc_settings = terracotta.get_settings()
+    tc_driver_path = f"{tc_settings.DRIVER_PATH}/{db_name}"
+    driver = terracotta.get_driver(tc_driver_path, "postgresql")
+    with driver.connect():
+        driver.insert(
+            raster["key_values"],
+            raster["local_path"],
+            override_path=raster["db_path"],
+        )
+    print(progress)
 
 
 if __name__ == "__main__":
