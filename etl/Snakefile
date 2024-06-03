@@ -16,18 +16,23 @@ use rule * from dem as dem_*
 ruleorder: dem_clip_raster > clip_raster
 
 
-module exposure_nature:
-    snakefile: "pipelines/exposure_nature/rules.smk"
-use rule * from exposure_nature as exposure_nature_*
-
-
-# gem_earthquake has no dataset specific rules defined
+module gem_earthquake:
+    snakefile: "pipelines/gem_earthquake/rules.smk"
+    config: config
+use rule * from gem_earthquake as gem_earthquake_*
+ruleorder: gem_earthquake_clip_raster > clip_raster
 
 
 module ghsl_buildings:
     snakefile: "pipelines/ghsl_buildings/rules.smk"
     config: config
 use rule * from ghsl_buildings as ghsl_buildings_*
+
+
+module ghsl_pop:
+    snakefile: "pipelines/ghsl_pop/rules.smk"
+    config: config
+use rule * from ghsl_pop as ghsl_pop_*
 
 
 module iris:
@@ -40,17 +45,16 @@ module isimip:
 use rule * from isimip as isimip_*
 
 
-module jrc_pop:
-    snakefile: "pipelines/jrc_pop/rules.smk"
-    config: config
-use rule * from jrc_pop as jrc_pop_*
-
-
 module land_cover:
     snakefile: "pipelines/land_cover/rules.smk"
 use rule * from land_cover as land_cover_*
 ruleorder: land_cover_download_300m_2020_from_CDS > clip_raster
 ruleorder: land_cover_ingest_categorical_raster > ingest_rasters
+
+
+module nature:
+    snakefile: "pipelines/nature/rules.smk"
+use rule * from nature as nature_*
 
 
 module storm:
@@ -73,16 +77,16 @@ include: "rules/database.smk"
 # Datasets the `all` target rule will expand to
 ALL_DATASETS = (
     "aqueduct",
-    "land_cover",
-    "exposure_nature",
+    "dem",
     "gem_earthquake",
     "ghsl_buildings",
+    "ghsl_pop",
     "iris",
     "isimip",
-    "jrc_pop",
+    "land_cover",
+    "nature",
     "storm",
     "traveltime_to_healthcare",
-    "dem",
 )
 
 # prefix any shell blocks with these statements
