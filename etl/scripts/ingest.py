@@ -55,7 +55,13 @@ def ingest_files(db_name: str, keys: List[str], raster_files: List[dict]):
     driver = terracotta.get_driver(tc_driver_path, "postgresql")
 
     # Connect and setup DB
-    driver.create(keys)
+    try:
+        driver.create(keys)
+    except terracotta.exceptions.InvalidDatabaseError as ex:
+        if "Could not create database" in str(ex):
+            pass
+        else:
+            raise ex
 
     progress_bar = tqdm.tqdm(raster_files)
     with driver.connect():
@@ -95,7 +101,9 @@ if __name__ == "__main__":
         f"raster/cog/{metadata['domain']}",
         f"/data/{metadata['domain']}",
     )
-    ingest_files(metadata["source_db"], tile_keys, raster_files)
+    # Prefix database name with terracotta
+    db_name = f"terracotta_{metadata['domain']}"
+    ingest_files(db_name, tile_keys, raster_files)
 
     with open(flag, "w") as fh:
         fh.write("Done")
