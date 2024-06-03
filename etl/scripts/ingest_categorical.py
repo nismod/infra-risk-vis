@@ -88,9 +88,12 @@ if __name__ == "__main__":
     with open(metadata_path) as fh:
         metadata = json.load(fh)
 
+    # Prefix database name with terracotta
+    db_name = f"terracotta_{metadata['domain']}"
     load_single_categorical(
+        db_name,
         raster,
-        f"/data/{metadata["domain"]}",
+        f"/data/{metadata['domain']}",
         metadata["keys"],
         categorical_map,
     )
