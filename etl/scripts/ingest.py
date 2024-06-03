@@ -86,7 +86,7 @@ def ingest_files(
     if nproc == -1:
         nproc = 16
 
-    if nproc > 1:
+    if nproc > 1 and len(to_ingest) > 1:
         with concurrent.futures.ProcessPoolExecutor(max_workers=nproc) as executor:
             futures = {
                 executor.submit(
