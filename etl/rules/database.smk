@@ -22,7 +22,7 @@ rule ingest_rasters:
     output:
         flag = "raster/ingest/{DATASET}.flag"
     script:
-        "scripts/ingest.py"
+        "../scripts/ingest.py"
 
 
 rule ingest_metadata:
@@ -34,4 +34,4 @@ rule ingest_metadata:
     output:
         flag = "raster/metadata/{DATASET}.flag"
     script:
-        "scripts/ingest_metadata.py"
+        "../scripts/ingest_metadata.py"
