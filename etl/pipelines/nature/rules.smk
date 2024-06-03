@@ -3,8 +3,8 @@ rule download_1000m_organic_carbon_stocks:
     Download organic carbon stock raster at 1000m resolution and reproject to WGS84.
     """
     output:
-        homolosine = temp("raster/raw/exposure_nature/ocs_0-30cm_mean_1000_homolosine.tif"),
-        WGS84 = "raster/raw/exposure_nature/ocs_0-30cm_mean_1000.tif"
+        homolosine = temp("raster/raw/nature/ocs_0-30cm_mean_1000_homolosine.tif"),
+        WGS84 = "raster/raw/nature/ocs_0-30cm_mean_1000.tif"
     shell:
         """
         wget \
@@ -31,9 +31,9 @@ rule download_3arcsec_biodiversity_intactness:
     The download link may expire in time.
     """
     output:
-        archive = temp("raster/raw/exposure_nature/lbii.zip"),
-        ascii_text = temp("raster/raw/exposure_nature/lbii.asc"),
-        tiff = "raster/raw/exposure_nature/lbii.tif",
+        archive = temp("raster/raw/nature/lbii.zip"),
+        ascii_text = temp("raster/raw/nature/lbii.asc"),
+        tiff = "raster/raw/nature/lbii.tif",
     shell:
         """
         wget \
@@ -60,11 +60,11 @@ rule download_300m_forest_integrity_index:
     https://drive.google.com/drive/folders/180DXlbF4dwCYhBW025YkZbhNHnrW5NlW
     """
     output:
-        raw_integer = temp("raster/raw/exposure_nature/flii_integer.tif"),
-        rescaled = "raster/raw/exposure_nature/flii_earth.tif"
+        raw_integer = temp("raster/raw/nature/flii_integer.tif"),
+        rescaled = "raster/raw/nature/flii_earth.tif"
     shell:
         """
-        gdown --output {output.raw_integer} 1Bd3LxqPTSMuFRb-24Z7UMWCiPnhlTvg_ 
+        gdown --output {output.raw_integer} 1Bd3LxqPTSMuFRb-24Z7UMWCiPnhlTvg_
 
         gdal_translate \
             -scale 0 10000 0 10 \
