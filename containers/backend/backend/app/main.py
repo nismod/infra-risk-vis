@@ -4,8 +4,6 @@ from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.logger import logger
 
-from db import models
-from db.database import engine
 from .routers import attributes, features, tiles, colormap
 from config import LOG_LEVEL
 
