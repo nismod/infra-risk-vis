@@ -105,6 +105,7 @@ def _tile_db_from_domain(domain: str) -> str:
         "coastal": "terracotta_aqueduct",
         "cyclone_iris": "terracotta_iris",
         "cyclone": "terracotta_cyclone",
+        "dem": "terracotta_dem",
         "drought": "terracotta_drought",
         "earthquake": "terracotta_gem_earthquake",
         "extreme_heat": "terracotta_extreme_heat",
