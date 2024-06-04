@@ -97,30 +97,3 @@ CATEGORICAL_COLOR_MAPS = {
     }
 }
 ```
-
-**NOTE**: Large rasters can fail to load due to dropped MySQL connections to
-Cloud-hosts after metadata creation. This appears to be a bug with the
-underlying library. The fix to-date has been to load them locally and
-subsequently push the MySQL database to the Cloud host.
-
-#### Adding a Source to the Tileserver metastore
-
-Insert metadata about the raster to the database.
-
-Where metadata.json is a file containing JSON like so:
-
-```json
-{
-  "source_db": "aqueduct", # the MySQL database the source was ingested-into
-  "global_type": "Hazard", # The global hazard type listed for the source tiles
-  "domain": "fluvial", # The domain within the UI that the hazard maps-into
-  "full_name": "Hazard Aqueduct - Fluvial", # Currently for internal description only
-  "description": "description", # Currently for internal description only
-  "license": "license", # Currently for internal description only
-  "keys": [] # Currently for internal description only
-}
-```
-
-#### Removing a source from the tileserver metastore
-
-Connect to the database and delete the relevant row.
