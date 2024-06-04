@@ -101,18 +101,18 @@ def _tile_db_from_domain(domain: str) -> str:
     """
     # TODO try conventional or configured mappin again - hot fix for db pool exhaustion
     domain_to_db = {
-        "buildings": "buildings",
-        "coastal": "aqueduct",
-        "cyclone_iris": "iris",
-        "cyclone": "cyclone",
-        "drought": "drought",
-        "earthquake": "gem_earthquake",
-        "extreme_heat": "extreme_heat",
-        "fluvial": "aqueduct",
-        "land_cover": "land_cover",
-        "nature": "exposure_nature",
-        "population": "jrc_pop",
-        "traveltime_to_healthcare": "traveltime_to_healthcare",
+        "buildings": "terracotta_buildings",
+        "coastal": "terracotta_aqueduct",
+        "cyclone_iris": "terracotta_iris",
+        "cyclone": "terracotta_cyclone",
+        "drought": "terracotta_drought",
+        "earthquake": "terracotta_gem_earthquake",
+        "extreme_heat": "terracotta_extreme_heat",
+        "fluvial": "terracotta_aqueduct",
+        "land_cover": "terracotta_land_cover",
+        "nature": "terracotta_exposure_nature",
+        "population": "terracotta_jrc_pop",
+        "traveltime_to_healthcare": "terracotta_traveltime_to_healthcare",
     }
     return domain_to_db[domain]
 
