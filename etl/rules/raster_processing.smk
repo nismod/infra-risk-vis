@@ -82,7 +82,7 @@ rule cloud_optimise_raster:
         "raster/cog/{DATASET}/{KEY}.tif",
     resources:
         disk_mb=100,
-        mem_mb=2000,
+        mem_mb=20000,
     priority:
         90,
     shell:
