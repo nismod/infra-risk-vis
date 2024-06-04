@@ -35,14 +35,10 @@ def _parse_keys(keys: str) -> List:
     """
     Parse tiles URL key str
     """
-    return [key for key in keys.split("/") if key]
-
-
-def _domain_from_keys(keys: List[str]) -> str:
-    """
-    Retrieve domain from keys path
-    """
-    return keys[0]
+    all = [key for key in keys.split("/") if key]
+    domain = all[0]
+    parsed_keys = all[1:]
+    return domain, parsed_keys
 
 
 def _get_singleband_image(
@@ -77,23 +73,8 @@ def _tile_db_from_domain(domain: str) -> str:
         using the first value of the path keys (which links to hazard-type in the UI)
         See: frontend/src/config/hazards/domains.ts
     """
-    # TODO try conventional or configured mappin again - hot fix for db pool exhaustion
-    domain_to_db = {
-        "buildings": "terracotta_buildings",
-        "coastal": "terracotta_aqueduct",
-        "cyclone_iris": "terracotta_iris",
-        "cyclone": "terracotta_cyclone",
-        "dem": "terracotta_dem",
-        "drought": "terracotta_drought",
-        "earthquake": "terracotta_gem_earthquake",
-        "extreme_heat": "terracotta_extreme_heat",
-        "fluvial": "terracotta_aqueduct",
-        "land_cover": "terracotta_land_cover",
-        "nature": "terracotta_exposure_nature",
-        "population": "terracotta_jrc_pop",
-        "traveltime_to_healthcare": "terracotta_traveltime_to_healthcare",
-    }
-    return domain_to_db[domain]
+    # NOTE: hard-coding the convention:
+    return f"terracotta_{domain}"
 
 
 def _source_options(source_db: str, domain: str = None) -> List[dict]:
@@ -273,16 +254,11 @@ async def get_tile(
         json.loads(stretch_range) if stretch_range else "",
         explicit_color_map,
     )
-    parsed_keys = _parse_keys(keys)
-    domain = _domain_from_keys(parsed_keys)
-    try:
-        source_db = _tile_db_from_domain(domain)
-        logger.debug("source DB for tile path: %s", source_db)
-    except KeyError:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No source database for the given domain {domain} could be found",
-        )
+    domain, parsed_keys = _parse_keys(keys)
+
+    source_db = _tile_db_from_domain(domain)
+    logger.debug("source DB for tile path: %s", source_db)
+
     try:
         # Check the keys are appropriate for the given type
         options = {}
