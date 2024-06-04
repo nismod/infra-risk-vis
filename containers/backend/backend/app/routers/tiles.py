@@ -93,19 +93,28 @@ def _domain_exists(db: Session, domain: str) -> bool:
     return res == 1
 
 
-def _tile_db_from_domain(db: Session, domain: str) -> str:
+def _tile_db_from_domain(domain: str) -> str:
     """
     Query the name of the mysql database within-which the tiles reside
         using the first value of the path keys (which links to hazard-type in the UI)
         See: frontend/src/config/hazards/domains.ts
     """
-    source_db = db.execute(
-        # Should only return one entry
-        select(models.RasterTileSource.source_db).where(
-            models.RasterTileSource.domain == domain
-        )
-    ).scalar_one()
-    return source_db
+    # TODO try conventional or configured mappin again - hot fix for db pool exhaustion
+    domain_to_db = {
+        "buildings": "buildings",
+        "coastal": "aqueduct",
+        "cyclone_iris": "iris",
+        "cyclone": "cyclone",
+        "drought": "drought",
+        "earthquake": "gem_earthquake",
+        "extreme_heat": "extreme_heat",
+        "fluvial": "aqueduct",
+        "land_cover": "land_cover",
+        "nature": "exposure_nature",
+        "population": "jrc_pop",
+        "traveltime_to_healthcare": "traveltime_to_healthcare",
+    }
+    return domain_to_db[domain]
 
 
 def _source_options(source_db: str, domain: str = None) -> List[dict]:
@@ -307,7 +316,6 @@ async def get_tile(
     colormap: Union[str, None] = None,
     stretch_range: Union[str, None] = None,
     explicit_color_map: Union[str, None] = None,
-    db: Session = Depends(get_db),
 ):
     """
     Serves XYZ Raster Tiles with the given colormap / stretch range or explicit color map for categorical data.
@@ -346,9 +354,9 @@ async def get_tile(
     parsed_keys = _parse_keys(keys)
     domain = _domain_from_keys(parsed_keys)
     try:
-        source_db = _tile_db_from_domain(db, domain)
+        source_db = _tile_db_from_domain(domain)
         logger.debug("source DB for tile path: %s", source_db)
-    except NoResultFound:
+    except KeyError:
         raise HTTPException(
             status_code=404,
             detail=f"No source database for the given domain {domain} could be found",
