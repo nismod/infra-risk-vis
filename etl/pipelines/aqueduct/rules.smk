@@ -14,13 +14,11 @@ rule download_raw_data:
     """
     Download files from remote location.
     """
-    input:
-        layers = "pipelines/aqueduct/layers.csv",
     params:
         url = url_from_key
     output:
         "raster/raw/aqueduct/{KEY}.tif"
     shell:
         """
-        wget {params.url} --output-document={output}
+        wget -nc {params.url} --output-document={output}
         """
