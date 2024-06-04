@@ -58,8 +58,8 @@ The last two stages of the ETL pipeline (ingestion and metadata creation)
 involve interacting with the database service defined in the parent directory to
 this one.
 
-To bring up these services, refer to the [readme](../README.md) in the parent
-directory for a full explanation of their required env files, etc., but briefly:
+To bring up the database, refer to the [readme](../README.md) in the parent
+directory for a full explanation of the required env files, etc., but briefly:
 
 ```bash
 docker compose -f docker-compose-dev.yaml up db -d
@@ -73,14 +73,13 @@ ETL process.
 
 The affected datasets include:
 
-- gem_earthquake
 - iris
 
 Check the `snakemake` rules for more information, but source raster data should
 typically reside in `raster/raw/<dataset>/`.
 
 You may wish to remove write permissions to these files once they have been
-installed, e.g. `chmod ug-w raster/raw/gem_earthquake/*.tif`. This means `rm -r
+installed, e.g. `chmod ug-w raster/raw/iris/*.tif`. This means `rm -r
 raster` will remove files than can be replaced automatically, but not the
 awkward files.
 
@@ -225,6 +224,26 @@ The `Snakefile` will also require modification:
   `ruleorder` directive.
 - You should also add your dataset to `ALL_DATASETS` so that the `all` target
   rule will work as expected.
+
+#### Removing a source from the tileserver metastore
+
+Connect to the database server and delete the metadata database and reference row in `raster_tile_sources`:
+
+```bash
+# Drop a metadata database
+psql -h localhost -U global_dev -c 'DROP DATABASE terracotta_storm;'
+# Delete a row from raster tile sources
+psql -h localhost -U global_dev -c "DELETE FROM raster_tile_sources WHERE domain = 'storm';"
+```
+
+Check the current state of the local database server:
+
+```bash
+# List all databases
+psql -h localhost -U global_dev -c '\l'
+# List raster tile sources
+psql -h localhost -U global_dev -c 'select id, domain, name, "group", keys FROM raster_tile_sources;'
+```
 
 ### Vector
 
