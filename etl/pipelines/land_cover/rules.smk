@@ -56,6 +56,8 @@ rule ingest_categorical_raster:
         raster = "raster/cog/land_cover/C3S-LC-L4-LCCS-Map-300m-P1Y-2020-v2.1.1.tif",
         legend = "pipelines/land_cover/colourmap.csv",
         metadata = "pipelines/land_cover/metadata.json",
+    params:
+        key_values = ["land_cover"]
     output:
         flag = "raster/ingest/land_cover.flag"
     script:

@@ -4,25 +4,25 @@
 import csv
 import json
 import os
-from typing import OrderedDict
 
 import terracotta
 
 
 def load_single_categorical(
     db_name: str,
-    input_raster_fpath: str,
-    db_path: str,
-    ordered_key_values: OrderedDict,
+    local_raster_path: str,
+    db_raster_dir_path: str,
+    keys: list[str],
+    key_values: list[str],
     category_map: dict,
 ) -> None:
     """
     Load a single categorical raster
 
     ::param db_name str Database name
-    ::param input_raster_fpath str Filepath to input categorical raster
+    ::param local_raster_path str Filepath to input categorical raster
     ::param internal_raster_base_path str The Internal path the raster will be stored-under
-    ::param ordered_key_values: OrderedDict e.g. {'type' : 'exposure', 'sensor':'S2', 'data':'20181010', 'band':'cloudmask'}
+    ::param keys: list[str] e.g. ['sensor', 'band']
     ::param category_map dict The category map (label:category_value) for the raster e.g.:
         {
             'clear land': 0,
@@ -37,18 +37,18 @@ def load_single_categorical(
     driver = terracotta.get_driver(tc_driver_path, provider="postgresql")
 
     # Connect and setup DB
-    driver.create(ordered_key_values.keys())
+    driver.create(keys)
 
     # Load raster as per this: https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
     with driver.connect():
         metadata = driver.compute_metadata(
-            input_raster_fpath, extra_metadata={"categories": category_map}
+            local_raster_path, extra_metadata={"categories": category_map}
         )
     with driver.connect():
-        db_filepath = f"{db_path}/{os.path.basename(input_raster_fpath)}"
+        db_filepath = f"{db_raster_dir_path}/{os.path.basename(local_raster_path)}"
         driver.insert(
-            dict(ordered_key_values),
-            input_raster_fpath,
+            key_values,
+            local_raster_path,
             metadata=metadata,
             override_path=db_filepath,
         )
@@ -74,9 +74,12 @@ def read_legend_csv(fpath: str) -> dict:
 
 if __name__ == "__main__":
     try:
-        metadata_path = snakemake.input.metadata
         legend = snakemake.input.legend
+        metadata_path = snakemake.input.metadata
         raster = snakemake.input.raster
+
+        key_values = snakemake.params.key_values
+
         flag = snakemake.output.flag
     except NameError:
         assert False, "Must be run from snakemake"
@@ -95,6 +98,7 @@ if __name__ == "__main__":
         raster,
         f"/data/{metadata['domain']}",
         metadata["keys"],
+        key_values,
         categorical_map,
     )
 
