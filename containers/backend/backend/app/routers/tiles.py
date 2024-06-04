@@ -127,7 +127,7 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
 
 
 @router.get("/sources", response_model=List[schemas.TileSourceMeta])
-async def get_all_tile_source_meta(
+def get_all_tile_source_meta(
     db: Session = Depends(get_db),
 ) -> List[schemas.TileSourceMeta]:
     """
@@ -150,7 +150,7 @@ async def get_all_tile_source_meta(
 
 
 @router.get("/sources/{source_id}", response_model=schemas.TileSourceMeta)
-async def get_tile_source_meta(
+def get_tile_source_meta(
     source_id: int,
     db: Session = Depends(get_db),
 ) -> List[schemas.TileSourceMeta]:
@@ -177,7 +177,7 @@ async def get_tile_source_meta(
 
 
 @router.get("/sources/{source_id}/domains", response_model=schemas.TileSourceDomains)
-async def get_tile_source_domains(
+def get_tile_source_domains(
     source_id: int,
     db: Session = Depends(get_db),
 ) -> schemas.TileSourceDomains:
