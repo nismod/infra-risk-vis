@@ -6,7 +6,15 @@ configfile: "config.yml"
 #
 module aqueduct:
     snakefile: "pipelines/aqueduct/rules.smk"
+    config: config
 use rule * from aqueduct as aqueduct_*
+
+
+module cdd_miranda:
+    snakefile: "pipelines/cdd_miranda/rules.smk"
+    config: config
+use rule * from cdd_miranda as cdd_miranda_*
+ruleorder: cdd_miranda_clip_raster > clip_raster
 
 
 module dem:
@@ -37,16 +45,19 @@ use rule * from ghsl_pop as ghsl_pop_*
 
 module iris:
     snakefile: "pipelines/iris/rules.smk"
+    config: config
 use rule * from iris as iris_*
 
 
 module isimip:
     snakefile: "pipelines/isimip/rules.smk"
+    config: config
 use rule * from isimip as isimip_*
 
 
 module land_cover:
     snakefile: "pipelines/land_cover/rules.smk"
+    config: config
 use rule * from land_cover as land_cover_*
 ruleorder: land_cover_download_300m_2020_from_CDS > clip_raster
 ruleorder: land_cover_ingest_categorical_raster > ingest_rasters
@@ -54,16 +65,19 @@ ruleorder: land_cover_ingest_categorical_raster > ingest_rasters
 
 module nature:
     snakefile: "pipelines/nature/rules.smk"
+    config: config
 use rule * from nature as nature_*
 
 
 module storm:
     snakefile: "pipelines/storm/rules.smk"
+    config: config
 use rule * from storm as storm_*
 
 
 module traveltime_to_healthcare:
     snakefile: "pipelines/traveltime_to_healthcare/rules.smk"
+    config: config
 use rule * from traveltime_to_healthcare as traveltime_to_healthcare_*
 
 
@@ -77,6 +91,7 @@ include: "rules/database.smk"
 # Datasets the `all` target rule will expand to
 ALL_DATASETS = (
     "aqueduct",
+    "cdd_miranda",
     "dem",
     "gem_earthquake",
     "ghsl_buildings",

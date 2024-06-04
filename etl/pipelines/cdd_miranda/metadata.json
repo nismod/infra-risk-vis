@@ -1,0 +1,8 @@
+{
+  "domain": "cdd_miranda",
+  "name": "Cooling Degree Days, difference between 1.5°C and 2°C global warming scenarios",
+  "group": "Hazard",
+  "description": "Miranda, N. D., Lizana, J., Sparrow, S. N., Wallom, D. C. H., Zachau-Walker, M., Watson, P., Khosla, R., & McCulloch, M. (2023). Changes in Cooling Degree Days (CDD) between the 1.5ºC and 2.0ºC global warming scenarios. University of Oxford. https://ora.ox.ac.uk/objects/uuid:8d95c423-816c-4a4f-88b6-eb7a040cb40e",
+  "license": "CC-BY",
+  "keys": ["metric"]
+}
