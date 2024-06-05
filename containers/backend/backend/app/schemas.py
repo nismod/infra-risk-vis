@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, Optional, TypeVar, Union
 from pydantic import BaseModel, ConfigDict, conint, validator
 
 
@@ -7,7 +7,7 @@ class FeatureBase(BaseModel):
     id: int
     string_id: str
     layer: str
-    sublayer: str | None
+    sublayer: Optional[str] = None
     properties: dict
 
 
@@ -33,7 +33,7 @@ class DataParameters(BaseModel):
 class ExpectedDamagesDimensions(DataDimensions):
     hazard: str
     rcp: str
-    epoch: str
+    epoch: Union[str, int]
     protection_standard: int
 
 
@@ -54,7 +54,7 @@ class ExpectedDamage(ExpectedDamagesDimensions, ExpectedDamagesVariables):
 class ReturnPeriodDamagesDimensions(DataDimensions):
     hazard: str
     rcp: str
-    epoch: str
+    epoch: Union[str, int]
     rp: int
 
 
