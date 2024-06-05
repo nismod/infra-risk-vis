@@ -16,6 +16,7 @@ from sqlalchemy import select, func
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from geoalchemy2 import functions
+from terracotta.exceptions import DatasetNotFoundError
 
 
 from app import schemas
@@ -401,6 +402,12 @@ async def get_tile(
         raise HTTPException(
             status_code=400,
             detail=f"source database {source_db} does not exist in tiles metastore",
+        )
+    except DatasetNotFoundError as err:
+        handle_exception(logger, err)
+        raise HTTPException(
+            status_code=400,
+            detail=f"layer with keys {parsed_keys} not found in {source_db} in tiles metastore",
         )
     except Exception as err:
         handle_exception(logger, err)
