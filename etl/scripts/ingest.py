@@ -4,11 +4,11 @@
 import concurrent.futures
 import csv
 import json
+import logging
 from typing import Any, List
 
 import terracotta
 import terracotta.exceptions
-import tqdm
 
 
 def read_csv(
@@ -67,16 +67,14 @@ def ingest_files(
         else:
             raise ex
 
-    progress_bar = tqdm.tqdm(raster_files)
     to_ingest = []
     with driver.connect():
-        for raster in progress_bar:
-            progress_bar.set_postfix(file=raster["local_path"])
+        for raster in raster_files:
 
             # This does an internal DB check after each insert
             dup_path = _check_duplicate_entry(raster, driver)
             if dup_path:
-                print(
+                logging.info(
                     f"Skipping {raster['local_path']} duplicate of existing dataset {dup_path}"
                 )
                 continue
