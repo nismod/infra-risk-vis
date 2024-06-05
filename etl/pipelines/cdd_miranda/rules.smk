@@ -24,7 +24,19 @@ rule extract:
         import xarray as xr
         with xr.open_dataset(input.netcdf) as ds:
             ds.rio.write_crs("epsg:4326", inplace=True)
-            ds["CDD_total"].sel(rp=int(rp)).rio.to_raster(output.tiff)
+            ds.coords["longitude0"].attrs = {
+                "standard_name": "longitude",
+                "long_name": "longitude",
+                "units": "degrees_east",
+                "axis": "X",
+            }
+            ds.coords["latitude0"].attrs = {
+                "standard_name": "latitude",
+                "long_name": "latitude",
+                "units": "degrees_north",
+                "axis": "Y",
+            }
+            ds["CDD_total"].rio.to_raster(output.tiff)
 
 rule clip_raster:
     """
