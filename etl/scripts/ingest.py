@@ -112,12 +112,16 @@ def _ingest_single_raster(db_name, raster, progress):
     tc_settings = terracotta.get_settings()
     tc_driver_path = f"{tc_settings.DRIVER_PATH}/{db_name}"
     driver = terracotta.get_driver(tc_driver_path, "postgresql")
-    with driver.connect():
-        driver.insert(
-            raster["key_values"],
-            raster["local_path"],
-            override_path=raster["db_path"],
-        )
+    try:
+        with driver.connect():
+            driver.insert(
+                raster["key_values"],
+                raster["local_path"],
+                override_path=raster["db_path"],
+            )
+    except ValueError as e:
+        logging.warning(e)
+
     print(progress)
 
 
