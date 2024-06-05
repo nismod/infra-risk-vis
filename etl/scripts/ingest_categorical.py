@@ -37,7 +37,14 @@ def load_single_categorical(
     driver = terracotta.get_driver(tc_driver_path, provider="postgresql")
 
     # Connect and setup DB
-    driver.create(keys)
+
+    try:
+        driver.create(keys)
+    except terracotta.exceptions.InvalidDatabaseError as ex:
+        if "Could not create database" in str(ex):
+            pass
+        else:
+            raise ex
 
     # Load raster as per this: https://terracotta-python.readthedocs.io/en/latest/tutorials/categorical.html
     with driver.connect():
