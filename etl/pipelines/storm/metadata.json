@@ -1,8 +1,8 @@
 {
-  "domain": "storm",
+  "domain": "cyclone_storm",
   "name": "STORM Tropical Cyclone Maximum Windspeeds, Present and Future climates",
   "group": "Hazard",
   "description": "Bloemendaal, Nadia; de Moel, H. (Hans); Muis, S; Haigh, I.D. (Ivan); Aerts, J.C.J.H. (Jeroen) (2020): STORM tropical cyclone wind speed return periods. 4TU.ResearchData. Dataset. DOI 10.4121/12705164.v3 and Bloemendaal, Nadia; de Moel, Hans; Dullaart, Job; Haarsma, R.J. (Reindert); Haigh, I.D. (Ivan); Martinez, Andrew B.; et al. (2022): STORM climate change tropical cyclone wind speed return periods. 4TU.ResearchData. Dataset. DOI 10.4121/14510817.v3",
   "license": "CC0 1.0",
-  "keys": ["rp", "gcm"]
+  "keys": ["rp", "gcm", "rcp", "epoch"]
 }

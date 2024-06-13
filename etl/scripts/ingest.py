@@ -130,6 +130,7 @@ if __name__ == "__main__":
         metadata_path = snakemake.input.metadata
         layers_path = snakemake.input.layers
         flag = snakemake.output.flag
+        dataset_key = snakemake.wildcards.DATASET
     except NameError:
         assert False, "Must be run from snakemake"
 
@@ -140,8 +141,8 @@ if __name__ == "__main__":
     raster_files = read_csv(
         layers_path,
         tile_keys,
-        f"raster/cog/{metadata['domain']}",
-        f"/data/{metadata['domain']}",
+        f"raster/cog/{dataset_key}",
+        f"/data/{dataset_key}",
     )
     # Prefix database name with terracotta
     db_name = f"terracotta_{metadata['domain']}"

@@ -194,7 +194,11 @@ filename,mode
 
 The `metadata.json` must follow the example structure:
 
-- `"domain"` must match the `DATASET` wildcard used in the the snakemake rules
+- `"domain"` must be a short `lower_snake_case` string that will be exposed
+  through the API and used by clients to request tiles. It will be prefixed by
+  `terracotta_` to give the metadata database name. A good default choice would
+  be the same string as the directory name for the pipeline, which is picked up
+  as the `DATASET` wildcard by snakemake.
 - `"name"` should be a short, readable description
 - `"group"` should be one of the high-level front-end groups (Hazard, Exposure,
   Vulnerability, Risk)

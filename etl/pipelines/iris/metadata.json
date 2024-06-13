@@ -1,5 +1,5 @@
 {
-  "domain": "iris",
+  "domain": "cyclone_iris",
   "name": "IRIS Tropical Cyclone Wind Speed Return Period Maps",
   "group": "Hazard",
   "description": "Derived from an early version of Sparks, N., Toumi, R. The Imperial College Storm Model (IRIS) Dataset. Sci Data 11, 424 (2024). https://doi.org/10.1038/s41597-024-03250-y",
