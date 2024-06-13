@@ -7,7 +7,7 @@ rule download:
     shell:
         """
         pushd $(dirname {output.zip})
-            zenodo_get -w links.txt --record=8147088
+            zenodo_get -w links.txt --record=11582369
             wget -nc -i links.txt
             md5sum -c md5sums.txt
         popd
