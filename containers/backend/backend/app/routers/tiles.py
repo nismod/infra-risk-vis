@@ -278,6 +278,13 @@ async def get_tile(
             options["stretch_range"] = json.loads(stretch_range)
 
         # Generate the tile
+        logger.debug(
+            "db %s keys %s tile %s options %s",
+            source_db,
+            parsed_keys,
+            [tile_x, tile_y, tile_z],
+            options,
+        )
         image = _get_singleband_image(
             source_db, parsed_keys, [tile_x, tile_y, tile_z], options
         )
