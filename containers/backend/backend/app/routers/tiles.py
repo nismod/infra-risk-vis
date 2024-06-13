@@ -69,19 +69,34 @@ def _get_singleband_image(
 
 def _tile_db_from_domain(domain: str) -> str:
     """
-    Query the name of the mysql database within-which the tiles reside
+    Query the name of the metadata database within which the tiles reside
         using the first value of the path keys (which links to hazard-type in the UI)
         See: frontend/src/config/hazards/domains.ts
     """
-    # NOTE: hard-coding the convention:
-    return f"terracotta_{domain}"
+    # NOTE: hard-coding the configured datasets; strong convention that
+    #       db = f"terracotta_{domain}"
+    domain_to_db = {
+        "aqueduct": "terracotta_aqueduct",
+        "buildings": "terracotta_buildings",
+        "cdd_miranda": "terracotta_cdd_miranda",
+        "cyclone_iris": "terracotta_cyclone_iris",
+        "cyclone_storm": "terracotta_cyclone_storm",
+        "dem": "terracotta_dem",
+        "earthquake": "terracotta_earthquake",
+        "isimip": "terracotta_isimip",
+        "land_cover": "terracotta_land_cover",
+        "nature": "terracotta_nature",
+        "population": "terracotta_population",
+        "traveltime_to_healthcare": "terracotta_traveltime_to_healthcare",
+    }
+    return domain_to_db[domain]
 
 
-def _source_options(source_db: str, domain: str = None) -> List[dict]:
+def _source_options(source_db: str) -> List[dict]:
     """
     Gather all URL key combinations available in the given source
 
-    ::param source_db str The name of the source MySQL Database in-which the tiles reside
+    ::param source_db str The name of the metadata database in which the tiles reside
     ::kwarg domain str Source options will be optionally filtered to only include this 'type' (the first index in the key-tuple)
         domain in the source meta should always map to the type - which is the first key in the key tuple
         e.g. 'fluvial in th example tile k:v pairs below'
@@ -115,13 +130,7 @@ def _source_options(source_db: str, domain: str = None) -> List[dict]:
         dict(zip(keys, _values)) for _values in datasets.keys()
     ]
 
-    logger.debug(
-        f"{source_db=} {domain=} {driver_path=} {datasets=} {keys=} {source_options=}"
-    )
-
-    # optionally filter to a domain (type)
-    if domain is not None:
-        source_options = [item for item in source_options if item["type"] == domain]
+    logger.debug(f"{source_db=} {driver_path=} {datasets=} {keys=} {source_options=}")
 
     return source_options
 
@@ -194,11 +203,9 @@ def get_tile_source_domains(
             .filter(models.RasterTileSource.id == source_id)
             .one()
         )
-        domains = _source_options(
-            res.source_db, domain=res.domain if res.domain else None
-        )
+        domains = _source_options(_tile_db_from_domain(res.domain))
         meta = schemas.TileSourceDomains(domains=domains)
-        logger.debug(f"{source_id=} {res.source_db=} {res.domain=} {domains=} {meta=}")
+        logger.debug(f"{source_id=} {res.domain=} {domains=} {meta=}")
         return meta
     except NoResultFound:
         raise HTTPException(status_code=404)
