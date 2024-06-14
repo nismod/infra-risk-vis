@@ -133,3 +133,34 @@ docker compose -f docker-compose.yaml up -d
 containers with environment data provided from the .env file.
 
 `docker ps` to see the containers' state.
+
+## Terracotta databases
+
+Ingesting rasters into a terracotta metadata database can be time-consuming, so
+it can be simpler to copy them from a local dev database to the remote.
+
+**NOTE**: this must be done with an identical version of terracotta in both
+local and remote deployment.
+
+To upgrade terracotta, it may be simplest to upgrade and fully re-ingest to a
+clean database, locally, then drop all from the remote and copy up all the
+updated metadata databases, then restart with an updated raster tileserver.
+
+With `PG*` environment variables set to connect to the remote (staging/prod)
+database server.
+
+Drop an existing database (if metadata has changed and it should be reloaded):
+
+```bash
+psql -c 'drop database terracotta_aqueduct;'
+```
+
+Copy a local database to the remote (read script for details):
+
+```bash
+bash reload_db.sh terracotta_aqueduct
+```
+
+Make sure to also copy up entries in `raster_tile_sources` table (e.g. using the
+psql `\copy` command or rerunning the final snakemake `metadata/{DATASET}.flag`
+step with remote database connection details).
