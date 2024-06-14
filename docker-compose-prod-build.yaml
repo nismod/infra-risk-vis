@@ -4,7 +4,5 @@ services:
     build: ./containers/backend
 
   vector-tileserver:
-    build:
-      context: ./containers/vector
-      dockerfile: Dockerfile-prod
+    build: ./containers/vector
     image: ghcr.io/nismod/gri-vector-tileserver:0.10

@@ -4,13 +4,13 @@ import pandas as pd
 import xarray as xr
 
 
-def netcdf_path_from_key(wildcards) -> pd.Series:
+def netcdf_path_from_tiff(wildcards) -> pd.Series:
     """
     Lookup an IRIS source netCDF from our layers file by raster key.
     """
     df: pd.DataFrame = pd.read_csv("pipelines/iris/layers.csv")
-    layer = df[df.key == wildcards.KEY].squeeze()
-    return f"raster/raw/iris/{layer.path}"
+    layer = df[df.filename == wildcards.FILENAME].squeeze()
+    return f"raster/raw/iris/{layer.nc_path}"
 
 
 rule extract_netcdf_to_tiff:
@@ -18,12 +18,12 @@ rule extract_netcdf_to_tiff:
     Extract a return-period band from source IRIS netCDF files.
     """
     input:
-        netcdf = netcdf_path_from_key
+        netcdf = netcdf_path_from_tiff
     output:
-        tiff = "raster/raw/iris/{KEY}.tif"
+        tiff = "raster/raw/iris/{FILENAME}"
     run:
         # extract return period (sub-string) from key wildcard
-        rp, = re.search(r"rp_(\d+)", wildcards.KEY).groups()
+        rp, = re.search(r"rp_(\d+)", wildcards.FILENAME).groups()
         with xr.open_dataset(input.netcdf) as ds:
             ds.coords["longitude"].attrs = {
                 "standard_name": "longitude",

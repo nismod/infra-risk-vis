@@ -68,6 +68,17 @@ services:
   vector-tileserver:
     image: ghcr.io/nismod/gri-vector-tileserver:0.10
     restart: always
+    command:
+      [
+        "tileserver-gl-light",
+        "-c",
+        "config.json",
+        "-p",
+        "8080",
+        "--verbose",
+        "-u",
+        "https://global.infrastructureresilience.org/vector",
+      ]
     volumes:
       - ./tileserver/vector/data:/data
       - ./vector-tileserver/config.json:/config.json

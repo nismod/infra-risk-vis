@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, Params
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import desc
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from geoalchemy2 import functions
 
@@ -20,7 +21,13 @@ router = APIRouter(tags=["features"])
 
 @router.get("/{feature_id}", response_model=schemas.FeatureOut)
 def read_feature(feature_id: int, db: Session = Depends(get_db)):
-    feature = db.query(models.Feature).filter(models.Feature.id == feature_id).one()
+    try:
+        feature = db.query(models.Feature).filter(models.Feature.id == feature_id).one()
+    except NoResultFound:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No feature found with id {feature_id}",
+        )
     return feature
 
 

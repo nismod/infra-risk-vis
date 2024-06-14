@@ -1,13 +1,8 @@
 {
-  "source_db": "gem_earthquake",
-  "global_type": "Hazard",
   "domain": "earthquake",
-  "full_name": "GEM Earthquake",
-  "description": "description",
-  "license": "license",
-  "variables": {
-    "type": "hazard",
-    "rp": "rp",
-    "medium": "medium"
-  }
+  "name": "Seismic Risk",
+  "group": "Hazard",
+  "description": "Johnson, K., Villani, M., Bayliss, K., Brooks, C., Chandrasekhar, S., Chartier, T., Chen, Y.-S., Garcia-Pelaez, J., Gee, R., Styron, R., Rood, A., Simionato, M., & Pagani, M. (2023). Global Seismic Hazard Map (v2023.1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8409647",
+  "license": "CC BY-NC-SA 4.0 International",
+  "keys": ["rp", "medium"]
 }

@@ -1,17 +1,16 @@
 """
 Colormap
 """
-import ast
-from typing import List, Optional, Union
+
 import inspect
+import json
+from typing import Union
 
 from fastapi import APIRouter, HTTPException
 from fastapi.logger import logger
 
-
 from app import schemas
 from app.internal.helpers import handle_exception
-from app.exceptions import SourceDBDoesNotExistException, DomainAlreadyExistsException
 
 
 router = APIRouter(tags=["colormap"])
@@ -23,8 +22,8 @@ def _get_colormap(options: schemas.ColorMapOptions) -> schemas.ColorMap:
     """
     from terracotta.handlers.colormap import colormap
 
-    _colormap = colormap(**options.dict())
-    return schemas.ColorMap.parse_obj({"colormap": _colormap})
+    _colormap = colormap(**options.model_dump())
+    return schemas.ColorMap.model_validate({"colormap": _colormap})
 
 
 @router.get("", response_model=schemas.ColorMap)
@@ -48,14 +47,14 @@ async def get_colormap(
         "performing %s, using %s, %s, %s",
         inspect.stack()[0][3],
         colormap,
-        ast.literal_eval(stretch_range),
+        json.loads(stretch_range),
         num_values,
     )
     try:
 
         options = schemas.ColorMapOptions(
             colormap=colormap,
-            stretch_range=ast.literal_eval(stretch_range),
+            stretch_range=json.loads(stretch_range),
             num_values=num_values,
         )
 

@@ -1,0 +1,8 @@
+{
+  "domain": "population",
+  "name": "Global Human Settlement Layer Population",
+  "group": "Exposure",
+  "description": "Schiavina M., Freire S., MacManus K. (2022): GHS-POP R2022A - GHS population grid multitemporal (1975-2030).European Commission, Joint Research Centre (JRC) PID: http://data.europa.eu/89h/d6d86a90-4351-4508-99c1-cb074b022c4a, doi:10.2905/D6D86A90-4351-4508-99C1-CB074B022C4A",
+  "license": "CC-BY 4.0",
+  "keys": ["epoch"]
+}

@@ -22,7 +22,6 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    # TODO: update tag to 'latest' when irv-frontend publication workflow is updated
     image: ghcr.io/nismod/irv-frontend:0.25
     profiles: ["web-server"]
     volumes:
@@ -63,10 +62,9 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
 
   vector-tileserver:
-    build:
-      context: ./containers/vector
-      dockerfile: Dockerfile-dev
-    image: ghcr.io/nismod/gri-vector-tileserver-dev:0.10
+    build: ./containers/vector
+    image: ghcr.io/nismod/gri-vector-tileserver:0.10
+    restart: always
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config-dev.json:/config.json
@@ -116,29 +114,6 @@ services:
       - "traefik.http.routers.irv-autopkg-api.middlewares=irv-autopkg-api-stripprefix"
       - "traefik.http.middlewares.irv-autopkg-api-stripprefix.stripprefix.prefixes=/extract"
       - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
-
-  #### Utility Containers
-  ## WARNING - Deletes all entries from the MySQL Terracotta Db for the given DB name
-  raster-tile-delete-entries:
-    build: ./containers/raster-tile-ingester
-    image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
-    profiles: ["raster-tile-delete-entries"]
-    env_file:
-      - ./envs/dev/.etl.env
-    volumes:
-      - ./etl/scripts/ingest.py:/ingest.py # Mounted only for Dev
-    command: ["delete_database_entries", "--database_name", "iris"]
-
-  ## WARNING - Drop the MySQL Terracotta Db with the given DB name
-  raster-tile-drop-database:
-    build: ./containers/raster-tile-ingester
-    image: ghcr.io/nismod/gri-raster-tile-ingester:0.1
-    profiles: ["raster-tile-drop-database"]
-    env_file:
-      - ./envs/dev/.etl.env
-    volumes:
-      - ./etl/scripts/ingest.py:/ingest.py # Mounted only for Dev
-    command: ["drop_database", "--database_name", "aqueduct"]
 
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   recreate-metadata-schema:

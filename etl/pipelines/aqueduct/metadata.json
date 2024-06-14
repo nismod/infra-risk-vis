@@ -1,0 +1,8 @@
+{
+  "domain": "aqueduct",
+  "name": "WRI Aqueduct Coastal and River Flooding",
+  "group": "Hazard",
+  "description": "Ward, P.J., H.C. Winsemius, S. Kuzma, M.F.P. Bierkens, A. Bouwman, H. de Moel, A. Díaz Loaiza, et al. 2020. “Aqueduct Floods Methodology.” Technical Note. Washington, D.C.: World Resources Institute. Available online at: www.wri.org/publication/aqueduct-floods-methodology.",
+  "license": "CC-BY 4.0 International",
+  "keys": ["hazard", "rp", "rcp", "epoch", "gcm"]
+}

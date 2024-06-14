@@ -1,37 +1,22 @@
 """Load network features from a single source file-layer to database.
 """
-import os
-import sys
+
 import argparse
 import yaml
 
 import pandas
-from sqlalchemy import delete
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import exists
 import geopandas
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from common.db.database import SessionLocal
-from common.db.models import Feature, FeatureLayer
+from backend.db.database import SessionLocal
+from backend.db.models import Feature, FeatureLayer
 
 parser = argparse.ArgumentParser(description="OSM Roads Geoparquet - Load to DB")
-parser.add_argument(
-    "layer",
-    type=str,
-    help="Layer Name"
-)
-parser.add_argument(
-    "output_fpath",
-    type=str,
-    help="Output File Path"
-)
-parser.add_argument(
-    "config_fpath",
-    type=str,
-    help="Config yaml filepath"
-)
+parser.add_argument("layer", type=str, help="Layer Name")
+parser.add_argument("output_fpath", type=str, help="Output File Path")
+parser.add_argument("config_fpath", type=str, help="Config yaml filepath")
+
 
 def yield_features(layer, network_tile_layer):
     """Read from geoparquet into DB"""
@@ -89,12 +74,16 @@ def get_network_layer(layer_name, network_layers):
         print(f"Could not find {layer_name} in network layers.")
         raise e
 
-def get_network_layer_by_ref(network_tile_layer_ref: str, network_layers: pandas.DataFrame):
+
+def get_network_layer_by_ref(
+    network_tile_layer_ref: str, network_layers: pandas.DataFrame
+):
     try:
         return network_layers[network_layers.ref == network_tile_layer_ref].iloc[0]
     except IndexError as e:
         print(f"Could not find {network_tile_layer_ref} in network layers.")
         raise e
+
 
 def get_network_layer_path(layer):
     return f"{layer.path}"
@@ -103,8 +92,10 @@ def get_network_layer_path(layer):
 def get_tilelayer_by_layer_ref(layer_ref: str, network_tilelayers: pandas.DataFrame):
     return network_tilelayers[network_tilelayers.ref == layer_ref].iloc[0]
 
+
 def get_tilelayer_by_layer_name(layer_name: str, network_tilelayers: pandas.DataFrame):
     return network_tilelayers[network_tilelayers.layer == layer_name].iloc[0]
+
 
 def load_tile_feature_layer(db: Session, network_tile_layer):
     """Load FeatureLayer to DB if it doesnt exist"""
@@ -133,10 +124,7 @@ if __name__ == "__main__":
     network_layers = pandas.read_csv(config["network_layers"])
     network_tilelayers = pandas.read_csv(config["network_tilelayers"])
 
-    network_tile_layer = get_tilelayer_by_layer_name(
-        args.layer,
-        network_tilelayers
-    )
+    network_tile_layer = get_tilelayer_by_layer_name(args.layer, network_tilelayers)
     print("Network TileLayer:", network_tile_layer)
     network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
     print("Network Layer", network_layer)

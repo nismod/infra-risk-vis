@@ -1,6 +1,5 @@
 # data files and folders
 containers/web-server/node_modules/
-containers/vector/config-dev.json
 mounts/raster/
 mounts/vector/
 incoming_data/

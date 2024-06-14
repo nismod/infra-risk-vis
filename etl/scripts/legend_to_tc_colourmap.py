@@ -21,13 +21,13 @@ parser.add_argument(
 
 def main(
     csv_fpath,
-    value_col="Value",
-    red_col="R",
-    green_col="G",
-    blue_col="B",
+    value_col="value",
+    red_col="r",
+    green_col="g",
+    blue_col="b",
     alpha=255,
     include_names=True,
-    name_col="Label",
+    name_col="label",
 ):
     with open(csv_fpath, mode="r", encoding="utf-8-sig") as csvfile:
         reader = csv.DictReader(csvfile)

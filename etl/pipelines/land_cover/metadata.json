@@ -1,11 +1,8 @@
 {
-  "source_db": "land_cover",
-  "global_type": "Exposure",
   "domain": "land_cover",
-  "full_name": "ESA Land Cover",
-  "description": "description",
-  "license": "license",
-  "variables": {
-    "type": "land_cover"
-  }
+  "name": "ESA Land Cover Classification",
+  "group": "Exposure",
+  "description": "European Space Agency Climate Change Initiative Land Cover project (2021) Land cover classification gridded maps from 1992 to present derived from satellite observations, v2.1.1. https://doi.org/10.24381/cds.006f2c9a",
+  "license": "ESA CCI",
+  "keys": ["land_cover"]
 }
