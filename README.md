@@ -27,6 +27,7 @@ visualisation and how to run the tool.
 # Architecture
 
 The tool runs as a set of containerised services:
+
 - Traefik reverse proxy to direct requests to the other services
 - Web server (nginx) `ghcr.io/nismod/gri-web-server`
 - Vector tileserver (tileserver-gl) `ghcr.io/nismod/gri-vector-tileserver`
@@ -45,6 +46,7 @@ N.B. The app was built with docker engine version 20.10.16 and compose version
 
 The visualisation tool runs using prepared versions of analysis data and
 results:
+
 - Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
   a terracotta database, hosted within the backend API.
 - Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
@@ -57,6 +59,7 @@ the host within `tileserver/<data_type>`. These folders are made available to th
 running tileservers as docker bind mounts.
 
 For example, in `tileserver/raster/data/aqueduct` there might live TIF files like these:
+
 ```
 coastal_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.tif
 coastal_mangrove__rp_25__rcp_baseline__epoch_2010__conf_None.tif
@@ -65,6 +68,7 @@ coastal_nomangrove_minus_mangrove__rp_100__rcp_baseline__epoch_2010__conf_None.t
 ```
 
 And in `tileserver/vector/`, mbtiles files like these:
+
 ```
 airport_runways.mbtiles
 airport_terminals.mbtiles
@@ -87,6 +91,7 @@ To deploy the stack we use the `docker compose` tool.
 ### Development
 
 The set of long-running services can include:
+
 - traefik: Reverse proxy for other services, handles TLS
 - web-server: Nginx server for the frontend code and static files
 - db: PostgreSQL database holding vector data and raster metadata
@@ -122,6 +127,7 @@ compose -f docker-compose-dev.yaml --profile traefik --profile web-server
 
 There are also a few short-lived 'utility containers', which can be run to
 perform particular tasks:
+
 - recreate-metadata-schema: Drop the contents of the `db` database, recreate with empty tables
 - raster-tile-delete-entries: Delete raster entries of specified dataset in `tiles-db`
 - raster-tile-drop-database: Drop whole database for specified dataset from `tiles-db`
@@ -147,6 +153,7 @@ To deploy containers into a production environment:
 ## Updating a service
 
 To update a service:
+
 - We make the necessary changes to the container
 - Build a new container
 - Push it to the container repository
@@ -157,7 +164,7 @@ As an example, below we update the backend on a development machine:
 
 ```bash
 # Edit docker-compose-prod-build.yaml image version:
-#     image: ghcr.io/nismod/gri-backend:1.0
+#     image: ghcr.io/nismod/gri-backend:1.5.0
 
 # Build
 docker compose -f docker-compose-prod-build.yaml build backend
@@ -166,17 +173,17 @@ docker compose -f docker-compose-prod-build.yaml build backend
 # see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
 
 # Push
-docker push ghcr.io/nismod/gri-backend:1.0
+docker push ghcr.io/nismod/gri-backend:1.5.0
 ```
 
 On the production remote, pull the image and restart the service:
 
 ```bash
 # Pull image
-docker pull ghcr.io/nismod/gri-backend:1.0
+docker pull ghcr.io/nismod/gri-backend:1.5.0
 
 # Edit docker-compose-prod-deploy.yaml image version (or sync up):
-#     image: ghcr.io/nismod/gri-backend:1.0
+#     image: ghcr.io/nismod/gri-backend:1.5.0
 
 # Restart service
 docker compose up -d backend
