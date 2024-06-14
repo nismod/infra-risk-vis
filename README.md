@@ -31,8 +31,8 @@ The tool runs as a set of containerised services:
 - Web server (nginx) `ghcr.io/nismod/gri-web-server`
 - Vector tileserver (tileserver-gl) `ghcr.io/nismod/gri-vector-tileserver`
 - Backend / API (bespoke Python app for vector data and raster tiles (+meta)) `ghcr.io/nismod/gri-backend`
-- API Database (PostgreSQL with PostGIS serves backend) (Dev only)
-- Tiles Database (MySQL serves tile ingester and backend /tiles endpoints) (Dev only)
+- API Database (Postgres with PostGIS serves backend) (Dev only)
+- Tiles Database (Postgres server with multiples terracotta metadata databases) (Dev only)
 
 The services are orchestrated using `docker compose`.
 
@@ -46,7 +46,7 @@ N.B. The app was built with docker engine version 20.10.16 and compose version
 The visualisation tool runs using prepared versions of analysis data and
 results:
 - Rasters stored as Cloud-Optimised GeoTIFFs, with metadata ingested into
-  a terracotta MySQL database, hosted within the backend API.
+  a terracotta database, hosted within the backend API.
 - Vector data stored in a PostgreSQL database, and preprocessed into Mapbox
   Vector Tiles
 
@@ -90,7 +90,6 @@ The set of long-running services can include:
 - traefik: Reverse proxy for other services, handles TLS
 - web-server: Nginx server for the frontend code and static files
 - db: PostgreSQL database holding vector data and raster metadata
-- tiles-db: MySQL database holding raster metadata for terracotta
 - backend: API for available datasets and raster tileserver (terracotta)
 - vector-tileserver: TileServer-GL for serving .mbtiles files
 - redis: In-memory database for autopackage job queueing
