@@ -55,6 +55,12 @@ module isimip:
 use rule * from isimip as isimip_*
 
 
+module jrc_flood:
+    snakefile: "pipelines/jrc_flood/rules.smk"
+    config: config
+use rule * from jrc_flood as jrc_flood_*
+
+
 module land_cover:
     snakefile: "pipelines/land_cover/rules.smk"
     config: config
@@ -105,6 +111,7 @@ ALL_DATASETS = (
     "ghsl_pop",
     "iris",
     "isimip",
+    "jrc_flood",
     "land_cover",
     "nature",
     "storm",

@@ -84,6 +84,7 @@ def _tile_db_from_domain(domain: str) -> str:
         "dem": "terracotta_dem",
         "earthquake": "terracotta_earthquake",
         "isimip": "terracotta_isimip",
+        "jrc_flood": "terracotta_jrc_flood",
         "land_cover": "terracotta_land_cover",
         "nature": "terracotta_nature",
         "population": "terracotta_population",
