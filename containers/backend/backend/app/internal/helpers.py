@@ -2,6 +2,7 @@
 Singleton Helpers
 """
 
+import logging
 import traceback
 
 from config import TILEDB_URI
@@ -14,7 +15,7 @@ def build_driver_path(database: str, tiledb_uri: str = TILEDB_URI) -> str:
     return tiledb_uri + "/" + database
 
 
-def handle_exception(logger, err: Exception):
+def handle_exception(logger: logging.Logger, err: Exception):
     """
     Handle generic exceptions
     """

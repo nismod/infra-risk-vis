@@ -4,7 +4,7 @@ Tile Service wrapping Terracotta Python API
 
 from collections import OrderedDict
 from sys import getsizeof
-from typing import BinaryIO, List, Tuple, Union
+from typing import BinaryIO, List, Optional, Tuple, Union
 import json
 import inspect
 
@@ -31,7 +31,7 @@ from config import CATEGORICAL_COLOR_MAPS
 router = APIRouter(tags=["tiles"])
 
 
-def _parse_keys(keys: str) -> List:
+def _parse_keys(keys: str) -> Tuple[str, List[str]]:
     """
     Parse tiles URL key str
     """
@@ -44,7 +44,7 @@ def _parse_keys(keys: str) -> List:
 def _get_singleband_image(
     database: str,
     keys: List[str],
-    tile_xyz: Tuple[int, int, int] = None,
+    tile_xyz: Optional[Tuple[int, int, int]] = None,
     options: dict = {},
 ) -> BinaryIO:
     """
@@ -92,7 +92,7 @@ def _tile_db_from_domain(domain: str) -> str:
     return domain_to_db[domain]
 
 
-def _source_options(source_db: str) -> List[dict]:
+def _source_options(source_db: str) -> List[dict[str, str]]:
     """
     Gather all URL key combinations available in the given source
 
