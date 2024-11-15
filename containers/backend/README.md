@@ -26,7 +26,7 @@ cd containers/backend
 
 # create a virtual environment (using venv or another method if you prefer)
 python -m venv venv
-source venv/activate
+source venv/bin/activate
 pip install -e .[dev]
 
 # run the application
