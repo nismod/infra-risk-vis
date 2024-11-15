@@ -1,0 +1,5 @@
+filename,subtype
+ls_eq_tiled.tif,earthquake
+LS_RF_Mean_1980-2018_COG.tif,rainfall_mean
+LS_RF_Median_1980-2018_COG.tif,rainfall_median
+LS_TH_COG.tif,susceptibility
