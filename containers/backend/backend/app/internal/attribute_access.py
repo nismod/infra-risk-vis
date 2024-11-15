@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, Optional
 from sqlalchemy import Column
 from sqlalchemy.orm import Query
 from sqlalchemy.sql import functions
@@ -16,7 +16,7 @@ def add_damages_expected_value_query(
     dimensions: schemas.ExpectedDamagesDimensions,
     field: str,
     field_params: schemas.DataParameters,
-):
+) -> Query:
     q = fq.join(models.Feature.damages_expected)
     q = q.filter_by(rcp=dimensions.rcp, epoch=dimensions.epoch)
     agg = False
@@ -78,7 +78,7 @@ class DataGroupConfig:
     add_value_query: Callable[
         [Query, schemas.DataDimensions, str, schemas.DataParameters | None], Query
     ]
-    field_parameters_schemas: dict[str, schemas.DataParameters] = None
+    field_parameters_schemas: Optional[dict[str, schemas.DataParameters]] = None
 
 
 DATA_GROUP_CONFIGS: dict[str, DataGroupConfig] = {
@@ -136,8 +136,8 @@ def add_value_query(
     field_group: str,
     field_dimensions: schemas.DataDimensions,
     field: str,
-    field_params: schemas.DataParameters = None,
-):
+    field_params: Optional[schemas.DataParameters] = None,
+) -> Query:
     data_group_config = DATA_GROUP_CONFIGS.get(field_group)
 
     if data_group_config is not None:

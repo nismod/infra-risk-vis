@@ -21,7 +21,15 @@ docker-compose -f docker-compose-prod-build.yaml build backend
 ### Running Locally
 
 ```bash
-cd containers/backend/backend
+# cd to this backend app directory
+cd containers/backend
+
+# create a virtual environment (using venv or another method if you prefer)
+python -m venv venv
+source venv/bin/activate
+pip install -e .[dev]
+
+# run the application
 uvicorn app.main:app --port 8888 --reload
 ```
 

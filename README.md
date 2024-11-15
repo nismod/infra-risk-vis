@@ -101,7 +101,7 @@ The set of long-running services can include:
 - irv-autopkg-worker: Autopackage data processing (clipping, serialisation, etc.)
 - irv-autopkg-api: Autopackage service coordination
 
-If you're running [your own FE](https://github.com/nismod/irv-frontend/)
+If you're running your own [frontend](https://github.com/nismod/irv-frontend/)
 development server, or connecting to a remotely hosted database, or not using
 the [autopackage API](https://github.com/nismod/irv-autopkg), you may not need
 all these services.

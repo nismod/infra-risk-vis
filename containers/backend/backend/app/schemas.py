@@ -116,7 +116,7 @@ class AdaptationCostBenefitRatioParameters(DataParameters):
     eael_days: conint(ge=1, le=30)
 
     @validator("eael_days")
-    def fix_eael_days(cls, eael_days) -> float:
+    def fix_eael_days(cls, eael_days: int) -> float:
         """
         The data for `AdaptationCostBenefit.avoided_eael_mean` is erroneous and
         should be modified in the meantime. This validator adds a fudge factor
@@ -175,19 +175,19 @@ AttributeLookup = dict[int, AttributeT]
 
 # Tile Server metadata
 class TileSourceMeta(BaseModel):
-    id: int = None
+    id: Optional[int] = None
     domain: str
     name: str
     group: str
     description: str
     license: str
-    keys: list
+    keys: list[str]
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class TileSourceDomains(BaseModel):
-    domains: List[dict]
+    domains: List[dict[str, str]]
 
 
 class ColorMapOptions(BaseModel):
