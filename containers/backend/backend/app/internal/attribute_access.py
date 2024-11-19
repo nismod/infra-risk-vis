@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Callable, Optional
-from sqlalchemy import Column
+from sqlalchemy import Column, text, Float
 from sqlalchemy.orm import Query
 from sqlalchemy.sql import functions
 from sqlalchemy.sql.operators import ColumnOperators
@@ -40,6 +40,59 @@ def add_damages_expected_value_query(
 # def add_damages_npv_value_query(fq: Query, dimesions: schemas.NPVDamagesDimensions, field: str):
 #     pass
 
+import yaml
+
+ADAPTATIONS_CONFIG = yaml.safe_load(
+"""
+properties:
+  avoided_ead_amin:
+    type: float
+    json_key: "avoided_ead_amin"
+  avoided_ead_mean:
+    type: float
+    json_key: "avoided_ead_mean"
+  avoided_ead_amax:
+    type: float
+    json_key: "avoided_ead_amax"
+  adaptation_cost:
+    type: float
+    json_key: "adaptation_cost"
+  cost_benefit_ratio:
+    type: calculated
+    expression: "{avoided_ead_mean} / {adaptation_cost}"
+"""
+)
+
+
+def build_sql_expression(data_column, data_config, field, params=None):
+    """
+    Build a SQL expression for the given field based on the configuration.
+    """
+    print(data_config)
+    properties = data_config["properties"]
+    field_config = properties.get(field)
+    if not field_config:
+        raise KeyError(f"Field '{field}' is not defined in configuration.")
+
+    field_type = field_config["type"]
+    if field_type == "calculated":
+        # Substitute keys in the expression with their JSONB paths
+        expression = field_config["expression"]
+        for key, prop in properties.items():
+            expression = expression.replace(
+                f"{{{key}}}",
+                f"({data_column[prop['json_key']]}.astext::float)"
+            )
+        # Substitute parameters if provided
+        if params:
+            for param_key, param_value in params.items():
+                expression = expression.replace(f"{{{param_key}}}", str(param_value))
+        return text(expression)
+    elif field_type == "float":
+        json_key = field_config["json_key"]
+        return data_column[json_key].astext.cast(Float)
+    else:
+        raise ValueError(f"Unsupported field type '{field_type}'.")
 
 def add_adaptation_value_query(
     fq: Query,
@@ -55,18 +108,8 @@ def add_adaptation_value_query(
         adaptation_protection_level=dimensions.adaptation_protection_level,
     )
 
-    value: Column | ColumnOperators = None
-
-    if field == "cost_benefit_ratio":
-        cost_benefit_params: schemas.AdaptationCostBenefitRatioParameters = field_params
-        eael_days = cost_benefit_params.eael_days
-
-        value = (
-            models.AdaptationCostBenefit.avoided_ead_mean
-            + models.AdaptationCostBenefit.avoided_eael_mean * eael_days
-        ) / models.AdaptationCostBenefit.adaptation_cost
-    else:
-        value = getattr(models.AdaptationCostBenefit, field)
+    params = field_params.model_dump() if field_params else None
+    value = build_sql_expression(models.AdaptationCostBenefit.properties, ADAPTATIONS_CONFIG, field, params)
 
     return q.add_column(value.label("value"))
 

@@ -127,7 +127,8 @@ class AdaptationCostBenefitRatioParameters(DataParameters):
         return eael_days / 15
 
 
-class Adaptation(AdaptationDimensions, AdaptationVariables):
+class Adaptation(AdaptationDimensions):
+    properties: dict
     model_config = ConfigDict(from_attributes=True)
 
 
