@@ -4,7 +4,7 @@ Colormap
 
 import inspect
 import json
-from typing import Union
+from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from fastapi.logger import logger
@@ -29,7 +29,7 @@ def _get_colormap(options: schemas.ColorMapOptions) -> schemas.ColorMap:
 @router.get("", response_model=schemas.ColorMap)
 async def get_colormap(
     colormap: str,
-    stretch_range: Union[str, None],
+    stretch_range: Optional[str],
     num_values: int = 255,
 ) -> schemas.ColorMap:
     """
@@ -43,18 +43,23 @@ async def get_colormap(
 
     ::kwarg num_values int Number of values to generate in the colormap
     """
+    if stretch_range is None:
+        stretch_range_arg: list[int] = [0, 10]
+    else:
+        stretch_range_arg = json.loads(stretch_range)
+
     logger.debug(
         "performing %s, using %s, %s, %s",
         inspect.stack()[0][3],
         colormap,
-        json.loads(stretch_range),
+        stretch_range_arg,
         num_values,
     )
     try:
 
         options = schemas.ColorMapOptions(
             colormap=colormap,
-            stretch_range=json.loads(stretch_range),
+            stretch_range=stretch_range_arg,
             num_values=num_values,
         )
 
