@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gri-backend"
-version = "0.3.0"
+version = "0.4.0"
 description = "GRI API Backend"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.12"
 license = { text = "MIT" }
 classifiers = ["Framework :: FastAPI", "Programming Language :: Python :: 3"]
 dependencies = [
