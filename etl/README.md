@@ -22,7 +22,56 @@ The data processing steps are broadly as follows:
 ### Vector
 
 Vector data are yet to be incorporated in the unified ETL workflow. See the
-relevant pipeline readme files for more information.
+relevant pipeline readme files for more information. The rest of this section
+describes the general approach.
+
+We use [tippecanoe](https://github.com/mapbox/tippecanoe) to generate Mapbox Vector 
+Tiles, stored in `.mbtiles` files. Follow the installation or build instructions
+in their documentation.
+
+Step 1 is to have the features prepared in GeoJSON.
+
+The simplest `tippecanoe` example command often works well enough:
+
+```bash
+tippecanoe -zg -o landslide_forest.mbtiles --drop-densest-as-needed landslide_forest.geojson
+```
+
+Here's a version with options that should work a little better for a larger dataset:
+
+```bash
+tippecanoe  -o landslide_forest.mbtiles \
+    --use-attribute-for-id=feature_id \
+    -zg \
+    --minimum-zoom=4 \
+    --read-parallel \
+    --drop-densest-as-needed \
+    --extend-zooms-if-still-dropping \
+    --simplification=10 \
+    --simplify-only-low-zooms \
+    landslide_forest.geojson
+```
+
+NB that `--read-parallel` works with [GeoJSONSeq](https://gdal.org/en/latest/drivers/vector/geojsonseq.html)
+(line-delimited GeoJSON with one feature per line and no wrapping FeatureCollection). 
+You could use `ogr2ogr` or something like this Python script to convert from regular
+GeoJSON to a line-delimited series of features:
+
+```python
+import json
+with open('features.geojson', 'r') as fh_in:
+    with open('features.geojsonld', 'w') as fh_out:
+        for f in data['features']:
+            line = json.dumps(f)
+            fh_out.write(line)
+            fh_out.write("\n")
+```
+
+Once generated, the mbtiles file needs to sit in `./tileserver/vector/data` and have 
+an entry in [config.json or config-dev.json](https://github.com/nismod/infra-risk-vis/blob/c95b7cdcacf784fd92353f10f5f1312cfd0a5b6b/containers/vector/config.json#L11-L13).
+
+The file and volume mapping for vector tiles is configured in the docker-compose 
+(e.g. [here for dev](https://github.com/nismod/infra-risk-vis/blob/c95b7cdcacf784fd92353f10f5f1312cfd0a5b6b/docker-compose-dev.yaml#L69)).
 
 ## Architecture
 
