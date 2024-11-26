@@ -68,6 +68,8 @@ services:
     volumes:
       - ./tileserver/vector/data:/data # bind mount
       - ./containers/vector/config-dev.json:/config.json
+    env_file:
+      - ./envs/dev/.vector-tileserver.env
     ports:
       - 8800:8080
     labels:
