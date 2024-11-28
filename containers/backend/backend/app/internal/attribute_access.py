@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Callable, Optional
-from sqlalchemy import Column, text, Float
+from sqlalchemy import Column,  Float, literal_column, cast, literal
 from sqlalchemy.orm import Query
 from sqlalchemy.sql import functions
 from sqlalchemy.sql.operators import ColumnOperators
@@ -64,11 +64,10 @@ properties:
 )
 
 
-def build_sql_expression(data_column, data_config, field, params=None):
+def build_sql_expression(data_column: Column, data_config, field, params=None):
     """
     Build a SQL expression for the given field based on the configuration.
     """
-    print(data_config)
     properties = data_config["properties"]
     field_config = properties.get(field)
     if not field_config:
@@ -76,21 +75,26 @@ def build_sql_expression(data_column, data_config, field, params=None):
 
     field_type = field_config["type"]
     if field_type == "calculated":
+        # Get the fully qualified data column table.column specifier
+        data_column_spec = f"{data_column.table.name}.{data_column.key}"
+
         # Substitute keys in the expression with their JSONB paths
-        expression = field_config["expression"]
+        expression: str = field_config["expression"]
         for key, prop in properties.items():
-            expression = expression.replace(
-                f"{{{key}}}",
-                f"({data_column[prop['json_key']]}.astext::float)"
-            )
+            if prop['type'] != 'calculated':
+                json_key = prop["json_key"]
+                expression = expression.replace(
+                    f"{{{key}}}",
+                    f"(CAST({data_column_spec}::jsonb->>'{json_key}' AS FLOAT))"
+                )
         # Substitute parameters if provided
         if params:
             for param_key, param_value in params.items():
                 expression = expression.replace(f"{{{param_key}}}", str(param_value))
-        return text(expression)
+        return literal_column(expression)
     elif field_type == "float":
         json_key = field_config["json_key"]
-        return data_column[json_key].astext.cast(Float)
+        return cast(data_column.op('->>')(json_key), Float)
     else:
         raise ValueError(f"Unsupported field type '{field_type}'.")
 
@@ -144,9 +148,6 @@ DATA_GROUP_CONFIGS: dict[str, DataGroupConfig] = {
         dimensions_schema=schemas.AdaptationDimensions,
         variables_schema=schemas.AdaptationVariables,
         add_value_query=add_adaptation_value_query,
-        field_parameters_schemas={
-            "cost_benefit_ratio": schemas.AdaptationCostBenefitRatioParameters,
-        },
     ),
 }
 
