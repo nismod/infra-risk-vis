@@ -1,6 +1,11 @@
 FROM maptiler/tileserver-gl:v4.11.1
 LABEL maintainer="frederick.thomas@ouce.ox.ac.uk"
 
+# used in run.sh - override through docker compose if needed
+# this URL will be contained in the responses from the tileserver
+# it should be a URL accessible from the client
+ENV TILESERVER_PUBLIC_URL="http://localhost/vector"
+
 WORKDIR /
 
 # copy in required config
@@ -12,4 +17,4 @@ COPY ./config.json .
 USER root
 RUN chmod -R u+r /data
 
-CMD ["tileserver-gl-light", "-c", "config.json", "-p", "8080", "--verbose", "-u", "http://localhost/vector"]
+CMD ["./run.sh"]

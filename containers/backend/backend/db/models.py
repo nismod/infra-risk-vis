@@ -25,7 +25,7 @@ class Feature(Base):
     layer = Column(
         String, ForeignKey(FeatureLayer.layer_name), index=True, nullable=False
     )
-    properties = Column(JSON, nullable=False)
+    properties = Column(JSONB, nullable=False)
     geom = Column(Geometry("GEOMETRY", srid=4326), nullable=False)
 
     layer_info = relationship("FeatureLayer")
@@ -105,15 +105,8 @@ class AdaptationCostBenefit(Base):
     adaptation_name = Column(String, nullable=False, primary_key=True)
     adaptation_protection_level = Column(Float, nullable=False, primary_key=True)
 
-    adaptation_cost = Column(Float)
+    properties = Column(JSONB, nullable=False)
 
-    avoided_ead_amin = Column(Float)
-    avoided_ead_mean = Column(Float)
-    avoided_ead_amax = Column(Float)
-
-    avoided_eael_amin = Column(Float)
-    avoided_eael_mean = Column(Float)
-    avoided_eael_amax = Column(Float)
 
 
 class RasterTileSource(Base):
