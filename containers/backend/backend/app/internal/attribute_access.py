@@ -31,7 +31,7 @@ def add_damages_expected_value_query(
         q = q.group_by(models.Feature.id)
         value = functions.sum(value)
 
-    return q.add_column(value.label("value"))
+    return q.add_columns(value.label("value"))
 
 
 # def add_damages_rp_value_query(fq: Query, dimesions: schemas.ReturnPeriodDamagesDimensions, field: str):
@@ -68,7 +68,7 @@ def add_adaptation_value_query(
     else:
         value = getattr(models.AdaptationCostBenefit, field)
 
-    return q.add_column(value.label("value"))
+    return q.add_columns(value.label("value"))
 
 
 @dataclass
@@ -112,7 +112,7 @@ def parse_dimensions(field_group: str, dimensions: Json):
     data_group_config = DATA_GROUP_CONFIGS.get(field_group)
 
     if data_group_config is not None:
-        return data_group_config.dimensions_schema.parse_obj(dimensions)
+        return data_group_config.dimensions_schema.model_validate_json(dimensions)
     else:
         raise ValidationError(f"Invalid field group: {field_group}")
 
@@ -124,7 +124,7 @@ def parse_parameters(field_group: str, field: str, parameters: Json):
         field_params_schema = data_group_config.field_parameters_schemas
 
         if field_params_schema is not None and field in field_params_schema:
-            return field_params_schema[field].parse_obj(parameters)
+            return field_params_schema[field].model_validate_json(parameters)
         else:
             return None
     else:
