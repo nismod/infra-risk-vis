@@ -17,15 +17,15 @@ from terracotta.exceptions import DatasetNotFoundError
 from terracotta import get_driver
 
 
-from app import schemas
-from app.dependencies import get_db
-from db import models
-from app.internal.helpers import build_driver_path, handle_exception
-from app.exceptions import (
+from backend.app import schemas
+from backend.app.dependencies import get_db
+from backend.db import models
+from backend.app.internal.helpers import build_driver_path, handle_exception
+from backend.app.exceptions import (
     SourceDBDoesNotExistException,
     MissingExplicitColourMapException,
 )
-from config import CATEGORICAL_COLOR_MAPS
+from backend.config import CATEGORICAL_COLOR_MAPS
 
 
 router = APIRouter(tags=["tiles"])

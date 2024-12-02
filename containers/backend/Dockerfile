@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.12
 LABEL maintainer="frederick.thomas@ouce.ox.ac.uk"
 
 WORKDIR /code

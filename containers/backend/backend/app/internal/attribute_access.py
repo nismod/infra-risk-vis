@@ -7,8 +7,8 @@ from sqlalchemy.sql.operators import ColumnOperators
 from pydantic import Json, ValidationError
 
 
-from app import schemas
-from db import models
+from backend.app import schemas
+from backend.db import models
 
 
 def add_damages_expected_value_query(
@@ -55,7 +55,7 @@ def add_adaptation_value_query(
         adaptation_protection_level=dimensions.adaptation_protection_level,
     )
 
-    value: Column | ColumnOperators = None
+    value: Column | ColumnOperators | None = None
 
     if field == "cost_benefit_ratio":
         cost_benefit_params: schemas.AdaptationCostBenefitRatioParameters = field_params
@@ -78,7 +78,7 @@ class DataGroupConfig:
     add_value_query: Callable[
         [Query, schemas.DataDimensions, str, schemas.DataParameters | None], Query
     ]
-    field_parameters_schemas: Optional[dict[str, schemas.DataParameters]] = None
+    field_parameters_schemas: Optional[dict[str, schemas.DataParameters]] | None = None
 
 
 DATA_GROUP_CONFIGS: dict[str, DataGroupConfig] = {

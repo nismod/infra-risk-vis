@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, Params
 from fastapi_pagination.ext.sqlalchemy import paginate
@@ -6,14 +8,14 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from geoalchemy2 import functions
 
-from app import schemas
-from app.dependencies import get_db
-from app.internal.attribute_access import (
+from backend.app import schemas
+from backend.app.dependencies import get_db
+from backend.app.internal.attribute_access import (
     add_value_query,
     parse_dimensions,
     parse_parameters,
 )
-from db import models
+from backend.db import models
 
 
 router = APIRouter(tags=["features"])
@@ -32,7 +34,10 @@ def read_feature(feature_id: int, db: Session = Depends(get_db)):
 
 
 def get_layer_spec(
-    layer: str = None, sector: str = None, subsector: str = None, asset_type: str = None
+    layer: Optional[str] = None,
+    sector: Optional[str] = None,
+    subsector: Optional[str] = None,
+    asset_type: Optional[str] = None,
 ):
     return schemas.LayerSpec(
         layer_name=layer,
