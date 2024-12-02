@@ -2,16 +2,16 @@ from typing import Any
 from fastapi import APIRouter, Body, Depends
 from sqlalchemy.orm import Session
 
-from app.dependencies import get_db
-from app.internal.attribute_access import (
+from backend.app.dependencies import get_db
+from backend.app.internal.attribute_access import (
     add_value_query,
     parse_dimensions,
     parse_parameters,
 )
 
-from db import models
+from backend.db import models
 
-from .. import schemas
+from backend.app import schemas
 
 router = APIRouter(tags=["attributes"])
 

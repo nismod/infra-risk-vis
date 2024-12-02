@@ -5,7 +5,7 @@ Singleton Helpers
 import logging
 import traceback
 
-from config import TILEDB_URI
+from backend.config import TILEDB_URI
 
 
 def build_driver_path(database: str, tiledb_uri: str = TILEDB_URI) -> str:

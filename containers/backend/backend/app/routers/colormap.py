@@ -9,8 +9,8 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException
 from fastapi.logger import logger
 
-from app import schemas
-from app.internal.helpers import handle_exception
+from backend.app import schemas
+from backend.app.internal.helpers import handle_exception
 
 
 router = APIRouter(tags=["colormap"])
