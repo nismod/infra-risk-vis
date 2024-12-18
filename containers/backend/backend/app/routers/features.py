@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, Params
 from fastapi_pagination.ext.sqlalchemy import paginate
 from pydantic import Json
-from sqlalchemy import desc, Column, Integer
+from sqlalchemy import desc, Column, Integer, Text
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 from geoalchemy2 import functions
@@ -49,7 +49,7 @@ def parse_ranking_scope(ranking_scope: Json = None):
 
 def add_jsonb_filters(jsonb_column: Column, filters: dict[str, Any]):
     return [
-        jsonb_column.op("->>")(key).cast(Integer) == value
+        jsonb_column.op("->>")(key).cast(Text) == str(value)
         for key, value in filters.items()
     ]
 
