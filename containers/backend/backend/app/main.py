@@ -25,7 +25,7 @@ app = FastAPI(
     generate_unique_id_function=custom_generate_unique_id,
     title="GRI Infra-Risk-Vis API",
     description="API Supporting Global Resilience Initiative Visualisation UI.  Serving geospatial features (inc. related damages) and raster tiles (via Terracotta)",
-    version="0.8.0",
+    version="0.9.0",
     terms_of_service="",
     contact={
         "name": "Tom Russell",
