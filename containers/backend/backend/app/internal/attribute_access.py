@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import Callable, Optional
-from sqlalchemy import Column,  Float, literal_column, cast, literal
+from sqlalchemy import Column
 from sqlalchemy.orm import Query
 from sqlalchemy.sql import functions
-from sqlalchemy.sql.operators import ColumnOperators
 from pydantic import Json, ValidationError
 
 
 from app import schemas
+from app.internal.dynamic_data_config import DynamicDataConfig, build_sql_expression
 from db import models
 
 
@@ -40,10 +40,9 @@ def add_damages_expected_value_query(
 # def add_damages_npv_value_query(fq: Query, dimesions: schemas.NPVDamagesDimensions, field: str):
 #     pass
 
-import yaml
 
-ADAPTATIONS_CONFIG = yaml.safe_load(
-"""
+# potentially store the config in the database or a config file
+ADAPTATIONS_CONFIG_TEXT = """
 properties:
   avoided_ead_amin:
     type: float
@@ -61,42 +60,10 @@ properties:
     type: calculated
     expression: "{avoided_ead_mean} / {adaptation_cost}"
 """
-)
 
+import yaml
 
-def build_sql_expression(data_column: Column, data_config, field, params=None):
-    """
-    Build a SQL expression for the given field based on the configuration.
-    """
-    properties = data_config["properties"]
-    field_config = properties.get(field)
-    if not field_config:
-        raise KeyError(f"Field '{field}' is not defined in configuration.")
-
-    field_type = field_config["type"]
-    if field_type == "calculated":
-        # Get the fully qualified data column table.column specifier
-        data_column_spec = f"{data_column.table.name}.{data_column.key}"
-
-        # Substitute keys in the expression with their JSONB paths
-        expression: str = field_config["expression"]
-        for key, prop in properties.items():
-            if prop['type'] != 'calculated':
-                json_key = prop["json_key"]
-                expression = expression.replace(
-                    f"{{{key}}}",
-                    f"(CAST({data_column_spec}::jsonb->>'{json_key}' AS FLOAT))"
-                )
-        # Substitute parameters if provided
-        if params:
-            for param_key, param_value in params.items():
-                expression = expression.replace(f"{{{param_key}}}", str(param_value))
-        return literal_column(expression)
-    elif field_type == "float":
-        json_key = field_config["json_key"]
-        return cast(data_column.op('->>')(json_key), Float)
-    else:
-        raise ValueError(f"Unsupported field type '{field_type}'.")
+ADAPTATIONS_CONFIG = DynamicDataConfig.model_validate(yaml.safe_load(ADAPTATIONS_CONFIG_TEXT))
 
 def add_adaptation_value_query(
     fq: Query,
