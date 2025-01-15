@@ -52,6 +52,33 @@
     },
     "seismic_and_flooding_exposure_per_country": {
       "mbtiles": "seismic_and_flooding_exposure_per_country.mbtiles"
+    },
+    "nbs": {
+      "mbtiles": "nbs.mbtiles"
+    },
+    "adm0": {
+      "mbtiles": "adm0.mbtiles"
+    },
+    "adm0_points": {
+      "mbtiles": "adm0_points.mbtiles"
+    },
+    "adm1": {
+      "mbtiles": "adm1.mbtiles"
+    },
+    "adm1_points": {
+      "mbtiles": "adm1_points.mbtiles"
+    },
+    "adm2": {
+      "mbtiles": "adm2.mbtiles"
+    },
+    "adm2_points": {
+      "mbtiles": "adm2_points.mbtiles"
+    },
+    "hybas": {
+      "mbtiles": "hybas.mbtiles"
+    },
+    "hybas_points": {
+      "mbtiles": "hybas_points.mbtiles"
     }
   }
 }
