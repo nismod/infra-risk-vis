@@ -39,14 +39,25 @@ rule download_rwi:
     shell:
         """
         output_dir=$(dirname {output.csv})
+        mkdir -p $output_dir
 
+        # Combined April 2021 release
         wget -nc \
             https://data.humdata.org/dataset/76f2a2ea-ba50-40f5-b79c-db95d668b843/resource/de2f953e-940c-43bb-b1f8-4d02d28124b5/download/relative-wealth-index-april-2021.zip \
-            --directory-prefix=$(dirname {output.archive})
+            --directory-prefix=$output_dir
+
+        # Turkey released later
+        wget -nc \
+            https://data.humdata.org/dataset/76f2a2ea-ba50-40f5-b79c-db95d668b843/resource/ca1dea6b-9cc1-4bed-9465-8fd8fd7e0941/download/tur_relative_wealth_index.csv \
+            --directory-prefix=$output_dir
 
         unzip -j -n {output.archive} -d $output_dir
 
         pushd $output_dir
+            # fix mismatched columns
+            cat tur_relative_wealth_index.csv | cut -d ',' -f 2,3,4,5 > tur_relative_wealth_index.noquadkey.csv
+            mv tur_relative_wealth_index.noquadkey.csv tur_relative_wealth_index.csv
+            # concatenate all
             awk '(NR == 1) || (FNR > 1)' *_relative_wealth_index.csv > $(basename {output.csv})
         popd
         """
