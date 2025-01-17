@@ -201,7 +201,7 @@ rule download_gridded_hdi:
     """
     output:
         archive = "raster/raw/social/hdi/hdi_raster_predictions_V2.0.zip",
-        tiff = "raster/raw/social/hdi/hdi_raster_predictions.tif"
+        tiff = "raster/raw/social/hdi_raster_predictions.tif"
     shell:
         """
         wget -nc \
