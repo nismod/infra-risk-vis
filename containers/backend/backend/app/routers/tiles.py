@@ -146,7 +146,7 @@ def get_all_tile_source_meta(session: SessionDep) -> List[schemas.TileSourceMeta
         inspect.stack()[0][3],
     )
     try:
-        res = session.execute(select(models.RasterTileSource)).all()
+        res = session.scalars(select(models.RasterTileSource)).all()
         all_meta = []
         for row in res:
             meta = schemas.TileSourceMeta.model_validate(row)
