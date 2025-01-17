@@ -66,7 +66,6 @@ rule process_rwi_points:
     input:
         csv = "raster/raw/social/rwi/relative-wealth-index-april-2021.csv",
     output:
-        parquet = "raster/raw/social/rwi/relative-wealth-index-april-2021.parquet",
         gpkg = "raster/raw/social/rwi/relative-wealth-index-april-2021.gpkg",
     run:
         import pandas as pd
@@ -80,10 +79,9 @@ rule process_rwi_points:
         # reproject to 3857 (point coordinates are provided in lat/lon but the
         # underlying regular grid seems to be based on Web Mercator via Quadkeys)
         gdf.to_crs("EPSG:3857", inplace=True)
-        gdf.to_parquet(output.parquet)
         gdf.to_file(output.gpkg, engine="pyogrio")
 
-rule process_rwi_points_tiff:
+rule process_rwi_grid:
     """Rasterise points to a grid data format
 
     -tr specifies x/y resolution, guessed from most common difference between point
