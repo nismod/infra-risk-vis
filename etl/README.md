@@ -22,7 +22,56 @@ The data processing steps are broadly as follows:
 ### Vector
 
 Vector data are yet to be incorporated in the unified ETL workflow. See the
-relevant pipeline readme files for more information.
+relevant pipeline readme files for more information. The rest of this section
+describes the general approach.
+
+We use [tippecanoe](https://github.com/mapbox/tippecanoe) to generate Mapbox Vector
+Tiles, stored in `.mbtiles` files. Follow the installation or build instructions
+in their documentation.
+
+Step 1 is to have the features prepared in GeoJSON.
+
+The simplest `tippecanoe` example command often works well enough:
+
+```bash
+tippecanoe -zg -o landslide_forest.mbtiles --drop-densest-as-needed landslide_forest.geojson
+```
+
+Here's a version with options that should work a little better for a larger dataset:
+
+```bash
+tippecanoe  -o landslide_forest.mbtiles \
+    --use-attribute-for-id=feature_id \
+    -zg \
+    --minimum-zoom=4 \
+    --read-parallel \
+    --drop-densest-as-needed \
+    --extend-zooms-if-still-dropping \
+    --simplification=10 \
+    --simplify-only-low-zooms \
+    landslide_forest.geojson
+```
+
+NB that `--read-parallel` works with [GeoJSONSeq](https://gdal.org/en/latest/drivers/vector/geojsonseq.html)
+(line-delimited GeoJSON with one feature per line and no wrapping FeatureCollection).
+You could use `ogr2ogr` or something like this Python script to convert from regular
+GeoJSON to a line-delimited series of features:
+
+```python
+import json
+with open('features.geojson', 'r') as fh_in:
+    with open('features.geojsonld', 'w') as fh_out:
+        for f in data['features']:
+            line = json.dumps(f)
+            fh_out.write(line)
+            fh_out.write("\n")
+```
+
+Once generated, the mbtiles file needs to sit in `./tileserver/vector/data` and have
+an entry in [config.json or config-dev.json](https://github.com/nismod/infra-risk-vis/blob/c95b7cdcacf784fd92353f10f5f1312cfd0a5b6b/containers/vector/config.json#L11-L13).
+
+The file and volume mapping for vector tiles is configured in the docker-compose
+(e.g. [here for dev](https://github.com/nismod/infra-risk-vis/blob/c95b7cdcacf784fd92353f10f5f1312cfd0a5b6b/docker-compose-dev.yaml#L69)).
 
 ## Architecture
 
@@ -163,6 +212,29 @@ snakemake --cores <n_cores> -R all
 This will create and ingest all the pertinent rasters and create metadata
 records for them.
 
+### Running other rules by name
+
+The top-level `Snakefile` imports rules from the pipelines using `module`
+declarations, e.g.:
+
+```
+module land_cover:
+    snakefile: "pipelines/land_cover/rules.smk"
+    config: config
+use rule * from land_cover as land_cover_*
+```
+
+To run any rule defined in a pipeline by name, include
+the prefix specified in the line `use rule * from xxx as xxx_*`.
+
+For example, the rule `download_300m_2020_from_CDS` from
+`pipelines/land_cover/rules.smk` is imported `as land_cover_*`
+and can be run using:
+
+```bash
+snakemake --cores 1 land_cover_download_300m_2020_from_CDS
+```
+
 ## Adding new datasets
 
 ### Raster
@@ -228,6 +300,21 @@ The `Snakefile` will also require modification:
   `ruleorder` directive.
 - You should also add your dataset to `ALL_DATASETS` so that the `all` target
   rule will work as expected.
+
+#### Deploying a raster layer
+
+After testing against a local backend, `snakemake` can run the final ingest/metadata
+steps against the production database.
+
+Remove the flag files, then run with `--config environment=prod` to source environment
+files for the production database.
+
+```
+rm raster/{ingest,metadata}/social.flag
+snakemake --cores 1 --config environment=prod  -- raster/metadata/social.flag
+```
+
+Copy up the COGs and update the `backend` service (see the top-level [README](../README.md)).
 
 #### Removing a source from the tileserver metastore
 

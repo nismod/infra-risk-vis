@@ -23,6 +23,7 @@ dependencies:
       # this version not available on conda-forge
       - terracotta==0.8.3 # raster tile server and processing utilities
   - pyarrow # performant tabular data
+  - pyogrio # faster geopandas I/O
   - psycopg2-binary # postgreSQL python client, for raster metadata
   - rasterio # geospatial raster data
   - rioxarray # extend xarray for rasters

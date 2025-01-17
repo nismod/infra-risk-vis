@@ -4,8 +4,11 @@ from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.logger import logger
 
-from .routers import attributes, features, tiles, colormap
-from config import LOG_LEVEL
+import backend.app.routers.attributes as attributes
+import backend.app.routers.features as features
+import backend.app.routers.tiles as tiles
+import backend.app.routers.colormap as colormap
+from backend.config import LOG_LEVEL
 
 formatter = logging.Formatter(
     "[%(asctime)s.%(msecs)03d] %(levelname)s %(filename)s - %(funcName)s - %(message)s",

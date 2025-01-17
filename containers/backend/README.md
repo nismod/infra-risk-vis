@@ -30,7 +30,7 @@ source venv/bin/activate
 pip install -e .[dev]
 
 # run the application
-uvicorn app.main:app --port 8888 --reload
+uvicorn backend.app.main:app --port 8888 --reload
 ```
 
 ## Configuration

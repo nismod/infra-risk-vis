@@ -1,6 +1,7 @@
 from enum import Enum
-from typing import Generic, List, Optional, TypeVar, Union
-from pydantic import BaseModel, ConfigDict, conint, validator
+from typing import Generic, Optional, TypeVar, Union
+from typing_extensions import Annotated
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class FeatureBase(BaseModel):
@@ -113,9 +114,9 @@ class AdaptationVariables(DataVariables):
 
 
 class AdaptationCostBenefitRatioParameters(DataParameters):
-    eael_days: conint(ge=1, le=30)
+    eael_days: Annotated[int, Field(ge=1, le=30)]
 
-    @validator("eael_days")
+    @field_validator("eael_days")
     def fix_eael_days(cls, eael_days: int) -> float:
         """
         The data for `AdaptationCostBenefit.avoided_eael_mean` is erroneous and
@@ -188,19 +189,19 @@ class TileSourceMeta(BaseModel):
 
 
 class TileSourceDomains(BaseModel):
-    domains: List[dict[str, str]]
+    domains: list[dict[str, str]]
 
 
 class ColorMapOptions(BaseModel):
-    stretch_range: List[int]
+    stretch_range: list[int]
     colormap: str
     num_values: Optional[int] = 255
 
 
 class ColorMapEntry(BaseModel):
     value: float
-    rgba: List[int]
+    rgba: list[int]
 
 
 class ColorMap(BaseModel):
-    colormap: List[ColorMapEntry]
+    colormap: list[ColorMapEntry]

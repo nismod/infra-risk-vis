@@ -21,6 +21,7 @@ etl/config_local.yml
 public/*.csv
 public/**/*.csv
 .snakemake
+db
 
 # local config
 .env*

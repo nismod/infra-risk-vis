@@ -17,6 +17,9 @@ class FeatureLayer(Base):
     subsector = Column(String, nullable=False)
     asset_type = Column(String, nullable=False)
 
+    def __repr__(self) -> str:
+        return f"FeatureLayer(layer_name={self.layer_name!r}, sector={self.sector!r}, subsector={self.subsector!r}, asset_type={self.asset_type!r})"
+
 
 class Feature(Base):
     __tablename__ = "features"
@@ -34,6 +37,9 @@ class Feature(Base):
     damages_expected = relationship("ExpectedDamage")
     damages_npv = relationship("NPVDamage")
     adaptation = relationship("AdaptationCostBenefit")
+
+    def __repr__(self) -> str:
+        return f"Feature(id={self.id!r}, string_id={self.string_id!r}, layer={self.layer!r})"
 
 
 class ReturnPeriodDamage(Base):
@@ -56,6 +62,9 @@ class ReturnPeriodDamage(Base):
     loss_mean = Column(Float)
     loss_amax = Column(Float)
 
+    def __repr__(self) -> str:
+        return f"ReturnPeriodDamage(feature_id={self.feature_id!r}, hazard={self.hazard!r}, rcp={self.rcp!r}, epoch={self.epoch!r}, rp={self.rp!r}, damage_mean={self.damage_mean!r})"
+
 
 class ExpectedDamage(Base):
     __tablename__ = "damages_expected"
@@ -76,6 +85,9 @@ class ExpectedDamage(Base):
     eael_mean = Column(Float)
     eael_amax = Column(Float)
 
+    def __repr__(self) -> str:
+        return f"ExpectedDamage(feature_id={self.feature_id!r}, hazard={self.hazard!r}, rcp={self.rcp!r}, epoch={self.epoch!r}, ead_mean={self.ead_mean!r})"
+
 
 class NPVDamage(Base):
     __tablename__ = "damages_npv"
@@ -93,6 +105,9 @@ class NPVDamage(Base):
     eael_mean = Column(Float)
     eael_amax = Column(Float)
 
+    def __repr__(self) -> str:
+        return f"NPVDamage(feature_id={self.feature_id!r}, hazard={self.hazard!r}, rcp={self.rcp!r}, ead_mean={self.ead_mean!r})"
+
 
 class AdaptationCostBenefit(Base):
     __tablename__ = "adaptation_cost_benefit"
@@ -107,6 +122,9 @@ class AdaptationCostBenefit(Base):
 
     properties = Column(JSONB, nullable=False)
 
+
+    def __repr__(self) -> str:
+        return f"AdaptationCostBenefit(feature_id={self.feature_id!r}, hazard={self.hazard!r}, rcp={self.rcp!r}, adaptation_name={self.adaptation_name!r}, adaptation_protection_level={self.adaptation_protection_level!r}, adaptation_cost={self.adaptation_cost!r}, avoided_ead_mean={self.avoided_ead_mean!r})"
 
 
 class RasterTileSource(Base):
@@ -124,3 +142,6 @@ class RasterTileSource(Base):
     description = Column(String, nullable=True)
     license = Column(String, nullable=True)
     keys = Column(JSONB)  # JSON list of terracotta/URL keys
+
+    def __repr__(self) -> str:
+        return f"RasterTileSource(id={self.id!r}, domain={self.domain!r}, name={self.name!r}, group={self.group!r}, description={self.description!r})"

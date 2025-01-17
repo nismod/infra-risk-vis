@@ -5,10 +5,12 @@ from sqlalchemy.orm import Query
 from sqlalchemy.sql import functions
 from pydantic import Json, ValidationError
 
-
-from app import schemas
-from app.internal.dynamic_data_config import DynamicDataConfig, build_sql_expression
-from db import models
+from backend.app import schemas
+from backend.app.internal.dynamic_data_config import (
+    DynamicDataConfig,
+    build_sql_expression,
+)
+from backend.db import models
 
 
 def add_damages_expected_value_query(
@@ -31,7 +33,7 @@ def add_damages_expected_value_query(
         q = q.group_by(models.Feature.id)
         value = functions.sum(value)
 
-    return q.add_column(value.label("value"))
+    return q.add_columns(value.label("value"))
 
 
 # def add_damages_rp_value_query(fq: Query, dimesions: schemas.ReturnPeriodDamagesDimensions, field: str):
@@ -63,7 +65,10 @@ properties:
 
 import yaml
 
-ADAPTATIONS_CONFIG = DynamicDataConfig.model_validate(yaml.safe_load(ADAPTATIONS_CONFIG_TEXT))
+ADAPTATIONS_CONFIG = DynamicDataConfig.model_validate(
+    yaml.safe_load(ADAPTATIONS_CONFIG_TEXT)
+)
+
 
 def add_adaptation_value_query(
     fq: Query,
@@ -80,9 +85,11 @@ def add_adaptation_value_query(
     )
 
     params = field_params.model_dump() if field_params else None
-    value = build_sql_expression(models.AdaptationCostBenefit.properties, ADAPTATIONS_CONFIG, field, params)
+    value = build_sql_expression(
+        models.AdaptationCostBenefit.properties, ADAPTATIONS_CONFIG, field, params
+    )
 
-    return q.add_column(value.label("value"))
+    return q.add_columns(value.label("value"))
 
 
 @dataclass
@@ -92,7 +99,7 @@ class DataGroupConfig:
     add_value_query: Callable[
         [Query, schemas.DataDimensions, str, schemas.DataParameters | None], Query
     ]
-    field_parameters_schemas: Optional[dict[str, schemas.DataParameters]] = None
+    field_parameters_schemas: Optional[dict[str, schemas.DataParameters]] | None = None
 
 
 DATA_GROUP_CONFIGS: dict[str, DataGroupConfig] = {
@@ -123,7 +130,7 @@ def parse_dimensions(field_group: str, dimensions: Json):
     data_group_config = DATA_GROUP_CONFIGS.get(field_group)
 
     if data_group_config is not None:
-        return data_group_config.dimensions_schema.parse_obj(dimensions)
+        return data_group_config.dimensions_schema.model_validate_json(dimensions)
     else:
         raise ValidationError(f"Invalid field group: {field_group}")
 
@@ -135,7 +142,7 @@ def parse_parameters(field_group: str, field: str, parameters: Json):
         field_params_schema = data_group_config.field_parameters_schemas
 
         if field_params_schema is not None and field in field_params_schema:
-            return field_params_schema[field].parse_obj(parameters)
+            return field_params_schema[field].model_validate_json(parameters)
         else:
             return None
     else:
