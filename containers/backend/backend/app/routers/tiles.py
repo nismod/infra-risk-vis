@@ -8,18 +8,18 @@ from typing import BinaryIO, List, Optional, Tuple, Union
 import json
 import inspect
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 from fastapi.logger import logger
 from starlette.responses import StreamingResponse
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.orm import Session
+from sqlalchemy import select
 from terracotta.exceptions import DatasetNotFoundError
 from terracotta import get_driver
 
 
 from backend.app import schemas
-from backend.app.dependencies import get_db
 from backend.db import models
+from backend.db.database import SessionDep
 from backend.app.internal.helpers import build_driver_path, handle_exception
 from backend.app.exceptions import (
     SourceDBDoesNotExistException,
@@ -52,7 +52,7 @@ def _get_singleband_image(
 
     ::args database str DB under-which the requested data has been loaded
     """
-    from app.internal.tiles.singleband import singleband
+    from backend.app.internal.tiles.singleband import singleband
 
     # Collect TC Driver path for terracotta db
     driver_path = build_driver_path(database)
@@ -137,9 +137,7 @@ def _source_options(source_db: str) -> List[dict[str, str]]:
 
 
 @router.get("/sources", response_model=List[schemas.TileSourceMeta])
-def get_all_tile_source_meta(
-    db: Session = Depends(get_db),
-) -> List[schemas.TileSourceMeta]:
+def get_all_tile_source_meta(session: SessionDep) -> List[schemas.TileSourceMeta]:
     """
     Retrieve metadata about all the tile sources available
     """
@@ -148,7 +146,7 @@ def get_all_tile_source_meta(
         inspect.stack()[0][3],
     )
     try:
-        res = db.query(models.RasterTileSource).all()
+        res = session.scalars(select(models.RasterTileSource)).all()
         all_meta = []
         for row in res:
             meta = schemas.TileSourceMeta.model_validate(row)
@@ -161,8 +159,7 @@ def get_all_tile_source_meta(
 
 @router.get("/sources/{source_id}", response_model=schemas.TileSourceMeta)
 def get_tile_source_meta(
-    source_id: int,
-    db: Session = Depends(get_db),
+    source_id: int, session: SessionDep
 ) -> List[schemas.TileSourceMeta]:
     """
     Retrieve metadata about a single tile source
@@ -172,11 +169,7 @@ def get_tile_source_meta(
         inspect.stack()[0][3],
     )
     try:
-        res = (
-            db.query(models.RasterTileSource)
-            .filter(models.RasterTileSource.id == source_id)
-            .one()
-        )
+        res = session.get(models.RasterTileSource, source_id)
         meta = schemas.TileSourceMeta.model_validate(res)
         return meta
     except NoResultFound:
@@ -189,7 +182,7 @@ def get_tile_source_meta(
 @router.get("/sources/{source_id}/domains", response_model=schemas.TileSourceDomains)
 def get_tile_source_domains(
     source_id: int,
-    db: Session = Depends(get_db),
+    session: SessionDep,
 ) -> schemas.TileSourceDomains:
     """
     Retrieve all combinations available for the source domain
@@ -199,11 +192,7 @@ def get_tile_source_domains(
         inspect.stack()[0][3],
     )
     try:
-        res = (
-            db.query(models.RasterTileSource)
-            .filter(models.RasterTileSource.id == source_id)
-            .one()
-        )
+        res = session.get(models.RasterTileSource, source_id)
         domains = _source_options(_tile_db_from_domain(res.domain))
         meta = schemas.TileSourceDomains(domains=domains)
         logger.debug(f"{source_id=} {res.domain=} {domains=} {meta=}")
