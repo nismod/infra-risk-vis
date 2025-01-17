@@ -73,6 +73,7 @@ module social:
     snakefile: "pipelines/social/rules.smk"
     config: config
 use rule * from social as social_*
+ruleorder: social_clip_raster > clip_raster
 
 
 module storm:
