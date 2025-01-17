@@ -1,4 +1,4 @@
-rule download_rwi_meta:
+rule download_rwi_metadata:
     """
     Meta Relative Wealth Index
 
@@ -18,8 +18,8 @@ rule download_rwi_meta:
     License: CC-BY-NC 4.0
     """
     output:
-        links = "raster/raw/social/meta_rwi/rwi_links.txt",
-        meta = "raster/raw/social/meta_rwi/rwi.csv",
+        links = "raster/raw/social/rwi/rwi_links.txt",
+        meta = "raster/raw/social/rwi/rwi.csv",
     run:
         import pandas as pd
         from hdx.data.dataset import Dataset
