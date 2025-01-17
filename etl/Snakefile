@@ -69,6 +69,12 @@ module nature:
 use rule * from nature as nature_*
 
 
+module social:
+    snakefile: "pipelines/social/rules.smk"
+    config: config
+use rule * from social as social_*
+
+
 module storm:
     snakefile: "pipelines/storm/rules.smk"
     config: config
