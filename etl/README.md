@@ -301,6 +301,21 @@ The `Snakefile` will also require modification:
 - You should also add your dataset to `ALL_DATASETS` so that the `all` target
   rule will work as expected.
 
+#### Deploying a raster layer
+
+After testing against a local backend, `snakemake` can run the final ingest/metadata
+steps against the production database.
+
+Remove the flag files, then run with `--config environment=prod` to source environment
+files for the production database.
+
+```
+rm raster/{ingest,metadata}/social.flag
+snakemake --cores 1 --config environment=prod  -- raster/metadata/social.flag
+```
+
+Copy up the COGs and update the `backend` service (see the top-level [README](../README.md)).
+
 #### Removing a source from the tileserver metastore
 
 Connect to the database server and delete the metadata database and reference row in `raster_tile_sources`:
