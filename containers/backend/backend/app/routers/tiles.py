@@ -87,6 +87,7 @@ def _tile_db_from_domain(domain: str) -> str:
         "land_cover": "terracotta_land_cover",
         "nature": "terracotta_nature",
         "population": "terracotta_population",
+        "social": "terracotta_social",
         "traveltime_to_healthcare": "terracotta_traveltime_to_healthcare",
     }
     return domain_to_db[domain]

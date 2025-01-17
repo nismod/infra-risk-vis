@@ -1,0 +1,8 @@
+{
+  "domain": "social",
+  "name": "Social, demographic, and development-related indices and metrics",
+  "group": "Exposure",
+  "description": "Relative Wealth Index, WorldPop Age and Sex Structures, Gridded Human Development Index",
+  "license": "CC-BY-NC 4.0, MIT",
+  "keys": ["subtype"]
+}
