@@ -22,7 +22,7 @@ services:
       - "./containers/traefik/dev/certs:/certs"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.32
+    image: ghcr.io/nismod/irv-frontend:0.33
     profiles: ["web-server"]
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
