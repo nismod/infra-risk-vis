@@ -46,3 +46,21 @@ rule download_landslides:
                 print("Extracting zip", out_file)
                 with zipfile.ZipFile(out_file, 'r') as zh:
                     zh.extractall(out_dir)
+
+
+rule ingest_categorical_raster:
+    """
+    Custom ingestion rule for susceptibility, LS_TH_COG.tif as raster is
+    categorical and needs a mapping from raster integer value to colour and
+    classification.
+    """
+    input:
+        raster = "raster/cog/landslide_arup/LS_TH_COG.tif",
+        legend = "pipelines/landslide_arup/colourmap.csv",
+        metadata = "pipelines/landslide_arup/metadata.json",
+    params:
+        key_values = ["susceptibility"]
+    output:
+        flag = "raster/ingest/landslide_arup.categorical.flag"
+    script:
+        "../../scripts/ingest_categorical.py"

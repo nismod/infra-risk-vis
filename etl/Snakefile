@@ -69,6 +69,13 @@ ruleorder: land_cover_download_300m_2020_from_CDS > clip_raster
 ruleorder: land_cover_ingest_categorical_raster > ingest_rasters
 
 
+module landslide_arup:
+    snakefile: "pipelines/landslide_arup/rules.smk"
+    config: config
+use rule * from landslide_arup as landslide_arup_*
+ruleorder: landslide_arup_ingest_categorical_raster > ingest_rasters
+
+
 module nature:
     snakefile: "pipelines/nature/rules.smk"
     config: config
