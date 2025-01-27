@@ -1,0 +1,8 @@
+{
+  "domain": "landslide",
+  "name": "Global landslide hazard map",
+  "group": "Hazard",
+  "description": "Arup (2021) Global Landslide Hazard Map. Global Facility for Disaster Reduction and Recovery (GFDRR) and The World Bank.",
+  "license": "CC-BY 4.0",
+  "keys": ["subtype"]
+}

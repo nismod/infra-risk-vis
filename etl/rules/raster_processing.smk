@@ -45,6 +45,18 @@ rule set_zero_to_no_data:
         """
 
 
+rule generate_terracotta_colourmap:
+    input:
+        csv = "pipelines/{DATASET}/colourmap.csv",
+        script = "scripts/legend_to_tc_colourmap.py"
+    output:
+        json = "pipelines/{DATASET}/colourmap.json"
+    shell:
+        """
+        python {input.script} {input.csv} {output.json}
+        """
+
+
 rule clip_raster:
     """
     Clip raster extent to window defined by `raster_bounds` in config.

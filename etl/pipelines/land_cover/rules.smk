@@ -35,18 +35,6 @@ rule download_300m_2020_from_CDS:
         """
 
 
-rule generate_terracotta_colourmap:
-    input:
-        csv = "pipelines/land_cover/colourmap.csv",
-        script = "scripts/legend_to_tc_colourmap.py"
-    output:
-        json = "pipelines/land_cover/colourmap.json"
-    shell:
-        """
-        python {input.script} {input.csv} {output.json}
-        """
-
-
 rule ingest_categorical_raster:
     """
     Custom ingestion rule for ESA land cover as raster is categorical and needs
