@@ -28,7 +28,7 @@ class Feature(Base):
     layer = Column(
         String, ForeignKey(FeatureLayer.layer_name), index=True, nullable=False
     )
-    properties = Column(JSON, nullable=False)
+    properties = Column(JSONB, nullable=False)
     geom = Column(Geometry("GEOMETRY", srid=4326), nullable=False)
 
     layer_info = relationship("FeatureLayer")
@@ -120,15 +120,8 @@ class AdaptationCostBenefit(Base):
     adaptation_name = Column(String, nullable=False, primary_key=True)
     adaptation_protection_level = Column(Float, nullable=False, primary_key=True)
 
-    adaptation_cost = Column(Float)
+    properties = Column(JSONB, nullable=False)
 
-    avoided_ead_amin = Column(Float)
-    avoided_ead_mean = Column(Float)
-    avoided_ead_amax = Column(Float)
-
-    avoided_eael_amin = Column(Float)
-    avoided_eael_mean = Column(Float)
-    avoided_eael_amax = Column(Float)
 
     def __repr__(self) -> str:
         return f"AdaptationCostBenefit(feature_id={self.feature_id!r}, hazard={self.hazard!r}, rcp={self.rcp!r}, adaptation_name={self.adaptation_name!r}, adaptation_protection_level={self.adaptation_protection_level!r}, adaptation_cost={self.adaptation_cost!r}, avoided_ead_mean={self.avoided_ead_mean!r})"

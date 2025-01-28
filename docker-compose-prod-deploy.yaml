@@ -45,7 +45,7 @@ services:
     mem_limit: "250M"
 
   backend:
-    image: ghcr.io/nismod/gri-backend:1.7.2
+    image: ghcr.io/nismod/gri-backend:1.8.0
     restart: always
     volumes:
       - ./tileserver/raster/data:/data
@@ -68,17 +68,8 @@ services:
   vector-tileserver:
     image: ghcr.io/nismod/gri-vector-tileserver:0.10
     restart: always
-    command:
-      [
-        "tileserver-gl-light",
-        "-c",
-        "config.json",
-        "-p",
-        "8080",
-        "--verbose",
-        "-u",
-        "https://global.infrastructureresilience.org/vector",
-      ]
+    environment:
+      TILESERVER_PUBLIC_URL: https://global.infrastructureresilience.org/vector
     volumes:
       - ./tileserver/vector/data:/data
       - ./vector-tileserver/config.json:/config.json

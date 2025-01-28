@@ -3,11 +3,13 @@ from typing import Callable, Optional
 from sqlalchemy import Column
 from sqlalchemy.orm import Query
 from sqlalchemy.sql import functions
-from sqlalchemy.sql.operators import ColumnOperators
 from pydantic import Json, ValidationError
 
-
 from backend.app import schemas
+from backend.app.internal.dynamic_data_config import (
+    DynamicDataConfig,
+    build_sql_expression,
+)
 from backend.db import models
 
 
@@ -41,6 +43,33 @@ def add_damages_expected_value_query(
 #     pass
 
 
+# potentially store the config in the database or a config file
+ADAPTATIONS_CONFIG_TEXT = """
+properties:
+  avoided_ead_amin:
+    type: float
+    json_key: "avoided_ead_amin"
+  avoided_ead_mean:
+    type: float
+    json_key: "avoided_ead_mean"
+  avoided_ead_amax:
+    type: float
+    json_key: "avoided_ead_amax"
+  adaptation_cost:
+    type: float
+    json_key: "adaptation_cost"
+  cost_benefit_ratio:
+    type: calculated
+    expression: "{avoided_ead_mean} / {adaptation_cost}"
+"""
+
+import yaml
+
+ADAPTATIONS_CONFIG = DynamicDataConfig.model_validate(
+    yaml.safe_load(ADAPTATIONS_CONFIG_TEXT)
+)
+
+
 def add_adaptation_value_query(
     fq: Query,
     dimensions: schemas.AdaptationDimensions,
@@ -55,18 +84,10 @@ def add_adaptation_value_query(
         adaptation_protection_level=dimensions.adaptation_protection_level,
     )
 
-    value: Column | ColumnOperators | None = None
-
-    if field == "cost_benefit_ratio":
-        cost_benefit_params: schemas.AdaptationCostBenefitRatioParameters = field_params
-        eael_days = cost_benefit_params.eael_days
-
-        value = (
-            models.AdaptationCostBenefit.avoided_ead_mean
-            + models.AdaptationCostBenefit.avoided_eael_mean * eael_days
-        ) / models.AdaptationCostBenefit.adaptation_cost
-    else:
-        value = getattr(models.AdaptationCostBenefit, field)
+    params = field_params.model_dump() if field_params else None
+    value = build_sql_expression(
+        models.AdaptationCostBenefit.properties, ADAPTATIONS_CONFIG, field, params
+    )
 
     return q.add_columns(value.label("value"))
 
@@ -101,9 +122,6 @@ DATA_GROUP_CONFIGS: dict[str, DataGroupConfig] = {
         dimensions_schema=schemas.AdaptationDimensions,
         variables_schema=schemas.AdaptationVariables,
         add_value_query=add_adaptation_value_query,
-        field_parameters_schemas={
-            "cost_benefit_ratio": schemas.AdaptationCostBenefitRatioParameters,
-        },
     ),
 }
 
