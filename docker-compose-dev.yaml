@@ -45,7 +45,7 @@ services:
 
   backend:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:1.7.2
+    image: ghcr.io/nismod/gri-backend:1.8.0
     volumes:
       - ./etl/raster/cog/:/data/
       - ./containers/backend/backend/:/code/backend/
@@ -120,7 +120,7 @@ services:
   ## WARNING - this will wipe the existing tables. TODO: Alembic
   recreate-metadata-schema:
     build: ./containers/backend
-    image: ghcr.io/nismod/gri-backend:1.7.2
+    image: ghcr.io/nismod/gri-backend:1.8.0
     profiles: ["recreate-metadata-schema"]
     volumes:
       - ./containers/backend/backend/db/models.py:/code/backend/db/models.py
