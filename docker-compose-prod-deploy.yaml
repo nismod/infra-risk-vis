@@ -28,7 +28,7 @@ services:
     mem_limit: "250M"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.33
+    image: ghcr.io/nismod/irv-frontend:0.34
     restart: always
     expose:
       - "80"
@@ -45,7 +45,7 @@ services:
     mem_limit: "250M"
 
   backend:
-    image: ghcr.io/nismod/gri-backend:1.6.2
+    image: ghcr.io/nismod/gri-backend:1.7.2
     restart: always
     volumes:
       - ./tileserver/raster/data:/data
