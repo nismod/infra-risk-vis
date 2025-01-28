@@ -1,0 +1,8 @@
+{
+  "domain": "jrc_flood",
+  "name": "JRC Global river flood hazard maps",
+  "group": "Hazard",
+  "description": "Baugh, C., Colonese, J., D'Angelo, C., Dottori, F., Neal, J., Prudhomme, C., Salamon, P. (2024): Global river flood hazard maps. European Commission, Joint Research Centre (JRC) [Dataset] PID: http://data.europa.eu/89h/jrc-floods-floodmapgl_rp50y-tif",
+  "license": "CC-BY 4.0 International",
+  "keys": ["rp"]
+}

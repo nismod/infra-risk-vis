@@ -55,12 +55,25 @@ module isimip:
 use rule * from isimip as isimip_*
 
 
+module jrc_flood:
+    snakefile: "pipelines/jrc_flood/rules.smk"
+    config: config
+use rule * from jrc_flood as jrc_flood_*
+
+
 module land_cover:
     snakefile: "pipelines/land_cover/rules.smk"
     config: config
 use rule * from land_cover as land_cover_*
 ruleorder: land_cover_download_300m_2020_from_CDS > clip_raster
 ruleorder: land_cover_ingest_categorical_raster > ingest_rasters
+
+
+module landslide_arup:
+    snakefile: "pipelines/landslide_arup/rules.smk"
+    config: config
+use rule * from landslide_arup as landslide_arup_*
+ruleorder: landslide_arup_ingest_categorical_raster > ingest_rasters
 
 
 module nature:
@@ -105,6 +118,7 @@ ALL_DATASETS = (
     "ghsl_pop",
     "iris",
     "isimip",
+    "jrc_flood",
     "land_cover",
     "nature",
     "storm",
