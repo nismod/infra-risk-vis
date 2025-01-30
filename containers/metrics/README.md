@@ -34,11 +34,11 @@ Environment variables:
 
 - use `.env` to define environment variables
 - use [`PG*`](https://www.postgresql.org/docs/current/libpq-envars.html) to
-  define database connection details. See `.env.example` for an example
+  define database connection details. See `.metrics.env` for an example.
 
 ```
-METRICS_DB_URL=postgresql://postgres@localhost:5432/gdl
-METRICS_LOG_LEVEL=DEBUG
+METRICS_DB_URL=
+METRICS_LOG_LEVEL=
 ```
 
 ## Datasets
