@@ -12,7 +12,7 @@ COPY ./api /code/api
 
 RUN python -m pip install --upgrade --compile .
 
-CMD ["uvicorn", "api.app.main:app", "--host", "0.0.0.0", "--port", "8888"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8889"]
 
 # If running behind a proxy like Nginx or Traefik add --proxy-headers
 # CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--proxy-headers"]

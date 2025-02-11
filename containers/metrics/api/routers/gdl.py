@@ -11,10 +11,10 @@ from .routes import (
     GDL_DATA_EXTENT_ROUTE,
 )
 from .utils import handle_exception, get_log_level
-from database.database import get_db
-from database import gdl as models
+from api.database.database import get_db
+from api.database import gdl as models
 from sqlalchemy.sql import select, func
-from schemas import gdl as schemas
+from api.schemas import gdl as schemas
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -221,7 +221,7 @@ async def get_all_boundaries_for_iso(iso_code: str, db: Session = Depends(get_db
         )
         results = db.execute(stmt)
 
-        if results.first() is None:
+        if results is None:
             raise HTTPException(status_code=404, detail="No boundaries found")
 
         data = [
