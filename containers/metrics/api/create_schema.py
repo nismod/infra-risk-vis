@@ -3,7 +3,7 @@ SQLAlchemy Schema Setup Main
 """
 
 import database.gdl as gdl
-from database.database import engine
+from api.database.database import engine
 
 if __name__ == "__main__":
     gdl.Base.metadata.drop_all(bind=engine)

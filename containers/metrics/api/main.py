@@ -3,8 +3,9 @@ import logging
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.logger import logger
+from fastapi.middleware.cors import CORSMiddleware
 
-import routers.gdl as gdl
+from api.routers.gdl import router
 
 formatter = logging.Formatter(
     "[%(asctime)s.%(msecs)03d] %(levelname)s %(filename)s - %(funcName)s - %(message)s",
@@ -37,4 +38,17 @@ app = FastAPI(
     },
 )
 
-app.include_router(gdl.router)
+origins = [
+    "http://localhost",
+    "http://localhost:5173",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(router)

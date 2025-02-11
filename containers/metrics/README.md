@@ -10,22 +10,27 @@ PostGIS extension for spatial data types.
 ### Docker
 
 ```bash
-docker-compose -f docker-compose-metrics-build.yaml build api
+# Build the metrics service
+docker-compose -f docker-compose-prod-build.yaml build metrics-api
+# Start the database to run in the background
+docker-compose -f docker-compose-dev.yaml up -d database
+# Start the metrics api to run in the foreground - CTRL+C to quit
+docker-compose -f docker-compose-dev.yaml up metrics-api
 ```
 
 ### Running Locally (alternative to Docker)
 
 ```bash
 # cd to this backend app directory
-cd containers/backend
+cd containers/metrics
 
 # create a virtual environment (using venv or another method if you prefer)
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# run the application
-uvicorn backend.app.main:app --port 8888 --reload
+# run the application (from /metrics)
+uvicorn api.main:app --port 8888 --reload
 ```
 
 ## Configuration
