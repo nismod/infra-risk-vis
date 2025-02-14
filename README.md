@@ -236,8 +236,9 @@ This tool has been developed through several projects.
 - current work on global-scale data and analysis continues to be led by
   researchers in OPSIS. In part this is in collaboration with the Global
   Resilience Index Initiative, including the Oxford Spatial Finance Initiative
-  and Global Earthquake Model Foundation. This work has been funded by the World
-  Bank Group, Willis Towers Watson Insurance for Development Forum, the UK
+  and Global Earthquake Model Foundation. This work has been funded by: the World
+  Bank Group; Willis Towers Watson Insurance for Development Forum; the UK
   Natural Environment Research Council (NERC) through the UK Centre for Greening
-  Finance and Investment, and UK Foreign, Commonwealth and Development Office
-  (FCDO) through the Climate Compatible Growth (CCG) programme.
+  Finance and Investment; the UK Foreign, Commonwealth and Development Office
+  (FCDO) through the Climate Compatible Growth (CCG) programme; Howden Foundation;
+  and Global Center on Adaptation.
