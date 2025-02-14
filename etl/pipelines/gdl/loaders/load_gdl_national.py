@@ -2,39 +2,40 @@
 Load gdl_national DB table from GeoJSON
 """
 
-import sys
 import json
 from typing import List
 import sqlalchemy as sa
 from loader_utils import load_json, init_db_session
 from models import GdlNational, GdlRegion
 
+import requests
 
-def load_gdl_national(fpath: str) -> List:
-    print("Loading gdl_national from: ", fpath)
-    data = load_json(fpath)
-    engine, Session = init_db_session()
+DATA_URL = "https://zenodo.org/records/14868935/files/gdl_v6.4_national_small.json"
+
+
+def load_gdl_national() -> List:
+    print("Loading GDL data from: ", DATA_URL)
+    response = requests.get(DATA_URL)
+    if response.status_code == 200:
+        data = response.json()
+    else:
+        print(f"Failed to fetch data. Status code: {response.status_code}")
+        return
 
     loaded_ids = []
+    engine, Session = init_db_session()
     with Session() as session:
-
-        print("Deleting all rows in gdl_subnational table")
-        session.query(GdlNational).delete()
-
         try:
             for feature in data["features"]:
                 synthetic_gdl_code = (feature["properties"]["iso_code"] + "t").lower()
 
-                region_result = (
+                maybe_region = (
                     session.query(GdlRegion)
-                    .where(GdlRegion.gdl_code == synthetic_gdl_code)
+                    .filter_by(gdl_code=synthetic_gdl_code)
                     .first()
                 )
 
-                if not region_result:
-                    print("No matching gdl_code, skipping:", synthetic_gdl_code)
-
-                else:
+                if maybe_region:
                     boundary = GdlNational(
                         gdl_code=synthetic_gdl_code,
                         # format geojson for PostGIS
@@ -50,25 +51,21 @@ def load_gdl_national(fpath: str) -> List:
                         ),
                     )
                     session.add(boundary)
-                    _id = session.commit()
-                    loaded_ids.append(_id)
+                    commit_id = session.commit()
+                    loaded_ids.append(commit_id)
+
+                else:
+                    print(
+                        f"Skipped (due to no matching gdl_code in GdlRegion): gdl_code:'{synthetic_gdl_code}'"
+                    )
+
         except Exception as err:
             print(f"Boundary insert failed due to {err}, rolling back transaction...")
             session.rollback()
     engine.dispose()
 
     print(f"Loaded {len(loaded_ids)} boundaries to gdl_national")
-    return loaded_ids
 
 
 if __name__ == "__main__":
-    if not len(sys.argv) == 2:
-        print("Usage:", "load_gdl_national.py <geojson file path>")
-        sys.exit(1)
-
-    fpath = sys.argv[1]
-    if not fpath:
-        print("missing fpath")
-        sys.exit(1)
-
-    loaded_ids = load_gdl_national(fpath)
+    load_gdl_national()
