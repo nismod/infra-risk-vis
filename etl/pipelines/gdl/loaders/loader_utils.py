@@ -1,31 +1,6 @@
 import json
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
-
-
-# Not needed in prod when gri_metrics package (defined in containers/metrics/pyproject.toml) is installed in the working python environment
-# Keeping here because useful when setting up a dev env
-def insert_paths():
-    import sys
-    import os
-    import inspect
-
-    current_dir = os.path.dirname(
-        os.path.abspath(inspect.getfile(inspect.currentframe()))
-    )
-    parent_dir = os.path.dirname(os.path.dirname(current_dir))
-    grand_dir = os.path.dirname(os.path.dirname(parent_dir))
-    etl_dir = os.path.dirname(os.path.dirname(grand_dir))
-    container_dir = os.path.dirname(os.path.dirname(etl_dir))
-    sys.path.insert(0, parent_dir)
-    sys.path.insert(0, grand_dir)
-    sys.path.insert(0, etl_dir)
-    sys.path.insert(0, container_dir)
-
-
-# insert_paths()
-
-
 from containers.metrics.api.database.database import get_db_uri
 
 
