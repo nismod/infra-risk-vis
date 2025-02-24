@@ -58,9 +58,6 @@ properties:
   adaptation_cost:
     type: float
     json_key: "adaptation_cost"
-  cost_benefit_ratio:
-    type: calculated
-    expression: "{avoided_ead_mean} / {adaptation_cost}"
 """
 
 import yaml
@@ -130,7 +127,7 @@ def parse_dimensions(field_group: str, dimensions: Json):
     data_group_config = DATA_GROUP_CONFIGS.get(field_group)
 
     if data_group_config is not None:
-        return data_group_config.dimensions_schema.model_validate_json(dimensions)
+        return data_group_config.dimensions_schema.model_validate(dimensions)
     else:
         raise ValidationError(f"Invalid field group: {field_group}")
 
