@@ -75,3 +75,4 @@ etl/raw_data/*
 .editorconfig
 .DS_Store
 irv-autopkg/*
+etl/pipelines/nbs-adaptation/demo
