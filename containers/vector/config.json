@@ -53,8 +53,15 @@
     "seismic_and_flooding_exposure_per_country": {
       "mbtiles": "seismic_and_flooding_exposure_per_country.mbtiles"
     },
+    "adm0_exposure": {
+      "mbtiles": "adm0_exposure.mbtiles"
+    },
+
     "nbs": {
       "mbtiles": "nbs.mbtiles"
+    },
+    "nbs_points": {
+      "mbtiles": "nbs_points.mbtiles"
     },
     "adm0": {
       "mbtiles": "adm0.mbtiles"

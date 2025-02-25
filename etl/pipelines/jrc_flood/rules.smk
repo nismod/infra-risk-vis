@@ -1,24 +1,26 @@
-rule download:
+rule download_all:
     output:
-        zip="raster/raw/jrc_flood/floodMapGL_rp{RP}y.zip"
+        txt="raster/raw/jrc_flood/README.txt"
     shell:
         """
         output_dir=$(dirname {output.zip})
 
-        wget -q -nc \
+        wget --recursive --no-parent --continue --no-clobber \
+            --no-host-directories \
+            --cut-dirs=4 \
             --directory-prefix=$output_dir \
-            https://cidportal.jrc.ec.europa.eu/ftp/jrc-opendata/FLOODS/GlobalMaps/floodMapGL_rp{wildcards.RP}y.zip
+            https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/CEMS-GLOFAS/flood_hazard/
         """
 
-rule extract:
+rule combine:
     input:
-        tiff="raster/raw/jrc_flood/floodMapGL_rp{RP}y.zip"
+        tiffs="raster/raw/jrc_flood/floodMapGL_rp{RP}y.zip"
     output:
-        tiff="raster/raw/jrc_flood/floodMapGL_rp{RP}y.tif"
+        tiff="raster/raw/jrc_flood/jrc_2.1.0_rp{RP}.tif"
     shell:
         """
         output_dir=$(dirname {output.tiff})
-        unzip $output_dir/floodMapGL_rp{wildcards.RP}y.zip floodMapGL_rp{wildcards.RP}y.tif -d $output_dir
+        # gdal_mosaic?
         """
 
 rule all:
