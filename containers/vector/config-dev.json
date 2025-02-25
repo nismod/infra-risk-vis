@@ -14,6 +14,18 @@
     "nbs_ls_points": {
       "mbtiles": "nbs_ls_points.mbtiles"
     },
+    "nbs_cf": {
+      "mbtiles": "nbs_cf.mbtiles"
+    },
+    "nbs_cf_points": {
+      "mbtiles": "nbs_cf_points.mbtiles"
+    },
+    "nbs_rf": {
+      "mbtiles": "nbs_rf.mbtiles"
+    },
+    "nbs_rf_points": {
+      "mbtiles": "nbs_rf_points.mbtiles"
+    },
     "adm0": {
       "mbtiles": "adm0.mbtiles"
     },
