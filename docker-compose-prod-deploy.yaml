@@ -45,7 +45,7 @@ services:
     mem_limit: "250M"
 
   backend:
-    image: ghcr.io/nismod/gri-backend:1.8.0
+    image: ghcr.io/nismod/gri-backend:1.8.1
     restart: always
     volumes:
       - ./tileserver/raster/data:/data
