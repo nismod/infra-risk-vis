@@ -61,7 +61,7 @@ services:
       - "traefik.http.routers.backend.middlewares=backend-stripprefix"
       - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
-    cpus: 0.5
+    cpus: 1.5
     mem_reservation: "50M"
     mem_limit: "500M"
 
@@ -87,33 +87,8 @@ services:
     mem_reservation: "50M"
     mem_limit: "500M"
 
-  redis:
-    image: ghcr.io/nismod/irv-autopkg-redis:0.1
-    user: autopkg
-    restart: always
-    command: redis-server --save 20 1 --loglevel notice
-    volumes:
-      - ./irv-autopkg/redis:/data
-    cpus: 1.0
-    mem_reservation: "250M"
-    mem_limit: "1G"
-
-  irv-autopkg-worker:
-    image: ghcr.io/nismod/irv-autopkg:0.2.7
-    restart: always
-    user: autopkg
-    volumes:
-      - ./irv-autopkg/packages:/data/packages
-      - ./irv-autopkg/processing:/data/processing
-    env_file:
-      - envs/prod/.irv-autopkg.env
-    command: celery --app dataproc.tasks worker
-    cpus: 1.0
-    mem_reservation: "500M"
-    mem_limit: "2G"
-
   irv-autopkg-api:
-    image: ghcr.io/nismod/irv-autopkg:0.2.7
+    image: ghcr.io/nismod/irv-autopkg:0.3.1
     restart: always
     user: autopkg
     volumes:
