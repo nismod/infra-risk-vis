@@ -3,6 +3,10 @@ services:
     image: ghcr.io/nismod/gri-backend:1.8.1
     build: ./containers/backend
 
+  metrics-api:
+    image: ghcr.io/nismod/gri-metrics:1.0.0
+    build: ./containers/metrics
+
   vector-tileserver:
     build: ./containers/vector
     image: ghcr.io/nismod/gri-vector-tileserver:0.10
