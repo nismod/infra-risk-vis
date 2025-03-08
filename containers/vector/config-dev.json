@@ -7,48 +7,5 @@
     }
   },
   "styles": {},
-  "data": {
-    "nbs_ls": {
-      "mbtiles": "nbs_ls.mbtiles"
-    },
-    "nbs_ls_points": {
-      "mbtiles": "nbs_ls_points.mbtiles"
-    },
-    "nbs_cf": {
-      "mbtiles": "nbs_cf.mbtiles"
-    },
-    "nbs_cf_points": {
-      "mbtiles": "nbs_cf_points.mbtiles"
-    },
-    "nbs_rf": {
-      "mbtiles": "nbs_rf.mbtiles"
-    },
-    "nbs_rf_points": {
-      "mbtiles": "nbs_rf_points.mbtiles"
-    },
-    "adm0": {
-      "mbtiles": "adm0.mbtiles"
-    },
-    "adm0_points": {
-      "mbtiles": "adm0_points.mbtiles"
-    },
-    "adm1": {
-      "mbtiles": "adm1.mbtiles"
-    },
-    "adm1_points": {
-      "mbtiles": "adm1_points.mbtiles"
-    },
-    "adm2": {
-      "mbtiles": "adm2.mbtiles"
-    },
-    "adm2_points": {
-      "mbtiles": "adm2_points.mbtiles"
-    },
-    "hybas": {
-      "mbtiles": "hybas.mbtiles"
-    },
-    "hybas_points": {
-      "mbtiles": "hybas_points.mbtiles"
-    }
-  }
+  "data": {}
 }

@@ -1,4 +1,4 @@
-FROM maptiler/tileserver-gl:v4.11.1
+FROM maptiler/tileserver-gl:v4.12.0
 LABEL maintainer="frederick.thomas@ouce.ox.ac.uk"
 
 # used in run.sh - override through docker compose if needed
