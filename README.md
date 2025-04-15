@@ -216,7 +216,7 @@ This tool has been developed through several projects.
   Countries, which is financed by the Government of Japan and managed by the
   Global Facility for Disaster Reduction and Recovery (GFDRR) through the Tokyo
   Disaster Risk Management Hub.
-- [v0.3](https://github.com/oi-analytics/oi-risk-vis/releases/tag/v0.3.0-jamaica)
+- [v0.3](https://github.com/nismod/infra-risk-vis/releases/tag/v0.3.0)
   was developed by the Oxford Programme for Sustainable Infrastructure Systems
   (OPSIS) in the Environmental Change Institute, University of Oxford, for the
   Government of Jamaica (GoJ) as part of a project funded by UK Aid (FCDO). The
