@@ -1,25 +1,18 @@
 services:
   traefik:
-    image: "traefik:v2.9"
+    image: "traefik:v3.4"
     container_name: "traefik"
     profiles: ["traefik"]
     command:
-      - "--log.level=INFO"
-      - "--accessLog=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--providers.docker=true"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--entryPoints.web.address=:80"
-      - "--providers.file.directory=/configuration/"
-      - "--providers.file.watch=true"
+      - "--providers.docker"
       - "--api.insecure=true"
     ports:
-      - "80"
-      - "8080"
+      - "80:80"
+      - "8080:8080"
     volumes:
-      - "./containers/traefik/dev/configuration:/configuration"
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./containers/traefik/dev/certs:/certs"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
   web-server:
     image: ghcr.io/nismod/irv-frontend:0.34
@@ -88,21 +81,11 @@ services:
     volumes:
       - ./irv-autopkg/redis:/data
 
-  irv-autopkg-worker:
-    image: ghcr.io/nismod/irv-autopkg:0.2.7
-    profiles: ["autopkg"]
-    volumes:
-      - ./irv-autopkg/packages:/data/packages
-      - ./irv-autopkg/tmp:/data/tmp
-    env_file:
-      - envs/dev/.irv-autopkg.env
-    command: celery --app dataproc.tasks worker --loglevel=info --concurrency=4
-
   irv-autopkg-api:
-    image: ghcr.io/nismod/irv-autopkg:0.2.7
+    image: ghcr.io/nismod/irv-autopkg:0.4.0-dev
     profiles: ["autopkg"]
     volumes:
-      - ./irv-autopkg/packages:/data/packages
+      - /data/datapkg/data:/data/packages
       - ./irv-autopkg/tmp:/data/tmp
     env_file:
       - envs/dev/.irv-autopkg.env
