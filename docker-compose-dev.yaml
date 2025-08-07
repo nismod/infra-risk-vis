@@ -54,6 +54,14 @@ services:
       - "traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api"
       - "traefik.http.services.backend.loadbalancer.server.port=8888"
 
+  metrics-api:
+    build: ./containers/metrics
+    image: ghcr.io/nismod/gri-metrics:1.0.0
+    env_file:
+      - ./envs/dev/.metrics.env
+    ports:
+      - 8889:8889
+
   vector-tileserver:
     build: ./containers/vector
     image: ghcr.io/nismod/gri-vector-tileserver:0.10
