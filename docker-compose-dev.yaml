@@ -15,7 +15,7 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
   web-server:
-    image: ghcr.io/nismod/irv-frontend:0.34
+    image: ghcr.io/nismod/irv-frontend:0.37
     profiles: ["web-server"]
     volumes:
       - ./irv-autopkg/packages:/usr/share/nginx/html/packages
