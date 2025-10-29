@@ -14,14 +14,6 @@ DATA_URL = "https://zenodo.org/records/14868935/files/gdl_v6.4_national_small.js
 
 
 def load_gdl_national() -> List:
-    print("Loading GDL data from: ", DATA_URL)
-    response = requests.get(DATA_URL)
-    if response.status_code == 200:
-        data = response.json()
-    else:
-        print(f"Failed to fetch data. Status code: {response.status_code}")
-        return
-
     loaded_ids = []
     engine, Session = init_db_session()
     with Session() as session:
