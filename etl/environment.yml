@@ -1,10 +1,10 @@
 name: irv-etl
 channels:
-  - default
+  - nodefaults
+  - bioconda
   - conda-forge
-  - bioconda # for snakemake
 dependencies:
-  - python=3.10
+  - python=3.12
   - cdsapi # Copernicus CDS API client
   - crick # streaming algorithms for raster ingestion
   - gdal # geospatial data transformation
@@ -15,8 +15,7 @@ dependencies:
   - httpie # friendly CLI HTTP client
   - jq # JSON filtering
   - netcdf4 # netCDF file support
-  # pin numpy to prevent np.object deprecation bug triggered in crick 0.3.0
-  - numpy<=1.23.5 # n-d arrays
+  - numpy # array data
   - pip # python package management
   - pip:
       - ../containers/backend # gri-backend package provides "backend.*"
@@ -27,8 +26,7 @@ dependencies:
   - psycopg2-binary # postgreSQL python client, for raster metadata
   - rasterio # geospatial raster data
   - rioxarray # extend xarray for rasters
-  - sqlalchemy~=1.4 # SQL object relational mapper (ORM)
-  - snakemake==7.15.2 # workflow orchestration
+  - snakemake # workflow orchestration
   - tippecanoe # vector tileset creation
   - ujson # fast JSON encoder
   - xarray # named n-dimensional numpy matricies

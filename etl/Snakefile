@@ -23,6 +23,10 @@ module dem:
 use rule * from dem as dem_*
 ruleorder: dem_clip_raster > clip_raster
 
+module gdl:
+    snakefile: "pipelines/gdl/rules.smk"
+    config: config
+use rule * from gdl as gdl_*
 
 module gem_earthquake:
     snakefile: "pipelines/gem_earthquake/rules.smk"
@@ -113,6 +117,7 @@ ALL_DATASETS = (
     "aqueduct",
     "cdd_miranda",
     "dem",
+    "gdl",
     "gem_earthquake",
     "ghsl_buildings",
     "ghsl_pop",
@@ -134,10 +139,10 @@ shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set 
 wildcard_constraints:
     KEY="[^/]+",
     DATASET="[^/]+",
-    EPOCH="\d+",
-    RELEASE="\d{4}[A-Z]",
-    RP="\d+",
-    SSP="constant|ssp\d",
+    EPOCH="\\d+",
+    RELEASE="\\d{4}[A-Z]",
+    RP="\\d+",
+    SSP="constant|ssp\\d",
 
 rule all:
     """
