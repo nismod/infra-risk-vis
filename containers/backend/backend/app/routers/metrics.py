@@ -2,15 +2,6 @@ import json
 from typing import List
 from fastapi import APIRouter, HTTPException
 import logging
-from .routes import (
-    GDL_SUBNATIONAL_FROM_ISO_ROUTE,
-    GDL_COUNTRY_META_ROUTE,
-    GDL_REGION_META_ROUTE,
-    GDL_DATA_ISO_ROUTE,
-    GDL_NATIONAL_FROM_ISO_ROUTE,
-    GDL_DATA_EXTENT_ROUTE,
-)
-from .utils import handle_exception, get_log_level
 from api.database.database import get_db
 from api.database import gdl as models
 from sqlalchemy.sql import select, func
@@ -18,15 +9,30 @@ from api.schemas import gdl as schemas
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException
 
+# Retrieval of all country metrics data
+API_ROUTE_BASE = "/metrics"
+
+# GDL geojson
+GDL_BOUNDARY_BASE_ROUTE = API_ROUTE_BASE + "/geojson"
+GDL_SUBNATIONAL_FROM_ISO_ROUTE = GDL_BOUNDARY_BASE_ROUTE + "/subnational/iso/{iso_code}"
+GDL_NATIONAL_FROM_ISO_ROUTE = GDL_BOUNDARY_BASE_ROUTE + "/national/iso/{iso_code}"
+
+# GDL countries and regions metadata
+GDL_META_BASE_ROUTE = API_ROUTE_BASE + "/meta"
+GDL_COUNTRY_META_ROUTE = GDL_META_BASE_ROUTE + "/countries"
+GDL_REGION_META_ROUTE = GDL_META_BASE_ROUTE + "/regions"
+
+# GDL annual metrics
+GDL_DATA_BASE_ROUTE = API_ROUTE_BASE + "/data"
+GDL_DATA_ISO_ROUTE = GDL_DATA_BASE_ROUTE + "/{dataset_key}" + "/{iso_code}"
+GDL_DATA_EXTENT_ROUTE = GDL_DATA_BASE_ROUTE + "/{dataset_key}" + "/extent"
+
 
 router = APIRouter(
     tags=["boundaries"],
     dependencies=[],
     responses={404: {"description": "Not found"}},
 )
-
-logger = logging.getLogger("uvicorn.access")
-logger.setLevel(get_log_level())
 
 
 def parse_gdl_annual(results, dataset_key):
@@ -98,7 +104,6 @@ async def get_annual_for_country(
         return data
 
     except Exception as err:
-        handle_exception(logger, err)
         raise HTTPException(status_code=500)
 
 
@@ -121,7 +126,6 @@ async def get_all_countries_meta(db: Session = Depends(get_db)):
         return data
 
     except Exception as err:
-        handle_exception(logger, err)
         raise HTTPException(status_code=500)
 
 
@@ -145,7 +149,6 @@ async def get_all_regions_meta(db: Session = Depends(get_db)):
         return data
 
     except Exception as err:
-        handle_exception(logger, err)
         raise HTTPException(status_code=500)
 
 
@@ -200,7 +203,6 @@ async def get_national_for_iso(iso_code: str, db: Session = Depends(get_db)):
         raise not_found
 
     except Exception as err:
-        handle_exception(logger, err)
         raise HTTPException(status_code=500)
 
 
@@ -244,5 +246,4 @@ async def get_all_boundaries_for_iso(iso_code: str, db: Session = Depends(get_db
         raise not_found
 
     except Exception as err:
-        handle_exception(logger, err)
         raise HTTPException(status_code=500)
