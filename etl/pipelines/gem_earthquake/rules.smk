@@ -23,29 +23,3 @@ rule unpack:
         """
         unzip -j -n {input.zip} $(basename {output.tiff}) -d $(dirname {output.tiff})
         """
-
-rule clip_raster:
-    """
-    Clip raster extent to window defined by `raster_bounds` in config.
-    """
-    input:
-        "raster/raw/gem_earthquake/{KEY}.tif"
-    output:
-        temp("raster/clip/gem_earthquake/{KEY}.tif")
-    params:
-        bounds = config["raster_bounds"]
-    resources:
-        disk_mb=3000,
-        mem_mb=10000,
-    priority:
-        80,
-    shell:
-        """
-        gdalwarp \
-            -co "COMPRESS=LZW" \
-            -t_srs EPSG:4326 \
-            -te {params.bounds} \
-            -of GTiff \
-            {input} \
-            {output}
-        """

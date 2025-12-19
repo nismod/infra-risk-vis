@@ -14,21 +14,18 @@ module cdd_miranda:
     snakefile: "pipelines/cdd_miranda/rules.smk"
     config: config
 use rule * from cdd_miranda as cdd_miranda_*
-ruleorder: cdd_miranda_clip_raster > clip_raster
 
 
 module dem:
     snakefile: "pipelines/dem/rules.smk"
     config: config
 use rule * from dem as dem_*
-ruleorder: dem_clip_raster > clip_raster
 
 
 module gem_earthquake:
     snakefile: "pipelines/gem_earthquake/rules.smk"
     config: config
 use rule * from gem_earthquake as gem_earthquake_*
-ruleorder: gem_earthquake_clip_raster > clip_raster
 
 
 module ghsl_buildings:
@@ -86,7 +83,6 @@ module social:
     snakefile: "pipelines/social/rules.smk"
     config: config
 use rule * from social as social_*
-ruleorder: social_clip_raster > clip_raster
 
 
 module storm:
@@ -106,6 +102,7 @@ use rule * from traveltime_to_healthcare as traveltime_to_healthcare_*
 #
 include: "rules/raster_processing.smk"
 include: "rules/database.smk"
+include: "rules/stack.smk"
 
 
 # Datasets the `all` target rule will expand to
@@ -132,12 +129,12 @@ ALL_DATASETS = (
 shell.prefix(f"set -a && source ../envs/{config['environment']}/.etl.env && set +a; set -x; set -e; ")
 
 wildcard_constraints:
-    KEY="[^/]+",
-    DATASET="[^/]+",
-    EPOCH="\d+",
-    RELEASE="\d{4}[A-Z]",
-    RP="\d+",
-    SSP="constant|ssp\d",
+    KEY=r"[^/]+",
+    DATASET=r"[^/]+",
+    EPOCH=r"\d+",
+    RELEASE=r"\d{4}[A-Z]",
+    RP=r"\d+",
+    SSP=r"constant|ssp\d",
 
 rule all:
     """
@@ -145,3 +142,11 @@ rule all:
     """
     input:
         lambda x: expand("raster/metadata/{dataset}.flag", dataset=ALL_DATASETS)
+
+
+rule all_zarr:
+    """
+    Target rule to fetch, process and ingest all registered datasets.
+    """
+    input:
+        lambda x: expand("raster/stack/{dataset}.flag", dataset=ALL_DATASETS)

@@ -1,35 +1,39 @@
 name: irv-etl
 channels:
-  - default
   - conda-forge
-  - bioconda # for snakemake
+  - nodefaults
 dependencies:
-  - python=3.10
+  - python=3.13
   - cdsapi # Copernicus CDS API client
   - crick # streaming algorithms for raster ingestion
-  - gdal # geospatial data transformation
+  - dask # parallel data arrays
+  - gdal~=3.12 # geospatial data transformation
   - gdown # download from google drive
   - geoalchemy2 # spatial database extensions for sqlalchemy
   - geopandas # geographic pandas dataframes
   - gunicorn # WSGI web server
   - httpie # friendly CLI HTTP client
+  - ipykernel # notebooks in VSCode
   - jq # JSON filtering
   - netcdf4 # netCDF file support
   # pin numpy to prevent np.object deprecation bug triggered in crick 0.3.0
-  - numpy<=1.23.5 # n-d arrays
+  - numpy # n-d arrays
   - pip # python package management
   - pip:
       - ../containers/backend # gri-backend package provides "backend.*"
       # this version not available on conda-forge
       - terracotta==0.8.3 # raster tile server and processing utilities
+      - nismod-snail
   - pyarrow # performant tabular data
   - pyogrio # faster geopandas I/O
   - psycopg2-binary # postgreSQL python client, for raster metadata
   - rasterio # geospatial raster data
+  - rechunker # rechunk Zarr raster data
   - rioxarray # extend xarray for rasters
   - sqlalchemy~=1.4 # SQL object relational mapper (ORM)
-  - snakemake==7.15.2 # workflow orchestration
+  - bioconda::snakemake # workflow orchestration
   - tippecanoe # vector tileset creation
   - ujson # fast JSON encoder
   - xarray # named n-dimensional numpy matricies
+  - zarr~=3 # Zarr store for n-dimensional data
   - zenodo_get # downloader for zenodo data
