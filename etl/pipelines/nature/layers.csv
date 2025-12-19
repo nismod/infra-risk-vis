@@ -1,4 +1,4 @@
-filename,subtype
-ocs_0-30cm_mean_1000.tif,organic_carbon
-flii_earth.tif,forest_landscape_integrity
-lbii.tif,biodiversity_intactness
+filename,subtype,var
+ocs_0-30cm_mean_1000.tif,organic_carbon,organic_carbon
+flii_earth.tif,forest_landscape_integrity,forest_landscape_integrity
+lbii.tif,biodiversity_intactness,biodiversity_intactness
