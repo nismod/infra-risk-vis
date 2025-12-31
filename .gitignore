@@ -31,6 +31,7 @@ NOTES
 venv
 .vscode
 .devcontainer
+.local
 
 # build
 build/

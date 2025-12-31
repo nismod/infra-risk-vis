@@ -8,6 +8,7 @@ import backend.app.routers.attributes as attributes
 import backend.app.routers.features as features
 import backend.app.routers.tiles as tiles
 import backend.app.routers.colormap as colormap
+import backend.app.routers.pixel_driller as pixel_driller
 from backend.config import LOG_LEVEL
 
 formatter = logging.Formatter(
@@ -45,3 +46,4 @@ app.include_router(features.router, prefix="/features")
 app.include_router(attributes.router, prefix="/attributes")
 app.include_router(tiles.router, prefix="/tiles")
 app.include_router(colormap.router, prefix="/colormap")
+app.include_router(pixel_driller.router, prefix="/pixel-driller")

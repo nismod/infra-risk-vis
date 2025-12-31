@@ -133,7 +133,7 @@ def _source_options(source_db: str) -> List[dict[str, str]]:
         dict(zip(keys, _values)) for _values in datasets.keys()
     ]
 
-    logger.debug(f"{source_db=} {driver_path=} {datasets=} {keys=} {source_options=}")
+    # logger.debug(f"{source_db=} {driver_path=} {datasets=} {keys=} {source_options=}")
 
     return source_options
 
