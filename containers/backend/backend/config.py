@@ -5,10 +5,27 @@ Global Configuration
 from os import getenv
 import logging
 
+import xarray as xr
+import zarr
+
 LOG_LEVEL = logging.getLevelName(getenv("LOG_LEVEL", "INFO").upper())
 RASTER_BASE_PATH = getenv("RASTER_BASE_PATH", "/data")
 TILEDB_URI = getenv("TILEDB_URI")
 ZARR_BASE_PATH = getenv("ZARR_BASE_PATH", "/data/stack.zarr")
+
+try:
+    ZARR_STORE = xr.open_groups(ZARR_BASE_PATH)
+    ZARR_GROUPS = []
+    groups_level1 = zarr.open_group(ZARR_BASE_PATH).groups()
+    for key, group in groups_level1:
+        for subgroup in group.group_keys():
+            ZARR_GROUPS.append(f"/{key}/{subgroup}")
+
+    logging.debug(f"Found {len(ZARR_GROUPS)} groups: {ZARR_GROUPS}")
+except Exception as e:
+    logging.error(f"Failed to query Zarr store: {e}")
+    raise e
+
 
 # terracotta_database_name: dict[raster_value: tuple[R, G, B, A]]
 CATEGORICAL_COLOR_MAPS = {

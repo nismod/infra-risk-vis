@@ -211,7 +211,6 @@ class ColorMap(BaseModel):
 class PixelDrillerLayer(BaseModel):
     domain: str
     keys: dict[str, Union[str, int, float]]
-    id: str
 
 
 class PixelDrillerResult(BaseModel):
