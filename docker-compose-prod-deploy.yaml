@@ -45,10 +45,11 @@ services:
     mem_limit: "250M"
 
   backend:
-    image: ghcr.io/nismod/gri-backend:1.8.1
+    image: ghcr.io/nismod/gri-backend:1.9.0
     restart: always
     volumes:
       - ./tileserver/raster/data:/data
+      - ./pixel-driller:/stacks
     env_file:
       - ./envs/prod/.backend.env
     expose:
