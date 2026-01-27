@@ -12,7 +12,7 @@ from fastapi.logger import logger
 from pyproj import Transformer
 
 from backend.app import schemas
-from backend.config import ZARR_BASE_PATH, ZARR_GROUPS, ZARR_STORE
+from backend.config import ZARR_GROUPS, ZARR_STORE
 
 router = APIRouter(tags=["pixel-driller"])
 
@@ -152,9 +152,6 @@ def get_pixel_values(
         raise HTTPException(
             status_code=400, detail="Latitude must be between -90 and 90"
         )
-
-    zarr_path = Path(ZARR_BASE_PATH)
-    logger.debug(f"Using Zarr store at: {zarr_path}")
 
     groups = ZARR_GROUPS
     store = ZARR_STORE
