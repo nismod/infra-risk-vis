@@ -110,14 +110,13 @@ def main(dataset, metadata_path, layers_path, layers_dir, output_path) -> None:
                     engine="rasterio",
                     chunks=dict(band=1, x=ll_chunksize, y=ll_chunksize),
                 )
-                .rename({"x": "lon", "y": "lat"})
                 .squeeze("band", drop=True)
                 .rename({"band_data": var})
                 .drop_vars("spatial_ref")
                 .expand_dims(**{key: [value] for key, value in meta.items()})
             )
             layer_ds.to_zarr(
-                store_path, mode="a", region="auto", group=f"{dataset}/{var}"
+                store_path, mode="r+", region="auto", group=f"{dataset}/{var}"
             )
 
 
@@ -130,19 +129,17 @@ def setup_store(
     metadata,
     ll_chunksize=8192,
 ):
-    ds = xr.open_dataset(template_layer, engine="rasterio").rename(
-        {"x": "lon", "y": "lat"}
-    )
+    ds = xr.open_dataset(template_layer, engine="rasterio")
     logging.info("Opened template.")
 
-    dims = ["lat", "lon"]
+    dims = ["x", "y"]
     coords = {
-        "lat": list([float(l) for l in ds.coords["lat"]]),
-        "lon": list([float(l) for l in ds.coords["lon"]]),
+        "x": list([float(l) for l in ds.coords["x"]]),
+        "y": list([float(l) for l in ds.coords["y"]]),
     }
     ds.close()
     del ds
-    dim_lens = [len(coords["lat"]), len(coords["lon"])]
+    dim_lens = [len(coords["x"]), len(coords["y"])]
     chunk_sizes = [ll_chunksize, ll_chunksize]
     for dim in metadata["keys"]:
         dims.append(dim)
