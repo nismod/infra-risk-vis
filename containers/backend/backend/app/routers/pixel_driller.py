@@ -2,13 +2,14 @@
 Pixel Driller Service - Query Zarr raster data for pixel values at specific coordinates
 """
 
+import itertools
 import traceback
-from pathlib import Path
 
 import numpy as np
 import xarray as xr
 from fastapi import APIRouter, HTTPException
 from fastapi.logger import logger
+from fastapi.responses import ORJSONResponse
 from pyproj import Transformer
 
 from backend.app import schemas
@@ -114,13 +115,13 @@ def query_zarr_pixel(
                 value = None
             del dict_[var]
             results.append(
-                schemas.PixelDrillerResult(
-                    value=value,
-                    layer=schemas.PixelDrillerLayer(
-                        domain=zarr_group_to_domain(group),
-                        keys=dict_,
-                    ),
-                )
+                {
+                    "value": value,
+                    "layer": {
+                        "domain": zarr_group_to_domain(group),
+                        "keys": dict_,
+                    },
+                }
             )
     logger.debug(
         f"[{group}] Completed query_zarr_pixel, returning {len(results)} results"
@@ -128,11 +129,15 @@ def query_zarr_pixel(
     return results
 
 
-@router.get("/point/{lon}/{lat}", response_model=schemas.PixelDrillerResponse)
+@router.get(
+    "/point/{lon}/{lat}",
+    # response_model=schemas.PixelDrillerResponse,
+    response_class=ORJSONResponse,
+)
 def get_pixel_values(
     lon: float,
     lat: float,
-) -> schemas.PixelDrillerResponse:
+):
     """
     Get pixel values for all layers at a specific lat/lon coordinate.
 
@@ -169,7 +174,7 @@ def get_pixel_values(
                 lon,
             )
             logger.debug(f"Domain {group} returned {len(group_results)} results")
-            all_results.extend(group_results)
+            all_results.append(group_results)
         except Exception as e:
             # Skip groups that fail (e.g., connection errors, missing Zarr data)
             # Log with full traceback for debugging
@@ -180,9 +185,11 @@ def get_pixel_values(
     logger.debug(f"Completed processing all groups, total results: {len(all_results)}")
 
     try:
-        return schemas.PixelDrillerResponse(
-            point={"lat": lat, "lon": lon},
-            results=all_results,
+        return ORJSONResponse(
+            {
+                "point": {"lat": lat, "lon": lon},
+                "results": list(itertools.chain.from_iterable(all_results)),
+            }
         )
     except Exception as e:
         logger.error(f"Failed to create response: {e}")
