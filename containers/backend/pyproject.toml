@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["types-sqlalchemy"]
+dev = ["types-sqlalchemy", "aiohttp"]
 
 [tool.pyright]
 exclude = ["venv", ".venv"]
