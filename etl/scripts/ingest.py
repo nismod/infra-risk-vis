@@ -1,5 +1,4 @@
-"""Script to ingest generic rasters into terracotta.
-"""
+"""Script to ingest generic rasters into terracotta."""
 
 import concurrent.futures
 import csv

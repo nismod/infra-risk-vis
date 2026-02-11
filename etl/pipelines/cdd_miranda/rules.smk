@@ -37,29 +37,3 @@ rule extract:
                 "axis": "Y",
             }
             ds["CDD_total"].rio.to_raster(output.tiff)
-
-rule clip_raster:
-    """
-    Clip raster extent to window defined by `raster_bounds` in config.
-    """
-    input:
-        "raster/raw/cdd_miranda/{KEY}.tif"
-    output:
-        temp("raster/clip/cdd_miranda/{KEY}.tif")
-    params:
-        bounds = config["raster_bounds"]
-    resources:
-        disk_mb=3000,
-        mem_mb=10000,
-    priority:
-        80,
-    shell:
-        """
-        gdalwarp \
-            -co "COMPRESS=LZW" \
-            -t_srs EPSG:4326 \
-            -te {params.bounds} \
-            -of GTiff \
-            {input} \
-            {output}
-        """

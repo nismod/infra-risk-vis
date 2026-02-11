@@ -1,3 +1,3 @@
-filename,subtype
-GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000_V1_0.tif,all
-GHS_BUILT_S_NRES_E2020_GLOBE_R2023A_54009_1000_V1_0.tif,non_residential
+filename,subtype,var
+GHS_BUILT_S_E2020_GLOBE_R2023A_54009_1000_V1_0.tif,all,built_surface
+GHS_BUILT_S_NRES_E2020_GLOBE_R2023A_54009_1000_V1_0.tif,non_residential,built_surface

@@ -14,16 +14,20 @@ dependencies = [
     "fastapi==0.115.5",
     "fastapi-pagination==0.12.32",
     "geoalchemy2==0.16.0",
+    "orjson",
     "psycopg2-binary==2.9.10",
     "pydantic==2.9.2",
+    "pyproj",
     "sqlalchemy==2.0.36",
     "setuptools==78.1.1",
     "terracotta==0.8.3",
     "uvicorn==0.32.0",
+    "xarray",
+    "zarr",
 ]
 
 [project.optional-dependencies]
-dev = ["types-sqlalchemy"]
+dev = ["types-sqlalchemy", "aiohttp"]
 
 [tool.pyright]
 exclude = ["venv", ".venv"]

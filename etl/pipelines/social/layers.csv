@@ -1,3 +1,3 @@
-filename,subtype
-rwi.tif,rwi
-hdi_raster_predictions.tif,hdi
+filename,subtype,var
+rwi.tif,rwi,rwi
+hdi_raster_predictions.tif,hdi,hdi

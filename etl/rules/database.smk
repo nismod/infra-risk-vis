@@ -1,5 +1,4 @@
-"""These rules define interactions with the terracotta metadata databases that
-store raster / tileset state.
+"""Ingest metadata to the terracotta databases that store raster/tileset state.
 
 N.B. Dataset specific rules are located in pipelines/<dataset>.
 """

@@ -1,0 +1,13 @@
+#bash run.sh aqueduct
+bash run.sh cdd_miranda
+bash run.sh dem
+bash run.sh gem_earthquake
+bash run.sh ghsl_buildings
+bash run.sh ghsl_pop
+bash run.sh iris
+bash run.sh isimip
+bash run.sh jrc_flood
+bash run.sh land_cover
+bash run.sh nature
+bash run.sh storm
+bash run.sh traveltime_to_healthcare

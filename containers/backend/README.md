@@ -33,6 +33,31 @@ pip install -e .[dev]
 uvicorn backend.app.main:app --port 8888 --reload
 ```
 
+### API performance
+
+The `benchmark_pixel_driller.py` script runs queries against `localhost` running
+the API to roughly benchmark performance:
+
+```bash
+$ python benchmark_pixel_driller.py -c 4 -n 100
+Requests: 100 | Concurrency: 4
+Mean latency: 1543.54 ms
+Total wall time (approx): 154.35 s
+P95 latency: 2276.02 ms
+P99 latency: 2416.50 ms
+Status counts:
+  200: 100
+
+$  python benchmark_pixel_driller.py -c 8 -n 100
+Requests: 100 | Concurrency: 8
+Mean latency: 3179.33 ms
+Total wall time (approx): 317.93 s
+P95 latency: 4366.23 ms
+P99 latency: 4833.38 ms
+Status counts:
+  200: 100
+```
+
 ## Configuration
 
 Environment variables:

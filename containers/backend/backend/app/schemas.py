@@ -205,3 +205,19 @@ class ColorMapEntry(BaseModel):
 
 class ColorMap(BaseModel):
     colormap: list[ColorMapEntry]
+
+
+# Pixel Driller Schemas
+class PixelDrillerLayer(BaseModel):
+    domain: str
+    keys: dict[str, Union[str, int, float]]
+
+
+class PixelDrillerResult(BaseModel):
+    value: Optional[float] = None
+    layer: PixelDrillerLayer
+
+
+class PixelDrillerResponse(BaseModel):
+    point: dict[str, float]
+    results: list[PixelDrillerResult]
