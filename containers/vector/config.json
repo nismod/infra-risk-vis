@@ -23,6 +23,18 @@
     "road_edges_tertiary": {
       "mbtiles": "road_edges_tertiary.mbtiles"
     },
+    "power_transmission": {
+      "mbtiles": "power_transmission.mbtiles"
+    },
+    "power_distribution": {
+      "mbtiles": "power_distribution.mbtiles"
+    },
+    "rail_edges": {
+      "mbtiles": "rail_edges.mbtiles"
+    },
+    "rail_nodes": {
+      "mbtiles": "rail_nodes.mbtiles"
+    },
     "healthsites": {
       "mbtiles": "healthsites.mbtiles"
     },
