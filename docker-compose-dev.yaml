@@ -44,6 +44,9 @@ services:
       - ./backend/backend/:/code/backend/
     env_file:
       - ./envs/dev/.backend.env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     ports:
       - 8888:8888
     labels:
@@ -100,17 +103,37 @@ services:
       - "traefik.http.middlewares.irv-autopkg-api-stripprefix.stripprefix.prefixes=/extract"
       - "traefik.http.services.irv-autopkg-api.loadbalancer.server.port=8000"
 
-  ## WARNING - this will wipe the existing tables. TODO: Alembic
-  recreate-metadata-schema:
+  # Apply database migrations (alembic upgrade head). Runs before backend.
+  migrate:
     build: ./backend
     image: ghcr.io/nismod/gri-backend:1.8.1
-    profiles: ["recreate-metadata-schema"]
     volumes:
-      - ./backend/backend/db/models.py:/code/backend/db/models.py
+      - ./backend/backend/:/code/backend/
+      - ./backend/migrations/:/code/migrations/
     env_file:
       - ./envs/dev/.backend.env
-    entrypoint: ["python"]
-    command: ["/code/backend/create_schema.py"]
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: ["alembic"]
+    command: ["upgrade", "head"]
+
+  ## DEV ONLY, DESTRUCTIVE: drops every GRI table and its data, then recreates
+  ## them empty (alembic downgrade base && alembic upgrade head).
+  dev-reset-db:
+    build: ./backend
+    image: ghcr.io/nismod/gri-backend:1.8.1
+    profiles: ["dev-reset-db"]
+    volumes:
+      - ./backend/backend/:/code/backend/
+      - ./backend/migrations/:/code/migrations/
+    env_file:
+      - ./envs/dev/.backend.env
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: ["sh", "-c"]
+    command: ["alembic downgrade base && alembic upgrade head"]
 
 volumes:
   postgis-data:

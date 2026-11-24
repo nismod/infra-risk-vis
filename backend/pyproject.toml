@@ -11,6 +11,7 @@ requires-python = ">=3.10"
 license = { text = "MIT" }
 classifiers = ["Framework :: FastAPI", "Programming Language :: Python :: 3"]
 dependencies = [
+    "alembic==1.20.1",
     "fastapi==0.115.5",
     "fastapi-pagination==0.12.32",
     "geoalchemy2==0.16.0",
@@ -27,7 +28,15 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["types-sqlalchemy", "aiohttp"]
+dev = ["types-sqlalchemy", "aiohttp", "pytest"]
+
+[tool.setuptools.packages.find]
+# Only the app package; migrations/ and tests/ are not installed (the Docker
+# image copies migrations/ and alembic.ini alongside the code instead).
+include = ["backend*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.pyright]
 exclude = ["venv", ".venv"]

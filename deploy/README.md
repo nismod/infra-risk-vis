@@ -134,6 +134,36 @@ containers with environment data provided from the .env file.
 
 `docker ps` to see the containers' state.
 
+## Database migrations
+
+The GRI tables are managed by Alembic migrations, which ship inside the backend
+image (`/code/migrations`, `/code/alembic.ini`). They connect with the same
+`PG*` variables as the API (`envs/prod/.backend.env`). The baseline revision
+`0001_baseline` matches the tables already deployed; PostGIS (and pg_cron)
+objects are not part of the migrations.
+
+**Once**, on a database that predates migrations (i.e. production as of
+2026-11), record that it is at the baseline without changing anything:
+
+```bash
+docker compose -f docker-compose-prod-deploy.yaml run --rm --no-deps \
+    --entrypoint alembic backend stamp 0001_baseline
+```
+
+Then, whenever a new backend image is deployed, apply new migrations before
+restarting the API:
+
+```bash
+docker compose -f docker-compose-prod-deploy.yaml run --rm --no-deps \
+    --entrypoint alembic backend upgrade head
+```
+
+`alembic current` shows the database's revision and `alembic history` the
+available ones (same `run` prefix). `alembic upgrade head --sql` prints the SQL
+without running it, for review. Take a schema and data backup before upgrading
+production. Never run the dev-only `dev-reset-db` service (or `alembic
+downgrade`) against production: downgrading the baseline drops every GRI table.
+
 ## Terracotta databases
 
 Ingesting rasters into a terracotta metadata database can be time-consuming, so

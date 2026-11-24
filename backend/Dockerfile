@@ -11,6 +11,10 @@ RUN python -m pip install .
 COPY ./backend /code/backend
 RUN python -m pip install --upgrade --compile .
 
+# Database migrations: run with `alembic upgrade head` from /code
+COPY alembic.ini /code/alembic.ini
+COPY ./migrations /code/migrations
+
 CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8888"]
 
 # If running behind a proxy like Nginx or Traefik add --proxy-headers

@@ -113,7 +113,8 @@ without a `profiles` attribute).
 
 For example, when running your own FE development server to add a new raster
 layer the following should suffice: `docker compose -f docker-compose-dev.yaml
-up`. This will bring up `db`, `tiles-db`, `backend` and `vector-tileserver`.
+up`. This will bring up `db`, `tiles-db`, `backend` and `vector-tileserver`
+(after running `migrate` to completion).
 
 To run the core services with a standard frontend: `docker compose -f
 docker-compose-dev.yaml --profile web-server up`.
@@ -128,18 +129,32 @@ compose -f docker-compose-dev.yaml --profile traefik --profile web-server
 There are also a few short-lived 'utility containers', which can be run to
 perform particular tasks:
 
-- recreate-metadata-schema: Drop the contents of the `db` database, recreate with empty tables
-- raster-tile-delete-entries: Delete raster entries of specified dataset in `tiles-db`
-- raster-tile-drop-database: Drop whole database for specified dataset from `tiles-db`
+- `migrate`: Apply database migrations to `db` (`alembic upgrade head`)
+- `dev-reset-db`: Drop (!) all tables and data in `db`, then recreate empty
+- `raster-tile-delete-entries`: Delete raster entries of specified dataset in `tiles-db`
+- `raster-tile-drop-database`: Drop whole database for specified dataset from `tiles-db`
 
-When starting from a clean slate, the `recreate-metadata-schema` service must
-be run to create the tables in `db` that `backend` relies upon. If you find
-that the `backend` service is complaining that the `raster_tile_sources`
-database table is not available, you may need to create the appropriate tables
-in the `db` service first. To do that, bring the `db` service up as described
-above, and then run: `docker-compose -f docker-compose-dev.yaml up
-recreate-metadata-schema` to (re)create the tables. Note that this will drop
-any data currently in database.
+The database schema is managed with [Alembic](https://alembic.sqlalchemy.org/)
+migrations in `backend/migrations` (see
+[backend/README.md](backend/README.md#database-migrations)).
+
+Running `docker compose -f docker-compose-dev.yaml up` will run `migrate` before
+`backend` starts, so migrations should always be kept up-to-date in a local
+docker setup.
+
+To run `migrate` on its own:
+
+```bash
+docker compose -f docker-compose-dev.yaml run --rm migrate
+```
+
+If your database was created before migrations were adopted (by the old
+`recreate-metadata-schema` service) and already has the tables, mark it as
+up to date once, before the first `migrate`:
+
+```bash
+docker compose -f docker-compose-dev.yaml run --rm migrate stamp 0001_baseline
+```
 
 ### Production
 
@@ -184,6 +199,10 @@ docker pull ghcr.io/nismod/gri-backend:1.8.1
 
 # Edit docker-compose-prod-deploy.yaml image version (or sync up):
 #     image: ghcr.io/nismod/gri-backend:1.8.1
+
+# Apply any new database migrations (see deploy/README.md#database-migrations)
+docker compose -f docker-compose-prod-deploy.yaml run --rm --no-deps \
+    --entrypoint alembic backend upgrade head
 
 # Restart service
 docker compose -f docker-compose-prod-deploy.yaml up -d backend

@@ -33,6 +33,81 @@ pip install -e .[dev]
 uvicorn backend.app.main:app --port 8888 --reload
 ```
 
+## Database migrations
+
+The schema of the backend database is defined by the SQLAlchemy models in
+`backend/db/models.py` and versioned with [Alembic](https://alembic.sqlalchemy.org/):
+
+- `alembic.ini` and `migrations/` live next to `pyproject.toml` and are copied
+  into the Docker image at `/code/alembic.ini` and `/code/migrations`.
+- `migrations/env.py` connects with the same `PG*` environment variables as
+  the app (no URL in `alembic.ini`).
+- `migrations/versions/` holds one file per revision. `0001_baseline` creates
+  the tables in `models.py` and runs `CREATE EXTENSION IF NOT EXISTS postgis`.
+- Autogenerate only compares the default (`public`) schema, and ignores tables
+  owned by database extensions (PostGIS's `spatial_ref_sys`, pg_cron's tables)
+  and the `topology`, `tiger`, `tiger_data`, `cron` and `metrics` schemas.
+
+Run these from this directory, with `PG*` set for the target database:
+
+```bash
+alembic upgrade head      # apply all migrations (what the `migrate` service runs)
+alembic current           # show the database's revision
+alembic check             # fail if models.py and the database differ
+alembic upgrade head --sql  # print the SQL instead of running it
+```
+
+### Existing databases
+
+For already-existing databases, run `alembic stamp 0001_baseline` once, then use
+`upgrade head` as usual.
+
+### Changing the schema
+
+For each model change, make a new alembic revision:
+
+1. Edit `backend/db/models.py`.
+2. Bring a dev database up to date (`alembic upgrade head`), then run
+   `alembic revision --autogenerate -m "short description"`.
+3. Read the generated file in `migrations/versions/` and fix it by hand where
+   autogenerate falls short (renames might show up as drop + add; data
+   migrations may be needed, server-side defaults and custom SQL have to be
+   written). Geometry columns render as `geoalchemy2.Geometry(...)`; decide
+   whether to allow alembic to create the spatial index or to be more explicit.
+4. `alembic upgrade head`, then `alembic check` should report no changes, and
+   `alembic downgrade -1` should work.
+5. Commit the revision with the model change.
+
+Schema objects that are not in `models.py` (e.g. a SQL-defined schema) go in
+hand-written revisions (`alembic revision -m "..."`, then `op.execute(...)`).
+If they live in their own schema, add it to `EXCLUDED_SCHEMAS` in
+`migrations/env.py` so autogenerate leaves it alone.
+
+### Reset
+
+`alembic downgrade base && alembic upgrade head` drops every table in the
+migrations and all their data, then recreates them empty. The `dev-reset-db`
+compose service does this for the dev stack. Don't run it on production.
+
+### Tests
+
+The tests check the migrations against a real database: `upgrade head` on an
+empty database, then autogenerate must find no differences with `models.py`;
+`downgrade base` then `upgrade head` must work, via the API and the CLI. They
+need a **throwaway** PostGIS database (its GRI tables are dropped) given as
+`DATABASE_URL`, and are skipped without it:
+
+```bash
+pip install -e .[dev]
+docker run -d --name gri-test-db -p 5499:5432 \
+    -e POSTGRES_DB=gri_test -e POSTGRES_USER=gri_test -e POSTGRES_PASS=password \
+    kartoza/postgis:14-3.1
+# wait until it accepts connections (initialisation restarts postgres, ~10 s)
+until docker logs gri-test-db 2>&1 | grep -q "restarting in foreground"; do sleep 1; done; sleep 3
+DATABASE_URL=postgresql+psycopg2://gri_test:password@localhost:5499/gri_test pytest
+docker rm -f gri-test-db
+```
+
 ### API performance
 
 The `benchmark_pixel_driller.py` script runs queries against `localhost` running
