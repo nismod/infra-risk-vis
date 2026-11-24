@@ -1,3 +1,20 @@
 analysis_data_dir: /opt/etl/raw_data
 network_layers: "/opt/etl/pipelines/osm_roads/network_layers.csv"
 network_tilelayers: "/opt/etl/pipelines/osm_roads/network_tilelayers.csv"
+# Read network layers from a published open-gira results run,
+# {base}/results/open-gira/{run}/, instead of each layer's path in
+# network_layers*.csv (rows with an og_layer). null run and no lock: legacy paths.
+# See etl/README.md "Vector layers from open-gira results".
+open_gira_results:
+  # irv-datapkg catalogue base URI, e.g. s3://nismod/irv-datapkg
+  base: null
+  # published run id, e.g. 20261124-fc04e93-r1
+  run: null
+  # optional results lock pinning the run's checksums (scripts/og_results.py lock);
+  # used when it exists (base, if set, then reads the run from a mirror)
+  lock: null
+  # download cache (default $IRV_DATAPKG_CACHE); without one, files are streamed
+  cache_dir: null
+  storage_options: {}
+  # fetched files go to {dest}/{run}/
+  dest: raw_data/open-gira

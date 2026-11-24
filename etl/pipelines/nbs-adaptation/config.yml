@@ -1,0 +1,25 @@
+# nbs-adaptation pipeline: boundaries, HydroBASINS and NbS opportunities from
+# open-gira. Run from etl/:
+#   snakemake -s pipelines/nbs-adaptation/Snakefile -c1
+#
+# Read from a published open-gira results run, {base}/results/open-gira/{run}/
+# (layers admin_boundaries, hydrobasins_gadm, nbs_opportunities). With no run
+# and no lock, read from legacy_results_dir instead (a copy of an open-gira
+# results directory). See README.md.
+open_gira_results:
+  base: null
+  run: null
+  lock: null
+  cache_dir: null
+  storage_options: {}
+  dest: raw_data/open-gira
+
+# open-gira OSM dataset of the NbS run (results item property osm_extract;
+# legacy slices are read from slices/{osm_extract}_nbs/)
+osm_extract: planet-latest
+
+# fallback when no results run is configured
+legacy_results_dir: /mnt/linux-filestore/mert2014/projects/open-gira/results
+
+# MBTiles for the vector tileserver
+tiles_dir: ../tileserver/vector/data

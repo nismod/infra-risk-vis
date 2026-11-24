@@ -21,6 +21,8 @@ def yield_features(layer, network_tile_layer):
     if gdf.crs.name != "WGS 84":
         raise Exception("Input geoparquet must be in WGS 84")
     gdf.reset_index()
+    # GeoParquet 1.1 bbox covering column (open-gira results runs): not a property
+    gdf = gdf.drop(columns=["bbox"], errors="ignore")
     gdf["wkt"] = gdf.geometry.to_wkt()
 
     rename = {
@@ -123,6 +125,11 @@ if __name__ == "__main__":
     network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
     print("Network TileLayer:", network_tile_layer)
     network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
+    # open-gira results run (Snakefile fetch_og_results): read the fetched copy
+    source = getattr(snakemake.input, "source", None)
+    if source:
+        network_layer = network_layer.copy()
+        network_layer["path"] = str(source)
     print("Network Layer", network_layer)
 
     db: Session

@@ -1,0 +1,128 @@
+"""NbS adaptation: boundaries, HydroBASINS and opportunity areas from open-gira.
+
+Scripted replacement for the extraction steps of
+extract-nbs-adaptation-boundaries.ipynb and the "Extract" step of
+extract-nbs-adaptation-opportunities.ipynb (the per-NbS aggregation, CSVs
+and NbS MBTiles stay in that notebook, which reads the files written here).
+
+Run from etl/:
+
+    snakemake -s pipelines/nbs-adaptation/Snakefile -c1 [--config ...]
+
+Inputs come from the open-gira results run configured in config.yml
+(open_gira_results.base + run, or a results lock), fetched with the
+irv-datapkg client; without one, from legacy_results_dir.
+"""
+
+import os
+import shutil
+import subprocess
+import sys
+from glob import glob
+
+
+configfile: "pipelines/nbs-adaptation/config.yml"
+
+
+sys.path.insert(0, os.path.join(workflow.basedir, "..", "..", "scripts"))
+import nbs_adaptation as nbs
+import og_results
+
+OG_RESULTS = og_results.results_config(config)
+USE_RESULTS = og_results.active(OG_RESULTS)
+OG_LOCK = (
+    [OG_RESULTS["lock"]]
+    if OG_RESULTS["lock"] and os.path.exists(OG_RESULTS["lock"])
+    else []
+)
+TILES = config["tiles_dir"]
+MBTILES = {name: spec[3] for name, spec in nbs.BOUNDARIES.items()}
+
+
+wildcard_constraints:
+    BOUNDARY="|".join(nbs.BOUNDARIES),
+    NBS="|".join(nbs.NBS_TYPES),
+    MB="|".join(MBTILES.values()),
+    SUFFIX="|_points",
+
+
+rule all:
+    input:
+        expand(f"{TILES}/{{MB}}{{SUFFIX}}.mbtiles", MB=MBTILES.values(), SUFFIX=["", "_points"]),
+        expand("raw_data/nbs-adaptation/{NBS}_with_EAD.geoparquet", NBS=nbs.NBS_TYPES),
+
+
+rule boundary:
+    """Admin boundaries / HydroBASINS from the results run (or legacy copy)."""
+    input:
+        lock=OG_LOCK,
+    output:
+        "raw_data/boundaries/{BOUNDARY}.geoparquet",
+    run:
+        layer, filters, _, _ = nbs.BOUNDARIES[wildcards.BOUNDARY]
+        if USE_RESULTS:
+            og_results.fetch_layer(
+                og_results.open_run(OG_RESULTS), layer, output[0], filters, single=True,
+                cache=og_results.use_cache(OG_RESULTS),
+            )
+        else:
+            src = os.path.join(config["legacy_results_dir"], nbs.LEGACY_BOUNDARY_PATHS[wildcards.BOUNDARY])
+            shutil.copyfile(src, output[0])
+
+
+rule boundary_geojsonseq:
+    input:
+        "raw_data/boundaries/{BOUNDARY}.geoparquet",
+    output:
+        polygons="raw_data/boundaries/{BOUNDARY}.geojsonld",
+        points="raw_data/boundaries/{BOUNDARY}_points.geojsonld",
+    run:
+        nbs.boundary_geojsonseq(input[0], wildcards.BOUNDARY, output.polygons, output.points)
+
+
+def boundary_for_mbtiles(wildcards):
+    name = next(n for n, mb in MBTILES.items() if mb == wildcards.MB)
+    return f"raw_data/boundaries/{name}{wildcards.SUFFIX}.geojsonld"
+
+
+rule boundary_mbtiles:
+    input:
+        boundary_for_mbtiles,
+    output:
+        f"{TILES}/{{MB}}{{SUFFIX}}.mbtiles",
+    shell:
+        """
+        tippecanoe --read-parallel --force --drop-densest-as-needed \
+            -n {wildcards.MB}{wildcards.SUFFIX} -l {wildcards.MB}{wildcards.SUFFIX} \
+            -zg -o {output} {input}
+        """
+
+
+def nbs_sources(wildcards):
+    if USE_RESULTS:
+        return {"lock": OG_LOCK}
+    pattern = os.path.join(
+        config["legacy_results_dir"], "slices", f"{config['osm_extract']}_nbs",
+        "slice-*", f"{wildcards.NBS}_with_EAD.parquet",
+    )
+    return {"slices": sorted(glob(pattern))}
+
+
+rule nbs_opportunities:
+    """Opportunity areas joined with EAD, one file per NbS type."""
+    input:
+        unpack(nbs_sources),
+    output:
+        "raw_data/nbs-adaptation/{NBS}_with_EAD.geoparquet",
+    run:
+        if USE_RESULTS:
+            tmp = output[0] + ".fetched"
+            og_results.fetch_layer(
+                og_results.open_run(OG_RESULTS), "nbs_opportunities", tmp,
+                {"nbs": wildcards.NBS, "osm_extract": config["osm_extract"]}, single=True,
+                cache=og_results.use_cache(OG_RESULTS),
+            )
+            nbs.nbs_with_ead([tmp], wildcards.NBS, output[0])
+            os.remove(tmp)
+        else:
+            nbs.nbs_with_ead(input.slices, wildcards.NBS, output[0])

@@ -18,3 +18,13 @@ string_id in features table is the OSM id (not osm_way_id - which is duplicated)
 - PG Environment variables in the run-environment (e.g. in snakemake .env file if using docker-compose)
 
 No other pre-processing is required
+
+## Reading from a published open-gira results run
+
+Instead of a local copy at `path`, a layer row with an `og_layer` (and
+optional `og_filters`, `key=value;key=value`) in `network_layers*.csv` can be
+fetched from an open-gira results run, `{BASE}/results/open-gira/{run}/`, with
+the irv-datapkg client: set `open_gira_results.base` and `.run` (or `.lock`)
+in `config.yml`. Rule `fetch_og_results` writes the copy under
+`raw_data/open-gira/{run}/` and `networks_to_db` reads it in place of `path`.
+See `etl/README.md`, "Vector layers from open-gira results".

@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 import geopandas
 import pandas
@@ -12,6 +13,28 @@ configfile: "pipelines/osm_roads/config.yml"
 # Read further configuration data from CSV
 network_layers = pandas.read_csv(config["network_layers"])
 network_tilelayers = pandas.read_csv(config["network_tilelayers"])
+
+# open-gira results: with open_gira_results.run (or an existing lock) set, the
+# network layers listed with an og_layer in network_layers.csv are fetched from
+# the published run {BASE}/results/open-gira/{run}/ with the irv-datapkg
+# client, to raw_data/open-gira/{run}/{ref}/, one
+# {item id}.geoparquet per matching item (the loader walks the directory).
+# Otherwise each layer's `path` is read as before.
+# See etl/README.md "Vector layers from open-gira results".
+sys.path.insert(0, os.path.join(workflow.basedir, "..", "..", "scripts"))
+import og_results
+
+OG_RESULTS = og_results.results_config(config)
+OG_SINGLE = False
+
+
+def network_source(wildcards):
+    """Input of networks_to_db: the fetched results layer, if configured."""
+    tile_layer = get_tilelayer(wildcards.layer, network_tilelayers)
+    row = network_layers[network_layers.ref == tile_layer.ref].iloc[0]
+    if og_results.active(OG_RESULTS) and isinstance(row.get("og_layer"), str):
+        return {"source": og_results.fetched_path(OG_RESULTS, row.ref, OG_SINGLE)}
+    return {}
 
 
 wildcard_constraints:
@@ -35,11 +58,37 @@ rule all:
 rule networks_to_db:
    """Read from source directory to database
    """
+   input:
+       unpack(network_source),
    output:
        "logs/network/{layer}.txt",
    script:
-       "pipelines/osm_roads/osm_roads_pq_to_db.py"
+       "osm_roads_pq_to_db.py"
 
+
+if og_results.active(OG_RESULTS):
+
+    rule fetch_og_results:
+        """Fetch a network layer from the published open-gira results run
+        (sha256-verified; through the results lock if configured)."""
+        input:
+            lock=[OG_RESULTS["lock"]] if OG_RESULTS["lock"] and os.path.exists(OG_RESULTS["lock"]) else [],
+        output:
+            directory(og_results.fetched_path(OG_RESULTS, "{ref}", OG_SINGLE)),
+        wildcard_constraints:
+            ref="[^/]+",
+        params:
+            row=lambda wildcards: network_layers[network_layers.ref == wildcards.ref].iloc[0].to_dict(),
+        run:
+            catalog = og_results.open_run(OG_RESULTS)
+            og_results.fetch_layer(
+                catalog,
+                params.row["og_layer"],
+                output[0],
+                filters=params.row.get("og_filters"),
+                single=OG_SINGLE,
+                cache=og_results.use_cache(OG_RESULTS),
+            )
 
 rule db_to_geojsonseq:
     """Load from database to GeoJSONSeq

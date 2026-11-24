@@ -412,7 +412,7 @@ the published items (then run `layers_from_catalogue.py`).
 | social | `relative_wealth_index`, `hdi_mosaiks` | todo | `datapkg_dataset` per row | hdi: `download_gridded_hdi`. rwi: T1 is points (GeoParquet), so `process_rwi_grid` rasterisation stays here, reading the fetched parquet rather than a raw tif |
 | traveltime_to_healthcare | `traveltime_healthcare` | todo | subtype->mode (motorized/walking) | `download_motorised`, `download_walking` |
 | iris | `iris` (private) | todo | epoch, rp->return_period, ssp | Manual copy + `extract_netcdf_to_tiff`. Needs `private_base` credentials |
-| osm_rail, osm_roads, gem_exposure, nbs-adaptation | `openstreetmap`, ... | out of scope | n/a | Vector / separate Snakefiles, not `raster/raw` |
+| osm_rail, osm_roads, gem_exposure, nbs-adaptation | `openstreetmap`, ... | out of scope | n/a | Vector / separate Snakefiles, not `raster/raw`. osm_roads, osm_rail and nbs-adaptation read open-gira results runs instead: see [Vector layers from open-gira results](#vector-layers-from-open-gira-results) |
 
 ### Tests
 
@@ -428,6 +428,80 @@ workflow with pipelines enabled and disabled, and run `datapkg_lock` and
 
 See also [docs/serving-bundle.md](docs/serving-bundle.md) for publishing the
 processed serving bundle.
+
+## Vector layers from open-gira results
+
+The road and rail networks, NbS opportunities, admin boundaries and
+HydroBASINS shown in the tool are open-gira outputs. open-gira publishes them
+as an irv-datapkg **results run** (open-gira docs: "Publishing results for
+visualisation"; contract: irv-datapkg `docs/catalogue-spec.md` section 8):
+
+```
+{BASE}/results/open-gira/{run}/{layer}/{run}/{item}.parquet   # GeoParquet 1.1
+```
+
+The standalone vector pipelines fetch those layers with the irv-datapkg
+client (sha256-verified) instead of reading hand-made copies under
+`/opt/etl/raw_data/...` or `/mnt/linux-filestore/...`. Set, in the
+pipeline's `config.yml` or with `--config`:
+
+```yaml
+open_gira_results:
+  base: s3://nismod/irv-datapkg       # irv-datapkg {BASE}
+  run: 20261124-fc04e93-r1            # run id from the open-gira maintainers
+  lock: null                          # or a results lock file (below)
+```
+
+With no `run` and no existing `lock`, the pipelines read their legacy paths
+exactly as before.
+
+| Pipeline | Results layer (filters) | Fetched to | Replaces |
+| --- | --- | --- | --- |
+| `osm_roads` (`transport_roads_edges`) | `road_edges_damages` (all items: one per hazard and slice) | `raw_data/open-gira/{run}/transport_roads_edges/` | `/opt/etl/raw_data/processed_data/input/osm_roads/20221103_global_road_EAD_and_cost_per_RP` |
+| `osm_rail` (`transport_rail_edges`) | `rail_edges` (`osm_extract=planet-latest`) | `raw_data/open-gira/{run}/transport_rail_edges.geoparquet` | `.../osm_rail/20221021_global_rail_edges.geoparquet` |
+| `osm_rail` (`transport_rail_nodes`) | `rail_nodes` (`osm_extract=planet-latest`) | `raw_data/open-gira/{run}/transport_rail_nodes.geoparquet` | `.../osm_rail/20221027_global_rail_stations.geoparquet` |
+| `nbs-adaptation` boundaries | `admin_boundaries` (`admin_level=0,1,2`), `hydrobasins_gadm` (`level=12`) | `raw_data/boundaries/{admin-level-N,hybas_lev12_v1c_with_gadm_codes}.geoparquet` | `cp $OG_RESULTS_DIR/input/...` |
+| `nbs-adaptation` opportunities | `nbs_opportunities` (`nbs=...`, `osm_extract`) | `raw_data/nbs-adaptation/{nbs}_with_EAD.geoparquet` | the notebook's slice-gathering "Extract" step |
+
+For `osm_roads`/`osm_rail` the mapping is the `og_layer` and `og_filters`
+(`key=value;key=value`) columns of `network_layers*.csv`; rows without an
+`og_layer` always use `path`. Rule `fetch_og_results` writes the fetched copy
+and `networks_to_db` reads it in place of `path`. A `bbox` covering column in
+the GeoParquet is dropped before features are loaded.
+
+```bash
+cd etl
+# dry run: one fetch per network layer, then the usual load and tiling
+snakemake -s pipelines/osm_rail/Snakefile -n --config \
+    network_layers=pipelines/osm_rail/network_layers_edges.csv \
+    network_tilelayers=pipelines/osm_rail/network_tilelayers_edges.csv \
+    'open_gira_results={"base": "s3://nismod/irv-datapkg", "run": "20261124-fc04e93-r1"}'
+# boundaries, HydroBASINS and NbS opportunities (see pipelines/nbs-adaptation/README.md)
+snakemake -s pipelines/nbs-adaptation/Snakefile -c1 --config \
+    'open_gira_results={"base": "s3://nismod/irv-datapkg", "run": "20261124-fc04e93-r1"}'
+```
+
+### Locking a results run
+
+A run is immutable, so `base` + `run` already pins it. To also pin the
+checksums of the items a deployment uses (and read from a mirror with the
+same lock), write a results lock and point `open_gira_results.lock` at it:
+
+```bash
+python scripts/og_results.py lock --base s3://nismod/irv-datapkg \
+    --run 20261124-fc04e93-r1 --layer rail_edges --layer rail_nodes \
+    --filter osm_extract=planet-latest --output pipelines/osm_rail/og-results.lock.yaml
+```
+
+It is an irv-datapkg lock file with `run` in place of `release`
+(`Catalog.from_lock` reads it); the client refuses an item whose checksum
+differs from it. With a lock, `run` is read from it and `base` (if set) is a
+mirror of `{BASE}`.
+
+The tests (`tests/test_og_results.py`) build a synthetic results run with the
+irv-datapkg producer API, fetch from it, write and use a results lock,
+dry-run the three Snakefiles with and without a run, and run the fetch and
+NbS extraction rules for real.
 
 ## Adding new datasets
 

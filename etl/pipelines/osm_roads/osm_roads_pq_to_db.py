@@ -401,6 +401,11 @@ if __name__ == "__main__":
     network_tile_layer = get_tilelayer_by_layer_name(layer, network_tilelayers)
     print("Network TileLayer:", network_tile_layer)
     network_layer = get_network_layer_by_ref(network_tile_layer.ref, network_layers)
+    # open-gira results run (Snakefile fetch_og_results): read the fetched copy
+    source = getattr(snakemake.input, "source", None)
+    if source:
+        network_layer = network_layer.copy()
+        network_layer["path"] = str(source)
     print("Network Layer", network_layer)
     print(f"PQ Path: {network_layer.path}")
 
