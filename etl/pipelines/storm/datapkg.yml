@@ -1,0 +1,15 @@
+# irv-datapkg mapping (see scripts/datapkg_mapping.py). PROVISIONAL until the
+# storm_fixed_rp items are published (WP5): confirm property values, then run
+# scripts/layers_from_catalogue.py storm to record datapkg_item.
+# Replaces storm_download (Zenodo 10931452 zip) + storm_unpack.
+dataset: storm_fixed_rp
+properties:
+  rp: return_period
+  gcm: gcm
+  rcp: rcp
+  epoch: epoch
+values: {}           # present climate rows: gcm/rcp/epoch = constant/baseline/baseline
+filters: {}
+filename: "{id}.tif"
+columns:
+  var: ws

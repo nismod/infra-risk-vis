@@ -1,0 +1,14 @@
+# irv-datapkg mapping (see scripts/datapkg_mapping.py). PROVISIONAL until the
+# ghsl_pop items are published (WP5). T1 keeps the source grid, so the item is
+# the 1 km Mollweide (ESRI:54009) grid, as the current download; clip_raster
+# reprojects to EPSG:4326 as before.
+# Replaces ghsl_pop_download_and_unzip_raw_data.
+dataset: ghsl_pop
+properties:
+  epoch: epoch
+values: {}
+filters:             # the catalogue may also hold the 100 m / 3 arcsec grids
+  resolution: 1000
+filename: "{id}.tif"
+columns:
+  var: population

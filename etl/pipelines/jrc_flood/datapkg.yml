@@ -1,0 +1,12 @@
+# irv-datapkg mapping (see scripts/datapkg_mapping.py). PROVISIONAL until the
+# jrc_flood_glofas items are published (WP5). Assumes irv-datapkg publishes one
+# global mosaic COG per return period (upstream ships 266 tiles per RP); the
+# local fallback rules (download_all/combine) never produced these files.
+dataset: jrc_flood_glofas
+properties:
+  rp: return_period
+values: {}
+filters: {}
+filename: "{id}.tif"
+columns:
+  var: depth

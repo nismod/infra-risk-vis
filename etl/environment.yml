@@ -24,6 +24,9 @@ dependencies:
       # this version not available on conda-forge
       - terracotta==0.8.3 # raster tile server and processing utilities
       - nismod-snail
+      # irv-datapkg catalogue client (rules/datapkg.smk); pin to a release tag
+      # once the catalogue client is released
+      - irv-datapkg @ git+https://github.com/nismod/irv-datapkg
   - pyarrow # performant tabular data
   - pyogrio # faster geopandas I/O
   - psycopg2-binary # postgreSQL python client, for raster metadata

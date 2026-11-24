@@ -30,7 +30,7 @@ rule download_landslides:
         for file_meta in meta["resources"]:
             fname = file_meta["distribution"]["file_name"]
             url = file_meta["distribution"]["url"]
-            out_dir = "raster/raw/landslide"
+            out_dir = "raster/raw/landslide_arup"
             out_file = os.path.join(out_dir, fname)
 
             if Path(out_file).exists():

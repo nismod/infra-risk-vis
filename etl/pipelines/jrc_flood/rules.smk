@@ -3,7 +3,7 @@ rule download_all:
         txt="raster/raw/jrc_flood/README.txt"
     shell:
         """
-        output_dir=$(dirname {output.zip})
+        output_dir=$(dirname {output.txt})
 
         wget --recursive --no-parent --continue --no-clobber \
             --no-host-directories \

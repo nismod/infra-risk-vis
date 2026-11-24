@@ -10,7 +10,8 @@ The data processing steps are broadly as follows:
 
 ### Raster
 
-- Download data if possible
+- Download data if possible, or fetch it from the irv-datapkg catalogue (see
+  [Sourcing data from irv-datapkg](#sourcing-data-from-irv-datapkg))
 - Reproject to WGS84 if necessary
 - Set zeros to no data value
 - Clip to remove polar regions
@@ -235,6 +236,163 @@ and can be run using:
 snakemake --cores 1 land_cover_download_300m_2020_from_CDS
 ```
 
+## Sourcing data from irv-datapkg
+
+[irv-datapkg](https://github.com/nismod/irv-datapkg) is becoming the single
+producer of analysis-ready (T1) global open data, published as a static STAC
+catalogue under one base URI and pinned by six-monthly releases. Once a
+dataset is published there, its pipeline here stops downloading from upstream
+and fetches the catalogue file instead.
+
+The cut point is the raw raster path. `fetch_datapkg` (`rules/datapkg.smk`)
+writes exactly `raster/raw/{pipeline}/{key}.tif` for every row of the
+pipeline's `layers.csv`, verified against its sha256. Everything from
+`clip_raster` onwards (Web Mercator clipping, cloud optimisation, terracotta,
+Zarr stack, database) is unchanged and stays in this repository (irv-datapkg
+ADR 0007). T1 rasters keep the source CRS and grid (ADR 0001), so
+`clip_raster`, which already warps to EPSG:4326, does any reprojection
+(e.g. GHSL Mollweide, SoilGrids Homolosine).
+
+### Switching a pipeline over
+
+Switching is per pipeline and off by default. In `config.yml` (or with
+`--config`):
+
+```yaml
+datapkg:
+  base: s3://example-bucket/irv-datapkg   # catalogue base URI
+  private_base: null                      # default: {base}-private
+  release: "2026.1"
+  lock: datapkg.lock.yaml                 # used instead of base/release once it exists
+  cache_dir: null                         # default: $IRV_DATAPKG_CACHE or ~/.cache/irv-datapkg
+  enabled: [aqueduct, storm]
+```
+
+For each enabled pipeline, `fetch_datapkg` claims only the raw paths listed in
+its `layers.csv` and takes precedence (`ruleorder`) over every pipeline rule
+writing to `raster/raw/{pipeline}/`. Other pipelines, and other raw paths, keep
+their own download rules, which remain as the fallback until each dataset is
+published. Check what will run with:
+
+```bash
+snakemake -n raster/metadata/aqueduct.flag
+```
+
+The fetch runs as a shell rule, so credentials for a private or S3 catalogue
+can go in `../envs/{environment}/.etl.env` (e.g. `AWS_PROFILE`, or
+`IRV_DATAPKG_CACHE` to move the cache to a larger disk). The client needs the
+`irv-datapkg` package (in `environment.yml`); with nothing enabled the
+workflow does not import it.
+
+### Mapping layers to catalogue items
+
+Each pipeline that can be switched has a `pipelines/{pipeline}/datapkg.yml`:
+
+```yaml
+dataset: aqueduct_flood          # catalogue dataset id
+properties:                      # layers.csv column -> STAC item property
+  hazard: hazard
+  rp: return_period
+  rcp: rcp
+  epoch: epoch
+  gcm: gcm
+values:                          # layers.csv value -> property value
+  hazard: {fluvial: river}
+  gcm: {None: null}              # null: property absent or null
+filters: {}                      # extra filters for every row
+filename: "{id}.tif"             # for rows generated from new items
+columns: {var: "depth_{hazard}"} # other columns of generated rows
+```
+
+Each `layers.csv` row resolves to exactly one item, by the optional
+`datapkg_item` column (item id) if set, otherwise by the property filter built
+from the mapping and the optional `datapkg_filter` column
+(`key=value;key=v1|v2`, `null` for absent). An optional `datapkg_dataset`
+column overrides `dataset` for pipelines that combine several catalogue
+datasets (e.g. `nature`). Filenames (the raster keys used by terracotta and
+the frontend) never change.
+
+Recording `datapkg_item` is recommended: it makes resolution exact, and with a
+lock file the item's checksum becomes a job parameter, so a new release
+re-runs only the layers whose bytes changed. Fill it from the catalogue with:
+
+```bash
+python scripts/layers_from_catalogue.py aqueduct            # refresh: fill datapkg_item
+python scripts/layers_from_catalogue.py aqueduct --add-missing  # also add rows for new items
+python scripts/layers_from_catalogue.py aqueduct --check    # CI: non-zero if stale/unmatched
+```
+
+`--add-missing` (or a pipeline with no `layers.csv`) generates rows from item
+properties, reversing the `values` maps and rendering `filename`/`columns`.
+Catalogue options default to the `datapkg` section of `config.yml`;
+`--base/--release/--lock` override them.
+
+### Locking to a release
+
+Consumers lock to a release, never "latest" (irv-datapkg ADR 0003):
+
+```bash
+snakemake --cores 1 datapkg_lock   # writes datapkg.lock.yaml for the enabled pipelines' datasets
+git add datapkg.lock.yaml
+```
+
+While the lock file exists it is used instead of `base`/`release`, and the
+client refuses any item whose checksum differs from it. To move to a new
+release, change `release`, delete the lock and re-run `datapkg_lock`.
+
+### metadata.json from the STAC collection
+
+```bash
+python scripts/metadata_from_catalogue.py aqueduct          # update license + description
+python scripts/metadata_from_catalogue.py aqueduct --check  # CI
+```
+
+This sets `license` (SPDX id) and `description` from the collection.
+`raster_tile_sources` has no citation column and the frontend shows
+`description` as the source credit, so `description` takes `sci:citation`
+(plus DOI); `--description description` uses the collection description
+instead. `domain`, `name`, `group`, `keys` and colour maps stay local.
+
+### Pipeline mapping status
+
+The `datapkg.yml` files are provisional until each dataset is published: the
+property names follow the catalogue spec, and values must be confirmed against
+the published items (then run `layers_from_catalogue.py`).
+
+| Pipeline | Catalogue dataset(s) | Status | layers.csv column -> property | Replaces / notes |
+| --- | --- | --- | --- | --- |
+| aqueduct | `aqueduct_flood` | wired | hazard (fluvial->river), rp->return_period, rcp, epoch, gcm (None->null) | `download_raw_data`. Coastal items will add subsidence / sea-level percentile dimensions: add to `filters` or `datapkg_filter` |
+| storm | `storm_fixed_rp` | wired | rp->return_period, gcm, rcp, epoch | `download` (Zenodo zip) + `unpack` |
+| ghsl_pop | `ghsl_pop` | wired | epoch; filter resolution=1000 | `download_and_unzip_raw_data`. Mollweide grid kept at T1 |
+| jrc_flood | `jrc_flood_glofas` | wired | rp->return_period | Assumes one global mosaic COG per RP from irv-datapkg; the local rules never produced these files |
+| landslide_arup | `arup_landslide` | wired | subtype->(dimension TBD by WP6) | `download_metadata` + `download_landslides` |
+| ghsl_buildings | `ghsl_built_s` | todo | subtype (all/non_residential) -> e.g. `class`; filter epoch=2020, resolution=1000 | `download_all_building_types`, `download_non_residential_type` |
+| gem_earthquake | `gem_seismic_hazard` | todo | rp->return_period, medium->site | `download` + `unpack`. Single item |
+| isimip | `isimip_heat_drought` | todo | hazard, metric, rcp, epoch, gcm, impact_model | `download` + `unpack`. Upstream version still to reconcile (two Zenodo records) |
+| land_cover | `copernicus_lulc` | todo | land_cover -> item id (single layer) | `download_300m_2020_from_CDS` (CDS API, netCDF->GeoTIFF moves to irv-datapkg). Keep categorical ingest |
+| dem | `merit_dem` | todo | derivative->variable (elevation/slope) | `download` |
+| cdd_miranda | `cdd_miranda` | todo | metric (absolute/relative) | `download` + `extract` (netCDF->COG moves to irv-datapkg) |
+| nature | `soilgrids_soc`, `biodiversity_intactness`, `forest_landscape_integrity` | todo | `datapkg_dataset` per row; single item each | Three download rules. Homolosine kept at T1 (`clip_raster` warps). Confirm the FLII 0-10000 -> 0-10 rescale is applied at T1 or via `raster:bands` scale |
+| social | `relative_wealth_index`, `hdi_mosaiks` | todo | `datapkg_dataset` per row | hdi: `download_gridded_hdi`. rwi: T1 is points (GeoParquet), so `process_rwi_grid` rasterisation stays here, reading the fetched parquet rather than a raw tif |
+| traveltime_to_healthcare | `traveltime_healthcare` | todo | subtype->mode (motorized/walking) | `download_motorised`, `download_walking` |
+| iris | `iris` (private) | todo | epoch, rp->return_period, ssp | Manual copy + `extract_netcdf_to_tiff`. Needs `private_base` credentials |
+| osm_rail, osm_roads, gem_exposure, nbs-adaptation | `openstreetmap`, ... | out of scope | n/a | Vector / separate Snakefiles, not `raster/raw` |
+
+### Tests
+
+```bash
+pip install snakemake pytest pandas xarray -e path/to/irv-datapkg
+cd etl && python -m pytest tests
+```
+
+The tests build a tiny synthetic catalogue with the irv-datapkg producer API
+(nothing is downloaded), check the mapping and layers generation, dry-run the
+workflow with pipelines enabled and disabled, and run `datapkg_lock` and
+`fetch_datapkg` for real in a scratch working directory.
+
+See also [docs/serving-bundle.md](docs/serving-bundle.md) for publishing the
+processed serving bundle.
+
 ## Adding new datasets
 
 ### Raster
@@ -246,7 +404,10 @@ files in `pipelines/<new_dataset_name>`:
 - `layers.csv` table of layers
 - `metadata.json` metadata to be written to the Postgres database
 - `rules.smk` to acquire and process the data into a WGS84 raster. The rule(s)
-  should write output files to `raster/raw/<dataset>/`. The shared rules will
+  should write output files to `raster/raw/<dataset>/`. If the dataset is
+  published in irv-datapkg, write a `datapkg.yml` instead (see
+  [Sourcing data from irv-datapkg](#sourcing-data-from-irv-datapkg)) and keep
+  any download rules only as a fallback. The shared rules will
   then clip, set zero to no data, and cloud optimise unless overridden by custom
   rules.
 

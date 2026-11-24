@@ -103,6 +103,9 @@ use rule * from traveltime_to_healthcare as traveltime_to_healthcare_*
 include: "rules/raster_processing.smk"
 include: "rules/database.smk"
 include: "rules/stack.smk"
+# after the pipeline modules: fetch_datapkg takes precedence over their
+# download rules for pipelines listed in config datapkg.enabled
+include: "rules/datapkg.smk"
 
 
 # Datasets the `all` target rule will expand to

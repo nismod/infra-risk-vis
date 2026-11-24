@@ -1,0 +1,25 @@
+# irv-datapkg mapping for this pipeline (see scripts/datapkg_mapping.py).
+# PROVISIONAL: property names follow docs/catalogue-spec.md; value maps must be
+# confirmed against the published aqueduct_flood items (WP5), then run
+#   python scripts/layers_from_catalogue.py aqueduct --base ... --release ...
+# to record datapkg_item for every row.
+dataset: aqueduct_flood
+properties:          # layers.csv column -> STAC item property
+  hazard: hazard
+  rp: return_period
+  rcp: rcp
+  epoch: epoch
+  gcm: gcm
+values:              # layers.csv value -> property value
+  hazard:
+    fluvial: river
+    coastal: coastal
+  gcm:
+    None: null       # coastal layers have no GCM
+# Coastal items will also carry subsidence / sea-level percentile dimensions
+# (e.g. subsidence: wtsub): add them here or per row in datapkg_filter.
+filters: {}
+filename: "{id}.tif"
+columns:
+  key: "{stem}"
+  var: "depth_{hazard}"

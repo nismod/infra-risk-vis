@@ -1,0 +1,11 @@
+# irv-datapkg mapping (see scripts/datapkg_mapping.py). PROVISIONAL until the
+# arup_landslide items are published (WP6); the property name "subtype" is a
+# placeholder for whatever dimension WP6 uses (e.g. trigger/statistic).
+# Replaces landslide_arup_download_metadata + download_landslides.
+dataset: arup_landslide
+properties:
+  subtype: subtype
+values: {}
+filters: {}
+filename: "{id}.tif"
+columns: {}
