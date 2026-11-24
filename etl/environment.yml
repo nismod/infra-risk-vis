@@ -24,8 +24,10 @@ dependencies:
       # this version not available on conda-forge
       - terracotta==0.8.3 # raster tile server and processing utilities
       - nismod-snail
-      # irv-datapkg catalogue client (rules/datapkg.smk); pin to a release tag
-      # once the catalogue client is released
+      # irv-datapkg catalogue client (rules/datapkg.smk); needs irv-datapkg>=0.3.0
+      # (fetch(cache=/link=), fetch_locked, lock --item/--check, from_lock(base=)).
+      # TODO: 0.3.0 is not released yet (latest tag v0.2.1): replace with
+      # "irv-datapkg>=0.3.0" (or "@ git+...@v0.3.0") once it is tagged.
       - irv-datapkg @ git+https://github.com/nismod/irv-datapkg
   - pyarrow # performant tabular data
   - pyogrio # faster geopandas I/O

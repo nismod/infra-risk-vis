@@ -81,3 +81,9 @@ def test_metadata_from_collection_keeps_local_fields():
     assert dm.metadata_from_collection(metadata, collection, "description")["description"] == "Synthetic"
     # metadata.json is inserted as a raster_tile_sources row: no new keys
     assert set(out) == set(metadata)
+
+
+def test_client_filters_accept_number_forms_and_absent():
+    f = dm.client_filters({"return_period": 100.0, "gcm": None, "rcp": ["4.5", None]})
+    assert f["return_period"] == ["100", "100.0"]
+    assert f["gcm"] == [None] and f["rcp"] == [None, "4.5"]

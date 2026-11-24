@@ -45,6 +45,15 @@ DATAPKG_SPECS = _datapkg_specs() if DATAPKG["enabled"] else {}
 
 
 def _datapkg_cli_args():
+    """Catalogue options for scripts/datapkg_fetch.py.
+
+    Both --base and --lock are passed when set: once the lock file exists,
+    a configured ``base`` deliberately overrides the base recorded in the
+    lock (irv-datapkg >= 0.3.0 ``Catalog.from_lock(base=...)``), so a
+    deployment can read the same locked versions and checksums from a
+    mirror. Leave ``base`` as recorded in the lock (or null) to use the
+    lock's base; ``release`` is ignored while the lock exists.
+    """
     args = []
     for option, key in (
         ("--base", "base"),
@@ -56,6 +65,14 @@ def _datapkg_cli_args():
             args += [option, str(DATAPKG[key])]
     if DATAPKG_LOCK is not None:
         args += ["--lock", DATAPKG["lock"]]
+    return " ".join(f"'{a}'" for a in args)
+
+
+def _datapkg_lock_args():
+    """Selection for `irv-datapkg lock`: --item DATASET/ID for each layer that
+    names an item; datasets with filter-resolved layers are locked whole."""
+    whole, items = datapkg.lock_selection(DATAPKG_SPECS.values())
+    args = [a for i in items for a in ("--item", i)] + whole
     return " ".join(f"'{a}'" for a in args)
 
 
@@ -100,22 +117,47 @@ if DATAPKG_SPECS:
                 break
 
 
+_DATAPKG_LOCK_PARAMS = dict(
+    selection=_datapkg_lock_args(),
+    base=DATAPKG["base"] or "",
+    release=DATAPKG["release"] or "",
+    private_base=f"--private-base '{DATAPKG['private_base']}'" if DATAPKG["private_base"] else "",
+)
+
+
 rule datapkg_lock:
     """
     Write the lock file pinning the enabled pipelines' catalogue datasets to
-    ``datapkg.release``. Commit the result; delete it to re-lock.
+    ``datapkg.release``: only the items named by layers.csv ``datapkg_item``
+    (whole datasets where a layer is resolved by filter). Commit the result;
+    delete it to re-lock.
     """
     output:
         lock=DATAPKG["lock"],
     params:
-        datasets=" ".join(sorted({spec["dataset"] for spec in DATAPKG_SPECS.values()})),
-        base=DATAPKG["base"] or "",
-        release=DATAPKG["release"] or "",
-        private_base=f"--private-base '{DATAPKG['private_base']}'" if DATAPKG["private_base"] else "",
+        **_DATAPKG_LOCK_PARAMS,
     shell:
         """
-        test -n "{params.base}" -a -n "{params.release}" -a -n "{params.datasets}" || \
+        test -n "{params.base}" -a -n "{params.release}" -a -n "{params.selection}" || \
             (echo "datapkg_lock: set datapkg.base, datapkg.release and datapkg.enabled" && exit 1)
         irv-datapkg lock --base '{params.base}' --release '{params.release}' \
-            {params.private_base} --output {output.lock} {params.datasets}
+            {params.private_base} --output {output.lock} {params.selection}
+        """
+
+
+rule datapkg_lock_check:
+    """
+    CI: exit non-zero unless the lock file matches ``datapkg.release`` and
+    locks every item the enabled pipelines need with its current checksum
+    (`irv-datapkg lock ... --check`; writes nothing).
+    """
+    params:
+        **_DATAPKG_LOCK_PARAMS,
+        lock=DATAPKG["lock"],
+    shell:
+        """
+        test -n "{params.base}" -a -n "{params.release}" -a -n "{params.selection}" || \
+            (echo "datapkg_lock_check: set datapkg.base, datapkg.release and datapkg.enabled" && exit 1)
+        irv-datapkg lock --check --base '{params.base}' --release '{params.release}' \
+            {params.private_base} --output '{params.lock}' {params.selection}
         """

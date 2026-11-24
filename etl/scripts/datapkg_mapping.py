@@ -42,7 +42,7 @@ import yaml
 ITEM_COLUMN = "datapkg_item"
 FILTER_COLUMN = "datapkg_filter"
 DATASET_COLUMN = "datapkg_dataset"
-NULL = None
+NULL = None  # in filters: property absent or null (the client's Catalog.ABSENT)
 
 
 class MappingError(Exception):
@@ -171,7 +171,39 @@ def row_filters(row: dict, mapping: dict) -> dict:
     return filters
 
 
+def _forms(value) -> list:
+    """Accepted string forms of one filter value for the client's string
+    comparison: ``100``, ``100.0`` and ``"100"`` all match a property of
+    100 or 100.0. None stays None (the client's ``Catalog.ABSENT``)."""
+    norm = _norm(value)
+    if norm is None:
+        return [None]
+    forms = {norm, str(value)}
+    try:
+        number = float(norm)
+        if math.isfinite(number):
+            forms.add(str(number))
+    except ValueError:
+        pass
+    if norm in ("true", "false"):
+        forms.add(norm.capitalize())
+    return sorted(forms)
+
+
+def client_filters(filters: dict) -> dict:
+    """``filters`` in the form ``Catalog.items(**filters)`` takes: each value a
+    list of accepted strings, None meaning absent or null."""
+    out = {}
+    for key, wanted in filters.items():
+        options = wanted if isinstance(wanted, (list, tuple, set)) else [wanted]
+        out[key] = sorted({f for o in options for f in _forms(o)}, key=lambda f: (f is not None, f or ""))
+    return out
+
+
 def matches(properties: dict, filters: dict) -> bool:
+    """Local twin of the client's matching (``Catalog.items``) with layers.csv
+    number normalisation, for item lists already in hand (refresh_layers).
+    None among the accepted values matches an absent or null property."""
     for key, wanted in filters.items():
         options = wanted if isinstance(wanted, (list, tuple, set)) else [wanted]
         actual = _norm(properties.get(key))
@@ -202,7 +234,9 @@ def resolve(catalog, spec: dict):
     dataset = spec["dataset"]
     if "item" in spec:
         return catalog.item(dataset, spec["item"])
-    found = select(catalog.items(dataset), spec["filters"])
+    # the client filters (and, from a lock, skips reading items its recorded
+    # properties rule out); None in a filter matches an absent/null property
+    found = catalog.items(dataset, **client_filters(spec["filters"]))
     if len(found) != 1:
         ids = ", ".join(i.id for i in found[:5])
         raise MappingError(
@@ -232,7 +266,12 @@ def read_lock(path) -> Optional[dict]:
 
 
 def open_catalog(base=None, release=None, lock=None, private_base=None, cache_dir=None):
-    """Open the catalogue from a lock file if it exists, else from base/release."""
+    """Open the catalogue from a lock file if it exists, else from base/release.
+
+    With a lock file, ``base`` (if given) overrides the base recorded in the
+    lock: a mirror of the same catalogue (versions, item ids and checksums
+    still come from the lock). ``release`` is then ignored.
+    """
     from irv_datapkg.catalog import Catalog
 
     kwargs = {}
@@ -241,10 +280,27 @@ def open_catalog(base=None, release=None, lock=None, private_base=None, cache_di
     if private_base:
         kwargs["private_base"] = private_base
     if lock and os.path.exists(lock):
-        return Catalog.from_lock(lock, **kwargs)
+        return Catalog.from_lock(lock, base=base or None, **kwargs)
     if not base:
         raise MappingError("datapkg: set 'base' (or commit a lock file) in config.yml")
     return Catalog.open(base, release=release, **kwargs)
+
+
+def lock_selection(specs) -> tuple:
+    """``(datasets, items)`` for ``irv-datapkg lock``: datasets in which some
+    layer is resolved by a filter are locked whole (positional DATASETS);
+    datasets whose layers all name an item lock only those
+    (``--item DATASET/ID``)."""
+    by_dataset = {}
+    for spec in specs:
+        by_dataset.setdefault(spec["dataset"], []).append(spec)
+    whole, items = [], []
+    for dataset, group in sorted(by_dataset.items()):
+        if all("item" in s for s in group):
+            items += sorted({f"{dataset}/{s['item']}" for s in group})
+        else:
+            whole.append(dataset)
+    return whole, items
 
 
 # -- layers.csv generation ------------------------------------------------------

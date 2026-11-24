@@ -13,7 +13,9 @@ raster_bounds: "-180.0 -84.0395 180.0 84.7879"
 # Source raw rasters from the irv-datapkg STAC catalogue instead of each
 # pipeline's own download rules. See README "Sourcing data from irv-datapkg".
 datapkg:
-  # catalogue base URI (local path, file://, s3://, https://)
+  # catalogue base URI (local path, file://, s3://, https://). Once the lock
+  # file exists, a base set here overrides the base recorded in the lock (a
+  # mirror of the same catalogue); null uses the lock's base.
   base: null
   # authenticated catalogue for private datasets (default: {base}-private)
   private_base: null
@@ -22,7 +24,9 @@ datapkg:
   # lock file (relative to etl/); used instead of base/release when it exists.
   # Create with `snakemake --cores 1 datapkg_lock` and commit it.
   lock: datapkg.lock.yaml
-  # local download cache (default: $IRV_DATAPKG_CACHE or ~/.cache/irv-datapkg)
+  # download cache (default: $IRV_DATAPKG_CACHE); with neither set, each file
+  # is streamed straight to raster/raw/. With a cache, raw files are hardlinked
+  # from it (read-only).
   cache_dir: null
   # pipelines (raster/raw/{pipeline}/) to fetch from the catalogue; each needs
   # pipelines/{pipeline}/datapkg.yml. Wired so far: aqueduct, storm, ghsl_pop,

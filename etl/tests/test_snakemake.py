@@ -113,3 +113,19 @@ def test_fetch_datapkg_runs_against_local_catalogue(catalogue, etl_root, tmp_pat
     out = snakemake(["-n", "-p", AQ, *common]).stdout
     assert jobs(out) == Counter({"fetch_datapkg": 1})
     assert "'--lock' 'datapkg.lock.yaml'" in out and '"sha256": "' in out
+
+    # CI check: the lock covers every layer with current checksums
+    snakemake(["datapkg_lock_check", *common])
+    # re-lock: with every row naming an item, only those items are locked
+    lock.unlink()
+    proc = snakemake(["-p", "datapkg_lock", *common])
+    assert "'--item' 'aqueduct_flood/" in proc.stdout + proc.stderr
+    import yaml
+    locked = yaml.safe_load(lock.read_text())["datasets"]["aqueduct_flood"]["items"]
+    assert len(locked) == 3
+    snakemake(["datapkg_lock_check", *common])
+    # a lock missing a needed item fails the check
+    data = yaml.safe_load(lock.read_text())
+    data["datasets"]["aqueduct_flood"]["items"].popitem()
+    lock.write_text(yaml.safe_dump(data))
+    assert snakemake(["datapkg_lock_check", *common], check=False).returncode != 0

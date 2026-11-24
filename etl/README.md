@@ -264,7 +264,7 @@ datapkg:
   private_base: null                      # default: {base}-private
   release: "2026.1"
   lock: datapkg.lock.yaml                 # used instead of base/release once it exists
-  cache_dir: null                         # default: $IRV_DATAPKG_CACHE or ~/.cache/irv-datapkg
+  cache_dir: null                         # default: $IRV_DATAPKG_CACHE; neither: no cache
   enabled: [aqueduct, storm]
 ```
 
@@ -278,11 +278,16 @@ published. Check what will run with:
 snakemake -n raster/metadata/aqueduct.flag
 ```
 
+The client streams each file straight to `raster/raw/`, verifying size and
+sha256 while streaming and renaming into place atomically (no second copy on
+disk). Set `cache_dir` (or `IRV_DATAPKG_CACHE`) to keep a download cache
+instead: raw files are then hardlinked from it and are read-only.
+
 The fetch runs as a shell rule, so credentials for a private or S3 catalogue
 can go in `../envs/{environment}/.etl.env` (e.g. `AWS_PROFILE`, or
-`IRV_DATAPKG_CACHE` to move the cache to a larger disk). The client needs the
-`irv-datapkg` package (in `environment.yml`); with nothing enabled the
-workflow does not import it.
+`IRV_DATAPKG_CACHE`). The client needs `irv-datapkg>=0.3.0` (in
+`environment.yml`; 0.3.0 is not tagged yet, so it installs from git); with
+nothing enabled the workflow does not import it.
 
 ### Mapping layers to catalogue items
 
@@ -307,14 +312,20 @@ columns: {var: "depth_{hazard}"} # other columns of generated rows
 Each `layers.csv` row resolves to exactly one item, by the optional
 `datapkg_item` column (item id) if set, otherwise by the property filter built
 from the mapping and the optional `datapkg_filter` column
-(`key=value;key=v1|v2`, `null` for absent). An optional `datapkg_dataset`
+(`key=value;key=v1|v2`). A `null` value (in `datapkg_filter`, or a `values`
+map to `null`) matches a property that is absent or null, as `None` /
+`Catalog.ABSENT` does in the client's `Catalog.items()`; resolution uses
+`items()` itself, so from a lock file items whose recorded properties rule
+them out are not even read. An optional `datapkg_dataset`
 column overrides `dataset` for pipelines that combine several catalogue
 datasets (e.g. `nature`). Filenames (the raster keys used by terracotta and
 the frontend) never change.
 
-Recording `datapkg_item` is recommended: it makes resolution exact, and with a
-lock file the item's checksum becomes a job parameter, so a new release
-re-runs only the layers whose bytes changed. Fill it from the catalogue with:
+Recording `datapkg_item` is recommended: it makes resolution exact; with a
+lock file the item is fetched from the lock entry alone (`fetch_locked`: href,
+sha256 and size, no STAC reads), only the named items are locked, and the
+item's checksum becomes a job parameter, so a new release re-runs only the
+layers whose bytes changed. Fill it from the catalogue with:
 
 ```bash
 python scripts/layers_from_catalogue.py aqueduct            # refresh: fill datapkg_item
@@ -332,13 +343,38 @@ Catalogue options default to the `datapkg` section of `config.yml`;
 Consumers lock to a release, never "latest" (irv-datapkg ADR 0003):
 
 ```bash
-snakemake --cores 1 datapkg_lock   # writes datapkg.lock.yaml for the enabled pipelines' datasets
+snakemake --cores 1 datapkg_lock   # writes datapkg.lock.yaml for the enabled pipelines
 git add datapkg.lock.yaml
 ```
 
-While the lock file exists it is used instead of `base`/`release`, and the
-client refuses any item whose checksum differs from it. To move to a new
-release, change `release`, delete the lock and re-run `datapkg_lock`.
+`datapkg_lock` runs `irv-datapkg lock --base ... --release ...` with
+`--item DATASET/ID` for every layer that names a `datapkg_item`, so only the
+items this deployment serves are locked; a dataset in which any layer is still
+resolved by filter is locked whole. While the lock file exists it is used
+instead of `release`, and the client refuses any item whose checksum differs
+from it. To move to a new release, change `release`, delete the lock and
+re-run `datapkg_lock`.
+
+In CI, check that the committed lock is current (same release and versions,
+nothing retired, every needed item locked with its current checksum) without
+writing anything:
+
+```bash
+snakemake --cores 1 datapkg_lock_check
+# equivalent to:
+irv-datapkg lock --check --base "$BASE" --release 2026.1 \
+    --output datapkg.lock.yaml --item aqueduct_flood/ITEM_ID ... [DATASET ...]
+```
+
+#### Mirrors
+
+The lock records the catalogue `base` it was made from. When `datapkg.base` is
+also set, it deliberately overrides the lock's base (`fetch_datapkg` passes
+both `--base` and `--lock`; `Catalog.from_lock(lock, base=...)`): the locked
+versions, item ids and checksums still come from the lock, but files are read
+from that base, e.g. a mirror or a local copy of the catalogue. The private
+base is then `datapkg.private_base` or `{base}-private`. Leave `base` null, or
+equal to the recorded base, to read from where the lock was made.
 
 ### metadata.json from the STAC collection
 

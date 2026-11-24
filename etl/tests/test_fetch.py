@@ -19,11 +19,51 @@ def sha256(path):
 def test_fetch_from_base_and_release(catalogue, etl_root, cache, tmp_path):
     out = tmp_path / "raster/raw/aqueduct" / f"{KEY}.tif"
     out.parent.mkdir(parents=True)
-    item, path = datapkg_fetch.fetch_layer(
+    asset, path = datapkg_fetch.fetch_layer(
+        "aqueduct", KEY, out, base=str(catalogue), release="2026.1", root=etl_root)
+    assert asset.item_id == "inunriver_rcp4p5_noresm1-m_2030_rp00100"
+    assert path == out and sha256(out) == asset.sha256
+    assert list(out.parent.iterdir()) == [out]  # streamed, renamed into place
+
+
+def test_fetch_with_cache_hardlinks(catalogue, etl_root, cache, tmp_path):
+    out = tmp_path / f"{KEY}.tif"
+    asset, _ = datapkg_fetch.fetch_layer(
         "aqueduct", KEY, out, base=str(catalogue), release="2026.1", cache_dir=cache, root=etl_root)
-    assert item.id == "inunriver_rcp4p5_noresm1-m_2030_rp00100"
-    assert path == out and sha256(out) == item.asset.sha256
-    assert not out.with_name(out.name + ".part").exists()
+    cached = Catalog.open(str(catalogue), release="2026.1", cache_dir=cache).cache_path(asset)
+    assert out.samefile(cached)
+
+
+def test_fetch_locked_item_reads_no_stac(catalogue, etl_root, tmp_path, monkeypatch):
+    lock = tmp_path / "datapkg.lock.yaml"
+    item_id = "inunriver_rcp4p5_noresm1-m_2030_rp00100"
+    Catalog.open(str(catalogue), release="2026.1").write_lock(
+        lock, select={"aqueduct_flood": [item_id]})
+    assert list(yaml.safe_load(lock.read_text())["datasets"]["aqueduct_flood"]["items"]) == [item_id]
+    from irv_datapkg.catalog import _fs
+
+    def no_reads(*a, **k):
+        raise AssertionError("STAC document read")
+
+    monkeypatch.setattr(_fs, "read_json", no_reads)
+    out = tmp_path / f"{KEY}.tif"
+    spec = {"dataset": "aqueduct_flood", "item": item_id}
+    asset, _ = datapkg_fetch.fetch_layer("aqueduct", KEY, out, lock=str(lock), spec=spec,
+                                         root=etl_root)
+    assert sha256(out) == asset.sha256
+
+
+def test_lock_base_override_is_a_mirror(catalogue, etl_root, tmp_path):
+    lock = tmp_path / "datapkg.lock.yaml"
+    Catalog.open(str(catalogue), release="2026.1").write_lock(
+        lock, ["aqueduct_flood"], base="/nonexistent/irv-datapkg")
+    out = tmp_path / f"{KEY}.tif"
+    spec = {"dataset": "aqueduct_flood", "item": "inunriver_rcp4p5_noresm1-m_2030_rp00100"}
+    with pytest.raises(Exception):
+        datapkg_fetch.fetch_layer("aqueduct", KEY, out, lock=str(lock), spec=spec, root=etl_root)
+    datapkg_fetch.fetch_layer("aqueduct", KEY, out, lock=str(lock), base=str(catalogue),
+                              spec=spec, root=etl_root)
+    assert out.exists()
 
 
 def test_fetch_with_lock(catalogue, etl_root, cache, tmp_path):
@@ -55,9 +95,19 @@ def test_fetch_with_lock(catalogue, etl_root, cache, tmp_path):
                                   root=etl_root)
 
 
+def test_lock_selection():
+    specs = [
+        {"dataset": "a", "item": "x"},
+        {"dataset": "a", "item": "y"},
+        {"dataset": "b", "item": "z"},
+        {"dataset": "b", "filters": {"rp": 10}},
+    ]
+    assert dm.lock_selection(specs) == (["b"], ["a/x", "a/y"])
+
+
 def test_spec_sha_mismatch_refused(catalogue, etl_root, cache, tmp_path):
     spec = {"dataset": "aqueduct_flood", "item": "inunriver_rcp4p5_noresm1-m_2030_rp00100",
             "sha256": "f" * 64}
-    with pytest.raises(dm.MappingError, match="differs from the lock"):
+    with pytest.raises(dm.MappingError, match="differs from the spec"):
         datapkg_fetch.fetch_layer("aqueduct", KEY, tmp_path / "x.tif", base=str(catalogue),
                                   cache_dir=cache, spec=spec, root=etl_root)
