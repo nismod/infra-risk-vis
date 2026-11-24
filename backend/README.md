@@ -22,7 +22,7 @@ docker-compose -f docker-compose-prod-build.yaml build backend
 
 ```bash
 # cd to this backend app directory
-cd containers/backend
+cd backend
 
 # create a virtual environment (using venv or another method if you prefer)
 python -m venv venv

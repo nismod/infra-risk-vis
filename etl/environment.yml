@@ -20,7 +20,7 @@ dependencies:
   - numpy # n-d arrays
   - pip # python package management
   - pip:
-      - ../containers/backend # gri-backend package provides "backend.*"
+      - ../backend # gri-backend package provides "backend.*"
       # this version not available on conda-forge
       - terracotta==0.8.3 # raster tile server and processing utilities
       - nismod-snail

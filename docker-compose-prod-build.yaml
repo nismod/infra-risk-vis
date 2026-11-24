@@ -1,7 +1,7 @@
 services:
   backend:
     image: ghcr.io/nismod/gri-backend:1.9.0
-    build: ./containers/backend
+    build: ./backend
 
   vector-tileserver:
     build: ./containers/vector
