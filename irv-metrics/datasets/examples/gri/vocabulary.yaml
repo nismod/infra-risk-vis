@@ -1,0 +1,154 @@
+# A subset of the GRI vocabulary: enough for the example datasets.
+sections:
+  hazard: {title: Hazard}
+  exposure: {title: Exposure}
+  risk: {title: Risk}
+  adaptation-outcomes: {title: Adaptation outcomes}
+  development: {title: Development}
+
+units:
+  km2: {label: km², quantity: area}
+  m: {label: m, quantity: length}
+  percent: {label: "%", quantity: ratio}
+  people: {label: people, quantity: count}
+  people_per_year: {label: people/year, quantity: count}
+  usd: {label: USD, quantity: currency}
+  usd_per_year: {label: USD/year, quantity: currency}
+  million_usd: {label: USD million, quantity: currency}
+  index: {label: index, quantity: index}
+  share: {label: share, quantity: ratio}
+
+dimensions:
+  return_period_years:
+    label: Return period
+    ordered: true
+    members:
+      "10": {label: 1 in 10 years, short_label: RP10, value: 10}
+      "20": {label: 1 in 20 years, short_label: RP20, value: 20}
+      "50": {label: 1 in 50 years, short_label: RP50, value: 50}
+      "75": {label: 1 in 75 years, short_label: RP75, value: 75}
+      "100": {label: 1 in 100 years, short_label: RP100, value: 100}
+      "200": {label: 1 in 200 years, short_label: RP200, value: 200}
+      "500": {label: 1 in 500 years, short_label: RP500, value: 500}
+  design_return_period_years:
+    label: Design standard
+    ordered: true
+    members:
+      "10": {label: 1 in 10 years, value: 10}
+      "20": {label: 1 in 20 years, value: 20}
+      "50": {label: 1 in 50 years, value: 50}
+      "100": {label: 1 in 100 years, value: 100}
+      "200": {label: 1 in 200 years, value: 200}
+  demographic_group:
+    label: Population group
+    members:
+      total: {label: Total population}
+      female: {label: Female}
+      male: {label: Male}
+      infant: {label: Children under 5}
+      schoolage: {label: Children aged 5–14}
+      working: {label: People aged 15–64}
+      childbearing: {label: Women aged 15–49}
+      elderly: {label: People aged 65 and over}
+  sector:
+    label: Sector
+    members:
+      total: {label: All sectors}
+      residential: {label: Residential}
+      non_residential: {label: Non-residential}
+      infrastructure: {label: Infrastructure}
+  wealth_group:
+    label: Wealth group
+    ordered: true
+    members:
+      total: {label: All}
+      q1: {label: Poorest 20%}
+      q2: {label: Second 20%}
+      q3: {label: Middle 20%}
+      q4: {label: Fourth 20%}
+      q5: {label: Richest 20%}
+  adaptation_state:
+    label: State
+    members:
+      baseline: {label: Without adaptation}
+      adapted: {label: With adaptation}
+      avoided: {label: Avoided}
+      change: {label: Change}
+  cost_bound:
+    label: Cost estimate
+    members:
+      estimate: {label: Estimate}
+      lower: {label: Lower bound}
+      upper: {label: Upper bound}
+  urbanisation_threshold:
+    label: Protect areas at least as urban as
+    ordered: true
+    members:
+      urban_centre: {label: Urban centre, code: "30"}
+      dense_urban: {label: Dense urban, code: "23"}
+      semi_dense_urban_area: {label: Semi-dense urban, code: "22"}
+      suburban_area: {label: Suburban, code: "21"}
+      rural_settlement: {label: Rural settlement, code: "13"}
+      low_density_rural: {label: Low-density rural, code: "12"}
+      remote_area: {label: Remote, code: "11"}
+  scenario:
+    label: Scenario
+    members:
+      baseline_protected: {label: Baseline}
+      dry_proofing: {label: Dry proofing}
+      relocation: {label: Relocation}
+      flood_protection: {label: Flood protection}
+  year:
+    label: Year
+    ordered: true
+    role: time
+    range: {from: 1990, to: 2022}
+
+boundary_sets:
+  cgaz-6.0.0:
+    title: geoBoundaries CGAZ 6.0.0
+    kind: admin
+    attribution: geoBoundaries
+    attribution_url: https://www.geoboundaries.org
+    levels:
+      - {files: "boundaries/cgaz/geoBoundariesCGAZ_ADM0.gpkg", id: shapeGroup, name: shapeName, iso3: shapeGroup}
+      - {files: "boundaries/cgaz/geoBoundariesCGAZ_ADM1.gpkg", id: shapeID, name: shapeName, iso3: shapeGroup}
+      - {files: "boundaries/cgaz/geoBoundariesCGAZ_ADM2.gpkg", id: shapeID, name: shapeName, iso3: shapeGroup}
+  gdl-v6:
+    title: Global Data Lab regions, version 6
+    kind: admin
+    attribution: Global Data Lab
+    attribution_url: https://globaldatalab.org
+    levels:
+      - {files: "boundaries/gdl/GDL_national.gpkg", id: iso_code, name: country, iso3: iso_code}
+      - {files: "boundaries/gdl/GDL_subnational.gpkg", id: gdlcode, name: region, iso3: iso_code, parent: iso_code}
+
+  # Overlay: basins cross borders. Each basin is related to every country it
+  # overlaps by more than 1% of its area, by intersection with CGAZ level 0.
+  # HydroBASINS has no names and keeps its own level numbers. Pfafstetter codes
+  # have one digit per level, so they are unique across levels.
+  hydrobasins-v1c:
+    title: HydroBASINS v1c
+    kind: overlay
+    attribution: WWF HydroSHEDS
+    attribution_url: https://www.hydrosheds.org/products/hydrobasins
+    countries: {from: cgaz-6.0.0, min_share: 0.01}
+    levels:
+      - {level: 4, label: Basin, files: "boundaries/hydrobasins/hybas_lev04_v1c.gpkg", id: PFAF_ID, name: PFAF_ID}
+      - {level: 6, label: Sub-basin, files: "boundaries/hydrobasins/hybas_lev06_v1c.gpkg", id: PFAF_ID, name: PFAF_ID}
+      - {level: 8, label: Catchment, files: "boundaries/hydrobasins/hybas_lev08_v1c.gpkg", id: PFAF_ID, name: PFAF_ID}
+
+  # Group sets (extension, not loaded in phase 1): sets of countries with no
+  # geometry. The file has one row per (group, member country).
+  undp-hdr-regions:
+    title: UNDP Human Development Report regions
+    kind: group
+    attribution: UNDP
+    levels:
+      - {level: 1, label: Region, files: "groups/undp-hdr-regions.csv", id: region_code, name: region_name, iso3: iso3}
+  wb-income-fy26:
+    title: World Bank income groups, FY2026
+    kind: group
+    attribution: World Bank
+    levels:
+      - {level: 1, label: Income group, files: "groups/wb-income-fy26.csv", id: group_code, name: group_name, iso3: iso3}

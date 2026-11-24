@@ -1,0 +1,43 @@
+id: adaptation-potential/slope-vegetation
+title: Slope Vegetation
+documentation: /docs/adaptation-potential/slope-vegetation
+order: 1
+
+metrics:
+  opportunity_area:
+    label: Opportunity Area
+    unit: km2
+    dimensions: [land_use]
+    aggregation: sum
+  implementation_cost:
+    label: Implementation Cost
+    unit: usd_2020
+    dimensions: [land_use, implementation_approach]
+    aggregation: sum
+  biodiversity_benefit:
+    label: Biodiversity Benefit
+    unit: index
+    dimensions: [land_use]
+    description: Mean relative biodiversity-benefit index over the opportunity area; not additive.
+  carbon_benefit:
+    label: Carbon Benefit
+    unit: tonnes
+    dimensions: [land_use]
+    aggregation: sum
+
+dimensions:
+  land_use: {default: total}
+  implementation_approach: {default: natural_regeneration}
+
+source:
+  files: "{iso3}/adaptation_potential/{iso3}_adm{level}_adaptation_potential_slope_vegetation_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, adaptation_subsection]
+
+display:
+  card: slope-vegetation
+  controls: [land_use, metric, implementation_approach]
+  map: {metric: opportunity_area, dims: {land_use: total}}

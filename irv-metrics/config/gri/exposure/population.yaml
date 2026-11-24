@@ -1,0 +1,34 @@
+id: exposure/population
+title: Population
+documentation: /docs/exposure/population
+order: 1
+
+metrics:
+  population: {label: Population, unit: people, dimensions: [demographic_group], aggregation: sum}
+  population_share:
+    label: Share of total population
+    unit: percent
+    derive:
+      share_of: population
+      total: [{demographic_group: total}]
+
+dimensions:
+  demographic_group: {default: total}
+
+source:
+  files: "{iso3}/exposure/{iso3}_adm{level}_exposure_population_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, display_mode]
+  rules:
+    # Published percentages are derived from the counts; they are not stored.
+    - {when: {display_mode: percentage}, skip: derived}
+
+display:
+  card: population
+  controls: [demographic_group, metric]
+  map: {metric: population, dims: {demographic_group: total}}
+  charts:
+    - {type: bar, by: area}
+    - {type: bar, by: demographic_group}

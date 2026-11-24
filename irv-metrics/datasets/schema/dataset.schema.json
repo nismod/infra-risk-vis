@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nismod.github.io/irv-metrics/dataset.schema.json",
+  "title": "irv-metrics dataset config",
+  "description": "Contract C2. One file per dataset. Declares what the dataset measures (metrics, dimensions), where its values come from (source) and how to show it (display). Units, sections and dimensions are defined in vocabulary files and referenced here by id.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "metrics"],
+  "properties": {
+    "id": {
+      "description": "`{section}/{dataset}`. The section must exist in a vocabulary file.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*/[a-z][a-z0-9-]*$"
+    },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "documentation": { "description": "URL or host-relative path of the method notes.", "type": "string" },
+    "source_note": { "description": "Where the data comes from, for display.", "type": "string" },
+    "order": { "description": "Position within the section.", "type": "integer" },
+    "kind": {
+      "description": "`values`: one number per series and area. `curve`: a list of (x, y) points per series and area.",
+      "enum": ["values", "curve"],
+      "default": "values"
+    },
+    "x": {
+      "description": "The x axis of a `curve` dataset.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "label": { "type": "string" },
+        "unit": { "$ref": "#/$defs/id" }
+      }
+    },
+    "metrics": {
+      "description": "Keyed by metric id, in display order.",
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": { "$ref": "#/$defs/metric" }
+    },
+    "dimensions": {
+      "description": "The dimensions this dataset uses, keyed by dimension id. Every dimension named by a metric must be listed.",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/dimensionId" },
+      "additionalProperties": { "$ref": "#/$defs/datasetDimension" }
+    },
+    "source": {
+      "description": "How to read this dataset from files: one source, or a list when the data comes on several boundary sets (counties and river basins; countries and income groups). Each source feeds some of the dataset's metrics; a metric loaded on several sets has the same series on each, so its areas can be compared across sets. The dataset's sets are its sources' sets in order; the first is the default. Absent: the dataset is loaded some other way.",
+      "oneOf": [
+        { "$ref": "#/$defs/source" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } }
+      ]
+    },
+    "display": { "$ref": "#/$defs/display" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "curve" } }, "required": ["kind"] },
+      "then": { "required": ["x"] }
+    }
+  ],
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "dimensionId": {
+      "description": "`level`, `metric`, `set` and `area_id` are reserved by the API; `adm_id` because it is the area column in published CSVs.",
+      "allOf": [{ "$ref": "#/$defs/id" }, { "not": { "enum": ["level", "metric", "set", "area_id", "adm_id", "dims"] } }]
+    },
+    "member": { "description": "A member id. Numbers are written as strings: \"100\".", "type": "string", "minLength": 1 },
+    "assignment": {
+      "description": "Dimension id to member id.",
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/dimensionId" },
+      "additionalProperties": { "$ref": "#/$defs/member" }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "unit"],
+      "properties": {
+        "label": { "type": "string" },
+        "unit": { "description": "A unit id from a vocabulary file.", "$ref": "#/$defs/id" },
+        "description": { "type": "string" },
+        "source_note": { "description": "Where this metric's values come from, when it differs from the dataset's `source_note`. A figure published for groups by one source and a figure aggregated from member countries are separate metrics, each with its own note.", "type": "string" },
+        "dimensions": {
+          "description": "The dimensions that may key this metric. Empty or absent: one value per area. A series may leave one out where it does not apply (a baseline scenario has no design standard).",
+          "type": "array",
+          "items": { "$ref": "#/$defs/dimensionId" },
+          "uniqueItems": true
+        },
+        "aggregation": {
+          "description": "How values combine across areas. `none`: they do not.",
+          "enum": ["sum", "mean", "weighted_mean", "none"],
+          "default": "none"
+        },
+        "weight": { "description": "For `weighted_mean`: `{section}/{dataset}:{metric}` of the weights.", "type": "string" },
+        "derive": {
+          "description": "Makes this a derived metric. Its dimensions are inherited from the metric it derives from.",
+          "oneOf": [
+            {
+              "description": "A share of a total, computed on read, never stored.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["share_of", "total"],
+              "properties": {
+                "share_of": { "description": "The stored metric to take a share of.", "$ref": "#/$defs/id" },
+                "total": {
+                  "description": "The denominator: the sum over these assignments, with all other dimensions as requested. The result is a percentage.",
+                  "type": "array",
+                  "minItems": 1,
+                  "items": { "$ref": "#/$defs/assignment" }
+                }
+              }
+            },
+            {
+              "description": "Extension. Values for each group in the `to` sets, aggregated at load from the member countries' values of a stored metric, using that metric's `aggregation` and `weight`. Stored like loaded values. A metric with aggregation `none` cannot be aggregated.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["aggregate_of", "to"],
+              "properties": {
+                "aggregate_of": { "description": "The stored metric, with values at level 0 of an admin set.", "$ref": "#/$defs/id" },
+                "to": { "description": "Group sets.", "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true }
+              }
+            }
+          ]
+        }
+      },
+      "not": { "required": ["derive", "dimensions"] }
+    },
+    "datasetDimension": {
+      "description": "Use `{}` to take every member of the dimension as defined in the vocabulary.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "members": {
+          "description": "The subset this dataset uses, in display order. Absent: all members.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/member" },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "default": { "$ref": "#/$defs/member" },
+        "labels": {
+          "description": "Label overrides for this dataset, by member id.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "source": {
+      "description": "One file pattern and how to read it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["files", "format"],
+      "properties": {
+        "files": {
+          "description": "Path pattern under the data directory. `{iso3}` and `{level}` are filled from the path and may be used in `keys`. `*` matches within one path segment.",
+          "type": "string"
+        },
+        "format": {
+          "description": "`long`: one row per value, in a value column. `wide`: one row per area (and key), values in several columns.",
+          "enum": ["long", "wide"]
+        },
+        "boundary_set": {
+          "description": "The boundary set the area ids belong to. Absent: each country's admin set. Required in a list of sources, where each source names a different set.",
+          "type": "string"
+        },
+        "keys": {
+          "description": "The columns that identify the area.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "area": { "description": "Column holding the area id. Absent: the file holds country-level values only.", "type": "string" },
+            "level": {
+              "description": "An integer: every row is at this level. An object: the column holding the level, with the value of each level. Absent: `{level}` from the path.",
+              "type": ["object", "integer"],
+              "minimum": 0,
+              "additionalProperties": false,
+              "required": ["column", "values"],
+              "properties": {
+                "column": { "type": "string" },
+                "values": { "description": "Column value to level number.", "type": "object", "additionalProperties": { "type": "integer", "minimum": 0 } }
+              }
+            },
+            "iso3": { "description": "Column holding the ISO3 code, for admin sets. Absent: `{iso3}` from the path, or the deployment's one country. Not used for overlay and group sets, whose areas are related to countries by the set itself, and whose files hold each area once.", "type": "string" }
+          }
+        },
+        "value": { "description": "`long` only: the value column.", "type": "string", "default": "value" },
+        "unit": { "description": "`long` only: a column checked against the metric's unit. A mismatch fails the load.", "type": "string" },
+        "metric": { "description": "`long` only: the column holding the metric id, used by the default rule. Absent: the dataset's only stored metric.", "type": "string" },
+        "columns": {
+          "description": "`long` only: column name to dimension id, where they differ. A column with the same name as a dimension needs no entry.",
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/dimensionId" }
+        },
+        "ignore": {
+          "description": "`long` only: columns that are read but not mapped. Any other unmapped column fails the load, so a new column in the data is noticed. In a `wide` file, unlisted columns are ignored.",
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "x": { "description": "`curve` datasets: the column holding x.", "type": "string" },
+        "rules": {
+          "description": "`long` only. Tried in order for each row; the first match decides. A row that matches no rule falls to the default rule: metric from the `metric` column, each dimension of that metric from its column. A row the default rule cannot place fails the load.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" }
+        },
+        "value_columns": {
+          "description": "`wide` only: which columns hold values, and which series each is.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/valueColumn" }
+        }
+      },
+      "allOf": [
+        { "if": { "properties": { "format": { "const": "wide" } } }, "then": { "required": ["value_columns"], "not": { "anyOf": [{ "required": ["rules"] }, { "required": ["value"] }, { "required": ["metric"] }] } } },
+        { "if": { "properties": { "format": { "const": "long" } } }, "then": { "not": { "required": ["value_columns"] } } }
+      ]
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 2,
+      "properties": {
+        "when": {
+          "description": "Column to exact value, or list of values. All must hold.",
+          "type": "object",
+          "additionalProperties": { "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" }, "minItems": 1 }] }
+        },
+        "match": {
+          "description": "Column to regular expression, matched against the whole value. All must match. Named groups become variables for `metric` and `dims`.",
+          "type": "object",
+          "additionalProperties": { "type": "string", "format": "regex" }
+        },
+        "skip": { "description": "Drop the row. The value says why, e.g. `derived`.", "type": "string" },
+        "metric": { "description": "Metric id, or a template: `{column}` or `{group}`.", "type": "string" },
+        "dims": {
+          "description": "Dimension id to member: a literal, or a template `{column}` / `{group}`. Dimensions of the metric not listed here are read from their own columns.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/dimensionId" },
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "anyOf": [{ "required": ["when"] }, { "required": ["match"] }],
+      "oneOf": [
+        { "required": ["skip"], "not": { "anyOf": [{ "required": ["metric"] }, { "required": ["dims"] }] } },
+        { "not": { "required": ["skip"] } }
+      ]
+    },
+    "valueColumn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric"],
+      "properties": {
+        "column": { "description": "Exact column name.", "type": "string" },
+        "match": { "description": "Regular expression matched against whole column names. Named groups become variables.", "type": "string", "format": "regex" },
+        "metric": { "type": "string" },
+        "dims": {
+          "description": "Dimension id to member: a literal, a template `{group}`, or `{group|code}` to look the member up by its vocabulary `code`. In a wide file, other columns named after a dimension (e.g. `year`) also key the row.",
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/dimensionId" },
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "oneOf": [{ "required": ["column"] }, { "required": ["match"] }]
+    },
+    "display": {
+      "description": "Hints for the frontend. All optional. The API passes them through unchanged.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "description": "`generic`: the catalogue-driven card. Any other value names a card component the frontend has registered; if it has none by that name it falls back to `generic`.",
+          "type": "string",
+          "default": "generic"
+        },
+        "summary": { "description": "One or two sentences shown at the top of the card.", "type": "string" },
+        "controls": {
+          "description": "Dimensions that get a control, in order. `metric` adds a metric picker. Dimensions not listed stay at their default.",
+          "type": "array",
+          "items": { "anyOf": [{ "const": "metric" }, { "$ref": "#/$defs/dimensionId" }] },
+          "uniqueItems": true
+        },
+        "map": {
+          "description": "The opening choropleth.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "metric": { "$ref": "#/$defs/id" },
+            "dims": { "$ref": "#/$defs/assignment" },
+            "scale": { "enum": ["sequential", "diverging"], "default": "sequential" },
+            "midpoint": { "description": "For `diverging`.", "type": "number" }
+          }
+        },
+        "charts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "by"],
+            "properties": {
+              "type": { "enum": ["bar", "line", "stacked-bar"] },
+              "by": {
+                "description": "What runs along the axis. `area`: the selected series across areas. A dimension id: the selected area across that dimension's members.",
+                "anyOf": [{ "const": "area" }, { "$ref": "#/$defs/dimensionId" }]
+              },
+              "split": { "description": "A second dimension: one line or stack segment per member.", "$ref": "#/$defs/dimensionId" },
+              "metric": { "description": "Absent: the metric selected in the card.", "$ref": "#/$defs/id" },
+              "title": { "type": "string" }
+            }
+          }
+        },
+        "decimals": { "type": "integer", "minimum": 0, "maximum": 6 }
+      }
+    }
+  }
+}

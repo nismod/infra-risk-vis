@@ -130,6 +130,8 @@ There are also a few short-lived 'utility containers', which can be run to
 perform particular tasks:
 
 - `migrate`: Apply database migrations to `db` (`alembic upgrade head`)
+- `metrics-load`: Load the metrics CSVs into `db` (profile `metrics`, see
+  [Metrics](#metrics))
 - `dev-reset-db`: Drop (!) all tables and data in `db`, then recreate empty
 - `raster-tile-delete-entries`: Delete raster entries of specified dataset in `tiles-db`
 - `raster-tile-drop-database`: Drop whole database for specified dataset from `tiles-db`
@@ -156,14 +158,50 @@ up to date once, before the first `migrate`:
 docker compose -f docker-compose-dev.yaml run --rm migrate stamp 0001_baseline
 ```
 
+#### Metrics
+
+The backend serves the national metrics API (the [irv-metrics](irv-metrics/README.md)
+package) at `/metrics/v1/...`, i.e. `/api/metrics/v1/...`
+behind traefik. Its data lives in the `metrics` schema of `db`, which
+`migrate` creates (Alembic revision `0002_metrics`), and is loaded from the
+published metric CSVs by the `metrics-load` utility service (profile
+`metrics`), after `migrate`:
+
+```bash
+export METRICS_DATA_DIR=/path/to/csv-data          # KEN/..., MOZ/..., one directory per country
+export METRICS_CGAZ_DIR=/path/to/boundaries        # geoBoundariesCGAZ_ADM{0,1,2}.gpkg
+docker compose -f docker-compose-dev.yaml --profile metrics run --rm metrics-load
+# reload one country after its CSVs change:
+docker compose -f docker-compose-dev.yaml --profile metrics run --rm metrics-load --countries KEN --if-loaded replace
+```
+
+- `METRICS_DATA_DIR` defaults to `./metrics-data`
+- `METRICS_CGAZ_DIR` defaults to `$METRICS_DATA_DIR/boundaries/cgaz`.
+
+They can be set in a `.env` file next to the compose file (see `envs/dev-example/.metrics.env`).
+
+The loader reads the dataset config in `irv-metrics/config/gri`; extra arguments
+are passed to it (`python -m irv_metrics.loaders.csv --help`).
+
+Already loaded countries are skipped unless `--if-loaded replace` is given.
+
+Backend settings for the API (`envs/dev/.backend.env`):
+- `IRV_METRICS_DOWNLOADS` (`0` turns the CSV downloads off)
+- `IRV_METRICS_POOL_MAX_SIZE`
+- `IRV_METRICS_STATEMENT_TIMEOUT_MS`
+
+See `backend/backend/app/routers/national_metrics.py`.
+
 ### Production
 
 To run local builds of production containers we use the
-`docker-compose-prod-build.yaml` file. See [below](#Updating a service) for
-more details.
+`docker-compose-prod-build.yaml` file.
 
 To deploy containers into a production environment:
-`docker compose -f docker-compose-prod-deploy.yaml up -d`
+
+```bash
+docker compose -f docker-compose-prod-deploy.yaml up -d
+```
 
 ## Updating a service
 

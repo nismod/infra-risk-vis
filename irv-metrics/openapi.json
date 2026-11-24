@@ -1,0 +1,1949 @@
+{
+  "components": {
+    "schemas": {
+      "AreaEntry": {
+        "properties": {
+          "area_id": {
+            "title": "Area Id",
+            "type": "string"
+          },
+          "level": {
+            "title": "Level",
+            "type": "integer"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "observations": {
+            "description": "Ordered by metric (dataset order), then by each dimension's member order.",
+            "items": {
+              "$ref": "#/components/schemas/Observation"
+            },
+            "title": "Observations",
+            "type": "array"
+          },
+          "share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Overlay sets: the fraction of the area that lies in this country, 0\u20131. Null in admin and group sets.",
+            "title": "Share"
+          }
+        },
+        "required": [
+          "area_id",
+          "name",
+          "level",
+          "observations"
+        ],
+        "title": "AreaEntry",
+        "type": "object"
+      },
+      "AreaObservations": {
+        "properties": {
+          "areas": {
+            "description": "One entry per requested `area_id`, in request order.",
+            "items": {
+              "$ref": "#/components/schemas/AreaEntry"
+            },
+            "title": "Areas",
+            "type": "array"
+          },
+          "boundary_set": {
+            "title": "Boundary Set",
+            "type": "string"
+          },
+          "dataset": {
+            "title": "Dataset",
+            "type": "string"
+          },
+          "iso3": {
+            "description": "The country the request is scoped to.",
+            "title": "Iso3",
+            "type": "string"
+          }
+        },
+        "required": [
+          "iso3",
+          "dataset",
+          "boundary_set",
+          "areas"
+        ],
+        "title": "AreaObservations",
+        "type": "object"
+      },
+      "AreaValue": {
+        "properties": {
+          "area_id": {
+            "title": "Area Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "share": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Overlay sets: the fraction of the area that lies in this country, 0\u20131. Null in admin and group sets.",
+            "title": "Share"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "area_id",
+          "name",
+          "value"
+        ],
+        "title": "AreaValue",
+        "type": "object"
+      },
+      "BoundarySetLevel": {
+        "properties": {
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "level": {
+            "title": "Level",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "title": "BoundarySetLevel",
+        "type": "object"
+      },
+      "BoundarySetModel": {
+        "properties": {
+          "attribution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attribution"
+          },
+          "attribution_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attribution Url"
+          },
+          "id": {
+            "description": "e.g. `cgaz-6.0.0`, `hydrobasins-v1c`.",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "description": "`admin`: nested areas that partition each country; level 0 is the country, with `area_id` = ISO3. `overlay`: areas drawn independently of borders (river basins); one area may relate to several countries, and the areas related to a country do not partition it, so values must not be summed across them. `group`: named sets of countries (continents, income groups), without geometry of their own.",
+            "enum": [
+              "admin",
+              "overlay",
+              "group"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "levels": {
+            "items": {
+              "$ref": "#/components/schemas/BoundarySetLevel"
+            },
+            "title": "Levels",
+            "type": "array"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "kind",
+          "levels"
+        ],
+        "title": "BoundarySetModel",
+        "type": "object"
+      },
+      "Catalogue": {
+        "properties": {
+          "boundary_sets": {
+            "items": {
+              "$ref": "#/components/schemas/BoundarySetModel"
+            },
+            "title": "Boundary Sets",
+            "type": "array"
+          },
+          "datasets": {
+            "items": {
+              "$ref": "#/components/schemas/Dataset"
+            },
+            "title": "Datasets",
+            "type": "array"
+          },
+          "dimensions": {
+            "items": {
+              "$ref": "#/components/schemas/Dimension"
+            },
+            "title": "Dimensions",
+            "type": "array"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/SectionModel"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "units": {
+            "items": {
+              "$ref": "#/components/schemas/Unit"
+            },
+            "title": "Units",
+            "type": "array"
+          },
+          "version": {
+            "description": "Changes whenever data or config is reloaded. Also the ETag.",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "version",
+          "sections",
+          "units",
+          "dimensions",
+          "boundary_sets",
+          "datasets"
+        ],
+        "title": "Catalogue",
+        "type": "object"
+      },
+      "Country": {
+        "properties": {
+          "bbox": {
+            "description": "west, south, east, north.",
+            "maxItems": 4,
+            "minItems": 4,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Bbox",
+            "type": "array"
+          },
+          "boundary_set": {
+            "description": "The country's admin set: the default for maps and boundaries.",
+            "title": "Boundary Set",
+            "type": "string"
+          },
+          "iso3": {
+            "description": "Upper case.",
+            "title": "Iso3",
+            "type": "string"
+          },
+          "levels": {
+            "description": "Levels of the admin set, 0 first.",
+            "items": {
+              "$ref": "#/components/schemas/LevelSummary"
+            },
+            "title": "Levels",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "iso3",
+          "name",
+          "bbox",
+          "boundary_set",
+          "levels"
+        ],
+        "title": "Country",
+        "type": "object"
+      },
+      "CountryBoundarySet": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "levels": {
+            "items": {
+              "$ref": "#/components/schemas/LevelSummary"
+            },
+            "title": "Levels",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "levels"
+        ],
+        "title": "CountryBoundarySet",
+        "type": "object"
+      },
+      "CountryDetail": {
+        "properties": {
+          "bbox": {
+            "description": "west, south, east, north.",
+            "maxItems": 4,
+            "minItems": 4,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Bbox",
+            "type": "array"
+          },
+          "boundary_set": {
+            "description": "The country's admin set: the default for maps and boundaries.",
+            "title": "Boundary Set",
+            "type": "string"
+          },
+          "boundary_sets": {
+            "description": "Every set with areas related to this country, the admin set first.",
+            "items": {
+              "$ref": "#/components/schemas/CountryBoundarySet"
+            },
+            "title": "Boundary Sets",
+            "type": "array"
+          },
+          "datasets": {
+            "description": "Datasets with data for this country. Others are absent.",
+            "items": {
+              "$ref": "#/components/schemas/DatasetCoverage"
+            },
+            "title": "Datasets",
+            "type": "array"
+          },
+          "iso3": {
+            "description": "Upper case.",
+            "title": "Iso3",
+            "type": "string"
+          },
+          "levels": {
+            "description": "Levels of the admin set, 0 first.",
+            "items": {
+              "$ref": "#/components/schemas/LevelSummary"
+            },
+            "title": "Levels",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "iso3",
+          "name",
+          "bbox",
+          "boundary_set",
+          "levels",
+          "boundary_sets",
+          "datasets"
+        ],
+        "title": "CountryDetail",
+        "type": "object"
+      },
+      "Curve": {
+        "properties": {
+          "area_id": {
+            "title": "Area Id",
+            "type": "string"
+          },
+          "boundary_set": {
+            "title": "Boundary Set",
+            "type": "string"
+          },
+          "dataset": {
+            "title": "Dataset",
+            "type": "string"
+          },
+          "dims": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Dims",
+            "type": "object"
+          },
+          "iso3": {
+            "title": "Iso3",
+            "type": "string"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/CurvePoint"
+            },
+            "title": "Points",
+            "type": "array"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "x": {
+            "$ref": "#/components/schemas/CurveAxis"
+          }
+        },
+        "required": [
+          "iso3",
+          "dataset",
+          "metric",
+          "dims",
+          "area_id",
+          "boundary_set",
+          "unit",
+          "x",
+          "points"
+        ],
+        "title": "Curve",
+        "type": "object"
+      },
+      "CurveAxis": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "CurveAxis",
+        "type": "object"
+      },
+      "CurvePoint": {
+        "properties": {
+          "x": {
+            "title": "X",
+            "type": "number"
+          },
+          "y": {
+            "title": "Y",
+            "type": "number"
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "title": "CurvePoint",
+        "type": "object"
+      },
+      "Dataset": {
+        "properties": {
+          "boundary_sets": {
+            "description": "Sets this dataset has data on: the union of its metrics' sets. The first is the default for `set`.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Boundary Sets",
+            "type": "array"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "dimensions": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetDimension"
+            },
+            "title": "Dimensions",
+            "type": "array"
+          },
+          "display": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Display hints, as written in the dataset config (contract C2). Opaque to the API.",
+            "title": "Display"
+          },
+          "documentation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "URL or host-relative path of the method notes.",
+            "title": "Documentation"
+          },
+          "id": {
+            "description": "`{section}/{dataset}`.",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "description": "`values`: one number per series and area. `curve`: a list of points per series and area.",
+            "enum": [
+              "values",
+              "curve"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "metrics": {
+            "items": {
+              "$ref": "#/components/schemas/MetricModel"
+            },
+            "title": "Metrics",
+            "type": "array"
+          },
+          "section": {
+            "title": "Section",
+            "type": "string"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "x": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CurveAxis"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "`curve` datasets only."
+          }
+        },
+        "required": [
+          "id",
+          "section",
+          "title",
+          "kind",
+          "boundary_sets",
+          "metrics",
+          "dimensions"
+        ],
+        "title": "Dataset",
+        "type": "object"
+      },
+      "DatasetCoverage": {
+        "properties": {
+          "boundary_sets": {
+            "description": "Sets with data for this country, in the dataset's order.",
+            "items": {
+              "$ref": "#/components/schemas/SetCoverage"
+            },
+            "title": "Boundary Sets",
+            "type": "array"
+          },
+          "download": {
+            "description": "Whether the download route answers for this dataset.",
+            "title": "Download",
+            "type": "boolean"
+          },
+          "id": {
+            "description": "`{section}/{dataset}`.",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "boundary_sets",
+          "download"
+        ],
+        "title": "DatasetCoverage",
+        "type": "object"
+      },
+      "DatasetDimension": {
+        "properties": {
+          "default": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Label overrides for this dataset, by member id.",
+            "title": "Labels",
+            "type": "object"
+          },
+          "members": {
+            "description": "The members this dataset uses, in display order.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Members",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "members"
+        ],
+        "title": "DatasetDimension",
+        "type": "object"
+      },
+      "Dimension": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "members": {
+            "description": "All members, in display order.",
+            "items": {
+              "$ref": "#/components/schemas/Member"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "ordered": {
+            "description": "Members have a meaningful order (return periods, years, quintiles).",
+            "title": "Ordered",
+            "type": "boolean"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "const": "time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "ordered",
+          "members"
+        ],
+        "title": "Dimension",
+        "type": "object"
+      },
+      "Error": {
+        "properties": {
+          "detail": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        },
+        "required": [
+          "detail"
+        ],
+        "title": "Error",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "enum": [
+              "unknown_country",
+              "unknown_dataset",
+              "unknown_area",
+              "unknown_level",
+              "unknown_boundary_set",
+              "invalid_filters",
+              "downloads_disabled",
+              "busy"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "LevelSummary": {
+        "properties": {
+          "areas": {
+            "description": "Areas at this level related to the country.",
+            "title": "Areas",
+            "type": "integer"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Local name of the level, e.g. `County`, `Parish`.",
+            "title": "Label"
+          },
+          "level": {
+            "title": "Level",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "level",
+          "areas"
+        ],
+        "title": "LevelSummary",
+        "type": "object"
+      },
+      "Member": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "External code, e.g. a GHS-SMOD class.",
+            "title": "Code"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "short_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Short Label"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Numeric value of the member, e.g. 100 for a 100-year return period.",
+            "title": "Value"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "Member",
+        "type": "object"
+      },
+      "MetricModel": {
+        "properties": {
+          "aggregate_of": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set when this metric's values are aggregated at load from another metric of the dataset over the member countries of each group, e.g. a population-weighted mean of national values. Published group figures are separate metrics, without this field.",
+            "title": "Aggregate Of"
+          },
+          "aggregation": {
+            "enum": [
+              "sum",
+              "mean",
+              "weighted_mean",
+              "none"
+            ],
+            "title": "Aggregation",
+            "type": "string"
+          },
+          "boundary_sets": {
+            "description": "Sets this metric has data on, in the dataset's order.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Boundary Sets",
+            "type": "array"
+          },
+          "derived": {
+            "default": false,
+            "description": "Computed on read. Returned only when asked for by `metric=`.",
+            "title": "Derived",
+            "type": "boolean"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "dimensions": {
+            "description": "The dimensions that key this metric.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Dimensions",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "source_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Where this metric's values come from, when it differs from the dataset's `source`.",
+            "title": "Source Note"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "unit",
+          "dimensions",
+          "aggregation",
+          "boundary_sets"
+        ],
+        "title": "MetricModel",
+        "type": "object"
+      },
+      "Observation": {
+        "properties": {
+          "dims": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Dims",
+            "type": "object"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "metric",
+          "dims",
+          "value",
+          "unit"
+        ],
+        "title": "Observation",
+        "type": "object"
+      },
+      "SectionModel": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "SectionModel",
+        "type": "object"
+      },
+      "SeriesValues": {
+        "properties": {
+          "boundary_set": {
+            "title": "Boundary Set",
+            "type": "string"
+          },
+          "dataset": {
+            "title": "Dataset",
+            "type": "string"
+          },
+          "dims": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The full dimension assignment of the series.",
+            "title": "Dims",
+            "type": "object"
+          },
+          "iso3": {
+            "description": "The country the request is scoped to.",
+            "title": "Iso3",
+            "type": "string"
+          },
+          "level": {
+            "title": "Level",
+            "type": "integer"
+          },
+          "metric": {
+            "title": "Metric",
+            "type": "string"
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "values": {
+            "description": "Every area at this level related to the country, ordered by `area_id`. Overlay areas carry their whole-area value, not the part inside the country.",
+            "items": {
+              "$ref": "#/components/schemas/AreaValue"
+            },
+            "title": "Values",
+            "type": "array"
+          }
+        },
+        "required": [
+          "iso3",
+          "dataset",
+          "metric",
+          "dims",
+          "unit",
+          "level",
+          "boundary_set",
+          "values"
+        ],
+        "title": "SeriesValues",
+        "type": "object"
+      },
+      "SetCoverage": {
+        "properties": {
+          "id": {
+            "description": "Boundary set id.",
+            "title": "Id",
+            "type": "string"
+          },
+          "levels": {
+            "description": "Levels with data.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Levels",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "levels"
+        ],
+        "title": "SetCoverage",
+        "type": "object"
+      },
+      "Unit": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "description": "Display form, e.g. `km\u00b2`.",
+            "title": "Label",
+            "type": "string"
+          },
+          "quantity": {
+            "description": "e.g. `area`, `count`, `currency`, `ratio`.",
+            "title": "Quantity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label",
+          "quantity"
+        ],
+        "title": "Unit",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Metrics by admin area. Contract C1; see docs/api-v1.md.",
+    "title": "IRV metrics API",
+    "version": "1.0.0-draft"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/countries": {
+      "get": {
+        "description": "Countries with data. A single-country deployment returns one.",
+        "operationId": "listCountries",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Country"
+                  },
+                  "title": "Response Listcountries",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Countries",
+        "tags": [
+          "catalogue"
+        ]
+      }
+    },
+    "/v1/countries/{iso3}": {
+      "get": {
+        "description": "One country and its coverage: which datasets have data, at which levels.",
+        "operationId": "getCountry",
+        "parameters": [
+          {
+            "description": "ISO 3166-1 alpha-3 code, any case.",
+            "in": "path",
+            "name": "iso3",
+            "required": true,
+            "schema": {
+              "description": "ISO 3166-1 alpha-3 code, any case.",
+              "pattern": "^[A-Za-z]{3}$",
+              "title": "Iso3",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CountryDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Country",
+        "tags": [
+          "catalogue"
+        ]
+      }
+    },
+    "/v1/countries/{iso3}/boundaries/{level}": {
+      "get": {
+        "description": "Geometry of the areas at one level related to the country, WGS84, 6 decimal places.\n\nGroup sets have no geometry: 404 `unknown_boundary_set`.",
+        "operationId": "getBoundaries",
+        "parameters": [
+          {
+            "description": "ISO 3166-1 alpha-3 code, any case.",
+            "in": "path",
+            "name": "iso3",
+            "required": true,
+            "schema": {
+              "description": "ISO 3166-1 alpha-3 code, any case.",
+              "pattern": "^[A-Za-z]{3}$",
+              "title": "Iso3",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "level",
+            "required": true,
+            "schema": {
+              "minimum": 0,
+              "title": "Level",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+            "in": "query",
+            "name": "set",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+              "title": "Set"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/geo+json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "GeoJSON FeatureCollection. Each feature has `id` = `area_id` and properties `area_id`, `name`, `parent_area_id`, and `share` in overlay sets. Overlay areas are not clipped to the border."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Boundaries",
+        "tags": [
+          "geometry"
+        ]
+      }
+    },
+    "/v1/countries/{iso3}/datasets/{section}/{dataset}/areas": {
+      "get": {
+        "description": "Every stored value for some areas of one set that match the filters.\n\nFilters are partial: a dimension left out is left free. This one route serves what\nthe upstream API split into \"profile\" (all members of a dimension) and \"ladder\"\n(all return periods). Several areas in one call serve comparisons, e.g. a county and\nits country. Areas in another set (a country and its income group) take a second call.\n\n404 `unknown_area` when any `area_id` is not in the set or not related to the country.\n\nA filter on a dimension that a metric is not keyed by does not exclude that metric.\nDerived metrics are returned only when `metric` names one. A valid filter that\nmatches nothing returns an empty list.",
+        "operationId": "getAreaObservations",
+        "parameters": [
+          {
+            "description": "ISO 3166-1 alpha-3 code, any case.",
+            "in": "path",
+            "name": "iso3",
+            "required": true,
+            "schema": {
+              "description": "ISO 3166-1 alpha-3 code, any case.",
+              "pattern": "^[A-Za-z]{3}$",
+              "title": "Iso3",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Section id, e.g. `hazard`.",
+            "in": "path",
+            "name": "section",
+            "required": true,
+            "schema": {
+              "description": "Section id, e.g. `hazard`.",
+              "title": "Section",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Dataset name within the section, e.g. `river-flooding`.",
+            "in": "path",
+            "name": "dataset",
+            "required": true,
+            "schema": {
+              "description": "Dataset name within the section, e.g. `river-flooding`.",
+              "title": "Dataset",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Area ids in the chosen set, repeated: `?area_id=KEN&area_id=KEN.1_1`. Each must be related to the country. The country itself is `area_id={ISO3}` in an admin set.",
+            "in": "query",
+            "name": "area_id",
+            "required": true,
+            "schema": {
+              "description": "Area ids in the chosen set, repeated: `?area_id=KEN&area_id=KEN.1_1`. Each must be related to the country. The country itself is `area_id={ISO3}` in an admin set.",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 50,
+              "minItems": 1,
+              "title": "Area Id",
+              "type": "array"
+            }
+          },
+          {
+            "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+            "in": "query",
+            "name": "set",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+              "title": "Set"
+            }
+          },
+          {
+            "description": "Metric id. May be omitted when the dataset stores one metric.",
+            "in": "query",
+            "name": "metric",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Metric id. May be omitted when the dataset stores one metric.",
+              "title": "Metric"
+            }
+          },
+          {
+            "description": "Dimension filters, one query parameter per dimension: `?sector=total&return_period_years=100`.",
+            "explode": true,
+            "in": "query",
+            "name": "dims",
+            "required": false,
+            "schema": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "style": "form"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreaObservations"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Get Area Observations",
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/countries/{iso3}/datasets/{section}/{dataset}/curve": {
+      "get": {
+        "description": "The points of one curve, for datasets of kind `curve`. Filters are complete, as for `getValues`.",
+        "operationId": "getCurve",
+        "parameters": [
+          {
+            "description": "ISO 3166-1 alpha-3 code, any case.",
+            "in": "path",
+            "name": "iso3",
+            "required": true,
+            "schema": {
+              "description": "ISO 3166-1 alpha-3 code, any case.",
+              "pattern": "^[A-Za-z]{3}$",
+              "title": "Iso3",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Section id, e.g. `hazard`.",
+            "in": "path",
+            "name": "section",
+            "required": true,
+            "schema": {
+              "description": "Section id, e.g. `hazard`.",
+              "title": "Section",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Dataset name within the section, e.g. `river-flooding`.",
+            "in": "path",
+            "name": "dataset",
+            "required": true,
+            "schema": {
+              "description": "Dataset name within the section, e.g. `river-flooding`.",
+              "title": "Dataset",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+            "in": "query",
+            "name": "set",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+              "title": "Set"
+            }
+          },
+          {
+            "description": "Metric id. May be omitted when the dataset stores one metric.",
+            "in": "query",
+            "name": "metric",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Metric id. May be omitted when the dataset stores one metric.",
+              "title": "Metric"
+            }
+          },
+          {
+            "description": "Defaults to the country, in an admin set.",
+            "in": "query",
+            "name": "area_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Defaults to the country, in an admin set.",
+              "title": "Area Id"
+            }
+          },
+          {
+            "description": "Dimension filters, one query parameter per dimension: `?sector=total&return_period_years=100`.",
+            "explode": true,
+            "in": "query",
+            "name": "dims",
+            "required": false,
+            "schema": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "style": "form"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Curve"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Get Curve",
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/countries/{iso3}/datasets/{section}/{dataset}/download": {
+      "get": {
+        "description": "The dataset for one country and level as CSV, generated from the cube.\n\n404 `downloads_disabled` where the deployment turns downloads off.",
+        "operationId": "downloadDataset",
+        "parameters": [
+          {
+            "description": "ISO 3166-1 alpha-3 code, any case.",
+            "in": "path",
+            "name": "iso3",
+            "required": true,
+            "schema": {
+              "description": "ISO 3166-1 alpha-3 code, any case.",
+              "pattern": "^[A-Za-z]{3}$",
+              "title": "Iso3",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Section id, e.g. `hazard`.",
+            "in": "path",
+            "name": "section",
+            "required": true,
+            "schema": {
+              "description": "Section id, e.g. `hazard`.",
+              "title": "Section",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Dataset name within the section, e.g. `river-flooding`.",
+            "in": "path",
+            "name": "dataset",
+            "required": true,
+            "schema": {
+              "description": "Dataset name within the section, e.g. `river-flooding`.",
+              "title": "Dataset",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Level within the boundary set. In admin sets, 0 is the country.",
+            "in": "query",
+            "name": "level",
+            "required": true,
+            "schema": {
+              "description": "Level within the boundary set. In admin sets, 0 is the country.",
+              "minimum": 0,
+              "title": "Level",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+            "in": "query",
+            "name": "set",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+              "title": "Set"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "One row per area and series: key columns, one column per dimension, `metric`, `unit`, `value`."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Download Dataset",
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/countries/{iso3}/datasets/{section}/{dataset}/values": {
+      "get": {
+        "description": "One series across every area at a level: the data behind a choropleth.\n\nThe filters must be the complete dimension assignment of one stored series. The\nserver fills in no defaults; the catalogue gives each dimension's default.\n\n422 `invalid_filters` when they are not: an unknown dimension or member, or an\nassignment that is no series (usually a dimension left out). The message says which.",
+        "operationId": "getValues",
+        "parameters": [
+          {
+            "description": "ISO 3166-1 alpha-3 code, any case.",
+            "in": "path",
+            "name": "iso3",
+            "required": true,
+            "schema": {
+              "description": "ISO 3166-1 alpha-3 code, any case.",
+              "pattern": "^[A-Za-z]{3}$",
+              "title": "Iso3",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Section id, e.g. `hazard`.",
+            "in": "path",
+            "name": "section",
+            "required": true,
+            "schema": {
+              "description": "Section id, e.g. `hazard`.",
+              "title": "Section",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Dataset name within the section, e.g. `river-flooding`.",
+            "in": "path",
+            "name": "dataset",
+            "required": true,
+            "schema": {
+              "description": "Dataset name within the section, e.g. `river-flooding`.",
+              "title": "Dataset",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Level within the boundary set. In admin sets, 0 is the country.",
+            "in": "query",
+            "name": "level",
+            "required": true,
+            "schema": {
+              "description": "Level within the boundary set. In admin sets, 0 is the country.",
+              "minimum": 0,
+              "title": "Level",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+            "in": "query",
+            "name": "set",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Boundary set id. Defaults to the dataset's first set (data routes) or the country's admin set (`getBoundaries`).",
+              "title": "Set"
+            }
+          },
+          {
+            "description": "Metric id. May be omitted when the dataset stores one metric.",
+            "in": "query",
+            "name": "metric",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Metric id. May be omitted when the dataset stores one metric.",
+              "title": "Metric"
+            }
+          },
+          {
+            "description": "Dimension filters, one query parameter per dimension: `?sector=total&return_period_years=100`.",
+            "explode": true,
+            "in": "query",
+            "name": "dims",
+            "required": false,
+            "schema": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "style": "form"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeriesValues"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Unprocessable Content"
+          }
+        },
+        "summary": "Get Values",
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/datasets": {
+      "get": {
+        "description": "Everything needed to build controls and labels: sections, units, dimensions with\ntheir members, and each dataset's metrics, dimensions and display hints.\n\nThe same for every country. Use `getCountry` for what a country actually has.",
+        "operationId": "getCatalogue",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Catalogue"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Catalogue",
+        "tags": [
+          "catalogue"
+        ]
+      }
+    }
+  }
+}

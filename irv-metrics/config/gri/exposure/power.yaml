@@ -1,0 +1,18 @@
+id: exposure/power
+title: Power
+documentation: /docs/exposure/power
+order: 5
+
+metrics:
+  length: {label: Transmission Network Length, unit: km, aggregation: sum}
+
+source:
+  files: "{iso3}/exposure/{iso3}_adm{level}_exposure_power_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card]
+
+display:
+  card: power
+  map: {metric: length}

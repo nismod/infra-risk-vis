@@ -1,0 +1,25 @@
+id: adaptation-potential/river-network-context
+title: River Network Context
+documentation: /docs/adaptation-potential/river-network-context
+order: 5
+
+metrics:
+  river_length: {label: River Network Length, unit: km, dimensions: [urbanisation_class], aggregation: sum}
+
+dimensions:
+  urbanisation_class: {default: total}
+
+source:
+  files: "{iso3}/adaptation_potential/{iso3}_adm{level}_adaptation_potential_river_network_context_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, adaptation_subsection]
+  rules:
+    - when: {metric: river_length}
+      metric: river_length
+
+display:
+  card: river-network-context
+  controls: [urbanisation_class]
+  map: {metric: river_length, dims: {urbanisation_class: total}}

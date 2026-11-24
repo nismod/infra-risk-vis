@@ -27,6 +27,9 @@ cd backend
 # create a virtual environment (using venv or another method if you prefer)
 python -m venv venv
 source venv/bin/activate
+# irv-metrics (the national metrics API) first: the backend depends on it by
+# name and it is not on PyPI
+pip install -e ../irv-metrics
 pip install -e .[dev]
 
 # run the application
@@ -42,8 +45,10 @@ The schema of the backend database is defined by the SQLAlchemy models in
   into the Docker image at `/code/alembic.ini` and `/code/migrations`.
 - `migrations/env.py` connects with the same `PG*` environment variables as
   the app (no URL in `alembic.ini`).
-- `migrations/versions/` holds one file per revision. `0001_baseline` creates
-  the tables in `models.py` and runs `CREATE EXTENSION IF NOT EXISTS postgis`.
+- `migrations/versions/` holds one file per revision.
+  - `0001_baseline` creates the tables in `models.py` and runs `CREATE EXTENSION
+    IF NOT EXISTS postgis`.
+  - `0002_metrics` sets up the `irv-metrics` schema
 - Autogenerate only compares the default (`public`) schema, and ignores tables
   owned by database extensions (PostGIS's `spatial_ref_sys`, pg_cron's tables)
   and the `topology`, `tiger`, `tiger_data`, `cron` and `metrics` schemas.
@@ -81,7 +86,15 @@ For each model change, make a new alembic revision:
 Schema objects that are not in `models.py` (e.g. a SQL-defined schema) go in
 hand-written revisions (`alembic revision -m "..."`, then `op.execute(...)`).
 If they live in their own schema, add it to `EXCLUDED_SCHEMAS` in
-`migrations/env.py` so autogenerate leaves it alone.
+`migrations/env.py` so autogenerate leaves it alone
+
+For example, `0002_metrics` is hand-written: it creates the `metrics` schema and
+runs the installed `irv-metrics` package's `irv_metrics/schema/*.sql` (via
+`importlib.resources`).
+
+Downgrading to `0001_baseline` drops the schema and its data. The metric
+package's loaders leave the schema to Alembic. Any change to those SQL files
+needs a new revision..
 
 ### Reset
 
@@ -98,6 +111,7 @@ need a **throwaway** PostGIS database (its GRI tables are dropped) given as
 `DATABASE_URL`, and are skipped without it:
 
 ```bash
+pip install -e ../irv-metrics
 pip install -e .[dev]
 docker run -d --name gri-test-db -p 5499:5432 \
     -e POSTGRES_DB=gri_test -e POSTGRES_USER=gri_test -e POSTGRES_PASS=password \
@@ -107,6 +121,26 @@ until docker logs gri-test-db 2>&1 | grep -q "restarting in foreground"; do slee
 DATABASE_URL=postgresql+psycopg2://gri_test:password@localhost:5499/gri_test pytest
 docker rm -f gri-test-db
 ```
+
+`tests/test_metrics_migration.py` checks `0002_metrics` (needs irv-metrics
+installed). CI runs these and irv-metrics' tests
+(`.github/workflows/backend-tests.yml`).
+
+## Metrics API
+
+This mounts the irv-metrics `/v1` router at `/metrics`.
+
+Environment variables:
+- `IRV_METRICS_DATABASE_URL`
+- `IRV_METRICS_POOL_MIN_SIZE` defaults to 1
+- `IRV_METRICS_POOL_MAX_SIZE` defaults to 4
+- `IRV_METRICS_POOL_TIMEOUT_S` defaults to 10
+- `IRV_METRICS_STATEMENT_TIMEOUT_MS` defaults to 30000
+- `IRV_METRICS_DOWNLOADS` defaults to 1; 0 turns CSV downloads off
+- `IRV_METRICS_COUNTRIES` defaults to every loaded country
+
+See [../irv-metrics/README.md](../irv-metrics/README.md) for the API and
+loaders.
 
 ### API performance
 

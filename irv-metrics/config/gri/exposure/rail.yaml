@@ -1,0 +1,18 @@
+id: exposure/rail
+title: Rail
+documentation: /docs/exposure/rail
+order: 4
+
+metrics:
+  length: {label: Rail Length, unit: km, aggregation: sum}
+
+source:
+  files: "{iso3}/exposure/{iso3}_adm{level}_exposure_rail_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card]
+
+display:
+  card: rail
+  map: {metric: length}

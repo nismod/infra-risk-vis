@@ -1,7 +1,11 @@
 services:
   backend:
     image: ghcr.io/nismod/gri-backend:1.9.0
-    build: ./backend
+    build:
+      context: ./backend
+      # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
+      additional_contexts:
+        irv-metrics: ./irv-metrics
     depends_on:
       migrate:
         condition: service_completed_successfully

@@ -1,0 +1,27 @@
+sections:
+  hazard: {title: Hazard}
+  adaptation-outcomes: {title: Adaptation outcomes}
+
+units:
+  km2: {label: km², quantity: area}
+  share: {label: share, quantity: ratio}
+
+dimensions:
+  return_period_years:
+    label: Return Period
+    ordered: true
+    members:
+      "10": {label: RP10, value: 10}
+      "100": {label: RP100, value: 100}
+  scenario:
+    label: Adaptation Scenario
+    members:
+      baseline_protected: {label: Before adaptation}
+      dry_proofing: {label: Dry-Proofing}
+
+boundary_sets:
+  test-admin:
+    title: Test admin set
+    levels:
+      - {label: Country, files: "boundaries/admin0.geojson", id: shapeGroup, name: shapeName, iso3: shapeGroup}
+      - {label: Region, files: "boundaries/admin1.geojson", id: shapeID, name: shapeName, iso3: shapeGroup}

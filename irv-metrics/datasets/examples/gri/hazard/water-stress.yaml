@@ -1,0 +1,28 @@
+# An overlay dataset: values per river basin, not per admin area. A sketch:
+# the source columns are not checked against a real file.
+id: hazard/water-stress
+title: Baseline water stress
+source_note: WRI Aqueduct 4.0
+documentation: https://www.wri.org/aqueduct
+
+metrics:
+  water_stress:
+    label: Baseline water stress
+    unit: share
+    aggregation: none
+    description: Total water withdrawals as a share of available renewable supply.
+
+source:
+  files: "aqueduct/baseline_annual_hybas6.csv"
+  format: long
+  boundary_set: hydrobasins-v1c
+  keys: {area: pfaf_id, level: 6}
+  value: bws_raw
+  ignore: [bws_score, bws_cat, bws_label]
+
+display:
+  summary: Water stress by sub-basin. Basins cross borders, so the map shows whole basins.
+  map: {metric: water_stress, scale: sequential}
+  decimals: 2
+  charts:
+    - {type: bar, by: area}

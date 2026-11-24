@@ -1,0 +1,52 @@
+id: hazard/tropical-cyclone-wind
+title: Tropical Cyclone Wind
+documentation: /docs/hazard/tropical-cyclone-wind
+order: 2
+
+# The CSVs publish one metric, `wind_area`, in two display modes. Area and
+# percentage of area are both published, so both are stored. The bands
+# (`area_in_band*`) are not in the CSVs: they are computed at load from
+# consecutive thresholds (`COMPUTED` in `irv_metrics/loaders/csv.py`).
+metrics:
+  area_exceeding:
+    label: Area at or above threshold
+    unit: km2
+    dimensions: [return_period_years, wind_threshold]
+    aggregation: sum
+  area_exceeding_share:
+    label: Percentage of area at or above threshold
+    unit: percent
+    dimensions: [return_period_years, wind_threshold]
+  area_in_band:
+    label: Area in category
+    unit: km2
+    dimensions: [return_period_years, wind_band]
+    aggregation: sum
+  area_in_band_share:
+    label: Percentage of area in category
+    unit: percent
+    dimensions: [return_period_years, wind_band]
+
+dimensions:
+  return_period_years:
+    members: ["10", "20", "50", "100", "200", "500", "1000"]
+    default: "10"
+  wind_threshold: {default: tropical_storm_plus}
+  wind_band: {default: tropical_storm}
+
+source:
+  files: "{iso3}/hazard/{iso3}_adm{level}_hazard_tropical_cyclone_wind_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, hazard, model, scenario, epoch, wind_threshold_ms]
+  rules:
+    - when: {metric: wind_area, display_mode: area}
+      metric: area_exceeding
+    - when: {metric: wind_area, display_mode: percentage}
+      metric: area_exceeding_share
+
+display:
+  card: tropical-cyclone-wind
+  controls: [return_period_years, wind_threshold, metric]
+  map: {metric: area_exceeding, dims: {return_period_years: "10", wind_threshold: tropical_storm_plus}}

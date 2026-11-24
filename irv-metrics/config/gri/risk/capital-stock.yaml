@@ -1,0 +1,36 @@
+id: risk/capital-stock
+title: Capital Stock Loss
+documentation: /docs/risk/capital-stock
+order: 2
+
+metrics:
+  average_annual_loss: {label: Average Annual Loss, unit: usd_per_year, dimensions: [sector], aggregation: sum}
+  loss: {label: Loss at return period, unit: usd, dimensions: [sector, return_period_years], aggregation: sum}
+
+dimensions:
+  sector: {default: total}
+  return_period_years:
+    members: ["10", "20", "50", "75", "100", "200", "500"]
+    default: "10"
+
+source:
+  files: "{iso3}/risk/{iso3}_adm{level}_risk_capital_stock_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, risk_subsection, hazard, model, scenario]
+  rules:
+    # `risk_metric` holds either the annual metric or a return period.
+    - when: {risk_metric: average_annual_loss_protected}
+      metric: average_annual_loss
+    - match: {risk_metric: "rp(?P<rp>\\d+)"}
+      metric: loss
+      dims: {return_period_years: "{rp}"}
+
+display:
+  card: risk-capital-stock
+  controls: [sector, metric, return_period_years]
+  map: {metric: average_annual_loss, dims: {sector: total}}
+  charts:
+    - {type: bar, by: area}
+    - {type: line, by: return_period_years, metric: loss}

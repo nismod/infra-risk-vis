@@ -1,0 +1,34 @@
+# An invented single-country deployment, to test what standalone needs.
+sections:
+  agriculture: {title: Agriculture}
+
+units:
+  tonnes: {label: t, quantity: mass}
+  hectares: {label: ha, quantity: area}
+
+dimensions:
+  crop:
+    label: Crop
+    members:
+      all: {label: All crops}
+      sugar_cane: {label: Sugar cane}
+      banana: {label: Banana}
+      yam: {label: Yam}
+      coffee: {label: Coffee}
+  year:
+    label: Year
+    ordered: true
+    role: time
+    range: {from: 2015, to: 2024}
+
+boundary_sets:
+  jam-statin-2011:
+    title: Jamaica parishes and enumeration districts (STATIN 2011)
+    attribution: Statistical Institute of Jamaica
+    levels:
+      - {label: Country, files: "boundaries/jam_country.gpkg", id: iso3, name: name}
+      - {label: Parish, files: "boundaries/jam_parishes.gpkg", id: PARISH_CODE, name: PARISH}
+      - {label: Enumeration district, files: "boundaries/jam_eds.gpkg", id: ED_ID, name: ED_ID, parent: PARISH_CODE}
+
+countries:
+  JAM: {name: Jamaica, boundary_set: jam-statin-2011}

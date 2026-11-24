@@ -1,0 +1,53 @@
+id: adaptation-outcomes/dry-proofing
+title: Dry-Proofing
+documentation: /docs/adaptation-outcomes/dry-proofing
+order: 1
+
+# Benefits are published as baseline, adapted and avoided (the concentration
+# index as baseline, adapted and change); `statistic` says which, and is the
+# cost bound on cost rows. Benefit-cost ratios and cost-effectiveness are
+# computed by the card from these and its appraisal inputs.
+metrics:
+  average_annual_loss:
+    label: Average Annual Loss
+    unit: usd_per_year
+    dimensions: [sector, adaptation_state]
+    aggregation: sum
+  average_annual_flood_exposure:
+    label: Average Annual Flood Exposure
+    unit: people_per_year
+    dimensions: [wealth_group, adaptation_state]
+    aggregation: sum
+  concentration_index:
+    label: Concentration Index
+    unit: index
+    dimensions: [adaptation_state]
+  area_dry_proofed:
+    label: Area Dry-Proofed
+    unit: m2
+    aggregation: sum
+
+dimensions:
+  sector:
+    members: [residential, non_residential, infrastructure, total]
+    default: residential
+  wealth_group:
+    members: [q1, q2, q3, q4, q5, total]
+    default: q1
+  adaptation_state: {default: avoided}
+
+source:
+  files: "{iso3}/adaptation_outcomes/{iso3}_adm{level}_adaptation_outcomes_dry_proofing_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, outcome_type, hazard, model, statistic]
+  rules:
+    - when: {metric: [average_annual_loss, average_annual_flood_exposure, concentration_index]}
+      dims: {adaptation_state: "{statistic}"}
+
+display:
+  card: dry-proofing
+  controls: [metric, sector, wealth_group]
+  map: {metric: area_dry_proofed}

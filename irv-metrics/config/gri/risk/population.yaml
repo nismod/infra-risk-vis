@@ -1,0 +1,56 @@
+id: risk/population
+title: Population Exposure
+documentation: /docs/risk/population
+order: 1
+
+# Each series is keyed by a demographic group or a wealth group, never both:
+# the CSVs' `population_layer` says which `population_group` is meant.
+metrics:
+  average_annual_exposure:
+    label: Average Annual Exposure
+    unit: people_per_year
+    dimensions: [demographic_group, wealth_group]
+    aggregation: sum
+  exposure:
+    label: Exposure at return period
+    unit: people
+    dimensions: [demographic_group, wealth_group, return_period_years]
+    aggregation: sum
+
+dimensions:
+  demographic_group: {default: total}
+  wealth_group:
+    members: [q1, q2, q3, q4, q5, bottom_40]
+    default: q1
+  return_period_years:
+    members: ["10", "20", "50", "75", "100", "200", "500"]
+    default: "10"
+
+source:
+  files: "{iso3}/risk/{iso3}_adm{level}_risk_population_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, risk_subsection, hazard, model, scenario, population_group]
+  rules:
+    - when: {population_layer: demographics, risk_metric: average_annual_exposure_protected}
+      metric: average_annual_exposure
+      dims: {demographic_group: "{population_group}"}
+    - when: {population_layer: wealth, risk_metric: average_annual_exposure_protected}
+      metric: average_annual_exposure
+      dims: {wealth_group: "{population_group}"}
+    - when: {population_layer: demographics}
+      match: {risk_metric: "rp(?P<rp>\\d+)"}
+      metric: exposure
+      dims: {demographic_group: "{population_group}", return_period_years: "{rp}"}
+    - when: {population_layer: wealth}
+      match: {risk_metric: "rp(?P<rp>\\d+)"}
+      metric: exposure
+      dims: {wealth_group: "{population_group}", return_period_years: "{rp}"}
+
+display:
+  card: risk-population
+  controls: [wealth_group, demographic_group, metric, return_period_years]
+  map: {metric: average_annual_exposure, dims: {wealth_group: q1}}
+  charts:
+    - {type: line, by: return_period_years, metric: exposure}

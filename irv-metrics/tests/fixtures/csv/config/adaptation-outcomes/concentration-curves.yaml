@@ -1,0 +1,19 @@
+id: adaptation-outcomes/concentration-curves
+title: Flood Risk Inequality
+kind: curve
+x: {id: cumulative_population_share, label: Cumulative share of population, unit: share}
+
+metrics:
+  cumulative_exposure_share: {label: Concentration curve, unit: share, dimensions: [scenario]}
+
+dimensions:
+  scenario: {default: baseline_protected}
+
+source:
+  files: "{iso3}/concentration_curves/{iso3}_concentration_curves.csv"
+  format: wide
+  x: cumulative_population_share
+  value_columns:
+    - match: "flood_risk__jrc__(?P<scenario>baseline_protected|dry_proofing)"
+      metric: cumulative_exposure_share
+      dims: {scenario: "{scenario}"}

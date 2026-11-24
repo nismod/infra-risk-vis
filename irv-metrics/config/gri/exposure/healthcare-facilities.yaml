@@ -1,0 +1,32 @@
+id: exposure/healthcare-facilities
+title: Healthcare Facilities
+documentation: /docs/exposure/healthcare-facilities
+order: 6
+
+metrics:
+  count: {label: Facility Count, unit: facilities, aggregation: sum}
+  per_100k:
+    label: Per 100K People
+    unit: facilities_per_100k_people
+    dimensions: [demographic_group]
+    description: Published; within 0.2% of count / population × 100,000 but not exact, so stored rather than derived.
+
+dimensions:
+  demographic_group: {default: total}
+
+source:
+  files: "{iso3}/exposure/{iso3}_adm{level}_exposure_healthcare_facilities_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  # `infrastructure_type` is constant within the file.
+  ignore: [country_name, admin_level, adm_name, section, card, infrastructure_type]
+  rules:
+    # The count is repeated on each demographic group's row with the same value.
+    - {when: {metric: count, demographic_group: [female, male, infant, schoolage, working, childbearing, elderly]}, skip: duplicate}
+
+display:
+  card: healthcare-facilities
+  controls: [metric, demographic_group]
+  map: {metric: count}

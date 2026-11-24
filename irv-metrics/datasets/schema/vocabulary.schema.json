@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nismod.github.io/irv-metrics/vocabulary.schema.json",
+  "title": "irv-metrics vocabulary",
+  "description": "Contract C2. Shared definitions that dataset files refer to by id: sections, units, dimensions with their members, and boundary sets. A deployment may have several vocabulary files; they are merged, and a repeated id is an error.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "sections": {
+      "description": "Keyed by section id, in display order.",
+      "type": "object",
+      "propertyNames": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title"],
+        "properties": { "title": { "type": "string" }, "description": { "type": "string" } }
+      }
+    },
+    "units": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/id" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "quantity"],
+        "properties": {
+          "label": { "description": "Display form, e.g. `km²`.", "type": "string" },
+          "quantity": { "description": "e.g. `area`, `length`, `count`, `currency`, `ratio`, `index`, `time`.", "type": "string" }
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "propertyNames": { "allOf": [{ "$ref": "#/$defs/id" }, { "not": { "enum": ["level", "metric", "set", "area_id", "adm_id", "dims"] } }] },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label"],
+        "properties": {
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "ordered": { "description": "Members have a meaningful order.", "type": "boolean", "default": false },
+          "role": { "description": "`time`: the generic card shows a time control and time series.", "enum": ["time"] },
+          "members": {
+            "description": "Keyed by member id, in display order. Quote numeric ids: \"100\".",
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label"],
+              "properties": {
+                "label": { "type": "string" },
+                "short_label": { "type": "string" },
+                "description": { "type": "string" },
+                "value": { "description": "Numeric value, e.g. 100 for a 100-year return period.", "type": "number" },
+                "code": { "description": "External code for the member.", "type": "string" }
+              }
+            }
+          },
+          "range": {
+            "description": "Instead of `members`: integer members from `from` to `to` inclusive, each labelled with its number.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from", "to"],
+            "properties": { "from": { "type": "integer" }, "to": { "type": "integer" }, "step": { "type": "integer", "minimum": 1, "default": 1 } }
+          }
+        },
+        "oneOf": [{ "required": ["members"] }, { "required": ["range"] }]
+      }
+    },
+    "boundary_sets": {
+      "description": "Keyed by boundary set id, e.g. `cgaz-6.0.0`, `hydrobasins-v1c`, `wb-income-fy26`. An area id is unique within its set, across all levels.",
+      "type": "object",
+      "propertyNames": { "type": "string", "pattern": "^[a-z][a-z0-9.-]*$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "levels"],
+        "properties": {
+          "title": { "type": "string" },
+          "kind": {
+            "description": "`admin`: nested areas that partition each country; level 0 is the country, its id the ISO3 code. `overlay`: areas drawn independently of borders, e.g. river basins; each is related to every country it overlaps. `group`: named sets of countries, e.g. continents or income groups; no geometry. Only `admin` and `overlay` are loaded in phase 1.",
+            "enum": ["admin", "overlay", "group"],
+            "default": "admin"
+          },
+          "countries": {
+            "description": "`overlay` only: how areas are related to countries, by intersecting them with level 0 of an admin set at load.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["from"],
+            "properties": {
+              "from": { "description": "An admin set id.", "type": "string" },
+              "min_share": { "description": "Ignore overlaps smaller than this fraction of the area, so slivers along a border do not count.", "type": "number", "minimum": 0, "maximum": 1, "default": 0.01 }
+            }
+          },
+          "attribution": { "type": "string" },
+          "attribution_url": { "type": "string" },
+          "levels": {
+            "description": "One entry per level. For `admin` sets, level 0 (the country) first.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["files", "id", "name"],
+              "properties": {
+                "level": { "description": "Level number. Absent: the entry's position, from 0. HydroBASINS keeps its own numbers, 1–12.", "type": "integer", "minimum": 0 },
+                "label": { "description": "Local name of the level, e.g. `Parish`, `Sub-basin`.", "type": "string" },
+                "files": { "description": "Path pattern of the files; `{iso3}` allowed. `admin` and `overlay`: geometry. `group`: a table with one row per (group, member country).", "type": "string" },
+                "id": { "description": "Column or property holding the area id.", "type": "string" },
+                "name": { "description": "Column or property holding the area name.", "type": "string" },
+                "iso3": { "description": "`admin`: the property holding the area's country; absent, `{iso3}` from the path. `group`: the column holding a member country. Not used in `overlay` sets.", "type": "string" },
+                "parent": { "description": "Property holding the parent area's id. Absent: found by spatial join (`admin`, `overlay`) or none (`group`).", "type": "string" }
+              }
+            }
+          }
+        },
+        "allOf": [
+          { "if": { "properties": { "kind": { "const": "overlay" } }, "required": ["kind"] }, "then": { "required": ["countries"] }, "else": { "not": { "required": ["countries"] } } },
+          { "if": { "properties": { "kind": { "const": "group" } }, "required": ["kind"] }, "then": { "properties": { "levels": { "items": { "required": ["iso3"] } } } } }
+        ]
+      }
+    },
+    "countries": {
+      "description": "Per-country settings, keyed by upper-case ISO3. Optional: a country with data and no entry uses the first boundary set that has it.",
+      "type": "object",
+      "propertyNames": { "type": "string", "pattern": "^[A-Z]{3}$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": { "name": { "type": "string" }, "boundary_set": { "description": "The country's admin set. Must be of kind `admin`.", "type": "string" } }
+      }
+    }
+  },
+  "$defs": { "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" } }
+}

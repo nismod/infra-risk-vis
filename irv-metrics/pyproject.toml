@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "irv-metrics"
+version = "0.2.0"
+description = "Minimal FastAPI service over the GRI national risk data cube (PostgreSQL + PostGIS)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.30,<1",
+    "psycopg[binary,pool]>=3.2,<4",
+    "pyyaml>=6,<7",
+    "jsonschema>=4.18,<5",
+    "pyogrio>=0.10,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[tool.setuptools]
+packages = ["irv_metrics", "irv_metrics.adapters", "irv_metrics.api", "irv_metrics.loaders"]
+
+[tool.setuptools.package-data]
+# The DDL the Alembic revision 0002_metrics runs (importlib.resources).
+# config/, datasets/schema/ and openapi.json live outside the package and are
+# copied into irv_metrics/_data/ by setup.py when a wheel is built.
+irv_metrics = ["schema/*.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

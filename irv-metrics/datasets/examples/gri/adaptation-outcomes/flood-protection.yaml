@@ -1,0 +1,47 @@
+id: adaptation-outcomes/flood-protection
+title: Flood protection
+order: 3
+
+metrics:
+  average_annual_loss:
+    label: Average annual loss
+    unit: usd_per_year
+    dimensions: [urbanisation_threshold, design_return_period_years, sector, adaptation_state]
+  average_annual_flood_exposure:
+    label: People exposed per year
+    unit: people_per_year
+    dimensions: [urbanisation_threshold, design_return_period_years, wealth_group, adaptation_state]
+  concentration_index:
+    label: Concentration index
+    unit: index
+    dimensions: [urbanisation_threshold, design_return_period_years, adaptation_state]
+  adaptation_cost:
+    label: Cost of protection
+    unit: million_usd
+    dimensions: [urbanisation_threshold, design_return_period_years, cost_bound]
+
+dimensions:
+  urbanisation_threshold: {default: urban_centre}
+  design_return_period_years: {default: "100"}
+  sector: {default: total}
+  wealth_group: {default: total}
+  adaptation_state: {default: avoided}
+  cost_bound: {default: estimate}
+
+source:
+  files: "{iso3}/adaptation_outcomes/{iso3}_adm{level}_adaptation_outcomes_flood_protection_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, outcome_type, hazard, model, urbanisation_threshold_code, statistic]
+  rules:
+    # `statistic` is the cost bound for costs and the adaptation state for everything else.
+    - when: {metric: adaptation_cost}
+      dims: {cost_bound: "{statistic}"}
+    - when: {metric: [average_annual_loss, average_annual_flood_exposure, concentration_index]}
+      dims: {adaptation_state: "{statistic}"}
+
+display:
+  card: flood-protection
+  controls: [urbanisation_threshold, design_return_period_years]

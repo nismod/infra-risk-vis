@@ -37,11 +37,17 @@ services:
       test: "exit 0"
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
+      additional_contexts:
+        irv-metrics: ./irv-metrics
     image: ghcr.io/nismod/gri-backend:1.8.1
     volumes:
       - ./etl/raster/cog/:/data/
       - ./backend/backend/:/code/backend/
+      # over the editable install, so local irv-metrics changes are used
+      - ./irv-metrics/:/code/irv-metrics/
     env_file:
       - ./envs/dev/.backend.env
     depends_on:
@@ -105,11 +111,16 @@ services:
 
   # Apply database migrations (alembic upgrade head). Runs before backend.
   migrate:
-    build: ./backend
+    build:
+      context: ./backend
+      # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
+      additional_contexts:
+        irv-metrics: ./irv-metrics
     image: ghcr.io/nismod/gri-backend:1.8.1
     volumes:
       - ./backend/backend/:/code/backend/
       - ./backend/migrations/:/code/migrations/
+      - ./irv-metrics/:/code/irv-metrics/
     env_file:
       - ./envs/dev/.backend.env
     depends_on:
@@ -121,7 +132,11 @@ services:
   ## DEV ONLY, DESTRUCTIVE: drops every GRI table and its data, then recreates
   ## them empty (alembic downgrade base && alembic upgrade head).
   dev-reset-db:
-    build: ./backend
+    build:
+      context: ./backend
+      # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
+      additional_contexts:
+        irv-metrics: ./irv-metrics
     image: ghcr.io/nismod/gri-backend:1.8.1
     profiles: ["dev-reset-db"]
     volumes:
@@ -134,6 +149,54 @@ services:
         condition: service_healthy
     entrypoint: ["sh", "-c"]
     command: ["alembic downgrade base && alembic upgrade head"]
+
+  # Load the national metrics cube (schema `metrics`, created by `migrate`) from
+  # the published CSVs:
+  #   docker compose -f docker-compose-dev.yaml --profile metrics run --rm metrics-load [loader options]
+  # e.g. `--countries KEN --if-loaded replace`. Needs METRICS_DATA_DIR (the CSV
+  # directories KEN/, MOZ/, ...) and the CGAZ boundaries METRICS_CGAZ_DIR
+  # (geoBoundariesCGAZ_ADM{0,1,2}.gpkg; default $METRICS_DATA_DIR/boundaries/cgaz),
+  # both mounted read-only. See README.md, "National metrics".
+  metrics-load:
+    build:
+      context: ./backend
+      additional_contexts:
+        irv-metrics: ./irv-metrics
+    image: ghcr.io/nismod/gri-backend:1.8.1
+    profiles: ["metrics"]
+    volumes:
+      - ./irv-metrics/:/code/irv-metrics/
+      # defaults: ./metrics-data (git-ignored) and its boundaries/cgaz/
+      - ${METRICS_DATA_DIR:-./metrics-data}:/data/metrics/source:ro
+      - ${METRICS_CGAZ_DIR:-${METRICS_DATA_DIR:-./metrics-data}/boundaries/cgaz}:/data/metrics/cgaz:ro
+    env_file:
+      - ./envs/dev/.backend.env
+    environment:
+      # empty: connect with the PG* variables from .backend.env
+      DATABASE_URL: ""
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    entrypoint:
+      - sh
+      - -c
+      - |
+        set -e
+        # The dev db's healthcheck is `exit 0`: wait until it accepts connections.
+        until pg_isready -q; do echo "metrics-load: waiting for the database"; sleep 2; done
+        if [ -z "$$(ls -A /data/metrics/source)" ] || [ -z "$$(ls -A /data/metrics/cgaz)" ]; then
+          echo "metrics-load: set METRICS_DATA_DIR (CSVs: KEN/, MOZ/, ...) and METRICS_CGAZ_DIR (CGAZ .gpkg files)" >&2
+          exit 2
+        fi
+        # Assemble the loader's --data-dir layout: KEN/, MOZ/, ..., boundaries/cgaz/.
+        data=/tmp/metrics-data
+        mkdir -p "$$data/boundaries"
+        for entry in /data/metrics/source/*; do
+          [ "$$(basename "$$entry")" = boundaries ] || ln -sfn "$$entry" "$$data/"
+        done
+        ln -sfn /data/metrics/cgaz "$$data/boundaries/cgaz"
+        exec python -m irv_metrics.loaders.csv --config /code/irv-metrics/config/gri --data-dir "$$data" "$$@"
+      - metrics-load
 
 volumes:
   postgis-data:
