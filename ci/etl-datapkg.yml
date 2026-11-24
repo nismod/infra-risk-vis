@@ -1,0 +1,57 @@
+# Proposed .github/workflows/etl-datapkg.yml (see ci/README.md).
+#
+# Runs etl/tests: the irv-datapkg integration of the raster ETL (rules/datapkg.smk,
+# pipelines/*/datapkg.yml, scripts/layers_from_catalogue.py,
+# scripts/metadata_from_catalogue.py). The tests build a tiny synthetic catalogue
+# with the irv-datapkg producer API, dry-run the workflow and run datapkg_lock and
+# fetch_datapkg in a scratch directory; nothing is downloaded and no database or
+# terracotta service is needed.
+#
+# This repository has no other workflows yet. The full ETL environment
+# (etl/environment.yml, conda) is not needed for these tests: pip wheels suffice,
+# as documented in etl/README.md ("Tests").
+name: etl-datapkg
+
+on:
+  push:
+    paths: ["etl/**", ".github/workflows/etl-datapkg.yml"]
+  pull_request:
+    paths: ["etl/**", ".github/workflows/etl-datapkg.yml"]
+  schedule:
+    - cron: "53 5 * * 1" # weekly, to catch irv-datapkg changes that break the ETL
+  workflow_dispatch:
+    inputs:
+      irv_datapkg_ref:
+        description: irv-datapkg branch, tag or commit to test against
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+env:
+  # until irv-datapkg 0.3.0 is released, point this at its integration branch
+  IRV_DATAPKG_REF: ${{ inputs.irv_datapkg_ref || 'main' }}
+
+jobs:
+  etl-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: etl
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13" # as etl/environment.yml
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install snakemake pytest pandas xarray \
+            "irv-datapkg @ git+https://github.com/nismod/irv-datapkg@${IRV_DATAPKG_REF}"
+
+      - name: Test
+        run: python -m pytest -v tests

@@ -414,6 +414,26 @@ the published items (then run `layers_from_catalogue.py`).
 | iris | `iris` (private) | todo | epoch, rp->return_period, ssp | Manual copy + `extract_netcdf_to_tiff`. Needs `private_base` credentials |
 | osm_rail, osm_roads, gem_exposure, nbs-adaptation | `openstreetmap`, ... | out of scope | n/a | Vector / separate Snakefiles, not `raster/raw`. osm_roads, osm_rail and nbs-adaptation read open-gira results runs instead: see [Vector layers from open-gira results](#vector-layers-from-open-gira-results) |
 
+### Retiring the download rules
+
+The pipeline download rules listed under "Replaces / notes" above are
+deprecated but kept as the fallback for pipelines that are not enabled. A
+pipeline's download rules (and `unpack`/`extract` steps) are removed only when:
+
+1. its catalogue dataset version is pinned by a published irv-datapkg release,
+   and the remote passes `irv-datapkg validate --deep` and `irv-datapkg audit
+   --release`;
+2. the pipeline is in the committed `datapkg.enabled`, `datapkg.lock.yaml`
+   pins that release, and `snakemake --cores 1 datapkg_lock_check` passes;
+3. a run on the production machine with the pipeline enabled reproduced the
+   raster COGs and terracotta metadata, recorded in the removal PR;
+4. any note in the table (dimensions to confirm, rescaling, rasterisation) is
+   resolved.
+
+The cross-repository list of legacy rules and their status is kept in
+irv-datapkg [`docs/deprecation.md`](https://github.com/nismod/irv-datapkg/blob/main/docs/deprecation.md).
+`ci/etl-datapkg.yml` (to copy to `.github/workflows/`) runs the tests below in CI.
+
 ### Tests
 
 ```bash
