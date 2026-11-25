@@ -1,0 +1,29 @@
+id: agriculture/crop-production
+title: Crop production
+description: Annual production and harvested area by parish.
+source_note: Ministry of Agriculture (not open data)
+
+metrics:
+  production: {label: Production, unit: tonnes, dimensions: [crop, year], aggregation: sum}
+  harvested_area: {label: Harvested area, unit: hectares, dimensions: [crop, year], aggregation: sum}
+
+dimensions:
+  crop: {default: all}
+  year: {default: "2024"}
+
+source:
+  # One file for the whole country, parish level only, with the ministry's column names.
+  files: "agriculture/crop_production_by_parish.csv"
+  format: long
+  keys: {area: parish_code, level: 1}
+  value: amount
+  metric: indicator
+  columns: {commodity: crop, crop_year: year}
+  ignore: [parish_name, source]
+
+display:
+  controls: [metric, crop, year]
+  map: {metric: production, dims: {crop: all, year: "2024"}}
+  charts:
+    - {type: line, by: year, split: crop}
+    - {type: bar, by: area}

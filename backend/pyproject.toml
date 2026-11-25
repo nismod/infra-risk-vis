@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gri-backend"
+version = "0.4.1"
+description = "GRI API Backend"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+classifiers = ["Framework :: FastAPI", "Programming Language :: Python :: 3"]
+dependencies = [
+    "alembic==1.20.1",
+    "fastapi==0.130.0",
+    "fastapi-pagination==0.12.32",
+    "geoalchemy2==0.16.0",
+    # metrics API. Not on PyPI yet: install it from
+    # ../irv-metrics `pip install -e ../irv-metrics`
+    "irv-metrics",
+    "orjson",
+    "psycopg2-binary==2.9.10",
+    "pydantic==2.12.5",
+    "pyproj",
+    "sqlalchemy==2.0.36",
+    "setuptools==78.1.1",
+    "terracotta==0.8.3",
+    "uvicorn==0.32.0",
+    "xarray",
+    "zarr",
+]
+
+[project.optional-dependencies]
+dev = ["types-sqlalchemy", "aiohttp", "pytest"]
+
+[tool.setuptools.packages.find]
+# Only the app package; migrations/ and tests/ are not installed (the Docker
+# image copies migrations/ and alembic.ini alongside the code instead).
+include = ["backend*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.pyright]
+exclude = ["venv", ".venv"]

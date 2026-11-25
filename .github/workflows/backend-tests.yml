@@ -1,0 +1,85 @@
+name: Backend tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "irv-metrics/**"
+      - ".github/workflows/backend-tests.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - "irv-metrics/**"
+      - ".github/workflows/backend-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      # The database image GRI runs (docker-compose-dev.yaml). Throwaway: the
+      # migration tests drop and recreate every table.
+      db:
+        image: kartoza/postgis:14-3.1
+        env:
+          POSTGRES_DB: gri_test
+          POSTGRES_USER: gri_test
+          POSTGRES_PASS: password
+          ALLOW_IP_RANGE: 0.0.0.0/0
+        ports:
+          - 5432:5432
+    env:
+      PGHOST: localhost
+      PGPORT: "5432"
+      PGUSER: gri_test
+      PGPASSWORD: password
+      PGDATABASE: gri_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # as backend/Dockerfile; the contract test needs >= 3.13
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            backend/pyproject.toml
+            irv-metrics/pyproject.toml
+
+      - name: Install irv-metrics, then the backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "./irv-metrics[dev]"
+          pip install -e "./backend[dev]"
+
+      - name: Wait for the database
+        # kartoza/postgis restarts postgres once while initialising
+        run: |
+          sudo apt-get install -y --no-install-recommends postgresql-client >/dev/null
+          for i in $(seq 60); do
+            if pg_isready -q && psql -Atc "select 1" >/dev/null 2>&1; then
+              sleep 5
+              pg_isready -q && psql -Atc "select postgis_version()" && exit 0
+            fi
+            sleep 2
+          done
+          echo "database did not start" >&2
+          exit 1
+
+      - name: irv-metrics tests (unit, contract conformance, database on fixtures)
+        working-directory: irv-metrics
+        env:
+          DATABASE_URL: postgresql://gri_test:password@localhost:5432/gri_test
+        # No published data in CI: tests that need the loaded cube or the
+        # CSVs skip; the loaders, overlay, boundary-set and standalone tests
+        # run on their fixtures, in transactions that are rolled back.
+        run: pytest -ra
+
+      - name: Backend migration tests (Alembic, incl. 0002_metrics)
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql+psycopg2://gri_test:password@localhost:5432/gri_test
+        run: pytest -ra

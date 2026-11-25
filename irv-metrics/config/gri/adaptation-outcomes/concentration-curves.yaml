@@ -1,0 +1,43 @@
+id: adaptation-outcomes/concentration-curves
+title: Flood Risk Inequality
+description: How average annual flood exposure is distributed across people ranked from lower to higher wealth. Negative values indicate greater concentration among lower-wealth people.
+documentation: /docs/adaptation-outcomes/concentration-curves
+order: 4
+kind: curve
+x: {id: cumulative_population_share, label: Cumulative share of population, unit: share}
+
+# One national curve per scenario. Relocation curves are keyed by the
+# urbanisation threshold, flood-protection curves by the threshold and the
+# design standard; the baseline and dry-proofing curves by neither. The hazard
+# (river flooding, JRC model) is the same for every curve, so it is not a
+# dimension.
+metrics:
+  cumulative_exposure_share:
+    label: Concentration curve
+    unit: share
+    dimensions: [scenario, urbanisation_threshold, design_return_period_years]
+
+dimensions:
+  scenario: {default: baseline_protected}
+  urbanisation_threshold: {default: urban_centre}
+  design_return_period_years: {default: "10"}
+
+source:
+  # Country-level only: there is no area column.
+  files: "{iso3}/concentration_curves/{iso3}_concentration_curves.csv"
+  format: wide
+  x: cumulative_population_share
+  value_columns:
+    - match: "flood_risk__jrc__(?P<scenario>baseline_protected|dry_proofing)"
+      metric: cumulative_exposure_share
+      dims: {scenario: "{scenario}"}
+    - match: "flood_risk__jrc__relocation_duc(?P<duc>\\d+)"
+      metric: cumulative_exposure_share
+      dims: {scenario: relocation, urbanisation_threshold: "{duc|code}"}
+    - match: "flood_risk__jrc__flood_protection_rp(?P<rp>\\d+)_duc(?P<duc>\\d+)"
+      metric: cumulative_exposure_share
+      dims: {scenario: flood_protection, urbanisation_threshold: "{duc|code}", design_return_period_years: "{rp}"}
+
+display:
+  card: concentration-curves
+  controls: [scenario, urbanisation_threshold, design_return_period_years]

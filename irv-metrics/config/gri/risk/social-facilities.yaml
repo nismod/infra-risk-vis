@@ -1,0 +1,45 @@
+id: risk/social-facilities
+title: Facility Damage
+documentation: /docs/risk/social-facilities
+order: 5
+
+metrics:
+  ea_damages:
+    label: Expected Annual Damages
+    unit: usd_per_year
+    dimensions: [facility_type]
+    aggregation: sum
+  count_rp_threshold:
+    label: Damaged Facility Count
+    unit: facilities
+    dimensions: [facility_type, return_period_years, damage_threshold]
+    aggregation: sum
+
+dimensions:
+  facility_type: {default: hospitals}
+  return_period_years:
+    members: ["10", "20", "50", "75", "100", "200", "500"]
+    default: "10"
+  damage_threshold: {default: moderate}
+
+source:
+  files: "{iso3}/risk/{iso3}_adm{level}_risk_social_facilities_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  columns: {infrastructure_type: facility_type}
+  ignore: [country_name, admin_level, adm_name, section, subsection, card, hazard, model]
+  rules:
+    # `count_rp100_moderate+`: return period and damage threshold in the name.
+    - match: {metric: "count_rp(?P<rp>\\d+)_(?P<threshold>moderate|extensive)\\+"}
+      metric: count_rp_threshold
+      dims: {return_period_years: "{rp}", damage_threshold: "{threshold}"}
+    - match: {metric: "count_rp(?P<rp>\\d+)_complete"}
+      metric: count_rp_threshold
+      dims: {return_period_years: "{rp}", damage_threshold: complete}
+
+display:
+  card: social-facilities
+  controls: [facility_type, metric, return_period_years, damage_threshold]
+  map: {metric: ea_damages, dims: {facility_type: hospitals}}

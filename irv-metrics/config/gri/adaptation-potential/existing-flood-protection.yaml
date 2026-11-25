@@ -1,0 +1,24 @@
+id: adaptation-potential/existing-flood-protection
+title: Existing Flood Protection
+documentation: /docs/adaptation-potential/existing-flood-protection
+order: 4
+
+metrics:
+  protection_standard:
+    label: Protection Standard
+    unit: return_period_years
+    description: The most common river-flood protection standard in the area, as a design return period.
+
+source:
+  files: "{iso3}/adaptation_potential/{iso3}_adm{level}_adaptation_potential_existing_flood_protection_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, adaptation_subsection]
+  rules:
+    - when: {metric: protection_standard_mode}
+      metric: protection_standard
+
+display:
+  card: existing-flood-protection
+  map: {metric: protection_standard}

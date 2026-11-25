@@ -1,0 +1,31 @@
+id: adaptation-outcomes/concentration-curves
+title: Flood exposure by wealth
+kind: curve
+x: {id: cumulative_population_share, label: Cumulative share of population, unit: share}
+
+metrics:
+  cumulative_exposure_share:
+    label: Cumulative share of flood exposure
+    unit: share
+    dimensions: [scenario, urbanisation_threshold, design_return_period_years]
+
+dimensions:
+  scenario: {default: baseline_protected}
+  urbanisation_threshold: {}
+  design_return_period_years: {}
+
+source:
+  # Country-level only: there is no area column.
+  files: "{iso3}/concentration_curves/{iso3}_concentration_curves.csv"
+  format: wide
+  x: cumulative_population_share
+  value_columns:
+    - match: "flood_risk__jrc__(?P<scenario>baseline_protected|dry_proofing)"
+      metric: cumulative_exposure_share
+      dims: {scenario: "{scenario}"}
+    - match: "flood_risk__jrc__relocation_duc(?P<duc>\\d+)"
+      metric: cumulative_exposure_share
+      dims: {scenario: relocation, urbanisation_threshold: "{duc|code}"}
+    - match: "flood_risk__jrc__flood_protection_rp(?P<rp>\\d+)_duc(?P<duc>\\d+)"
+      metric: cumulative_exposure_share
+      dims: {scenario: flood_protection, urbanisation_threshold: "{duc|code}", design_return_period_years: "{rp}"}

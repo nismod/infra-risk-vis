@@ -1,0 +1,39 @@
+id: adaptation-potential/river-catchment-restoration
+title: River Catchment Restoration
+documentation: /docs/adaptation-potential/river-catchment-restoration
+order: 3
+
+metrics:
+  opportunity_area:
+    label: Opportunity Area
+    unit: km2
+    aggregation: sum
+  implementation_cost:
+    label: Implementation Cost
+    unit: usd_2020
+    dimensions: [implementation_approach]
+    aggregation: sum
+  biodiversity_benefit:
+    label: Biodiversity Benefit
+    unit: index
+    description: Mean relative biodiversity-benefit index over the opportunity area; not additive.
+  carbon_benefit:
+    label: Carbon Benefit
+    unit: tonnes
+    aggregation: sum
+
+dimensions:
+  implementation_approach: {default: natural_regeneration}
+
+source:
+  files: "{iso3}/adaptation_potential/{iso3}_adm{level}_adaptation_potential_river_catchment_restoration_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, adaptation_subsection]
+
+display:
+  card: river-catchment-restoration
+  controls: [metric, implementation_approach]
+  map: {metric: opportunity_area}

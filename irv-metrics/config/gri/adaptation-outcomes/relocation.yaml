@@ -1,0 +1,55 @@
+id: adaptation-outcomes/relocation
+title: Relocation
+documentation: /docs/adaptation-outcomes/relocation
+order: 3
+
+# Benefits are published as baseline, adapted and avoided (the concentration
+# index as baseline, adapted and change); `statistic` says which, and is the
+# cost bound on cost rows. Benefit-cost ratios and cost-effectiveness are
+# computed by the card from these and its appraisal inputs.
+metrics:
+  average_annual_loss:
+    label: Average Annual Loss
+    unit: usd_per_year
+    dimensions: [urbanisation_threshold, sector, adaptation_state]
+    aggregation: sum
+  average_annual_flood_exposure:
+    label: Average Annual Flood Exposure
+    unit: people_per_year
+    dimensions: [urbanisation_threshold, wealth_group, adaptation_state]
+    aggregation: sum
+  concentration_index:
+    label: Concentration Index
+    unit: index
+    dimensions: [urbanisation_threshold, adaptation_state]
+  capstock_relocated:
+    label: Capital Stock Relocated
+    unit: usd
+    dimensions: [urbanisation_threshold]
+    aggregation: sum
+
+dimensions:
+  urbanisation_threshold: {default: urban_centre}
+  sector:
+    members: [residential, non_residential, infrastructure, total]
+    default: residential
+  wealth_group:
+    members: [q1, q2, q3, q4, q5, total]
+    default: q1
+  adaptation_state: {default: avoided}
+
+source:
+  files: "{iso3}/adaptation_outcomes/{iso3}_adm{level}_adaptation_outcomes_relocation_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, outcome_type, hazard, model, urbanisation_threshold_code, statistic]
+  rules:
+    - when: {metric: [average_annual_loss, average_annual_flood_exposure, concentration_index]}
+      dims: {adaptation_state: "{statistic}"}
+
+display:
+  card: relocation
+  controls: [urbanisation_threshold, metric, sector, wealth_group]
+  map: {metric: capstock_relocated, dims: {urbanisation_threshold: urban_centre}}

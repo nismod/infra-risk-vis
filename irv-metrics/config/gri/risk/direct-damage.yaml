@@ -1,0 +1,34 @@
+id: risk/direct-damage
+title: Direct Damage
+documentation: /docs/risk/direct-damage
+order: 3
+
+# Roads by class; rail and power have only `road_class: all`. River flooding
+# covers roads and rail, tropical cyclones cover power.
+metrics:
+  expected_annual_damage:
+    label: Expected Annual Damage
+    unit: usd_per_year
+    dimensions: [hazard, infrastructure_type, road_class]
+    aggregation: sum
+
+dimensions:
+  hazard: {default: river_flood}
+  infrastructure_type: {default: road}
+  road_class: {default: all}
+
+source:
+  files: "{iso3}/risk/{iso3}_adm{level}_risk_direct_damage_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  columns: {asset_class: road_class}
+  ignore: [country_name, admin_level, adm_name, section, card, risk_subsection, model, scenario, epoch]
+  rules:
+    - when: {metric: direct_damage}
+      metric: expected_annual_damage
+
+display:
+  card: direct-damage
+  controls: [hazard, infrastructure_type, road_class]
+  map: {metric: expected_annual_damage, dims: {hazard: river_flood, infrastructure_type: road, road_class: all}}

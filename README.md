@@ -113,7 +113,25 @@ without a `profiles` attribute).
 
 For example, when running your own FE development server to add a new raster
 layer the following should suffice: `docker compose -f docker-compose-dev.yaml
-up`. This will bring up `db`, `tiles-db`, `backend` and `vector-tileserver`.
+up`. This will bring up `db`, `tiles-db`, `backend` and `vector-tileserver`
+(after running `migrate` to completion).
+
+The `backend`, `migrate`, `metrics-load` and `dev-reset-db` services run a
+local build of `./backend` (and `./irv-metrics`), tagged `gri-backend:dev`.
+Compose rebuilds it on every `up` or `run` (`pull_policy: build`), which takes
+seconds when nothing has changed.
+
+`db` publishes port 5432 on the host. If another PostgreSQL already uses that
+port (a local server, or another project's database container), `up` fails with
+`Bind for 0.0.0.0:5432 failed: port is already allocated`. Stop that one first.
+Inside the stack, the services reach the database as `db`, so the host port is
+only needed by tools run from the host, such as the ETL (`envs/dev/.etl.env`)
+and `psql`.
+
+When running the [frontend](https://github.com/nismod/irv-frontend/) development
+server against this stack, proxy `/api` to `http://localhost:8888` and
+`/vector` to `http://localhost:8800`, stripping each prefix (the frontend's
+`dev-proxy/proxy-table.docker-exposed.ts` does this.
 
 To run the core services with a standard frontend: `docker compose -f
 docker-compose-dev.yaml --profile web-server up`.
@@ -128,27 +146,83 @@ compose -f docker-compose-dev.yaml --profile traefik --profile web-server
 There are also a few short-lived 'utility containers', which can be run to
 perform particular tasks:
 
-- recreate-metadata-schema: Drop the contents of the `db` database, recreate with empty tables
-- raster-tile-delete-entries: Delete raster entries of specified dataset in `tiles-db`
-- raster-tile-drop-database: Drop whole database for specified dataset from `tiles-db`
+- `migrate`: Apply database migrations to `db` (`alembic upgrade head`)
+- `metrics-load`: Load the metrics CSVs into `db` (profile `metrics`, see
+  [Metrics](#metrics))
+- `dev-reset-db`: Drop (!) all tables and data in `db`, then recreate empty
+- `raster-tile-delete-entries`: Delete raster entries of specified dataset in `tiles-db`
+- `raster-tile-drop-database`: Drop whole database for specified dataset from `tiles-db`
 
-When starting from a clean slate, the `recreate-metadata-schema` service must
-be run to create the tables in `db` that `backend` relies upon. If you find
-that the `backend` service is complaining that the `raster_tile_sources`
-database table is not available, you may need to create the appropriate tables
-in the `db` service first. To do that, bring the `db` service up as described
-above, and then run: `docker-compose -f docker-compose-dev.yaml up
-recreate-metadata-schema` to (re)create the tables. Note that this will drop
-any data currently in database.
+The database schema is managed with [Alembic](https://alembic.sqlalchemy.org/)
+migrations in `backend/migrations` (see
+[backend/README.md](backend/README.md#database-migrations)).
+
+Running `docker compose -f docker-compose-dev.yaml up` will run `migrate` before
+`backend` starts, so migrations should always be kept up-to-date in a local
+docker setup.
+
+To run `migrate` on its own:
+
+```bash
+docker compose -f docker-compose-dev.yaml run --rm migrate
+```
+
+If your database was created before migrations were adopted (by the old
+`recreate-metadata-schema` service) and already has the tables, mark it as
+up to date once, before the first `migrate`:
+
+```bash
+docker compose -f docker-compose-dev.yaml run --rm migrate stamp 0001_baseline
+```
+
+#### Metrics
+
+The backend serves the national metrics API (the [irv-metrics](irv-metrics/README.md)
+package) at `/metrics/v1/...`, i.e. `/api/metrics/v1/...`
+behind traefik. Its data lives in the `metrics` schema of `db`, which
+`migrate` creates (Alembic revision `0002_metrics`), and is loaded from the
+published metric CSVs by the `metrics-load` utility service (profile
+`metrics`), after `migrate`:
+
+```bash
+export METRICS_DATA_DIR=/path/to/csv-data          # KEN/..., MOZ/..., one directory per country
+export METRICS_CGAZ_DIR=/path/to/boundaries        # geoBoundariesCGAZ_ADM{0,1,2}.gpkg
+docker compose -f docker-compose-dev.yaml --profile metrics run --rm metrics-load
+# reload one country after its CSVs change:
+docker compose -f docker-compose-dev.yaml --profile metrics run --rm metrics-load --countries KEN --if-loaded replace
+```
+
+- `METRICS_DATA_DIR` defaults to `./metrics-data`
+- `METRICS_CGAZ_DIR` defaults to `$METRICS_DATA_DIR/boundaries/cgaz`.
+
+They can be set in a `.env` file next to the compose file (see `envs/dev-example/.metrics.env`).
+
+Both are bind-mounted into the container, so point them at real directories. A
+symlink on the host that points outside the mounted directory doesn't resolve
+inside the container.
+
+The loader reads the dataset config in `irv-metrics/config/gri`; extra arguments
+are passed to it (`python -m irv_metrics.loaders.csv --help`).
+
+Already loaded countries are skipped unless `--if-loaded replace` is given.
+
+Backend settings for the API (`envs/dev/.backend.env`):
+- `IRV_METRICS_DOWNLOADS` (`0` turns the CSV downloads off)
+- `IRV_METRICS_POOL_MAX_SIZE`
+- `IRV_METRICS_STATEMENT_TIMEOUT_MS`
+
+See `backend/backend/app/routers/national_metrics.py`.
 
 ### Production
 
 To run local builds of production containers we use the
-`docker-compose-prod-build.yaml` file. See [below](#Updating a service) for
-more details.
+`docker-compose-prod-build.yaml` file.
 
 To deploy containers into a production environment:
-`docker compose -f docker-compose-prod-deploy.yaml up -d`
+
+```bash
+docker compose -f docker-compose-prod-deploy.yaml up -d
+```
 
 ## Updating a service
 
@@ -164,7 +238,7 @@ As an example, below we update the backend on a development machine:
 
 ```bash
 # Edit docker-compose-prod-build.yaml image version:
-#     image: ghcr.io/nismod/gri-backend:1.8.1
+#     image: ghcr.io/nismod/gri-backend:1.10.0
 
 # Build
 docker compose -f docker-compose-prod-build.yaml build backend
@@ -173,17 +247,21 @@ docker compose -f docker-compose-prod-build.yaml build backend
 # see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
 
 # Push
-docker push ghcr.io/nismod/gri-backend:1.8.1
+docker push ghcr.io/nismod/gri-backend:1.10.0
 ```
 
 On the production remote, pull the image and restart the service:
 
 ```bash
 # Pull image
-docker pull ghcr.io/nismod/gri-backend:1.8.1
+docker pull ghcr.io/nismod/gri-backend:1.10.0
 
 # Edit docker-compose-prod-deploy.yaml image version (or sync up):
-#     image: ghcr.io/nismod/gri-backend:1.8.1
+#     image: ghcr.io/nismod/gri-backend:1.10.0
+
+# Apply any new database migrations (see deploy/README.md#database-migrations)
+docker compose -f docker-compose-prod-deploy.yaml run --rm --no-deps \
+    --entrypoint alembic backend upgrade head
 
 # Restart service
 docker compose -f docker-compose-prod-deploy.yaml up -d backend

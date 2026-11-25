@@ -1,0 +1,243 @@
+# GRI vocabulary (contract C2): sections, units, dimensions and boundary sets
+# that the dataset files under this directory refer to by id.
+#
+# Labels and member order follow the current national viewer. Member ids are
+# canonical; where the published CSVs or the upstream API spell a member
+# differently (`motorized`, `moderate+`, `urbanisation_threshold_code`), the
+# dataset's `source` rules translate it.
+
+sections:
+  hazard: {title: Hazard}
+  exposure: {title: Exposure}
+  vulnerability: {title: Vulnerability}
+  risk: {title: Risk}
+  adaptation-potential: {title: Adaptation potential}
+  adaptation-outcomes: {title: Adaptation outcomes}
+
+# Unit ids are the ones the published CSVs write in their `unit` column, so a
+# source can check each row against its metric's unit.
+units:
+  people: {label: people, quantity: count}
+  people_per_year: {label: people/year, quantity: count rate}
+  usd: {label: USD, quantity: currency}
+  usd_per_year: {label: USD/year, quantity: currency rate}
+  usd_2020: {label: USD (2020), quantity: currency}
+  million_usd: {label: USD million, quantity: currency}
+  km: {label: km, quantity: length}
+  km2: {label: km², quantity: area}
+  m2: {label: m², quantity: area}
+  m: {label: m, quantity: depth}
+  percent: {label: "%", quantity: ratio}
+  share: {label: share, quantity: ratio}
+  index: {label: index, quantity: index}
+  facilities: {label: facilities, quantity: count}
+  facilities_per_100k_people: {label: per 100K people, quantity: rate}
+  minutes: {label: min, quantity: time}
+  person_minutes_per_year: {label: person-minutes/year, quantity: time rate}
+  tonnes: {label: t, quantity: mass}
+  return_period_years: {label: years, quantity: return period}
+
+dimensions:
+  return_period_years:
+    label: Return Period
+    ordered: true
+    members:
+      "10": {label: RP10, value: 10}
+      "20": {label: RP20, value: 20}
+      "50": {label: RP50, value: 50}
+      "75": {label: RP75, value: 75}
+      "100": {label: RP100, value: 100}
+      "200": {label: RP200, value: 200}
+      "500": {label: RP500, value: 500}
+      "1000": {label: "RP1,000", value: 1000}
+  design_return_period_years:
+    label: Design Flood Protection
+    ordered: true
+    members:
+      "10": {label: RP10, value: 10}
+      "20": {label: RP20, value: 20}
+      "50": {label: RP50, value: 50}
+      "100": {label: RP100, value: 100}
+      "200": {label: RP200, value: 200}
+  demographic_group:
+    label: Population Group
+    members:
+      total: {label: Total, short_label: People}
+      female: {label: Female, short_label: Females}
+      male: {label: Male, short_label: Males}
+      infant: {label: Children Under 5, short_label: Under 5}
+      schoolage: {label: School-Age Children (5–14), short_label: Children 5–14}
+      working: {label: Working-Age (15–64), short_label: People 15–64}
+      childbearing: {label: Female Aged 15–49, short_label: Females 15–49}
+      elderly: {label: Older (65+), short_label: People 65+}
+  wealth_group:
+    label: Wealth Group
+    description: "One national wealth quintile, or the combined bottom 40% (Q1 and Q2)."
+    members:
+      q1: {label: Bottom Wealth Quintile, short_label: Bottom, description: "Poorest 20%"}
+      q2: {label: Second Wealth Quintile, short_label: Second, description: "20th-40th percentile"}
+      q3: {label: Middle Wealth Quintile, short_label: Middle, description: "40th-60th percentile"}
+      q4: {label: Fourth Wealth Quintile, short_label: Fourth, description: "60th-80th percentile"}
+      q5: {label: Top Wealth Quintile, short_label: Top, description: "Richest 20%"}
+      bottom_40: {label: "Bottom 40%", description: Poorest two quintiles}
+      top_40: {label: "Top 40%"}
+      total: {label: Total}
+  sector:
+    label: Sector
+    members:
+      total: {label: Total}
+      residential: {label: Residential}
+      non_residential: {label: Non-residential}
+      infrastructure: {label: Infrastructure}
+  road_class:
+    label: Road Class
+    members:
+      all: {label: All, short_label: Total}
+      motorway: {label: Motorway}
+      trunk: {label: Trunk}
+      primary: {label: Primary}
+      secondary: {label: Secondary}
+      tertiary: {label: Tertiary}
+  hazard:
+    label: Hazard
+    members:
+      river_flood: {label: Flooding}
+      tropical_cyclone: {label: Tropical Cyclones}
+  wind_threshold:
+    label: Wind Threshold
+    description: Minimum category. Areas at that category or higher are included.
+    ordered: true
+    members:
+      tropical_storm_plus: {label: Tropical Storm+}
+      cat1plus: {label: Category 1+}
+      cat2plus: {label: Category 2+}
+      cat3plus: {label: Category 3+}
+      cat4plus: {label: Category 4+}
+      cat5plus: {label: Category 5+}
+  wind_band:
+    label: Wind Category
+    description: "Non-cumulative category bands; *plus thresholds are cumulative sums of these."
+    ordered: true
+    members:
+      tropical_storm: {label: Tropical Storm}
+      cat1: {label: Category 1}
+      cat2: {label: Category 2}
+      cat3: {label: Category 3}
+      cat4: {label: Category 4}
+      cat5: {label: Category 5}
+  infrastructure_type:
+    label: Infrastructure Type
+    members:
+      road: {label: Roads}
+      rail: {label: Rail}
+      power: {label: Power}
+  facility_type:
+    label: Facility Type
+    members:
+      hospitals: {label: Healthcare Facilities}
+      schools: {label: Schools}
+  travel_mode:
+    label: Travel Mode
+    members:
+      walking: {label: Pedestrian}
+      motorised: {label: Motorised}
+  travel_time_threshold_min:
+    label: Travel Time Threshold
+    description: "Split out of the API metric slug pop_within_{n}min."
+    ordered: true
+    members:
+      "15": {label: "15 min", value: 15}
+      "30": {label: "30 min", value: 30}
+      "60": {label: "60 min", value: 60}
+      "120": {label: "120 min", value: 120}
+  disruption_type:
+    label: Disruption Type
+    members:
+      facility_closed: {label: Facility closed, description: "The nearest facility is closed by flood damage (moderate or worse), so people travel to one further away."}
+      route_disrupted: {label: Route disrupted, description: "The nearest facility is open, but flooding makes the trip longer."}
+      isolated: {label: Isolated, description: No open facility can be reached.}
+  damage_threshold:
+    label: Damage Threshold
+    ordered: true
+    members:
+      moderate: {label: Moderate+}
+      extensive: {label: Extensive+}
+      complete: {label: Complete}
+  land_use:
+    label: Land-Use Category
+    members:
+      total: {label: All}
+      other: {label: Other Land}
+      crops: {label: Cropland}
+      bare_ground: {label: Bare Ground}
+  shoreline_condition:
+    label: Shoreline Condition
+    members:
+      total: {label: All}
+      accreting: {label: Accreting}
+      static_moderate_retreat: {label: Static or Moderately Retreating}
+      fast_retreat: {label: Fast Retreating}
+  urbanisation_class:
+    label: Urbanisation Class
+    description: Urbanisation class through which rivers flow (DEGURBA level 1 style).
+    members:
+      total: {label: All}
+      rural: {label: Rural}
+      town: {label: Town}
+      city: {label: City}
+  urbanisation_threshold:
+    label: Urbanisation Threshold
+    description: "GHS-SMOD settlement classes; 'code' is the SMOD code sent to concentration-curves as urbanisation_threshold_code."
+    ordered: true
+    members:
+      urban_centre: {label: Urban centre, code: "30"}
+      dense_urban: {label: Dense urban, code: "23"}
+      semi_dense_urban_area: {label: Semi-dense urban area, code: "22"}
+      suburban_area: {label: Suburban area, code: "21"}
+      rural_settlement: {label: Rural settlement, code: "13"}
+      low_density_rural: {label: Low-density rural, code: "12"}
+      remote_area: {label: Remote area, code: "11"}
+  implementation_approach:
+    label: Implementation Approach
+    members:
+      natural_regeneration: {label: Natural Regeneration}
+      native_planting: {label: Native Planting}
+  cost_bound:
+    label: Flood Protection Cost
+    members:
+      lower: {label: Lower}
+      estimate: {label: Central}
+      upper: {label: Upper}
+  rwi_measure:
+    label: RWI Measure
+    members:
+      average: {label: Average, short_label: Average RWI}
+      population_weighted: {label: Population-weighted, short_label: Population-weighted RWI}
+  scenario:
+    label: Adaptation Scenario
+    description: "Used by concentration curves; risk datasets are implicitly baseline_protected (the API's *_protected metric suffix)."
+    members:
+      baseline_protected: {label: Before adaptation}
+      dry_proofing: {label: Dry-Proofing}
+      flood_protection: {label: Flood-Protection}
+      relocation: {label: Relocation}
+  adaptation_state:
+    label: Adaptation State
+    ordered: true
+    members:
+      baseline: {label: Baseline}
+      adapted: {label: Adapted}
+      avoided: {label: Avoided}
+      change: {label: Change}
+
+boundary_sets:
+  cgaz-6.0.0:
+    title: geoBoundaries CGAZ 6.0.0
+    kind: admin
+    attribution: geoBoundaries
+    attribution_url: https://www.geoboundaries.org
+    levels:
+      - {label: Country, files: "boundaries/cgaz/geoBoundariesCGAZ_ADM0.gpkg", id: shapeGroup, name: shapeName, iso3: shapeGroup}
+      - {label: Admin 1, files: "boundaries/cgaz/geoBoundariesCGAZ_ADM1.gpkg", id: shapeID, name: shapeName, iso3: shapeGroup}
+      - {label: Admin 2, files: "boundaries/cgaz/geoBoundariesCGAZ_ADM2.gpkg", id: shapeID, name: shapeName, iso3: shapeGroup}
+

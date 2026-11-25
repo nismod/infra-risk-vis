@@ -1,0 +1,3 @@
+country_iso3,country_name,adm_id,return_period_years,metric,unit,value
+ZZA,Zedland,Zedland,10,flooded_area,km2,12.5
+ZZA,Zedland,Zedland,100,flooded_area,km2,30.25

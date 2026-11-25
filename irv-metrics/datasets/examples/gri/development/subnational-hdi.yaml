@@ -1,0 +1,66 @@
+# The GDL dashboard merged in as a dataset (phase 2). Generic card only.
+# Two sources: GDL regions (admin) and UNDP regions (group, extension), plus
+# a metric aggregated from member countries (extension).
+id: development/subnational-hdi
+title: Subnational Human Development Index
+source_note: Global Data Lab, Subnational HDI
+documentation: https://globaldatalab.org/shdi/about/
+
+metrics:
+  shdi:
+    label: Human Development Index
+    unit: index
+    dimensions: [year]
+    aggregation: weighted_mean
+    weight: "exposure/population:population"
+  health_index: {label: Health index, unit: index, dimensions: [year]}
+  education_index: {label: Education index, unit: index, dimensions: [year]}
+  income_index: {label: Income index, unit: index, dimensions: [year]}
+  # Extension: two kinds of group figure, side by side, as separate metrics.
+  # Published by UNDP for its regions; loaded by the second source.
+  hdi_undp:
+    label: Human Development Index (UNDP regional aggregate)
+    unit: index
+    dimensions: [year]
+    source_note: UNDP Human Development Report, regional aggregates
+  # Aggregated at load from GDL's national values, weighted by population.
+  shdi_group:
+    label: Human Development Index (population-weighted mean of member countries)
+    unit: index
+    source_note: Global Data Lab national values, aggregated over member countries
+    derive: {aggregate_of: shdi, to: [undp-hdr-regions, wb-income-fy26]}
+
+dimensions:
+  year: {default: "2022"}
+
+source:
+  - files: "gdl/SHDI-SGDI-Total*.csv"
+    format: wide
+    boundary_set: gdl-v6
+    keys:
+      area: GDLCODE
+      iso3: iso_code
+      level: {column: level, values: {National: 0, Subnat: 1}}
+    # The `year` column is named after a dimension, so it keys each row.
+    value_columns:
+      - {column: shdi, metric: shdi}
+      - {column: healthindex, metric: health_index}
+      - {column: edindex, metric: education_index}
+      - {column: incindex, metric: income_index}
+  # Extension: UNDP's published regional figures, so a region of Kenya can be
+  # set beside Kenya and Sub-Saharan Africa. Columns are a sketch.
+  - files: "undp/hdr-regional-aggregates.csv"
+    format: wide
+    boundary_set: undp-hdr-regions
+    keys: {area: region_code, level: 1}
+    value_columns:
+      - {column: hdi, metric: hdi_undp}
+
+display:
+  summary: Health, education and income combined into one index, for subnational regions.
+  controls: [metric, year]
+  map: {metric: shdi, dims: {year: "2022"}}
+  decimals: 3
+  charts:
+    - {type: line, by: year}
+    - {type: bar, by: area}

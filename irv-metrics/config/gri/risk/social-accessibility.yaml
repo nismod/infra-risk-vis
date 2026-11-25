@@ -1,0 +1,47 @@
+id: risk/social-accessibility
+title: Disrupted Access
+documentation: /docs/risk/social-accessibility
+order: 6
+
+# Isolated people have no travel time increase: `ea_person_min` has no
+# `isolated` series.
+metrics:
+  ea_people:
+    label: People
+    unit: people_per_year
+    dimensions: [facility_type, travel_mode, demographic_group, disruption_type]
+    aggregation: sum
+  ea_person_min:
+    label: Travel time increase
+    unit: person_minutes_per_year
+    dimensions: [facility_type, travel_mode, demographic_group, disruption_type]
+    aggregation: sum
+
+dimensions:
+  facility_type: {default: hospitals}
+  travel_mode: {default: walking}
+  demographic_group: {default: total}
+  disruption_type: {default: facility_closed}
+
+source:
+  files: "{iso3}/risk/{iso3}_adm{level}_risk_social_accessibility_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  columns: {infrastructure_type: facility_type, mode: travel_mode}
+  ignore: [country_name, admin_level, adm_name, section, subsection, card, hazard, model]
+  rules:
+    # `ea_people_route_disrupted`: the disruption type is part of the published
+    # metric name; `motorized` is the CSV spelling of `motorised`.
+    - when: {mode: motorized}
+      match: {metric: "(?P<measure>ea_people|ea_person_min)_(?P<disruption>facility_closed|route_disrupted|isolated)"}
+      metric: "{measure}"
+      dims: {disruption_type: "{disruption}", travel_mode: motorised}
+    - match: {metric: "(?P<measure>ea_people|ea_person_min)_(?P<disruption>facility_closed|route_disrupted|isolated)"}
+      metric: "{measure}"
+      dims: {disruption_type: "{disruption}"}
+
+display:
+  card: risk-accessibility
+  controls: [facility_type, travel_mode, demographic_group, disruption_type, metric]
+  map: {metric: ea_people, dims: {facility_type: hospitals, travel_mode: walking, demographic_group: total, disruption_type: facility_closed}}

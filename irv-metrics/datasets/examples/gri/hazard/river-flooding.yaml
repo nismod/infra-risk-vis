@@ -1,0 +1,30 @@
+id: hazard/river-flooding
+title: River flooding
+source_note: JRC global river flood hazard maps
+documentation: /docs/hazard/river-flooding
+order: 1
+
+metrics:
+  flooded_area: {label: Flooded area, unit: km2, dimensions: [return_period_years], aggregation: sum}
+  area_flooded_percentage: {label: Share of area flooded, unit: percent, dimensions: [return_period_years]}
+  mean_flood_depth: {label: Mean flood depth, unit: m, dimensions: [return_period_years]}
+  p90_flood_depth: {label: 90th percentile flood depth, unit: m, dimensions: [return_period_years]}
+
+dimensions:
+  return_period_years: {default: "100"}
+
+source:
+  files: "{iso3}/hazard/{iso3}_adm{level}_hazard_river_flooding_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card, hazard, model, scenario]
+
+display:
+  card: river-flooding
+  controls: [metric, return_period_years]
+  map: {metric: flooded_area, dims: {return_period_years: "100"}}
+  charts:
+    - {type: bar, by: area}
+    - {type: line, by: return_period_years}

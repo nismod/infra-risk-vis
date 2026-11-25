@@ -1,0 +1,22 @@
+id: exposure/capital-stock
+title: Capital Stock
+documentation: /docs/exposure/capital-stock
+order: 2
+
+metrics:
+  capital_stock: {label: Capital Stock, unit: usd, dimensions: [sector], aggregation: sum}
+
+dimensions:
+  sector: {default: total}
+
+source:
+  files: "{iso3}/exposure/{iso3}_adm{level}_exposure_capital_stock_metrics.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  unit: unit
+  ignore: [country_name, admin_level, adm_name, section, card]
+
+display:
+  card: capital-stock
+  controls: [sector]
+  map: {metric: capital_stock, dims: {sector: total}}

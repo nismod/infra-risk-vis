@@ -77,3 +77,6 @@ etl/raw_data/*
 .DS_Store
 irv-autopkg/*
 etl/pipelines/nbs-adaptation/demo
+
+# national metrics data for the metrics-load service (METRICS_DATA_DIR default)
+/metrics-data/

@@ -1,7 +1,25 @@
 services:
   backend:
-    image: ghcr.io/nismod/gri-backend:1.9.0
-    build: ./containers/backend
+    image: ghcr.io/nismod/gri-backend:1.10.0
+    build:
+      context: ./backend
+      # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
+      additional_contexts:
+        irv-metrics: ./irv-metrics
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  # Apply database migrations using the backend image. Connects with the PG*
+  # variables in envs/prod/.backend.env, e.g. to test the built image:
+  #   docker compose -f docker-compose-prod-build.yaml run --rm migrate
+  migrate:
+    image: ghcr.io/nismod/gri-backend:1.10.0
+    env_file:
+      - path: ./envs/prod/.backend.env
+        required: false
+    entrypoint: ["alembic"]
+    command: ["upgrade", "head"]
 
   vector-tileserver:
     build: ./containers/vector

@@ -1,0 +1,16 @@
+id: hazard/river-flooding
+title: River Flooding
+
+metrics:
+  flooded_area: {label: Flooded Area, unit: km2, dimensions: [return_period_years], aggregation: sum}
+
+dimensions:
+  return_period_years: {default: "10"}
+
+source:
+  files: "{iso3}/hazard/{iso3}_adm{level}_flood.csv"
+  format: long
+  keys: {area: adm_id, iso3: country_iso3}
+  metric: metric
+  unit: unit
+  ignore: [country_name]
