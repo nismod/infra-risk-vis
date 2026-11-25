@@ -13,15 +13,22 @@ RASTER_BASE_PATH = getenv("RASTER_BASE_PATH", "/data")
 TILEDB_URI = getenv("TILEDB_URI")
 ZARR_BASE_PATH = getenv("ZARR_BASE_PATH", "/data/stack.zarr")
 
+ZARR_STORE = None
+ZARR_GROUPS = []
 try:
     ZARR_STORE = xr.open_groups(ZARR_BASE_PATH)
-    ZARR_GROUPS = []
     groups_level1 = zarr.open_group(ZARR_BASE_PATH).groups()
     for key, group in groups_level1:
         for subgroup in group.group_keys():
             ZARR_GROUPS.append(f"/{key}/{subgroup}")
 
     logging.debug(f"Found {len(ZARR_GROUPS)} groups: {ZARR_GROUPS}")
+except FileNotFoundError as e:
+    # Without the store (e.g. a dev setup without pixel-driller data), the
+    # backend still starts; only /pixel-driller fails, with 503.
+    ZARR_STORE = None
+    ZARR_GROUPS = []
+    logging.warning(f"No Zarr store, pixel driller disabled: {e}")
 except Exception as e:
     logging.error(f"Failed to query Zarr store: {e}")
     raise e

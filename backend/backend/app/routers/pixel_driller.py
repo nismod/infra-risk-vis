@@ -158,6 +158,11 @@ def get_pixel_values(
             status_code=400, detail="Latitude must be between -90 and 90"
         )
 
+    if ZARR_STORE is None:
+        raise HTTPException(
+            status_code=503, detail="Pixel driller data is not available"
+        )
+
     groups = ZARR_GROUPS
     store = ZARR_STORE
 
