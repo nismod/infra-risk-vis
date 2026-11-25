@@ -42,7 +42,9 @@ services:
       # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
       additional_contexts:
         irv-metrics: ./irv-metrics
-    image: ghcr.io/nismod/gri-backend:1.8.1
+    # always the local build of ./backend (cached), never the published image
+    image: gri-backend:dev
+    pull_policy: build
     volumes:
       - ./etl/raster/cog/:/data/
       - ./backend/backend/:/code/backend/
@@ -116,7 +118,9 @@ services:
       # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
       additional_contexts:
         irv-metrics: ./irv-metrics
-    image: ghcr.io/nismod/gri-backend:1.8.1
+    # always the local build of ./backend (cached), never the published image
+    image: gri-backend:dev
+    pull_policy: build
     volumes:
       - ./backend/backend/:/code/backend/
       - ./backend/migrations/:/code/migrations/
@@ -137,7 +141,9 @@ services:
       # irv-metrics is installed from ./irv-metrics (see backend/Dockerfile)
       additional_contexts:
         irv-metrics: ./irv-metrics
-    image: ghcr.io/nismod/gri-backend:1.8.1
+    # always the local build of ./backend (cached), never the published image
+    image: gri-backend:dev
+    pull_policy: build
     profiles: ["dev-reset-db"]
     volumes:
       - ./backend/backend/:/code/backend/
@@ -162,7 +168,9 @@ services:
       context: ./backend
       additional_contexts:
         irv-metrics: ./irv-metrics
-    image: ghcr.io/nismod/gri-backend:1.8.1
+    # always the local build of ./backend (cached), never the published image
+    image: gri-backend:dev
+    pull_policy: build
     profiles: ["metrics"]
     volumes:
       - ./irv-metrics/:/code/irv-metrics/

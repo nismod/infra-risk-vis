@@ -116,6 +116,23 @@ layer the following should suffice: `docker compose -f docker-compose-dev.yaml
 up`. This will bring up `db`, `tiles-db`, `backend` and `vector-tileserver`
 (after running `migrate` to completion).
 
+The `backend`, `migrate`, `metrics-load` and `dev-reset-db` services run a
+local build of `./backend` (and `./irv-metrics`), tagged `gri-backend:dev`.
+Compose rebuilds it on every `up` or `run` (`pull_policy: build`), which takes
+seconds when nothing has changed.
+
+`db` publishes port 5432 on the host. If another PostgreSQL already uses that
+port (a local server, or another project's database container), `up` fails with
+`Bind for 0.0.0.0:5432 failed: port is already allocated`. Stop that one first.
+Inside the stack, the services reach the database as `db`, so the host port is
+only needed by tools run from the host, such as the ETL (`envs/dev/.etl.env`)
+and `psql`.
+
+When running the [frontend](https://github.com/nismod/irv-frontend/) development
+server against this stack, proxy `/api` to `http://localhost:8888` and
+`/vector` to `http://localhost:8800`, stripping each prefix (the frontend's
+`dev-proxy/proxy-table.docker-exposed.ts` does this.
+
 To run the core services with a standard frontend: `docker compose -f
 docker-compose-dev.yaml --profile web-server up`.
 
@@ -179,6 +196,10 @@ docker compose -f docker-compose-dev.yaml --profile metrics run --rm metrics-loa
 - `METRICS_CGAZ_DIR` defaults to `$METRICS_DATA_DIR/boundaries/cgaz`.
 
 They can be set in a `.env` file next to the compose file (see `envs/dev-example/.metrics.env`).
+
+Both are bind-mounted into the container, so point them at real directories. A
+symlink on the host that points outside the mounted directory doesn't resolve
+inside the container.
 
 The loader reads the dataset config in `irv-metrics/config/gri`; extra arguments
 are passed to it (`python -m irv_metrics.loaders.csv --help`).
