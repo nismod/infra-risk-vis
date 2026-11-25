@@ -131,7 +131,7 @@ def query_zarr_pixel(
 
 @router.get(
     "/point/{lon}/{lat}",
-    # response_model=schemas.PixelDrillerResponse,
+    response_model=schemas.PixelDrillerResponse,
     response_class=ORJSONResponse,
 )
 def get_pixel_values(
@@ -185,12 +185,10 @@ def get_pixel_values(
     logger.debug(f"Completed processing all groups, total results: {len(all_results)}")
 
     try:
-        return ORJSONResponse(
-            {
-                "point": {"lat": lat, "lon": lon},
-                "results": list(itertools.chain.from_iterable(all_results)),
-            }
-        )
+        return {
+            "point": {"lat": lat, "lon": lon},
+            "results": list(itertools.chain.from_iterable(all_results)),
+        }
     except Exception as e:
         logger.error(f"Failed to create response: {e}")
         logger.debug(f"Response creation traceback:\n{traceback.format_exc()}")

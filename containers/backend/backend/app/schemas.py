@@ -218,6 +218,11 @@ class PixelDrillerResult(BaseModel):
     layer: PixelDrillerLayer
 
 
+class Point(BaseModel):
+    lat: float
+    lon: float
+
+
 class PixelDrillerResponse(BaseModel):
-    point: dict[str, float]
+    point: Point
     results: list[PixelDrillerResult]
