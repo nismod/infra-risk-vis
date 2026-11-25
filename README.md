@@ -238,7 +238,7 @@ As an example, below we update the backend on a development machine:
 
 ```bash
 # Edit docker-compose-prod-build.yaml image version:
-#     image: ghcr.io/nismod/gri-backend:1.8.1
+#     image: ghcr.io/nismod/gri-backend:1.10.0
 
 # Build
 docker compose -f docker-compose-prod-build.yaml build backend
@@ -247,17 +247,17 @@ docker compose -f docker-compose-prod-build.yaml build backend
 # see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry
 
 # Push
-docker push ghcr.io/nismod/gri-backend:1.8.1
+docker push ghcr.io/nismod/gri-backend:1.10.0
 ```
 
 On the production remote, pull the image and restart the service:
 
 ```bash
 # Pull image
-docker pull ghcr.io/nismod/gri-backend:1.8.1
+docker pull ghcr.io/nismod/gri-backend:1.10.0
 
 # Edit docker-compose-prod-deploy.yaml image version (or sync up):
-#     image: ghcr.io/nismod/gri-backend:1.8.1
+#     image: ghcr.io/nismod/gri-backend:1.10.0
 
 # Apply any new database migrations (see deploy/README.md#database-migrations)
 docker compose -f docker-compose-prod-deploy.yaml run --rm --no-deps \
