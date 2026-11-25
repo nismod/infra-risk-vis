@@ -65,7 +65,7 @@ pool = ConnectionPool(
 
 service = Service(pool, downloads=DOWNLOADS, countries=COUNTRIES)
 router = create_router(service)
-legacy_router = legacy.create_router(pool)
+legacy_router, legacy_catalog = legacy.create_router(pool)
 
 
 @asynccontextmanager
@@ -78,6 +78,7 @@ async def lifespan(_app):
     pool.open(wait=False)
     try:
         service.refresh()
+        legacy_catalog.refresh()
     except Exception as error:  # the rest of the API must still start
         logger.warning("national metrics not ready at startup (%s); will retry on first request", error)
     try:

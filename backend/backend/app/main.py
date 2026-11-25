@@ -9,7 +9,7 @@ import backend.app.routers.features as features
 import backend.app.routers.tiles as tiles
 import backend.app.routers.colormap as colormap
 import backend.app.routers.pixel_driller as pixel_driller
-import backend.backend.app.routers.metrics as metrics
+import backend.app.routers.metrics as metrics
 from backend.config import LOG_LEVEL
 
 formatter = logging.Formatter(
@@ -51,4 +51,4 @@ app.include_router(tiles.router, prefix="/tiles")
 app.include_router(colormap.router, prefix="/colormap")
 app.include_router(pixel_driller.router, prefix="/pixel-driller")
 app.include_router(metrics.router, prefix="/metrics")
-app.include_router(metrics.legacy_router) # TODO drop when metrics frontend migrates
+app.include_router(metrics.legacy_router, tags=["metrics-legacy"]) # TODO drop when metrics frontend migrates
